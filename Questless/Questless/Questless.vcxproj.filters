@@ -154,301 +154,301 @@
     </Font>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="headers\Game.h">
+    <ClInclude Include="include\Game.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="headers\animation\Animation.h">
+    <ClInclude Include="include\animation\Animation.h">
       <Filter>include\animation</Filter>
     </ClInclude>
-    <ClInclude Include="headers\animation\AnimationCollection.h">
+    <ClInclude Include="include\animation\AnimationCollection.h">
       <Filter>include\animation</Filter>
     </ClInclude>
-    <ClInclude Include="headers\animation\Camera.h">
+    <ClInclude Include="include\animation\Camera.h">
       <Filter>include\animation</Filter>
     </ClInclude>
-    <ClInclude Include="headers\animation\particles\Particle.h">
+    <ClInclude Include="include\animation\particles\Particle.h">
       <Filter>include\animation\particles</Filter>
     </ClInclude>
-    <ClInclude Include="headers\animation\particles\RedMagic.h">
+    <ClInclude Include="include\animation\particles\RedMagic.h">
       <Filter>include\animation\particles</Filter>
     </ClInclude>
-    <ClInclude Include="headers\animation\particles\WhiteMagic.h">
+    <ClInclude Include="include\animation\particles\WhiteMagic.h">
       <Filter>include\animation\particles</Filter>
     </ClInclude>
-    <ClInclude Include="headers\animation\particles\YellowMagic.h">
+    <ClInclude Include="include\animation\particles\YellowMagic.h">
       <Filter>include\animation\particles</Filter>
     </ClInclude>
-    <ClInclude Include="headers\animation\particles\BlackMagic.h">
+    <ClInclude Include="include\animation\particles\BlackMagic.h">
       <Filter>include\animation\particles</Filter>
     </ClInclude>
-    <ClInclude Include="headers\animation\particles\BlueMagic.h">
+    <ClInclude Include="include\animation\particles\BlueMagic.h">
       <Filter>include\animation\particles</Filter>
     </ClInclude>
-    <ClInclude Include="headers\animation\particles\GreenMagic.h">
+    <ClInclude Include="include\animation\particles\GreenMagic.h">
       <Filter>include\animation\particles</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\AllEntities.h">
+    <ClInclude Include="include\entities\AllEntities.h">
       <Filter>include\entities</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\Entity.h">
+    <ClInclude Include="include\entities\Entity.h">
       <Filter>include\entities</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\Attributes.h">
+    <ClInclude Include="include\entities\beings\Attributes.h">
       <Filter>include\entities\beings</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\Being.h">
+    <ClInclude Include="include\entities\beings\Being.h">
       <Filter>include\entities\beings</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\statuses\Nauseated.h">
+    <ClInclude Include="include\entities\beings\statuses\Nauseated.h">
       <Filter>include\entities\beings\statuses</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\statuses\Numb.h">
+    <ClInclude Include="include\entities\beings\statuses\Numb.h">
       <Filter>include\entities\beings\statuses</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\statuses\Poisoned.h">
+    <ClInclude Include="include\entities\beings\statuses\Poisoned.h">
       <Filter>include\entities\beings\statuses</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\statuses\Recharging.h">
+    <ClInclude Include="include\entities\beings\statuses\Recharging.h">
       <Filter>include\entities\beings\statuses</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\statuses\Sleeping.h">
+    <ClInclude Include="include\entities\beings\statuses\Sleeping.h">
       <Filter>include\entities\beings\statuses</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\statuses\Blind.h">
+    <ClInclude Include="include\entities\beings\statuses\Blind.h">
       <Filter>include\entities\beings\statuses</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\statuses\Confused.h">
+    <ClInclude Include="include\entities\beings\statuses\Confused.h">
       <Filter>include\entities\beings\statuses</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\statuses\Deaf.h">
+    <ClInclude Include="include\entities\beings\statuses\Deaf.h">
       <Filter>include\entities\beings\statuses</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\statuses\Discharging.h">
+    <ClInclude Include="include\entities\beings\statuses\Discharging.h">
       <Filter>include\entities\beings\statuses</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\statuses\Healing.h">
+    <ClInclude Include="include\entities\beings\statuses\Healing.h">
       <Filter>include\entities\beings\statuses</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\statuses\Illuminated.h">
+    <ClInclude Include="include\entities\beings\statuses\Illuminated.h">
       <Filter>include\entities\beings\statuses</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\statuses\Mute.h">
+    <ClInclude Include="include\entities\beings\statuses\Mute.h">
       <Filter>include\entities\beings\statuses</Filter>
     </ClInclude>
-    <ClInclude Include="headers\items\Craftable.h">
+    <ClInclude Include="include\items\Craftable.h">
       <Filter>include\items</Filter>
     </ClInclude>
-    <ClInclude Include="headers\items\Item.h">
+    <ClInclude Include="include\items\Item.h">
       <Filter>include\items</Filter>
     </ClInclude>
-    <ClInclude Include="headers\items\armor\Armor.h">
+    <ClInclude Include="include\items\armor\Armor.h">
       <Filter>include\items\armor</Filter>
     </ClInclude>
-    <ClInclude Include="headers\items\potions\Potion.h">
+    <ClInclude Include="include\items\potions\Potion.h">
       <Filter>include\items\potions</Filter>
     </ClInclude>
-    <ClInclude Include="headers\items\weapons\Weapon.h">
+    <ClInclude Include="include\items\weapons\Weapon.h">
       <Filter>include\items\weapons</Filter>
     </ClInclude>
-    <ClInclude Include="headers\world\Region.h">
+    <ClInclude Include="include\world\Region.h">
       <Filter>include\world</Filter>
     </ClInclude>
-    <ClInclude Include="headers\world\Section.h">
+    <ClInclude Include="include\world\Section.h">
       <Filter>include\world</Filter>
     </ClInclude>
-    <ClInclude Include="headers\utility\constants.h">
+    <ClInclude Include="include\utility\constants.h">
       <Filter>include\utility</Filter>
     </ClInclude>
-    <ClInclude Include="headers\utility\Frequency.h">
+    <ClInclude Include="include\utility\Frequency.h">
       <Filter>include\utility</Filter>
     </ClInclude>
-    <ClInclude Include="headers\utility\optional.h">
+    <ClInclude Include="include\utility\optional.h">
       <Filter>include\utility</Filter>
     </ClInclude>
-    <ClInclude Include="headers\utility\PointF.h">
+    <ClInclude Include="include\utility\PointF.h">
       <Filter>include\utility</Filter>
     </ClInclude>
-    <ClInclude Include="headers\utility\utility.h">
+    <ClInclude Include="include\utility\utility.h">
       <Filter>include\utility</Filter>
     </ClInclude>
-    <ClInclude Include="headers\utility\VectorF.h">
+    <ClInclude Include="include\utility\VectorF.h">
       <Filter>include\utility</Filter>
     </ClInclude>
-    <ClInclude Include="headers\utility\Velocity.h">
+    <ClInclude Include="include\utility\Velocity.h">
       <Filter>include\utility</Filter>
     </ClInclude>
-    <ClInclude Include="headers\sdl-wrappers\Font.h">
+    <ClInclude Include="include\sdl-wrappers\Font.h">
       <Filter>include\sdl-wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\sdl-wrappers\Renderer.h">
+    <ClInclude Include="include\sdl-wrappers\Renderer.h">
       <Filter>include\sdl-wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\sdl-wrappers\Sound.h">
+    <ClInclude Include="include\sdl-wrappers\Sound.h">
       <Filter>include\sdl-wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\sdl-wrappers\Texture.h">
+    <ClInclude Include="include\sdl-wrappers\Texture.h">
       <Filter>include\sdl-wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\sdl-wrappers\Window.h">
+    <ClInclude Include="include\sdl-wrappers\Window.h">
       <Filter>include\sdl-wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\utility\hex-utilities.h">
+    <ClInclude Include="include\utility\hex-utilities.h">
       <Filter>include\utility</Filter>
     </ClInclude>
-    <ClInclude Include="headers\utility\Delegate.h">
+    <ClInclude Include="include\utility\Delegate.h">
       <Filter>include\utility</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\Damage.h">
+    <ClInclude Include="include\entities\beings\Damage.h">
       <Filter>include\entities\beings</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\Protection.h">
+    <ClInclude Include="include\entities\beings\Protection.h">
       <Filter>include\entities\beings</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\Agent.h">
+    <ClInclude Include="include\entities\beings\Agent.h">
       <Filter>include\entities\beings</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\Player.h">
+    <ClInclude Include="include\entities\beings\Player.h">
       <Filter>include\entities\beings</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\LazyAI.h">
+    <ClInclude Include="include\entities\beings\LazyAI.h">
       <Filter>include\entities\beings</Filter>
     </ClInclude>
-    <ClInclude Include="headers\ui\Dialog.h">
+    <ClInclude Include="include\ui\Dialog.h">
       <Filter>include\ui</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\WorldView.h">
+    <ClInclude Include="include\entities\beings\WorldView.h">
       <Filter>include\entities\beings</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\goblinoids\Goblin.h">
+    <ClInclude Include="include\entities\beings\goblinoids\Goblin.h">
       <Filter>include\entities\beings\goblinoids</Filter>
     </ClInclude>
-    <ClInclude Include="headers\world\Tile.h">
+    <ClInclude Include="include\world\Tile.h">
       <Filter>include\world</Filter>
     </ClInclude>
-    <ClInclude Include="headers\animation\WorldRenderer.h">
+    <ClInclude Include="include\animation\WorldRenderer.h">
       <Filter>include\animation</Filter>
     </ClInclude>
-    <ClInclude Include="headers\spells\Spell.h">
+    <ClInclude Include="include\spells\Spell.h">
       <Filter>include\spells</Filter>
     </ClInclude>
-    <ClInclude Include="headers\spells\HealSpell.h">
+    <ClInclude Include="include\spells\HealSpell.h">
       <Filter>include\spells</Filter>
     </ClInclude>
-    <ClInclude Include="headers\spells\LightningBoltSpell.h">
+    <ClInclude Include="include\spells\LightningBoltSpell.h">
       <Filter>include\spells</Filter>
     </ClInclude>
-    <ClInclude Include="headers\items\Scroll.h">
+    <ClInclude Include="include\items\Scroll.h">
       <Filter>include\items</Filter>
     </ClInclude>
-    <ClInclude Include="headers\animation\EntityAnimator.h">
+    <ClInclude Include="include\animation\EntityAnimator.h">
       <Filter>include\animation</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\EntityVisitor.h">
+    <ClInclude Include="include\entities\EntityVisitor.h">
       <Filter>include\entities</Filter>
     </ClInclude>
-    <ClInclude Include="headers\animation\TileTexturer.h">
+    <ClInclude Include="include\animation\TileTexturer.h">
       <Filter>include\animation</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\objects\Object.h">
+    <ClInclude Include="include\entities\objects\Object.h">
       <Filter>include\entities\objects</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\Human.h">
+    <ClInclude Include="include\entities\beings\Human.h">
       <Filter>include\entities\beings</Filter>
     </ClInclude>
-    <ClInclude Include="headers\sdl-wrappers\basic-sdl-wrappers.h">
+    <ClInclude Include="include\sdl-wrappers\basic-sdl-wrappers.h">
       <Filter>include\sdl-wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\animation\ItemTexturer.h">
+    <ClInclude Include="include\animation\ItemTexturer.h">
       <Filter>include\animation</Filter>
     </ClInclude>
-    <ClInclude Include="headers\ui\HUDController.h">
+    <ClInclude Include="include\ui\HUDController.h">
       <Filter>include\ui</Filter>
     </ClInclude>
-    <ClInclude Include="headers\ui\HUDView.h">
+    <ClInclude Include="include\ui\HUDView.h">
       <Filter>include\ui</Filter>
     </ClInclude>
-    <ClInclude Include="headers\ui\HUDModel.h">
+    <ClInclude Include="include\ui\HUDModel.h">
       <Filter>include\ui</Filter>
     </ClInclude>
-    <ClInclude Include="headers\sdl-wrappers\Input.h">
+    <ClInclude Include="include\sdl-wrappers\Input.h">
       <Filter>include\sdl-wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\sdl-wrappers\Renderable.h">
+    <ClInclude Include="include\sdl-wrappers\Renderable.h">
       <Filter>include\sdl-wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\sdl-wrappers\FontManager.h">
+    <ClInclude Include="include\sdl-wrappers\FontManager.h">
       <Filter>include\sdl-wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\ui\CountDialog.h">
+    <ClInclude Include="include\ui\CountDialog.h">
       <Filter>include\ui</Filter>
     </ClInclude>
-    <ClInclude Include="headers\ui\DigraphMenuController.h">
+    <ClInclude Include="include\ui\DigraphMenuController.h">
       <Filter>include\ui</Filter>
     </ClInclude>
-    <ClInclude Include="headers\ui\DigraphMenuModel.h">
+    <ClInclude Include="include\ui\DigraphMenuModel.h">
       <Filter>include\ui</Filter>
     </ClInclude>
-    <ClInclude Include="headers\ui\DigraphMenuView.h">
+    <ClInclude Include="include\ui\DigraphMenuView.h">
       <Filter>include\ui</Filter>
     </ClInclude>
-    <ClInclude Include="headers\ui\MagnitudeDialog.h">
+    <ClInclude Include="include\ui\MagnitudeDialog.h">
       <Filter>include\ui</Filter>
     </ClInclude>
-    <ClInclude Include="headers\ui\PlayerActionDialog.h">
+    <ClInclude Include="include\ui\PlayerActionDialog.h">
       <Filter>include\ui</Filter>
     </ClInclude>
-    <ClInclude Include="headers\ui\TileDialog.h">
+    <ClInclude Include="include\ui\TileDialog.h">
       <Filter>include\ui</Filter>
     </ClInclude>
-    <ClInclude Include="headers\utility\Initializer.h">
+    <ClInclude Include="include\utility\Initializer.h">
       <Filter>include\utility</Filter>
     </ClInclude>
-    <ClInclude Include="headers\sdl-wrappers\ResourceManager.h">
+    <ClInclude Include="include\sdl-wrappers\ResourceManager.h">
       <Filter>include\sdl-wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\ui\MessageDialog.h">
+    <ClInclude Include="include\ui\MessageDialog.h">
       <Filter>include\ui</Filter>
     </ClInclude>
-    <ClInclude Include="headers\items\Inventory.h">
+    <ClInclude Include="include\items\Inventory.h">
       <Filter>include\items</Filter>
     </ClInclude>
-    <ClInclude Include="headers\items\Breakable.h">
+    <ClInclude Include="include\items\Breakable.h">
       <Filter>include\items</Filter>
     </ClInclude>
-    <ClInclude Include="headers\items\Equipable.h">
+    <ClInclude Include="include\items\Equipable.h">
       <Filter>include\items</Filter>
     </ClInclude>
-    <ClInclude Include="headers\utility\Stream.h">
+    <ClInclude Include="include\utility\Stream.h">
       <Filter>include\utility</Filter>
     </ClInclude>
-    <ClInclude Include="headers\items\weapons\ModalWeapon.h">
+    <ClInclude Include="include\items\weapons\ModalWeapon.h">
       <Filter>include\items\weapons</Filter>
     </ClInclude>
-    <ClInclude Include="headers\items\weapons\Quarterstaff.h">
+    <ClInclude Include="include\items\weapons\Quarterstaff.h">
       <Filter>include\items\weapons</Filter>
     </ClInclude>
-    <ClInclude Include="headers\utility\Event.h">
+    <ClInclude Include="include\utility\Event.h">
       <Filter>include\utility</Filter>
     </ClInclude>
-    <ClInclude Include="headers\items\ItemVisitor.h">
+    <ClInclude Include="include\items\ItemVisitor.h">
       <Filter>include\items</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\Action.h">
+    <ClInclude Include="include\entities\beings\Action.h">
       <Filter>include\entities\beings</Filter>
     </ClInclude>
-    <ClInclude Include="headers\ui\ListDialog.h">
+    <ClInclude Include="include\ui\ListDialog.h">
       <Filter>include\ui</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\statuses\Status.h">
+    <ClInclude Include="include\entities\beings\statuses\Status.h">
       <Filter>include\entities\beings\statuses</Filter>
     </ClInclude>
-    <ClInclude Include="headers\sdl-wrappers\resources.h">
+    <ClInclude Include="include\sdl-wrappers\resources.h">
       <Filter>include\sdl-wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\animation\BodyTexturer.h">
+    <ClInclude Include="include\animation\BodyTexturer.h">
       <Filter>include\animation</Filter>
     </ClInclude>
-    <ClInclude Include="headers\entities\beings\BodyPart.h">
+    <ClInclude Include="include\entities\beings\BodyPart.h">
       <Filter>include\entities\beings</Filter>
     </ClInclude>
   </ItemGroup>
