@@ -1,0 +1,642 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="resources">
+      <UniqueIdentifier>{ae2a9f75-f1a6-40bb-943d-b2391ec47c79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\sounds">
+      <UniqueIdentifier>{d573eddc-e51f-4217-b689-31183354219e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\music">
+      <UniqueIdentifier>{fb2e1f78-6d91-4b36-8493-f2f769247b07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\textures">
+      <UniqueIdentifier>{d94cedb8-2f20-4437-a6f5-f7ac14eb546d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\fonts">
+      <UniqueIdentifier>{9980f248-c982-4d94-bb67-6d40c43cd7b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\textures\splash">
+      <UniqueIdentifier>{b0c3482e-8e45-4a2c-a458-a403937de9dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\textures\ui">
+      <UniqueIdentifier>{121d5c6e-39f3-457d-b0b7-2b3370529801}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{afaa3c08-9c64-4d9e-9d2d-b6689dc30af7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\animation">
+      <UniqueIdentifier>{b30d2d4b-679e-4334-afe6-8ddd4f5b0012}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\animation\particles">
+      <UniqueIdentifier>{a5242356-2751-446c-be91-c502539e715b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\entities">
+      <UniqueIdentifier>{458da7dc-c4d5-4b2c-8b7e-f89f3688b666}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\entities\objects">
+      <UniqueIdentifier>{6e0d9201-1a0c-4ddb-9c09-ce7e2a71272c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\sdl-wrappers">
+      <UniqueIdentifier>{b3472b87-ac58-4240-8805-baf8a893ea93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\spells">
+      <UniqueIdentifier>{ea4c9649-02c6-4da1-bd4a-6628b0a695e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ui">
+      <UniqueIdentifier>{fe2568e3-155b-4a7b-8a39-df90c7752ec8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\utility">
+      <UniqueIdentifier>{4406d98e-2ac6-4d89-a7e3-737f383f3e44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\world">
+      <UniqueIdentifier>{9d062920-6fac-41ec-b65a-9f6440980e8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\entities\beings">
+      <UniqueIdentifier>{d25bb59f-10bb-411d-8e56-a601dbb16f36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\entities\beings\goblinoids">
+      <UniqueIdentifier>{7a3b6635-f54f-499f-a8e8-a1c2ea9494a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\textures\items">
+      <UniqueIdentifier>{e6f34e10-f2f7-4ad6-8ac1-122a1872dc0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\items">
+      <UniqueIdentifier>{e363e4de-9bab-4f56-9da3-6a7b25071101}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\items\weapons">
+      <UniqueIdentifier>{3e77930b-d355-48ea-adea-73e32287077b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\entities\beings\statuses">
+      <UniqueIdentifier>{a2a83533-6206-4551-ac7f-82a37b385f35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{67d163b0-2a95-4f45-b4bd-ec4125d1597c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\animation">
+      <UniqueIdentifier>{c455b766-4f6f-49cc-841a-b2ad2f8f4d73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\animation\particles">
+      <UniqueIdentifier>{5d3b2039-4b75-401b-862e-793fb157a4ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\entities">
+      <UniqueIdentifier>{9bf1436a-91ee-4a9f-a2aa-62e383f8bd99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\entities\beings">
+      <UniqueIdentifier>{34575e59-38b9-4036-8045-2a2311be3099}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\entities\beings\statuses">
+      <UniqueIdentifier>{b16d270c-5eb2-4c9d-b662-bc15cef1fb9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\entities\beings\goblinoids">
+      <UniqueIdentifier>{be952fa2-bfac-4aae-a4b3-242f5c95058a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\entities\objects">
+      <UniqueIdentifier>{a80d227d-1a1a-4c7d-9e5d-21d5d94dcfaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\items">
+      <UniqueIdentifier>{f8a7eef9-f5f0-4e32-ae04-f50edf9fee6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\items\armor">
+      <UniqueIdentifier>{b84fc0dd-db2d-45f8-b459-fbbd4a5b8fe0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\items\potions">
+      <UniqueIdentifier>{01cfb1fd-fadd-4aa5-a28b-a82299927485}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\items\weapons">
+      <UniqueIdentifier>{5579dfe1-5925-4522-9352-07fbb97ecaa7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\sdl-wrappers">
+      <UniqueIdentifier>{49155920-0eda-4357-a8a4-557986aac3c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\spells">
+      <UniqueIdentifier>{bb0e3630-997b-4c1a-ab00-4fe56489233b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\ui">
+      <UniqueIdentifier>{5d877783-6b45-46ca-9902-97e31b511ac3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\utility">
+      <UniqueIdentifier>{8ec7bdaf-2d04-4997-896e-2d37fda1ba32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\world">
+      <UniqueIdentifier>{bbbb5d55-d9b6-4dde-a3b5-cb99a2d2c034}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\textures\test.png">
+      <Filter>resources\textures</Filter>
+    </Image>
+    <Image Include="resources\textures\splash\flame.png">
+      <Filter>resources\textures\splash</Filter>
+    </Image>
+    <Image Include="resources\textures\splash\logo.png">
+      <Filter>resources\textures\splash</Filter>
+    </Image>
+    <Image Include="resources\textures\ui\hex_circle.png">
+      <Filter>resources\textures\ui</Filter>
+    </Image>
+    <Image Include="resources\textures\items\blank-scroll.png">
+      <Filter>resources\textures\items</Filter>
+    </Image>
+    <Image Include="resources\textures\items\charged-scroll.png">
+      <Filter>resources\textures\items</Filter>
+    </Image>
+    <Image Include="resources\textures\items\uncharged-scroll.png">
+      <Filter>resources\textures\items</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="resources\fonts\dumbledor1.ttf">
+      <Filter>resources\fonts</Filter>
+    </Font>
+    <Font Include="resources\fonts\firamono.ttf">
+      <Filter>resources\fonts</Filter>
+    </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="headers\Game.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\animation\Animation.h">
+      <Filter>include\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\animation\AnimationCollection.h">
+      <Filter>include\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\animation\Camera.h">
+      <Filter>include\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\animation\particles\Particle.h">
+      <Filter>include\animation\particles</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\animation\particles\RedMagic.h">
+      <Filter>include\animation\particles</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\animation\particles\WhiteMagic.h">
+      <Filter>include\animation\particles</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\animation\particles\YellowMagic.h">
+      <Filter>include\animation\particles</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\animation\particles\BlackMagic.h">
+      <Filter>include\animation\particles</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\animation\particles\BlueMagic.h">
+      <Filter>include\animation\particles</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\animation\particles\GreenMagic.h">
+      <Filter>include\animation\particles</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\AllEntities.h">
+      <Filter>include\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\Entity.h">
+      <Filter>include\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\Attributes.h">
+      <Filter>include\entities\beings</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\Being.h">
+      <Filter>include\entities\beings</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\statuses\Nauseated.h">
+      <Filter>include\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\statuses\Numb.h">
+      <Filter>include\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\statuses\Poisoned.h">
+      <Filter>include\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\statuses\Recharging.h">
+      <Filter>include\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\statuses\Sleeping.h">
+      <Filter>include\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\statuses\Blind.h">
+      <Filter>include\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\statuses\Confused.h">
+      <Filter>include\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\statuses\Deaf.h">
+      <Filter>include\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\statuses\Discharging.h">
+      <Filter>include\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\statuses\Healing.h">
+      <Filter>include\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\statuses\Illuminated.h">
+      <Filter>include\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\statuses\Mute.h">
+      <Filter>include\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\items\Craftable.h">
+      <Filter>include\items</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\items\Item.h">
+      <Filter>include\items</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\items\armor\Armor.h">
+      <Filter>include\items\armor</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\items\potions\Potion.h">
+      <Filter>include\items\potions</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\items\weapons\Weapon.h">
+      <Filter>include\items\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\world\Region.h">
+      <Filter>include\world</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\world\Section.h">
+      <Filter>include\world</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\utility\constants.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\utility\Frequency.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\utility\optional.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\utility\PointF.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\utility\utility.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\utility\VectorF.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\utility\Velocity.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\sdl-wrappers\Font.h">
+      <Filter>include\sdl-wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\sdl-wrappers\Renderer.h">
+      <Filter>include\sdl-wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\sdl-wrappers\Sound.h">
+      <Filter>include\sdl-wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\sdl-wrappers\Texture.h">
+      <Filter>include\sdl-wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\sdl-wrappers\Window.h">
+      <Filter>include\sdl-wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\utility\hex-utilities.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\utility\Delegate.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\Damage.h">
+      <Filter>include\entities\beings</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\Protection.h">
+      <Filter>include\entities\beings</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\Agent.h">
+      <Filter>include\entities\beings</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\Player.h">
+      <Filter>include\entities\beings</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\LazyAI.h">
+      <Filter>include\entities\beings</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\ui\Dialog.h">
+      <Filter>include\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\WorldView.h">
+      <Filter>include\entities\beings</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\goblinoids\Goblin.h">
+      <Filter>include\entities\beings\goblinoids</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\world\Tile.h">
+      <Filter>include\world</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\animation\WorldRenderer.h">
+      <Filter>include\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\spells\Spell.h">
+      <Filter>include\spells</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\spells\HealSpell.h">
+      <Filter>include\spells</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\spells\LightningBoltSpell.h">
+      <Filter>include\spells</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\items\Scroll.h">
+      <Filter>include\items</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\animation\EntityAnimator.h">
+      <Filter>include\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\EntityVisitor.h">
+      <Filter>include\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\animation\TileTexturer.h">
+      <Filter>include\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\objects\Object.h">
+      <Filter>include\entities\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\Human.h">
+      <Filter>include\entities\beings</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\sdl-wrappers\basic-sdl-wrappers.h">
+      <Filter>include\sdl-wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\animation\ItemTexturer.h">
+      <Filter>include\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\ui\HUDController.h">
+      <Filter>include\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\ui\HUDView.h">
+      <Filter>include\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\ui\HUDModel.h">
+      <Filter>include\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\sdl-wrappers\Input.h">
+      <Filter>include\sdl-wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\sdl-wrappers\Renderable.h">
+      <Filter>include\sdl-wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\sdl-wrappers\FontManager.h">
+      <Filter>include\sdl-wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\ui\CountDialog.h">
+      <Filter>include\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\ui\DigraphMenuController.h">
+      <Filter>include\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\ui\DigraphMenuModel.h">
+      <Filter>include\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\ui\DigraphMenuView.h">
+      <Filter>include\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\ui\MagnitudeDialog.h">
+      <Filter>include\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\ui\PlayerActionDialog.h">
+      <Filter>include\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\ui\TileDialog.h">
+      <Filter>include\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\utility\Initializer.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\sdl-wrappers\ResourceManager.h">
+      <Filter>include\sdl-wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\ui\MessageDialog.h">
+      <Filter>include\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\items\Inventory.h">
+      <Filter>include\items</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\items\Breakable.h">
+      <Filter>include\items</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\items\Equipable.h">
+      <Filter>include\items</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\utility\Stream.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\items\weapons\ModalWeapon.h">
+      <Filter>include\items\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\items\weapons\Quarterstaff.h">
+      <Filter>include\items\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\utility\Event.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\items\ItemVisitor.h">
+      <Filter>include\items</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\Action.h">
+      <Filter>include\entities\beings</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\ui\ListDialog.h">
+      <Filter>include\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\statuses\Status.h">
+      <Filter>include\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\sdl-wrappers\resources.h">
+      <Filter>include\sdl-wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\animation\BodyTexturer.h">
+      <Filter>include\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\entities\beings\BodyPart.h">
+      <Filter>include\entities\beings</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\world\Region.cpp">
+      <Filter>src\world</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utility\PointF.cpp">
+      <Filter>src\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\world\Section.cpp">
+      <Filter>src\world</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\Entity.cpp">
+      <Filter>src\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\beings\goblinoids\Goblin.cpp">
+      <Filter>src\entities\beings\goblinoids</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utility\VectorF.cpp">
+      <Filter>src\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utility\utility.cpp">
+      <Filter>src\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utility\Velocity.cpp">
+      <Filter>src\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\particles\BlackMagic.cpp">
+      <Filter>src\animation\particles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\particles\BlueMagic.cpp">
+      <Filter>src\animation\particles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\particles\GreenMagic.cpp">
+      <Filter>src\animation\particles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\particles\RedMagic.cpp">
+      <Filter>src\animation\particles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\particles\WhiteMagic.cpp">
+      <Filter>src\animation\particles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\particles\YellowMagic.cpp">
+      <Filter>src\animation\particles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\particles\Particle.cpp">
+      <Filter>src\animation\particles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\Animation.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\AnimationCollection.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utility\Camera.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sdl-wrappers\Sound.cpp">
+      <Filter>src\sdl-wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sdl-wrappers\Renderer.cpp">
+      <Filter>src\sdl-wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sdl-wrappers\Window.cpp">
+      <Filter>src\sdl-wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sdl-wrappers\Font.cpp">
+      <Filter>src\sdl-wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\beings\Being.cpp">
+      <Filter>src\entities\beings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sdl-wrappers\Texture.cpp">
+      <Filter>src\sdl-wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\beings\Player.cpp">
+      <Filter>src\entities\beings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\beings\WorldView.cpp">
+      <Filter>src\entities\beings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\world\Tile.cpp">
+      <Filter>src\world</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\WorldRenderer.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\spells\HealSpell.cpp">
+      <Filter>src\spells</Filter>
+    </ClCompile>
+    <ClCompile Include="src\spells\LightningBoltSpell.cpp">
+      <Filter>src\spells</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\TileTexturer.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\spells\Spell.cpp">
+      <Filter>src\spells</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\beings\Human.cpp">
+      <Filter>src\entities\beings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\ItemTexturer.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\HUDController.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\HUDView.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\HUDModel.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sdl-wrappers\Input.cpp">
+      <Filter>src\sdl-wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sdl-wrappers\Renderable.cpp">
+      <Filter>src\sdl-wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\Dialog.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\DigraphMenuController.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\DigraphMenuModel.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\DigraphMenuView.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\PlayerActionDialog.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\items\Inventory.cpp">
+      <Filter>src\items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\items\Item.cpp">
+      <Filter>src\items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\beings\Action.cpp">
+      <Filter>src\entities\beings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\items\weapons\Weapon.cpp">
+      <Filter>src\items\weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\beings\statuses\Status.cpp">
+      <Filter>src\entities\beings\statuses</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\beings\statuses\Sleeping.cpp">
+      <Filter>src\entities\beings\statuses</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\beings\statuses\Recharging.cpp">
+      <Filter>src\entities\beings\statuses</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\beings\statuses\Poisoned.cpp">
+      <Filter>src\entities\beings\statuses</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\beings\statuses\Healing.cpp">
+      <Filter>src\entities\beings\statuses</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\beings\statuses\Discharging.cpp">
+      <Filter>src\entities\beings\statuses</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\MessageDialog.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\MagnitudeDialog.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\CountDialog.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\TileDialog.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sdl-wrappers\resources.cpp">
+      <Filter>src\sdl-wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\BodyTexturer.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\beings\BodyPart.cpp">
+      <Filter>src\entities\beings</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
