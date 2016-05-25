@@ -1,0 +1,35 @@
+Region
+	Blocks
+		Tiles
+		Entities
+			Entity data
+			Hex coords
+
+
+
+Hex types
+	0 - edge - black, impassable
+	1 - rock
+	2 - dirt
+	3 - grass
+	4 - road - buff speed
+	5 - tree - debuff speed
+	
+			
+Example 4 x 4 block file:
+
+4 4
+0 0 0 0
+0 1,2,5 1,3 0
+0 1,3 1,2 0
+0 0 0 0
+
+
+Scrap the preceding design. Instead:
+
+char(-1) indicates end of hex stack. Other values correspond to a hex type.
+
+
+Region file:
+
+2 3 // rows columns

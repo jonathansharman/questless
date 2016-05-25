@@ -1,0 +1,646 @@
+================================================================================
+Realms
+================================================================================
+Earth
+    The abode of mortals
+Heaven
+    The abode of hosts
+Hell
+    The abode of fiends, including the undead, demons, and devils
+The Void
+    An empty realm, inhospitable to most life with the exception of void beasts
+	TODO: I think this should be more like a chaos realm (rename it to something), with lots of energy and mind-boggling 	physics
+Need to add a counterpart to the chaos realm, to represent blue magic.
+
+================================================================================
+Potion brewing
+================================================================================
+Ingredient categories
+    ???
+Basic ingredients
+    Water
+Basic potion effects
+    Healing
+    Mana restoration?
+Brewing techniques
+    Crush
+    Slice
+    Mix
+    Boil
+    Smoke
+Recipes
+
+================================================================================
+Spellcasting
+================================================================================
+Player acquires new spells through various means along the way
+    Spells may be discovered by entering a trance - a color-dependent mini-game
+        Different type of trance for each color
+            White
+            Black
+            Green
+            Red
+            Blue
+            Yellow
+        At the conclusion, power and/or resistance for that color improve, and a new spell may be obtained, if a scroll is available
+            Rewards are semi-random
+    Spells may be bought or traded for
+    Spells may be stolen or looted from corpses, found lying around, etc.
+Must be written on magic scrolls or in a grimoire (both reusable) and recited to take effect
+    Each scroll or grimoire page may be labeled to describe the effect of the spell
+    Scrolls may be inserted into the grimoire as a new page at no cost
+    Spell labels may be changed later
+    Spell runes may not be changed
+    Player may acquire a notebook (possibly given at the start) to write/rewrite freely in
+NPCs may use spells, but only if they are not mute (beasts are mute)
+    The game will play the sound effect of the spell, allowing the player to copy it if he/she can discern what is said (still doing this?)
+Incantation
+    Before a spell can be cast, its incantation must be performed
+    Takes a significant amount of time, depending on the spell
+    Once the incantation is complete, the spell's scroll/page is charged
+    Charged spells may be cast very quickly (maybe instantly?)
+    Some spells may be incanted multiple times to build up more charges
+    Spell charges expire over time (should they?)
+    While a spell is charged, it occupies some of the spellcaster's spirit
+        The amount of spirit required per charge is a property of each spell
+        This limits the number of spells that can be quickly cast during a single battle
+    Mana cost is not incurred until the spell is actually cast
+When casting a spell, the caster may choose the magnitude and duration of the spell, if applicable. The cost of the casting is linear with the duration and quasilinear (n log n) with the magnitude.
+
+================================================================================
+Attributes
+================================================================================
+Vitality
+    Determines maximum health
+Spirit
+    Determines maximum mana
+Health Regeneration
+    Determines healing rate
+Mana Regeneration
+    Determines mana restoration rate
+Strength
+    Affects attack power, carry capacity
+Endurance
+    Determines defense power
+Stamina
+    Determines maximum energy
+Agility
+    Determines movement speed
+Dexterity
+    Determines attack speed
+Stealth
+    Makes it more difficult to be sensed by other beings
+        Attacking from stealth does more damage, in proportion to the degree of stealth (e.g., attacking a sleeping opponent does enormous damage; attacking from the shadows does somewhat less damage)
+    Makes it more difficult for other beings to discern stats, abilities, and actions (counters intellect)
+Vision
+    Improves ability to attributes of other beings and to identify carried items
+    Reduces enemy stealth
+    Enables wider field of view
+Light Affinity
+    Determines preferred light level. Visual range is maximal when ambient light level matches light affinity.
+        Effective vision at a given point is vision - abs(light level - light affinity) * factor / distance
+Hearing
+    Reduces enemy stealth
+Intellect
+    Improves ability to discern stats, abilities, and actions of opponents, nature of new items
+Minimum Temperature
+    The minimum temperature the being can endure before taking freeze damage
+Maximum Temperature
+    The maximum temperature the being can endure before taking burn damage
+
+================================================================================
+Conditions
+================================================================================
+Health
+    Regenerates slowly over time, faster while asleep
+Mana
+    Regenerates over time, faster while asleep
+Weariness
+    The result of performing actions
+        Each attack with a weapon costs weariness in proportion to its weight ??
+    Reduces strength, endurance
+    Reduced by sleeping or idling
+Hunger
+    Occurs over time and also as a result of performing actions
+    Accrues more slowly while asleep
+    Reduces regeneration
+Sleepiness
+    Increases over time
+    Reduces agility, intellect
+
+================================================================================
+Statuses
+================================================================================
+Nauseated - Reduces strength, endurance
+Confused - Reduces intellect
+Numb - Reduces agility, dexterity
+Poisoned - Causes damage over time
+Mute - Disables casting of spells
+Blind - Reduces vision
+Deaf - Reduces hearing
+Healing - Restores health over time
+Drunk - Causes unpredictable movement, reduces intellect, dexterity, vision
+Possessed - Allows the being who inflicted the possession to control the target being
+Illuminated - Reduces stealth and black magic power
+
+================================================================================
+World Mechanics
+================================================================================
+Travel from one tile to the next requires a certain number of turns
+    Dependent on factors like agility and tile material
+Flying beings can traverse tiles that others cannot
+Agent perception and knowledge about the world TODO
+
+================================================================================
+Combat Mechanics
+================================================================================
+Has elements of both real-time and turn-based combat
+    Everything that occurs has duration, but the next action may be chosen at one's own pace (sort of similar to FTL)
+Every action has a wind-up time and follow-through time
+    Wind-up - Time until the action completes
+    Follow-through - Time until a new action may be started
+Once started, an action cannot be canceled by the being that started it
+Damage
+    Types
+        Slash
+        Bludgeon
+        Pierce
+        Burn
+        Freeze
+        Blight
+    Base damage - Amount of damage per hit intrinsic to a weapon or spell
+    Applied damage - Amount of damage the target actually receives after applying strength, buffs, endurance, armor, etc.
+    Order of calculation: base damage -> attacker strength, attacker weariness -> armor -> defender endurance, defender weariness
+    Formula:
+        applied_damage = (base_damage * attacker_strength / (1 + attacker_weariness / attacker_endurance) - armor) / (defender_endurance / (1 + defender_weariness))
+Armor
+    Armor reduces effective damage by a constant amount per hit, not to exceed the effective damage
+    Types
+        Pad
+            100% to bludgeon
+            50% to slash
+            25% to pierce
+        Deflect
+            100% to slash
+            50% to pierce
+            25% to bludgeon
+        Insulate
+            100% to burn
+            100% to freeze
+        Cleanse
+            100% to blight
+Weapon attributes
+    Base damage - The base amount of damage per hit
+    Damage rate - Quotient of base damage and sum of ready and recovery times
+    Wind-up - Time after attack is initiated before attack completes
+    Follow-through - Time after attack connects before another action can be performed
+    Cooldown - Time after attack connects before the weapon can be used again
+    Equip time
+    Unequip time
+Relevant item attributes
+    Durability - Determines how quickly the item wears out
+        When integrity reaches zero, the weapon or armor breaks
+        Each use of a weapon decreases its integrity in proportion to its base damage and wear ratio
+            wear_per_hit = total(base_damage) * wear_ratio
+        Each hit absorbed by armor decreases its integrity in proportion to effective damage reduced and its wear ratio
+            wear_per_hit = effective_damage_reduction * wear_ratio
+        A weapon does less damage (down to 50%) the lower its integrity
+            damage = base_damage * (1 + integrity / durability) / 2
+        Armor protects against less damage the lower the integrity
+            protection = base_protection * (1 + integrity / durability) / 2
+    Weight
+        Affects strength requirements of weapons and armor
+    Size - tiny, small, medium, large, titanic
+Melee attacks require being adjacent to the target, i.e. one tile away, on the turn the attack connects
+	Relax this for polearms?
+
+================================================================================
+Enemy Ideas
+================================================================================
+Desert/sand monster - Kicks up sand to blind enemies
+Super fast regenerating thing - Require suppressing the regeneration (via debuffs or damage over time) or lots of burst damage to kill
+
+================================================================================
+Enchanting
+================================================================================
+Enhances the qualities of equipment and other items
+Requires souls? Blood?
+    Obtained from slain enemies and stored, somehow
+        Bottles? Gems? Crystals?
+    This sounds kind of evil. Maybe enchantment should be more morally neutral.
+Uses red magic
+Weapon Enchantments
+    Lifesteal - Restores health to the attacker in proportion to damage dealt
+Armor Enchantments
+    ??? - Temporarily increases agility whenever the wearer takes damage
+
+================================================================================
+Items
+================================================================================
+Utility
+    Pack
+        A simple pack for storing some volume of items
+        Starting item
+    Void satchel
+        Stores some volume of items in the Void
+        Has a fixed (small) earth mass and volume, regardless of its contents
+        Every time a void satchel is opened, there's a chance a void beast will escape into the current realm
+            The presence of food in the void satchel increases this chance
+Weapons
+    Melee
+        Blades
+            (Look up types of swords)
+            Broadsword
+                Hands: 1
+                Damage: slash
+                Equip time: medium
+                Unequip time: medium
+                Ready time: high
+                Recovery time: high
+                Burst damage: high
+                Damage rate: average
+                Weight: average
+            Rapier
+                Hands: 1
+                Damage type: piercing
+            Cutlass
+            Xiphos
+        Hacking weapons
+            Battle axe
+                Hands: 2
+                Damage: slash + bludgeon
+                Equip time: medium
+                Unequip time: medium
+                Ready time: very high
+                Recovery time: very high
+                Burst damage: very high
+                Damage rate: below average
+                Weight: high
+        Polearms
+        Staves
+            Quarterstaff
+                Hands: 2
+                Damage: bludgeon
+                Ready time: low
+                Recovery time: low
+                Burst damage: low
+                Damage rate: average
+                Weight: medium
+        Flails?
+    Ranged
+        Bows
+            Longbow
+                Hands: 2
+                Damage type: piercing
+            Crossbow
+        Atlatl (spear-thrower)
+Armor
+    Helmets
+    Breastplates
+    Gauntlets
+    Grieves
+    Boots
+
+================================================================================
+Magic
+================================================================================
+NPCs can have explicit specializations. Spells will all fit roughly into the specializations. But players need not choose an explicit specialization.
+White - good - light - heaven
+    Specializations
+        Celestial mage
+            Healing/cleansing/protecting and piety
+        Light mage
+    Celestial Runes
+        Heal - Restore health to a target.
+        Cleanse - Remove a negative status from a target. The status power must be lower than the invocation power.
+        Exorcise - Empower black magic resistance, weaken black magic power, and remove possession on target being.
+        Immortalize - Make target temporarily undying. When the effect wears off, if the target has no health, it gains health depending on spell magnitude.
+        Resurrect - Return a target corpse to life. Health after resurrection depends on spell magnitude.
+        Summon hosts
+    Light Runes
+        Bright Vision - Temporarily raise target's light affinity.
+        Blinding Light - Dramatically increase the light level at target tile for a short duration.
+        Illuminate - Increase the light level in an area around the caster for a certain duration.
+        Lumiphile - Temporarily become a lumiphile. Lumiphiles have increased agility and health regen while in bright light.
+Black - evil - darkness - hell
+    Specializations
+        Demon master
+        Necromancer
+        Shadow mage
+            Focused on curses and stealth
+    Demonic Runes
+        Corrupt - Empowers white magic resistance and weakens white magic power
+        Possess - Take control of a target being for a certain duration. Invocation power times caster's black power divided by target's black resistance must be greater than target's intellect.
+        Damn - If the caster is alive after a certain duration, the target dies.
+        Curse - Caster chooses an item and curses it. Carrying a cursed item 
+        Summon demons and devils
+            Summon 
+    Necrotic Runes
+        Rot - Afflict target with rot, causing blight damage over time.
+        Exanimate - Extract a target's soul, resulting in a corpse and a wraith under the caster's control.
+        Raise Dead - Raise a target corpse to undeath under the caster's control. The undead being's stats depend on the spell magnitude, and it disintegrates after the spell's duration elapses.
+        Summon undead (probably just spirits so as not to overlap with raising corpses?)
+    Shadow Runes
+        Night Vision - Temporarily lower target's light affinity.
+        Blind Spot - Dramatically decrease the light level at target tile for a short duration.
+        Enshadow - Decrease the light level in an area around the caster for a certain duration.
+        Umbraphile - Temporarily become a shadowphile. Shadowphiles have increased dexterity and mana regen while in dim light.
+        Shadow Copy - Summon a temporary shadow copy of the caster onto an adjacent tile. The copy cannot attack and disintegrates when it takes damage.
+Green - nature - earth
+    Specializations
+        Zoomancer (name?)
+        Botanomancer (name?)
+        Geomancer (name?)
+        Hunter?
+        Something based on taking the form of animals and plants?
+        Something based on weather effects?
+    Bestial Runes
+        Metamorphose hide - Creates and equips a low-durability, high-power body armor. Currently equipped body armor is unequipped without incurring unequip time.
+        Feral Form - Temporarily become feral. While feral, a being is mute and has increased strength, endurance, agility, dexterity, vision, and hearing but decreased spirit, stamina, and intellect.
+        Eagle Eye - Temporarily increase vision by 100%.
+        Scavenge - Destroy a target corpse and regain health in proportion to its vitality when it was alive.
+        Summon animals
+    Botanic Runes
+        Regenerate - Regain health over time.
+        Metamorphose claws - Creates and equips a low-durability, high-power one-handed weapon for each hand. Currently equipped weapons are unequipped without incurring unequip times.
+        Devour - Deals blight damage to a target and restores health to the caster.
+        Communicate with animals/plants??
+        Summon plants
+            Growth - Creates a disc of trees at target location, blocking movement.
+        Summon elementals?
+            Should probably only be able to summon earth elemental, and the other magics should be able to summon the others
+Red - industry - war - fire
+    Specializations
+        Battle mage
+        Technomage
+        Fire mage
+    Battle Runes
+        Battle Cry - Temporarily empowers strength and endurance.
+        Duel - A target being and the caster temporarily become immune to weapon-based attacks from all other beings except each other.
+		Rampage - The caster's next x actions do not incur cooldown.
+        Weapon and armor enchantments
+    Mech Runes
+        Repair - Restores health to target machine.
+        Summon machines
+    Flame Runes
+        Ignite - Sets a fire at the target location, greatly increasing the temperature at that location. Fire wanes in intensity over time and then is extinguished.
+        Pyrophile - Temporarily become a pyrophile. A pyrophile's maximum temperature is raised dramatically, and it heals over time in proportion to the ambient temperature.
+        Living Flame - Temporarily become a living flame. A living flame's agility is doubled, and it sets fire to every tile it moves into.
+        Summon fire elemental?
+Blue - law - time - ice
+    Specializations
+        Peacekeeper
+        Avenger
+        Cryomancer
+        Chronomancer
+    Peace Runes
+        Imprison - For a certain duration, prevent target from moving or using melee attacks.
+        Silence - Cause muteness in target being for a certain duration.
+        Disarmament - Unequip all weapons (including caster's weapons) within a certain range. Unequip times are not incurred; the effect is immediate. Any weapons being readied will not connect with their targets. Recovery times from weapons used prior to casting are unaffected.
+        Pacify - For a certain duration, cause the target to become passive. Passive beings cannot perform any actions.
+        Summon guardians
+    Vengeance Runes
+        Retribution - Gives target being retribution status. Next time that target deals damage, it also deals that damage to itself.
+    Frost Runes
+        Chill - Temporarily raise the target being's minimum temperature.
+        Freeze - Freeze target location, drastically lowering its temperature. The temperature returns to normal over time.
+        Summon frost elemental?
+    Time Runes
+Yellow - chaos - energy
+    Specializations
+        Shock mage
+        Chaos mage
+        Void mage
+    Chaos Runes
+        Revolt - Swaps a stat of two beings.
+        Confuse - Reduces the target being's intellect.
+        Madden - Causes the target being to become insane for a certain duration. While insane, the target behaves erratically and often self-destructively.
+            Will use an "insane" AI to control such beings.
+        Bind - Temporarily binds two beings together in some sense.
+            Life Bind - Cast on two target beings. If the first target dies, the second target also dies.
+                Magnitude: spell power * caster's yellow power / second target's yellow resistance
+                Effective if magnitude > second target's vitality
+            Statuses
+            Health
+            Attack
+            ...
+        Mirage - Summon a weaker copy of a target being that attacks that being. The copy expires after a set duration.
+        Transmute??
+    Energy Runes
+        Charge - Gain mana over time. Total mana restored is equal to casting cost plus spell duration times a constant factor.
+            E.g., spend 100 mana to recover 100 mana over 0 turns. Or spend 100 mana to recover 200 mana over, say, 25 turns.
+        Overcharge - Gain mana and then lose twice that much over time. The more mana gained, the faster it depletes.
+            E.g., gain 0 mana and lose 0 over 0 turns. Gain 100 mana and lose 200 mana over 10 turns. Gain 200 mana and lose 400 mana over 5 turns.
+        Discharge - Deal burn damage within an area of effect. Does less damage farther from the caster, down to zero damage at maximum range. Does more damage the fuller the caster's mana is before casting, up to 100% extra damage at full mana.
+        Lightning bolt - Deal burn damage to a target being. Lightning bolt will chain to nearby beings, with less range and damage for each jump. Targets are chosen first by proximity, then by lowest yellow resistance, then at random. May target the caster and other friendly beings.
+        Scroll Magnet - Steal a scroll from target being.
+        Levitate - Temporarily gain the power of flight.
+        Summon shock elemental?
+    Void Runes
+        Interport - Swap positions of two beings.
+        Teleport - Teleport within a certain distance.
+        Banish - Banish target being to the void for a certain duration. While banished, an impassable and indestructible void portal appears in its place. During banishment, the being cannot be interacted with and does not update its state.
+		Open portal - ???
+        Summon void beasts
+
+================================================================================
+Abilities
+================================================================================
+Abilities may require mana or other resources but do not require scrolls or a spell book.
+Common
+    Bribe
+        An offering of gold or goods can sometimes persuade a neutral or even hostile being to join your side
+        May be used to hire mercenaries to join one's party
+            Loyalty (regard) decreases over time and must be replenished with more gold
+White
+    Prayer
+        Possible even when muted
+Black
+	Steal
+Green
+    Cultivate
+        Fosters plant growth; useful for farming or buffing plant companions
+Red
+    Repair
+        Restores a machine to better working order
+    Battle Cry
+        Rallies nearby friendly beings to attack a target
+        Increases enemies-player hostility, increases ally-enemy hostility
+        Useful with golems, mercenaries, friendly elementals, etc.
+Yellow
+Blue
+
+================================================================================
+NPC Classes ???
+================================================================================
+Marauder - chaotic evil
+Merchant - lawful neutral
+Mercenary - neutral
+    May be hired into service
+Knight - lawful neutral
+
+================================================================================
+Beings
+================================================================================
+NEED TO DECIDE WHETHER I WANT TO GO GENERIC OR COME UP WITH ALL-NEW BEINGS
+	I think I'll do a mix, with most generic beings having different names and some twists on the usual formulas
+Should find a compendium of mythical creatures for this
+    http://en.wikipedia.org/wiki/List_of_legendary_creatures_by_type is a good candidate
+Humanoid
+    Human
+    Goblinoid
+        Goblin
+            The goblins are a diminutive and simpleminded humanoid race, known particularly for their bad tempers and love of mischief. Goblins rarely form large communities, preferring small family groups or solitude. They are remarkably sneaky, and many an unwary traveler through goblin territory has lost a coin or a limb to a goblin ambush.
+        Orc
+        Troll
+        Ogre
+        Bugbear
+Natural
+    Beasts
+        Wolf
+        Lion
+        Bear
+        Shark
+		Bunny monster: https://40.media.tumblr.com/02adcb5598134a6192969371f03202e6/tumblr_o421h0bfWT1v85teno1_500.jpg
+		Pileous sable slug
+			A large slug with beautiful flowing black hair. Poisonous to eat. Its hair is a brewing ingredient.
+    Plants
+        Man-eating tree
+			Has many tentacle-like branches and a glowing eye in the center.
+			Abilities:
+				1) Snatch - pulls a nearby being one space closer
+				2) Strangle - immobilizes and deals damage over time to a being in melee range
+				3) Scavenge
+        Wobble fern - neutral
+            When ingested, causes nausea and instability.
+Mythic
+    Dragon - DO AWAY WITH THE COLOR CLICHE?? But it fits really well with the magic system, which is definitely staying...
+        White - neutral good
+            Breathes bioluminescent fog
+        Black - neutral evil
+            Breathes dark fog
+        Green - neutral
+            Breathes poison
+        Red - neutral
+            The largest and fiercest of dragons
+            Breathes fire
+        Yellow - chaotic neutral
+            Breathes plasma and generates lightning
+        Blue - lawful neutral
+            Breathes ice
+        Wyvern?
+    Chimera - neutral
+        Mix of two natural beings
+        Blends their stats and so forth
+		Could maybe achieve this using mixed body parts
+    Herbivorous predator (need to name it) - neutral
+        Has a symbiotic relationship with a certain moss species
+        The moss grows from the creature's underside
+        The creature eats the moss
+        The creature hunts prey to feed to the moss
+        The creature spends a lot of time lounging belly-up in the sunlight, allowing the meat it feeds the moss to decompose and the moss to photosynthesize
+        The creature can't eat meat, only the moss
+    Scrap Vulture - neutral
+		Metallic bird creature.
+        Eats metal, including weapons and armor (consumes some of the items' integrity).
+    Gargoyle - chaotic good
+        A living statue with the ability to repel evil and spew water
+    Guardian - lawful neutral
+Host
+    The heavenly host are immortal and thus cannot be slain; however, they can be defeated in battle and incapacitated temporarily. They return to heaven immediately when defeated outside heaven.
+    Seraph (seraphim) - lawful good
+        Worshipers
+        Magic: white
+        Appearance: humanoid with six wings, two covering the face, two covering the genitals, and two for flight
+    Cherub (cherubim) - lawful good
+        Guardians and attendants
+        Magic: white
+        Appearance: "Cherubim have four faces: one of each a man, an ox, a lion, and an eagle. They have four conjoined wings covered with eyes, a lion's body figure, and they have ox's feet." - Wikipedia
+    Ophan (ophanim) - lawful good
+        Represent God's justice and authority
+        Magic: blue
+        Appearance: a beryl-colored wheel within a wheel, with one hundred eyes covering the rims
+    Hashmal (hashmallim) - lawful good
+        Rule over lower angels
+        Magic: blue
+        Appearance: winged humanoid, wielding a sword or scepter with an orb of light on the head or pommel
+    Dynamis (dynameis) - lawful good
+        Supervise the movement of the heavenly bodies
+        Magic: green
+        Appearance: winged humanoid
+    Exousia (exousiai)
+        Warriors
+        Bearer of conscience
+        Keeper of history
+        Oversee the distribution of power among humankind
+        Magic: red
+        Appearance: winged humanoid
+    Arche (archai)
+        Educators, guardians, and inspirers of humankind
+        Magic: blue
+        Appearance: winged humanoid with crown and scepter
+    Archangel
+        High-ranking messenger
+        Magic: white
+        Appearance: winged humanoid
+    Malak (pl. malakim)
+        Messenger
+        Magic: white
+        Appearance: winged humanoid
+Fiend (Legion)
+    Like the heavenly host, many fiends are immortal and can only be incapacitated temporarily. They return to hell immediately when defeated outside hell.
+    Demonic
+        Demon - chaotic evil
+        Imp - neutral evil
+    Diabolical
+        Devil - lawful evil
+    Hellhound - neutral evil
+    Undead
+        Zombie - neutral evil
+            Has lowered stats, especially intellect, and is mute
+            Causes nausea on contact
+        Lich
+            Like a zombie, but with spirit intact; can cast spells
+        Wight
+            Maintains existence by draining the health and mana of other beings
+        Wraith
+            The evil spirit of a deceased mortal
+Void Beasts
+Elemental
+    Light
+        A good elemental that routs out evil
+    Shadow
+        An evil elemental that shuns goodness
+        http://imgur.com/gallery/KSK2JDR for inspiration?
+    Earth
+        A wild elemental that protects nature
+    Fire
+        A warlike elemental that attacks and destroys everything in its path
+    Shock
+        A chaotic elemental that behaves unpredictably
+    Water
+        A lawful and retributive elemental that attacks aggressors and protects the weak
+        Three phases: frost, water, and steam
+            Different types are found in different climates
+            Can be forced to change phase with fire/ice attacks
+Constructs
+    Golem - beings constructed, not summoned, by a mage to do that mage's bidding
+        A practice of yellow magic
+        Types
+            Mud - Summoned from a dirt tile.
+            Wood - Summoned from a tree.
+            Stone - Summoned from a stone tile.
+            Iron - Summoned from a dirt or stone tile.
+            Corpse - Summoned from one or more corpses. Possesses none of the deceaseds' original attributes except size.
+    Machines
+        Flamechugger
+            Recovers health and loses weariness and hunger when engulfed in flames.
+    Tulpa - http://en.wikipedia.org/wiki/Tulpa
+
+================================================================================
+Geographical Features
+================================================================================
+Hellmouth
+    An entrance to Hell
+Jacob's Ladder
+    An entrance to Heaven

@@ -1,0 +1,20 @@
+/**
+* @file    Poisoned.cpp
+* @author  Jonathan Sharman
+*
+* @section LICENSE See LICENSE.txt.
+*
+* @section DESCRIPTION The implementation for the Poisoned status class.
+*/
+
+#include "entities/beings/statuses/Poisoned.h"
+#include "entities/beings/Being.h"
+
+namespace questless
+{
+	void Poisoned::update(Being& target)
+	{
+		target.take_damage(Damage::from_blight(_magnitude), _source);
+		Status::update(target);
+	}
+}

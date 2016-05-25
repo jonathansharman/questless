@@ -1,0 +1,265 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{D44739D1-4AB7-4180-BCAE-393BA1F74BDA}</ProjectGuid>
+    <RootNamespace>RPG</RootNamespace>
+    <ProjectName>Questless</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros">
+    <SDL_PATH>C:\vc-libs\</SDL_PATH>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(SourcePath)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(VC_IncludePath)</IncludePath>
+    <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(SourcePath)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(VC_IncludePath)</IncludePath>
+    <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Image Include="resources\textures\items\blank-scroll.png" />
+    <Image Include="resources\textures\items\charged-scroll.png" />
+    <Image Include="resources\textures\items\uncharged-scroll.png" />
+    <Image Include="resources\textures\splash\flame.png" />
+    <Image Include="resources\textures\splash\logo.png" />
+    <Image Include="resources\textures\test.png" />
+    <Image Include="resources\textures\ui\hex_circle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="resources\fonts\dumbledor1.ttf" />
+    <Font Include="resources\fonts\firamono.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="headers\animation\Animation.h" />
+    <ClInclude Include="headers\animation\AnimationCollection.h" />
+    <ClInclude Include="headers\animation\BodyTexturer.h" />
+    <ClInclude Include="headers\animation\Camera.h" />
+    <ClInclude Include="headers\animation\EntityAnimator.h" />
+    <ClInclude Include="headers\animation\ItemTexturer.h" />
+    <ClInclude Include="headers\animation\particles\BlackMagic.h" />
+    <ClInclude Include="headers\animation\particles\BlueMagic.h" />
+    <ClInclude Include="headers\animation\particles\GreenMagic.h" />
+    <ClInclude Include="headers\animation\particles\Particle.h" />
+    <ClInclude Include="headers\animation\particles\RedMagic.h" />
+    <ClInclude Include="headers\animation\particles\WhiteMagic.h" />
+    <ClInclude Include="headers\animation\particles\YellowMagic.h" />
+    <ClInclude Include="headers\animation\TileTexturer.h" />
+    <ClInclude Include="headers\animation\WorldRenderer.h" />
+    <ClInclude Include="headers\entities\AllEntities.h" />
+    <ClInclude Include="headers\entities\beings\Action.h" />
+    <ClInclude Include="headers\entities\beings\Agent.h" />
+    <ClInclude Include="headers\entities\beings\Attributes.h" />
+    <ClInclude Include="headers\entities\beings\Being.h" />
+    <ClInclude Include="headers\entities\beings\BodyPart.h" />
+    <ClInclude Include="headers\entities\beings\Damage.h" />
+    <ClInclude Include="headers\entities\beings\goblinoids\Goblin.h" />
+    <ClInclude Include="headers\entities\beings\Human.h" />
+    <ClInclude Include="headers\entities\beings\LazyAI.h" />
+    <ClInclude Include="headers\entities\beings\Player.h" />
+    <ClInclude Include="headers\entities\beings\Protection.h" />
+    <ClInclude Include="headers\entities\beings\statuses\Blind.h" />
+    <ClInclude Include="headers\entities\beings\statuses\Confused.h" />
+    <ClInclude Include="headers\entities\beings\statuses\Deaf.h" />
+    <ClInclude Include="headers\entities\beings\statuses\Discharging.h" />
+    <ClInclude Include="headers\entities\beings\statuses\Healing.h" />
+    <ClInclude Include="headers\entities\beings\statuses\Illuminated.h" />
+    <ClInclude Include="headers\entities\beings\statuses\Mute.h" />
+    <ClInclude Include="headers\entities\beings\statuses\Nauseated.h" />
+    <ClInclude Include="headers\entities\beings\statuses\Numb.h" />
+    <ClInclude Include="headers\entities\beings\statuses\Poisoned.h" />
+    <ClInclude Include="headers\entities\beings\statuses\Recharging.h" />
+    <ClInclude Include="headers\entities\beings\statuses\Sleeping.h" />
+    <ClInclude Include="headers\entities\beings\statuses\Status.h" />
+    <ClInclude Include="headers\entities\beings\WorldView.h" />
+    <ClInclude Include="headers\entities\Entity.h" />
+    <ClInclude Include="headers\entities\EntityVisitor.h" />
+    <ClInclude Include="headers\entities\objects\Object.h" />
+    <ClInclude Include="headers\Game.h" />
+    <ClInclude Include="headers\items\armor\Armor.h" />
+    <ClInclude Include="headers\items\Craftable.h" />
+    <ClInclude Include="headers\items\Breakable.h" />
+    <ClInclude Include="headers\items\Equipable.h" />
+    <ClInclude Include="headers\items\Inventory.h" />
+    <ClInclude Include="headers\items\Item.h" />
+    <ClInclude Include="headers\items\ItemVisitor.h" />
+    <ClInclude Include="headers\items\potions\Potion.h" />
+    <ClInclude Include="headers\items\Scroll.h" />
+    <ClInclude Include="headers\items\weapons\ModalWeapon.h" />
+    <ClInclude Include="headers\items\weapons\Quarterstaff.h" />
+    <ClInclude Include="headers\items\weapons\Weapon.h" />
+    <ClInclude Include="headers\sdl-wrappers\basic-sdl-wrappers.h" />
+    <ClInclude Include="headers\sdl-wrappers\Font.h" />
+    <ClInclude Include="headers\sdl-wrappers\FontManager.h" />
+    <ClInclude Include="headers\sdl-wrappers\Input.h" />
+    <ClInclude Include="headers\sdl-wrappers\Renderable.h" />
+    <ClInclude Include="headers\sdl-wrappers\Renderer.h" />
+    <ClInclude Include="headers\sdl-wrappers\ResourceManager.h" />
+    <ClInclude Include="headers\sdl-wrappers\resources.h" />
+    <ClInclude Include="headers\sdl-wrappers\Sound.h" />
+    <ClInclude Include="headers\sdl-wrappers\Texture.h" />
+    <ClInclude Include="headers\sdl-wrappers\Window.h" />
+    <ClInclude Include="headers\spells\HealSpell.h" />
+    <ClInclude Include="headers\spells\LightningBoltSpell.h" />
+    <ClInclude Include="headers\spells\Spell.h" />
+    <ClInclude Include="headers\ui\CountDialog.h" />
+    <ClInclude Include="headers\ui\Dialog.h" />
+    <ClInclude Include="headers\ui\DigraphMenuController.h" />
+    <ClInclude Include="headers\ui\DigraphMenuModel.h" />
+    <ClInclude Include="headers\ui\DigraphMenuView.h" />
+    <ClInclude Include="headers\ui\HUDController.h" />
+    <ClInclude Include="headers\ui\HUDModel.h" />
+    <ClInclude Include="headers\ui\HUDView.h" />
+    <ClInclude Include="headers\ui\ListDialog.h" />
+    <ClInclude Include="headers\ui\MagnitudeDialog.h" />
+    <ClInclude Include="headers\ui\MessageDialog.h" />
+    <ClInclude Include="headers\ui\PlayerActionDialog.h" />
+    <ClInclude Include="headers\ui\TileDialog.h" />
+    <ClInclude Include="headers\utility\constants.h" />
+    <ClInclude Include="headers\utility\Delegate.h" />
+    <ClInclude Include="headers\utility\Event.h" />
+    <ClInclude Include="headers\utility\Frequency.h" />
+    <ClInclude Include="headers\utility\hex-utilities.h" />
+    <ClInclude Include="headers\utility\Initializer.h" />
+    <ClInclude Include="headers\utility\optional.h" />
+    <ClInclude Include="headers\utility\PointF.h" />
+    <ClInclude Include="headers\utility\Stream.h" />
+    <ClInclude Include="headers\utility\utility.h" />
+    <ClInclude Include="headers\utility\VectorF.h" />
+    <ClInclude Include="headers\utility\Velocity.h" />
+    <ClInclude Include="headers\world\Region.h" />
+    <ClInclude Include="headers\world\Section.h" />
+    <ClInclude Include="headers\world\Tile.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\animation\Animation.cpp" />
+    <ClCompile Include="src\animation\AnimationCollection.cpp" />
+    <ClCompile Include="src\animation\BodyTexturer.cpp" />
+    <ClCompile Include="src\animation\ItemTexturer.cpp" />
+    <ClCompile Include="src\animation\particles\BlackMagic.cpp" />
+    <ClCompile Include="src\animation\particles\BlueMagic.cpp" />
+    <ClCompile Include="src\animation\particles\GreenMagic.cpp" />
+    <ClCompile Include="src\animation\particles\Particle.cpp" />
+    <ClCompile Include="src\animation\particles\RedMagic.cpp" />
+    <ClCompile Include="src\animation\particles\WhiteMagic.cpp" />
+    <ClCompile Include="src\animation\particles\YellowMagic.cpp" />
+    <ClCompile Include="src\animation\TileTexturer.cpp" />
+    <ClCompile Include="src\animation\WorldRenderer.cpp" />
+    <ClCompile Include="src\entities\beings\Action.cpp" />
+    <ClCompile Include="src\entities\beings\Being.cpp" />
+    <ClCompile Include="src\entities\beings\BodyPart.cpp" />
+    <ClCompile Include="src\entities\beings\Human.cpp" />
+    <ClCompile Include="src\entities\beings\Player.cpp" />
+    <ClCompile Include="src\entities\beings\statuses\Discharging.cpp" />
+    <ClCompile Include="src\entities\beings\statuses\Healing.cpp" />
+    <ClCompile Include="src\entities\beings\statuses\Poisoned.cpp" />
+    <ClCompile Include="src\entities\beings\statuses\Recharging.cpp" />
+    <ClCompile Include="src\entities\beings\statuses\Sleeping.cpp" />
+    <ClCompile Include="src\entities\beings\statuses\Status.cpp" />
+    <ClCompile Include="src\entities\beings\WorldView.cpp" />
+    <ClCompile Include="src\entities\Entity.cpp" />
+    <ClCompile Include="src\entities\beings\goblinoids\Goblin.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\items\Inventory.cpp" />
+    <ClCompile Include="src\items\Item.cpp" />
+    <ClCompile Include="src\items\weapons\Weapon.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\sdl-wrappers\Font.cpp" />
+    <ClCompile Include="src\sdl-wrappers\Input.cpp" />
+    <ClCompile Include="src\sdl-wrappers\Renderable.cpp" />
+    <ClCompile Include="src\sdl-wrappers\Renderer.cpp" />
+    <ClCompile Include="src\sdl-wrappers\resources.cpp" />
+    <ClCompile Include="src\sdl-wrappers\Sound.cpp" />
+    <ClCompile Include="src\sdl-wrappers\Texture.cpp" />
+    <ClCompile Include="src\sdl-wrappers\Window.cpp" />
+    <ClCompile Include="src\spells\HealSpell.cpp" />
+    <ClCompile Include="src\spells\LightningBoltSpell.cpp" />
+    <ClCompile Include="src\spells\Spell.cpp" />
+    <ClCompile Include="src\ui\CountDialog.cpp" />
+    <ClCompile Include="src\ui\Dialog.cpp" />
+    <ClCompile Include="src\ui\DigraphMenuController.cpp" />
+    <ClCompile Include="src\ui\DigraphMenuModel.cpp" />
+    <ClCompile Include="src\ui\DigraphMenuView.cpp" />
+    <ClCompile Include="src\ui\HUDController.cpp" />
+    <ClCompile Include="src\ui\HUDModel.cpp" />
+    <ClCompile Include="src\ui\HUDView.cpp" />
+    <ClCompile Include="src\ui\MagnitudeDialog.cpp" />
+    <ClCompile Include="src\ui\MessageDialog.cpp" />
+    <ClCompile Include="src\ui\PlayerActionDialog.cpp" />
+    <ClCompile Include="src\ui\TileDialog.cpp" />
+    <ClCompile Include="src\utility\Camera.cpp" />
+    <ClCompile Include="src\utility\PointF.cpp" />
+    <ClCompile Include="src\utility\utility.cpp" />
+    <ClCompile Include="src\utility\VectorF.cpp" />
+    <ClCompile Include="src\utility\Velocity.cpp" />
+    <ClCompile Include="src\world\Region.cpp" />
+    <ClCompile Include="src\world\Section.cpp" />
+    <ClCompile Include="src\world\Tile.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

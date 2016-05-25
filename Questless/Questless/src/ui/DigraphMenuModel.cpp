@@ -1,0 +1,64 @@
+/**
+* @file    DigraphMenu.cpp
+* @author  Jonathan Sharman
+*
+* @section LICENSE
+*
+* @todo This
+*
+* @section DESCRIPTION The implementation for the DigraphMenuModel struct.
+*/
+
+#include "ui/DigraphMenuModel.h"
+
+namespace questless
+{
+	DigraphMenuModel::Page& DigraphMenuModel::current_page()
+	{
+		if (pages.size() == 0) {
+			throw logic_error("Attempted to access current page of an empty menu.");
+		} else if (page_index >= 0 && page_index < pages.size()) {
+			return pages[page_index];
+		} else {
+			throw out_of_range("Current page index is invalid.");
+		}
+	}
+
+	const DigraphMenuModel::Page& DigraphMenuModel::current_page() const
+	{
+		if (pages.size() == 0) {
+			throw logic_error("Attempted to access current page of an empty menu.");
+		} else if (page_index >= 0 && page_index < pages.size()) {
+			return pages[page_index];
+		} else {
+			throw out_of_range("Current page index is invalid.");
+		}
+	}
+
+	vector<DigraphMenuModel::Page::Option>& DigraphMenuModel::current_options()
+	{
+		return pages[page_index].options;
+	}
+	const vector<DigraphMenuModel::Page::Option>& DigraphMenuModel::current_options() const
+	{
+		return pages[page_index].options;
+	}
+
+	DigraphMenuModel::Page::Option& DigraphMenuModel::current_option()
+	{
+		return pages[page_index].options[pages[page_index].option_index];
+	}
+	const DigraphMenuModel::Page::Option& DigraphMenuModel::current_option() const
+	{
+		return pages[page_index].options[pages[page_index].option_index];
+	}
+
+	int& DigraphMenuModel::current_option_index()
+	{
+		return pages[page_index].option_index;
+	}
+	int DigraphMenuModel::current_option_index() const
+	{
+		return pages[page_index].option_index;
+	}
+}
