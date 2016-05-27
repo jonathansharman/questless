@@ -31,16 +31,6 @@ namespace questless
 			virtual void apply(Attributes& attributes) = 0;
 		};
 
-		/// Overrides the being's number of hands.
-		class HandsModifier : public Modifier
-		{
-		public:
-			HandsModifier(int hands) : _hands{hands} {}
-			void apply(Attributes& attributes) override { attributes.hands = _hands; }
-		private:
-			int _hands;
-		};
-
 		/// Overrides whether the being is mute.
 		class MuteModifier : public Modifier
 		{
@@ -292,7 +282,6 @@ namespace questless
 		double lift;
 		double min_temp;
 		double max_temp;
-		unsigned hands;
 		bool mute;
 
 		double white_power;
@@ -313,14 +302,25 @@ namespace questless
 		// Attribute Methods //
 		///////////////////////
 
+		/// @return The base attributes of the given Being subclass.
+		template <typename BeingType>
+		static Attributes of()
+		{
+			using t = BeingType;
+			return Attributes{t::base_vitality, t::base_spirit, t::base_health_regen, t::base_mana_regen, t::base_strength, t::base_endurance, t::base_stamina, t::base_agility, t::base_dexterity,
+				t::base_stealth, t::base_vision, t::base_light_affinity, t::base_hearing, t::base_intellect, t::base_lift, t::base_min_temp, t::base_max_temp, t::base_mute,
+				t::base_white_power, t::base_black_power, t::base_green_power, t::base_red_power, t::base_blue_power, t::base_yellow_power, t::base_white_resistance,
+				t::base_black_resistance, t::base_green_resistance, t::base_red_resistance, t::base_blue_resistance, t::base_yellow_resistance};
+		}
+
 		Attributes() {}
 
 		Attributes(double vitality, double spirit, double health_regen, double mana_regen, double strength, double endurance, double stamina, double agility, double dexterity,
-			double stealth, double vision, double light_affinity, double hearing, double intellect, double lift, double min_temp, double max_temp, unsigned hands, bool mute,
+			double stealth, double vision, double light_affinity, double hearing, double intellect, double lift, double min_temp, double max_temp, bool mute,
 			double white_power, double black_power, double green_power, double red_power, double blue_power, double yellow_power, double white_resistance,
 			double black_resistance, double green_resistance, double red_resistance, double blue_resistance, double yellow_resistance)
 			: vitality{vitality}, spirit{spirit}, health_regen{health_regen}, mana_regen{mana_regen}, strength{strength}, endurance{endurance}, stamina{stamina}, agility{agility}, dexterity{dexterity},
-			stealth{stealth}, vision{vision}, light_affinity{light_affinity}, hearing{hearing}, intellect{intellect}, lift{lift}, min_temp{min_temp}, max_temp{max_temp}, hands{hands}, mute{mute},
+			stealth{stealth}, vision{vision}, light_affinity{light_affinity}, hearing{hearing}, intellect{intellect}, lift{lift}, min_temp{min_temp}, max_temp{max_temp}, mute{mute},
 			white_power{white_power}, black_power{black_power}, green_power{green_power}, red_power{red_power}, blue_power{blue_power}, yellow_power{yellow_power}, white_resistance{white_resistance},
 			black_resistance{black_resistance}, green_resistance{green_resistance}, red_resistance{red_resistance}, blue_resistance{blue_resistance}, yellow_resistance{yellow_resistance}
 		{}

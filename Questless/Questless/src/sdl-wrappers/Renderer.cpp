@@ -79,10 +79,14 @@ namespace sdl
 	void Renderer::draw_rect(Rect rect, Color border_color, Color fill_color)
 	{
 		SDL_Rect sdl_rect = rect;
-		set_draw_color(fill_color);
-		SDL_RenderFillRect(_renderer, &sdl_rect);
 		set_draw_color(border_color);
 		SDL_RenderDrawRect(_renderer, &sdl_rect);
+		set_draw_color(fill_color);
+		sdl_rect.w -= 2;
+		sdl_rect.h -= 2;
+		++sdl_rect.x;
+		++sdl_rect.y;
+		SDL_RenderFillRect(_renderer, &sdl_rect);
 	}
 
 	void Renderer::set_draw_color(Color color)

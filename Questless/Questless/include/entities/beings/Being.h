@@ -16,6 +16,7 @@
 #include <memory>
 
 #include "entities/Entity.h"
+#include "entities/beings/Body.h"
 #include "entities/beings/statuses/Status.h"
 #include "Attributes.h"
 #include "items/Inventory.h"
@@ -106,7 +107,6 @@ namespace questless
 	// Forward class declarations.
 
 	class Agent;
-	class BodyPart;
 
 	class Being : public Entity
 	{
@@ -181,8 +181,10 @@ namespace questless
 		/// @param item An item to be added to the inventory.
 		void give_item(Item::ptr item) { _inventory.add(std::move(item)); }
 
-		/// @return The being's body as a tree of body parts.
-		const BodyPart& body() const { return *_body; }
+		/// @return The being's body.
+		const Body& body() const { return _body; }
+		/// @return The being's body.
+		Body& body() { return _body; }
 
 		// Condition accessors
 
@@ -213,7 +215,6 @@ namespace questless
 		double intellect() const { return _attributes.intellect; }
 		double min_temp() const { return _attributes.min_temp; }
 		double max_temp() const { return _attributes.max_temp; }
-		unsigned hands() const { return _attributes.hands; }
 		bool mute() const { return _attributes.mute; }
 
 		double power(Spell::Color color) const;
@@ -278,7 +279,6 @@ namespace questless
 		void intellect(double value) { _attributes.intellect = value; }
 		void min_temp(double value) { _attributes.min_temp = value; }
 		void max_temp(double value) { _attributes.max_temp = value; }
-		void hands(unsigned value) { _attributes.hands = value; }
 		void mute(bool value) { _attributes.mute = value; }
 
 		double power(Spell::Color color, double value);
@@ -314,16 +314,16 @@ namespace questless
 
 		void add_status(std::unique_ptr<Status> status);
 	protected:
-		Being(std::function<std::unique_ptr<Agent>(Being&)> agent_factory, id_t id, std::unique_ptr<BodyPart> body, Attributes base_attributes);
-		Being(std::istream& in, std::unique_ptr<BodyPart> body);
+		Being(std::function<std::unique_ptr<Agent>(Being&)> agent_factory, id_t id, Body body, Attributes base_attributes);
+		Being(std::istream& in, Body body);
 
-		virtual std::unique_ptr<BodyPart> make_body() = 0;
+		virtual Body make_body() = 0;
 	private:
 		std::shared_ptr<Agent> _agent; ///< The agent responsible for this being.
 
 		// Body
 
-		std::unique_ptr<BodyPart> _body;
+		Body _body;
 
 		// Attributes
 

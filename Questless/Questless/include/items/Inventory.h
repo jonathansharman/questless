@@ -65,7 +65,7 @@ namespace questless
 	private:
 		std::vector<Page> _pages;
 
-		/// @todo Is the convenience of streams really worth this monstrosity? Also, is the implementation even lazy?
+		/// @todo Is the convenience of streams really worth this monstrosity?
 		Stream<Item*> items(size_t page_start);
 		Stream<Item*> items(size_t page, size_t row_start);
 		Stream<Item*> items(size_t page, size_t row_start, size_t column_start);

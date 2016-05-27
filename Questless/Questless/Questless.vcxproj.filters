@@ -451,6 +451,9 @@
     <ClInclude Include="include\entities\beings\BodyPart.h">
       <Filter>include\entities\beings</Filter>
     </ClInclude>
+    <ClInclude Include="include\entities\beings\Body.h">
+      <Filter>include\entities\beings</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp" />
@@ -636,6 +639,9 @@
       <Filter>src\animation</Filter>
     </ClCompile>
     <ClCompile Include="src\entities\beings\BodyPart.cpp">
+      <Filter>src\entities\beings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\beings\Body.cpp">
       <Filter>src\entities\beings</Filter>
     </ClCompile>
   </ItemGroup>

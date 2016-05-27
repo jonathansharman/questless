@@ -11,6 +11,11 @@
 #include "Game.h"
 #include "entities/beings/Being.h"
 
+/// @todo Body part stuff - remove if not used.
+#include "entities/beings/BodyPart.h"
+#include <deque>
+#include <type_traits>
+
 namespace questless
 {
 	void LightningBoltSpell::perform(Game& game, Being& caster, cont_t cont)
@@ -41,8 +46,15 @@ namespace questless
 						discharge();
 						caster.lose_mana(cost);
 						if (auto target = dynamic_cast<Being*>(game.region().entity(tile_coords))) {
-							auto burn = Damage::from_burn(magnitude * caster.power(color()) / target->resistance(color()));
+							double burn_magnitude = magnitude * caster.power(color()) / target->resistance(color());
+							auto burn = Damage::from_burn(burn_magnitude);
 							target->take_damage(burn, &caster);
+
+							/// @todo Experimental body part stuff here... Delete or fix.
+							double average_damage_per_part = burn_magnitude / target->body().parts_count();
+							for (auto part : target->body().parts()) {
+								part->take_damage(uniform(0.0, 2.0 * average_damage_per_part));
+							}
 						}
 						return cont(Result::success);
 					}

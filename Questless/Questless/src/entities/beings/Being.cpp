@@ -9,7 +9,7 @@
 
 #include "entities/beings/Being.h"
 #include "entities/beings/Agent.h"
-#include "entities/beings/BodyPart.h"
+#include "entities/beings/Body.h"
 #include "world/Section.h"
 #include "world/Region.h"
 
@@ -18,7 +18,7 @@ using std::function;
 
 namespace questless
 {
-	Being::Being(function<unique_ptr<Agent>(Being&)> agent_factory, id_t id, BodyPart::ptr body, Attributes base_attributes)
+	Being::Being(function<unique_ptr<Agent>(Being&)> agent_factory, id_t id, Body body, Attributes base_attributes)
 		: Entity{id}
 		, _agent{agent_factory(*this)}
 		, _body{std::move(body)}
@@ -28,23 +28,22 @@ namespace questless
 		, _conditions{_base_attributes.vitality, _base_attributes.spirit, 0.0, 0.0, 0.0, 0}
 	{}
 
-	Being::Being(std::istream& in, BodyPart::ptr body)
+	Being::Being(std::istream& in, Body body)
 		: Entity(in)
 		, _body{std::move(body)}
 		, _need_to_calculate_attributes{true}
 	{
 		double vitality, spirit, health_regen, mana_regen, strength, endurance, stamina, agility, dexterity, stealth, vision, light_affinity, hearing, intellect, lift, min_temp, max_temp;
-		unsigned hands;
 		bool mute;
 		double white_power, black_power, green_power, red_power, blue_power, yellow_power;
 		double white_resistance, black_resistance, green_resistance, red_resistance, blue_resistance, yellow_resistance;
 
 		in >> vitality >> spirit >> health_regen >> mana_regen >> strength >> endurance >> stamina >> agility >> dexterity >> stealth >> vision >> light_affinity >> hearing
-			>> intellect >> lift >> min_temp >> max_temp >> hands >> mute >> white_power >> black_power >> green_power >> red_power >> blue_power >> yellow_power
+			>> intellect >> lift >> min_temp >> max_temp >> mute >> white_power >> black_power >> green_power >> red_power >> blue_power >> yellow_power
 			>> white_resistance >> black_resistance >> green_resistance >> red_resistance >> blue_resistance >> yellow_resistance;
 
 		_attributes = Attributes{vitality, spirit, health_regen, mana_regen, strength, endurance, stamina, agility, dexterity, stealth, vision, light_affinity,
-			hearing, intellect, lift, min_temp, max_temp, hands, mute, white_power, black_power, green_power, red_power, blue_power, yellow_power,
+			hearing, intellect, lift, min_temp, max_temp, mute, white_power, black_power, green_power, red_power, blue_power, yellow_power,
 			white_resistance, black_resistance, green_resistance, red_resistance, blue_resistance, yellow_resistance};
 
 		double health, mana, energy, satiety, alertness, busy_time;
@@ -60,7 +59,7 @@ namespace questless
 
 		// Write attributes.
 		out << vitality() << ' ' << strength() << ' ' << endurance() << ' ' << stamina() << ' ' << agility() << ' ' << dexterity() << ' ' << stealth() << ' '
-			<< vision() << ' ' << hearing() << ' ' << intellect() << ' ' << hands() << ' ' << mute() << ' ' << white_power() << ' ' << black_power() << ' '
+			<< vision() << ' ' << hearing() << ' ' << intellect() << ' ' << mute() << ' ' << white_power() << ' ' << black_power() << ' '
 			<< green_power() << ' ' << red_power() << ' ' << blue_power() << ' ' << yellow_power() << ' ' << white_resistance() << ' ' << black_resistance() << ' '
 			<< green_resistance() << ' ' << red_resistance() << ' ' << blue_resistance() << ' ' << yellow_resistance() << ' ';
 
@@ -77,6 +76,8 @@ namespace questless
 			case Spell::Color::red:    return _attributes.red_power;
 			case Spell::Color::blue:   return _attributes.blue_power;
 			case Spell::Color::yellow: return _attributes.yellow_power;
+			default:
+				throw logic_error{"Unrecognized spell color."};
 		}
 	}
 
@@ -89,6 +90,8 @@ namespace questless
 			case Spell::Color::red:    return _attributes.red_resistance;
 			case Spell::Color::blue:   return _attributes.blue_resistance;
 			case Spell::Color::yellow: return _attributes.yellow_resistance;
+			default:
+				throw logic_error{"Unrecognized spell color."};
 		}
 	}
 
@@ -101,6 +104,8 @@ namespace questless
 			case Spell::Color::red:    return _attributes.red_power = value;
 			case Spell::Color::blue:   return _attributes.blue_power = value;
 			case Spell::Color::yellow: return _attributes.yellow_power = value;
+			default:
+				throw logic_error{"Unrecognized spell color."};
 		}
 	}
 
@@ -113,6 +118,8 @@ namespace questless
 			case Spell::Color::red:    _attributes.red_resistance = value;
 			case Spell::Color::blue:   _attributes.blue_resistance = value;
 			case Spell::Color::yellow: _attributes.yellow_resistance = value;
+			default:
+				throw logic_error{"Unrecognized spell color."};
 		}
 	}
 
@@ -155,11 +162,11 @@ namespace questless
 
 		double temp = 0.0; /// @todo Get ambient temperature here!
 		if (temp > max_temp()) {
-			double burn = (temp - max_temp()) / (max_temp() - min_temp()) * BeingK::temperature_damage_factor;
-			take_damage(Damage::from_burn(burn));
+			auto burn = Damage::from_burn((temp - max_temp()) / (max_temp() - min_temp()) * BeingK::temperature_damage_factor);
+			take_damage(burn);
 		} else if (temp < min_temp()) {
-			double freeze = (min_temp() - temp) / (max_temp() - min_temp()) * BeingK::temperature_damage_factor;
-			take_damage(Damage::from_freeze(freeze));
+			auto freeze = Damage::from_freeze((min_temp() - temp) / (max_temp() - min_temp()) * BeingK::temperature_damage_factor);
+			take_damage(freeze);
 		}
 
 		// Update items.

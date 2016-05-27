@@ -14,46 +14,49 @@
 
 namespace questless
 {
-	namespace GoblinK
-	{
-		const double vitality = 100.0;
-		const double spirit = 20.0;
-		const double health_regen = 0.1;
-		const double mana_regen = 1.0;
-		const double strength = 100.0;
-		const double endurance = 100.0;
-		const double stamina = 100.0;
-		const double agility = 120.0;
-		const double dexterity = 100.0;
-		const double stealth = 300.0;
-		const double vision = 60.0;
-		const double light_affinity = 100.0;
-		const double hearing = 180.0;
-		const double intellect = 60.0;
-		const double lift = 0.0;
-		const double min_temp = 100.0;
-		const double max_temp = -100.0;
-		const unsigned hands = 2;
-		const bool mute = false;
-
-		const double white_power = 100.0;
-		const double black_power = 100.0;
-		const double green_power = 100.0;
-		const double red_power = 100.0;
-		const double blue_power = 100.0;
-		const double yellow_power = 100.0;
-
-		const double white_resistance = 100.0;
-		const double black_resistance = 100.0;
-		const double green_resistance = 100.0;
-		const double red_resistance = 100.0;
-		const double blue_resistance = 100.0;
-		const double yellow_resistance = 100.0;
-	}
-
 	class Goblin : public Being
 	{
 	public:
+		static constexpr double base_vitality = 100.0;
+		static constexpr double base_spirit = 20.0;
+		static constexpr double base_health_regen = 0.1;
+		static constexpr double base_mana_regen = 1.0;
+		static constexpr double base_strength = 100.0;
+		static constexpr double base_endurance = 100.0;
+		static constexpr double base_stamina = 100.0;
+		static constexpr double base_agility = 120.0;
+		static constexpr double base_dexterity = 100.0;
+		static constexpr double base_stealth = 300.0;
+		static constexpr double base_vision = 60.0;
+		static constexpr double base_light_affinity = 100.0;
+		static constexpr double base_hearing = 180.0;
+		static constexpr double base_intellect = 60.0;
+		static constexpr double base_lift = 0.0;
+		static constexpr double base_min_temp = 100.0;
+		static constexpr double base_max_temp = -100.0;
+		static constexpr bool base_mute = false;
+
+		static constexpr double base_white_power = 100.0;
+		static constexpr double base_black_power = 100.0;
+		static constexpr double base_green_power = 100.0;
+		static constexpr double base_red_power = 100.0;
+		static constexpr double base_blue_power = 100.0;
+		static constexpr double base_yellow_power = 100.0;
+
+		static constexpr double base_white_resistance = 100.0;
+		static constexpr double base_black_resistance = 100.0;
+		static constexpr double base_green_resistance = 100.0;
+		static constexpr double base_red_resistance = 100.0;
+		static constexpr double base_blue_resistance = 100.0;
+		static constexpr double base_yellow_resistance = 100.0;
+
+		static constexpr double head_vitality = 25.0;
+		static constexpr double torso_vitality = 50.0;
+		static constexpr double arm_vitality = 25.0;
+		static constexpr double hand_vitality = 15.0;
+		static constexpr double leg_vitality = 25.0;
+		static constexpr double foot_vitality = 15.0;
+
 		Goblin(std::function<std::unique_ptr<Agent>(Being&)> agent_factory, id_t id);
 		Goblin(std::istream& in);
 
@@ -63,7 +66,7 @@ namespace questless
 
 		void serialize(std::ostream& out) const override;
 
-		std::unique_ptr<BodyPart> make_body() override;
+		Body make_body() override;
 
 		const string& description() const { return "The goblins are a diminutive and simpleminded humanoid race, known "
 			"particularly for their bad tempers and love of mischief. Goblins rarely form large communities, preferring small "

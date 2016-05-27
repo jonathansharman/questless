@@ -68,6 +68,10 @@ namespace questless
 		{
 			return Damage{k * d.slash, k * d.pierce, k * d.bludgeon, k * d.burn, k * d.freeze, k * d.blight};
 		}
+		friend Damage operator /(const Damage& d, double k)
+		{
+			return Damage{d.slash / k, d.pierce / k, d.bludgeon / k, d.burn / k, d.freeze / k, d.blight / k};
+		}
 
 		Damage& operator +=(const Damage& addend)
 		{

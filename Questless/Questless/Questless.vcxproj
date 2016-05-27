@@ -114,6 +114,7 @@
     <ClInclude Include="include\entities\beings\Agent.h" />
     <ClInclude Include="include\entities\beings\Attributes.h" />
     <ClInclude Include="include\entities\beings\Being.h" />
+    <ClInclude Include="include\entities\beings\Body.h" />
     <ClInclude Include="include\entities\beings\BodyPart.h" />
     <ClInclude Include="include\entities\beings\Damage.h" />
     <ClInclude Include="include\entities\beings\goblinoids\Goblin.h" />
@@ -210,6 +211,7 @@
     <ClCompile Include="src\animation\WorldRenderer.cpp" />
     <ClCompile Include="src\entities\beings\Action.cpp" />
     <ClCompile Include="src\entities\beings\Being.cpp" />
+    <ClCompile Include="src\entities\beings\Body.cpp" />
     <ClCompile Include="src\entities\beings\BodyPart.cpp" />
     <ClCompile Include="src\entities\beings\Human.cpp" />
     <ClCompile Include="src\entities\beings\Player.cpp" />

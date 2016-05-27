@@ -11,14 +11,14 @@
 #define BODY_TEXTURER_H
 
 #include "sdl-wrappers/Texture.h"
-#include "entities/beings/BodyPart.h"
+#include "entities/beings/Body.h"
 
 namespace questless
 {
 	class BodyTexturer
 	{
 	public:
-		void visit(const BodyPart&);
+		void visit(const Body&);
 
 		sdl::Texture::ptr texture() { return std::move(_texture); }
 	private:

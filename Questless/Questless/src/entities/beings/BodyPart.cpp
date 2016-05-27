@@ -16,12 +16,13 @@ using namespace sdl;
 
 namespace questless
 {
-	BodyPart::BodyPart(string name, Attributes attributes, bool vital, vector<Rect> regions)
+	BodyPart::BodyPart(string name, double vitality, Attributes attributes, bool vital, vector<Rect> regions)
 		: _name{std::move(name)}
 		, _attributes{attributes}
 		, _vital{vital}
 		, _regions{std::move(regions)}
-		, _health{_attributes.vitality}
+		, _health{vitality}
+		, _vitality{vitality}
 	{
 		for (auto& region : _regions) {
 			region.x *= 5;
