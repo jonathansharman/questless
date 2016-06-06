@@ -35,9 +35,6 @@ namespace questless
 		/// @return The spell's color.
 		virtual Color color() const = 0;
 
-		/// @return The constant offset in log parts of mana cost functions.
-		virtual double k() const { return 2.0; };
-
 		/// @return The maximum number of charges the spell can hold or nullopt if the spell has infinite charges.
 		virtual optional<int> max_charges() const = 0;
 

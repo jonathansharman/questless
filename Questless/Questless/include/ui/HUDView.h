@@ -21,10 +21,6 @@ using sdl::Window;
 
 namespace questless
 {
-	namespace HUDViewK
-	{
-	}
-
 	class HUDView : public Renderable
 	{
 	public:
@@ -54,8 +50,6 @@ namespace questless
 		/// Draws the given HUD.
 		/// @param hud The HUD to be drawn.
 		void draw(const HUDModel& hud);
-	protected:
-		void refresh() override;
 	private:
 		static const int _item_count_font_size = 10;
 		
@@ -89,6 +83,8 @@ namespace questless
 		Texture::ptr _hotbar_slot_texture;
 
 		Font::ptr _fnt_item_count;
+
+		void refresh() override;
 
 		void load_textures();
 	};

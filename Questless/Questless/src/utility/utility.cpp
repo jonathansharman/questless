@@ -58,4 +58,20 @@ namespace questless
 			return static_cast<uint8_t>(255 * percent);
 		}
 	}
+
+	void extend_bounds(sdl::Rect& bounds, sdl::Point point)
+	{
+		if (point.x < bounds.x) {
+			bounds.w += bounds.x - point.x;
+			bounds.x = point.x;
+		} else if (point.x >= bounds.x + bounds.w) {
+			bounds.w = point.x - bounds.x + 1;
+		}
+		if (point.y < bounds.y) {
+			bounds.h += bounds.y - point.y;
+			bounds.y = point.y;
+		} else if (point.y >= bounds.y + bounds.h) {
+			bounds.h = point.y - bounds.y + 1;
+		}
+	}
 }

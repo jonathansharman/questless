@@ -26,20 +26,25 @@ namespace questless
 		/// @param position The particle's starting position.
 		WhiteMagic(const PointF& position) : Particle
 			{ position
-			, Velocity{random_displacement(ParticleK::white_vi_max)}
+			, Velocity{random_displacement(_vi_max)}
 			, uniform(0.0, 360.0)
-			, Hertz{uniform(-ParticleK::white_dtheta_max, ParticleK::white_dtheta_max)}
+			, Hertz{uniform(-_dtheta_max, _dtheta_max)}
 			, 1.0
 			, Hertz{0.0}
-			, double_seconds{uniform(ParticleK::white_lifetime_min, ParticleK::white_lifetime_max)}
+			, double_seconds{uniform(_lifetime_min, _lifetime_max)}
 			}
 		{}
-
-		/// Updates the particle.
-		void update() override;
 	private:
-		/// @return The texture to be used when drawing a particle.
-		Texture::ptr& texture() const override;
+		static constexpr Hertz _gravity{-50.0};
+		static constexpr double _vi_max = 80.0;
+		static constexpr double _vx_factor_per_frame = 0.97;
+		static constexpr double _dtheta_max = 720.0;
+		static constexpr double _lifetime_min = 2.00;
+		static constexpr double _lifetime_max = 2.50;
+
+		void subupdate() override;
+
+		sdl::Texture::ptr& texture() const override;
 	};
 }
 

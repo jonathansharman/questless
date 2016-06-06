@@ -26,7 +26,7 @@ namespace questless
 		if (charges() <= 0) {
 			return caster.agent().message(game, "Out of charges!", "You need incant this spell first.", [cont] { cont(Result::aborted); });
 		}
-		caster.agent().query_tile(game, "Lightning Bolt Target", "Select a tile to be zapped with a lightning bolt.", tile_in_range_predicate(caster, LightningBoltSpellK::range),
+		caster.agent().query_tile(game, "Lightning Bolt Target", "Select a tile to be zapped with a lightning bolt.", tile_in_range_predicate(caster, _range),
 			[this, &game, &caster, cont](optional<HexCoords> opt_tile_coords) {
 				if (!opt_tile_coords) {
 					return cont(Result::aborted);
@@ -38,7 +38,7 @@ namespace questless
 							return cont(Result::aborted);
 						}
 						double magnitude = *opt_magnitude;
-						double cost = LightningBoltSpellK::cost_factor * magnitude * log2(magnitude + k());
+						double cost = _cost_factor * magnitude * log2(magnitude + _cost_log);
 						if (caster.mana() < cost) {
 							return caster.agent().message(game, "Not enough mana!", "You need " + std::to_string(cost - caster.mana()) + " more mana to cast this.", [cont] { cont(Result::aborted); });
 						}

@@ -14,7 +14,7 @@ using std::chrono::duration;
 
 namespace questless
 {
-	Animation::Animation(vector<Frame> frames, bool looping)
+	Animation::Animation(std::vector<Frame> frames, bool looping)
 		: _frames(frames)
 		, _frame_index(0)
 		, _accrued_time(double_seconds::zero())

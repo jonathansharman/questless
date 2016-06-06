@@ -27,21 +27,26 @@ namespace questless
 	class WorldRenderer : public Renderable
 	{
 	public:
-		void refresh() override
-		{
-			_tile_textures.clear();
-			_entity_animations.clear();
-		}
+		/// @param world_view The world view to render.
+		WorldRenderer(const WorldView& world_view) : _world_view{world_view}, _terrain_render_is_current{false} {}
 
 		void update();
-		void draw_terrain(const WorldView& world_view, const Camera& camera);
-		void draw_beings(const WorldView& world_view, const Camera& camera);
+		void draw_terrain(const Camera& camera);
+		void draw_beings(const Camera& camera);
 	private:
-		map<Tile::Type, Texture::ptr> _tile_textures;
-		map<Entity::id_t, unique_ptr<AnimationCollection>> _entity_animations;
+		const WorldView& _world_view;
 
-		Texture& create_and_cache_tile_texture(const Tile& tile);
+		std::map<Tile::Type, sdl::Texture::ptr> _tile_textures;
+		std::map<Entity::id_t, std::unique_ptr<AnimationCollection>> _entity_animations;
+		sdl::Texture::ptr _terrain_texture;
+		sdl::Rect _terrain_bounds;
+		bool _terrain_render_is_current;
+
+		void refresh() override;
+
+		sdl::Texture& create_and_cache_tile_texture(const Tile& tile);
 		AnimationCollection& create_and_cache_entity_animation(Entity& entity);
+		void render_terrain();
 	};
 }
 

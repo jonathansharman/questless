@@ -24,10 +24,10 @@ namespace sdl
 	protected:
 		Renderable() { _registry.insert(this); }
 		~Renderable() { _registry.erase(this); }
-
-		virtual void refresh() = 0;
 	private:
 		static std::set<Renderable*> _registry;
+
+		virtual void refresh() = 0;
 	};
 }
 

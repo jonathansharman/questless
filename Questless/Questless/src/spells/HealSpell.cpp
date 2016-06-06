@@ -23,7 +23,7 @@ namespace questless
 		if (charges() <= 0) {
 			return caster.agent().message(game, "Out of charges!", "You need incant this spell first.", [cont] { cont(Result::aborted); });
 		}
-		caster.agent().query_being(game, "Heal Target", "Select a being to be healed.", being_in_range_predicate(caster, HealSpellK::range),
+		caster.agent().query_being(game, "Heal Target", "Select a being to be healed.", being_in_range_predicate(caster, _range),
 			[this, &game, &caster, cont](optional<Being*> opt_target) {
 				if (!opt_target) {
 					return cont(Result::aborted);
@@ -35,7 +35,7 @@ namespace questless
 							return cont(Result::aborted);
 						}
 						double magnitude = *opt_magnitude;
-						double cost = HealSpellK::cost_factor * magnitude * log2(magnitude + k());
+						double cost = _cost_factor * magnitude * log2(magnitude + _cost_log);
 						if (caster.mana() < cost) {
 							caster.agent().message(game, "Not enough mana!", "You need " + std::to_string(cost - caster.mana()) + " more mana to cast this.", [cont] { cont(Result::aborted); });
 							return;

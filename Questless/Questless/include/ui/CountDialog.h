@@ -38,8 +38,6 @@ namespace questless
 			, _cont{std::move(cont)}
 		{}
 
-		void refresh() override;
-
 		/// Updates the dialog state based on input.
 		/// @param input User input used to update the dialog.
 		void update(const sdl::Input& input) override;
@@ -59,6 +57,8 @@ namespace questless
 		sdl::Texture::ptr _txt_title;
 		sdl::Texture::ptr _txt_prompt;
 		sdl::Texture::ptr _txt_current;
+
+		void refresh() override;
 	};
 }
 

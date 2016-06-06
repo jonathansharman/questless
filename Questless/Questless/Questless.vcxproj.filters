@@ -121,6 +121,9 @@
     <Filter Include="include\world">
       <UniqueIdentifier>{bbbb5d55-d9b6-4dde-a3b5-cb99a2d2c034}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\entities\beings\attributes">
+      <UniqueIdentifier>{12fb0415-9163-4edb-8467-74b35c6cf3fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\test.png">
@@ -192,9 +195,6 @@
     </ClInclude>
     <ClInclude Include="include\entities\Entity.h">
       <Filter>include\entities</Filter>
-    </ClInclude>
-    <ClInclude Include="include\entities\beings\Attributes.h">
-      <Filter>include\entities\beings</Filter>
     </ClInclude>
     <ClInclude Include="include\entities\beings\Being.h">
       <Filter>include\entities\beings</Filter>
@@ -454,6 +454,18 @@
     <ClInclude Include="include\entities\beings\Body.h">
       <Filter>include\entities\beings</Filter>
     </ClInclude>
+    <ClInclude Include="include\entities\beings\attributes\Attributes.h">
+      <Filter>include\entities\beings\attributes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\entities\beings\attributes\MagicPower.h">
+      <Filter>include\entities\beings\attributes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\entities\beings\attributes\MagicResistance.h">
+      <Filter>include\entities\beings\attributes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\entities\beings\attributes\Vision.h">
+      <Filter>include\entities\beings\attributes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp" />
@@ -643,6 +655,9 @@
     </ClCompile>
     <ClCompile Include="src\entities\beings\Body.cpp">
       <Filter>src\entities\beings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\EntityAnimator.cpp">
+      <Filter>src\animation</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

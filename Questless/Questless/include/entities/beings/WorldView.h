@@ -19,20 +19,13 @@ using std::shared_ptr;
 
 #include "utility/constants.h"
 #include "utility/hex-utilities.h"
+#include "utility/optional.h"
 
 namespace questless
 {
 	class Game;
 	class Region;
 	class Being;
-
-	namespace WorldViewK
-	{
-		const double low_perception_threshold = 20.0;
-		const double medium_perception_threshold = 40.0;
-		const double high_perception_threshold = 60.0;
-		const double full_perception_threshold = 80.0;
-	}
 
 	class WorldView
 	{
@@ -72,15 +65,26 @@ namespace questless
 		/// Constructs the world view of the given being.
 		/// @param game The game object, used for determining the being's surroundings.
 		/// @param being The being whose perspective this world view represents.
-		WorldView(const Game& game, const Being& being);
+		/// @param find_bounds If true, the world view will find a bounding rectangle in world space around the visible tiles.
+		WorldView(const Game& game, const Being& being, bool find_bounds);
 
 		const vector<SectionView>& section_views() const { return _section_views; }
 		const vector<BeingView>& being_views() const { return _being_views; }
 		const Region& region() const { return _region; }
+
+		/// @return A bounding rectangle around the visible tiles or nullopt if initialized with find_bounds set to false or if no tiles are visible.
+		optional<sdl::Rect> bounds() const { return _bounds; }
 	private:
+		static constexpr double _low_perception_threshold = 20.0;
+		static constexpr double _medium_perception_threshold = 40.0;
+		static constexpr double _high_perception_threshold = 60.0;
+		static constexpr double _full_perception_threshold = 80.0;
+
 		vector<SectionView> _section_views;
 		vector<BeingView> _being_views;
 		const Region& _region;
+
+		optional<sdl::Rect> _bounds;
 	};
 }
 

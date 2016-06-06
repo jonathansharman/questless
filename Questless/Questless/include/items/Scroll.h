@@ -18,11 +18,6 @@ using std::unique_ptr;
 
 namespace questless
 {
-	namespace ScrollK
-	{
-		const double weight = 0.1;
-	}
-
 	class Scroll : public Item
 	{
 	public:
@@ -32,7 +27,7 @@ namespace questless
 
 		std::string name() const override { return blank() ? "Blank Scroll" : "Scroll"; }
 
-		double weight() const override { return ScrollK::weight; }
+		double weight() const override { return 0.1; }
 
 		bool blank() const { return _spell == nullptr; }
 

@@ -14,11 +14,6 @@
 
 namespace questless
 {
-	namespace HumanK
-	{
-		
-	}
-
 	class Human : public Being
 	{
 	public:
@@ -32,8 +27,9 @@ namespace questless
 		static constexpr double base_agility = 100.0;
 		static constexpr double base_dexterity = 120.0;
 		static constexpr double base_stealth = 100.0;
-		static constexpr double base_vision = 100.0;
-		static constexpr double base_light_affinity = 100.0;
+		static constexpr double base_visual_acuity = 100.0;
+		static constexpr double base_ideal_light = 100.0;
+		static constexpr double base_light_tolerance = 10.0;
 		static constexpr double base_hearing = 80.0;
 		static constexpr double base_intellect = 100.0;
 		static constexpr double base_lift = 0.0;

@@ -10,9 +10,16 @@
 #include <cmath>
 
 #include "utility/VectorF.h"
+#include "utility/PointF.h"
+#include "utility/constants.h"
 
 namespace questless
 {
+	constexpr VectorF VectorF::to(PointF p)
+	{
+		return VectorF{p.x, p.y};
+	}
+
 	VectorF operator +(const VectorF& v1, const VectorF& v2)
 	{
 		return VectorF(v1.x + v2.x, v1.y + v2.y);
@@ -93,8 +100,5 @@ namespace questless
 		return VectorF{this->x * cos_theta - this->y * sin_theta, this->x * sin_theta + this->y * cos_theta};
 	}
 
-	Vector VectorF:: to_vector() const
-	{
-		return Vector{lround(x), lround(y)};
-	}
+	double VectorF::angle() const { return 360.0 * atan2(y, x) / tau; }
 }

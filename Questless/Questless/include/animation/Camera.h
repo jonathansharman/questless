@@ -13,14 +13,9 @@
 #include "utility/utility.h"
 #include "utility/PointF.h"
 #include "sdl-wrappers/basic-sdl-wrappers.h"
-using sdl::Rect;
-using sdl::Color;
 #include "sdl-wrappers/Texture.h"
-using sdl::Texture;
 #include "sdl-wrappers/Window.h"
-using sdl::Window;
 #include "sdl-wrappers/Input.h"
-using sdl::Input;
 #include "utility/hex-utilities.h"
 
 namespace questless
@@ -31,32 +26,32 @@ namespace questless
 		/// Constructs a camera with the specified starting position.
 		/// @param window The window.
 		/// @param position The starting position of the camera.
-		Camera(Window& window, PointF position)
+		Camera(sdl::Window& window, PointF position)
 			: _window{window}
 			, _position{position}
 			, _zoom{1.0}
 			, _angle{0}
-			, _color{Color::white()}
+			, _color{sdl::Color::white()}
 		{}
 
 		/// Constructs a camera with the specified starting position.
 		/// @param window The window.
 		/// @param position The starting position of the camera.
-		Camera(Window& window, Point position)
+		Camera(sdl::Window& window, sdl::Point position)
 			: _window{window}
 			, _position{position}
 			, _zoom{1.0}
 			, _angle{0}
-			, _color{Color::white()}
+			, _color{sdl::Color::white()}
 		{}
 
 		Camera& operator =(const Camera&) = delete;
 
 		/// @return The camera's reference to the window.
-		Window& window() { return _window; }
+		sdl::Window& window() { return _window; }
 
 		/// @return The camera's reference to the window.
-		const Window& window() const { return _window; }
+		const sdl::Window& window() const { return _window; }
 
 		/// @return The camera's position.
 		PointF position() const { return _position; }
@@ -95,22 +90,22 @@ namespace questless
 		void rotate(double dtheta);
 
 		/// @return The camera's color multiplier.
-		Color color() const { return _color; }
+		sdl::Color color() const { return _color; }
 
 		/// Sets the camera's color multiplier.
 		/// @param color The new color multiplier.
-		Color color(Color color) { _color = color; }
+		sdl::Color color(sdl::Color color) { _color = color; }
 
 		/// @return The exact point the mouse is hovering over.
 		PointF pt_hovered() const { return _pt_hovered; }
 
 		/// @return The rounded point the mouse is hovering over.
-		Point pt_hovered_rounded() const { return _pt_hovered_rounded; }
+		sdl::Point pt_hovered_rounded() const { return _pt_hovered_rounded; }
 
 		/// @return The hex coordinates of the tile the mouse is hovering over.
-		HexCoords tile_hovered() const { return Layout::dflt().to_hex_coords(_pt_hovered_rounded); }
+		HexCoords tile_hovered() const { return Layout::dflt().to_hex_coords(PointF{_pt_hovered_rounded}); }
 
-		void update(const Input& input);
+		void update(const sdl::Input& input);
 
 		/// Draws all or part of the provided texture with respect to the camera.
 		/// @param texture The texture to be drawn.
@@ -124,26 +119,26 @@ namespace questless
 		/// @param color An additional color multiplier, applied on top of the camera's and texture's color members.
 		/// @param src_rect An optional Rect specifying the portion of the texture to be copied. If nullopt, the entire texture is used.
 		void draw
-			( const Texture& texture
-			, Point position
-			, const optional<Point>& origin = nullopt
+			( const sdl::Texture& texture
+			, sdl::Point position
+			, const optional<sdl::Point>& origin = nullopt
 			, double horizontal_scale = 1.0
 			, double vertical_scale = 1.0
 			, bool flip_horizontally = false
 			, bool flip_vertically = false
 			, double angle = 0.0
-			, Color color = Color::white()
-			, const optional<Rect>& src_rect = nullopt
+			, sdl::Color color = sdl::Color::white()
+			, const optional<sdl::Rect>& src_rect = nullopt
 			) const;
 	private:
-		Window& _window;
+		sdl::Window& _window;
 		PointF _position;
 		double _zoom;
 		double _angle;
-		Color _color;
+		sdl::Color _color;
 
 		PointF _pt_hovered;
-		Point _pt_hovered_rounded;
+		sdl::Point _pt_hovered_rounded;
 		HexCoords _tile_hovered;
 	};
 }

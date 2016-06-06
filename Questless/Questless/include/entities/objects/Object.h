@@ -16,10 +16,6 @@
 
 namespace questless
 {
-	namespace ObjectK
-	{
-	}
-
 	class Object : public Entity
 	{
 	public:

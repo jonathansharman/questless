@@ -14,24 +14,21 @@
 
 namespace questless
 {
-	namespace ProtectionK
-	{
-		const double percent_pad_to_slash = 0.50;
-		const double percent_pad_to_pierce = 0.25;
-		const double percent_pad_to_bludgeon = 1.00;
-
-		const double percent_deflect_to_slash = 1.00;
-		const double percent_deflect_to_pierce = 0.50;
-		const double percent_deflect_to_bludgeon = 0.25;
-
-		const double percent_insulate_to_burn = 1.00;
-		const double percent_insulate_to_freeze = 1.00;
-
-		const double percent_cleanse_to_blight = 1.00;
-	}
-
 	struct Protection
 	{
+		static constexpr double percent_pad_to_slash = 0.50;
+		static constexpr double percent_pad_to_pierce = 0.25;
+		static constexpr double percent_pad_to_bludgeon = 1.00;
+
+		static constexpr double percent_deflect_to_slash = 1.00;
+		static constexpr double percent_deflect_to_pierce = 0.50;
+		static constexpr double percent_deflect_to_bludgeon = 0.25;
+
+		static constexpr double percent_insulate_to_burn = 1.00;
+		static constexpr double percent_insulate_to_freeze = 1.00;
+
+		static constexpr double percent_cleanse_to_blight = 1.00;
+
 		double pad;
 		double deflect;
 		double insulate;
@@ -77,12 +74,12 @@ namespace questless
 		Damage reduction() const
 		{
 			return Damage
-				{ pad * ProtectionK::percent_pad_to_slash + deflect * ProtectionK::percent_deflect_to_slash // slash
-				, pad * ProtectionK::percent_pad_to_pierce + deflect * ProtectionK::percent_deflect_to_pierce // pierce
-				, pad * ProtectionK::percent_pad_to_bludgeon + deflect * ProtectionK::percent_deflect_to_bludgeon // bludgeon
-				, insulate * ProtectionK::percent_insulate_to_burn // burn
-				, insulate * ProtectionK::percent_insulate_to_freeze // freeze
-				, cleanse * ProtectionK::percent_cleanse_to_blight // blight
+				{ pad * percent_pad_to_slash + deflect * percent_deflect_to_slash // slash
+				, pad * percent_pad_to_pierce + deflect * percent_deflect_to_pierce // pierce
+				, pad * percent_pad_to_bludgeon + deflect * percent_deflect_to_bludgeon // bludgeon
+				, insulate * percent_insulate_to_burn // burn
+				, insulate * percent_insulate_to_freeze // freeze
+				, cleanse * percent_cleanse_to_blight // blight
 				};
 		}
 	};

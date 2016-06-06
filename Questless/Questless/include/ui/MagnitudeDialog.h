@@ -37,10 +37,8 @@ namespace questless
 			, _predicate{std::move(predicate)}
 			, _cont{std::move(cont)}
 		{
-			refresh();
+			load_textures();
 		}
-
-		void refresh() override;
 
 		/// Updates the dialog state based on input.
 		/// @param input User input used to update the dialog.
@@ -61,6 +59,10 @@ namespace questless
 		sdl::Texture::ptr _txt_title;
 		sdl::Texture::ptr _txt_prompt;
 		sdl::Texture::ptr _txt_current;
+
+		void refresh() override { load_textures(); }
+
+		void load_textures();
 	};
 }
 

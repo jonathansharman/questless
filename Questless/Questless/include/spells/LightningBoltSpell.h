@@ -14,12 +14,6 @@
 
 namespace questless
 {
-	namespace LightningBoltSpellK
-	{
-		const double cost_factor = 0.2;
-		const int range = 3;
-	}
-
 	class LightningBoltSpell : public Spell
 	{
 	public:
@@ -32,6 +26,10 @@ namespace questless
 		optional<int> max_charges() const override { return 10; }
 
 		double cooldown() const override { return 5.0; }
+	private:
+		static constexpr double _cost_factor = 0.2;
+		static constexpr double _cost_log = 2.0;
+		static constexpr int _range = 3;
 	};
 }
 

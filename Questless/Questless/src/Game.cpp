@@ -40,6 +40,8 @@ using std::make_shared;
 using std::dynamic_pointer_cast;
 using std::function;
 
+using namespace std::chrono;
+
 using namespace sdl;
 
 namespace questless
@@ -96,6 +98,9 @@ namespace questless
 
 		load_textures();
 
+		texture_manager().add("ss/test", [] { return Texture::make("resources/textures/test_animation.png", renderer(), SDL_BLENDMODE_BLEND); });
+		_ani_test = make_unique<AnimationCollection>("ss/test", 3, 1);
+
 		// Load sounds.
 
 		_sfx_splash = Sound::make("resources/sounds/splash.wav");
@@ -140,13 +145,6 @@ namespace questless
 
 	void Game::load_textures()
 	{
-		// Sprite sheets and animations
-
-		_test_sprite_sheet = Texture::make("resources/textures/test_animation.png", renderer(), SDL_BLENDMODE_BLEND);
-		_ani_test = make_unique<AnimationCollection>(*_test_sprite_sheet, 3, 1);
-
-		// Textures
-
 		_txt_test = Texture::make("resources/textures/test.png", renderer(), SDL_BLENDMODE_BLEND);
 		_txt_test2 = Texture::make("resources/textures/test2.png", renderer(), SDL_BLENDMODE_BLEND);
 		_txt_test3 = Texture::make("resources/textures/test3.png", renderer(), SDL_BLENDMODE_BLEND);
@@ -220,7 +218,7 @@ namespace questless
 
 	void Game::game_loop()
 	{
-		duration<double> accrued_time = duration<double>::zero();
+		double_seconds accrued_time = double_seconds::zero();
 		clock::time_point last_update_time = clock::now();
 		for (;;) {
 			// Update
@@ -351,10 +349,10 @@ namespace questless
 			_mnu_main.add_option("Settings", "Cancel", "Questless");
 
 			vector<Animation::Frame> frames;
-			frames.emplace_back(duration<double>{1.0}, Point{0, 0}, Point{0, 0});
-			frames.emplace_back(duration<double>{1.0}, Point{1, 0}, Point{0, 0});
-			frames.emplace_back(duration<double>{1.0}, Point{2, 0}, Point{0, 0});
-			_ani_test->add("", Animation(frames, true));
+			frames.emplace_back(double_seconds{1.0}, Point{0, 0}, Point{0, 0});
+			frames.emplace_back(double_seconds{1.0}, Point{1, 0}, Point{0, 0});
+			frames.emplace_back(double_seconds{1.0}, Point{2, 0}, Point{0, 0});
+			_ani_test->add("", Animation::make(frames, true));
 			_ani_test->start("");
 
 			_time_last_state_change = clock::now();
@@ -365,12 +363,12 @@ namespace questless
 	void Game::render_splash()
 	{
 		if (clock::now() - _time_last_state_change < splash_fade_in_duration) {
-			auto ms_fading_in = duration_cast<duration<double>>(clock::now() - _time_last_state_change).count();
+			auto ms_fading_in = duration_cast<double_seconds>(clock::now() - _time_last_state_change).count();
 			uint8_t intensity = percentage_to_byte(static_cast<double>(ms_fading_in / splash_fade_in_duration.count()));
 			_txt_splash_logo->color(Color{intensity, intensity, intensity});
 			_txt_splash_flame->color(Color{intensity, intensity, intensity});
 		} else {
-			auto ms_fading_out = duration_cast<duration<double>>(clock::now() - _time_last_state_change - splash_fade_in_duration).count();
+			auto ms_fading_out = duration_cast<double_seconds>(clock::now() - _time_last_state_change - splash_fade_in_duration).count();
 			uint8_t intensity = percentage_to_byte(1 - static_cast<double>(ms_fading_out / splash_fade_out_duration.count()));
 			_txt_splash_logo->color(Color{intensity, intensity, intensity});
 			_txt_splash_flame->color(Color{intensity, intensity, intensity});
@@ -389,7 +387,6 @@ namespace questless
 				if (option.second == "Continue" || option.second == "Begin Anew") {
 					_region = make_unique<Region>("Region1");
 					//_region = make_unique<Region>("Slot1", "Region1");
-					_region->cache_background(renderer());
 
 					Being::ptr player_being = make_unique<Human>(Agent::make<Player>, Entity::next_id());
 					_player_being = player_being.get();
@@ -399,7 +396,10 @@ namespace questless
 					_player_being->give_item((make_unique<Quarterstaff>()));
 					_hud->player_being(_player_being);
 
-					_camera->position(Layout::dflt().to_world(_player_being->coords()));
+					_world_view = make_unique<WorldView>(*this, *_player_being, true);
+					_world_renderer = make_unique<WorldRenderer>(*_world_view);
+
+					_camera->position(PointF{Layout::dflt().to_world(_player_being->coords())});
 
 					_time_last_state_change = clock::now();
 					_state = State::playing;
@@ -424,11 +424,9 @@ namespace questless
 			renderer().draw_rect(Rect(_window->center().x - width * i, _window->center().y - width * i, 2 * width * i, 2 * width * i), Color::white(), false);
 		}
 
-		_ani_test->draw(Point(0, 0));
+		_world_renderer->draw_terrain(*_camera);
 
-		WorldView world_view{*this, *_player_being};
-		_world_renderer.draw_terrain(world_view, *_camera);
-		//_region->draw_terrain(_camera);
+		_ani_test->draw(Point(0, 0));
 
 		static Point pt_clicked_rounded; /// @todo Ewww...
 		if (_input.pressed(MouseButton::right)) {
@@ -437,7 +435,7 @@ namespace questless
 		_camera->draw(*_txt_hex_highlight, _camera->pt_hovered_rounded());
 		_camera->draw(*_txt_hex_circle, pt_clicked_rounded);
 		
-		_world_renderer.draw_beings(world_view, *_camera);
+		_world_renderer->draw_beings(*_camera);
 
 		for (auto& particle : _particles) {
 			particle->draw(*_camera);
@@ -446,7 +444,7 @@ namespace questless
 		// Draw HUD.
 		_hud->draw();
 
-		// Draw dialogs??
+		// Draw dialogs.
 		for (const auto& dialog : _dialogs) {
 			dialog->draw(*_window);
 		}
@@ -493,8 +491,6 @@ namespace questless
 			/// @todo Turns are advancing too slowly sometimes. I.e., moving around takes half a time unit instead of one. Why?
 			// Take turns.
 
-			/// @todo Remove once the texture refreshing bug is fixed.
-			//load_textures();
 			// Work through the beings ready to take their turns, until all have acted or one of them can't finish acting yet.
 			while (Being* next_ready_being = _region->next_ready_being()) {
 				next_ready_being->agent().act(*this);
@@ -508,11 +504,20 @@ namespace questless
 				_time += 1.0;
 				// Update the region.
 				_region->update();
+				// Reset the world view.
+				_world_view = make_unique<WorldView>(*this, *_player_being, true);
+				// Reset the world renderer.
+				_world_renderer = make_unique<WorldRenderer>(*_world_view);
+
+				/// @todo Ideally, some information about the previous world view would be preserved.
+				///       E.g., being animations shouldn't reset every time the turn advances.
+
+				/// @todo Determine why the terrain only updates after the second time moving.
 			}
 		}
 
 		// Update world renderer.
-		_world_renderer.update();
+		_world_renderer->update();
 
 		if (_input.down(SDLK_t)) {
 			_particles.emplace_back(make_unique<WhiteMagic>(_camera->pt_hovered()));
@@ -557,7 +562,7 @@ namespace questless
 
 		// Pan camera.
 		if (_input.down(MouseButton::middle)) {
-			VectorF pan = (_input.last_mouse_position() - _input.mouse_position()) / _camera->zoom();
+			VectorF pan = VectorF{_input.last_mouse_position() - _input.mouse_position()} / _camera->zoom();
 			pan.rotate(_camera->angle());
 			_camera->pan(pan);
 		}
@@ -590,7 +595,7 @@ namespace questless
 
 		// Reset camera.
 		if (_input.down(SDLK_BACKSPACE)) {
-			_camera->position(Layout::dflt().to_world(_player_being->coords()));
+			_camera->position(PointF{Layout::dflt().to_world(_player_being->coords())});
 			_camera->zoom(1.0);
 			_camera->angle(0.0);
 		}

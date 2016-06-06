@@ -26,23 +26,29 @@ namespace questless
 		/// @param position The particle's starting position.
 		GreenMagic(const PointF& position) : Particle
 			{ position
-			, Velocity{random_displacement(ParticleK::green_v_min, ParticleK::green_v_max)}
+			, Velocity{random_displacement(_v_min, _v_max)}
 			, uniform(0.0, 360.0)
-			, Hertz{uniform(-ParticleK::green_dtheta_max, ParticleK::green_dtheta_max)}
+			, Hertz{uniform(-_dtheta_max, _dtheta_max)}
 			, 1.0
 			, Hertz{0.0}
-			, double_seconds{uniform(ParticleK::green_lifetime_min, ParticleK::green_lifetime_max)}
+			, double_seconds{uniform(_lifetime_min, _lifetime_max)}
 			}
 			, _turning_right{random_bool()}
 		{}
-
-		/// Updates the particle.
-		void update() override;
 	private:
-		/// @return The texture to be used when drawing a particle.
-		Texture::ptr& texture() const override;
+		static constexpr double _dtheta_max = 720.0;
+		static constexpr double _v_min = 20.0;
+		static constexpr double _v_max = 50.0;
+		static constexpr double _inflection_probability = 0.1;
+		static constexpr double _turn_rate = 5.0;
+		static constexpr double _lifetime_min = 1.8;
+		static constexpr double _lifetime_max = 2.2;
 
 		bool _turning_right; ///< True if the green magic particle is turning to the right (CW), false if turning left (CCW).
+
+		void subupdate() override;
+
+		sdl::Texture::ptr& texture() const override;
 	};
 }
 

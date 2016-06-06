@@ -11,36 +11,43 @@
 #define ANIMATION_H
 
 #include <vector>
-using std::vector;
 #include <string>
-using std::string;
 #include <chrono>
-using namespace std::chrono;
 #include <exception>
+#include <memory>
 
 #include "utility/constants.h"
 #include "utility/optional.h"
 #include "sdl-wrappers/basic-sdl-wrappers.h"
-using sdl::Point;
 
 namespace questless
 {
 	class Animation
 	{
 	public:
+		using ptr = std::unique_ptr<Animation>;
+
 		struct Frame
 		{
-			duration<double> duration;
-			Point origin; ///< The origin of the frame's texture relative to the animation origin.
-			Point coords; ///< The cel coordinates within the sprite sheet.
+			double_seconds duration;
+			sdl::Point origin; ///< The origin of the frame's texture relative to the animation origin.
+			sdl::Point coords; ///< The cel coordinates within the sprite sheet.
 
-			Frame(double_seconds duration, Point coords, Point origin) : duration{duration}, coords{coords}, origin{origin} {}
+			Frame(double_seconds duration, sdl::Point coords, sdl::Point origin) : duration{duration}, coords{coords}, origin{origin} {}
 		};
+
+		/// Constructs an animation pointer from the provided frames using the provided loop type.
+		/// @param frames The sequence of frames that compose the animation.
+		/// @param looping Whether to loop the animation or play just once.
+		static Animation::ptr make(std::vector<Frame> frames, bool looping)
+		{
+			return std::make_unique<Animation>(std::move(frames), looping);
+		}
 
 		/// Constructs an animation object from the provided frames using the provided loop type.
 		/// @param frames The sequence of frames that compose the animation.
 		/// @param looping Whether to loop the animation or play just once.
-		Animation(vector<Frame> frames, bool looping);
+		Animation(std::vector<Frame> frames, bool looping);
 
 		/// @return Whether the animation is looping.
 		bool looping() const { return _looping; }
@@ -73,7 +80,7 @@ namespace questless
 		/// Advances the animation. Should be called once per game update.
 		void update();
 	private:
-		vector<Frame> _frames;
+		std::vector<Frame> _frames;
 		int _frame_index;
 		double_seconds _accrued_time;
 		bool _looping;

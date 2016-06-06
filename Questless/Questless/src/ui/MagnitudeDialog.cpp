@@ -13,12 +13,6 @@ using namespace sdl;
 
 namespace questless
 {
-	void MagnitudeDialog::refresh()
-	{
-		_txt_title = Texture::make(font_manager()["Dialog/title"].render(_title, renderer(), Color::white()));
-		_txt_prompt = Texture::make(font_manager()["Dialog/prompt"].render(_prompt, renderer(), Color::white()));
-	}
-
 	void MagnitudeDialog::update(const Input& input)
 	{
 		if (input.presses(SDLK_BACKSPACE) || input.presses(SDLK_ESCAPE)) {
@@ -53,5 +47,11 @@ namespace questless
 		Texture txt_current = font_manager()["Dialog/io"].render(std::to_string(static_cast<int>(_magnitude)), renderer(), Color::white());
 		renderer().draw_rect(Rect{x_center - txt_current.width() / 2, 100, txt_current.width(), txt_current.height()}, Color{0, 0, 0, 128}, true);
 		txt_current.draw(Point{x_center, 100}, HAlign::center);
+	}
+
+	void MagnitudeDialog::load_textures()
+	{
+		_txt_title = Texture::make(font_manager()["Dialog/title"].render(_title, renderer(), Color::white()));
+		_txt_prompt = Texture::make(font_manager()["Dialog/prompt"].render(_prompt, renderer(), Color::white()));
 	}
 }

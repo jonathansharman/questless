@@ -14,7 +14,7 @@
 #include <vector>
 #include <memory>
 
-#include "entities/beings/Attributes.h"
+#include "entities/beings/attributes/Attributes.h"
 
 namespace questless
 {

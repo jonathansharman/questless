@@ -7,8 +7,8 @@
 * @section DESCRIPTION Provides access to shared resources.
 */
 
-#ifndef MEDIA_H
-#define MEDIA_H
+#ifndef RESOURCES_H
+#define RESOURCES_H
 
 #include <memory>
 

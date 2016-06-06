@@ -38,14 +38,17 @@ namespace questless
 		/// @return The number of body parts this body has.
 		size_t parts_count() const { return _parts_count; }
 
+		/// @return The bounding box around the body's parts.
 		sdl::Rect bounds() const { return _bounds; }
-		sdl::Vector offset() const { return _offset; }
+
+		/// @return The offset from the upper left corner of the bounds to the body's center.
+		sdl::Vector offset_to_center() const { return _offset_to_center; }
 	private:
 		std::unique_ptr<BodyPart> _root;
 
 		size_t _parts_count;
 		sdl::Rect _bounds;
-		sdl::Vector _offset;
+		sdl::Vector _offset_to_center;
 	};
 }
 

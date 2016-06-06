@@ -21,7 +21,7 @@ namespace questless
 	{
 		_fnt_item_count = Font::make("resources/fonts/dumbledor1.ttf", _item_count_font_size, SDL_BLENDMODE_BLEND);
 
-		refresh();
+		load_textures();
 	}
 
 	void HUDView::draw(const HUDModel& hud)

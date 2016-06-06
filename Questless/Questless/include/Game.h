@@ -59,8 +59,6 @@ namespace questless
 		/// Runs a new game of Questless.
 		void run();
 
-		void refresh() override { load_textures(); }
-
 		// Dialogs
 
 		void message(std::string title, std::string prompt, std::function<void()> cont);
@@ -69,7 +67,7 @@ namespace questless
 
 		template <typename ItemType>
 		void query_list
-			( Point origin
+			( sdl::Point origin
 			, std::string title
 			, std::vector<ItemType> options
 			, std::function<std::string(const ItemType&)> item_to_name
@@ -106,9 +104,9 @@ namespace questless
 		// Constants //
 		///////////////
 
-		const duration<double> splash_fade_out_duration{2.0};
-		const duration<double> splash_fade_in_duration{2.0};
-		const duration<double> splash_duration = splash_fade_out_duration + splash_fade_in_duration;
+		const double_seconds splash_fade_out_duration{2.0};
+		const double_seconds splash_fade_in_duration{2.0};
+		const double_seconds splash_duration = splash_fade_out_duration + splash_fade_in_duration;
 
 		// Debug
 
@@ -123,9 +121,9 @@ namespace questless
 		const int dflt_window_width = 1920;
 		const int dflt_window_height = 1080;
 #endif
-		const Color splash_clear_color = Color(0, 0, 0);
-		const Color menu_clear_color = Color(0, 0, 255);
-		const Color playing_clear_color = Color(0, 0, 255);
+		const sdl::Color splash_clear_color = sdl::Color::black();
+		const sdl::Color menu_clear_color = sdl::Color::blue();
+		const sdl::Color playing_clear_color = sdl::Color::blue();
 
 		// Splash screen
 
@@ -159,10 +157,9 @@ namespace questless
 
 		// Animations
 
-		sdl::Texture::ptr _test_sprite_sheet;
 		std::unique_ptr<AnimationCollection> _ani_test;
 
-		WorldRenderer _world_renderer;
+		std::unique_ptr<WorldRenderer> _world_renderer;
 
 		// Fonts
 
@@ -179,6 +176,8 @@ namespace questless
 
 		Being* _player_being;
 
+		std::unique_ptr<WorldView> _world_view;
+
 		double _time;
 
 		sdl::Input _input;
@@ -186,7 +185,7 @@ namespace questless
 		bool _game_over;
 
 		bool _splash_sound_played;
-		std::vector<Point> _splash_flame_positions;
+		std::vector<sdl::Point> _splash_flame_positions;
 
 		std::unique_ptr<Region> _region;
 
@@ -207,6 +206,8 @@ namespace questless
 		/////////////
 		// Methods //
 		/////////////
+
+		void refresh() override { load_textures(); }
 
 		void load_textures();
 

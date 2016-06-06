@@ -26,20 +26,25 @@ namespace questless
 		/// @param position The particle's starting position.
 		RedMagic(const PointF& position) : Particle
 			{ position
-			, Velocity{random_displacement(ParticleK::red_v_max)} +Velocity{0.0, ParticleK::red_vyi_adjustment}
+			, Velocity{random_displacement(_v_max)} + Velocity{0.0, _vyi_adjustment}
 			, uniform(0.0, 360.0)
-			, Hertz{uniform(-ParticleK::red_dtheta_max, ParticleK::red_dtheta_max)}
+			, Hertz{uniform(-_dtheta_max, _dtheta_max)}
 			, 1.0
 			, Hertz{0.0}
-			, double_seconds{uniform(ParticleK::red_lifetime_min, ParticleK::red_lifetime_max)}
+			, double_seconds{uniform(_lifetime_min, _lifetime_max)}
 			}
 		{}
-
-		/// Updates the particle.
-		void update() override;
 	private:
-		/// @return The texture to be used when drawing a particle.
-		Texture::ptr& texture() const override;
+		static constexpr double _v_max = 200.0;
+		static constexpr double _vyi_adjustment = -150.0;
+		static constexpr double _dtheta_max = 720.0;
+		static constexpr Hertz _gravity{300.0};
+		static constexpr double _lifetime_min = 0.6;
+		static constexpr double _lifetime_max = 1.0;
+
+		void subupdate() override;
+
+		sdl::Texture::ptr& texture() const override;
 	};
 }
 

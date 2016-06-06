@@ -166,6 +166,7 @@ namespace questless
 
 		std::set<Being::ref, Being::ref_less_t> _turn_queue;
 
+		/// @todo Remove _background once world renderer has all the caching functionality.
 		sdl::Texture::ptr _background;
 
 		/// Performs some operation on each section in the loaded rhomboid of sections.

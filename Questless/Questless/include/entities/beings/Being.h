@@ -18,7 +18,7 @@
 #include "entities/Entity.h"
 #include "entities/beings/Body.h"
 #include "entities/beings/statuses/Status.h"
-#include "Attributes.h"
+#include "attributes/Attributes.h"
 #include "items/Inventory.h"
 #include "items/Item.h"
 #include "items/weapons/Weapon.h"
@@ -28,82 +28,6 @@
 
 namespace questless
 {
-	namespace BeingK
-	{
-		// Maxima
-		const double max_satiety = 100.0;
-		const double max_alertness = 100.0;
-
-		// Default Stats
-		const double dflt_vitality = 100.0;
-		const double dflt_spirit = 100.0;
-		const double dflt_health_regen = 0.0;
-		const double dflt_mana_regen = 0.0;
-		const double dflt_strength = 100.0;
-		const double dflt_endurance = 100.0;
-		const double dflt_stamina = 100.0;
-		const double dflt_agility = 100.0;
-		const double dflt_dexterity = 100.0;
-		const double dflt_stealth = 100.0;
-		const double dflt_vision = 100.0;
-		const double dflt_light_affinity = 100.0;
-		const double dflt_hearing = 100.0;
-		const double dflt_intellect = 100.0;
-		const double dflt_min_temp = -100.0;
-		const double dflt_max_temp = 100.0;
-		const unsigned dflt_hands = 0;
-		const bool dflt_mute = true;
-
-		const double dflt_white_power = 100.0;
-		const double dflt_black_power = 100.0;
-		const double dflt_green_power = 100.0;
-		const double dflt_red_power = 100.0;
-		const double dflt_blue_power = 100.0;
-		const double dflt_yellow_power = 100.0;
-
-		const double dflt_white_resistance = 100.0;
-		const double dflt_black_resistance = 100.0;
-		const double dflt_green_resistance = 100.0;
-		const double dflt_red_resistance = 100.0;
-		const double dflt_blue_resistance = 100.0;
-		const double dflt_yellow_resistance = 100.0;
-
-		// Energy
-		const double energy_rate = 1.0; ///< Energy gained per turn (awake or asleep).
-		const double energy_rate_asleep = 2.0; ///< Additional energy gained per turn asleep.
-		const double energy_strength_penalty = 0.5; ///< Proportion of base strength removed at zero energy.
-		const double energy_endurance_penalty = 0.5; ///< Proportion of base endurance removed at zero energy.
-
-		// Satiety
-		const double satiety_rate = -1.0; ///< Satiety gained per turn (awake or asleep).
-		const double satiety_rate_asleep = 0.5; ///< Additional satiety gained per turn asleep.
-		const double satiety_health_regen_penalty = 1.0; ///< Proportion of base health regeneration removed at zero satiety.
-		const double satiety_mana_regen_penalty = 1.0; ///< Proportion of base mana regeneration removed at zero satiety.
-
-		// Alertness
-		const double alertness_rate = -1.0; ///< Alertness gained per turn (awake or asleep).
-		const double alertness_rate_asleep = 3.0; ///< Additional alertness gained per turn asleep.
-		const double alertness_agility_penalty = 0.75; ///< Proportion of base agility removed at zero alertness.
-		const double alertness_dexterity_penalty = 0.75; ///< Proportion of base dexterity removed at zero alertness.
-		const double alertness_intellect_penalty = 0.75; ///< Proportion of base intellect removed at zero alertness.
-		const double health_regen_asleep_factor = 1.0; ///< Additional health regeneration multiplier while asleep.
-		const double mana_regen_asleep_factor = 1.0; ///< Additional mana regeneration multiplier while asleep.
-
-		// Strength
-		const double strength_factor = 0.01; ///< Proportion of strength by which base damage is multiplied.
-
-		// Endurance
-		const double endurance_factor = 0.01; ///< Proportion of endurance by which damage after armor is divided.
-
-		// Temperature
-		const double temperature_damage_factor = 1.0; ///< Burn damage taken = (temp - max) / (max - min)) * factor. Freeze damage taken = (min - temp) / (max - min)) * factor.
-
-		// Vision
-		// Visibility at a tile = (vision - distance^2 * vision distance factor) / (1 + abs(light level at tile - light affinity) * vision affinity factor).
-		const double vision_distance_factor = 1;
-		const double vision_affinity_factor = 0.1;
-	}
-
 	// Forward class declarations.
 
 	class Agent;
@@ -135,6 +59,79 @@ namespace questless
 				: health{health}, mana{mana}, energy{energy}, satiety{satiety}, alertness{alertness}, busy_time{busy_time}
 			{}
 		};
+
+		///////////////
+		// Constants //
+		///////////////
+
+		/// @todo Probably move some of these to private? (Sleeping stuff goes in Sleeping?)
+
+		// Maxima
+		static constexpr double max_satiety = 100.0;
+		static constexpr double max_alertness = 100.0;
+
+		// Default Stats
+		static constexpr double dflt_vitality = 100.0;
+		static constexpr double dflt_spirit = 100.0;
+		static constexpr double dflt_health_regen = 0.0;
+		static constexpr double dflt_mana_regen = 0.0;
+		static constexpr double dflt_strength = 100.0;
+		static constexpr double dflt_endurance = 100.0;
+		static constexpr double dflt_stamina = 100.0;
+		static constexpr double dflt_agility = 100.0;
+		static constexpr double dflt_dexterity = 100.0;
+		static constexpr double dflt_stealth = 100.0;
+		static constexpr double dflt_vision = 100.0;
+		static constexpr double dflt_light_affinity = 100.0;
+		static constexpr double dflt_hearing = 100.0;
+		static constexpr double dflt_intellect = 100.0;
+		static constexpr double dflt_min_temp = -100.0;
+		static constexpr double dflt_max_temp = 100.0;
+		static constexpr bool dflt_mute = true;
+
+		static constexpr double dflt_white_power = 100.0;
+		static constexpr double dflt_black_power = 100.0;
+		static constexpr double dflt_green_power = 100.0;
+		static constexpr double dflt_red_power = 100.0;
+		static constexpr double dflt_blue_power = 100.0;
+		static constexpr double dflt_yellow_power = 100.0;
+
+		static constexpr double dflt_white_resistance = 100.0;
+		static constexpr double dflt_black_resistance = 100.0;
+		static constexpr double dflt_green_resistance = 100.0;
+		static constexpr double dflt_red_resistance = 100.0;
+		static constexpr double dflt_blue_resistance = 100.0;
+		static constexpr double dflt_yellow_resistance = 100.0;
+
+		// Energy
+		static constexpr double energy_rate = 1.0; ///< Energy gained per turn (awake or asleep).
+		static constexpr double energy_rate_asleep = 2.0; ///< Additional energy gained per turn asleep.
+		static constexpr double energy_strength_penalty = 0.5; ///< Proportion of base strength removed at zero energy.
+		static constexpr double energy_endurance_penalty = 0.5; ///< Proportion of base endurance removed at zero energy.
+
+		// Satiety
+		static constexpr double satiety_rate = -1.0; ///< Satiety gained per turn (awake or asleep).
+		static constexpr double satiety_rate_asleep = 0.5; ///< Additional satiety gained per turn asleep.
+		static constexpr double satiety_health_regen_penalty = 1.0; ///< Proportion of base health regeneration removed at zero satiety.
+		static constexpr double satiety_mana_regen_penalty = 1.0; ///< Proportion of base mana regeneration removed at zero satiety.
+
+		// Alertness
+		static constexpr double alertness_rate = -1.0; ///< Alertness gained per turn (awake or asleep).
+		static constexpr double alertness_rate_asleep = 3.0; ///< Additional alertness gained per turn asleep.
+		static constexpr double alertness_agility_penalty = 0.75; ///< Proportion of base agility removed at zero alertness.
+		static constexpr double alertness_dexterity_penalty = 0.75; ///< Proportion of base dexterity removed at zero alertness.
+		static constexpr double alertness_intellect_penalty = 0.75; ///< Proportion of base intellect removed at zero alertness.
+		static constexpr double health_regen_asleep_factor = 1.0; ///< Additional health regeneration multiplier while asleep.
+		static constexpr double mana_regen_asleep_factor = 1.0; ///< Additional mana regeneration multiplier while asleep.
+
+		// Strength
+		static constexpr double strength_factor = 0.01; ///< Proportion of strength by which base damage is multiplied.
+
+		// Endurance
+		static constexpr double endurance_factor = 0.01; ///< Proportion of endurance by which damage after armor is divided.
+
+		// Temperature
+		static constexpr double temperature_damage_factor = 1.0; ///< Burn damage taken = (temp - max) / (max - min)) * factor. Freeze damage taken = (min - temp) / (max - min)) * factor.
 
 		/////////////////
 		// Public Data //
@@ -209,31 +206,23 @@ namespace questless
 		double agility() const { return _attributes.agility; }
 		double dexterity() const { return _attributes.dexterity; }
 		double stealth() const { return _attributes.stealth; }
-		double vision() const { return _attributes.vision; }
-		double light_affinity() const { return _attributes.light_affinity; }
+		Vision vision() const { return _attributes.vision; }
+		double visual_acuity() const { return _attributes.vision.acuity; }
+		double ideal_light() const { return _attributes.vision.ideal_light; }
+		double light_tolerance() const { return _attributes.vision.light_tolerance; }
 		double hearing() const { return _attributes.hearing; }
 		double intellect() const { return _attributes.intellect; }
 		double min_temp() const { return _attributes.min_temp; }
 		double max_temp() const { return _attributes.max_temp; }
 		bool mute() const { return _attributes.mute; }
 
+		MagicPower power() const { return _attributes.magic_power; }
+		template <Spell::Color color> double power() const { return _attributes.magic_power.get<color>(); }
 		double power(Spell::Color color) const;
 
-		double white_power() const { return _attributes.white_power; }
-		double black_power() const { return _attributes.black_power; }
-		double green_power() const { return _attributes.green_power; }
-		double red_power() const { return _attributes.red_power; }
-		double blue_power() const { return _attributes.blue_power; }
-		double yellow_power() const { return _attributes.yellow_power; }
-
+		MagicResistance resistance() const { return _attributes.magic_resistance; }
+		template <Spell::Color color> double resistance() const { return _attributes.magic_resistance.get<color>(); }
 		double resistance(Spell::Color color) const;
-
-		double white_resistance() const { return _attributes.white_resistance; }
-		double black_resistance() const { return _attributes.black_resistance; }
-		double green_resistance() const { return _attributes.green_resistance; }
-		double red_resistance() const { return _attributes.red_resistance; }
-		double blue_resistance() const { return _attributes.blue_resistance; }
-		double yellow_resistance() const { return _attributes.yellow_resistance; }
 
 		// Condition mutators
 
@@ -273,31 +262,23 @@ namespace questless
 		void agility(double value) { _attributes.agility = value; }
 		void dexterity(double value) { _attributes.dexterity = value; }
 		void stealth(double value) { _attributes.stealth = value; }
-		void vision(double value) { _attributes.vision = value; }
-		void light_affinity(double value) { _attributes.light_affinity = value; }
+		void vision(Vision value) { _attributes.vision = value; }
+		void visual_acuity(double value) { _attributes.vision.acuity = value; }
+		void ideal_light(double value) { _attributes.vision.ideal_light = value; }
+		void light_tolerance(double value) { _attributes.vision.light_tolerance = value; }
 		void hearing(double value) { _attributes.hearing = value; }
 		void intellect(double value) { _attributes.intellect = value; }
 		void min_temp(double value) { _attributes.min_temp = value; }
 		void max_temp(double value) { _attributes.max_temp = value; }
 		void mute(bool value) { _attributes.mute = value; }
 
-		double power(Spell::Color color, double value);
+		void power(MagicPower value) { _attributes.magic_power = value; }
+		template <Spell::Color color> void power(double value) { _attributes.magic_power.get<color> = value; }
+		void power(Spell::Color color, double value);
 
-		void white_power(double value) { _attributes.white_power = value; }
-		void black_power(double value) { _attributes.black_power = value; }
-		void green_power(double value) { _attributes.green_power = value; }
-		void red_power(double value) { _attributes.red_power = value; }
-		void blue_power(double value) { _attributes.blue_power = value; }
-		void yellow_power(double value) { _attributes.yellow_power = value; }
-
+		void resistance(MagicResistance value) { _attributes.magic_resistance = value; }
+		template <Spell::Color color> void resistance(double value) { _attributes.magic_resistance.get<color> = value; }
 		void resistance(Spell::Color color, double value);
-
-		void white_resistance(double value) { _attributes.white_resistance = value; }
-		void black_resistance(double value) { _attributes.black_resistance = value; }
-		void green_resistance(double value) { _attributes.green_resistance = value; }
-		void red_resistance(double value) { _attributes.red_resistance = value; }
-		void blue_resistance(double value) { _attributes.blue_resistance = value; }
-		void yellow_resistance(double value) { _attributes.yellow_resistance = value; }
 
 		/// Advances the being one time unit.
 		void update() override;

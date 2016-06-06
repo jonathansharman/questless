@@ -12,17 +12,15 @@
 
 namespace questless
 {
-	void YellowMagic::update()
+	void YellowMagic::subupdate()
 	{
-		_velocity.rotate(uniform(ParticleK::yellow_turn_rate_min, ParticleK::yellow_turn_rate_max));
+		_velocity.rotate(uniform(_turn_rate_min, _turn_rate_max));
 		_angle = _velocity.angle();
-
-		Particle::update();
 	}
 
-	Texture::ptr& YellowMagic::texture() const
+	sdl::Texture::ptr& YellowMagic::texture() const
 	{
-		static auto texture = Texture::make("resources/textures/particles/magic/yellow.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+		static auto texture = sdl::Texture::make("resources/textures/particles/magic/yellow.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
 		return texture;
 	}
 }

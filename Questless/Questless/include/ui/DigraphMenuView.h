@@ -46,8 +46,6 @@ namespace questless
 			: _content_position{0, 0}, _page_index{0}, _current_option_index{0}, _min_width{min_width}, _min_height{min_height}, _content_width{0}, _content_height{0}, _render_is_current{false}
 		{}
 
-		void refresh() override { _render_is_current = false; }
-
 		/// @return The page view at the specified index.
 		const PageView& page(size_t index) const { return _page_views[index]; }
 
@@ -99,6 +97,8 @@ namespace questless
 		int _content_width, _content_height;
 		sdl::Texture::ptr _background;
 		bool _render_is_current;
+
+		void refresh() override { _render_is_current = false; }
 	};
 }
 

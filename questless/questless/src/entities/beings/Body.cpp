@@ -45,7 +45,7 @@ namespace questless
 			}
 		}
 		_bounds = {x_min, y_min, x_max - x_min + 1, y_max - y_min + 1};
-		_offset = {-x_min, -y_min};
+		_offset_to_center = {-x_min, -y_min};
 	}
 	Body::~Body() = default;
 
@@ -78,8 +78,8 @@ namespace questless
 		auto work_list = make_shared<deque<reference_wrapper<const BodyPart>>>();
 		work_list->push_back(*_root);
 
-		shared_ptr<function<Cell<const BodyPart*>()>> lambda = make_shared<function<Cell<const BodyPart*>()>>();
-		*lambda = [lambda, work_list] {
+		shared_ptr<function<Cell<const BodyPart*>()>> generator = make_shared<function<Cell<const BodyPart*>()>>();
+		*generator = [generator, work_list] {
 			const BodyPart& part = work_list->front();
 			work_list->pop_front();
 			for (const BodyPart::ptr& child : part.children()) {
@@ -87,9 +87,9 @@ namespace questless
 			}
 			return work_list->empty()
 				? Cell<const BodyPart*>{&part}
-				: Cell<const BodyPart*>{&part, Stream<const BodyPart*>{[lambda] { return (*lambda)(); }}};
+				: Cell<const BodyPart*>{&part, Stream<const BodyPart*>{[generator] { return (*generator)(); }}};
 		};
 
-		return Stream<const BodyPart*>{*lambda};
+		return Stream<const BodyPart*>{*generator};
 	}
 }

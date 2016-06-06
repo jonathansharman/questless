@@ -10,15 +10,11 @@
 #ifndef ANIMATION_COLLECTION_H
 #define ANIMATION_COLLECTION_H
 
-#include <memory>
-using std::unique_ptr;
-using std::shared_ptr;
-using std::make_shared;
+#include <string>
 #include <map>
-using std::map;
+#include <memory>
 
-#include "sdl-wrappers/Texture.h"
-using sdl::Texture;
+#include "sdl-wrappers/resources.h"
 #include "animation/Animation.h"
 #include "animation/Camera.h"
 
@@ -27,23 +23,27 @@ namespace questless
 	class AnimationCollection
 	{
 	public:
-		/// Constructs an animation collection, which holds animations accessible by name.
-		/// @param sprite_sheet A sprite sheet texture.
+		using ptr = std::unique_ptr<AnimationCollection>;
+
+		/// Constructs an animation collection pointer, which holds animations accessible by name.
+		/// @param sprite_sheet_name The name of the sprite sheet texture in the texture manager.
 		/// @param cel_columns The number of cels in one row of the sprite sheet texture.
 		/// @param cel_rows The number of cels in one column of the sprite sheet texture.
-		AnimationCollection(Texture& sprite_sheet, unsigned cel_columns, unsigned cel_rows);
+		static ptr make(std::string sprite_sheet_name, int cel_columns, int cel_rows)
+		{
+			return std::make_unique<AnimationCollection>(sprite_sheet_name, cel_columns, cel_rows);
+		}
 
-		AnimationCollection& operator =(const AnimationCollection&) = delete;
+		/// Constructs an animation collection, which holds animations accessible by name.
+		/// @param sprite_sheet_name The name of the sprite sheet texture in the texture manager.
+		/// @param cel_columns The number of cels in one row of the sprite sheet texture.
+		/// @param cel_rows The number of cels in one column of the sprite sheet texture.
+		AnimationCollection(std::string sprite_sheet_name, int cel_columns, int cel_rows);
 
 		/// Adds an animation to the collection.
 		/// @param animation_name The name of the animation to be added.
 		/// @param animation The animation to be added.
-		void add(const string& animation_name, const Animation& animation);
-
-		/// Adds an animation to the collection.
-		/// @param animation_name The name of the animation to be added.
-		/// @param animation The animation to be added.
-		void add(const string& animation_name, Animation&& animation);
+		void add(const string& animation_name, Animation::ptr animation);
 
 		/// Starts the given animation from the beginning.
 		/// @param animation_name The name of the animation to be started.
@@ -67,19 +67,19 @@ namespace questless
 
 		/// Draws the current animation at the specified coordinates.
 		/// @param origin The origin point of the animation on the screen.
-		void draw(Point origin) const;
+		void draw(sdl::Point origin) const;
 
 		/// Draws the current animation at the specified coordinates using the provided camera.
 		/// @param origin The origin point of the animation on the screen.
 		/// @param camera A camera object.
-		void draw(Point origin, const Camera& camera) const;
+		void draw(sdl::Point origin, const Camera& camera) const;
 	private:
-		Texture& _sprite_sheet;
+		std::string _sprite_sheet_name;
 		int _cel_width;
 		int _cel_height;
 
-		map<string, shared_ptr<Animation>> _animations;
-		shared_ptr<Animation> _current_animation;
+		std::map<std::string, Animation::ptr> _animations;
+		Animation* _current_animation;
 
 		bool _paused;
 	};

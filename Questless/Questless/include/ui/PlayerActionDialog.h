@@ -33,8 +33,6 @@ namespace questless
 
 		PlayerActionDialog(HUDController& hud, std::function<void(Choice)> cont) : _hud{hud}, _cont{std::move(cont)} {}
 
-		void refresh() override {}
-
 		/// Updates the menu state based on input.
 		/// @param input User input used to update the dialog.
 		void update(const Input& input) override;
@@ -46,6 +44,8 @@ namespace questless
 	private:
 		HUDController& _hud;
 		std::function<void(Choice)> _cont;
+
+		void refresh() override {}
 	};
 }
 

@@ -189,7 +189,7 @@ namespace questless
 		vector<PointF> corner_points(HexCoords h)
 		{
 			vector<PointF> corners = {};
-			PointF center = to_world(h);
+			PointF center = PointF{to_world(h)};
 			for (int i = 0; i < 6; i++) {
 				PointF offset = hex_corner_offset(i);
 				corners.push_back(PointF(center.x + offset.x, center.y + offset.y));

@@ -19,6 +19,8 @@ using std::vector;
 using std::function;
 using std::unique_ptr;
 
+using namespace sdl;
+
 namespace questless
 {
 	/// @todo Remove.
@@ -303,7 +305,7 @@ namespace questless
 			for (int q = -_loaded_sections_r_radius; q <= _loaded_sections_r_radius; ++q) {
 				HexCoords section_coords{q, r};
 				auto it = _section_map.find(section_coords);
-				if (it != _section_map.end() && it->second != nullptr) {
+				if (it != _section_map.end() && it->second != nullptr) { /// @todo Null sections...?
 					f(*it->second);
 				}
 			}

@@ -35,20 +35,7 @@ namespace questless
 			, _cont{std::move(cont)}
 			, _selection{0}
 		{
-			refresh();
-		}
-
-		void refresh() override
-		{
-			_txt_title = sdl::Texture::make(sdl::font_manager()["Dialog/title"].render(_title, sdl::renderer(), sdl::Color::black()));
-			_bounds.w = _txt_title->width();
-			_txt_options.clear();
-			for (const auto& option : _options) {
-				_txt_options.push_back(sdl::Texture::make(sdl::font_manager()["Dialog/list-option"].render(_item_to_name(option), sdl::renderer(), sdl::Color::black())));
-				_bounds.w = max(_bounds.w, _txt_options.back()->width());
-			}
-			_bounds.w += 2 * _x_padding;
-			_bounds.h = _title_height + static_cast<int>(_options.size() * _option_height) + 2 * _y_padding;
+			load_textures();
 		}
 
 		/// Updates the dialog state based on input.
@@ -103,7 +90,7 @@ namespace questless
 			}
 
 			// Draw background.
-			sdl::renderer().draw_rect(_bounds, Color::black(), Color{255, 200, 150});
+			sdl::renderer().draw_rect(_bounds, sdl::Color::black(), sdl::Color{255, 200, 150});
 
 			// Draw highlight.
 			sdl::renderer().draw_rect(sdl::Rect{_bounds.x + _x_padding, _bounds.y + _y_padding + _title_height + _selection * _option_height, _bounds.w - 2 * _x_padding, _option_height}, sdl::Color::white(), true);
@@ -133,6 +120,21 @@ namespace questless
 		std::vector<sdl::Texture::ptr> _txt_options;
 
 		int _selection;
+
+		void refresh() override { load_textures(); }
+
+		void load_textures()
+		{
+			_txt_title = sdl::Texture::make(sdl::font_manager()["Dialog/title"].render(_title, sdl::renderer(), sdl::Color::black()));
+			_bounds.w = _txt_title->width();
+			_txt_options.clear();
+			for (const auto& option : _options) {
+				_txt_options.push_back(sdl::Texture::make(sdl::font_manager()["Dialog/list-option"].render(_item_to_name(option), sdl::renderer(), sdl::Color::black())));
+				_bounds.w = max(_bounds.w, _txt_options.back()->width());
+			}
+			_bounds.w += 2 * _x_padding;
+			_bounds.h = _title_height + static_cast<int>(_options.size() * _option_height) + 2 * _y_padding;
+		}
 	};
 }
 

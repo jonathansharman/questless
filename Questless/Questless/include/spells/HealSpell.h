@@ -14,12 +14,6 @@
 
 namespace questless
 {
-	namespace HealSpellK
-	{
-		const double cost_factor = 1.0;
-		const int range = 10;
-	}
-
 	class HealSpell : public Spell
 	{
 	public:
@@ -32,6 +26,10 @@ namespace questless
 		optional<int> max_charges() const override { return 10; }
 
 		double cooldown() const override { return 5.0; }
+	private:
+		static constexpr double _cost_factor = 1.0;
+		static constexpr double _cost_log = 2.0;
+		static constexpr int _range = 10;
 	};
 }
 

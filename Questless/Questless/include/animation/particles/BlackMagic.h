@@ -26,9 +26,9 @@ namespace questless
 		/// @param position The particle's starting position.
 		BlackMagic(const PointF& position) : Particle
 			{ position
-			, Velocity{uniform(ParticleK::black_vxi_min, ParticleK::black_vxi_max), 0.0}
+			, Velocity{uniform(_vxi_min, _vxi_max), 0.0}
 			, uniform(0.0, 360.0)
-			, Hertz{uniform(-ParticleK::black_dtheta_max, ParticleK::black_dtheta_max)}
+			, Hertz{uniform(-_dtheta_max, _dtheta_max)}
 			, 1.0
 			, Hertz{0.0}
 			, double_seconds{2.0}
@@ -36,12 +36,17 @@ namespace questless
 		{
 			_velocity.rotate(uniform(0.0, 360.0));
 		}
-
-		/// Updates the particle.
-		void update() override;
 	private:
-		/// @return The texture to be used when drawing a particle.
-		Texture::ptr& texture() const override;
+		static constexpr Hertz _turn_rate{225.0};
+		static constexpr double _vxi_min = 5.0;
+		static constexpr double _vxi_max = 25.0;
+		static constexpr double _dtheta_max = 720.0;
+		static constexpr Hertz _acceleration_factor{1.25};
+		static constexpr double_seconds _lifetime{2.5};
+
+		void subupdate() override;
+
+		sdl::Texture::ptr& texture() const override;
 	};
 }
 

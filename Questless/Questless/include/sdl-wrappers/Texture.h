@@ -65,6 +65,8 @@ namespace sdl
 		template <typename... Args>
 		static ptr make(Args&&... args) { return std::make_unique<Texture>(std::forward<Args>(args)...); }
 
+		/// @todo Replace all "make" functions with perfect-forwarding versions like this one.
+
 		~Texture();
 
 		Texture& operator =(Texture texture);

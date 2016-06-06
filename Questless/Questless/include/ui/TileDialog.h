@@ -25,10 +25,8 @@ namespace questless
 		TileDialog(std::string title, std::string prompt, const Camera& camera, std::function<bool(HexCoords)> predicate, std::function<void(optional<HexCoords>)> cont)
 			: _title{std::move(title)}, _prompt{std::move(prompt)}, _camera{camera}, _predicate{std::move(predicate)}, _cont{std::move(cont)}
 		{
-			refresh();
+			load_textures();
 		}
-
-		void refresh() override;
 
 		/// Updates the dialog state based on input.
 		/// @param input User input used to update the dialog.
@@ -46,6 +44,10 @@ namespace questless
 
 		sdl::Texture::ptr _txt_title;
 		sdl::Texture::ptr _txt_prompt;
+
+		void refresh() override { load_textures(); }
+
+		void load_textures();
 
 	};
 }

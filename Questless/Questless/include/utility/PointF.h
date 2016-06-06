@@ -11,7 +11,6 @@
 #define POINTF_H
 
 #include "sdl-wrappers/basic-sdl-wrappers.h"
-using sdl::Point;
 #include "utility.h"
 #include "VectorF.h"
 
@@ -22,26 +21,47 @@ namespace questless
 		double x;
 		double y;
 
-		PointF() : x(0.0), y(0.0) {}
-		PointF(double x, double y) : x(x), y(y) {}
-		PointF(const PointF& p) : x(p.x), y(p.y) {}
-		PointF(const Point& p) : x(p.x), y(p.y) {}
+		constexpr PointF() : x(0.0), y(0.0) {}
+		constexpr PointF(double x, double y) : x(x), y(y) {}
+		constexpr PointF(const PointF& p) : x(p.x), y(p.y) {}
+		constexpr explicit PointF(const sdl::Point& p) : x(p.x), y(p.y) {}
 
-		bool operator ==(const Vector& right) const { return x == right.x && y == right.y; }
-		bool operator !=(const Vector& right) const { return x != right.x || y != right.y; }
+		constexpr bool operator ==(const sdl::Vector& right) const { return x == right.x && y == right.y; }
+		constexpr bool operator !=(const sdl::Vector& right) const { return x != right.x || y != right.y; }
 		
-		friend PointF operator +(PointF p, const VectorF& v);
-		friend PointF operator +(const VectorF& v, PointF p);
-		friend PointF operator -(PointF p, const VectorF& v);
-		friend VectorF operator -(const PointF& p1, const PointF& p2);
-		friend PointF operator *(PointF p, double factor);
-		friend PointF operator *(double factor, PointF p);
-		friend PointF operator /(PointF p, double divisor);
+		constexpr friend PointF operator +(PointF p, const VectorF& v) { return PointF{p.x + v.x, p.y + v.y}; }
+		constexpr friend PointF operator +(const VectorF& v, PointF p) { return PointF{v.x + p.x, v.y + p.y}; }
+		constexpr friend PointF operator -(PointF p, const VectorF& v) { return PointF{p.x - v.x, p.y - v.y}; }
+		constexpr friend VectorF operator -(const PointF& p1, const PointF& p2) { return VectorF{p1.x - p2.x, p1.y - p2.y}; }
+		constexpr friend VectorF operator -(const PointF& p) { return VectorF{-p.x, -p.y}; }
+		constexpr friend PointF operator *(PointF p, double k) { return PointF{k * p.x, k * p.y}; }
+		constexpr friend PointF operator *(double k, PointF p) { return PointF{k * p.x, k * p.y}; }
+		constexpr friend PointF operator /(PointF p, double k) { return PointF{p.x / k, p.y / k}; }
 
-		PointF& operator +=(const VectorF& v);
-		PointF& operator -=(const VectorF& v);
-		PointF& operator *=(double factor);
-		PointF& operator /=(double divisor);
+		PointF& operator +=(const VectorF& v)
+		{
+			x += v.x;
+			y += v.y;
+			return *this;
+		}
+		PointF& operator -=(const VectorF& v)
+		{
+			x -= v.x;
+			y -= v.y;
+			return *this;
+		}
+		PointF& operator *=(double factor)
+		{
+			x *= factor;
+			y *= factor;
+			return *this;
+		}
+		PointF& operator /=(double divisor)
+		{
+			x /= divisor;
+			y /= divisor;
+			return *this;
+		}
 
 		/// Rotates the point about another point, overwriting the original value.
 		/// @param origin The origin around which the point will be rotated.
@@ -54,7 +74,7 @@ namespace questless
 		PointF rotated(const PointF& origin, double theta) const;
 
 		/// @return A point with integer coordinates. Floating-point coordinates are rounded to the nearest whole number.
-		Point to_point() const;
+		sdl::Point to_point() const;
 	};
 }
 

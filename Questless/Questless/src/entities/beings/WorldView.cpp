@@ -9,21 +9,30 @@
 
 #include <set>
 using std::set;
+#include <limits.h>
 
 #include "entities/beings/WorldView.h"
 #include "Game.h"
 #include "entities/beings/Being.h"
+#include "utility/hex-utilities.h"
+#include "sdl-wrappers/basic-sdl-wrappers.h"
+
+using namespace sdl;
 
 namespace questless
 {
-	WorldView::WorldView(const Game& game, const Being& being) : _region{game.region()}
+	WorldView::WorldView(const Game& game, const Being& being, bool find_bounds)
+		: _region{game.region()}
+		, _bounds{nullopt}
 	{
 		HexCoords coords = being.coords();
-		double vision = being.vision();
-		double light_affinity = being.light_affinity();
+		Vision vision = being.vision();
+		double acuity = vision.acuity;
+		double ideal_light = vision.ideal_light;
+		double light_tolerance = vision.light_tolerance;
 
 		// Calculate the maximum distance the being can see.
-		int visual_range = static_cast<int>(sqrt(vision / BeingK::vision_distance_factor));
+		int visual_range = static_cast<int>(sqrt(acuity / Vision::distance_factor));
 
 		// Find the set of coordinates of sections plausibly visible to the being.
 		set<HexCoords> section_coords_set;
@@ -45,12 +54,22 @@ namespace questless
 
 			for (int r = -section_radius; r <= section_radius; ++r) {
 				for (int q = -section_radius; q <= section_radius; ++q) {
-					HexCoords tile_coords = HexCoords{q, r} +section_coords * section_diameter;
+					HexCoords tile_coords = HexCoords{q, r} + section_coords * section_diameter;
 
 					double light_level = _region.light_level(tile_coords);
-					double vision_divisor = 1 + abs(light_level - light_affinity) * BeingK::vision_affinity_factor;
+					double vision_divisor = 1 + (light_level - ideal_light) * (light_level - ideal_light) / light_tolerance * Vision::light_factor;
 					int distance = coords.distance_to(tile_coords);
-					double tile_visibility = (vision - distance * distance * BeingK::vision_distance_factor) / vision_divisor;
+					double tile_visibility = (acuity - distance * distance * Vision::distance_factor) / vision_divisor;
+
+					// Update max and min coordinates.
+					if (find_bounds && tile_visibility > 0.0) {
+						Point world_coords = Layout::dflt().to_world(tile_coords);
+						if (!_bounds) {
+							_bounds = Rect{world_coords.x, world_coords.y, 1, 1};
+						} else {
+							extend_bounds(*_bounds, world_coords);
+						}
+					}
 
 					section_view.tile_visibilities[r + section_radius][q + section_radius] = tile_visibility;
 				}
@@ -65,13 +84,13 @@ namespace questless
 					being_view.being = other_being.get();
 
 					double tile_visibility = section_view.tile_visibilities[other_coords.r + section_radius][other_coords.q + section_radius];
-					if (tile_visibility < WorldViewK::low_perception_threshold) {
+					if (0.0 < tile_visibility < _low_perception_threshold) {
 						being_view.perception = BeingView::Perception::none;
-					} else if (tile_visibility < WorldViewK::medium_perception_threshold) {
+					} else if (tile_visibility < _medium_perception_threshold) {
 						being_view.perception = BeingView::Perception::low;
-					} else if (tile_visibility < WorldViewK::high_perception_threshold) {
+					} else if (tile_visibility < _high_perception_threshold) {
 						being_view.perception = BeingView::Perception::medium;
-					} else if (tile_visibility < WorldViewK::full_perception_threshold) {
+					} else if (tile_visibility < _full_perception_threshold) {
 						being_view.perception = BeingView::Perception::high;
 					} else {
 						being_view.perception = BeingView::Perception::full;
@@ -80,6 +99,23 @@ namespace questless
 					_being_views.push_back(being_view);
 				}
 			}
+		}
+		if (_bounds) {
+			/// @todo Figure out the correct way to compute these adjustments.
+
+			//Point size = Layout::dflt().size.to_point();
+			//Point double_size = (2 * Layout::dflt().size).to_point();
+			//_bounds->x -= size.x;
+			//_bounds->y -= size.y;
+			//_bounds->w += double_size.x;
+			//_bounds->h += double_size.y;
+
+			Point size = Layout::dflt().size.to_point();
+			Point double_size = (2 * Layout::dflt().size).to_point();
+			_bounds->x -= 31;
+			_bounds->y -= 19;
+			_bounds->w += 62;
+			_bounds->h += 39;
 		}
 	}
 }

@@ -42,11 +42,8 @@ namespace questless
 	const int section_radius = 10;
 	const int section_diameter = 2 * section_radius + 1;
 	
-	const Vector hex_unit_r = Vector(0, 36);
-	const Vector hex_unit_q = Vector(44, -18);
-
-	//const Vector hex_unit_r = Vector(0, 26);
-	//const Vector hex_unit_q = Vector(31, -13);
+	const sdl::Vector hex_unit_r{0, 36};
+	const sdl::Vector hex_unit_q{44, -18};
 
 	const int region_background_margin_top = 19;
 	const int region_background_margin_left = 22;

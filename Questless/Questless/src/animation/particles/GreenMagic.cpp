@@ -12,24 +12,22 @@
 
 namespace questless
 {
-	void GreenMagic::update()
+	void GreenMagic::subupdate()
 	{
-		if (uniform(0.0, 1.0) < ParticleK::green_inflection_probability) {
+		if (uniform(0.0, 1.0) < _inflection_probability) {
 			_turning_right = !_turning_right;
 		}
 
 		if (_turning_right) {
-			_velocity.rotate(-ParticleK::green_turn_rate);
+			_velocity.rotate(-_turn_rate);
 		} else {
-			_velocity.rotate(ParticleK::green_turn_rate);
+			_velocity.rotate(_turn_rate);
 		}
-
-		Particle::update();
 	}
 
-	Texture::ptr& GreenMagic::texture() const
+	sdl::Texture::ptr& GreenMagic::texture() const
 	{
-		static auto texture = Texture::make("resources/textures/particles/magic/green.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+		static auto texture = sdl::Texture::make("resources/textures/particles/magic/green.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
 		return texture;
 	}
 }

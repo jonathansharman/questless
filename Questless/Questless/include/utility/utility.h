@@ -78,6 +78,9 @@ namespace questless
 	/// @return The corresponding 8-bit integer.
 	uint8_t percentage_to_byte(double percent);
 
+	/// Extends the given bounding rectangle by the given point.
+	void extend_bounds(sdl::Rect& bounds, sdl::Point point);
+
 	///////////////////
 	// Miscellaneous //
 	///////////////////

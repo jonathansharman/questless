@@ -12,17 +12,15 @@
 
 namespace questless
 {
-	void BlackMagic::update()
+	void BlackMagic::subupdate()
 	{
-		_velocity += _velocity * (ParticleK::black_acceleration_factor * frame_duration);
-		_velocity.rotate(ParticleK::black_turn_rate * frame_duration);
-
-		Particle::update();
+		_velocity += _velocity * (_acceleration_factor * frame_duration);
+		_velocity.rotate(_turn_rate * frame_duration);
 	}
 
-	Texture::ptr& BlackMagic::texture() const
+	sdl::Texture::ptr& BlackMagic::texture() const
 	{
-		static auto texture = Texture::make("resources/textures/particles/magic/black.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+		static auto texture = sdl::Texture::make("resources/textures/particles/magic/black.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
 		return texture;
 	}
 }

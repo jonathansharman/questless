@@ -23,23 +23,28 @@ namespace questless
 		/// Constructs a yellow magic particle with the specified position.
 		/// @param position The particle's starting position.
 		YellowMagic(const PointF& position) : Particle
-			{ position + random_displacement(ParticleK::max_displacement)
-			, Velocity{ParticleK::yellow_v, 0.0}
+			{ position + random_displacement(_max_displacement)
+			, Velocity{_v, 0.0}
 			, uniform(0.0, 360.0)
 			, 0.0
 			, 1.0
 			, Hertz{0.0}
-			, double_seconds{uniform(ParticleK::yellow_lifetime_min, ParticleK::yellow_lifetime_max)}
+			, double_seconds{uniform(_lifetime_min, _lifetime_max)}
 			}
 		{
 			_velocity.rotate(uniform(0.0, 360.0));
 		}
-
-		/// Updates the particle.
-		void update() override;
 	private:
-		/// @return The texture to be used when drawing a particle.
-		Texture::ptr& texture() const override;
+		static constexpr double _max_displacement = 15.0;
+		static constexpr double _v = 100.0;
+		static constexpr double _turn_rate_min = -60.0;
+		static constexpr double _turn_rate_max = 60.0;
+		static constexpr double _lifetime_min = 0.8;
+		static constexpr double _lifetime_max = 1.2;
+
+		void subupdate() override;
+
+		sdl::Texture::ptr& texture() const override;
 	};
 }
 

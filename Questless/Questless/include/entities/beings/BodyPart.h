@@ -15,7 +15,7 @@
 #include <memory>
 
 #include "sdl-wrappers/basic-sdl-wrappers.h"
-#include "Attributes.h" /// @todo Probably remove this eventually. (BodyParts shouldn't need the full attributes struct.)
+#include "attributes/Attributes.h" /// @todo Probably remove this eventually. (BodyParts shouldn't need the full attributes struct.)
 
 namespace questless
 {

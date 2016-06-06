@@ -13,12 +13,6 @@ using namespace sdl;
 
 namespace questless
 {
-	void TileDialog::refresh()
-	{
-		_txt_title = Texture::make(font_manager()["Dialog/title"].render(_title, renderer(), Color::white()));
-		_txt_prompt = Texture::make(font_manager()["Dialog/prompt"].render(_prompt, renderer(), Color::white()));
-	}
-
 	void TileDialog::update(const Input& input)
 	{
 		if (input.presses(SDLK_BACKSPACE) || input.presses(SDLK_ESCAPE)) {
@@ -47,5 +41,11 @@ namespace questless
 
 		// Highlight valid tiles.
 		/// @todo This.
+	}
+
+	void TileDialog::load_textures()
+	{
+		_txt_title = Texture::make(font_manager()["Dialog/title"].render(_title, renderer(), Color::white()));
+		_txt_prompt = Texture::make(font_manager()["Dialog/prompt"].render(_prompt, renderer(), Color::white()));
 	}
 }

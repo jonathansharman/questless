@@ -13,9 +13,10 @@ namespace questless
 {
 	void Particle::update()
 	{
+		subupdate();
+
 		_time_left -= frame_duration;
-		if (_time_left < double_seconds::zero()) {
-			_dead = true;
+		if (dead()) {
 			return;
 		}
 		_position += _velocity.displacement(frame_duration);
@@ -25,7 +26,7 @@ namespace questless
 
 	void Particle::draw(const Camera& camera)
 	{
-		texture()->alpha(percentage_to_byte(_fade_out ? _time_left.count() / _lifetime.count() : 1.0));
+		texture()->alpha(percentage_to_byte(fade_out() ? _time_left.count() / _lifetime.count() : 1.0));
 		camera.draw(*texture(), _position.to_point(), nullopt, _scale, _scale, false, false, _angle);
 	}
 }

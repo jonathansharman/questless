@@ -16,10 +16,15 @@
 
 namespace sdl
 {
+	struct Point;
+
 	struct Vector
 	{
 		int x;
 		int y;
+
+		/// @return A vector from the origin (0, 0) to the given point.
+		static constexpr Vector to(Point p);
 
 		constexpr Vector() : x{0}, y{0} {}
 		constexpr Vector(int x, int y) : x{x}, y{y} {}
@@ -29,6 +34,7 @@ namespace sdl
 
 		constexpr friend Vector operator +(Vector v1, Vector v2) { return {v1.x + v2.x, v1.y + v2.y}; }
 		constexpr friend Vector operator -(Vector v1, Vector v2) { return {v1.x - v2.x, v1.y - v2.y}; }
+		constexpr friend Vector operator -(const Vector& v) { return{-v.x, -v.y}; }
 
 		Vector& operator =(Vector v)
 		{
@@ -64,7 +70,8 @@ namespace sdl
 		constexpr friend Point operator +(const Point& p, const Vector& v) { return {p.x + v.x, p.y + v.y}; }
 		constexpr friend Point operator +(const Vector& v, const Point& p) { return {v.x + p.x, v.y + p.y}; }
 		constexpr friend Point operator -(const Point& p, const Vector& v) { return {p.x - v.x, p.y - v.y}; }
-		constexpr friend Vector operator -(const Point& p1, const Point& p2) { return {p1.x - p2.x, p1.y - p2.y}; }
+		constexpr friend Vector operator -(const Point& p1, const Point& p2) { return{p1.x - p2.x, p1.y - p2.y}; }
+		constexpr friend Point operator -(const Point& p) { return{-p.x, -p.y}; }
 
 		Point& operator =(const Point& p)
 		{
@@ -87,6 +94,11 @@ namespace sdl
 
 		constexpr operator SDL_Point() const { return {x, y}; }
 	};
+
+	inline constexpr Vector Vector::to(Point p)
+	{
+		return Vector{p.x, p.y};
+	}
 
 	struct Rect
 	{
@@ -130,6 +142,7 @@ namespace sdl
 			return left.x != right.x || left.y != right.y || left.w != right.w || left.h != right.h;
 		}
 
+		Point position() const { return Point{x, y}; }
 		int right() const { return x + w - 1; }
 		int bottom() const { return y + h - 1; }
 

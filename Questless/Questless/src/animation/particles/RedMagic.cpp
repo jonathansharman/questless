@@ -12,16 +12,14 @@
 
 namespace questless
 {
-	void RedMagic::update()
+	void RedMagic::subupdate()
 	{
-		_velocity.y += Hertz{ParticleK::red_gravity * frame_duration};
-
-		Particle::update();
+		_velocity.y += Hertz{_gravity * frame_duration};
 	}
 
-	Texture::ptr& RedMagic::texture() const
+	sdl::Texture::ptr& RedMagic::texture() const
 	{
-		static auto texture = Texture::make("resources/textures/particles/magic/red.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+		static auto texture = sdl::Texture::make("resources/textures/particles/magic/red.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
 		return texture;
 	}
 }

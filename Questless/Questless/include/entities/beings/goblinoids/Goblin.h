@@ -27,8 +27,9 @@ namespace questless
 		static constexpr double base_agility = 120.0;
 		static constexpr double base_dexterity = 100.0;
 		static constexpr double base_stealth = 300.0;
-		static constexpr double base_vision = 60.0;
-		static constexpr double base_light_affinity = 100.0;
+		static constexpr double base_visual_acuity = 60.0;
+		static constexpr double base_ideal_light = 100.0;
+		static constexpr double base_light_tolerance = 10.0;
 		static constexpr double base_hearing = 180.0;
 		static constexpr double base_intellect = 60.0;
 		static constexpr double base_lift = 0.0;
