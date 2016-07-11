@@ -7,8 +7,8 @@
 * @section DESCRIPTION Provides access to shared resources.
 */
 
-#ifndef RESOURCES_H
-#define RESOURCES_H
+#ifndef SDL_RESOURCES_H
+#define SDL_RESOURCES_H
 
 #include <memory>
 

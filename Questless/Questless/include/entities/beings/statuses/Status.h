@@ -27,16 +27,24 @@ namespace questless
 
 		using modifiers_t = std::vector<std::unique_ptr<Attributes::Modifier>>;
 
+		/// @return The name of the status modifier displayed to the player.
 		std::string name() const { return _name; }
-		unsigned duration() const { return _duration; }
+
+		/// @return The number of turns remaining before the status expires.
+		int duration() const { return _duration; }
+
+		/// @return The being that caused the status or null if none did.
+		Being* source() const { return _source; }
+
+		/// @return The type of the status: debuff, netural, or buff.
 		virtual Type type() const = 0;
 
 		/// @param name The name of the status modifier displayed to the player.
 		/// @param duration The number of turns remaining before the status modifier expires.
 		/// @param source The being that caused the status modifier, if any.
-		Status(std::string name, unsigned duration, Being* source = nullptr);
+		Status(std::string name, int duration, Being* source = nullptr);
 
-		/// @return A list of attribute modifiers.
+		/// @return The list of attribute modifiers associated with this status.
 		virtual const modifiers_t& modifiers() const
 		{
 			// No modifiers by default.
@@ -46,19 +54,21 @@ namespace questless
 
 		/// Carries out any effects that should occur when the status is initially applied.
 		/// @param target The being affected by the status.
-		virtual void apply(Being& target) {}
+		virtual void apply(Being& target);
 
 		/// Carries out any effects that should occur each update cycle and decrements the duration of the status.
 		/// @param target The being affected by the status.
-		virtual void update(Being& target) { --_duration; }
+		void update(Being& target);
 
 		/// Carries out any effects that should occur when the status expires.
 		/// @param target The being affected by the status.
-		virtual void expire(Being& target) {}
-	protected:
-		std::string _name; ///< The name of the status modifier displayed to the player.
-		unsigned _duration; ///< The number of turns remaining before the status expires.
-		Being* _source; ///< The being that caused the status, if any.
+		virtual void expire(Being& target);
+	private:
+		std::string _name;
+		int _duration;
+		Being* _source;
+
+		virtual void subupdate(Being& target);
 	};
 }
 

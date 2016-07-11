@@ -33,7 +33,7 @@ namespace questless
 		struct SectionView
 		{
 			HexCoords coords;
-			array<array<double, section_diameter>, section_diameter> tile_visibilities;
+			array<array<double, section_diameter>, section_diameter> tile_visibilities; ///< Indices are r-major.
 		};
 
 		struct BeingView

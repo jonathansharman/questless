@@ -37,9 +37,9 @@ namespace questless
 			( Game&
 			, const std::string&
 			, const std::string&
-			, int default
-			, optional<int> min
-			, optional<int> max
+			, int
+			, optional<int>
+			, optional<int>
 			, std::function<void(optional<int>)> cont
 			) const override
 		 {
@@ -49,7 +49,7 @@ namespace questless
 			( Game&
 			, const std::string&
 			, const std::string&
-			, int default
+			, int
 			, std::function<bool(int)>
 			, std::function<void(optional<int>)> cont
 			) const override
@@ -71,7 +71,7 @@ namespace questless
 			( Game&
 			, const std::string&
 			, const std::string&
-			, double default
+			, double
 			, std::function<bool(double)>
 			, std::function<void(optional<double>)> cont
 			) const override
@@ -115,7 +115,7 @@ namespace questless
 			( Game&
 			, const std::string&
 			, const std::string&
-			, const Being& source
+			, const Being&
 			, std::function<bool(Being&)>
 			, std::function<void(optional<Item*>)> cont
 			) const override

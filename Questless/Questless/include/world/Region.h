@@ -71,10 +71,6 @@ namespace questless
 		/// Draws the visible portion of the terrain.
 		void draw_terrain(const Camera& camera);
 
-		/// Draws the region's hexes to a single cached background texture for faster drawing.
-		/// @param renderer The renderer object to create and render the background.
-		void cache_background(sdl::Renderer& renderer);
-
 		/// Adds an entity of the given type to the appropriate section of the region, based on the given coordinates, and set its internal coordinates to those given.
 		/// @param entity An entity to be added.
 		/// @param coords The entity's coordinates in the region.

@@ -12,9 +12,8 @@
 
 namespace questless
 {
-	void Poisoned::update(Being& target)
+	void Poisoned::subupdate(Being& target)
 	{
-		target.take_damage(Damage::from_blight(_magnitude), _source);
-		Status::update(target);
+		target.take_damage(Damage::from_blight(_magnitude), source());
 	}
 }

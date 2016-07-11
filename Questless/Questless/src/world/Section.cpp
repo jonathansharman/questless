@@ -21,6 +21,13 @@ namespace questless
 	//	return f_y < s_y || (f_y == s_y && first->entity_id() < second->entity_id());
 	//}
 
+	HexCoords Section::section_coords(HexCoords region_coords)
+	{
+		int q = (region_coords.q % section_diameter + section_diameter) % section_diameter;
+		int r = (region_coords.r % section_diameter + section_diameter) % section_diameter;
+		return HexCoords{q, r};
+	}
+
 	Section::Section(HexCoords coords) : _coords{coords}
 	{}
 

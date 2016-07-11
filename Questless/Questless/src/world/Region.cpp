@@ -23,7 +23,7 @@ using namespace sdl;
 
 namespace questless
 {
-	/// @todo Remove.
+	/// @todo Remove. Wait, why?
 	bool turn_order_function(const Being& first, const Being& second)
 	{
 		// Sort beings in the turn queue by lower busy-time first, then lower entity ID.
@@ -227,29 +227,6 @@ namespace questless
 	void Region::draw_terrain(const Camera& camera)
 	{
 		camera.draw(*_background, Point{0, 0});
-	}
-
-	void Region::cache_background(sdl::Renderer& renderer)
-	{
-		HexCoords most_distant_hex_coords{-(_loaded_sections_q_radius + 1) * section_diameter, -(_loaded_sections_r_radius + 1) * section_diameter};
-		Point most_distant_world_coords = Layout::dflt().to_world(most_distant_hex_coords);
-
-		_background = make_unique<Texture>
-			( renderer
-			, SDL_BLENDMODE_BLEND
-			, 2 * abs(most_distant_world_coords.x) + 1
-			, 2 * abs(most_distant_world_coords.y) + 1
-			, true
-			);
-		Vector center{_background->width() / 2, _background->height() / 2};
-		_background->as_target([&] {
-			for (unsigned i = 0; i < 20; ++i) {
-				renderer.draw_rect(Rect(i, i, _background->width() - 2 * i, _background->height() - 2 * i), Color::red(), false);
-			}
-			for_each_loaded_section([center](Section& section) {
-//				section.draw(center);
-			});
-		});
 	}
 
 	Entity* Region::entity(HexCoords tile_coords) const

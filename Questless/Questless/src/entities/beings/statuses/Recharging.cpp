@@ -12,7 +12,7 @@
 
 namespace questless
 {
-	void Recharging::update(Being& target)
+	void Recharging::subupdate(Being& target)
 	{
 		target.gain_mana(_magnitude);
 		Status::update(target);

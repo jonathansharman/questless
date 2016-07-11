@@ -495,7 +495,15 @@ namespace questless
 			while (Being* next_ready_being = _region->next_ready_being()) {
 				next_ready_being->agent().act(*this);
 				if (!_dialogs.empty()) {
-					// Awaiting user input to complete current action. Stop taking turns, and start at the next agent once this action is complete.
+					// Awaiting player input to complete current action. Stop taking turns, and start at the next agent once this action is complete.
+
+					/// @todo The world render should probably be updated more frequently than just when it's the player's turn.
+
+					// Reset the world view.
+					_world_view = make_unique<WorldView>(*this, *_player_being, true);
+					// Reset the world renderer.
+					_world_renderer = make_unique<WorldRenderer>(*_world_view);
+
 					break;
 				}
 			}
@@ -504,15 +512,9 @@ namespace questless
 				_time += 1.0;
 				// Update the region.
 				_region->update();
-				// Reset the world view.
-				_world_view = make_unique<WorldView>(*this, *_player_being, true);
-				// Reset the world renderer.
-				_world_renderer = make_unique<WorldRenderer>(*_world_view);
 
 				/// @todo Ideally, some information about the previous world view would be preserved.
 				///       E.g., being animations shouldn't reset every time the turn advances.
-
-				/// @todo Determine why the terrain only updates after the second time moving.
 			}
 		}
 

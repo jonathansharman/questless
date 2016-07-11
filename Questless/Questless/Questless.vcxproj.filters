@@ -7,9 +7,6 @@
     <Filter Include="resources\sounds">
       <UniqueIdentifier>{d573eddc-e51f-4217-b689-31183354219e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="resources\music">
-      <UniqueIdentifier>{fb2e1f78-6d91-4b36-8493-f2f769247b07}</UniqueIdentifier>
-    </Filter>
     <Filter Include="resources\textures">
       <UniqueIdentifier>{d94cedb8-2f20-4437-a6f5-f7ac14eb546d}</UniqueIdentifier>
     </Filter>
@@ -123,6 +120,9 @@
     </Filter>
     <Filter Include="include\entities\beings\attributes">
       <UniqueIdentifier>{12fb0415-9163-4edb-8467-74b35c6cf3fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\music">
+      <UniqueIdentifier>{fb2e1f78-6d91-4b36-8493-f2f769247b07}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -374,9 +374,6 @@
       <Filter>include\sdl-wrappers</Filter>
     </ClInclude>
     <ClInclude Include="include\sdl-wrappers\Renderable.h">
-      <Filter>include\sdl-wrappers</Filter>
-    </ClInclude>
-    <ClInclude Include="include\sdl-wrappers\FontManager.h">
       <Filter>include\sdl-wrappers</Filter>
     </ClInclude>
     <ClInclude Include="include\ui\CountDialog.h">

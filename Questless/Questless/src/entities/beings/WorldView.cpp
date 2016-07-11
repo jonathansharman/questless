@@ -78,13 +78,15 @@ namespace questless
 			_section_views.push_back(section_view);
 
 			for (const Being::ptr& other_being : _region.beings(section_coords)) {
-				if (other_being->coords().distance_to(coords) <= visual_range) {
-					HexCoords other_coords = other_being->coords();
+				HexCoords other_coords = other_being->coords();
+				if (other_coords.distance_to(coords) < visual_range) {
 					BeingView being_view;
 					being_view.being = other_being.get();
 
-					double tile_visibility = section_view.tile_visibilities[other_coords.r + section_radius][other_coords.q + section_radius];
-					if (0.0 < tile_visibility < _low_perception_threshold) {
+					HexCoords tile_coords = Section::section_coords(other_coords);
+
+					double tile_visibility = section_view.tile_visibilities[tile_coords.r][tile_coords.q];
+					if (tile_visibility < _low_perception_threshold) {
 						being_view.perception = BeingView::Perception::none;
 					} else if (tile_visibility < _medium_perception_threshold) {
 						being_view.perception = BeingView::Perception::low;

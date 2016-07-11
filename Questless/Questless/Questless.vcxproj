@@ -5,9 +5,17 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -22,7 +30,20 @@
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
@@ -35,21 +56,50 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros">
     <SDL_PATH>C:\vc-libs\</SDL_PATH>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SourcePath)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(VC_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(VC_IncludePath)</IncludePath>
+    <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>C:\Program Files (x86)\Windows Kits\8.1\Include\shared\;$(SourcePath)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(VC_IncludePath)</IncludePath>
     <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SourcePath)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(VC_IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files (x86)\Windows Kits\8.1\Include\shared\;$(SourcePath)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(VC_IncludePath)</IncludePath>
+    <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>C:\Program Files (x86)\Windows Kits\8.1\Include\shared\;$(SourcePath)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(VC_IncludePath)</IncludePath>
     <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
@@ -65,6 +115,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
@@ -157,7 +223,6 @@
     <ClInclude Include="include\items\weapons\Weapon.h" />
     <ClInclude Include="include\sdl-wrappers\basic-sdl-wrappers.h" />
     <ClInclude Include="include\sdl-wrappers\Font.h" />
-    <ClInclude Include="include\sdl-wrappers\FontManager.h" />
     <ClInclude Include="include\sdl-wrappers\Input.h" />
     <ClInclude Include="include\sdl-wrappers\Renderable.h" />
     <ClInclude Include="include\sdl-wrappers\Renderer.h" />

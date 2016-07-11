@@ -12,9 +12,21 @@
 
 namespace questless
 {
-	Status::Status(std::string name, unsigned duration, Being* source)
+	Status::Status(std::string name, int duration, Being* source)
 		: _name{std::move(name)}
 		, _duration{duration}
 		, _source{source}
 	{}
+
+	void Status::apply(Being&) {}
+
+	void Status::update(Being& target)
+	{
+		--_duration;
+		subupdate(target);
+	}
+
+	void Status::expire(Being&) {}
+
+	void Status::subupdate(Being&) {}
 }

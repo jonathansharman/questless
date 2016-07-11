@@ -27,7 +27,7 @@ namespace questless
 
 		virtual Type type() const { return Type::neutral; }
 
-		void update(Being& target) override;
+		void subupdate(Being& target) override;
 	private:
 		double _magnitude;
 	};

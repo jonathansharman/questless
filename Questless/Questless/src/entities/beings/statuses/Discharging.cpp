@@ -12,9 +12,8 @@
 
 namespace questless
 {
-	void Discharging::update(Being& target)
+	void Discharging::subupdate(Being& target)
 	{
 		target.lose_mana(_magnitude);
-		Status::update(target);
 	}
 }

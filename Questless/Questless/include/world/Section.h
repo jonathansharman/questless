@@ -31,6 +31,10 @@ namespace questless
 	class Section
 	{
 	public:
+		/// @param region Coordinates relative to the entire region.
+		/// @return Positive coordinates relative to the section containing the given region coordinates.
+		static HexCoords section_coords(HexCoords region_coords);
+
 		/// Constructs an empty section.
 		/// @param coords The positive axial coordinates of the section.
 		Section(HexCoords coords);
