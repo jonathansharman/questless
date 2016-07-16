@@ -63,8 +63,6 @@ namespace questless
 		static constexpr int _condition_bar_width = 10;
 		static constexpr int _condition_bar_height = 100;
 
-		int _screen_width;
-		int _screen_height;
 		int _screen_bottom;
 
 		int _hotbar_width;
@@ -84,9 +82,9 @@ namespace questless
 
 		Font::ptr _fnt_item_count;
 
-		void refresh() override;
+		void refresh() override { load_textures_and_layout(); }
 
-		void load_textures();
+		void load_textures_and_layout();
 	};
 }
 

@@ -47,14 +47,15 @@ namespace questless
 						caster.lose_mana(cost);
 						if (auto target = dynamic_cast<Being*>(game.region().entity(tile_coords))) {
 							double burn_magnitude = magnitude * caster.power(color()) / target->resistance(color());
-							auto burn = Damage::from_burn(burn_magnitude);
-							target->take_damage(burn, &caster);
+							auto burn = Damage::from_burn(burn_magnitude * 10000000000); /// @todo Debug damage... Remove.
 
 							/// @todo Experimental body part stuff here... Delete or fix.
 							double average_damage_per_part = burn_magnitude / target->body().parts_count();
 							for (auto part : target->body().parts()) {
 								part->take_damage(uniform(0.0, 2.0 * average_damage_per_part));
 							}
+
+							target->take_damage(burn, &caster);
 						}
 						return cont(Result::success);
 					}

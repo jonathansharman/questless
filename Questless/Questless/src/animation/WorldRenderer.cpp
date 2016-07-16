@@ -18,6 +18,14 @@ using namespace sdl;
 
 namespace questless
 {
+	void WorldRenderer::reset_view(const WorldView& world_view)
+	{
+		_world_view = &world_view;
+		_terrain_render_is_current = false;
+
+		/// @todo Should the tile texture and entity animation caches ever be cleaned out? If so, when and how?
+	}
+
 	void WorldRenderer::update()
 	{
 		for (const auto& id_and_animation : _entity_animations) {
@@ -40,11 +48,13 @@ namespace questless
 
 	void WorldRenderer::draw_beings(const Camera& camera)
 	{
-		for (const auto& being_view : _world_view.being_views()) {
+		for (const auto& being_view : _world_view->being_views()) {
 			// Search for the being's animation in the cache.
 			auto it = _entity_animations.find(being_view.being->entity_id());
 			// If it's there, use it. Otherwise, create the animation and cache it.
-			AnimationCollection& being_animation = it != _entity_animations.end() ? *it->second : create_and_cache_entity_animation(*being_view.being);
+			AnimationCollection& being_animation = it != _entity_animations.end()
+				? *it->second
+				: create_and_cache_entity_animation(*being_view.being);
 
 			being_animation.draw(Layout::dflt().to_world(being_view.being->coords()), camera);
 		}
@@ -53,7 +63,6 @@ namespace questless
 	void WorldRenderer::refresh()
 	{
 		_tile_textures.clear();
-
 		_terrain_render_is_current = false;
 	}
 
@@ -75,23 +84,23 @@ namespace questless
 
 	void WorldRenderer::render_terrain()
 	{
-		optional<Rect> opt_bounds = _world_view.bounds();
+		optional<Rect> opt_bounds = _world_view->bounds();
 		if (!opt_bounds) {
 			_terrain_texture = nullptr;
 		}
 		_terrain_bounds = *opt_bounds;
 
 		_terrain_texture = make_unique<Texture>
-			(sdl::renderer()
-				, SDL_BLENDMODE_BLEND
-				, _terrain_bounds.w
-				, _terrain_bounds.h
-				, true
-				);
+			( sdl::renderer()
+			, SDL_BLENDMODE_BLEND
+			, _terrain_bounds.w
+			, _terrain_bounds.h
+			, true
+			);
 		_terrain_texture->as_target([&] {
 			renderer().clear(Color::clear());
-			for (const auto& section_view : _world_view.section_views()) {
-				const Section& section = _world_view.region().section(section_view.coords);
+			for (const auto& section_view : _world_view->section_views()) {
+				const Section& section = _world_view->region().section(section_view.coords);
 				for (int r = -section_radius; r <= section_radius; ++r) {
 					for (int q = -section_radius; q <= section_radius; ++q) {
 						double tile_visibility = section_view.tile_visibilities[r + section_radius][q + section_radius];

@@ -14,8 +14,6 @@
 #include <set>
 #include <memory>
 #include <functional>
-#include <filesystem>
-namespace fs = std::tr2::sys; /// @todo Replace this with proper using statements if/when TR2 comes around.
 
 #include "Section.h"
 #include "utility/utility.h"
@@ -161,9 +159,6 @@ namespace questless
 		HexCoords center_section_coords = HexCoords{0, 0};
 
 		std::set<Being::ref, Being::ref_less_t> _turn_queue;
-
-		/// @todo Remove _background once world renderer has all the caching functionality.
-		sdl::Texture::ptr _background;
 
 		/// Performs some operation on each section in the loaded rhomboid of sections.
 		/// @param f The operation to perform on each section.

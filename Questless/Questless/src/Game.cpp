@@ -230,6 +230,10 @@ namespace questless
 				return;
 			}
 
+			/// @todo Sometimes resizing the window causes a crash.
+			if (_input.window_restored()) {
+				/// @todo Save previous window size and restore it here.
+			}
 			if (_input.window_resized()) {
 				_window->recreate();
 				renderer(make_unique<Renderer>(*_window, _window->width(), _window->height()));
@@ -486,9 +490,18 @@ namespace questless
 			_dialogs.front()->update(_input);
 			if (_dialogs.front()->closed()) {
 				_dialogs.pop_front();
+
+				// End of player's turn. Update world view.
+				if (_dialogs.empty()) {
+					// Reset the world view.
+					_world_view = make_unique<WorldView>(*this, *_player_being, true);
+					// Reset the world renderer.
+					_world_renderer->reset_view(*_world_view);
+				}
 			}
 		} else {
 			/// @todo Turns are advancing too slowly sometimes. I.e., moving around takes half a time unit instead of one. Why?
+
 			// Take turns.
 
 			// Work through the beings ready to take their turns, until all have acted or one of them can't finish acting yet.
@@ -497,12 +510,12 @@ namespace questless
 				if (!_dialogs.empty()) {
 					// Awaiting player input to complete current action. Stop taking turns, and start at the next agent once this action is complete.
 
-					/// @todo The world render should probably be updated more frequently than just when it's the player's turn.
-
 					// Reset the world view.
 					_world_view = make_unique<WorldView>(*this, *_player_being, true);
 					// Reset the world renderer.
-					_world_renderer = make_unique<WorldRenderer>(*_world_view);
+					_world_renderer->reset_view(*_world_view);
+
+					/// @todo The world render should probably be updated more frequently than before and after the player's turn.
 
 					break;
 				}

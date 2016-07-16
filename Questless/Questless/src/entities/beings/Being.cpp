@@ -213,8 +213,6 @@ namespace questless
 			
 			// Target's death occurs here.
 			/// @todo Make corpse, or do whatever is appropriate for the type of being. (Add abstract base classes for Corporeal, Incorporeal, etc.?)
-			_region->remove_from_turn_queue(*this); /// @todo There needs to be a standard way to remove things from a region/section so that calls to remove_from_turn_queue() don't get left out. (Should just be Region::remove<>().)
-			_section->remove<Being>(*this);
 
 			// Source has killed target.
 			if (source != nullptr) {
@@ -222,6 +220,10 @@ namespace questless
 			}
 			// Target has died.
 			after_die(source);
+
+			// Remove from world.
+			_region->remove_from_turn_queue(*this); /// @todo There needs to be a standard way to remove things from a region/section so that calls to remove_from_turn_queue() don't get left out. (Should just be Region::remove<>().)
+			_section->remove<Being>(*this);
 		}
 	}
 

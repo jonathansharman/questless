@@ -7,6 +7,8 @@
 * @section DESCRIPTION The implementation for the Region class.
 */
 
+#include <filesystem>
+namespace fs = std::tr2::sys; /// @todo Replace this with proper using statements if/when TR2 comes around.
 #include <limits.h>
 
 #include "world/Region.h"

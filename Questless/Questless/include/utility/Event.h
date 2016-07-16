@@ -46,6 +46,7 @@ namespace questless
 		/// @param args The event handler arguments.
 		void operator ()(Args... args)
 		{
+			size_t s = _handlers.size();
 			for (auto& handler : _handlers) {
 				if (!(*handler)(args...)) {
 					return;

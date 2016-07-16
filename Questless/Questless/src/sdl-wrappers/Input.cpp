@@ -95,6 +95,8 @@ namespace sdl
 		_presses.clear();
 		_releases.clear();
 
+		_window_maximized = false;
+		_window_restored = false;
 		_window_resized = false;
 
 		while (SDL_PollEvent(&_event)) {
@@ -118,10 +120,20 @@ namespace sdl
 				_scroll += _event.wheel.y;
 				break;
 			case SDL_WINDOWEVENT:
-				if (_event.window.event == SDL_WINDOWEVENT_RESIZED) {
-					_window_resized = true;
-					_resized_window_width = _event.window.data1;
-					_resized_window_height = _event.window.data2;
+				switch (_event.window.event) {
+					case SDL_WINDOWEVENT_RESIZED:
+						_window_resized = true;
+						_resized_window_width = _event.window.data1;
+						_resized_window_height = _event.window.data2;
+						break;
+					case SDL_WINDOWEVENT_MAXIMIZED:
+						_window_maximized = true;
+						break;
+					case SDL_WINDOWEVENT_RESTORED:
+						_window_restored = true;
+						break;
+					default:
+						break;
 				}
 				break;
 			}

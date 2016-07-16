@@ -29,7 +29,7 @@ namespace sdl
 			, h_centered ? SDL_WINDOWPOS_CENTERED : SDL_WINDOWPOS_UNDEFINED
 			, v_centered ? SDL_WINDOWPOS_CENTERED : SDL_WINDOWPOS_UNDEFINED
 			, width, height
-			, (fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0) | (resizable ? SDL_WINDOW_RESIZABLE : 0)
+			, (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | (resizable ? SDL_WINDOW_RESIZABLE : 0)
 			);
 		if (_sdl_window == nullptr) {
 			throw runtime_error{"Failed to create window."};
@@ -52,7 +52,7 @@ namespace sdl
 			( title.c_str()
 			, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED
 			, width, height
-			, (fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0) | (resizable ? SDL_WINDOW_RESIZABLE : 0)
+			, (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | (resizable ? SDL_WINDOW_RESIZABLE : 0)
 			);
 		if (_sdl_window == nullptr) {
 			throw runtime_error{"Failed to create window."};
@@ -79,23 +79,26 @@ namespace sdl
 			( _title.c_str()
 			, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED
 			, width(), height()
-			, (fullscreen() ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0) | (resizable() ? SDL_WINDOW_RESIZABLE : 0)
+			, flags()
 			);
 		SDL_SetWindowIcon(_sdl_window, IMG_Load(_icon_filename.c_str()));
 		SDL_SetWindowPosition(_sdl_window, x_init, y_init);
 		SDL_DestroyWindow(old_sdl_window);
 	}
 
+	bool Window::maximized() const
+	{
+		return (flags() & SDL_WINDOW_MAXIMIZED) != 0;
+	}
+
 	bool Window::fullscreen() const
 	{
-		Uint32 flags = SDL_GetWindowFlags(_sdl_window);
-		return (flags & SDL_WINDOW_FULLSCREEN) != 0;
+		return (flags() & SDL_WINDOW_FULLSCREEN) != 0;
 	}
 
 	bool Window::resizable() const
 	{
-		Uint32 flags = SDL_GetWindowFlags(_sdl_window);
-		return (flags & SDL_WINDOW_RESIZABLE) != 0;
+		return (flags() & SDL_WINDOW_RESIZABLE) != 0;
 	}
 
 	Point Window::position() const

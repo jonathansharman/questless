@@ -21,7 +21,7 @@ namespace questless
 	{
 		_fnt_item_count = Font::make("resources/fonts/dumbledor1.ttf", _item_count_font_size, SDL_BLENDMODE_BLEND);
 
-		load_textures();
+		load_textures_and_layout();
 	}
 
 	void HUDView::draw(const HUDModel& hud)
@@ -84,28 +84,23 @@ namespace questless
 		}
 	}
 
-	void HUDView::refresh()
-	{
-		load_textures();
-
-		_screen_width = _window.width();
-		_screen_height = _window.height();
-		_screen_bottom = _screen_height - 1;
-
-		_hotbar_width = _hotbar_slot_texture->width() * HUDModel::hotbar_size + _hotbar_interslot_gap * (HUDModel::hotbar_size - 1);
-		_hotbar_x_start = (_screen_width - _hotbar_width) / 2;
-
-		_inv_width = static_cast<int>(HUDView::inv_width_percent * _screen_width);
-		_inv_height = static_cast<int>(HUDView::inv_height_percent * _screen_height);
-
-		_inv_left = (_screen_width - _inv_width) / 2;
-		_inv_top = (_screen_height - _inv_height) / 2;
-
-		_inv_column_count = _inv_width / HUDView::item_icon_width;
-	}
-
-	void HUDView::load_textures()
+	void HUDView::load_textures_and_layout()
 	{
 		_hotbar_slot_texture = Texture::make("resources/textures/ui/hud/hotbar-slot.png", renderer());
+
+		int window_width = _window.width();
+		int window_height = _window.height();
+		_screen_bottom = window_height - 1;
+
+		_hotbar_width = _hotbar_slot_texture->width() * HUDModel::hotbar_size + _hotbar_interslot_gap * (HUDModel::hotbar_size - 1);
+		_hotbar_x_start = (window_width - _hotbar_width) / 2;
+
+		_inv_width = static_cast<int>(HUDView::inv_width_percent * window_width);
+		_inv_height = static_cast<int>(HUDView::inv_height_percent * window_height);
+
+		_inv_left = (window_width - _inv_width) / 2;
+		_inv_top = (window_height - _inv_height) / 2;
+
+		_inv_column_count = _inv_width / HUDView::item_icon_width;
 	}
 }

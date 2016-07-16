@@ -75,6 +75,9 @@ namespace sdl
 		/// @return The filename used to load the window icon.
 		string icon_filename() const { return _icon_filename; }
 
+		/// @return Whether the window is maximized.
+		bool maximized() const;
+
 		/// @return Whether the window is in fullscreen mode.
 		bool fullscreen() const;
 
@@ -102,6 +105,9 @@ namespace sdl
 		string _icon_filename;
 
 		mutable optional<int> _width, _height;
+
+		/// @return The SDL window flags.
+		Uint32 flags() const { return SDL_GetWindowFlags(_sdl_window); }
 	};
 }
 

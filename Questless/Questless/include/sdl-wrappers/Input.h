@@ -67,7 +67,11 @@ namespace sdl
 		/// @return Whether the user has attempted to quit the application.
 		bool quit() const { return _quit; }
 
-		/// @return Whether the user has resized the window.
+		/// @return Whether the user maximized the window.
+		bool window_maximized() const { return _window_maximized; }
+		/// @return Whether the user restored the window.
+		bool window_restored() const { return _window_restored; }
+		/// @return Whether the user resized the window.
 		bool window_resized() const { return _window_resized; }
 		/// @return The window's new width after being resized. The value is unspecified if the window wasn't resized last update.
 		int resized_window_width() const { return _resized_window_width; }
@@ -128,7 +132,9 @@ namespace sdl
 		SDL_Event _event;
 
 		bool _quit;
-		
+
+		bool _window_maximized = false;
+		bool _window_restored = false;
 		bool _window_resized = false;
 		int _resized_window_width, _resized_window_height;
 
