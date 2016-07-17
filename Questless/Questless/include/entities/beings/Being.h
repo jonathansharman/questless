@@ -137,7 +137,7 @@ namespace questless
 		// Public Data //
 		/////////////////
 
-		// Delegates
+		// Event Handlers
 
 		Event<Damage&, Being*> before_take_damage;
 		Event<Damage&, Being*> after_take_damage;
@@ -164,6 +164,7 @@ namespace questless
 		virtual ~Being() = default;
 
 		Being& as_being() { return dynamic_cast<Being&>(*this); }
+		const Being& as_being() const { return dynamic_cast<const Being&>(*this); }
 
 		/// @param out A stream object into which the serialized being is inserted.
 		void serialize(std::ostream& out) const override;
@@ -177,6 +178,11 @@ namespace questless
 		/// Adds the given item to the being's inventory.
 		/// @param item An item to be added to the inventory.
 		void give_item(Item::ptr item) { _inventory.add(std::move(item)); }
+
+		/// Takes the given item from the being's inventory.
+		/// @param item An item to be taken from the inventory.
+		/// @return The item taken.
+		Item::ptr take_item(const Item& item) { return _inventory.remove(item); }
 
 		/// @return The being's body.
 		const Body& body() const { return _body; }
@@ -318,7 +324,7 @@ namespace questless
 		// Statuses
 
 		std::vector<std::unique_ptr<Status>> _statuses;
-		bool _need_to_calculate_attributes;
+		bool _need_to_calculate_attributes; /// @todo Is there a way to avoid this?
 
 		// Items
 

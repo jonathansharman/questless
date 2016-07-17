@@ -30,8 +30,8 @@ namespace questless
 		struct Frame
 		{
 			double_seconds duration;
-			sdl::Point origin; ///< The origin of the frame's texture relative to the animation origin.
 			sdl::Point coords; ///< The cel coordinates within the sprite sheet.
+			sdl::Point origin; ///< The origin of the frame's texture relative to the animation origin.
 
 			Frame(double_seconds duration, sdl::Point coords, sdl::Point origin) : duration{duration}, coords{coords}, origin{origin} {}
 		};

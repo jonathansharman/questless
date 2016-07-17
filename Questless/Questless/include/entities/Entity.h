@@ -20,7 +20,7 @@
 
 namespace questless
 {
-	enum class EntityClass : unsigned { HumanClass, GoblinClass, TrollClass };
+	enum class EntityClass : unsigned { HumanClass, GoblinClass, TrollClass, ItemBoxClass };
 	class Region;
 	class Section;
 
@@ -69,7 +69,6 @@ namespace questless
 
 		/// @return The entity's coordinates within its region.
 		HexCoords coords() const { return _coords; }
-
 		/// @param value The entity's new coordinates within its region.
 		void coords(HexCoords value) { _coords = value; }
 	protected:

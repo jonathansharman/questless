@@ -46,8 +46,18 @@ namespace questless
 		/// @param item An item to add to the inventory.
 		void add(Item::ptr item);
 
+		/// Finds and removes the given item from the inventory.
+		/// @param item An item to remove from the inventory.
+		/// @return The removed item or nullptr if not found.
+		Item::ptr remove(const Item& item);
+
+		/// Removes the item at the given coordinates from the inventory.
+		/// @param coords The inventory coordinates of the item to remove.
+		/// @return The removed item or nullptr if not found.
+		Item::ptr remove(Coords coords);
+
 		/// @return A stream of items in the inventory, ordered by page and then coordinates.
-		Stream<Item*> items();
+		Stream<Item*> items() { return items(0); }
 
 		/// @return The number of item pages in the inventory.
 		size_t pages() const { return _pages.size(); }

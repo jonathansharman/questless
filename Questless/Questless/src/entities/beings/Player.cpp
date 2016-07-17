@@ -29,24 +29,26 @@ namespace questless
 				{
 					if (auto item_coords = game.hud().hotbar()[player_choice.data]) {
 						Item* item = _being.inventory()[*item_coords];
-						game.query_list<Action::ptr>
-							( game.input().mouse_position()
-							, item->name()
-							, item->actions()
-							, [](const Action::ptr& a) { return a->name(); }
-							, [this, &game](optional<Action::ptr> opt_action) {
-								if (!opt_action) {
-									act(game);
-									return;
-								}
-								Action::ptr action = std::move(*opt_action);
-								action->perform(game, _being, [this, &game](Action::Result result) {
-									if (result == Action::Result::aborted) {
+						if (item != nullptr) { /// @todo Sync the hotbar with changes to the inventory so this is unnecessary.
+							game.query_list<Action::ptr>
+								( game.input().mouse_position()
+								, item->name()
+								, item->actions()
+								, [](const Action::ptr& a) { return a->name(); }
+								, [this, &game](optional<Action::ptr> opt_action) {
+									if (!opt_action) {
 										act(game);
 										return;
 									}
+									Action::ptr action = std::move(*opt_action);
+									action->perform(game, _being, [this, &game](Action::Result result) {
+										if (result == Action::Result::aborted) {
+											act(game);
+											return;
+										}
+									});
 								});
-							});
+						}
 					}
 					break;
 				}

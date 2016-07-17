@@ -22,6 +22,8 @@ namespace questless
 		void visit(const Human&) override;
 		void visit(const Goblin&) override;
 
+		void visit(const ItemBox&) override;
+
 		AnimationCollection::ptr animation() { return std::move(_animation); }
 	private:
 		AnimationCollection::ptr _animation;

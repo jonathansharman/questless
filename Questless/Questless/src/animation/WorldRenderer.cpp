@@ -60,6 +60,20 @@ namespace questless
 		}
 	}
 
+	void WorldRenderer::draw_objects(const Camera& camera)
+	{
+		for (const auto& object_view : _world_view->object_views()) {
+			// Search for the being's animation in the cache.
+			auto it = _entity_animations.find(object_view.object->entity_id());
+			// If it's there, use it. Otherwise, create the animation and cache it.
+			AnimationCollection& being_animation = it != _entity_animations.end()
+				? *it->second
+				: create_and_cache_entity_animation(*object_view.object);
+
+			being_animation.draw(Layout::dflt().to_world(object_view.object->coords()), camera);
+		}
+	}
+
 	void WorldRenderer::refresh()
 	{
 		_tile_textures.clear();

@@ -438,7 +438,8 @@ namespace questless
 		}
 		_camera->draw(*_txt_hex_highlight, _camera->pt_hovered_rounded());
 		_camera->draw(*_txt_hex_circle, pt_clicked_rounded);
-		
+
+		_world_renderer->draw_objects(*_camera);
 		_world_renderer->draw_beings(*_camera);
 
 		for (auto& particle : _particles) {

@@ -22,7 +22,7 @@ namespace questless
 
 	void Human::serialize(std::ostream& out) const
 	{
-		Human::serialize(out);
+		as_being().serialize(out);
 
 		out << std::endl;
 	}

@@ -11,11 +11,7 @@
 #define WORLD_VIEW
 
 #include <vector>
-using std::vector;
 #include <array>
-using std::array;
-#include <memory>
-using std::shared_ptr;
 
 #include "utility/constants.h"
 #include "utility/hex-utilities.h"
@@ -26,6 +22,7 @@ namespace questless
 	class Game;
 	class Region;
 	class Being;
+	class Object;
 
 	class WorldView
 	{
@@ -33,20 +30,34 @@ namespace questless
 		struct SectionView
 		{
 			HexCoords coords;
-			array<array<double, section_diameter>, section_diameter> tile_visibilities; ///< Indices are r-major.
+			std::array<std::array<double, section_diameter>, section_diameter> tile_visibilities; ///< Indices are r-major.
 		};
 
 		struct BeingView
 		{
 			enum class Perception
-			{ none   // Imperceptible.
-			, low    // Can tell there's something there but can't identify it.
-			, medium // Can tell what type of being is there.
-			, high   // Can tell what type of being is there, as well as its health, mana, and equipped items.
-			, full   // Knows everything about the being.
-			};
+				{ none   // Imperceptible.
+				, low    // Can tell there's an entity there but can't identify it.
+				, medium // Can tell what type of being is there.
+				, high   // Can tell what type of being is there, as well as its health, mana, and equipped items.
+				, full   // Knows everything about the being.
+				};
 
 			Being* being;
+			Perception perception;
+		};
+
+		struct ObjectView
+		{
+			enum class Perception
+				{ none   // Imperceptible.
+				, low    // Can tell there's an entity there but can't identify it.
+				, medium // Can tell what type of object is there.
+				, high   // Can tell what type of object is there, as well as its health, mana, and equipped items.
+				, full   // Knows everything about the being.
+				};
+
+			Object* object;
 			Perception perception;
 		};
 		
@@ -68,8 +79,9 @@ namespace questless
 		/// @param find_bounds If true, the world view will find a bounding rectangle in world space around the visible tiles.
 		WorldView(const Game& game, const Being& being, bool find_bounds);
 
-		const vector<SectionView>& section_views() const { return _section_views; }
-		const vector<BeingView>& being_views() const { return _being_views; }
+		const std::vector<SectionView>& section_views() const { return _section_views; }
+		const std::vector<BeingView>& being_views() const { return _being_views; }
+		const std::vector<ObjectView>& object_views() const { return _object_views; }
 		const Region& region() const { return _region; }
 
 		/// @return A bounding rectangle around the visible tiles or nullopt if initialized with find_bounds set to false or if no tiles are visible.
@@ -80,8 +92,9 @@ namespace questless
 		static constexpr double _high_perception_threshold = 60.0;
 		static constexpr double _full_perception_threshold = 80.0;
 
-		vector<SectionView> _section_views;
-		vector<BeingView> _being_views;
+		std::vector<SectionView> _section_views;
+		std::vector<BeingView> _being_views;
+		std::vector<ObjectView> _object_views;
 		const Region& _region;
 
 		optional<sdl::Rect> _bounds;

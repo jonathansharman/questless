@@ -43,6 +43,10 @@ namespace questless
 		/// Draws the visible beings in the world.
 		/// @param camera The camera with which to draw the beings.
 		void draw_beings(const Camera& camera);
+
+		/// Draws the visible objects in the world.
+		/// @param camera The camera with which to draw the objects.
+		void draw_objects(const Camera& camera);
 	private:
 		const WorldView* _world_view;
 

@@ -7,13 +7,15 @@
 * @section DESCRIPTION The implementation of the WorldView class.
 */
 
+#include "entities/beings/WorldView.h"
+
 #include <set>
 using std::set;
 #include <limits.h>
 
-#include "entities/beings/WorldView.h"
 #include "Game.h"
 #include "entities/beings/Being.h"
+#include "entities/objects/Object.h"
 #include "utility/hex-utilities.h"
 #include "sdl-wrappers/basic-sdl-wrappers.h"
 
@@ -77,6 +79,7 @@ namespace questless
 
 			_section_views.push_back(section_view);
 
+			// Calculate being visibilities.
 			for (const Being::ptr& other_being : _region.beings(section_coords)) {
 				HexCoords other_coords = other_being->coords();
 				if (other_coords.distance_to(coords) < visual_range) {
@@ -99,6 +102,32 @@ namespace questless
 					}
 
 					_being_views.push_back(being_view);
+				}
+			}
+
+			// Calculate object visibilities.
+			for (const Object::ptr& object : _region.objects(section_coords)) {
+				HexCoords other_coords = object->coords();
+				if (other_coords.distance_to(coords) < visual_range) {
+					ObjectView object_view;
+					object_view.object = object.get();
+
+					HexCoords tile_coords = Section::section_coords(other_coords);
+
+					double tile_visibility = section_view.tile_visibilities[tile_coords.r][tile_coords.q];
+					if (tile_visibility < _low_perception_threshold) {
+						object_view.perception = ObjectView::Perception::none;
+					} else if (tile_visibility < _medium_perception_threshold) {
+						object_view.perception = ObjectView::Perception::low;
+					} else if (tile_visibility < _high_perception_threshold) {
+						object_view.perception = ObjectView::Perception::medium;
+					} else if (tile_visibility < _full_perception_threshold) {
+						object_view.perception = ObjectView::Perception::high;
+					} else {
+						object_view.perception = ObjectView::Perception::full;
+					}
+
+					_object_views.push_back(object_view);
 				}
 			}
 		}

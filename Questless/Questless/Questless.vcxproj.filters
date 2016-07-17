@@ -463,6 +463,9 @@
     <ClInclude Include="include\entities\beings\attributes\Vision.h">
       <Filter>include\entities\beings\attributes</Filter>
     </ClInclude>
+    <ClInclude Include="include\entities\objects\ItemBox.h">
+      <Filter>include\entities\objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp" />
@@ -655,6 +658,9 @@
     </ClCompile>
     <ClCompile Include="src\animation\EntityAnimator.cpp">
       <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\objects\Object.cpp">
+      <Filter>src\entities\objects</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

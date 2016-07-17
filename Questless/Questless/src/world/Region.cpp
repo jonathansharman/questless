@@ -116,7 +116,7 @@ namespace questless
 		std::ifstream fin;
 		fin.open((region_path / entities_filename).string());
 		if (fin.fail()) {
-			throw logic_error("Could not open region's entities file.");
+			throw std::logic_error("Could not open region's entities file.");
 		}
 		string line;
 		while (std::getline(fin, line)) {
@@ -131,15 +131,16 @@ namespace questless
 				case EntityClass::TrollClass:
 					break;
 				default:
-					throw logic_error("Unknown entity type in entities file.");
+					throw std::logic_error("Unknown entity type in entities file.");
 			}
 		}
 	}
 
 	void Region::save(const string& save_name)
 	{
-		return; /// @todo Reenable someday. Use SQLite or something to save games.
+		/// @todo Reenable someday. Use SQLite or something to save games.
 
+#if 0
 		/// @todo How do deal with deleted sections? Their files should be cleaned out somehow.
 
 		fs::path saves_dir{"saves"};
@@ -162,7 +163,7 @@ namespace questless
 		{
 			std::ofstream fout{(region_path / entities_filename).string()};
 			if (fout.fail()) {
-				throw logic_error("Could not open region's entities file.");
+				throw std::logic_error("Could not open region's entities file.");
 			}
 			for (const auto& coords_and_section : _section_map) {
 				const auto& section = coords_and_section.second;
@@ -175,6 +176,9 @@ namespace questless
 				}
 			}
 		}
+#else
+		save_name.size();
+#endif
 	}
 
 	Being* Region::next_ready_being()
@@ -226,11 +230,6 @@ namespace questless
 		add<Being>(std::move(player_being), player_coords);
 	}
 
-	void Region::draw_terrain(const Camera& camera)
-	{
-		camera.draw(*_background, Point{0, 0});
-	}
-
 	Entity* Region::entity(HexCoords tile_coords) const
 	{
 		HexCoords section_coords = containing_section_coords(tile_coords);
@@ -262,7 +261,7 @@ namespace questless
 		if (it != _section_map.end()) {
 			return *(it->second);
 		} else {
-			throw logic_error{"No section at given coordinates in region."};
+			throw std::out_of_range{"No section at given coordinates in region."};
 		}
 	}
 

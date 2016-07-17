@@ -64,15 +64,10 @@ namespace questless
 		/// @param player_being The being to insert into the region.
 		void spawn_player(Being::ptr player_being);
 
-		/// @todo Remove draw_terrain() and cache_background() once all the functionality (caching in particular) is moved into the world renderer.
-
-		/// Draws the visible portion of the terrain.
-		void draw_terrain(const Camera& camera);
-
 		/// Adds an entity of the given type to the appropriate section of the region, based on the given coordinates, and set its internal coordinates to those given.
 		/// @param entity An entity to be added.
 		/// @param coords The entity's coordinates in the region.
-		/// @tparam EntityType The type of entity to add. Possible values are Being and Object.
+		/// @tparam EntityType The type of entity to add. Legal values are Being and Object.
 		template <typename EntityType>
 		void add(typename EntityType::ptr entity, HexCoords coords)
 		{
@@ -87,6 +82,8 @@ namespace questless
 				if (dynamic_cast<Being*>(entity.get())) {
 					add_to_turn_queue(dynamic_cast<Being&>(*entity));
 				}
+			} else {
+				throw std::out_of_range("No section at given coordinates in region.");
 			}
 		}
 

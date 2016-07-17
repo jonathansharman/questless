@@ -57,9 +57,11 @@ namespace questless
 				_hotbar_slot_texture->draw(Point{x, y}, HAlign::left, VAlign::bottom);
 				if (auto inv_coords = hud.hotbar[i]) {
 					Item* item = hud.player_being->inventory()[*inv_coords];
-					item->accept(texturer);
-					Texture::ptr texture = texturer.texture();
-					texture->draw(Point{x + _hotbar_slot_h_padding, y - _hotbar_slot_v_padding}, HAlign::left, VAlign::bottom);
+					if (item != nullptr) { /// @todo Find a way to sync the hotbar with the inventory so these checks aren't necessary.
+						item->accept(texturer);
+						Texture::ptr texture = texturer.texture();
+						texture->draw(Point{x + _hotbar_slot_h_padding, y - _hotbar_slot_v_padding}, HAlign::left, VAlign::bottom);
+					}
 				}
 			}
 		}

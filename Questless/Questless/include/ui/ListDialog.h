@@ -68,7 +68,7 @@ namespace questless
 					}
 				}
 
-				if (input.pressed(sdl::MouseButton::left) || input.presses(SDLK_RETURN)) {
+				if (input.pressed(sdl::MouseButton::left) || input.presses(SDLK_RETURN) || input.presses(SDLK_SPACE)) {
 					close();
 					return _cont(std::move(_options[_selection]));
 				}

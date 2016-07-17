@@ -10,6 +10,7 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+#include <iostream>
 #include <memory>
 
 #include "entities/Entity.h"
@@ -37,7 +38,8 @@ namespace questless
 
 		virtual ~Object() = default;
 
-		Object* as_object() { return dynamic_cast<Object*>(this); }
+		Object& as_object() { return dynamic_cast<Object&>(*this); }
+		const Object& as_object() const { return dynamic_cast<const Object&>(*this); }
 
 		/// @param out A stream object into which the serialized object is inserted.
 		void serialize(std::ostream& out) const override;
@@ -45,8 +47,8 @@ namespace questless
 		/// Advances the object one time unit.
 		void update() override;
 	protected:
-		Object();
-		Object(std::istream& in);
+		Object(id_t id) : Entity(id) {}
+		Object(std::istream& in) : Entity(in) {}
 	private:
 	};
 }
