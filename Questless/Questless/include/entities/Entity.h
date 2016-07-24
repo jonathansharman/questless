@@ -22,6 +22,7 @@
 namespace questless
 {
 	enum class EntityClass : unsigned { HumanClass, GoblinClass, TrollClass, ItemBoxClass };
+	class Game;
 	class Region;
 	class Section;
 
@@ -31,17 +32,8 @@ namespace questless
 		using ptr = std::unique_ptr<Entity>;
 		using ref_less_t = bool(*)(const Entity&, const Entity&);
 		using ptr_less_t = bool(*)(const ptr&, const ptr&);
-		using id_t = unsigned long long;
-
-		static id_t next_id() { static id_t next = 0; return next++; } /// @todo This is bad.
-
-		Entity(id_t id) : _id{id}, _region{}, _section{}, _coords{} {}
-		Entity(std::istream& in);
 
 		virtual ~Entity() = default;
-
-		Entity& as_entity() { return dynamic_cast<Entity&>(*this); }
-		const Entity& as_entity() const { return dynamic_cast<const Entity&>(*this); }
 
 		/// Accepts an entity visitor. Used to implement the visitor pattern for entities.
 		/// @param visitor An entity visitor.
@@ -53,15 +45,16 @@ namespace questless
 		/// @return The entity's class's enumerated value.
 		virtual EntityClass entity_class() const = 0;
 
-		/// @return The entity's ID number.
-		id_t entity_id() const { return _id; }
-
 		/// @param out A stream object into which the serialized entity is inserted.
 		virtual void serialize(std::ostream& out) const;
 
 		/// Advances the entity one turn.
 		virtual void update() = 0;
 
+		/// @return The entity's game object.
+		Game& game() { return _game; }
+		/// @return The entity's game object.
+		const Game& game() const { return _game; }
 		/// @return The entity's region.
 		Region& region() { return *_region; }
 		/// @return The entity's region.
@@ -80,8 +73,11 @@ namespace questless
 		RegionTileCoords coords() const { return _coords; }
 		/// @param value The entity's new coordinates within its region.
 		void coords(RegionTileCoords value) { _coords = value; }
+	protected:
+		Entity(Game& game) : _game{game}, _region{}, _section{}, _coords{} {}
+		Entity(Game& game, std::istream& in);
 	private:
-		id_t _id;
+		Game& _game;
 		Region* _region;
 		Section* _section;
 		RegionTileCoords _coords;

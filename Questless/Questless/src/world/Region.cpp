@@ -32,7 +32,7 @@ namespace questless
 		// Sort beings in the turn queue by lower busy-time first, then lower entity ID.
 		double f_b = first.busy_time();
 		double s_b = second.busy_time();
-		return f_b < s_b || (f_b == s_b && first.entity_id() < second.entity_id());
+		return f_b < s_b || (f_b == s_b && first.id() < second.id());
 	}
 
 	Region::Region(Game& game, string region_name)
@@ -62,7 +62,7 @@ namespace questless
 									data += std::to_string(uniform(1, 5)) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
 									if ((section_r != 0 || section_q != 0) && uniform(0, 10) == 0) {
 										RegionTileCoords entity_coords{HexCoords{q, r} + section_coords.hex * section_diameter};
-										auto new_being = make_unique<Goblin>(Agent::make<LazyAI>, Entity::next_id());
+										auto new_being = make_unique<Goblin>(_game, Agent::make<LazyAI>, BeingId::next());
 										add<Being>(std::move(new_being), entity_coords);
 									}
 								}
@@ -129,7 +129,7 @@ namespace questless
 			sin >> entity_id;
 			switch (static_cast<EntityClass>(entity_id)) {
 				case EntityClass::GoblinClass:
-					add<Being>(make_unique<Goblin>(sin)); /// @todo How will this handle references to other entities?
+					add<Being>(make_unique<Goblin>(_game, sin));
 					break;
 				case EntityClass::TrollClass:
 					break;
@@ -275,7 +275,7 @@ namespace questless
 			}
 		} else {
 			being.coords(coords);
-			_game.beings()[being.entity_id()] = std::make_tuple(GlobalCoords{_name, src_section.coords()}, &being);
+			_game.beings()[being.id()] = std::make_tuple(GlobalCoords{_name, src_section.coords()}, &being);
 		}
 	}
 
@@ -296,7 +296,7 @@ namespace questless
 			}
 		} else {
 			object.coords(coords);
-			_game.objects()[object.entity_id()] = std::make_tuple(GlobalCoords{_name, src_section.coords()}, &object);
+			_game.objects()[object.id()] = std::make_tuple(GlobalCoords{_name, src_section.coords()}, &object);
 		}
 	}
 	
@@ -307,7 +307,7 @@ namespace questless
 		being.region(nullptr);
 		being.section(nullptr);
 
-		_game.beings().erase(being.entity_id());
+		_game.beings().erase(being.id());
 		remove_from_turn_queue(being);
 		return section.remove<Being>(being);
 	}
@@ -319,7 +319,7 @@ namespace questless
 		object.region(nullptr);
 		object.section(nullptr);
 
-		_game.objects().erase(object.entity_id());
+		_game.objects().erase(object.id());
 		return section.remove<Object>(object);
 	}
 
@@ -341,22 +341,22 @@ namespace questless
 
 	void Region::update()
 	{
-		std::vector<Entity::id_t> beings_to_update;
-		std::vector<Entity::id_t> objects_to_update;
+		std::vector<BeingId> beings_to_update;
+		std::vector<ObjectId> objects_to_update;
 		for_each_loaded_section([&](Section& section) {
 			for (const Being::ptr& being : section.beings()) {
-				beings_to_update.push_back(being->entity_id());
+				beings_to_update.push_back(being->id());
 			}
 			for (const Object::ptr& object : section.objects()) {
-				objects_to_update.push_back(object->entity_id());
+				objects_to_update.push_back(object->id());
 			}
 		});
-		for (Entity::id_t being_id : beings_to_update) {
+		for (BeingId being_id : beings_to_update) {
 			if (Being* being = _game.being(being_id)) {
 				being->update();
 			}
 		}
-		for (Entity::id_t object_id : objects_to_update) {
+		for (ObjectId object_id : objects_to_update) {
 			if (Object* object = _game.object(object_id)) {
 				object->update();
 			}

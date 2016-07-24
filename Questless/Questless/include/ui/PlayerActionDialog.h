@@ -35,11 +35,11 @@ namespace questless
 
 		/// Updates the menu state based on input.
 		/// @param input User input used to update the dialog.
-		void update(const Input& input) override;
+		void update(const sdl::Input& input) override;
 
 		/// Draws the dialog to the screen.
 		/// @param window The window.
-		void draw(const Window&) override
+		void draw(const sdl::Window&) override
 		{}
 	private:
 		HUDController& _hud;

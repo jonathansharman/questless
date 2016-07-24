@@ -19,9 +19,9 @@ namespace questless
 	public:
 		/// @param magnitude How powerful the status modifier is.
 		/// @param duration The number of turns remaining before the status modifier expires.
-		/// @param source The being that caused the status modifier, if any.
-		Nauseated(double magnitude, unsigned duration, Being* source = nullptr)
-			: Status{"Nauseated", duration, source}
+		/// @param source_id The ID of the being that caused the status modifier, if any.
+		Nauseated(double magnitude, unsigned duration, optional<BeingId> source_id = nullopt)
+			: Status("Nauseated", duration, source_id)
 			, _magnitude{magnitude}
 			, _modifiers
 				{ std::make_unique<Attributes::StrengthModifier>(-_magnitude)

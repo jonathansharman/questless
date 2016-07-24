@@ -13,7 +13,9 @@
 #include <vector>
 #include <array>
 
-#include "entities/Entity.h"
+#include "entities/beings/BeingId.h"
+#include "entities/objects/ObjectId.h"
+#include "world/coordinates.h"
 #include "utility/constants.h"
 #include "utility/optional.h"
 
@@ -43,7 +45,7 @@ namespace questless
 				, full   // Knows everything about the being.
 				};
 
-			Entity::id_t id;
+			BeingId id;
 			Perception perception;
 		};
 
@@ -57,7 +59,7 @@ namespace questless
 				, full   // Knows everything about the being.
 				};
 
-			Entity::id_t id;
+			ObjectId id;
 			Perception perception;
 		};
 		

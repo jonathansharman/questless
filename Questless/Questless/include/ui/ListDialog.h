@@ -57,7 +57,7 @@ namespace questless
 
 				size_t end = option_count <= 10 ? option_count : 10;
 				for (size_t i = 0; i < end; ++i) {
-					if (input.presses(Input::index_to_num_key(i))) {
+					if (input.presses(sdl::Input::index_to_num_key(i))) {
 						if (_selection == static_cast<int>(i)) {
 							close();
 							return _cont(std::move(_options[_selection]));

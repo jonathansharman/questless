@@ -19,8 +19,8 @@ namespace questless
 	class ItemBox : public Object
 	{
 	public:
-		ItemBox(id_t id) : Object(id) {}
-		ItemBox(std::istream& in) : Object(in) {}
+		ItemBox(Game& game, ObjectId id) : Object(game, id) {}
+		ItemBox(Game& game, std::istream& in) : Object(game, in) {}
 
 		void accept(EntityVisitor& visitor) override { visitor.visit(*this); }
 		void accept(EntityVisitor& visitor) const override { visitor.visit(*this); }

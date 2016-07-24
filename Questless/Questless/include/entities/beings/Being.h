@@ -16,6 +16,7 @@
 #include <memory>
 
 #include "entities/Entity.h"
+#include "entities/beings/BeingId.h"
 #include "entities/beings/Body.h"
 #include "entities/beings/statuses/Status.h"
 #include "attributes/Attributes.h"
@@ -139,23 +140,23 @@ namespace questless
 
 		// Event Handlers
 
-		Event<Damage&, Being*> before_take_damage;
-		Event<Damage&, Being*> after_take_damage;
+		Event<Damage&, optional<BeingId>> before_take_damage;
+		Event<Damage&, optional<BeingId>> after_take_damage;
 
-		Event<Damage&, Being*> before_deal_damage;
-		Event<Damage&, Being*> after_deal_damage;
+		Event<Damage&, BeingId> before_deal_damage;
+		Event<Damage&, BeingId> after_deal_damage;
 
-		Event<double&, Being*> before_receive_heal;
-		Event<double&, Being*> after_receive_heal;
+		Event<double&, optional<BeingId>> before_receive_heal;
+		Event<double&, optional<BeingId>> after_receive_heal;
 
-		Event<double&, Being*> after_give_heal;
-		Event<double&, Being*> before_give_heal;
+		Event<double&, BeingId> after_give_heal;
+		Event<double&, BeingId> before_give_heal;
 
-		Event<Being*> before_kill;
-		Event<Being*> after_kill;
+		Event<BeingId> before_kill;
+		Event<BeingId> after_kill;
 
-		Event<Being*> before_die;
-		Event<Being*> after_die;
+		Event<optional<BeingId>> before_die;
+		Event<optional<BeingId>> after_die;
 
 		////////////////////
 		// Public Methods //
@@ -163,11 +164,10 @@ namespace questless
 
 		virtual ~Being() = default;
 
-		Being& as_being() { return dynamic_cast<Being&>(*this); }
-		const Being& as_being() const { return dynamic_cast<const Being&>(*this); }
-
 		/// @param out A stream object into which the serialized being is inserted.
 		void serialize(std::ostream& out) const override;
+
+		BeingId id() const { return _id; }
 
 		/// @return The agent responsible for this being.
 		Agent& agent() { return *_agent; }
@@ -197,8 +197,6 @@ namespace questless
 		double satiety() const { return _conditions.satiety; }
 		double alertness() const { return _conditions.alertness; }
 		double busy_time() const { return _conditions.busy_time; }
-
-		bool dead() const { return _conditions.health <= 0.0; }
 
 		// Attribute accessors
 
@@ -291,21 +289,23 @@ namespace questless
 
 		/// Causes the being to take damage from the specified source being.
 		/// @param damage Damage to be applied to this being.
-		/// @param source The being which caused the damage, if any.
-		void take_damage(Damage& damage, Being* source = nullptr);
+		/// @param source_id The ID of the being which caused the damage, if any.
+		void take_damage(Damage& damage, optional<BeingId> source_id = nullopt);
 
 		/// Causes the being to be healed by the specified source being.
 		/// @param amount Health to be restored to this being.
-		/// @param source The being which caused the healing, if any.
-		void heal(double amount, Being* source = nullptr);
+		/// @param source The ID of the being which caused the healing, if any.
+		void heal(double amount, optional<BeingId> source_id);
 
 		void add_status(std::unique_ptr<Status> status);
 	protected:
-		Being(std::function<std::unique_ptr<Agent>(Being&)> agent_factory, id_t id, Body body, Attributes base_attributes);
-		Being(std::istream& in, Body body);
+		Being(Game& game, std::function<std::unique_ptr<Agent>(Being&)> agent_factory, BeingId id, Body body, Attributes base_attributes);
+		Being(Game& game, std::istream& in, Body body);
 
 		virtual Body make_body() = 0;
 	private:
+		BeingId _id;
+
 		std::shared_ptr<Agent> _agent; ///< The agent responsible for this being.
 
 		// Body

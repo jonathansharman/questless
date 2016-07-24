@@ -94,10 +94,10 @@ namespace questless
 				/// @todo Find a more permanent solution to this switch on type. (Probably need to write different add methods for beings and objects unless I change how the turn queue works and add generic accessors for game.beings() and game.objects().)
 				if (Being* being = dynamic_cast<Being*>(entity.get())) {
 					add_to_turn_queue(dynamic_cast<Being&>(*entity));
-					_game.beings()[being->entity_id()] = std::make_tuple(GlobalCoords{_name, section->coords()}, being);
+					_game.beings()[being->id()] = std::make_tuple(GlobalCoords{_name, section->coords()}, being);
 				} else {
 					Object* object = dynamic_cast<Object*>(entity.get());
-					_game.objects()[object->entity_id()] = std::make_tuple(GlobalCoords{_name, section->coords()}, object);
+					_game.objects()[object->id()] = std::make_tuple(GlobalCoords{_name, section->coords()}, object);
 				}
 
 				section->add<EntityType>(std::move(entity));

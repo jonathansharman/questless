@@ -11,14 +11,12 @@
 #include "Game.h"
 #include "entities/beings/Being.h"
 
-using sdl::MouseButton;
-
 namespace questless
 {
-	HUDController::HUDController(Game& game, const Window& window) : _game{game}, _hud {}, _view{game, window}
+	HUDController::HUDController(Game& game, const sdl::Window& window) : _game{game}, _hud {}, _view{game, window}
 	{}
 	
-	void HUDController::update(const Input& input)
+	void HUDController::update(const sdl::Input& input)
 	{
 		if (!_hud.player_id) {
 			return;
@@ -72,7 +70,7 @@ namespace questless
 		}
 	}
 
-	void HUDController::player_id(Entity::id_t player_id)
+	void HUDController::player_id(BeingId player_id)
 	{
 		_hud.player_id = player_id;
 		_hud.inv_page = 0;

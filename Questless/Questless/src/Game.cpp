@@ -393,8 +393,8 @@ namespace questless
 					//_region = make_unique<Region>(*this, "Slot1", "Region1");
 
 					{ // Spawn the player's being.
-						Being::ptr player_being = make_unique<Human>(Agent::make<Player>, Entity::next_id());
-						_player_id = player_being->entity_id();
+						Being::ptr player_being = make_unique<Human>(*this, Agent::make<Player>, BeingId::next());
+						_player_id = player_being->id();
 						player_being->give_item(make_unique<Scroll>(make_unique<LightningBoltSpell>()));
 						player_being->give_item(make_unique<Scroll>(make_unique<HealSpell>()));
 						player_being->give_item((make_unique<Quarterstaff>()));
@@ -506,8 +506,6 @@ namespace questless
 				}
 			}
 		} else {
-			/// @todo Turns are advancing too slowly sometimes. I.e., moving around takes half a time unit instead of one. Why?
-
 			// Take turns.
 
 			// Work through the beings ready to take their turns, until all have acted or one of them can't finish acting yet.
@@ -531,9 +529,6 @@ namespace questless
 				_time += 1.0;
 				// Update the region.
 				_region->update();
-
-				/// @todo Ideally, some information about the previous world view would be preserved.
-				///       E.g., being animations shouldn't reset every time the turn advances.
 			}
 		}
 
@@ -622,7 +617,7 @@ namespace questless
 		}
 	}
 
-	Being* Game::_being(Entity::id_t id) const
+	Being* Game::_being(BeingId id) const
 	{
 		auto it = _beings.find(id);
 		if (it == _beings.end()) {
@@ -637,7 +632,7 @@ namespace questless
 				Region& region = *_region; /// @todo Load region based on the region name in the coords (coords.region).
 				RegionSectionCoords section = coords.section;
 				for (const Being::ptr& being : region.section(section).beings()) {
-					if (being->entity_id() == id) {
+					if (being->id() == id) {
 						return being.get();
 					}
 				}
@@ -646,7 +641,7 @@ namespace questless
 		}
 	}
 
-	Object* Game::_object(Entity::id_t id) const
+	Object* Game::_object(ObjectId id) const
 	{
 		auto it = _objects.find(id);
 		if (it == _objects.end()) {
@@ -661,7 +656,7 @@ namespace questless
 				Region& region = *_region; /// @todo Load region based on the region name in the coords (coords.region).
 				RegionSectionCoords section = coords.section;
 				for (const Object::ptr& object : region.section(section).objects()) {
-					if (object->entity_id() == id) {
+					if (object->id() == id) {
 						return object.get();
 					}
 				}

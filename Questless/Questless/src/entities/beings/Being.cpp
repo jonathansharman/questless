@@ -8,6 +8,7 @@
 */
 
 #include "entities/beings/Being.h"
+#include "Game.h"
 #include "entities/beings/Agent.h"
 #include "entities/beings/Body.h"
 #include "world/Section.h"
@@ -18,8 +19,9 @@ using std::function;
 
 namespace questless
 {
-	Being::Being(function<unique_ptr<Agent>(Being&)> agent_factory, id_t id, Body body, Attributes base_attributes)
-		: Entity{id}
+	Being::Being(Game& game, function<unique_ptr<Agent>(Being&)> agent_factory, BeingId id, Body body, Attributes base_attributes)
+		: Entity(game)
+		, _id{id}
 		, _agent{agent_factory(*this)}
 		, _body{std::move(body)}
 		, _need_to_calculate_attributes{false}
@@ -28,11 +30,15 @@ namespace questless
 		, _conditions{_base_attributes.vitality, _base_attributes.spirit, 0.0, 0.0, 0.0, 0}
 	{}
 
-	Being::Being(std::istream& in, Body body)
-		: Entity(in)
+	Being::Being(Game& game, std::istream& in, Body body)
+		: Entity(game, in)
 		, _body{std::move(body)}
 		, _need_to_calculate_attributes{true}
 	{
+		BeingId::key_t id_key;
+		in >> id_key;
+		_id = id_key;
+
 		double vitality, spirit, health_regen, mana_regen, strength, endurance, stamina, agility, dexterity, stealth,
 			visual_acuity, ideal_light, light_tolerance, hearing, intellect, lift, min_temp, max_temp;
 		bool mute;
@@ -58,6 +64,8 @@ namespace questless
 	void Being::serialize(std::ostream& out) const
 	{
 		Entity::serialize(out);
+
+		out << id().key << ' ';
 
 		// Write attributes.
 		out << vitality() << ' ' << strength() << ' ' << endurance() << ' ' << stamina() << ' ' << agility() << ' ' << dexterity() << ' ' << stealth() << ' '
@@ -178,13 +186,19 @@ namespace questless
 		}
 	}
 
-	void Being::take_damage(Damage& damage, Being* source)
+	void Being::take_damage(Damage& damage, optional<BeingId> source_id)
 	{
+		// Get source.
+		Being* source = nullptr;
+		if (source_id) {
+			source = game().being(*source_id);
+		}
+
 		// Target will take damage.
-		before_take_damage(damage, source);
+		before_take_damage(damage, source_id);
 		// Source will deal damage.
 		if (source != nullptr) {
-			source->before_deal_damage(damage, this);
+			source->before_deal_damage(damage, id());
 		}
 
 		// Target loses health.
@@ -196,19 +210,19 @@ namespace questless
 		lose_health(applied_damage);
 
 		// Target has taken damage.
-		after_take_damage(damage, source);
+		after_take_damage(damage, source_id);
 		// Source has dealt damage.
 		if (source != nullptr) {
-			source->after_deal_damage(damage, this);
+			source->after_deal_damage(damage, id());
 		}
 
 		// Check for death.
-		if (dead()) {
+		if (health() <= 0) {
 			// Target will die.
-			before_die(source);
+			before_die(source_id);
 			// Source will have killed target.
 			if (source != nullptr) {
-				source->before_kill(this);
+				source->before_kill(id());
 			}
 			
 			// Target's death occurs here.
@@ -216,31 +230,37 @@ namespace questless
 
 			// Source has killed target.
 			if (source != nullptr) {
-				source->after_kill(this);
+				source->after_kill(id());
 			}
 			// Target has died.
-			after_die(source);
+			after_die(source_id);
 
 			// Remove from world.
 			region().remove(*this);
 		}
 	}
 
-	void Being::heal(double amount, Being* source)
+	void Being::heal(double amount, optional<BeingId> source_id)
 	{
+		// Get source.
+		Being* source = nullptr;
+		if (source_id) {
+			source = game().being(*source_id);
+		}
+
 		// Source will give healing.
 		if (source != nullptr) {
-			source->before_give_heal(amount, this);
+			source->before_give_heal(amount, id());
 		}
 		// Target will receive healing.
-		before_receive_heal(amount, source);
+		before_receive_heal(amount, source_id);
 		// Target gains health.
 		gain_health(amount);
 		// Target has received healing.
-		after_receive_heal(amount, source);
+		after_receive_heal(amount, source_id);
 		// Source has given healing.
 		if (source != nullptr) {
-			source->after_give_heal(amount, this);
+			source->after_give_heal(amount, id());
 		}
 	}
 

@@ -48,7 +48,7 @@
 
 namespace questless
 {
-	class Game : public Renderable
+	class Game : public sdl::Renderable
 	{
 	public:
 		/// Creates a game object, initializes the environment, and loads game resources.
@@ -93,23 +93,23 @@ namespace questless
 
 		// Accessors
 
-		Input& input() { return _input; }
-		const Input& input() const { return _input; }
+		sdl::Input& input() { return _input; }
+		const sdl::Input& input() const { return _input; }
 
 		Region& region() { return *_region; }
 		const Region& region() const { return *_region; }
 
 		/// @todo Shouldn't expose beings() and objects() directly. Need to add encapsulated ways to add or remove entities from these lists.
 
-		Being* being(Entity::id_t id) { return _being(id); }
-		const Being* being(Entity::id_t id) const { return _being(id); }
-		std::unordered_map<Entity::id_t, std::tuple<GlobalCoords, Being*>>& beings() { return _beings; }
-		const std::unordered_map<Entity::id_t, std::tuple<GlobalCoords, Being*>>& beings() const { return _beings; }
+		Being* being(BeingId id) { return _being(id); }
+		const Being* being(BeingId id) const { return _being(id); }
+		std::unordered_map<BeingId, std::tuple<GlobalCoords, Being*>>& beings() { return _beings; }
+		const std::unordered_map<BeingId, std::tuple<GlobalCoords, Being*>>& beings() const { return _beings; }
 
-		Object* object(Entity::id_t id) { return _object(id); }
-		const Object* object(Entity::id_t id) const { return _object(id); }
-		std::unordered_map<Entity::id_t, std::tuple<GlobalCoords, Object*>>& objects() { return _objects; }
-		const std::unordered_map<Entity::id_t, std::tuple<GlobalCoords, Object*>>& objects() const { return _objects; }
+		Object* object(ObjectId id) { return _object(id); }
+		const Object* object(ObjectId id) const { return _object(id); }
+		std::unordered_map<ObjectId, std::tuple<GlobalCoords, Object*>>& objects() { return _objects; }
+		const std::unordered_map<ObjectId, std::tuple<GlobalCoords, Object*>>& objects() const { return _objects; }
 
 		HUDController& hud() { return *_hud; }
 		const HUDController& hud() const { return *_hud; }
@@ -188,10 +188,10 @@ namespace questless
 		enum class State { splash, menu, playing };
 		State _state;
 
-		std::unordered_map<Entity::id_t, std::tuple<GlobalCoords, Being*>> _beings;
-		std::unordered_map<Entity::id_t, std::tuple<GlobalCoords, Object*>> _objects;
+		std::unordered_map<BeingId, std::tuple<GlobalCoords, Being*>> _beings;
+		std::unordered_map<ObjectId, std::tuple<GlobalCoords, Object*>> _objects;
 
-		Entity::id_t _player_id;
+		BeingId _player_id;
 
 		std::unique_ptr<WorldView> _world_view;
 
@@ -244,8 +244,8 @@ namespace questless
 
 		// Accessor helpers
 
-		Being* _being(Entity::id_t id) const;
-		Object* _object(Entity::id_t id) const;
+		Being* _being(BeingId id) const;
+		Object* _object(ObjectId id) const;
 	};
 }
 

@@ -14,16 +14,16 @@
 
 namespace questless
 {
-	Human::Human(std::function<std::unique_ptr<Agent>(Being&)> agent_factory, id_t id)
-		: Being(std::move(agent_factory), id, make_body(), Attributes::of<Human>())
+	Human::Human(Game& game, std::function<std::unique_ptr<Agent>(Being&)> agent_factory, BeingId id)
+		: Being(game, std::move(agent_factory), id, make_body(), Attributes::of<Human>())
 	{}
 
-	Human::Human(std::istream& in) : Being(in, make_body()) {}
+	Human::Human(Game& game, std::istream& in) : Being(game, in, make_body()) {}
 
 	void Human::serialize(std::ostream& out) const
 	{
-		as_being().serialize(out);
-
+		Being::serialize(out);
+		
 		out << std::endl;
 	}
 

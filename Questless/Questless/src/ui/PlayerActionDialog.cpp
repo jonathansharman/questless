@@ -11,7 +11,7 @@
 
 namespace questless
 {
-	void PlayerActionDialog::update(const Input& input)
+	void PlayerActionDialog::update(const sdl::Input& input)
 	{
 		if (input.presses(SDLK_z) || input.presses(SDLK_RETURN)) {
 			close();

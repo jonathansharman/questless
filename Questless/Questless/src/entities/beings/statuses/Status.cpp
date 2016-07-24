@@ -8,14 +8,14 @@
 */
 
 #include "entities/beings/statuses/Status.h"
-#include "entities/beings/Being.h"
+#include "entities/beings/BeingId.h"
 
 namespace questless
 {
-	Status::Status(std::string name, int duration, Being* source)
+	Status::Status(std::string name, int duration, optional<BeingId> source_id)
 		: _name{std::move(name)}
 		, _duration{duration}
-		, _source{source}
+		, _source_id{source_id}
 	{}
 
 	void Status::apply(Being&) {}

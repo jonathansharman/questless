@@ -11,9 +11,8 @@
 #define HUD_MODEL_H
 
 #include <array>
-#include <memory>
 
-#include "entities/beings/Being.h"
+#include "entities/beings/BeingId.h"
 #include "items/Inventory.h"
 #include "utility/optional.h"
 
@@ -29,7 +28,7 @@ namespace questless
 
 		// Data
 
-		optional<Entity::id_t> player_id = nullopt;
+		optional<BeingId> player_id = nullopt;
 		std::array<optional<Inventory::Coords>, hotbar_size> hotbar;
 
 		bool inv_open = false;

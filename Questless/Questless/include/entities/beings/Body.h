@@ -30,6 +30,9 @@ namespace questless
 		
 		~Body();
 
+		/// @return The root body part.
+		BodyPart& root() { return *_root; }
+
 		/// @return A stream of all the body's parts.
 		Stream<const BodyPart*> parts() const;
 		/// @return A stream of all the body's parts.

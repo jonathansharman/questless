@@ -13,9 +13,8 @@
 
 namespace questless
 {
-	Entity::Entity(std::istream& in)
+	Entity::Entity(Game& game, std::istream& in) : _game{game}
 	{
-		in >> _id;
 		in >> _coords.hex.q;
 		in >> _coords.hex.r;
 		in >> _coords.hex.s;
@@ -23,6 +22,6 @@ namespace questless
 
 	void Entity::serialize(std::ostream& out) const
 	{
-		out << static_cast<unsigned>(entity_class()) << ' ' << entity_id() << ' ' << _coords.hex.q << ' ' << _coords.hex.r << ' ' << _coords.hex.s << ' ';
+		out << static_cast<unsigned>(entity_class()) << ' ' << _coords.hex.q << ' ' << _coords.hex.r << ' ' << _coords.hex.s << ' ';
 	}
 }

@@ -44,7 +44,7 @@ namespace questless
 						discharge();
 						caster.lose_mana(cost);
 						double healing = magnitude * caster.power(color());
-						target->heal(healing, &caster);
+						target->heal(healing, caster.id());
 						return cont(Result::success);
 					}
 				);

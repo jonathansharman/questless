@@ -19,10 +19,9 @@ namespace questless
 	public:
 		/// @param magnitude How powerful the status modifier is.
 		/// @param duration The number of turns remaining before the status modifier expires.
-		/// @param source The being that caused the status modifier, if any.
-		Recharging(double magnitude, unsigned duration, Being* source = nullptr)
-			: Status{"Poisoned", duration, source}
-			, _magnitude{magnitude}
+		/// @param source_id The ID of the being that caused the status modifier, if any.
+		Recharging(double magnitude, unsigned duration, optional<BeingId> source_id = nullopt)
+			: Status("Recharging", duration, source_id), _magnitude{magnitude}
 		{}
 
 		virtual Type type() const { return Type::buff; }

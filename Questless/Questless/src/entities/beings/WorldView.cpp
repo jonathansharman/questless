@@ -84,7 +84,7 @@ namespace questless
 				RegionTileCoords other_coords = other_being->coords();
 				if (other_coords.hex.distance_to(coords.hex) < visual_range) {
 					BeingView being_view;
-					being_view.id = other_being->entity_id();
+					being_view.id = other_being->id();
 
 					SectionTileIndex other_tile_index = Section::tile_index(other_coords);
 
@@ -110,7 +110,7 @@ namespace questless
 				RegionTileCoords other_coords = object->coords();
 				if (other_coords.hex.distance_to(coords.hex) < visual_range) {
 					ObjectView object_view;
-					object_view.id = object->entity_id();
+					object_view.id = object->id();
 
 					SectionTileIndex other_tile_index = Section::tile_index(other_coords);
 

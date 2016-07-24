@@ -15,6 +15,7 @@
 #include <memory>
 
 #include "entities/beings/attributes/Attributes.h"
+#include "entities/beings/BeingId.h"
 
 namespace questless
 {
@@ -33,16 +34,11 @@ namespace questless
 		/// @return The number of turns remaining before the status expires.
 		int duration() const { return _duration; }
 
-		/// @return The being that caused the status or null if none did.
-		Being* source() const { return _source; }
+		/// @return The ID of the being that caused the status or nullopt if none did.
+		optional<BeingId> source() const { return _source_id; }
 
 		/// @return The type of the status: debuff, netural, or buff.
 		virtual Type type() const = 0;
-
-		/// @param name The name of the status modifier displayed to the player.
-		/// @param duration The number of turns remaining before the status modifier expires.
-		/// @param source The being that caused the status modifier, if any.
-		Status(std::string name, int duration, Being* source = nullptr);
 
 		/// @return The list of attribute modifiers associated with this status.
 		virtual const modifiers_t& modifiers() const
@@ -63,10 +59,15 @@ namespace questless
 		/// Carries out any effects that should occur when the status expires.
 		/// @param target The being affected by the status.
 		virtual void expire(Being& target);
+	protected:
+		/// @param name The name of the status modifier displayed to the player.
+		/// @param duration The number of turns remaining before the status modifier expires.
+		/// @param source The ID of the being that caused the status modifier, if any.
+		Status(std::string name, int duration, optional<BeingId> source_id = nullopt);
 	private:
 		std::string _name;
 		int _duration;
-		Being* _source;
+		optional<BeingId> _source_id;
 
 		virtual void subupdate(Being& target);
 	};

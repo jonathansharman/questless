@@ -29,7 +29,14 @@ namespace questless
 
 	void WorldRenderer::update()
 	{
-		for (const auto& id_and_animation : _entity_animations) {
+		// Update cached being and object animations.
+
+		for (const auto& id_and_animation : _being_animations) {
+			if (id_and_animation.second != nullptr) {
+				id_and_animation.second->update();
+			}
+		}
+		for (const auto& id_and_animation : _object_animations) {
 			if (id_and_animation.second != nullptr) {
 				id_and_animation.second->update();
 			}
@@ -53,16 +60,16 @@ namespace questless
 			// Attempt to load the being.
 			if (const Being* being = game.being(being_view.id)) {
 				// Search for the being's animation in the cache.
-				auto it = _entity_animations.find(being_view.id);
+				auto it = _being_animations.find(being_view.id);
 				// If it's there, use it. Otherwise, create the animation and cache it.
-				AnimationCollection& being_animation = it != _entity_animations.end()
+				AnimationCollection& being_animation = it != _being_animations.end()
 					? *it->second
-					: create_and_cache_entity_animation(being->as_entity());
+					: cache_being_animation(*being);
 
 				being_animation.draw(Layout::dflt().to_world(being->coords().hex), camera);
 			} else {
 				// Remove the being from the animation cache if it doesn't exist anymore.
-				_entity_animations.erase(being_view.id);
+				_being_animations.erase(being_view.id);
 			}
 		}
 	}
@@ -73,16 +80,16 @@ namespace questless
 			// Attempt to load the object.
 			if (const Object* object = game.object(object_view.id)) {
 				// Search for the object's animation in the cache.
-				auto it = _entity_animations.find(object_view.id);
+				auto it = _object_animations.find(object_view.id);
 				// If it's there, use it. Otherwise, create the animation and cache it.
-				AnimationCollection& being_animation = it != _entity_animations.end()
+				AnimationCollection& being_animation = it != _object_animations.end()
 					? *it->second
-					: create_and_cache_entity_animation(object->as_entity());
+					: cache_object_animation(*object);
 
 				being_animation.draw(Layout::dflt().to_world(object->coords().hex), camera);
 			} else {
 				// Remove the object from the animation cache if it doesn't exist anymore.
-				_entity_animations.erase(object_view.id);
+				_object_animations.erase(object_view.id);
 			}
 		}
 	}
@@ -93,7 +100,7 @@ namespace questless
 		_terrain_render_is_current = false;
 	}
 
-	Texture& WorldRenderer::create_and_cache_tile_texture(const Tile& tile)
+	Texture& WorldRenderer::cache_tile_texture(const Tile& tile)
 	{
 		TileTexturer tile_texturer;
 		tile.accept(tile_texturer);
@@ -101,12 +108,20 @@ namespace questless
 		return *_tile_textures[tile.tile_class()];
 	};
 
-	AnimationCollection& WorldRenderer::create_and_cache_entity_animation(const Entity& entity)
+	AnimationCollection& WorldRenderer::cache_being_animation(const Being& being)
 	{
 		EntityAnimator entity_animator;
-		entity.accept(entity_animator);
-		_entity_animations[entity.entity_id()] = entity_animator.animation();
-		return *_entity_animations[entity.entity_id()];
+		being.accept(entity_animator);
+		_being_animations[being.id()] = entity_animator.animation();
+		return *_being_animations[being.id()];
+	};
+
+	AnimationCollection& WorldRenderer::cache_object_animation(const Object& object)
+	{
+		EntityAnimator entity_animator;
+		object.accept(entity_animator);
+		_object_animations[object.id()] = entity_animator.animation();
+		return *_object_animations[object.id()];
 	};
 
 	void WorldRenderer::render_terrain()
@@ -144,9 +159,16 @@ namespace questless
 							// Search for its texture in the cache.
 							auto it = _tile_textures.find(tile.tile_class());
 							// If it's there, use it. Otherwise, create the texture and cache it.
-							Texture& tile_texture = it != _tile_textures.end() ? *it->second : create_and_cache_tile_texture(tile);
+							Texture& tile_texture = it != _tile_textures.end() ? *it->second : cache_tile_texture(tile);
 
-							tile_texture.draw_transformed(coords_in_world - Vector::to(_terrain_bounds.position()), nullopt, 1.0, 1.0, false, false, Color{luminance, luminance, luminance});
+							tile_texture.draw_transformed
+								( coords_in_world - Vector::to(_terrain_bounds.position())
+								, nullopt // Origin
+								, 1.0 // H-scale
+								, 1.0 // V-scale
+								, false // H-flip
+								, false // V-flip
+								, Color{luminance, luminance, luminance});
 						}
 					}
 				}

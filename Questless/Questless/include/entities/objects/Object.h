@@ -14,6 +14,7 @@
 #include <memory>
 
 #include "entities/Entity.h"
+#include "entities/objects/ObjectId.h"
 
 namespace questless
 {
@@ -39,18 +40,18 @@ namespace questless
 
 		virtual ~Object() = default;
 
-		Object& as_object() { return dynamic_cast<Object&>(*this); }
-		const Object& as_object() const { return dynamic_cast<const Object&>(*this); }
-
 		/// @param out A stream object into which the serialized object is inserted.
 		void serialize(std::ostream& out) const override;
+
+		ObjectId id() const { return _id; }
 
 		/// Advances the object one time unit.
 		void update() override;
 	protected:
-		Object(id_t id) : Entity(id) {}
-		Object(std::istream& in) : Entity(in) {}
+		Object(Game& game, ObjectId id) : Entity(game), _id{id} {}
+		Object(Game& game, std::istream& in);
 	private:
+		ObjectId _id;
 	};
 }
 

@@ -11,17 +11,13 @@
 #define HUD_MENU_VIEW_H
 
 #include "sdl-wrappers/Renderable.h"
-using sdl::Renderable;
-using sdl::Texture;
 #include "sdl-wrappers/Font.h"
-using sdl::Font;
 #include "sdl-wrappers/Window.h"
-using sdl::Window;
 #include "ui/HUDModel.h"
 
 namespace questless
 {
-	class HUDView : public Renderable
+	class HUDView : public sdl::Renderable
 	{
 	public:
 		static constexpr double inv_width_percent = 0.7;
@@ -30,7 +26,7 @@ namespace questless
 		static constexpr int item_icon_width = 55;
 		static constexpr int item_icon_height = 55;
 
-		HUDView(Game& game, const Window& window);
+		HUDView(Game& game, const sdl::Window& window);
 
 		/// @return The inventory's width.
 		int inv_width() const { return _inv_width; }
@@ -78,11 +74,11 @@ namespace questless
 
 		Game& _game;
 
-		const Window& _window;
+		const sdl::Window& _window;
 
-		Texture::ptr _hotbar_slot_texture;
+		sdl::Texture::ptr _hotbar_slot_texture;
 
-		Font::ptr _fnt_item_count;
+		sdl::Font::ptr _fnt_item_count;
 
 		void refresh() override { load_textures_and_layout(); }
 

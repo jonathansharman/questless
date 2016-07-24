@@ -183,6 +183,7 @@
     <ClInclude Include="include\entities\beings\attributes\MagicResistance.h" />
     <ClInclude Include="include\entities\beings\attributes\Vision.h" />
     <ClInclude Include="include\entities\beings\Being.h" />
+    <ClInclude Include="include\entities\beings\BeingId.h" />
     <ClInclude Include="include\entities\beings\Body.h" />
     <ClInclude Include="include\entities\beings\BodyPart.h" />
     <ClInclude Include="include\entities\beings\Damage.h" />
@@ -209,6 +210,7 @@
     <ClInclude Include="include\entities\EntityVisitor.h" />
     <ClInclude Include="include\entities\objects\ItemBox.h" />
     <ClInclude Include="include\entities\objects\Object.h" />
+    <ClInclude Include="include\entities\objects\ObjectId.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\items\armor\Armor.h" />
     <ClInclude Include="include\items\Craftable.h" />

@@ -10,14 +10,9 @@
 #ifndef HUD_CONTROLLER_H
 #define HUD_CONTROLLER_H
 
-#include <array>
-using std::array;
-
 #include "HUDModel.h"
 #include "HUDView.h"
-#include "items/Item.h"
 #include "sdl-wrappers/Input.h"
-using sdl::Input;
 
 namespace questless
 {
@@ -26,16 +21,16 @@ namespace questless
 	class HUDController
 	{
 	public:
-		HUDController(Game& game, const Window& window);
+		HUDController(Game& game, const sdl::Window& window);
 
 		/// @return A constant reference to the hotbar.
 		const auto& hotbar() { return _hud.hotbar; }
 
-		void update(const Input& input);
+		void update(const sdl::Input& input);
 
 		void HUDController::draw() { _view.draw(_hud); }
 
-		void player_id(Entity::id_t player_id);
+		void player_id(BeingId player_id);
 	private:
 		Game& _game;
 		HUDModel _hud;
