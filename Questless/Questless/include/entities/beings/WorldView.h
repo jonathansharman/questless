@@ -13,8 +13,8 @@
 #include <vector>
 #include <array>
 
+#include "entities/Entity.h"
 #include "utility/constants.h"
-#include "utility/hex-utilities.h"
 #include "utility/optional.h"
 
 namespace questless
@@ -29,7 +29,7 @@ namespace questless
 	public:
 		struct SectionView
 		{
-			HexCoords coords;
+			RegionSectionCoords coords;
 			std::array<std::array<double, section_diameter>, section_diameter> tile_visibilities; ///< Indices are r-major.
 		};
 
@@ -43,7 +43,7 @@ namespace questless
 				, full   // Knows everything about the being.
 				};
 
-			Being* being;
+			Entity::id_t id;
 			Perception perception;
 		};
 
@@ -57,7 +57,7 @@ namespace questless
 				, full   // Knows everything about the being.
 				};
 
-			Object* object;
+			Entity::id_t id;
 			Perception perception;
 		};
 		

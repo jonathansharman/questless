@@ -33,8 +33,8 @@ namespace questless
 		static constexpr double base_hearing = 180.0;
 		static constexpr double base_intellect = 60.0;
 		static constexpr double base_lift = 0.0;
-		static constexpr double base_min_temp = 100.0;
-		static constexpr double base_max_temp = -100.0;
+		static constexpr double base_min_temp = -100.0;
+		static constexpr double base_max_temp = 100.0;
 		static constexpr bool base_mute = false;
 
 		static constexpr double base_white_power = 100.0;
@@ -62,6 +62,7 @@ namespace questless
 		Goblin(std::istream& in);
 
 		void accept(EntityVisitor& visitor) override { return visitor.visit(*this); }
+		void accept(EntityVisitor& visitor) const override { return visitor.visit(*this); }
 
 		EntityClass entity_class() const override { return EntityClass::GoblinClass; }
 

@@ -23,7 +23,7 @@ namespace questless
 					break;
 				case PlayerActionDialog::Choice::Type::move:
 					_being.gain_busy_time(1.0);
-					game.region().move<Being>(_being, _being.coords().neighbor(static_cast<HexCoords::Direction>(player_choice.data)));
+					game.region().move(_being, RegionTileCoords{_being.coords().hex.neighbor(static_cast<HexCoords::Direction>(player_choice.data))});
 					break;
 				case PlayerActionDialog::Choice::Type::use:
 				{
@@ -116,8 +116,8 @@ namespace questless
 		( Game& game
 		, const std::string& title
 		, const std::string& prompt
-		, std::function<bool(HexCoords)> predicate
-		, std::function<void(optional<HexCoords>)> cont
+		, std::function<bool(RegionTileCoords)> predicate
+		, std::function<void(optional<RegionTileCoords>)> cont
 		) const
 	{
 		game.query_tile(title, prompt, std::move(predicate), std::move(cont));

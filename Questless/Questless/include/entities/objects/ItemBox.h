@@ -10,6 +10,8 @@
 #ifndef ITEM_BOX_H
 #define ITEM_BOX_H
 
+#include <vector>
+
 #include "Object.h"
 
 namespace questless
@@ -21,10 +23,14 @@ namespace questless
 		ItemBox(std::istream& in) : Object(in) {}
 
 		void accept(EntityVisitor& visitor) override { visitor.visit(*this); }
+		void accept(EntityVisitor& visitor) const override { visitor.visit(*this); }
 
 		virtual EntityClass entity_class() const { return EntityClass::ItemBoxClass; }
+
+		std::vector<Item::ptr>& items() { return _items; }
+		const std::vector<Item::ptr>& items() const { return _items; }
 	private:
-		/// @todo Contained items
+		std::vector<Item::ptr> _items;
 	};
 }
 

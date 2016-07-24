@@ -13,6 +13,8 @@
 #include <string>
 #include <vector>
 #include <deque>
+#include <tuple>
+#include <unordered_map>
 #include <random>
 #include <chrono>
 #include <type_traits>
@@ -83,7 +85,7 @@ namespace questless
 
 		void query_magnitude(std::string title, std::string prompt, double default, std::function<bool(double)> predicate, std::function<void(optional<double>)> cont);
 
-		void query_tile(std::string title, std::string prompt, std::function<bool(HexCoords)> predicate, std::function<void(optional<HexCoords>)> cont);
+		void query_tile(std::string title, std::string prompt, std::function<bool(RegionTileCoords)> predicate, std::function<void(optional<RegionTileCoords>)> cont);
 
 		void query_being(std::string title, std::string prompt, std::function<bool(Being&)> predicate, std::function<void(optional<Being*>)> cont);
 
@@ -96,6 +98,18 @@ namespace questless
 
 		Region& region() { return *_region; }
 		const Region& region() const { return *_region; }
+
+		/// @todo Shouldn't expose beings() and objects() directly. Need to add encapsulated ways to add or remove entities from these lists.
+
+		Being* being(Entity::id_t id) { return _being(id); }
+		const Being* being(Entity::id_t id) const { return _being(id); }
+		std::unordered_map<Entity::id_t, std::tuple<GlobalCoords, Being*>>& beings() { return _beings; }
+		const std::unordered_map<Entity::id_t, std::tuple<GlobalCoords, Being*>>& beings() const { return _beings; }
+
+		Object* object(Entity::id_t id) { return _object(id); }
+		const Object* object(Entity::id_t id) const { return _object(id); }
+		std::unordered_map<Entity::id_t, std::tuple<GlobalCoords, Object*>>& objects() { return _objects; }
+		const std::unordered_map<Entity::id_t, std::tuple<GlobalCoords, Object*>>& objects() const { return _objects; }
 
 		HUDController& hud() { return *_hud; }
 		const HUDController& hud() const { return *_hud; }
@@ -174,7 +188,10 @@ namespace questless
 		enum class State { splash, menu, playing };
 		State _state;
 
-		Being* _player_being;
+		std::unordered_map<Entity::id_t, std::tuple<GlobalCoords, Being*>> _beings;
+		std::unordered_map<Entity::id_t, std::tuple<GlobalCoords, Object*>> _objects;
+
+		Entity::id_t _player_id;
 
 		std::unique_ptr<WorldView> _world_view;
 
@@ -224,6 +241,11 @@ namespace questless
 		void render_splash();
 		void render_menu();
 		void render_playing();
+
+		// Accessor helpers
+
+		Being* _being(Entity::id_t id) const;
+		Object* _object(Entity::id_t id) const;
 	};
 }
 

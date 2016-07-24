@@ -68,8 +68,8 @@ namespace questless
 			( Game& game
 			, const std::string& title
 			, const std::string& prompt
-			, std::function<bool(HexCoords)> predicate
-			, std::function<void(optional<HexCoords>)> cont
+			, std::function<bool(RegionTileCoords)> predicate
+			, std::function<void(optional<RegionTileCoords>)> cont
 			) const override;
 
 		void query_being

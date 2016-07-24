@@ -26,7 +26,7 @@ namespace questless
 	class HUDController
 	{
 	public:
-		HUDController(const Window& window);
+		HUDController(Game& game, const Window& window);
 
 		/// @return A constant reference to the hotbar.
 		const auto& hotbar() { return _hud.hotbar; }
@@ -35,8 +35,9 @@ namespace questless
 
 		void HUDController::draw() { _view.draw(_hud); }
 
-		void player_being(Being* player_being);
+		void player_id(Entity::id_t player_id);
 	private:
+		Game& _game;
 		HUDModel _hud;
 		HUDView _view;
 	};

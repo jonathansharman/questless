@@ -16,13 +16,13 @@ namespace questless
 	Entity::Entity(std::istream& in)
 	{
 		in >> _id;
-		in >> _coords.q;
-		in >> _coords.r;
-		in >> _coords.s;
+		in >> _coords.hex.q;
+		in >> _coords.hex.r;
+		in >> _coords.hex.s;
 	}
 
 	void Entity::serialize(std::ostream& out) const
 	{
-		out << static_cast<unsigned>(entity_class()) << ' ' << entity_id() << ' ' << _coords.q << ' ' << _coords.r << ' ' << _coords.s << ' ';
+		out << static_cast<unsigned>(entity_class()) << ' ' << entity_id() << ' ' << _coords.hex.q << ' ' << _coords.hex.r << ' ' << _coords.hex.s << ' ';
 	}
 }

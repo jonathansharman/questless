@@ -30,7 +30,7 @@ namespace questless
 		static constexpr int item_icon_width = 55;
 		static constexpr int item_icon_height = 55;
 
-		HUDView(const Window& window);
+		HUDView(Game& game, const Window& window);
 
 		/// @return The inventory's width.
 		int inv_width() const { return _inv_width; }
@@ -75,6 +75,8 @@ namespace questless
 		int _inv_height;
 
 		int _inv_column_count;
+
+		Game& _game;
 
 		const Window& _window;
 

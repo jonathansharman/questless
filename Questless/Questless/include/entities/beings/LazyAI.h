@@ -83,8 +83,8 @@ namespace questless
 			( Game&
 			, const std::string&
 			, const std::string&
-			, std::function<bool(HexCoords)>
-			, std::function<void(optional<HexCoords>)> cont
+			, std::function<bool(RegionTileCoords)>
+			, std::function<void(optional<RegionTileCoords>)> cont
 			) const override
 		 {
 			 cont(nullopt);

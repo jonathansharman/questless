@@ -21,7 +21,7 @@ namespace questless
 		}
 
 		if (input.pressed(MouseButton::left)) {
-			HexCoords value = _camera.tile_hovered();
+			RegionTileCoords value = _camera.tile_hovered();
 			if (_predicate(value)) {
 				close();
 				return _cont(value);

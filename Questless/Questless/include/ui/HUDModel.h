@@ -29,7 +29,7 @@ namespace questless
 
 		// Data
 
-		Being* player_being = nullptr;
+		optional<Entity::id_t> player_id = nullopt;
 		std::array<optional<Inventory::Coords>, hotbar_size> hotbar;
 
 		bool inv_open = false;

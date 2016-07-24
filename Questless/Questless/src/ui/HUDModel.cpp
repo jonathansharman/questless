@@ -13,7 +13,7 @@ namespace questless
 {
 	void HUDModel::update_being_info()
 	{
-		if (player_being != nullptr) {
+		if (player_id) {
 			/// @todo This. (Is this even necessary? Why would we store information twice?)
 		}
 	}

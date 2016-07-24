@@ -8,6 +8,7 @@
 */
 
 #include "world/Section.h"
+#include "world/Region.h"
 
 namespace questless
 {
@@ -21,14 +22,21 @@ namespace questless
 	//	return f_y < s_y || (f_y == s_y && first->entity_id() < second->entity_id());
 	//}
 
-	HexCoords Section::section_coords(HexCoords region_coords)
+	SectionTileIndex Section::tile_index(SectionTileCoords tile_coords)
 	{
-		int q = (region_coords.q % section_diameter + section_diameter) % section_diameter;
-		int r = (region_coords.r % section_diameter + section_diameter) % section_diameter;
-		return HexCoords{q, r};
+		int x = tile_coords.hex.r + section_radius;
+		int y = tile_coords.hex.q + section_radius;
+		return SectionTileIndex{x, y};
 	}
 
-	Section::Section(HexCoords coords) : _coords{coords}
+	SectionTileIndex Section::tile_index(RegionTileCoords region_tile_coords)
+	{
+		int x = (region_tile_coords.hex.q % section_diameter + section_diameter) % section_diameter;
+		int y = (region_tile_coords.hex.r % section_diameter + section_diameter) % section_diameter;
+		return SectionTileIndex{x, y};
+	}
+
+	Section::Section(RegionSectionCoords coords) : _coords{coords}
 	{}
 
 	void Section::create(const string& data)
@@ -52,8 +60,8 @@ namespace questless
 		std::ofstream fout(filename.c_str());
 
 		for (auto& r_row : _tiles) {
-			for (auto& hex : r_row) {
-				fout << static_cast<char>(hex->type());
+			for (auto& tile : r_row) {
+				fout << static_cast<char>(tile->tile_class()) << ' ' << tile->light_level() << ' ' << tile->temperature() << ' ';
 			}
 		}
 
@@ -63,8 +71,8 @@ namespace questless
 	void Section::close()
 	{
 		for (auto& r_row : _tiles) {
-			for (auto& hex : r_row) {
-				hex = nullptr;
+			for (auto& tile : r_row) {
+				tile = nullptr;
 			}
 		}
 	}
@@ -73,28 +81,32 @@ namespace questless
 	{
 		using std::make_unique;
 
-		char c;
 		for (auto& slice : _tiles) {
 			for (auto& tile : slice) {
-				in >> c;
-				switch (static_cast<Tile::Type>(c)) {
-					case Tile::Type::edge:
-						tile = make_unique<EdgeTile>();
+				int c;
+				double light_level;
+				double temperature;
+
+				in >> c >> light_level >> temperature;
+
+				switch (static_cast<Tile::TileClass>(c)) {
+					case Tile::TileClass::edge:
+						tile = make_unique<EdgeTile>(light_level, temperature);
 						break;
-					case Tile::Type::stone:
-						tile = make_unique<StoneTile>();
+					case Tile::TileClass::stone:
+						tile = make_unique<StoneTile>(light_level, temperature);
 						break;
-					case Tile::Type::dirt:
-						tile = make_unique<DirtTile>();
+					case Tile::TileClass::dirt:
+						tile = make_unique<DirtTile>(light_level, temperature);
 						break;
-					case Tile::Type::grass:
-						tile = make_unique<GrassTile>();
+					case Tile::TileClass::grass:
+						tile = make_unique<GrassTile>(light_level, temperature);
 						break;
-					case Tile::Type::water:
-						tile = make_unique<WaterTile>();
+					case Tile::TileClass::water:
+						tile = make_unique<WaterTile>(light_level, temperature);
 						break;
-					case Tile::Type::snow:
-						tile = make_unique<SnowTile>();
+					case Tile::TileClass::snow:
+						tile = make_unique<SnowTile>(light_level, temperature);
 						break;
 					default:
 						throw std::logic_error{"Unrecognized tile type."};

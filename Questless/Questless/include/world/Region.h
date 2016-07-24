@@ -22,17 +22,21 @@
 
 namespace questless
 {
+	class Game;
+
 	class Region
 	{
 	public:
 		/// Pseudo-randomly generates a new region.
+		/// @param game The game object.
 		/// @param name The name of the new region.
-		Region(std::string region_name);
+		Region(Game& game, std::string region_name);
 
 		/// Loads a region from disk.
+		/// @param game The game object.
 		/// @param save_name The name of the region's save file.
 		/// @param region_name The name of the region.
-		Region(const std::string& save_name, const std::string& region_name);
+		Region(Game& game, const std::string& save_name, const std::string& region_name);
 
 		/// @return The region's name, as it appears in game and on disk.
 		std::string name() const { return _name; }
@@ -53,12 +57,20 @@ namespace questless
 		Being* next_ready_being();
 
 		/// @param section_coords Section coordinates within the region.
-		/// @return The list of beings in the section at the given coordinates.
-		const std::vector<Being::ptr>& beings(HexCoords section_coords) const { return _section_map.find(section_coords)->second->beings(); }
+		/// @return The list of beings in the section at the given section coordinates.
+		const std::vector<Being::ptr>& beings(RegionSectionCoords section_coords) const { return _section_map.find(section_coords)->second->beings(); }
 
 		/// @param section_coords Section coordinates within the region.
-		/// @return The list of objects at the given coordinates.
-		const std::vector<Object::ptr>& objects(HexCoords section_coords) const { return _section_map.find(section_coords)->second->objects(); }
+		/// @return The list of objects at the given section coordinates.
+		const std::vector<Object::ptr>& objects(RegionSectionCoords section_coords) const { return _section_map.find(section_coords)->second->objects(); }
+
+		/// @param tile_coords Tile coordinates within the region.
+		/// @return The list of beings at the given tile coordinates.
+		std::vector<Being::ref> beings(RegionTileCoords tile_coords) const;
+
+		/// @param tile_coords Tile coordinates within the region.
+		/// @return The list of objects at the given tile coordinates.
+		std::vector<Object::ref> objects(RegionTileCoords tile_coords) const;
 
 		/// Inserts the given player being into the region at an arbitrary location, as its spawn point at the start of the game.
 		/// @param player_being The being to insert into the region.
@@ -69,19 +81,26 @@ namespace questless
 		/// @param coords The entity's coordinates in the region.
 		/// @tparam EntityType The type of entity to add. Legal values are Being and Object.
 		template <typename EntityType>
-		void add(typename EntityType::ptr entity, HexCoords coords)
+		void add(typename EntityType::ptr entity, RegionTileCoords coords)
 		{
-			HexCoords section_coords = containing_section_coords(coords);
+			RegionSectionCoords section_coords = containing_section_coords(coords);
 			auto it = _section_map.find(section_coords);
-			if (it != _section_map.end()) { /// @todo Deal with case where section not found? Probably not good to silently do nothing.
+			if (it != _section_map.end()) {
+				Section* section = it->second.get();
 				entity->region(this);
-				entity->section(it->second.get());
+				entity->section(section);
 				entity->coords(coords);
-				it->second->add<EntityType>(std::move(entity));
-				/// @todo Find a more permanent solution to this switch on type. (Probably need to write different add methods for beings and objects unless I change how the turn queue works.)
-				if (dynamic_cast<Being*>(entity.get())) {
+
+				/// @todo Find a more permanent solution to this switch on type. (Probably need to write different add methods for beings and objects unless I change how the turn queue works and add generic accessors for game.beings() and game.objects().)
+				if (Being* being = dynamic_cast<Being*>(entity.get())) {
 					add_to_turn_queue(dynamic_cast<Being&>(*entity));
+					_game.beings()[being->entity_id()] = std::make_tuple(GlobalCoords{_name, section->coords()}, being);
+				} else {
+					Object* object = dynamic_cast<Object*>(entity.get());
+					_game.objects()[object->entity_id()] = std::make_tuple(GlobalCoords{_name, section->coords()}, object);
 				}
+
+				section->add<EntityType>(std::move(entity));
 			} else {
 				throw std::out_of_range("No section at given coordinates in region.");
 			}
@@ -93,67 +112,71 @@ namespace questless
 		template <typename EntityType>
 		void add(typename EntityType::ptr entity) { add<EntityType>(std::move(entity), entity->coords()); }
 
-		/// Moves the given entity to the given coordinates, updating the corresponding section entity list as needed.
-		/// @param entity The entity to move.
-		/// @param coords The entity's new coordinates.
-		/// @tparam EntityType The type of entity to move. Possible values are Being and Object.
-		template <typename EntityType>
-		void move(typename EntityType& entity, HexCoords coords)
-		{
-			HexCoords src_section_coords = containing_section_coords(entity.coords());
-			const unique_ptr<Section>& src_section = _section_map[src_section_coords];
-			if (src_section != nullptr) { /// @todo What's up with null sections?
-				HexCoords dst_section_coords = containing_section_coords(coords);
+		/// Moves the given being to the given coordinates.
+		/// @param being The being to move.
+		/// @param coords The being's new coordinates.
+		void move(Being& being, RegionTileCoords coords);
 
-				if (dst_section_coords != src_section_coords) {
-					const unique_ptr<Section>& dst_section = _section_map[dst_section_coords];
-					if (dst_section != nullptr) {
-						EntityType::ptr moving_entity = src_section->remove<EntityType>(entity);
+		/// Moves the given entity to the given coordinates.
+		/// @param object The object to move.
+		/// @param coords The object's new coordinates.
+		void move(Object& object, RegionTileCoords coords);
 
-						moving_entity->coords(coords);
-						dst_section->add<EntityType>(std::move(moving_entity));
-					} else {
-						/// @todo Need to deal with null destination case.
-						return;
-					}
-				} else {
-					entity.coords(coords);
-				}
-			}
-		}
+		/// Removes a being from the region and the game.
+		/// @param being A being to be removed.
+		/// @return The removed being.
+		Being::ptr remove(Being& being);
+
+		/// Removes an object from the region and the game.
+		/// @param object An object to be removed.
+		/// @return The removed object.
+		Object::ptr remove(Object& object);
 
 		/// @return Whether there is a section at the given section coordinates.
-		bool section_exists(HexCoords section_coords) const;
+		bool section_exists(RegionSectionCoords section_coords) const;
 
 		/// @return The section at the given section coordinates.
-		const Section& section(HexCoords section_coords) const;
-
-		/// @return The entity at the given tile coordinates, or nullptr if there is none.
-		Entity* entity(HexCoords tile_coords) const;
+		const Section& section(RegionSectionCoords section_coords) const;
 
 		/// Gets the coordinates of the section that contains the tile with the given coordinates.
 		/// @param tile_coords The tile's hex coordinates in the region.
 		/// @return Hex coordinates of the containing section.
-		HexCoords containing_section_coords(HexCoords tile_coords) const
+		RegionSectionCoords containing_section_coords(RegionTileCoords tile_coords) const
 		{
 			/// @todo Figure out how to do this without the ugly casting to/from floating-point.
-			return HexCoords{lround(tile_coords.q / double{section_diameter}), lround(tile_coords.r / double{section_diameter})};
+			return RegionSectionCoords{{lround(tile_coords.hex.q / double{section_diameter}), lround(tile_coords.hex.r / double{section_diameter})}};
 		}
 
-		/// Gets the light level at the given hex coordinates. If there is no tile at the given coordinates, the base light level for the region is returned.
+		/// Gets the section that contains the tile with the given coordinates.
+		/// @param tile_coords The tile's hex coordinates in the region.
+		/// @return The containing section.
+		Section& containing_section(RegionTileCoords tile_coords) { return *_section_map[containing_section_coords(tile_coords)]; }
+		/// Gets the section that contains the tile with the given coordinates.
+		/// @param tile_coords The tile's hex coordinates in the region.
+		/// @return The containing section.
+		const Section& containing_section(RegionTileCoords tile_coords) const { return *_section_map.find(containing_section_coords(tile_coords))->second; }
+
+		/// Gets the light level at the given hex coordinates.
 		/// @param tile_coords Hex coordinates in the region.
 		/// @return The light level at those coordinates.
-		double light_level(HexCoords tile_coords) const { return 100.0; } /// @todo Implement this.
+		double light_level(RegionTileCoords tile_coords) const { return containing_section(tile_coords).light_level(tile_coords); }
 
+		/// Gets the temperature at the given hex coordinates.
+		/// @param tile_coords Hex coordinates in the region.
+		/// @return The temperature at those coordinates.
+		double temperature(RegionTileCoords tile_coords) const { return containing_section(tile_coords).temperature(tile_coords); }
+
+		/// Updates everything contained in the region.
 		void update();
 	private:
 		// Define the maximum size of the sections rhomboid that should be loaded at any given time.
 		static const int _loaded_sections_q_radius = 1;
 		static const int _loaded_sections_r_radius = 1;
 
+		Game& _game;
 		std::string _name;
-		std::map<HexCoords, std::unique_ptr<Section>> _section_map;
-		HexCoords center_section_coords = HexCoords{0, 0};
+		std::map<RegionSectionCoords, std::unique_ptr<Section>> _section_map;
+		RegionSectionCoords center_section_coords = RegionSectionCoords{{0, 0}};
 
 		std::set<Being::ref, Being::ref_less_t> _turn_queue;
 

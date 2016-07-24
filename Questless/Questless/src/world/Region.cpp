@@ -11,6 +11,7 @@
 namespace fs = std::tr2::sys; /// @todo Replace this with proper using statements if/when TR2 comes around.
 #include <limits.h>
 
+#include "Game.h"
 #include "world/Region.h"
 #include "entities/beings/Agent.h"
 #include "entities/beings/LazyAI.h"
@@ -34,7 +35,8 @@ namespace questless
 		return f_b < s_b || (f_b == s_b && first.entity_id() < second.entity_id());
 	}
 
-	Region::Region(string region_name) : _name{std::move(region_name)}, _turn_queue{turn_order_function}
+	Region::Region(Game& game, string region_name)
+		: _game{game}, _name{std::move(region_name)}, _turn_queue{turn_order_function}
 	{
 		const int r_radius = 1;
 		const int q_radius = 1;
@@ -43,7 +45,7 @@ namespace questless
 			for (int section_q = -q_radius; section_q <= q_radius; ++section_q) {
 				if (uniform(0, 0)) {
 				} else {
-					HexCoords section_coords{section_q, section_r};
+					RegionSectionCoords section_coords{{section_q, section_r}};
 					_section_map[section_coords] = make_unique<Section>(section_coords);
 
 					// Create a random section.
@@ -52,14 +54,14 @@ namespace questless
 						for (int q = -section_radius; q <= section_radius; ++q) {
 #if 1 // Tiles based on coords
 							if (r == section_radius) {
-								data += char(0);
+								data += std::to_string(0) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
 							} else {
 								if (q == section_radius) {
-									data += char(0);
+									data += std::to_string(0) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
 								} else {
-									data += char(uniform(1, 5));
+									data += std::to_string(uniform(1, 5)) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
 									if ((section_r != 0 || section_q != 0) && uniform(0, 10) == 0) {
-										HexCoords entity_coords = HexCoords{q, r} +section_coords * section_diameter;
+										RegionTileCoords entity_coords{HexCoords{q, r} + section_coords.hex * section_diameter};
 										auto new_being = make_unique<Goblin>(Agent::make<LazyAI>, Entity::next_id());
 										add<Being>(std::move(new_being), entity_coords);
 									}
@@ -70,7 +72,7 @@ namespace questless
 							data += new_tile;
 							if (new_tile != 0) {
 								if (section_r != 0 && section_q != 0 && uniform(0, 10) == 0) {
-									HexCoords entity_coords = HexCoords{q, r} + section_coords * section_diameter;
+									HexCoords entity_coords = HexCoords{q, r} +section_coords * section_diameter;
 									auto new_being = make_shared<Goblin>(Agent::make<LazyAI>, _name, entity_coords);
 									add_entity(new_being->as_entity());
 								}
@@ -84,7 +86,8 @@ namespace questless
 		}
 	}
 
-	Region::Region(const string& save_name, const string& region_name) : _name{std::move(region_name)}, _turn_queue{turn_order_function}
+	Region::Region(Game& game, const string& save_name, const string& region_name)
+		: _game{game}, _name{std::move(region_name)}, _turn_queue{turn_order_function}
 	{
 		fs::path saves_dir{"saves"};
 		fs::path save_filename{save_name};
@@ -105,9 +108,9 @@ namespace questless
 					r_string += c;
 				}
 			}
-			int q = std::stoi(q_string);
-			int r = std::stoi(r_string);
-			HexCoords section_coords{q, r};
+			int section_q = std::stoi(q_string);
+			int section_r = std::stoi(r_string);
+			RegionSectionCoords section_coords{{section_q, section_r}};
 
 			_section_map[section_coords]->open((region_path / it->path()).string());
 		}
@@ -213,6 +216,31 @@ namespace questless
 		//}
 	}
 
+
+	std::vector<Being::ref> Region::beings(RegionTileCoords tile_coords) const
+	{
+		std::vector<Being::ref> beings;
+		const Section& section = containing_section(tile_coords);
+		for (const auto& being : section.beings()) {
+			if (being->coords().hex == tile_coords.hex) {
+				beings.push_back(*being);
+			}
+		}
+		return beings;
+	}
+
+	std::vector<Object::ref> Region::objects(RegionTileCoords tile_coords) const
+	{
+		std::vector<Object::ref> objects;
+		const Section& section = containing_section(tile_coords);
+		for (const auto& object : section.objects()) {
+			if (object->coords().hex == tile_coords.hex) {
+				objects.push_back(*object);
+			}
+		}
+		return objects;
+	}
+
 	void Region::spawn_player(Being::ptr player_being)
 	{
 		/// @todo More advanced player spawning.
@@ -221,41 +249,87 @@ namespace questless
 
 		int q = uniform(-section_radius, section_radius);
 		int r = uniform(-section_radius, section_radius);
-		HexCoords player_coords = HexCoords{q, r};
+		RegionTileCoords player_coords{{q, r}};
 
 		// Erase the being currently there, if any.
-		auto& section = _section_map[containing_section_coords(player_coords)];
-		section->remove<Being>([=](const Being::ptr& being) { return being->coords() == player_coords; });
+		auto& section = containing_section(player_coords);
+		section.remove<Being>([=](const Being::ptr& being) { return being->coords().hex == player_coords.hex; });
 
 		add<Being>(std::move(player_being), player_coords);
 	}
 
-	Entity* Region::entity(HexCoords tile_coords) const
+	void Region::move(Being& being, RegionTileCoords coords)
 	{
-		HexCoords section_coords = containing_section_coords(tile_coords);
-		if (section_exists(section_coords)) {
-			const Section& s = section(section_coords);
-			for (const auto& being : s.beings()) {
-				if (being->coords() == tile_coords) {
-					return &being->as_entity();
-				}
+		Section& src_section = being.section();
+		RegionSectionCoords dst_section_coords = containing_section_coords(coords);
+		if (dst_section_coords.hex != src_section.coords().hex) {
+			const unique_ptr<Section>& dst_section = _section_map[dst_section_coords];
+			if (dst_section != nullptr) {
+				Being::ptr moving_being = src_section.remove(being);
+
+				moving_being->coords(coords);
+				dst_section->add<Being>(std::move(moving_being));
+			} else {
+				/// @todo Need to deal with null destination case.
+				return;
 			}
-			for (const auto& object : s.objects()) {
-				if (object->coords() == tile_coords) {
-					return &object->as_entity();
-				}
-			}
+		} else {
+			being.coords(coords);
+			_game.beings()[being.entity_id()] = std::make_tuple(GlobalCoords{_name, src_section.coords()}, &being);
 		}
-		return nullptr;
+	}
+
+	void Region::move(Object& object, RegionTileCoords coords)
+	{
+		Section& src_section = object.section();
+		RegionSectionCoords dst_section_coords = containing_section_coords(coords);
+		if (dst_section_coords.hex != src_section.coords().hex) {
+			const unique_ptr<Section>& dst_section = _section_map[dst_section_coords];
+			if (dst_section != nullptr) {
+				Object::ptr moving_object = src_section.remove(object);
+
+				moving_object->coords(coords);
+				dst_section->add<Object>(std::move(moving_object));
+			} else {
+				/// @todo Need to deal with null destination case.
+				return;
+			}
+		} else {
+			object.coords(coords);
+			_game.objects()[object.entity_id()] = std::make_tuple(GlobalCoords{_name, src_section.coords()}, &object);
+		}
 	}
 	
-	bool Region::section_exists(HexCoords section_coords) const
+	Being::ptr Region::remove(Being& being)
+	{
+		Section& section = being.section();
+
+		being.region(nullptr);
+		being.section(nullptr);
+
+		_game.beings().erase(being.entity_id());
+		remove_from_turn_queue(being);
+		return section.remove<Being>(being);
+	}
+
+	Object::ptr Region::remove(Object& object)
+	{
+		Section& section = object.section();
+
+		object.region(nullptr);
+		object.section(nullptr);
+
+		_game.objects().erase(object.entity_id());
+		return section.remove<Object>(object);
+	}
+
+	bool Region::section_exists(RegionSectionCoords section_coords) const
 	{
 		auto it = _section_map.find(section_coords);
 		return it != _section_map.end() && it->second != nullptr;
 	}
 
-	const Section& Region::section(HexCoords section_coords) const
+	const Section& Region::section(RegionSectionCoords section_coords) const
 	{
 		auto it = _section_map.find(section_coords);
 		if (it != _section_map.end()) {
@@ -267,21 +341,33 @@ namespace questless
 
 	void Region::update()
 	{
-		for_each_loaded_section([](Section& section) {
-			for (const auto& being : section.beings()) {
-				being->update();
+		std::vector<Entity::id_t> beings_to_update;
+		std::vector<Entity::id_t> objects_to_update;
+		for_each_loaded_section([&](Section& section) {
+			for (const Being::ptr& being : section.beings()) {
+				beings_to_update.push_back(being->entity_id());
 			}
-			for (const auto& object : section.objects()) {
-				object->update();
+			for (const Object::ptr& object : section.objects()) {
+				objects_to_update.push_back(object->entity_id());
 			}
 		});
+		for (Entity::id_t being_id : beings_to_update) {
+			if (Being* being = _game.being(being_id)) {
+				being->update();
+			}
+		}
+		for (Entity::id_t object_id : objects_to_update) {
+			if (Object* object = _game.object(object_id)) {
+				object->update();
+			}
+		}
 	}
 
 	void Region::for_each_loaded_section(function<void(Section&)> f)
 	{
 		for (int r = -_loaded_sections_q_radius; r <= _loaded_sections_q_radius; ++r) {
 			for (int q = -_loaded_sections_r_radius; q <= _loaded_sections_r_radius; ++q) {
-				HexCoords section_coords{q, r};
+				RegionSectionCoords section_coords{{q, r}};
 				auto it = _section_map.find(section_coords);
 				if (it != _section_map.end() && it->second != nullptr) { /// @todo Null sections...?
 					f(*it->second);

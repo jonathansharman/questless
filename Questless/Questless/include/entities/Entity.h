@@ -17,6 +17,7 @@
 #include "EntityVisitor.h"
 #include "utility/utility.h"
 #include "utility/hex-utilities.h"
+#include "world/coordinates.h"
 
 namespace questless
 {
@@ -40,10 +41,14 @@ namespace questless
 		virtual ~Entity() = default;
 
 		Entity& as_entity() { return dynamic_cast<Entity&>(*this); }
+		const Entity& as_entity() const { return dynamic_cast<const Entity&>(*this); }
 
 		/// Accepts an entity visitor. Used to implement the visitor pattern for entities.
 		/// @param visitor An entity visitor.
 		virtual void accept(EntityVisitor& visitor) = 0;
+		/// Accepts an entity visitor. Used to implement the visitor pattern for entities.
+		/// @param visitor An entity visitor.
+		virtual void accept(EntityVisitor& visitor) const = 0;
 
 		/// @return The entity's class's enumerated value.
 		virtual EntityClass entity_class() const = 0;
@@ -59,23 +64,27 @@ namespace questless
 
 		/// @return The entity's region.
 		Region& region() { return *_region; }
+		/// @return The entity's region.
+		const Region& region() const { return *_region; }
 		/// @param value The entity's new region.
 		void region(Region* value) { _region = value; }
 
 		/// @return The entity's section.
 		Section& section() { return *_section; }
+		/// @return The entity's section.
+		const Section& section() const { return *_section; }
 		/// @param value The entity's new section.
 		void section(Section* value) { _section = value; }
 
 		/// @return The entity's coordinates within its region.
-		HexCoords coords() const { return _coords; }
+		RegionTileCoords coords() const { return _coords; }
 		/// @param value The entity's new coordinates within its region.
-		void coords(HexCoords value) { _coords = value; }
-	protected:
+		void coords(RegionTileCoords value) { _coords = value; }
+	private:
 		id_t _id;
 		Region* _region;
 		Section* _section;
-		HexCoords _coords; ///< Coordinates within the entity's region.
+		RegionTileCoords _coords;
 	};
 }
 

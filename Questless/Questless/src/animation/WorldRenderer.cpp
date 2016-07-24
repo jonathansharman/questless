@@ -7,6 +7,7 @@
 * @section DESCRIPTION The implementation for the WorldRenderer class.
 */
 
+#include "Game.h"
 #include "animation/WorldRenderer.h"
 #include "animation/EntityAnimator.h"
 #include "world/Region.h"
@@ -46,31 +47,43 @@ namespace questless
 		}
 	}
 
-	void WorldRenderer::draw_beings(const Camera& camera)
+	void WorldRenderer::draw_beings(const Game& game, const Camera& camera)
 	{
 		for (const auto& being_view : _world_view->being_views()) {
-			// Search for the being's animation in the cache.
-			auto it = _entity_animations.find(being_view.being->entity_id());
-			// If it's there, use it. Otherwise, create the animation and cache it.
-			AnimationCollection& being_animation = it != _entity_animations.end()
-				? *it->second
-				: create_and_cache_entity_animation(*being_view.being);
+			// Attempt to load the being.
+			if (const Being* being = game.being(being_view.id)) {
+				// Search for the being's animation in the cache.
+				auto it = _entity_animations.find(being_view.id);
+				// If it's there, use it. Otherwise, create the animation and cache it.
+				AnimationCollection& being_animation = it != _entity_animations.end()
+					? *it->second
+					: create_and_cache_entity_animation(being->as_entity());
 
-			being_animation.draw(Layout::dflt().to_world(being_view.being->coords()), camera);
+				being_animation.draw(Layout::dflt().to_world(being->coords().hex), camera);
+			} else {
+				// Remove the being from the animation cache if it doesn't exist anymore.
+				_entity_animations.erase(being_view.id);
+			}
 		}
 	}
 
-	void WorldRenderer::draw_objects(const Camera& camera)
+	void WorldRenderer::draw_objects(const Game& game, const Camera& camera)
 	{
 		for (const auto& object_view : _world_view->object_views()) {
-			// Search for the being's animation in the cache.
-			auto it = _entity_animations.find(object_view.object->entity_id());
-			// If it's there, use it. Otherwise, create the animation and cache it.
-			AnimationCollection& being_animation = it != _entity_animations.end()
-				? *it->second
-				: create_and_cache_entity_animation(*object_view.object);
+			// Attempt to load the object.
+			if (const Object* object = game.object(object_view.id)) {
+				// Search for the object's animation in the cache.
+				auto it = _entity_animations.find(object_view.id);
+				// If it's there, use it. Otherwise, create the animation and cache it.
+				AnimationCollection& being_animation = it != _entity_animations.end()
+					? *it->second
+					: create_and_cache_entity_animation(object->as_entity());
 
-			being_animation.draw(Layout::dflt().to_world(object_view.object->coords()), camera);
+				being_animation.draw(Layout::dflt().to_world(object->coords().hex), camera);
+			} else {
+				// Remove the object from the animation cache if it doesn't exist anymore.
+				_entity_animations.erase(object_view.id);
+			}
 		}
 	}
 
@@ -84,11 +97,11 @@ namespace questless
 	{
 		TileTexturer tile_texturer;
 		tile.accept(tile_texturer);
-		_tile_textures[tile.type()] = tile_texturer.texture();
-		return *_tile_textures[tile.type()];
+		_tile_textures[tile.tile_class()] = tile_texturer.texture();
+		return *_tile_textures[tile.tile_class()];
 	};
 
-	AnimationCollection& WorldRenderer::create_and_cache_entity_animation(Entity& entity)
+	AnimationCollection& WorldRenderer::create_and_cache_entity_animation(const Entity& entity)
 	{
 		EntityAnimator entity_animator;
 		entity.accept(entity_animator);
@@ -101,6 +114,7 @@ namespace questless
 		optional<Rect> opt_bounds = _world_view->bounds();
 		if (!opt_bounds) {
 			_terrain_texture = nullptr;
+			return;
 		}
 		_terrain_bounds = *opt_bounds;
 
@@ -117,21 +131,22 @@ namespace questless
 				const Section& section = _world_view->region().section(section_view.coords);
 				for (int r = -section_radius; r <= section_radius; ++r) {
 					for (int q = -section_radius; q <= section_radius; ++q) {
-						double tile_visibility = section_view.tile_visibilities[r + section_radius][q + section_radius];
+						SectionTileCoords section_tile_coords{{q, r}};
+						SectionTileIndex tile_index = Section::tile_index(section_tile_coords);
+						double tile_visibility = section_view.tile_visibilities[tile_index.i][tile_index.j];
 						if (tile_visibility > 0) {
-							HexCoords tile_coords_section{q, r};
-							HexCoords tile_coords_region = section.coords() * section_diameter + tile_coords_section;
-							Point tile_coords_world = Layout::dflt().to_world(tile_coords_region);
+							RegionTileCoords region_tile_coords = section.region_tile_coords(section_tile_coords);
+							Point coords_in_world = Layout::dflt().to_world(region_tile_coords.hex);
 							uint8_t luminance = static_cast<uint8_t>(255 * std::min(tile_visibility / 100.0, 1.0));
 
 							// Get the current tile.
-							const Tile& tile = section.tile(tile_coords_section);
+							const Tile& tile = section.tile(section_tile_coords);
 							// Search for its texture in the cache.
-							auto it = _tile_textures.find(tile.type());
+							auto it = _tile_textures.find(tile.tile_class());
 							// If it's there, use it. Otherwise, create the texture and cache it.
 							Texture& tile_texture = it != _tile_textures.end() ? *it->second : create_and_cache_tile_texture(tile);
 
-							tile_texture.draw_transformed(tile_coords_world - Vector::to(_terrain_bounds.position()), nullopt, 1.0, 1.0, false, false, Color{luminance, luminance, luminance});
+							tile_texture.draw_transformed(coords_in_world - Vector::to(_terrain_bounds.position()), nullopt, 1.0, 1.0, false, false, Color{luminance, luminance, luminance});
 						}
 					}
 				}

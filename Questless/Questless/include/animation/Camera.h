@@ -16,7 +16,7 @@
 #include "sdl-wrappers/Texture.h"
 #include "sdl-wrappers/Window.h"
 #include "sdl-wrappers/Input.h"
-#include "utility/hex-utilities.h"
+#include "world/coordinates.h"
 
 namespace questless
 {
@@ -103,7 +103,7 @@ namespace questless
 		sdl::Point pt_hovered_rounded() const { return _pt_hovered_rounded; }
 
 		/// @return The hex coordinates of the tile the mouse is hovering over.
-		HexCoords tile_hovered() const { return Layout::dflt().to_hex_coords(PointF{_pt_hovered_rounded}); }
+		RegionTileCoords tile_hovered() const { return {Layout::dflt().to_hex_coords(PointF{_pt_hovered_rounded})}; }
 
 		void update(const sdl::Input& input);
 

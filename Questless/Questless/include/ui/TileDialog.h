@@ -15,14 +15,14 @@
 
 #include "Dialog.h"
 #include "animation/Camera.h"
-#include "utility/hex-utilities.h"
+#include "world/coordinates.h"
 
 namespace questless
 {
 	class TileDialog : public Dialog
 	{
 	public:
-		TileDialog(std::string title, std::string prompt, const Camera& camera, std::function<bool(HexCoords)> predicate, std::function<void(optional<HexCoords>)> cont)
+		TileDialog(std::string title, std::string prompt, const Camera& camera, std::function<bool(RegionTileCoords)> predicate, std::function<void(optional<RegionTileCoords>)> cont)
 			: _title{std::move(title)}, _prompt{std::move(prompt)}, _camera{camera}, _predicate{std::move(predicate)}, _cont{std::move(cont)}
 		{
 			load_textures();
@@ -39,8 +39,8 @@ namespace questless
 		std::string _title;
 		std::string _prompt;
 		const Camera& _camera;
-		std::function<bool(HexCoords)> _predicate;
-		std::function<void(optional<HexCoords>)> _cont;
+		std::function<bool(RegionTileCoords)> _predicate;
+		std::function<void(optional<RegionTileCoords>)> _cont;
 
 		sdl::Texture::ptr _txt_title;
 		sdl::Texture::ptr _txt_prompt;

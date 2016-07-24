@@ -15,9 +15,7 @@
 #include <functional>
 #include <memory>
 
-#include "utility/hex-utilities.h"
-
-/// @todo UPDATE ALL DOCUMENTATION IN THIS FILE. REMOVE UNUSED CLASSES AFTER CONTINUATION REFACTOR.
+#include "world/coordinates.h"
 
 namespace questless
 {
@@ -40,10 +38,10 @@ namespace questless
 		/// Performs the action.
 		/// @param game The game object.
 		/// @param actor The being that is performing the action.
-		/// @param [in,out] cont The continuation function. If the action does not complete, this function can be invoked later to resume it.
+		/// @param cont The continuation function to call once the action completes.
 		virtual void perform(Game& game, Being& actor, cont_t cont) = 0;
 
-		static std::function<bool(HexCoords)> tile_in_range_predicate(Being& actor, int range);
+		static std::function<bool(RegionTileCoords)> tile_in_range_predicate(Being& actor, int range);
 		static std::function<bool(Being&)> being_in_range_predicate(Being& actor, int range);
 	};
 }

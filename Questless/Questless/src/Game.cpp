@@ -92,7 +92,7 @@ namespace questless
 
 		// Initialize and load menu resources.
 
-		_hud = make_unique<HUDController>(*_window);
+		_hud = make_unique<HUDController>(*this, *_window);
 
 		// Load textures and graphics.
 
@@ -190,7 +190,7 @@ namespace questless
 		_dialogs.push_back(move(dialog));
 	}
 
-	void Game::query_tile(string title, string prompt, function<bool(HexCoords)> predicate, function<void(optional<HexCoords>)> cont)
+	void Game::query_tile(string title, string prompt, function<bool(RegionTileCoords)> predicate, function<void(optional<RegionTileCoords>)> cont)
 	{
 		auto dialog = make_unique<TileDialog>(move(title), move(prompt), *_camera, move(predicate), move(cont));
 		_dialogs.push_back(move(dialog));
@@ -389,21 +389,23 @@ namespace questless
 		for (const auto& option : _mnu_main.poll_selections()) {
 			if (option.first == "Questless") {
 				if (option.second == "Continue" || option.second == "Begin Anew") {
-					_region = make_unique<Region>("Region1");
-					//_region = make_unique<Region>("Slot1", "Region1");
+					_region = make_unique<Region>(*this, "Region1");
+					//_region = make_unique<Region>(*this, "Slot1", "Region1");
 
-					Being::ptr player_being = make_unique<Human>(Agent::make<Player>, Entity::next_id());
-					_player_being = player_being.get();
-					_region->spawn_player(move(player_being));
-					_player_being->give_item(make_unique<Scroll>(make_unique<LightningBoltSpell>()));
-					_player_being->give_item(make_unique<Scroll>(make_unique<HealSpell>()));
-					_player_being->give_item((make_unique<Quarterstaff>()));
-					_hud->player_being(_player_being);
-
-					_world_view = make_unique<WorldView>(*this, *_player_being, true);
+					{ // Spawn the player's being.
+						Being::ptr player_being = make_unique<Human>(Agent::make<Player>, Entity::next_id());
+						_player_id = player_being->entity_id();
+						player_being->give_item(make_unique<Scroll>(make_unique<LightningBoltSpell>()));
+						player_being->give_item(make_unique<Scroll>(make_unique<HealSpell>()));
+						player_being->give_item((make_unique<Quarterstaff>()));
+						_region->spawn_player(move(player_being));
+					}
+					// Pass the player's being ID to the HUD.
+					_hud->player_id(_player_id);
+					// Set the initial world view, world renderer, and camera position relative to the player's being.
+					_world_view = make_unique<WorldView>(*this, *being(_player_id), true);
 					_world_renderer = make_unique<WorldRenderer>(*_world_view);
-
-					_camera->position(PointF{Layout::dflt().to_world(_player_being->coords())});
+					_camera->position(PointF{Layout::dflt().to_world(being(_player_id)->coords().hex)});
 
 					_time_last_state_change = clock::now();
 					_state = State::playing;
@@ -439,8 +441,8 @@ namespace questless
 		_camera->draw(*_txt_hex_highlight, _camera->pt_hovered_rounded());
 		_camera->draw(*_txt_hex_circle, pt_clicked_rounded);
 
-		_world_renderer->draw_objects(*_camera);
-		_world_renderer->draw_beings(*_camera);
+		_world_renderer->draw_objects(*this, *_camera);
+		_world_renderer->draw_beings(*this, *_camera);
 
 		for (auto& particle : _particles) {
 			particle->draw(*_camera);
@@ -494,10 +496,13 @@ namespace questless
 
 				// End of player's turn. Update world view.
 				if (_dialogs.empty()) {
-					// Reset the world view.
-					_world_view = make_unique<WorldView>(*this, *_player_being, true);
-					// Reset the world renderer.
-					_world_renderer->reset_view(*_world_view);
+					/// @todo Do something nice when the player dies.
+					if (Being* player_being = being(_player_id)) {
+						// Reset the world view.
+						_world_view = make_unique<WorldView>(*this, *player_being, true);
+						// Reset the world renderer.
+						_world_renderer->reset_view(*_world_view);
+					}
 				}
 			}
 		} else {
@@ -512,7 +517,7 @@ namespace questless
 					// Awaiting player input to complete current action. Stop taking turns, and start at the next agent once this action is complete.
 
 					// Reset the world view.
-					_world_view = make_unique<WorldView>(*this, *_player_being, true);
+					_world_view = make_unique<WorldView>(*this, *being(_player_id), true);
 					// Reset the world renderer.
 					_world_renderer->reset_view(*_world_view);
 
@@ -611,9 +616,57 @@ namespace questless
 
 		// Reset camera.
 		if (_input.down(SDLK_BACKSPACE)) {
-			_camera->position(PointF{Layout::dflt().to_world(_player_being->coords())});
+			_camera->position(PointF{Layout::dflt().to_world(being(_player_id)->coords().hex)});
 			_camera->zoom(1.0);
 			_camera->angle(0.0);
+		}
+	}
+
+	Being* Game::_being(Entity::id_t id) const
+	{
+		auto it = _beings.find(id);
+		if (it == _beings.end()) {
+			// Being no longer exists.
+			return nullptr;
+		} else {
+			if (Being* being = std::get<Being*>(it->second)) {
+				return being;
+			} else {
+				// Load being from its coordinates.
+				GlobalCoords coords = std::get<GlobalCoords>(it->second);
+				Region& region = *_region; /// @todo Load region based on the region name in the coords (coords.region).
+				RegionSectionCoords section = coords.section;
+				for (const Being::ptr& being : region.section(section).beings()) {
+					if (being->entity_id() == id) {
+						return being.get();
+					}
+				}
+				throw std::logic_error{"Being lookup failed."};
+			}
+		}
+	}
+
+	Object* Game::_object(Entity::id_t id) const
+	{
+		auto it = _objects.find(id);
+		if (it == _objects.end()) {
+			// Object no longer exists.
+			return nullptr;
+		} else {
+			if (Object* object = std::get<Object*>(it->second)) {
+				return object;
+			} else {
+				// Load object from its coordinates.
+				GlobalCoords coords = std::get<GlobalCoords>(it->second);
+				Region& region = *_region; /// @todo Load region based on the region name in the coords (coords.region).
+				RegionSectionCoords section = coords.section;
+				for (const Object::ptr& object : region.section(section).objects()) {
+					if (object->entity_id() == id) {
+						return object.get();
+					}
+				}
+				throw std::logic_error{"Object lookup failed."};
+			}
 		}
 	}
 }

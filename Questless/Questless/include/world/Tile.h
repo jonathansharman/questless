@@ -68,55 +68,69 @@ namespace questless
 	class Tile
 	{
 	public:
-		enum class Type {edge, stone, dirt, grass, water, snow};
+		enum class TileClass : int {edge = 0, stone, dirt, grass, water, snow};
+
+		Tile(double light_level, double temperature) : _light_level{light_level}, _temperature{temperature} {}
 
 		virtual ~Tile() {}
 
 		/// @return The tile's type enumeration, for use in serialization and deserialization.
-		virtual Type type() const = 0;
+		virtual TileClass tile_class() const = 0;
 
 		virtual void accept(TileVisitor& visitor) const = 0;
+
+		double light_level() const { return _light_level; }
+		double temperature() const { return _temperature; }
+	private:
+		double _light_level;
+		double _temperature;
 	};
 
 	class EdgeTile : public Tile
 	{
 	public:
-		Type type() const override { return Type::edge; }
+		using Tile::Tile;
+		TileClass tile_class() const override { return TileClass::edge; }
 		void accept(TileVisitor& visitor) const override { visitor.visit(*this); }
 	};
 
 	class StoneTile : public Tile
 	{
 	public:
-		Type type() const override { return Type::stone; }
+		using Tile::Tile;
+		TileClass tile_class() const override { return TileClass::stone; }
 		void accept(TileVisitor& visitor) const override { visitor.visit(*this); }
 	};
 
 	class DirtTile : public Tile
 	{
 	public:
-		Type type() const override { return Type::dirt; }
+		using Tile::Tile;
+		TileClass tile_class() const override { return TileClass::dirt; }
 		void accept(TileVisitor& visitor) const override { visitor.visit(*this); }
 	};
 
 	class GrassTile : public Tile
 	{
 	public:
-		Type type() const override { return Type::grass; }
+		using Tile::Tile;
+		TileClass tile_class() const override { return TileClass::grass; }
 		void accept(TileVisitor& visitor) const override { visitor.visit(*this); }
 	};
 
 	class WaterTile : public Tile
 	{
 	public:
-		Type type() const override { return Type::water; }
+		using Tile::Tile;
+		TileClass tile_class() const override { return TileClass::water; }
 		void accept(TileVisitor& visitor) const override { visitor.visit(*this); }
 	};
 
 	class SnowTile : public Tile
 	{
 	public:
-		Type type() const override { return Type::snow; }
+		using Tile::Tile;
+		TileClass tile_class() const override { return TileClass::snow; }
 		void accept(TileVisitor& visitor) const override { visitor.visit(*this); }
 	};
 }

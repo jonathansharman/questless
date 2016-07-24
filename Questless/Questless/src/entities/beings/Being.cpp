@@ -162,7 +162,7 @@ namespace questless
 
 		// Handle temperature damage.
 
-		double temp = 0.0; /// @todo Get ambient temperature here!
+		double temp = region().temperature(coords());
 		if (temp > max_temp()) {
 			auto burn = Damage::from_burn((temp - max_temp()) / (max_temp() - min_temp()) * temperature_damage_factor);
 			take_damage(burn);
@@ -222,8 +222,7 @@ namespace questless
 			after_die(source);
 
 			// Remove from world.
-			_region->remove_from_turn_queue(*this); /// @todo There needs to be a standard way to remove things from a region/section so that calls to remove_from_turn_queue() don't get left out. (Should just be Region::remove<>().)
-			_section->remove<Being>(*this);
+			region().remove(*this);
 		}
 	}
 
@@ -328,21 +327,21 @@ namespace questless
 
 	void Being::busy_time(double value)
 	{
-		_region->remove_from_turn_queue(*this);
+		region().remove_from_turn_queue(*this);
 		_conditions.busy_time = value;
-		_region->add_to_turn_queue(*this);
+		region().add_to_turn_queue(*this);
 	}
 	void Being::gain_busy_time(double amount)
 	{
-		_region->remove_from_turn_queue(*this);
+		region().remove_from_turn_queue(*this);
 		_conditions.busy_time += amount;
-		_region->add_to_turn_queue(*this);
+		region().add_to_turn_queue(*this);
 	}
 	void Being::lose_busy_time(double amount)
 	{
-		_region->remove_from_turn_queue(*this);
+		region().remove_from_turn_queue(*this);
 		_conditions.busy_time -= amount;
-		_region->add_to_turn_queue(*this);
+		region().add_to_turn_queue(*this);
 	}
 
 	/////////////////////////////////////

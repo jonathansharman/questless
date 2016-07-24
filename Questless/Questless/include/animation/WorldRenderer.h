@@ -10,8 +10,8 @@
 #ifndef WORLD_RENDERER_H
 #define WORLD_RENDERER_H
 
+#include <unordered_map>
 #include <memory>
-using std::shared_ptr;
 
 #include "Camera.h"
 #include "AnimationCollection.h"
@@ -23,6 +23,8 @@ using std::shared_ptr;
 
 namespace questless
 {
+	class Game;
+
 	class WorldRenderer : public sdl::Renderable
 	{
 	public:
@@ -41,17 +43,19 @@ namespace questless
 		void draw_terrain(const Camera& camera);
 
 		/// Draws the visible beings in the world.
+		/// @param game The game object.
 		/// @param camera The camera with which to draw the beings.
-		void draw_beings(const Camera& camera);
+		void draw_beings(const Game& game, const Camera& camera);
 
 		/// Draws the visible objects in the world.
+		/// @param game The game object.
 		/// @param camera The camera with which to draw the objects.
-		void draw_objects(const Camera& camera);
+		void draw_objects(const Game& game, const Camera& camera);
 	private:
 		const WorldView* _world_view;
 
-		std::map<Tile::Type, sdl::Texture::ptr> _tile_textures;
-		std::map<Entity::id_t, std::unique_ptr<AnimationCollection>> _entity_animations;
+		std::unordered_map<Tile::TileClass, sdl::Texture::ptr> _tile_textures;
+		std::unordered_map<Entity::id_t, std::unique_ptr<AnimationCollection>> _entity_animations;
 		sdl::Texture::ptr _terrain_texture;
 		sdl::Rect _terrain_bounds;
 		bool _terrain_render_is_current;
@@ -59,7 +63,7 @@ namespace questless
 		void refresh() override;
 
 		sdl::Texture& create_and_cache_tile_texture(const Tile& tile);
-		AnimationCollection& create_and_cache_entity_animation(Entity& entity);
+		AnimationCollection& create_and_cache_entity_animation(const Entity& entity);
 		void render_terrain();
 	};
 }

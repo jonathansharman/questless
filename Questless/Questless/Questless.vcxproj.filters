@@ -466,6 +466,9 @@
     <ClInclude Include="include\entities\objects\ItemBox.h">
       <Filter>include\entities\objects</Filter>
     </ClInclude>
+    <ClInclude Include="include\world\coordinates.h">
+      <Filter>include\world</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp" />
