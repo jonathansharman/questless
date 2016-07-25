@@ -11,6 +11,8 @@
 #define DELEGATE_H
 
 #include <vector>
+#include <functional>
+#include <memory>
 
 namespace questless
 {
@@ -18,7 +20,8 @@ namespace questless
 	class Delegate
 	{
 	public:
-		using callback_t = shared_ptr<function<void(Args...)>>;
+		/// The delegate callback type.
+		using callback_t = std::shared_ptr<std::function<void(Args...)>>;
 
 		/// Adds a new callback function at the end of the callbacks list.
 		/// @param f The new callback.

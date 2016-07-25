@@ -14,8 +14,8 @@
 namespace sdl
 {
 	Window::Window
-		( string title
-		, string icon_filename
+		( std::string title
+		, std::string icon_filename
 		, bool fullscreen
 		, int width
 		, int height
@@ -32,14 +32,14 @@ namespace sdl
 			, (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | (resizable ? SDL_WINDOW_RESIZABLE : 0)
 			);
 		if (_sdl_window == nullptr) {
-			throw runtime_error{"Failed to create window."};
+			throw std::runtime_error{"Failed to create window."};
 		}
 		SDL_SetWindowIcon(_sdl_window, IMG_Load(_icon_filename.c_str()));
 	}
 
 	Window::Window
-		( string title
-		, string icon_filename
+		( std::string title
+		, std::string icon_filename
 		, bool fullscreen
 		, int width
 		, int height
@@ -55,7 +55,7 @@ namespace sdl
 			, (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | (resizable ? SDL_WINDOW_RESIZABLE : 0)
 			);
 		if (_sdl_window == nullptr) {
-			throw runtime_error{"Failed to create window."};
+			throw std::runtime_error{"Failed to create window."};
 		}
 		SDL_SetWindowIcon(_sdl_window, IMG_Load("textures/icon.png"));
 		SDL_SetWindowPosition(_sdl_window, x, y);

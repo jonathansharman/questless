@@ -11,12 +11,8 @@
 #define INPUT_H
 
 #include <vector>
-using std::vector;
 #include <map>
-using std::map;
-#include <algorithm>
 #include <exception>
-using std::bad_alloc;
 
 #include <SDL.h>
 
@@ -142,11 +138,11 @@ namespace sdl
 		uint8_t* _prev_keyboard_state;
 		const uint8_t* _curr_keyboard_state;
 
-		vector<SDL_Keycode> _press_buffer;
-		vector<SDL_Keycode> _release_buffer;
+		std::vector<SDL_Keycode> _press_buffer;
+		std::vector<SDL_Keycode> _release_buffer;
 
-		map<SDL_Keycode, unsigned> _presses;
-		map<SDL_Keycode, unsigned> _releases;
+		std::map<SDL_Keycode, unsigned> _presses;
+		std::map<SDL_Keycode, unsigned> _releases;
 		
 		int _x_mouse;
 		int _y_mouse;

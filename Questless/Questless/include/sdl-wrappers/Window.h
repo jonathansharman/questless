@@ -11,9 +11,6 @@
 #define WINDOW_H
 
 #include <string>
-using std::string;
-#include <stdexcept>
-using std::runtime_error;
 #include <memory>
 
 #include <SDL.h>
@@ -37,7 +34,7 @@ namespace sdl
 		/// @param h_centered If true, window is centered horizontally. Otherwise horizontal position is undefined.
 		/// @param v_centered If true, window is centered vertically. Otherwise vertical position is undefined.
 		/// @param resizable If true, window may be resized (enables maximize, restore, and window frame handles).
-		Window(string title, string icon_filename, bool fullscreen = true, int width = 0, int height = 0, bool h_centered = false, bool v_centered = false, bool resizable = false);
+		Window(std::string title, std::string icon_filename, bool fullscreen = true, int width = 0, int height = 0, bool h_centered = false, bool v_centered = false, bool resizable = false);
 
 		/// Constructs a window object with the specified properties.
 		/// @param title The title of the window.
@@ -48,7 +45,7 @@ namespace sdl
 		/// @param x The window's x-coordinate.
 		/// @param y The window's y-coordinate.
 		/// @param resizable If true, window may be resized (enables maximize, restore, and window frame handles).
-		Window(string title, string icon_filename, bool fullscreen, int width, int height, int x, int y, bool resizable);
+		Window(std::string title, std::string icon_filename, bool fullscreen, int width, int height, int x, int y, bool resizable);
 
 		Window(const Window& other) = delete;
 		Window(Window&& other) = default;
@@ -70,10 +67,10 @@ namespace sdl
 		SDL_Window* const sdl_ptr() const { return _sdl_window; }
 
 		/// @return The window title.
-		string title() const { return _title; }
+		std::string title() const { return _title; }
 
 		/// @return The filename used to load the window icon.
-		string icon_filename() const { return _icon_filename; }
+		std::string icon_filename() const { return _icon_filename; }
 
 		/// @return Whether the window is maximized.
 		bool maximized() const;
@@ -101,8 +98,8 @@ namespace sdl
 		Point center() const;
 	private:
 		SDL_Window* _sdl_window;
-		string _title;
-		string _icon_filename;
+		std::string _title;
+		std::string _icon_filename;
 
 		mutable optional<int> _width, _height;
 

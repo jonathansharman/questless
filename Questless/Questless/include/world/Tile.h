@@ -35,16 +35,16 @@ namespace questless
 		virtual void visit(const SnowTile&) = 0;
 	};
 
-	class BadTileVisit : public runtime_error
+	class BadTileVisit : public std::runtime_error
 	{
 	public:
-		BadTileVisit(string message) : runtime_error{move(message)} {}
+		BadTileVisit(std::string message) : std::runtime_error{std::move(message)} {}
 	};
 
 	class TrivialTileVisitor : public TileVisitor
 	{
 	public:
-		TrivialTileVisitor(string message) : _message{move(message)} {}
+		TrivialTileVisitor(std::string message) : _message{std::move(message)} {}
 
 		virtual ~TrivialTileVisitor() = default;
 
@@ -55,7 +55,7 @@ namespace questless
 		virtual void visit(const WaterTile&) override { throw BadTileVisit{_message}; }
 		virtual void visit(const SnowTile&) override { throw BadTileVisit{_message}; }
 	private:
-		string _message;
+		std::string _message;
 	};
 
 	class Tile

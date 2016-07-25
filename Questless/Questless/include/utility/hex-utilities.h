@@ -27,6 +27,8 @@ using std::logic_error;
 #include "constants.h"
 #include "PointF.h"
 
+/// @todo Get rid of using declarations and move most of these functions to an implementation file.
+
 namespace questless
 {
 	struct HexCoords

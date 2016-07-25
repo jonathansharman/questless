@@ -12,6 +12,8 @@
 #define EVENT_H
 
 #include <vector>
+#include <functional>
+#include <memory>
 
 namespace questless
 {

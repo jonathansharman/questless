@@ -10,14 +10,8 @@
 #ifndef POTION_H
 #define POTION_H
 
-#include <vector>
-using std::vector;
 #include <functional>
-using std::function;
-#include <memory>
-using std::shared_ptr;
 
-#include "constants.h"
 #include "Item.h"
 #include "Craftable.h"
 

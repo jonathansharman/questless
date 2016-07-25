@@ -81,7 +81,7 @@ namespace questless
 			throw invalid_argument("Attempted to set the option of a nonexistent menu page.");
 		} else {
 			if (option_index < 0 || option_index >= _menu.pages[page_index.value()].options.size()) {
-				throw out_of_range("Option index out of bounds.");
+				throw std::out_of_range("Option index out of bounds.");
 			}
 			_menu.pages[page_index.value()].option_index = option_index;
 		}

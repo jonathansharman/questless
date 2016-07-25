@@ -24,17 +24,17 @@ namespace sdl
 		if (_w != 0 && _h != 0) {
 			_texture = SDL_CreateTexture(_renderer.sdl_ptr(), _format, _access, _w, _h);
 			if (_texture == nullptr) {
-				throw runtime_error("Failed to create blank texture.");
+				throw std::runtime_error("Failed to create blank texture.");
 			}
 			if (SDL_SetTextureBlendMode(_texture, _blend_mode)) {
-				throw runtime_error("Failed to set texture blend mode.");
+				throw std::runtime_error("Failed to set texture blend mode.");
 			}
 		} else {
-			throw runtime_error("Attempted to create texture with zero dimensions.");
+			throw std::runtime_error("Attempted to create texture with zero dimensions.");
 		}
 	}
 
-	Texture::Texture(const string& filename, Renderer& renderer, SDL_BlendMode blend_mode, bool targetable)
+	Texture::Texture(const std::string& filename, Renderer& renderer, SDL_BlendMode blend_mode, bool targetable)
 		: _texture{nullptr }
 		, _renderer{renderer}
 		, _blend_mode{blend_mode}
@@ -44,11 +44,11 @@ namespace sdl
 	{
 		_texture = IMG_LoadTexture(_renderer.sdl_ptr(), filename.c_str());
 		if (!_texture) {
-			throw runtime_error(("Failed to load texture \"" + filename + "\".").c_str());
+			throw std::runtime_error(("Failed to load texture \"" + filename + "\".").c_str());
 		}
 		SDL_QueryTexture(_texture, nullptr, nullptr, &_w, &_h);
 		if (SDL_SetTextureBlendMode(_texture, _blend_mode)) {
-			throw runtime_error("Failed to set texture blend mode.");
+			throw std::runtime_error("Failed to set texture blend mode.");
 		}
 	}
 	
@@ -108,7 +108,7 @@ namespace sdl
 			SDL_SetTextureColorMod(_texture, _color.r, _color.g, _color.b);
 			SDL_RenderCopy(_renderer.sdl_ptr(), _texture, (src_rect ? &sdl_src_rect : nullptr), &sdl_dst_rect);
 		} else {
-			throw runtime_error("Texture is unloaded.");
+			throw std::runtime_error("Texture is unloaded.");
 		}
 	}
 
@@ -143,7 +143,7 @@ namespace sdl
 			SDL_SetTextureColorMod(_texture, _color.r, _color.g, _color.b);
 			SDL_RenderCopy(_renderer.sdl_ptr(), _texture, (src_rect ? &sdl_src_rect : nullptr), &sdl_dst_rect);
 		} else {
-			throw runtime_error("Texture is unloaded.");
+			throw std::runtime_error("Texture is unloaded.");
 		}
 	}
 
@@ -186,7 +186,7 @@ namespace sdl
 				, static_cast<SDL_RendererFlip>((flip_horizontally ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE) | (flip_vertically ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE))
 				);
 		} else {
-			throw runtime_error("Texture is unloaded.");
+			throw std::runtime_error("Texture is unloaded.");
 		}
 	}
 

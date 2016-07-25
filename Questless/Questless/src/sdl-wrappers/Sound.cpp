@@ -15,7 +15,7 @@ namespace sdl
 	{
 		_chunk = Mix_LoadWAV(filename.c_str());
 		if (!_chunk) {
-			throw runtime_error{("Failed to load sound \"" + filename + "\".").c_str()};
+			throw std::runtime_error{("Failed to load sound \"" + filename + "\".").c_str()};
 		}
 	}
 

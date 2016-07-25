@@ -57,7 +57,7 @@ namespace questless
 		// Initialize video.
 
 		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
-			throw runtime_error("Failed to initialize SDL.");
+			throw std::runtime_error("Failed to initialize SDL.");
 		}
 		if (fullscreen) {
 			_window = Window::make("Questless", "resources/textures/icon.png", true);
@@ -74,13 +74,13 @@ namespace questless
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
 
 		if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
-			throw runtime_error("Failed to initialize IMG.");
+			throw std::runtime_error("Failed to initialize IMG.");
 		}
 
 		// Initialize and load fonts.
 
 		if (TTF_Init()) {
-			throw runtime_error("Failed to initialize TTF. SDL Error: " + string{SDL_GetError()});
+			throw std::runtime_error("Failed to initialize TTF. SDL Error: " + string{SDL_GetError()});
 		}
 
 		_fnt_20pt = Font::make("resources/fonts/firamono.ttf", 20, SDL_BLENDMODE_BLEND);
@@ -88,7 +88,7 @@ namespace questless
 		// Initialize sound.
 
 	    if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 1024)) {
-			throw runtime_error("Failed to initialize Mix.");
+			throw std::runtime_error("Failed to initialize Mix.");
 	    }
 
 		// Initialize and load menu resources.
@@ -199,11 +199,13 @@ namespace questless
 
 	void Game::query_being(string /*title*/, string /*prompt*/, function<bool(Being&)> /*predicate*/, function<void(optional<Being*>)> cont)
 	{
+		/// @todo This.
 		cont(nullopt);
 	}
 
 	void Game::query_item(string /*title*/, string /*prompt*/, Being& /*source*/, function<bool(Being&)> /*predicate*/, function<void(optional<Item*>)> cont)
 	{
+		/// @todo This.
 		cont(nullopt);
 	}
 

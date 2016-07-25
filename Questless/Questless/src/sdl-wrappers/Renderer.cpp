@@ -10,6 +10,8 @@
 #include "sdl-wrappers/Renderer.h"
 
 using std::vector;
+using std::runtime_error;
+using namespace std::string_literals;
 
 namespace sdl
 {
@@ -92,7 +94,7 @@ namespace sdl
 	void Renderer::set_draw_color(Color color)
 	{
 		if (SDL_SetRenderDrawColor(_renderer, color.r, color.g, color.b, color.a)) {
-			string message = "Failed to set renderer draw color. SDL error: " + string{SDL_GetError()};
+			std::string message = "Failed to set renderer draw color. SDL error: "s + SDL_GetError();
 			throw runtime_error{message};
 		}
 	}

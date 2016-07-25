@@ -11,9 +11,6 @@
 #define SOUND_H
 
 #include <string>
-using std::string;
-#include <stdexcept>
-using std::runtime_error;
 #include <algorithm>
 #include <memory>
 

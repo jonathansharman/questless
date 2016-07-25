@@ -11,8 +11,6 @@
 #define DAMAGE_H
 
 #include <vector>
-using std::vector;
-using std::initializer_list;
 
 namespace questless
 {

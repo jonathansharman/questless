@@ -11,9 +11,7 @@
 #define SPELL_H
 
 #include <string>
-#include <functional>
 #include <memory>
-#include <stdexcept>
 
 #include "utility/optional.h"
 

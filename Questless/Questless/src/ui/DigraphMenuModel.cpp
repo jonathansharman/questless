@@ -11,13 +11,16 @@
 
 #include "ui/DigraphMenuModel.h"
 
+using std::logic_error;
+using std::out_of_range;
+
 namespace questless
 {
 	DigraphMenuModel::Page& DigraphMenuModel::current_page()
 	{
 		if (pages.size() == 0) {
 			throw logic_error("Attempted to access current page of an empty menu.");
-		} else if (page_index >= 0 && page_index < pages.size()) {
+		} else if (page_index >= 0 && static_cast<size_t>(page_index) < pages.size()) {
 			return pages[page_index];
 		} else {
 			throw out_of_range("Current page index is invalid.");
@@ -28,20 +31,11 @@ namespace questless
 	{
 		if (pages.size() == 0) {
 			throw logic_error("Attempted to access current page of an empty menu.");
-		} else if (page_index >= 0 && page_index < pages.size()) {
+		} else if (page_index >= 0 && static_cast<size_t>(page_index) < pages.size()) {
 			return pages[page_index];
 		} else {
 			throw out_of_range("Current page index is invalid.");
 		}
-	}
-
-	vector<DigraphMenuModel::Page::Option>& DigraphMenuModel::current_options()
-	{
-		return pages[page_index].options;
-	}
-	const vector<DigraphMenuModel::Page::Option>& DigraphMenuModel::current_options() const
-	{
-		return pages[page_index].options;
 	}
 
 	DigraphMenuModel::Page::Option& DigraphMenuModel::current_option()

@@ -80,7 +80,7 @@ namespace questless
 		_page_views.clear();
 		for (unsigned i = 0; i < menu.pages.size(); ++i) {
 			_content_height = max(_content_height, static_cast<int>(title_height + menu.current_options().size() * option_height));
-			vector<Texture> option_textures;
+			std::vector<Texture> option_textures;
 			for (unsigned j = 0; j < menu.pages[i].options.size(); ++j) {
 				option_textures.push_back(font_manager()[_option_font_handle].render(menu.pages[i].options[j].name, renderer(), Color::white()));
 				_content_width = max(_content_width, option_textures[j].width());
