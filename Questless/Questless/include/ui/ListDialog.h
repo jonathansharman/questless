@@ -125,11 +125,11 @@ namespace questless
 
 		void load_textures()
 		{
-			_txt_title = sdl::Texture::make(sdl::font_manager()["Dialog/title"].render(_title, sdl::renderer(), sdl::Color::black()));
+			_txt_title = sdl::Texture::make(sdl::font_manager()[title_font_handle()].render(_title, sdl::renderer(), sdl::Color::black()));
 			_bounds.w = _txt_title->width();
 			_txt_options.clear();
 			for (const auto& option : _options) {
-				_txt_options.push_back(sdl::Texture::make(sdl::font_manager()["Dialog/list-option"].render(_item_to_name(option), sdl::renderer(), sdl::Color::black())));
+				_txt_options.push_back(sdl::Texture::make(sdl::font_manager()[list_option_font_handle()].render(_item_to_name(option), sdl::renderer(), sdl::Color::black())));
 				_bounds.w = max(_bounds.w, _txt_options.back()->width());
 			}
 			_bounds.w += 2 * _x_padding;

@@ -20,12 +20,15 @@ namespace questless
 	void EntityAnimator::visit(const Human&)
 	{
 		static bool first_call = true;
+		static Handle<Texture> ss_handle;
 		if (first_call) {
-			sdl::texture_manager().add("ss/human", [] { return Texture::make("resources/textures/human-animation.png", sdl::renderer(), SDL_BLENDMODE_BLEND); });
+			ss_handle = sdl::texture_manager().add([] {
+				return Texture::make("resources/textures/human-animation.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+			});
 			first_call = false;
 		}
 
-		_animation = make_unique<AnimationCollection>("ss/human", 3, 1);
+		_animation = make_unique<AnimationCollection>(ss_handle, 3, 1);
 
 		vector<Animation::Frame> frames
 			{ {double_seconds{0.2}, Point{0, 0}, Point{0, 10}}
@@ -39,12 +42,15 @@ namespace questless
 	void EntityAnimator::visit(const Goblin&)
 	{
 		static bool first_call = true;
+		static Handle<Texture> ss_handle;
 		if (first_call) {
-			sdl::texture_manager().add("ss/goblin", [] { return Texture::make("resources/textures/test_animation.png", sdl::renderer(), SDL_BLENDMODE_BLEND); });
+			ss_handle = sdl::texture_manager().add([] {
+				return Texture::make("resources/textures/test_animation.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+			});
 			first_call = false;
 		}
 
-		_animation = make_unique<AnimationCollection>("ss/goblin", 3, 1);
+		_animation = make_unique<AnimationCollection>(ss_handle, 3, 1);
 
 		vector<Animation::Frame> frames
 			{ {double_seconds{0.2}, Point{0, 0}, Point{0, 10}}
@@ -61,12 +67,15 @@ namespace questless
 	void EntityAnimator::visit(const ItemBox&)
 	{
 		static bool first_call = true;
+		static Handle<Texture> ss_handle;
 		if (first_call) {
-			sdl::texture_manager().add("ss/item-box", [] { return Texture::make("resources/textures/entities/objects/item-box.png", sdl::renderer(), SDL_BLENDMODE_BLEND); });
+			ss_handle = sdl::texture_manager().add([] {
+				return Texture::make("resources/textures/entities/objects/item-box.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+			});
 			first_call = false;
 		}
 
-		_animation = make_unique<AnimationCollection>("ss/item-box", 1, 1);
+		_animation = make_unique<AnimationCollection>(ss_handle, 1, 1);
 
 		vector<Animation::Frame> frames{{double_seconds{1.0}, Point{0, 0}, Point{0, 4}}};
 		_animation->add("being-a-box", Animation::make(frames, true));

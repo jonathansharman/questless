@@ -10,6 +10,8 @@
 #include "animation/particles/GreenMagic.h"
 #include "sdl-wrappers/resources.h"
 
+using namespace sdl;
+
 namespace questless
 {
 	void GreenMagic::subupdate()
@@ -25,15 +27,16 @@ namespace questless
 		}
 	}
 
-	sdl::Texture& GreenMagic::texture() const
+	Texture& GreenMagic::texture() const
 	{
 		static bool first_call = true;
+		static Handle<Texture> handle;
 		if (first_call) {
-			sdl::texture_manager().add("particles/green_magic", [] {
-				return sdl::Texture::make("resources/textures/particles/magic/green.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+			handle = texture_manager().add([] {
+				return Texture::make("resources/textures/particles/magic/green.png", renderer(), SDL_BLENDMODE_BLEND);
 			});
 			first_call = false;
 		}
-		return sdl::texture_manager()["particles/green_magic"];
+		return texture_manager()[handle];
 	}
 }

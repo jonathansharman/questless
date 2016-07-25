@@ -11,6 +11,7 @@
 #define DIALOG_H
 
 #include "sdl-wrappers/Renderable.h"
+#include "sdl-wrappers/resources.h"
 #include "sdl-wrappers/Window.h"
 #include "sdl-wrappers/Input.h"
 #include "utility/Initializer.h"
@@ -38,10 +39,20 @@ namespace questless
 		virtual void draw(const sdl::Window& window) = 0;
 	protected:
 		static constexpr int _prompt_top = 40;
+
+		static sdl::Handle<sdl::Font> title_font_handle() { return _title_font_handle; }
+		static sdl::Handle<sdl::Font> prompt_font_handle() { return _prompt_font_handle; }
+		static sdl::Handle<sdl::Font> io_font_handle() { return _io_font_handle; }
+		static sdl::Handle<sdl::Font> list_option_font_handle() { return _list_option_font_handle; }
 	private:
 		friend class Initializer<Dialog>;
 		static Initializer<Dialog> _initializer;
 		static void initialize();
+
+		static sdl::Handle<sdl::Font> _title_font_handle;
+		static sdl::Handle<sdl::Font> _prompt_font_handle;
+		static sdl::Handle<sdl::Font> _io_font_handle;
+		static sdl::Handle<sdl::Font> _list_option_font_handle;
 
 		bool _closed;
 	};

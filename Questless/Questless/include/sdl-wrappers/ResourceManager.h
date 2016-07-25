@@ -11,68 +11,74 @@
 #define RESOURCE_MANAGER_H
 
 #include <string>
-#include <vector>
-#include <unordered_map>
+#include <list>
 #include <functional>
-#include <exception>
 #include <memory>
-
-/// @todo The resource manager is quite inefficient. Filling the screen with particles that use the texture manager causes the FPS to plummet.
-///       Need to do away with the string-based keys.
 
 namespace sdl
 {
+	template <typename ResourceType>
+	struct Entry
+	{
+		mutable std::unique_ptr<ResourceType> resource; // Mutable to support lazy evaluation.
+		std::function<std::unique_ptr<ResourceType>()> generator;
+	};
+
+	template <typename ResourceType>
+	struct Handle
+	{
+		typename std::list<Entry<ResourceType>>::iterator it;
+	};
+
 	template <typename ResourceType>
 	class ResourceManager
 	{
 	public:
 		/// Registers the given resource name and generator with the manager.
-		/// @param name The name by which the resource should be accessed.
 		/// @param generator A function that loads or creates the resource when it is needed.
-		void add(std::string name, std::function<std::unique_ptr<ResourceType>()> generator) { _registry[name] = make_pair(nullptr, std::move(generator)); }
-
-		/// @return The resource with the given name.
-		/// @param name The name of the resource to be retrieved.
-		ResourceType& get(std::string name)
+		/// @return The handle with which the resource can be accessed.
+		Handle<ResourceType> add(std::function<std::unique_ptr<ResourceType>()> generator)
 		{
-			auto it = _registry.find(name);
-			if (it == _registry.end()) {
-				throw std::logic_error{'\"' + name + "\" not found in resource manager."};
-			} else {
-				auto& entry = it->second;
-				if (entry.first == nullptr) {
-					entry.first = entry.second();
-				}
-				return *entry.first;
-			}
+			_registry.push_front(Entry<ResourceType>{nullptr, std::move(generator)});
+			return Handle<ResourceType>{_registry.begin()};
 		}
 
-		/// @return The resource with the given name.
-		/// @param name The name of the resource to be retrieved.
-		ResourceType& operator [](std::string name) { return get(name); }
+		/// @param handle The handle of the desired resource, obtained from the initial call to add().
+		/// @return The resource at the given index.
+		ResourceType& operator [](const Handle<ResourceType>& handle) const
+		{
+			auto& entry = *handle.it;
+			if (entry.resource == nullptr) {
+				entry.resource = entry.generator();
+			}
+			return *entry.resource;
+		}
 
 		/// Removes the given resource and its generator from the registry.
-		/// @param name The name of the resource to be removed.
-		void erase(std::string name) { _registry.erase(name); }
+		/// @param handle The handle of the resource to be removed, obtained from the initial call to add().
+		void erase(const Handle<ResourceType>& handle)
+		{
+			_registry.erase(handle._it);
+		}
 
 		/// Removes the given resources and their generators from the registry.
 		/// @param names The names of the resources to be removed.
-		void erase(std::vector<std::string> names)
+		void erase(const std::vector<Handle<ResourceType>>& handles)
 		{
-			for (std::string name : names) {
-				erase(name);
+			for (const Handle& handle : handles) {
+				erase(handle);
 			}
 		}
 
 		/// Clears the cache such that each resource must be regenerated when next accessed.
 		void clear_cache()
 		{
-			for (auto& name_and_entry : _registry) {
-				name_and_entry.second.first = nullptr;
+			for (auto& entry : _registry) {
+				entry.resource = nullptr;
 			}
 		}
 	private:
-		std::unordered_map<std::string, std::pair<std::unique_ptr<ResourceType>, std::function<std::unique_ptr<ResourceType>()>>> _registry;
+		std::list<Entry<ResourceType>> _registry;
 	};
 }
 

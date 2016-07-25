@@ -15,11 +15,13 @@ using namespace sdl;
 
 namespace questless
 {
+	sdl::Handle<sdl::Sound> DigraphMenuController::_hover_sound_handle, DigraphMenuController::_select_sound_handle;
+
 	Initializer<DigraphMenuController> DigraphMenuController::_initializer;
 	void DigraphMenuController::initialize()
 	{
-		sound_manager().add("DMC/hover", [] { return Sound::make("resources/sounds/menu/hover.wav"); });
-		sound_manager().add("DMC/select", [] { return Sound::make("resources/sounds/menu/select.wav"); });
+		_hover_sound_handle = sound_manager().add([] { return Sound::make("resources/sounds/menu/hover.wav"); });
+		_select_sound_handle = sound_manager().add([] { return Sound::make("resources/sounds/menu/select.wav"); });
 	}
 
 	DigraphMenuController::DigraphMenuController(int min_width, int min_height) : _view{min_width, min_height} {}
@@ -118,16 +120,16 @@ namespace questless
 
 		if (input.mouse_moved() && hovered_option_index) {
 			if (_menu.current_option_index() != hovered_option_index.value()) {
-				sound_manager()["DMC/hover"].play();
+				sound_manager()[_hover_sound_handle].play();
 				_menu.current_option_index() = hovered_option_index.value();
 			}
 		} else {
 			if (input.presses(SDLK_DOWN)) {
-				sound_manager()["DMC/hover"].play();
+				sound_manager()[_hover_sound_handle].play();
 				++_menu.current_option_index();
 			}
 			if (input.presses(SDLK_UP)) {
-				sound_manager()["DMC/hover"].play();
+				sound_manager()[_hover_sound_handle].play();
 				--_menu.current_option_index();
 			}
 			if (_menu.current_option_index() < 0) {
@@ -140,7 +142,7 @@ namespace questless
 		// Check for selection.
 
 		if (input.presses(SDLK_RETURN) || input.presses(SDLK_SPACE) || hovered_option_index && input.pressed(MouseButton::left)) {
-			sound_manager()["DMC/select"].play();
+			sound_manager()[_select_sound_handle].play();
 			DigraphMenuModel::Page::Option selection = _menu.current_option();
 			if (selection.target) {
 				_menu.page_index = selection.target.value();

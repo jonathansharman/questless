@@ -76,7 +76,7 @@ namespace questless
 			, std::function<void(optional<ItemType>)> cont
 			)
 		{
-			auto dialog = make_unique<ListDialog<ItemType>>(origin, std::move(title), std::move(options), std::move(item_to_name), std::move(cont));
+			auto dialog = std::make_unique<ListDialog<ItemType>>(origin, std::move(title), std::move(options), std::move(item_to_name), std::move(cont));
 			_dialogs.push_back(std::move(dialog));
 		}
 

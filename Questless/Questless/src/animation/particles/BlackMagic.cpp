@@ -10,6 +10,8 @@
 #include "animation/particles/BlackMagic.h"
 #include "sdl-wrappers/resources.h"
 
+using namespace sdl;
+
 namespace questless
 {
 	void BlackMagic::subupdate()
@@ -18,15 +20,16 @@ namespace questless
 		_velocity.rotate(_turn_rate * frame_duration);
 	}
 
-	sdl::Texture& BlackMagic::texture() const
+	Texture& BlackMagic::texture() const
 	{
 		static bool first_call = true;
+		static Handle<Texture> handle;
 		if (first_call) {
-			sdl::texture_manager().add("particles/black_magic", [] {
-				return sdl::Texture::make("resources/textures/particles/magic/black.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+			handle = texture_manager().add([] {
+				return Texture::make("resources/textures/particles/magic/black.png", renderer(), SDL_BLENDMODE_BLEND);
 			});
 			first_call = false;
 		}
-		return sdl::texture_manager()["particles/black_magic"];
+		return texture_manager()[handle];
 	}
 }

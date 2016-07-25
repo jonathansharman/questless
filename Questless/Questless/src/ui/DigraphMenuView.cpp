@@ -19,34 +19,48 @@ using namespace::sdl;
 
 namespace questless
 {
+	Handle<Font> DigraphMenuView::_title_font_handle;
+	Handle<Font> DigraphMenuView::_option_font_handle;
+
+	Handle<Texture> DigraphMenuView::_ul_handle;
+	Handle<Texture> DigraphMenuView::_ur_handle;
+	Handle<Texture> DigraphMenuView::_dl_handle;
+	Handle<Texture> DigraphMenuView::_dr_handle;
+	Handle<Texture> DigraphMenuView::_u_handle;
+	Handle<Texture> DigraphMenuView::_d_handle;
+	Handle<Texture> DigraphMenuView::_l_handle;
+	Handle<Texture> DigraphMenuView::_r_handle;
+	Handle<Texture> DigraphMenuView::_tile_handle;
+
 	shared_future<int> DigraphMenuView::_top_margin;
 	shared_future<int> DigraphMenuView::_bottom_margin;
 	shared_future<int> DigraphMenuView::_left_margin;
 	shared_future<int> DigraphMenuView::_right_margin;
 	shared_future<int> DigraphMenuView::_tile_width;
 	shared_future<int> DigraphMenuView::_tile_height;
+
 	Initializer<DigraphMenuView> DigraphMenuView::_initializer;
 	void DigraphMenuView::initialize()
 	{
-		font_manager().add("DMV/title", [] { return Font::make("resources/fonts/dumbledor1.ttf", title_font_size, SDL_BLENDMODE_BLEND); });
-		font_manager().add("DMV/option", [] { return Font::make("resources/fonts/dumbledor1.ttf", option_font_size, SDL_BLENDMODE_BLEND); });
+		_title_font_handle = font_manager().add([] { return Font::make("resources/fonts/dumbledor1.ttf", title_font_size, SDL_BLENDMODE_BLEND); });
+		_option_font_handle = font_manager().add([] { return Font::make("resources/fonts/dumbledor1.ttf", option_font_size, SDL_BLENDMODE_BLEND); });
 
-		texture_manager().add("DMV/ul", [] { return Texture::make("resources/textures/menu/ul.png", renderer(), SDL_BLENDMODE_BLEND); });
-		texture_manager().add("DMV/ur", [] { return Texture::make("resources/textures/menu/ur.png", renderer(), SDL_BLENDMODE_BLEND); });
-		texture_manager().add("DMV/dl", [] { return Texture::make("resources/textures/menu/dl.png", renderer(), SDL_BLENDMODE_BLEND); });
-		texture_manager().add("DMV/dr", [] { return Texture::make("resources/textures/menu/dr.png", renderer(), SDL_BLENDMODE_BLEND); });
-		texture_manager().add("DMV/u", [] { return Texture::make("resources/textures/menu/u.png", renderer(), SDL_BLENDMODE_BLEND); });
-		texture_manager().add("DMV/d", [] { return Texture::make("resources/textures/menu/d.png", renderer(), SDL_BLENDMODE_BLEND); });
-		texture_manager().add("DMV/l", [] { return Texture::make("resources/textures/menu/l.png", renderer(), SDL_BLENDMODE_BLEND); });
-		texture_manager().add("DMV/r", [] { return Texture::make("resources/textures/menu/r.png", renderer(), SDL_BLENDMODE_BLEND); });
-		texture_manager().add("DMV/tile", [] { return Texture::make("resources/textures/menu/tile.png", renderer(), SDL_BLENDMODE_BLEND); });
+		_ul_handle = texture_manager().add([] { return Texture::make("resources/textures/menu/ul.png", renderer(), SDL_BLENDMODE_BLEND); });
+		_ur_handle = texture_manager().add([] { return Texture::make("resources/textures/menu/ur.png", renderer(), SDL_BLENDMODE_BLEND); });
+		_dl_handle = texture_manager().add([] { return Texture::make("resources/textures/menu/dl.png", renderer(), SDL_BLENDMODE_BLEND); });
+		_dr_handle = texture_manager().add([] { return Texture::make("resources/textures/menu/dr.png", renderer(), SDL_BLENDMODE_BLEND); });
+		_u_handle = texture_manager().add([] { return Texture::make("resources/textures/menu/u.png", renderer(), SDL_BLENDMODE_BLEND); });
+		_d_handle = texture_manager().add([] { return Texture::make("resources/textures/menu/d.png", renderer(), SDL_BLENDMODE_BLEND); });
+		_l_handle = texture_manager().add([] { return Texture::make("resources/textures/menu/l.png", renderer(), SDL_BLENDMODE_BLEND); });
+		_r_handle = texture_manager().add([] { return Texture::make("resources/textures/menu/r.png", renderer(), SDL_BLENDMODE_BLEND); });
+		_tile_handle = texture_manager().add([] { return Texture::make("resources/textures/menu/tile.png", renderer(), SDL_BLENDMODE_BLEND); });
 
-		_top_margin = async(std::launch::deferred, [] { return texture_manager()["DMV/u"].height(); });
-		_bottom_margin = async(std::launch::deferred, [] { return texture_manager()["DMV/d"].height(); });
-		_left_margin = async(std::launch::deferred, [] { return texture_manager()["DMV/l"].width(); });
-		_right_margin = async(std::launch::deferred, [] { return texture_manager()["DMV/r"].width(); });
-		_tile_width = async(std::launch::deferred, [] { return texture_manager()["DMV/tile"].width(); });
-		_tile_height = async(std::launch::deferred, [] { return texture_manager()["DMV/tile"].height(); });
+		_top_margin = async(std::launch::deferred, [&] { return texture_manager()[_u_handle].height(); });
+		_bottom_margin = async(std::launch::deferred, [&] { return texture_manager()[_d_handle].height(); });
+		_left_margin = async(std::launch::deferred, [&] { return texture_manager()[_l_handle].width(); });
+		_right_margin = async(std::launch::deferred, [&] { return texture_manager()[_r_handle].width(); });
+		_tile_width = async(std::launch::deferred, [&] { return texture_manager()[_tile_handle].width(); });
+		_tile_height = async(std::launch::deferred, [&] { return texture_manager()[_tile_handle].height(); });
 	}
 
 	void DigraphMenuView::render(const DigraphMenuModel& menu)
@@ -68,10 +82,10 @@ namespace questless
 			_content_height = max(_content_height, static_cast<int>(title_height + menu.current_options().size() * option_height));
 			vector<Texture> option_textures;
 			for (unsigned j = 0; j < menu.pages[i].options.size(); ++j) {
-				option_textures.push_back(font_manager()["DMV/option"].render(menu.pages[i].options[j].name, renderer(), Color::white()));
+				option_textures.push_back(font_manager()[_option_font_handle].render(menu.pages[i].options[j].name, renderer(), Color::white()));
 				_content_width = max(_content_width, option_textures[j].width());
 			}
-			_page_views.emplace_back(font_manager()["DMV/title"].render(menu.pages[i].title, renderer(), title_color()), std::move(option_textures));
+			_page_views.emplace_back(font_manager()[_title_font_handle].render(menu.pages[i].title, renderer(), title_color()), std::move(option_textures));
 		}
 
 		int width_remainder = _content_width % tile_width;
@@ -100,24 +114,24 @@ namespace questless
 			// Interior
 			for (int x = 0; x < _content_width / tile_width; ++x) {
 				for (int y = 0; y < _content_height / tile_height; ++y) {
-					texture_manager()["DMV/tile"].draw(Point(left_margin + tile_width * x, top_margin + tile_height * y));
+					texture_manager()[_tile_handle].draw(Point{left_margin + tile_width * x, top_margin + tile_height * y});
 				}
 			}
 			// Top and bottom margins
 			for (int x = 0; x < _content_width / tile_width; ++x) {
-				texture_manager()["DMV/u"].draw(Point(left_margin + tile_width * x, 0));
-				texture_manager()["DMV/d"].draw(Point(left_margin + tile_width * x, top_margin + _content_height));
+				texture_manager()[_u_handle].draw(Point{left_margin + tile_width * x, 0});
+				texture_manager()[_d_handle].draw(Point{left_margin + tile_width * x, top_margin + _content_height});
 			}
 			// Left and right margins
 			for (int y = 0; y < _content_height / tile_height; ++y) {
-				texture_manager()["DMV/l"].draw(Point(0, top_margin + tile_width * y));
-				texture_manager()["DMV/r"].draw(Point(left_margin + _content_width, top_margin + tile_width * y));
+				texture_manager()[_l_handle].draw(Point{0, top_margin + tile_width * y});
+				texture_manager()[_r_handle].draw(Point{left_margin + _content_width, top_margin + tile_width * y});
 			}
 			// Corners
-			texture_manager()["DMV/ul"].draw(Point(0, 0));
-			texture_manager()["DMV/ur"].draw(Point(left_margin + _content_width, 0));
-			texture_manager()["DMV/dl"].draw(Point(0, top_margin + _content_height));
-			texture_manager()["DMV/dr"].draw(Point(left_margin + _content_width, top_margin + _content_height));
+			texture_manager()[_ul_handle].draw(Point{0, 0});
+			texture_manager()[_ur_handle].draw(Point{left_margin + _content_width, 0});
+			texture_manager()[_dl_handle].draw(Point{0, top_margin + _content_height});
+			texture_manager()[_dr_handle].draw(Point{left_margin + _content_width, top_margin + _content_height});
 		});
 
 		_render_is_current = true;

@@ -99,8 +99,8 @@ namespace questless
 
 		load_textures();
 
-		texture_manager().add("ss/test", [] { return Texture::make("resources/textures/test_animation.png", renderer(), SDL_BLENDMODE_BLEND); });
-		_ani_test = make_unique<AnimationCollection>("ss/test", 3, 1);
+		Handle<Texture> test_ss_handle = texture_manager().add([] { return Texture::make("resources/textures/test_animation.png", renderer(), SDL_BLENDMODE_BLEND); });
+		_ani_test = make_unique<AnimationCollection>(test_ss_handle, 3, 1);
 
 		// Load sounds.
 

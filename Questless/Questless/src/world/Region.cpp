@@ -21,6 +21,7 @@ using std::string;
 using std::vector;
 using std::function;
 using std::unique_ptr;
+using std::make_unique;
 
 using namespace sdl;
 
@@ -280,8 +281,8 @@ namespace questless
 				return;
 			}
 		} else {
-			for (const Being::ptr& being : src_section.beings()) {
-				if (being->coords().hex == coords.hex) {
+			for (const Being::ptr& other_being : src_section.beings()) {
+				if (other_being->coords().hex == coords.hex) {
 					// Collision. Prevent movement.
 					return;
 				}

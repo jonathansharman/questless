@@ -45,7 +45,7 @@ namespace questless
 
 	void TileDialog::load_textures()
 	{
-		_txt_title = Texture::make(font_manager()["Dialog/title"].render(_title, renderer(), Color::white()));
-		_txt_prompt = Texture::make(font_manager()["Dialog/prompt"].render(_prompt, renderer(), Color::white()));
+		_txt_title = Texture::make(font_manager()[title_font_handle()].render(_title, renderer(), Color::white()));
+		_txt_prompt = Texture::make(font_manager()[prompt_font_handle()].render(_prompt, renderer(), Color::white()));
 	}
 }

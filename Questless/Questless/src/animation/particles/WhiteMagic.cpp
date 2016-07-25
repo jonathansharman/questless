@@ -10,6 +10,8 @@
 #include "animation/particles/WhiteMagic.h"
 #include "sdl-wrappers/resources.h"
 
+using namespace sdl;
+
 namespace questless
 {
 	void WhiteMagic::subupdate()
@@ -18,15 +20,16 @@ namespace questless
 		_velocity.x *= _vx_factor_per_frame;
 	}
 
-	sdl::Texture& WhiteMagic::texture() const
+	Texture& WhiteMagic::texture() const
 	{
 		static bool first_call = true;
+		static Handle<Texture> handle;
 		if (first_call) {
-			sdl::texture_manager().add("particles/white_magic", [] {
-				return sdl::Texture::make("resources/textures/particles/magic/white.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+			handle = texture_manager().add([] {
+				return Texture::make("resources/textures/particles/magic/white.png", renderer(), SDL_BLENDMODE_BLEND);
 			});
 			first_call = false;
 		}
-		return sdl::texture_manager()["particles/white_magic"];
+		return texture_manager()[handle];
 	}
 }

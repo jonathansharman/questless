@@ -82,6 +82,8 @@ namespace questless
 		static Initializer<DigraphMenuController> _initializer;
 		static void initialize();
 
+		static sdl::Handle<sdl::Sound> _hover_sound_handle, _select_sound_handle;
+
 		DigraphMenuModel _menu;
 		DigraphMenuView _view;
 		std::vector<std::pair<std::string, std::string>> _selections;

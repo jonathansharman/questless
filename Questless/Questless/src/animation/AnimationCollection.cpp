@@ -11,13 +11,15 @@
 
 using namespace sdl;
 
+/// @todo Make AnimationCollection a Renderable and cache the sprite sheet?
+
 namespace questless
 {
-	AnimationCollection::AnimationCollection(std::string sprite_sheet_name, int cel_columns, int cel_rows)
-		: _sprite_sheet_name{sprite_sheet_name}, _current_animation{nullptr}, _paused{false}
+	AnimationCollection::AnimationCollection(sdl::Handle<Texture> sprite_sheet_handle, int cel_columns, int cel_rows)
+		: _sprite_sheet_handle{sprite_sheet_handle}, _current_animation{nullptr}, _paused{false}
 	{
-		_cel_width = texture_manager()[_sprite_sheet_name].width() / cel_columns;
-		_cel_height = texture_manager()[_sprite_sheet_name].height() / cel_rows;
+		_cel_width = texture_manager()[_sprite_sheet_handle].width() / cel_columns;
+		_cel_height = texture_manager()[_sprite_sheet_handle].height() / cel_rows;
 	}
 
 	void AnimationCollection::add(const string& animation_name, Animation::ptr animation)
@@ -46,7 +48,7 @@ namespace questless
 			const Animation::Frame& frame = _current_animation->current_frame();
 			Rect dst_rect(origin.x - frame.origin.x, origin.y - frame.origin.y, _cel_width, _cel_height);
 			Rect src_rect(_cel_width * frame.coords.x, _cel_height * frame.coords.y, _cel_width, _cel_height);
-			texture_manager()[_sprite_sheet_name].draw(dst_rect, src_rect);
+			texture_manager()[_sprite_sheet_handle].draw(dst_rect, src_rect);
 		}
 	}
 
@@ -55,7 +57,7 @@ namespace questless
 		if (_current_animation != nullptr) {
 			const Animation::Frame& frame = _current_animation->current_frame();
 			Rect src_rect(_cel_width * frame.coords.x, _cel_height * frame.coords.y, _cel_width, _cel_height);
-			camera.draw(texture_manager()[_sprite_sheet_name], origin - Vector{frame.origin.x, frame.origin.y}, nullopt, 1.0, 1.0, false, false, 0.0, Color::white(), src_rect);
+			camera.draw(texture_manager()[_sprite_sheet_handle], origin - Vector{frame.origin.x, frame.origin.y}, nullopt, 1.0, 1.0, false, false, 0.0, Color::white(), src_rect);
 		}
 	}
 }

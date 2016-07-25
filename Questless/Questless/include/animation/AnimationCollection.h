@@ -26,19 +26,19 @@ namespace questless
 		using ptr = std::unique_ptr<AnimationCollection>;
 
 		/// Constructs an animation collection pointer, which holds animations accessible by name.
-		/// @param sprite_sheet_name The name of the sprite sheet texture in the texture manager.
+		/// @param sprite_sheet_handle The handle of the sprite sheet texture in the texture manager.
 		/// @param cel_columns The number of cels in one row of the sprite sheet texture.
 		/// @param cel_rows The number of cels in one column of the sprite sheet texture.
-		static ptr make(std::string sprite_sheet_name, int cel_columns, int cel_rows)
+		static ptr make(sdl::Handle<sdl::Texture> sprite_sheet_handle, int cel_columns, int cel_rows)
 		{
-			return std::make_unique<AnimationCollection>(sprite_sheet_name, cel_columns, cel_rows);
+			return std::make_unique<AnimationCollection>(sprite_sheet_handle, cel_columns, cel_rows);
 		}
 
 		/// Constructs an animation collection, which holds animations accessible by name.
-		/// @param sprite_sheet_name The name of the sprite sheet texture in the texture manager.
+		/// @param sprite_sheet_handle The handle of the sprite sheet texture in the texture manager.
 		/// @param cel_columns The number of cels in one row of the sprite sheet texture.
 		/// @param cel_rows The number of cels in one column of the sprite sheet texture.
-		AnimationCollection(std::string sprite_sheet_name, int cel_columns, int cel_rows);
+		AnimationCollection(sdl::Handle<sdl::Texture> sprite_sheet_handle, int cel_columns, int cel_rows);
 
 		/// Adds an animation to the collection.
 		/// @param animation_name The name of the animation to be added.
@@ -74,7 +74,7 @@ namespace questless
 		/// @param camera A camera object.
 		void draw(sdl::Point origin, const Camera& camera) const;
 	private:
-		std::string _sprite_sheet_name;
+		sdl::Handle<sdl::Texture> _sprite_sheet_handle;
 		int _cel_width;
 		int _cel_height;
 

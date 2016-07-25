@@ -30,7 +30,7 @@ namespace questless
 			}
 		}
 		// Otherwise make a new box and add to it.
-		auto item_box = make_unique<ItemBox>(game, ObjectId::next());
+		auto item_box = std::make_unique<ItemBox>(game, ObjectId::next());
 		item_box->items().push_back(std::move(item));
 		game.region().add<Object>(std::move(item_box), actor.coords());
 		cont(Result::success);

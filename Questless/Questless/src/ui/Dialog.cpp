@@ -13,13 +13,18 @@
 
 namespace questless
 {
+	sdl::Handle<sdl::Font> Dialog::_title_font_handle;
+	sdl::Handle<sdl::Font> Dialog::_prompt_font_handle;
+	sdl::Handle<sdl::Font> Dialog::_io_font_handle;
+	sdl::Handle<sdl::Font> Dialog::_list_option_font_handle;
+
 	Initializer<Dialog> Dialog::_initializer;
 	void Dialog::initialize()
 	{
 		using namespace sdl;
-		font_manager().add("Dialog/title", [] { return Font::make("resources/fonts/dumbledor1.ttf", 32, SDL_BLENDMODE_BLEND); });
-		font_manager().add("Dialog/prompt", [] { return Font::make("resources/fonts/dumbledor1.ttf", 20, SDL_BLENDMODE_BLEND); });
-		font_manager().add("Dialog/io", [] { return Font::make("resources/fonts/dumbledor1.ttf", 32, SDL_BLENDMODE_BLEND); });
-		font_manager().add("Dialog/list-option", [] { return Font::make("resources/fonts/dumbledor1.ttf", 20, SDL_BLENDMODE_BLEND); });
+		_title_font_handle = font_manager().add([] { return Font::make("resources/fonts/dumbledor1.ttf", 32, SDL_BLENDMODE_BLEND); });
+		_prompt_font_handle = font_manager().add([] { return Font::make("resources/fonts/dumbledor1.ttf", 20, SDL_BLENDMODE_BLEND); });
+		_io_font_handle = font_manager().add([] { return Font::make("resources/fonts/dumbledor1.ttf", 32, SDL_BLENDMODE_BLEND); });
+		_list_option_font_handle = font_manager().add([] { return Font::make("resources/fonts/dumbledor1.ttf", 20, SDL_BLENDMODE_BLEND); });
 	}
 }

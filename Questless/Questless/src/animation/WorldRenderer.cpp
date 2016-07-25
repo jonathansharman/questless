@@ -133,7 +133,7 @@ namespace questless
 		}
 		_terrain_bounds = *opt_bounds;
 
-		_terrain_texture = make_unique<Texture>
+		_terrain_texture = std::make_unique<Texture>
 			( sdl::renderer()
 			, SDL_BLENDMODE_BLEND
 			, _terrain_bounds.w

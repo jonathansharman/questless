@@ -44,14 +44,14 @@ namespace questless
 		_txt_prompt->draw(Point{x_center, _prompt_top}, HAlign::center);
 
 		// Draw the magnitude selector.
-		Texture txt_current = font_manager()["Dialog/io"].render(std::to_string(static_cast<int>(_count)), renderer(), Color::white());
+		Texture txt_current = font_manager()[io_font_handle()].render(std::to_string(static_cast<int>(_count)), renderer(), Color::white());
 		renderer().draw_rect(Rect{x_center - txt_current.width() / 2, 100, txt_current.width(), txt_current.height()}, Color{0, 0, 0, 128}, true);
 		txt_current.draw(Point{x_center, 100}, HAlign::center);
 	}
 
 	void CountDialog::refresh()
 	{
-		_txt_title = Texture::make(font_manager()["Dialog/title"].render(_title, renderer(), Color::white()));
-		_txt_prompt = Texture::make(font_manager()["Dialog/prompt"].render(_prompt, renderer(), Color::white()));
+		_txt_title = Texture::make(font_manager()[title_font_handle()].render(_title, renderer(), Color::white()));
+		_txt_prompt = Texture::make(font_manager()[prompt_font_handle()].render(_prompt, renderer(), Color::white()));
 	}
 }

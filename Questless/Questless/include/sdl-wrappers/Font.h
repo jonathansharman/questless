@@ -11,11 +11,7 @@
 #define FONT_H
 
 #include <string>
-using std::string;
-#include <stdexcept>
-using std::runtime_error;
 #include <algorithm>
-#include <memory>
 
 #include <SDL.h>
 #include <SDL_ttf.h>
@@ -34,7 +30,7 @@ namespace sdl
 		/// @param filename The name of a TrueType font file.
 		/// @param blend_mode The SDL blend mode to use for this font. Determines the way the alpha channel is used.
 		/// @param size The point size of the font.
-		Font(const string& filename, int size, SDL_BlendMode blend_mode = SDL_BLENDMODE_BLEND);
+		Font(const std::string& filename, int size, SDL_BlendMode blend_mode = SDL_BLENDMODE_BLEND);
 
 		Font(const Font& font) = delete;
 
@@ -61,7 +57,7 @@ namespace sdl
 		/// @param renderer The renderer object to create and render the font.
 		/// @param text_color The text color.
 		/// @note The text must be at least one character in length, or an exception is thrown.
-		Texture render(const string& text, Renderer& renderer, Color text_color) const;
+		Texture render(const std::string& text, Renderer& renderer, Color text_color) const;
 	
 		/// Renders the provided string of text as a texture with a solid background.
 		/// @param text The text to be rendered.
@@ -69,7 +65,7 @@ namespace sdl
 		/// @param text_color The text color.
 		/// @param background_color The background color.
 		/// @note The text must be at least one character in length, or an exception is thrown.
-		Texture render(const string& text, Renderer& renderer, Color text_color, Color background_color) const;
+		Texture render(const std::string& text, Renderer& renderer, Color text_color, Color background_color) const;
 
 		/// Quickly renders the provided string of text as a texture with a transparent background.
 		/// @param text The text to be rendered.
@@ -77,7 +73,7 @@ namespace sdl
 		/// @param text_color The text color.
 		/// @note The text must be at least one character in length, or an exception is thrown.
 		/// @note Render quality is inferior to that produced by render, but the resulting texture is produced and drawn much faster.
-		Texture quick_render(const string& text, Renderer& renderer, Color text_color) const;
+		Texture quick_render(const std::string& text, Renderer& renderer, Color text_color) const;
 	private:
 		TTF_Font* _font;
 		int _size;

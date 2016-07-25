@@ -10,13 +10,6 @@
 #ifndef TILE_H
 #define TILE_H
 
-#include <vector>
-using std::vector;
-#include <memory>
-using std::unique_ptr;
-using std::make_unique;
-using std::shared_ptr;
-
 #include "sdl-wrappers/Renderer.h"
 #include "sdl-wrappers/Texture.h"
 
