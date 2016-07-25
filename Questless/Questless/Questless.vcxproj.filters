@@ -475,6 +475,9 @@
     <ClInclude Include="include\entities\objects\ObjectId.h">
       <Filter>include\entities\objects</Filter>
     </ClInclude>
+    <ClInclude Include="include\spells\TeleportSpell.h">
+      <Filter>include\spells</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp" />
@@ -670,6 +673,9 @@
     </ClCompile>
     <ClCompile Include="src\entities\objects\Object.cpp">
       <Filter>src\entities\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\spells\TeleportSpell.cpp">
+      <Filter>src\spells</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

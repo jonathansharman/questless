@@ -11,7 +11,6 @@
 #define SCROLL_H
 
 #include <memory>
-using std::unique_ptr;
 
 #include "Item.h"
 #include "spells/Spell.h"
@@ -68,9 +67,9 @@ namespace questless
 
 			std::string name() const override { return "Cast"; }
 
-			void perform(Game& game, Being& actor, cont_t cont) override
+			void perform(Being& actor, cont_t cont) override
 			{
-				_scroll.spell().perform(game, actor, std::move(cont));
+				_scroll.spell().perform(actor, std::move(cont));
 			}
 		private:
 			Scroll& _scroll;
@@ -85,7 +84,7 @@ namespace questless
 
 			std::string name() const override { return "Incant"; }
 
-			void perform(Game& game, Being& actor, cont_t cont) override
+			void perform(Being& /*actor*/, cont_t cont) override
 			{
 				/// @todo Costs, times, etc.
 				_scroll.spell().charge();
@@ -104,7 +103,7 @@ namespace questless
 
 			std::string name() const override { return "Discharge"; }
 
-			void perform(Game& game, Being& actor, cont_t cont) override
+			void perform(Being& /*actor*/, cont_t cont) override
 			{
 				/// @todo Costs, times, etc.
 				_scroll.spell().discharge();

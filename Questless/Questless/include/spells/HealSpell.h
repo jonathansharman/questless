@@ -19,7 +19,7 @@ namespace questless
 	public:
 		HealSpell() : Spell(10) {}
 
-		void perform(Game& game, Being& caster, cont_t cont) override;
+		void perform(Being& caster, cont_t cont) override;
 
 		Color color() const override { return Color::white; }
 

@@ -129,6 +129,9 @@ namespace questless
 	using Hertz = Frequency<double>;
 	/// Frequency type representing thousounds of cycles per second or cycles per millisecond.
 	using kiloHertz = Frequency<double, std::milli>;
+
+	constexpr Hertz operator ""_Hz(long double cycles) { return Hertz{static_cast<double>(cycles)}; }
+	constexpr kiloHertz operator ""_kHz(long double cycles) { return kiloHertz{static_cast<double>(cycles)}; }
 }
 
 #endif

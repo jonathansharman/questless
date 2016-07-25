@@ -12,10 +12,13 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <functional>
 #include <exception>
 #include <memory>
+
+/// @todo The resource manager is quite inefficient. Filling the screen with particles that use the texture manager causes the FPS to plummet.
+///       Need to do away with the string-based keys.
 
 namespace sdl
 {
@@ -69,7 +72,7 @@ namespace sdl
 			}
 		}
 	private:
-		std::map<std::string, std::pair<std::unique_ptr<ResourceType>, std::function<std::unique_ptr<ResourceType>()>>> _registry;
+		std::unordered_map<std::string, std::pair<std::unique_ptr<ResourceType>, std::function<std::unique_ptr<ResourceType>()>>> _registry;
 	};
 }
 

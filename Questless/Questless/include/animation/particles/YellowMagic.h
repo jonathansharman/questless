@@ -28,7 +28,7 @@ namespace questless
 			, uniform(0.0, 360.0)
 			, 0.0
 			, 1.0
-			, Hertz{0.0}
+			, 0.0_Hz
 			, double_seconds{uniform(_lifetime_min, _lifetime_max)}
 			}
 		{
@@ -44,7 +44,7 @@ namespace questless
 
 		void subupdate() override;
 
-		sdl::Texture::ptr& texture() const override;
+		sdl::Texture& texture() const override;
 	};
 }
 

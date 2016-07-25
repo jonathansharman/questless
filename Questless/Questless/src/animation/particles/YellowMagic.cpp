@@ -18,9 +18,15 @@ namespace questless
 		_angle = _velocity.angle();
 	}
 
-	sdl::Texture::ptr& YellowMagic::texture() const
+	sdl::Texture& YellowMagic::texture() const
 	{
-		static auto texture = sdl::Texture::make("resources/textures/particles/magic/yellow.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
-		return texture;
+		static bool first_call = true;
+		if (first_call) {
+			sdl::texture_manager().add("particles/yellow_magic", [] {
+				return sdl::Texture::make("resources/textures/particles/magic/yellow.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+			});
+			first_call = false;
+		}
+		return sdl::texture_manager()["particles/yellow_magic"];
 	}
 }

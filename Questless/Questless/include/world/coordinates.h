@@ -12,6 +12,8 @@
 
 #include "utility/hex-utilities.h"
 
+/// @todo Make hex private and provide appropriate accessors and operators.
+
 namespace questless
 {
 	/// Coordinates within the space of tiles in a section.

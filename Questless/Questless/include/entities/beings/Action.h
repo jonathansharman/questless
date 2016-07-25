@@ -19,7 +19,6 @@
 
 namespace questless
 {
-	class Game;
 	class Being;
 
 	class Action
@@ -36,10 +35,9 @@ namespace questless
 		virtual std::string name() const = 0;
 
 		/// Performs the action.
-		/// @param game The game object.
 		/// @param actor The being that is performing the action.
 		/// @param cont The continuation function to call once the action completes.
-		virtual void perform(Game& game, Being& actor, cont_t cont) = 0;
+		virtual void perform(Being& actor, cont_t cont) = 0;
 
 		static std::function<bool(RegionTileCoords)> tile_in_range_predicate(Being& actor, int range);
 		static std::function<bool(Being&)> being_in_range_predicate(Being& actor, int range);

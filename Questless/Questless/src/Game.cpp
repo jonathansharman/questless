@@ -31,6 +31,7 @@ using std::ostringstream;
 #include "items/Scroll.h"
 #include "spells/LightningBoltSpell.h"
 #include "spells/HealSpell.h"
+#include "spells/TeleportSpell.h"
 #include "items/weapons/Quarterstaff.h"
 
 using std::move;
@@ -196,12 +197,12 @@ namespace questless
 		_dialogs.push_back(move(dialog));
 	}
 
-	void Game::query_being(string title, string prompt, function<bool(Being&)> predicate, function<void(optional<Being*>)> cont)
+	void Game::query_being(string /*title*/, string /*prompt*/, function<bool(Being&)> /*predicate*/, function<void(optional<Being*>)> cont)
 	{
 		cont(nullopt);
 	}
 
-	void Game::query_item(string title, string prompt, const Being& source, function<bool(Being&)> predicate, function<void(optional<Item*>)> cont)
+	void Game::query_item(string /*title*/, string /*prompt*/, Being& /*source*/, function<bool(Being&)> /*predicate*/, function<void(optional<Item*>)> cont)
 	{
 		cont(nullopt);
 	}
@@ -397,13 +398,14 @@ namespace questless
 						_player_id = player_being->id();
 						player_being->give_item(make_unique<Scroll>(make_unique<LightningBoltSpell>()));
 						player_being->give_item(make_unique<Scroll>(make_unique<HealSpell>()));
+						player_being->give_item(make_unique<Scroll>(make_unique<TeleportSpell>()));
 						player_being->give_item((make_unique<Quarterstaff>()));
 						_region->spawn_player(move(player_being));
 					}
 					// Pass the player's being ID to the HUD.
 					_hud->player_id(_player_id);
 					// Set the initial world view, world renderer, and camera position relative to the player's being.
-					_world_view = make_unique<WorldView>(*this, *being(_player_id), true);
+					_world_view = make_unique<WorldView>(*being(_player_id), true);
 					_world_renderer = make_unique<WorldRenderer>(*_world_view);
 					_camera->position(PointF{Layout::dflt().to_world(being(_player_id)->coords().hex)});
 
@@ -499,7 +501,7 @@ namespace questless
 					/// @todo Do something nice when the player dies.
 					if (Being* player_being = being(_player_id)) {
 						// Reset the world view.
-						_world_view = make_unique<WorldView>(*this, *player_being, true);
+						_world_view = make_unique<WorldView>(*player_being, true);
 						// Reset the world renderer.
 						_world_renderer->reset_view(*_world_view);
 					}
@@ -510,12 +512,12 @@ namespace questless
 
 			// Work through the beings ready to take their turns, until all have acted or one of them can't finish acting yet.
 			while (Being* next_ready_being = _region->next_ready_being()) {
-				next_ready_being->agent().act(*this);
+				next_ready_being->agent().act();
 				if (!_dialogs.empty()) {
 					// Awaiting player input to complete current action. Stop taking turns, and start at the next agent once this action is complete.
 
 					// Reset the world view.
-					_world_view = make_unique<WorldView>(*this, *being(_player_id), true);
+					_world_view = make_unique<WorldView>(*being(_player_id), true);
 					// Reset the world renderer.
 					_world_renderer->reset_view(*_world_view);
 
@@ -606,14 +608,24 @@ namespace questless
 		} else if (_input.down(SDLK_KP_7)) {
 			_camera->rotate((90.0 - angle) / 40.0);
 		} else {
-			_camera->angle(angle / 1.1);
+			//_camera->angle(angle / 1.1);
 		}
 
 		// Reset camera.
 		if (_input.down(SDLK_BACKSPACE)) {
-			_camera->position(PointF{Layout::dflt().to_world(being(_player_id)->coords().hex)});
-			_camera->zoom(1.0);
-			_camera->angle(0.0);
+			// Move 1/x of the way back to the default camera values.
+			double x = 5.0;
+
+			VectorF to_player = PointF{Layout::dflt().to_world(being(_player_id)->coords().hex)} -_camera->position();
+			_camera->position(_camera->position() + to_player / x);
+
+			double to_zoom_1 = 1.0 - _camera->zoom();
+			_camera->zoom(_camera->zoom() + to_zoom_1 / x);
+			if (abs(_camera->zoom() - 1.0) < 0.001) {
+				_camera->zoom(1.0);
+			}
+
+			_camera->angle(_camera->angle() * (1 - 1.0 / x));
 		}
 	}
 
@@ -626,18 +638,17 @@ namespace questless
 		} else {
 			if (Being* being = std::get<Being*>(it->second)) {
 				return being;
-			} else {
-				// Load being from its coordinates.
-				GlobalCoords coords = std::get<GlobalCoords>(it->second);
-				Region& region = *_region; /// @todo Load region based on the region name in the coords (coords.region).
-				RegionSectionCoords section = coords.section;
-				for (const Being::ptr& being : region.section(section).beings()) {
-					if (being->id() == id) {
-						return being.get();
-					}
-				}
-				throw std::logic_error{"Being lookup failed."};
 			}
+			// Load being from its coordinates.
+			GlobalCoords coords = std::get<GlobalCoords>(it->second);
+			Region& region = *_region; /// @todo Load region based on the region name in the coords (coords.region).
+			RegionSectionCoords section = coords.section;
+			for (const Being::ptr& being : region.section(section).beings()) {
+				if (being->id() == id) {
+					return being.get();
+				}
+			}
+			throw std::logic_error{"Being lookup failed."};
 		}
 	}
 
@@ -650,18 +661,17 @@ namespace questless
 		} else {
 			if (Object* object = std::get<Object*>(it->second)) {
 				return object;
-			} else {
-				// Load object from its coordinates.
-				GlobalCoords coords = std::get<GlobalCoords>(it->second);
-				Region& region = *_region; /// @todo Load region based on the region name in the coords (coords.region).
-				RegionSectionCoords section = coords.section;
-				for (const Object::ptr& object : region.section(section).objects()) {
-					if (object->id() == id) {
-						return object.get();
-					}
-				}
-				throw std::logic_error{"Object lookup failed."};
 			}
+			// Load object from its coordinates.
+			GlobalCoords coords = std::get<GlobalCoords>(it->second);
+			Region& region = *_region; /// @todo Load region based on the region name in the coords (coords.region).
+			RegionSectionCoords section = coords.section;
+			for (const Object::ptr& object : region.section(section).objects()) {
+				if (object->id() == id) {
+					return object.get();
+				}
+			}
+			throw std::logic_error{"Object lookup failed."};
 		}
 	}
 }

@@ -264,6 +264,12 @@ namespace questless
 		RegionSectionCoords dst_section_coords = containing_section_coords(coords);
 		if (dst_section_coords.hex != src_section.coords().hex) {
 			const unique_ptr<Section>& dst_section = _section_map[dst_section_coords];
+			for (const Being::ptr& other_being : dst_section->beings()) {
+				if (other_being->coords().hex == coords.hex) {
+					// Collision. Prevent movement.
+					return;
+				}
+			}
 			if (dst_section != nullptr) {
 				Being::ptr moving_being = src_section.remove(being);
 
@@ -274,8 +280,14 @@ namespace questless
 				return;
 			}
 		} else {
+			for (const Being::ptr& being : src_section.beings()) {
+				if (being->coords().hex == coords.hex) {
+					// Collision. Prevent movement.
+					return;
+				}
+			}
 			being.coords(coords);
-			_game.beings()[being.id()] = std::make_tuple(GlobalCoords{_name, src_section.coords()}, &being);
+			_game.update_being_coords(being.id(), GlobalCoords{_name, src_section.coords()});
 		}
 	}
 
@@ -285,6 +297,12 @@ namespace questless
 		RegionSectionCoords dst_section_coords = containing_section_coords(coords);
 		if (dst_section_coords.hex != src_section.coords().hex) {
 			const unique_ptr<Section>& dst_section = _section_map[dst_section_coords];
+			for (const Being::ptr& being : dst_section->beings()) {
+				if (being->coords().hex == coords.hex) {
+					// Collision. Prevent movement.
+					return;
+				}
+			}
 			if (dst_section != nullptr) {
 				Object::ptr moving_object = src_section.remove(object);
 
@@ -295,8 +313,14 @@ namespace questless
 				return;
 			}
 		} else {
+			for (const Being::ptr& being : src_section.beings()) {
+				if (being->coords().hex == coords.hex) {
+					// Collision. Prevent movement.
+					return;
+				}
+			}
 			object.coords(coords);
-			_game.objects()[object.id()] = std::make_tuple(GlobalCoords{_name, src_section.coords()}, &object);
+			_game.update_object_coords(object.id(), GlobalCoords{_name, src_section.coords()});
 		}
 	}
 	
@@ -307,7 +331,7 @@ namespace questless
 		being.region(nullptr);
 		being.section(nullptr);
 
-		_game.beings().erase(being.id());
+		_game.remove_being_id(being.id());
 		remove_from_turn_queue(being);
 		return section.remove<Being>(being);
 	}
@@ -319,7 +343,7 @@ namespace questless
 		object.region(nullptr);
 		object.section(nullptr);
 
-		_game.objects().erase(object.id());
+		_game.remove_object_id(object.id());
 		return section.remove<Object>(object);
 	}
 

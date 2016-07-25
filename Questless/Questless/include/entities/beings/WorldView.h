@@ -21,7 +21,6 @@
 
 namespace questless
 {
-	class Game;
 	class Region;
 	class Being;
 	class Object;
@@ -76,10 +75,9 @@ namespace questless
 		WorldView& operator =(WorldView&&) = default;
 
 		/// Constructs the world view of the given being.
-		/// @param game The game object, used for determining the being's surroundings.
 		/// @param being The being whose perspective this world view represents.
 		/// @param find_bounds If true, the world view will find a bounding rectangle in world space around the visible tiles.
-		WorldView(const Game& game, const Being& being, bool find_bounds);
+		WorldView(const Being& being, bool find_bounds);
 
 		const std::vector<SectionView>& section_views() const { return _section_views; }
 		const std::vector<BeingView>& being_views() const { return _being_views; }

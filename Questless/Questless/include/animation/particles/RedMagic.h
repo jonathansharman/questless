@@ -10,10 +10,6 @@
 #ifndef RED_MAGIC_H
 #define RED_MAGIC_H
 
-#include <memory>
-using std::unique_ptr;
-using std::make_unique;
-
 #include "animation/particles/Particle.h"
 #include "utility/utility.h"
 
@@ -30,7 +26,7 @@ namespace questless
 			, uniform(0.0, 360.0)
 			, Hertz{uniform(-_dtheta_max, _dtheta_max)}
 			, 1.0
-			, Hertz{0.0}
+			, 0.0_Hz
 			, double_seconds{uniform(_lifetime_min, _lifetime_max)}
 			}
 		{}
@@ -38,13 +34,13 @@ namespace questless
 		static constexpr double _v_max = 200.0;
 		static constexpr double _vyi_adjustment = -150.0;
 		static constexpr double _dtheta_max = 720.0;
-		static constexpr Hertz _gravity{300.0};
+		static constexpr Hertz _gravity = 300.0_Hz;
 		static constexpr double _lifetime_min = 0.6;
 		static constexpr double _lifetime_max = 1.0;
 
 		void subupdate() override;
 
-		sdl::Texture::ptr& texture() const override;
+		sdl::Texture& texture() const override;
 	};
 }
 

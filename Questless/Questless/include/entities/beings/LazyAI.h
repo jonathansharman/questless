@@ -19,13 +19,12 @@ namespace questless
 	public:
 		LazyAI(Being& being) : Agent{being} {}
 
-		void act(Game&) override { _being.gain_busy_time(uniform(1.0, 2.0)); }
+		void act() override { being().gain_busy_time(uniform(1.0, 2.0)); }
 
 		// Queries and messages
 
 		 void message
-			( Game&
-			, const std::string&
+			( const std::string&
 			, const std::string&
 			, std::function<void()> cont
 			) const override
@@ -34,8 +33,7 @@ namespace questless
 		 }
 
 		 void query_count
-			( Game&
-			, const std::string&
+			( const std::string&
 			, const std::string&
 			, int
 			, optional<int>
@@ -46,8 +44,7 @@ namespace questless
 			 cont(nullopt);
 		 }
 		 void query_count
-			( Game&
-			, const std::string&
+			( const std::string&
 			, const std::string&
 			, int
 			, std::function<bool(int)>
@@ -58,8 +55,7 @@ namespace questless
 		 }
 
 		 void query_duration
-			( Game&
-			, const std::string&
+			( const std::string&
 			, const std::string&
 			, std::function<void(optional<int>)> cont
 			) const override
@@ -68,8 +64,7 @@ namespace questless
 		 }
 
 		 void query_magnitude
-			( Game&
-			, const std::string&
+			( const std::string&
 			, const std::string&
 			, double
 			, std::function<bool(double)>
@@ -80,8 +75,7 @@ namespace questless
 		 }
 
 		 void query_tile
-			( Game&
-			, const std::string&
+			( const std::string&
 			, const std::string&
 			, std::function<bool(RegionTileCoords)>
 			, std::function<void(optional<RegionTileCoords>)> cont
@@ -91,8 +85,7 @@ namespace questless
 		 }
 
 		 void query_being
-			( Game&
-			, const std::string&
+			( const std::string&
 			, const std::string&
 			, std::function<bool(Being&)>
 			, std::function<void(optional<Being*>)> cont
@@ -102,8 +95,7 @@ namespace questless
 		 }
 
 		 void query_range
-			( Game&
-			, const std::string&
+			( const std::string&
 			, const std::string&
 			, std::function<void(optional<int>)> cont
 			) const override
@@ -112,10 +104,9 @@ namespace questless
 		 }
 
 		 void query_item
-			( Game&
+			( const std::string&
 			, const std::string&
-			, const std::string&
-			, const Being&
+			, Being&
 			, std::function<bool(Being&)>
 			, std::function<void(optional<Item*>)> cont
 			) const override

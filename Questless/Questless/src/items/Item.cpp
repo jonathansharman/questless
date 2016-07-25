@@ -16,8 +16,9 @@
 
 namespace questless
 {
-	void Item::Drop::perform(Game& game, Being& actor, cont_t cont)
+	void Item::Drop::perform(Being& actor, cont_t cont)
 	{
+		Game& game = actor.game();
 		Item::ptr item = actor.take_item(_item);
 
 		// See if there's already an item box on the ground at the drop location.

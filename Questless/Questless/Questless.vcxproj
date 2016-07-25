@@ -237,6 +237,7 @@
     <ClInclude Include="include\spells\HealSpell.h" />
     <ClInclude Include="include\spells\LightningBoltSpell.h" />
     <ClInclude Include="include\spells\Spell.h" />
+    <ClInclude Include="include\spells\TeleportSpell.h" />
     <ClInclude Include="include\ui\CountDialog.h" />
     <ClInclude Include="include\ui\Dialog.h" />
     <ClInclude Include="include\ui\DigraphMenuController.h" />
@@ -314,6 +315,7 @@
     <ClCompile Include="src\spells\HealSpell.cpp" />
     <ClCompile Include="src\spells\LightningBoltSpell.cpp" />
     <ClCompile Include="src\spells\Spell.cpp" />
+    <ClCompile Include="src\spells\TeleportSpell.cpp" />
     <ClCompile Include="src\ui\CountDialog.cpp" />
     <ClCompile Include="src\ui\Dialog.cpp" />
     <ClCompile Include="src\ui\DigraphMenuController.cpp" />

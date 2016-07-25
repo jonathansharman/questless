@@ -10,8 +10,6 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
 
-#include <memory>
-
 #include "sdl-wrappers/Renderer.h"
 #include "sdl-wrappers/Texture.h"
 #include "animation/Camera.h"
@@ -68,9 +66,8 @@ namespace questless
 		double_seconds _lifetime; ///< The total duration in seconds of the particle's lifetime.
 		double_seconds _time_left; ///< The remaining duration in seconds of the particle's lifetime.
 
-		/// @todo THIS IS WRONG. Particles should be using the texture manager. Static texture pointers are not safe if the renderer has to be recreated.
 		/// @return The texture to be used when drawing a particle.
-		virtual sdl::Texture::ptr& texture() const = 0;
+		virtual sdl::Texture& texture() const = 0;
 	private:
 		static constexpr double max_displacement = 15.0;
 

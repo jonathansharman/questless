@@ -12,9 +12,15 @@
 
 namespace questless
 {
-	sdl::Texture::ptr& BlueMagic::texture() const
+	sdl::Texture& BlueMagic::texture() const
 	{
-		static auto texture = sdl::Texture::make("resources/textures/particles/magic/blue.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
-		return texture;
+		static bool first_call = true;
+		if (first_call) {
+			sdl::texture_manager().add("particles/blue_magic", [] {
+				return sdl::Texture::make("resources/textures/particles/magic/blue.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+			});
+			first_call = false;
+		}
+		return sdl::texture_manager()["particles/blue_magic"];
 	}
 }

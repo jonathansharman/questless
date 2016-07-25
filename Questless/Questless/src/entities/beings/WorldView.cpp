@@ -23,7 +23,7 @@ using namespace sdl;
 
 namespace questless
 {
-	WorldView::WorldView(const Game& game, const Being& being, bool find_bounds)
+	WorldView::WorldView(const Being& being, bool find_bounds)
 		: _region{being.region()}
 		, _bounds{nullopt}
 	{

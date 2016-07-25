@@ -19,20 +19,18 @@ namespace questless
 	public:
 		Player(Being& being) : Agent{being} {}
 
-		void act(Game& game) override;
+		void act() override;
 
 		// Queries and messages
 
 		void message
-			(Game& game
-			, const std::string& title
+			( const std::string& title
 			, const std::string& prompt
 			, std::function<void()> cont
 			) const override;
 
 		void query_count
-			( Game& game
-			, const std::string& title
+			( const std::string& title
 			, const std::string& prompt
 			, int default
 			, optional<int> min
@@ -40,8 +38,7 @@ namespace questless
 			, std::function<void(optional<int>)> cont
 			) const override;
 		void query_count
-			( Game& game
-			, const std::string& title
+			( const std::string& title
 			, const std::string& prompt
 			, int default
 			, std::function<bool(int)> predicate
@@ -49,15 +46,13 @@ namespace questless
 			) const override;
 
 		void query_duration
-			( Game& game
-			, const std::string& title
+			( const std::string& title
 			, const std::string& prompt
 			, std::function<void(optional<int>)> cont
 			) const override;
 
 		void query_magnitude
-			( Game& game
-			, const std::string& title
+			( const std::string& title
 			, const std::string& prompt
 			, double default
 			, std::function<bool(double)> predicate
@@ -65,33 +60,29 @@ namespace questless
 			) const override;
 
 		void query_tile
-			( Game& game
-			, const std::string& title
+			( const std::string& title
 			, const std::string& prompt
 			, std::function<bool(RegionTileCoords)> predicate
 			, std::function<void(optional<RegionTileCoords>)> cont
 			) const override;
 
 		void query_being
-			( Game& game
-			, const std::string& title
+			( const std::string& title
 			, const std::string& prompt
 			, std::function<bool(Being&)> predicate
 			, std::function<void(optional<Being*>)> cont
 			) const override;
 
 		void query_range
-			( Game& game
-			, const std::string& title
+			( const std::string& title
 			, const std::string& prompt
 			, std::function<void(optional<int>)> cont
 			) const override;
 
 		void query_item
-			( Game& game
-			, const std::string& title
+			( const std::string& title
 			, const std::string& prompt
-			, const Being& source
+			, Being& source
 			, std::function<bool(Being&)> predicate
 			, std::function<void(optional<Item*>)> cont
 			) const override;

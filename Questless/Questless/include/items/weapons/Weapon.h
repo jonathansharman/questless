@@ -56,7 +56,7 @@ namespace questless
 
 			std::string name() const override { return _name; }
 
-			void perform(Game& game, Being& actor, cont_t cont) override;
+			void perform(Being& actor, cont_t cont) override;
 		private:
 			Weapon& _weapon;
 			const std::string _name;
@@ -71,7 +71,7 @@ namespace questless
 
 			std::string name() const override { return _name; }
 
-			void perform(Game& game, Being& actor, cont_t cont) override;
+			void perform(Being& actor, cont_t cont) override;
 		private:
 			Weapon& _weapon;
 			const std::string _name;
@@ -86,7 +86,7 @@ namespace questless
 
 			std::string name() const override { return _name; }
 
-			void perform(Game& game, Being& actor, cont_t cont) override;
+			void perform(Being& actor, cont_t cont) override;
 		private:
 			Weapon& _weapon;
 			const std::string _name;

@@ -14,6 +14,8 @@
 #include "utility/Frequency.h"
 #include "utility/VectorF.h"
 
+using namespace std::literals;
+
 namespace questless
 {
 	////////////
@@ -23,7 +25,7 @@ namespace questless
 	using clock = std::chrono::steady_clock;
 	using double_seconds = std::chrono::duration<double>;
 
-	const Hertz frame_rate{60.0};
+	const Hertz frame_rate = 60.0_Hz;
 	const double_seconds frame_duration = 1 / frame_rate;
 
 	const double_seconds accrued_update_time_max{1.0};

@@ -26,7 +26,7 @@ namespace questless
 
 	void Particle::draw(const Camera& camera)
 	{
-		texture()->alpha(percentage_to_byte(fade_out() ? _time_left.count() / _lifetime.count() : 1.0));
-		camera.draw(*texture(), _position.to_point(), nullopt, _scale, _scale, false, false, _angle);
+		texture().alpha(percentage_to_byte(fade_out() ? _time_left.count() / _lifetime.count() : 1.0));
+		camera.draw(texture(), _position.to_point(), nullopt, _scale, _scale, false, false, _angle);
 	}
 }

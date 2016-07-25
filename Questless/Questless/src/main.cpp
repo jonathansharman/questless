@@ -2,6 +2,12 @@
 
 int main(int argc, char* argv[])
 {
+	/// @todo This is to shut up the compiler warnings for unused variables.
+	int x = argc;
+	argc = x;
+	char** y = argv;
+	argv = y;
+
 //	try {
 		questless::Game game(false);
 		//Game game(true);

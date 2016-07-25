@@ -30,7 +30,7 @@ namespace questless
 		}
 	}
 
-	void ItemTexturer::visit(const Quarterstaff& quarterstaff)
+	void ItemTexturer::visit(const Quarterstaff&)
 	{
 		_texture = Texture::make("resources/textures/items/quarterstaff.png", renderer());
 	}

@@ -51,21 +51,16 @@ namespace questless
 		/// Advances the entity one turn.
 		virtual void update() = 0;
 
-		/// @return The entity's game object.
-		Game& game() { return _game; }
-		/// @return The entity's game object.
-		const Game& game() const { return _game; }
+		/// @return The game in which the entity is taking part.
+		Game& game() const { return _game; }
+
 		/// @return The entity's region.
-		Region& region() { return *_region; }
-		/// @return The entity's region.
-		const Region& region() const { return *_region; }
+		Region& region() const { return *_region; }
 		/// @param value The entity's new region.
 		void region(Region* value) { _region = value; }
 
 		/// @return The entity's section.
-		Section& section() { return *_section; }
-		/// @return The entity's section.
-		const Section& section() const { return *_section; }
+		Section& section() const { return *_section; }
 		/// @param value The entity's new section.
 		void section(Section* value) { _section = value; }
 
