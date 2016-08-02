@@ -645,9 +645,9 @@ namespace questless
 			GlobalCoords coords = std::get<GlobalCoords>(it->second);
 			Region& region = *_region; /// @todo Load region based on the region name in the coords (coords.region).
 			RegionSectionCoords section = coords.section;
-			for (const Being::ptr& being : region.section(section).beings()) {
-				if (being->id() == id) {
-					return being.get();
+			for (Being& being : region.section(section).beings()) {
+				if (being.id() == id) {
+					return &being;
 				}
 			}
 			throw std::logic_error{"Being lookup failed."};
@@ -668,9 +668,9 @@ namespace questless
 			GlobalCoords coords = std::get<GlobalCoords>(it->second);
 			Region& region = *_region; /// @todo Load region based on the region name in the coords (coords.region).
 			RegionSectionCoords section = coords.section;
-			for (const Object::ptr& object : region.section(section).objects()) {
-				if (object->id() == id) {
-					return object.get();
+			for (Object& object : region.section(section).objects()) {
+				if (object.id() == id) {
+					return &object;
 				}
 			}
 			throw std::logic_error{"Object lookup failed."};

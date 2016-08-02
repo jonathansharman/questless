@@ -45,14 +45,14 @@ namespace questless
 						active_cooldown(cooldown());
 						discharge();
 						caster.lose_mana(cost);
-						for (Being& target : caster.region().beings(tile_coords)) {
-							double burn_magnitude = magnitude * caster.power(color()) / target.resistance(color());
+						if (Being* target = caster.region().being(tile_coords)) {
+							double burn_magnitude = magnitude * caster.power(color()) / target->resistance(color());
 							auto burn = Damage::from_burn(burn_magnitude);
 
 							/// @todo Experimental body part stuff here... Delete or fix.
 
 							// Pick a random path from the root to a leaf part.
-							BodyPart* part = &target.body().root();
+							BodyPart* part = &target->body().root();
 							std::vector<BodyPart*> struck_parts{part};
 							while (!part->children().empty()) {
 								part = part->children()[uniform(0u, part->children().size() - 1)].get();
@@ -62,7 +62,7 @@ namespace questless
 								struck_part->take_damage(uniform(0.5, 1.5) * burn_magnitude * part->vitality() / 50);
 							}
 
-							target.take_damage(burn, caster.id());
+							target->take_damage(burn, caster.id());
 						}
 						return cont(Result::success);
 					}

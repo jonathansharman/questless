@@ -77,6 +77,36 @@ namespace questless
 		}
 	}
 
+	std::vector<Being::ref> Section::beings() const
+	{
+		std::vector<Being::ref> beings;
+		for (const auto& pair : _beings) {
+			beings.push_back(*pair.second);
+		}
+		return beings;
+	}
+
+	std::vector<Object::ref> Section::objects() const
+	{
+		std::vector<Object::ref> objects;
+		for (const auto& pair : _objects) {
+			objects.push_back(*pair.second);
+		}
+		return objects;
+	}
+
+	Being* Section::being(RegionTileCoords tile_coords) const
+	{
+		auto it = _beings.find(tile_coords);
+		return it == _beings.end() ? nullptr : it->second.get();
+	}
+
+	Object* Section::object(RegionTileCoords tile_coords) const
+	{
+		auto it = _objects.find(tile_coords);
+		return it == _objects.end() ? nullptr : it->second.get();
+	}
+
 	void Section::read(std::istream& in)
 	{
 		using std::make_unique;

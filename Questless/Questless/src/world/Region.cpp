@@ -217,29 +217,18 @@ namespace questless
 		//}
 	}
 
-
-	std::vector<Being::ref> Region::beings(RegionTileCoords tile_coords) const
+	Being* Region::being(RegionTileCoords tile_coords) const
 	{
-		std::vector<Being::ref> beings;
-		const Section& section = containing_section(tile_coords);
-		for (const auto& being : section.beings()) {
-			if (being->coords().hex == tile_coords.hex) {
-				beings.push_back(*being);
-			}
-		}
-		return beings;
+		RegionSectionCoords section_coords = containing_section_coords(tile_coords);
+		auto it = _section_map.find(section_coords);
+		return it != _section_map.end() ? it->second->being(tile_coords) : nullptr;
 	}
 
-	std::vector<Object::ref> Region::objects(RegionTileCoords tile_coords) const
+	Object* Region::object(RegionTileCoords tile_coords) const
 	{
-		std::vector<Object::ref> objects;
-		const Section& section = containing_section(tile_coords);
-		for (const auto& object : section.objects()) {
-			if (object->coords().hex == tile_coords.hex) {
-				objects.push_back(*object);
-			}
-		}
-		return objects;
+		RegionSectionCoords section_coords = containing_section_coords(tile_coords);
+		auto it = _section_map.find(section_coords);
+		return it != _section_map.end() ? it->second->object(tile_coords) : nullptr;
 	}
 
 	void Region::spawn_player(Being::ptr player_being)
@@ -254,75 +243,71 @@ namespace questless
 
 		// Erase the being currently there, if any.
 		auto& section = containing_section(player_coords);
-		section.remove<Being>([=](const Being::ptr& being) { return being->coords().hex == player_coords.hex; });
+		section.remove<Being>(player_coords);
 
 		add<Being>(std::move(player_being), player_coords);
 	}
 
-	void Region::move(Being& being, RegionTileCoords coords)
+	bool Region::move(Being& being, RegionTileCoords coords)
 	{
 		Section& src_section = being.section();
 		RegionSectionCoords dst_section_coords = containing_section_coords(coords);
 		if (dst_section_coords.hex != src_section.coords().hex) {
 			const unique_ptr<Section>& dst_section = _section_map[dst_section_coords];
-			for (const Being::ptr& other_being : dst_section->beings()) {
-				if (other_being->coords().hex == coords.hex) {
-					// Collision. Prevent movement.
-					return;
-				}
-			}
 			if (dst_section != nullptr) {
+				if (dst_section->being(coords)) {
+					// Collision. Prevent movement.
+					return false;
+				}
 				Being::ptr moving_being = src_section.remove(being);
-
 				moving_being->coords(coords);
 				dst_section->add<Being>(std::move(moving_being));
 			} else {
 				/// @todo Need to deal with null destination case.
-				return;
+				return false;
 			}
 		} else {
-			for (const Being::ptr& other_being : src_section.beings()) {
-				if (other_being->coords().hex == coords.hex) {
-					// Collision. Prevent movement.
-					return;
-				}
+			if (src_section.being(coords)) {
+				// Collision. Prevent movement.
+				return false;
 			}
+			Being::ptr moving_being = src_section.remove(being);
 			being.coords(coords);
+			src_section.add<Being>(std::move(moving_being));
 			_game.update_being_coords(being.id(), GlobalCoords{_name, src_section.coords()});
 		}
+		return true;
 	}
 
-	void Region::move(Object& object, RegionTileCoords coords)
+	bool Region::move(Object& object, RegionTileCoords coords)
 	{
 		Section& src_section = object.section();
 		RegionSectionCoords dst_section_coords = containing_section_coords(coords);
 		if (dst_section_coords.hex != src_section.coords().hex) {
 			const unique_ptr<Section>& dst_section = _section_map[dst_section_coords];
-			for (const Being::ptr& being : dst_section->beings()) {
-				if (being->coords().hex == coords.hex) {
-					// Collision. Prevent movement.
-					return;
-				}
-			}
 			if (dst_section != nullptr) {
+				if (dst_section->being(coords)) {
+					// Collision. Prevent movement.
+					return false;
+				}
 				Object::ptr moving_object = src_section.remove(object);
-
 				moving_object->coords(coords);
 				dst_section->add<Object>(std::move(moving_object));
 			} else {
 				/// @todo Need to deal with null destination case.
-				return;
+				return false;
 			}
 		} else {
-			for (const Being::ptr& being : src_section.beings()) {
-				if (being->coords().hex == coords.hex) {
-					// Collision. Prevent movement.
-					return;
-				}
+			if (src_section.being(coords)) {
+				// Collision. Prevent movement.
+				return false;
 			}
+			Object::ptr moving_being = src_section.remove(object);
 			object.coords(coords);
+			src_section.add<Object>(std::move(moving_being));
 			_game.update_object_coords(object.id(), GlobalCoords{_name, src_section.coords()});
 		}
+		return true;
 	}
 	
 	Being::ptr Region::remove(Being& being)
@@ -369,11 +354,11 @@ namespace questless
 		std::vector<BeingId> beings_to_update;
 		std::vector<ObjectId> objects_to_update;
 		for_each_loaded_section([&](Section& section) {
-			for (const Being::ptr& being : section.beings()) {
-				beings_to_update.push_back(being->id());
+			for (Being& being : section.beings()) {
+				beings_to_update.push_back(being.id());
 			}
-			for (const Object::ptr& object : section.objects()) {
-				objects_to_update.push_back(object->id());
+			for (Object& object : section.objects()) {
+				objects_to_update.push_back(object.id());
 			}
 		});
 		for (BeingId being_id : beings_to_update) {

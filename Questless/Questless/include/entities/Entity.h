@@ -16,7 +16,6 @@
 
 #include "EntityVisitor.h"
 #include "utility/utility.h"
-#include "utility/hex-utilities.h"
 #include "world/coordinates.h"
 
 namespace questless

@@ -21,6 +21,10 @@ namespace questless
 	{
 		HexCoords hex;
 
+		friend bool operator ==(const SectionTileCoords& left, const SectionTileCoords& right)
+		{
+			return left.hex == right.hex;
+		}
 		friend bool operator <(const SectionTileCoords& left, const SectionTileCoords& right)
 		{
 			return left.hex < right.hex;
@@ -37,6 +41,10 @@ namespace questless
 	{
 		HexCoords hex;
 
+		friend bool operator ==(const RegionTileCoords& left, const RegionTileCoords& right)
+		{
+			return left.hex == right.hex;
+		}
 		friend bool operator <(const RegionTileCoords& left, const RegionTileCoords& right)
 		{
 			return left.hex < right.hex;
@@ -47,6 +55,10 @@ namespace questless
 	{
 		HexCoords hex;
 
+		friend bool operator ==(const RegionSectionCoords& left, const RegionSectionCoords& right)
+		{
+			return left.hex == right.hex;
+		}
 		friend bool operator <(const RegionSectionCoords& left, const RegionSectionCoords& right)
 		{
 			return left.hex < right.hex;
@@ -59,9 +71,44 @@ namespace questless
 		std::string region;
 		RegionSectionCoords section;
 
+		friend bool operator ==(const GlobalCoords& left, const GlobalCoords& right)
+		{
+			return left.region == right.region || (left.region == right.region && left.section < right.section);
+		}
 		friend bool operator <(const GlobalCoords& left, const GlobalCoords& right)
 		{
 			return left.region < right.region || (left.region == right.region && left.section < right.section);
+		}
+	};
+}
+
+// Specialize std::hash for hex-based coordinate types.
+namespace std
+{
+	template <>
+	struct hash<questless::SectionTileCoords>
+	{
+		size_t operator()(const questless::SectionTileCoords& coords) const
+		{
+			return hash<questless::HexCoords>{}(coords.hex);
+		}
+	};
+
+	template <>
+	struct hash<questless::RegionTileCoords>
+	{
+		size_t operator()(const questless::RegionTileCoords& coords) const
+		{
+			return hash<questless::HexCoords>{}(coords.hex);
+		}
+	};
+
+	template <>
+	struct hash<questless::RegionSectionCoords>
+	{
+		size_t operator()(const questless::RegionSectionCoords& coords) const
+		{
+			return hash<questless::HexCoords>{}(coords.hex);
 		}
 	};
 }

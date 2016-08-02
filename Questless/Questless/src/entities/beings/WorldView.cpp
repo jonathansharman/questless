@@ -80,11 +80,11 @@ namespace questless
 			_section_views.push_back(section_view);
 
 			// Calculate being visibilities.
-			for (const Being::ptr& other_being : _region.beings(section_coords)) {
-				RegionTileCoords other_coords = other_being->coords();
+			for (const Being& other_being : _region.beings(section_coords)) {
+				RegionTileCoords other_coords = other_being.coords();
 				if (other_coords.hex.distance_to(coords.hex) < visual_range) {
 					BeingView being_view;
-					being_view.id = other_being->id();
+					being_view.id = other_being.id();
 
 					SectionTileIndex other_tile_index = Section::tile_index(other_coords);
 
@@ -106,11 +106,11 @@ namespace questless
 			}
 
 			// Calculate object visibilities.
-			for (const Object::ptr& object : _region.objects(section_coords)) {
-				RegionTileCoords other_coords = object->coords();
+			for (const Object& object : _region.objects(section_coords)) {
+				RegionTileCoords other_coords = object.coords();
 				if (other_coords.hex.distance_to(coords.hex) < visual_range) {
 					ObjectView object_view;
-					object_view.id = object->id();
+					object_view.id = object.id();
 
 					SectionTileIndex other_tile_index = Section::tile_index(other_coords);
 

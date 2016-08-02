@@ -17,6 +17,7 @@ using std::endl;
 using std::string;
 #include <vector>
 using std::vector;
+#include <array>
 #include <cmath>
 using std::abs;
 #include <algorithm>
@@ -229,6 +230,19 @@ namespace questless
 		int s = -q - r;
 		return HexCoords(q, r, s);
 	}
+}
+
+// Specialize std::hash.
+namespace std
+{
+	template <>
+	struct hash<questless::HexCoords>
+	{
+		size_t operator()(const questless::HexCoords& coords) const
+		{
+			return 31 * coords.q + coords.r;
+		}
+	};
 }
 
 /// @todo Move tests to proper location.

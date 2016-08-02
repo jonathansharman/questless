@@ -58,19 +58,25 @@ namespace questless
 
 		/// @param section_coords Section coordinates within the region.
 		/// @return The list of beings in the section at the given section coordinates.
-		const std::vector<Being::ptr>& beings(RegionSectionCoords section_coords) const { return _section_map.find(section_coords)->second->beings(); }
+		std::vector<Being::ref> beings(RegionSectionCoords section_coords) const
+		{
+			return _section_map.find(section_coords)->second->beings();
+		}
 
 		/// @param section_coords Section coordinates within the region.
 		/// @return The list of objects at the given section coordinates.
-		const std::vector<Object::ptr>& objects(RegionSectionCoords section_coords) const { return _section_map.find(section_coords)->second->objects(); }
+		std::vector<Object::ref> objects(RegionSectionCoords section_coords) const
+		{
+			return _section_map.find(section_coords)->second->objects();
+		}
 
 		/// @param tile_coords Tile coordinates within the region.
-		/// @return The list of beings at the given tile coordinates.
-		std::vector<Being::ref> beings(RegionTileCoords tile_coords) const;
+		/// @return The being at the given tile coordinates or nullptr if none.
+		Being* being(RegionTileCoords tile_coords) const;
 
 		/// @param tile_coords Tile coordinates within the region.
-		/// @return The list of objects at the given tile coordinates.
-		std::vector<Object::ref> objects(RegionTileCoords tile_coords) const;
+		/// @return The object at the given tile coordinates or nullptr if none.
+		Object* object(RegionTileCoords tile_coords) const;
 
 		/// Inserts the given player being into the region at an arbitrary location, as its spawn point at the start of the game.
 		/// @param player_being The being to insert into the region.
@@ -115,12 +121,14 @@ namespace questless
 		/// Moves the given being to the given coordinates.
 		/// @param being The being to move.
 		/// @param coords The being's new coordinates.
-		void move(Being& being, RegionTileCoords coords);
+		/// @return Whether the being successfully moved.
+		bool move(Being& being, RegionTileCoords coords);
 
 		/// Moves the given entity to the given coordinates.
 		/// @param object The object to move.
 		/// @param coords The object's new coordinates.
-		void move(Object& object, RegionTileCoords coords);
+		/// @return Whether the object successfully moved.
+		bool move(Object& object, RegionTileCoords coords);
 
 		/// Removes a being from the region and the game.
 		/// @param being A being to be removed.
