@@ -7,7 +7,7 @@
 * @section DESCRIPTION The implementation for the Player class.
 */
 
-#include "entities/beings/Player.h"
+#include "agents/Player.h"
 #include "Game.h"
 
 using std::function;
@@ -60,7 +60,7 @@ namespace questless
 	void Player::message
 		( const std::string& title
 		, const std::string& prompt
-		, std::function<void()> cont
+		, function<void()> cont
 		) const
 	{
 		being().game().message(title, prompt, std::move(cont));
@@ -72,7 +72,7 @@ namespace questless
 		, int default
 		, optional<int> min
 		, optional<int> max
-		, std::function<void(optional<int>)> cont
+		, function<void(optional<int>)> cont
 		) const
 	{
 		being().game().query_count(title, prompt, default, min, max, std::move(cont));
@@ -81,8 +81,8 @@ namespace questless
 		( const std::string& title
 		, const std::string& prompt
 		, int default
-		, std::function<bool(int)> predicate
-		, std::function<void(optional<int>)> cont
+		, function<bool(int)> predicate
+		, function<void(optional<int>)> cont
 		) const
 	{
 		being().game().query_count(title, prompt, default, std::move(predicate), std::move(cont));
@@ -91,7 +91,7 @@ namespace questless
 	void Player::query_duration
 		( const std::string& title
 		, const std::string& prompt
-		, std::function<void(optional<int>)> cont
+		, function<void(optional<int>)> cont
 		) const
 	{
 		being().game().query_count(title, prompt, 1, 1, nullopt, std::move(cont));
@@ -101,8 +101,8 @@ namespace questless
 		( const std::string& title
 		, const std::string& prompt
 		, double default
-		, std::function<bool(double)> predicate
-		, std::function<void(optional<double>)> cont
+		, function<bool(double)> predicate
+		, function<void(optional<double>)> cont
 		) const
 	{
 		being().game().query_magnitude(title, prompt, default, std::move(predicate), std::move(cont));
@@ -111,8 +111,8 @@ namespace questless
 	void Player::query_tile
 		( const std::string& title
 		, const std::string& prompt
-		, std::function<bool(RegionTileCoords)> predicate
-		, std::function<void(optional<RegionTileCoords>)> cont
+		, function<bool(RegionTileCoords)> predicate
+		, function<void(optional<RegionTileCoords>)> cont
 		) const
 	{
 		being().game().query_tile(title, prompt, std::move(predicate), std::move(cont));
@@ -121,8 +121,8 @@ namespace questless
 	void Player::query_being
 		( const std::string& title
 		, const std::string& prompt
-		, std::function<bool(Being&)> predicate
-		, std::function<void(optional<Being*>)> cont
+		, function<bool(Being&)> predicate
+		, function<void(optional<Being*>)> cont
 		) const
 	{
 		being().game().query_being(title, prompt, std::move(predicate), std::move(cont));
@@ -131,7 +131,7 @@ namespace questless
 	void Player::query_range
 		( const std::string& title
 		, const std::string& prompt
-		, std::function<void(optional<int>)> cont
+		, function<void(optional<int>)> cont
 		) const
 	{
 		being().game().query_count(title, prompt, 0, 0, nullopt, std::move(cont));
@@ -141,8 +141,8 @@ namespace questless
 		( const std::string& title
 		, const std::string& prompt
 		, Being& source
-		, std::function<bool(Being&)> predicate
-		, std::function<void(optional<Item*>)> cont
+		, function<bool(Being&)> predicate
+		, function<void(optional<Item*>)> cont
 		) const
 	{
 		being().game().query_item(title, prompt, source, std::move(predicate), std::move(cont));

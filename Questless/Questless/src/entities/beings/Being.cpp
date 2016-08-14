@@ -8,9 +8,9 @@
 */
 
 #include "entities/beings/Being.h"
-#include "Game.h"
-#include "entities/beings/Agent.h"
 #include "entities/beings/Body.h"
+#include "Game.h"
+#include "agents/Agent.h"
 #include "world/Section.h"
 #include "world/Region.h"
 

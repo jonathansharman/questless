@@ -24,8 +24,8 @@ using std::ostringstream;
 #include "animation/particles/YellowMagic.h"
 
 /// @todo The following are needed only for player spawning. Perhaps this should be the responsibility of a different class.
-#include "entities/beings/Agent.h"
-#include "entities/beings/Player.h"
+#include "agents/Agent.h"
+#include "agents/Player.h"
 #include "entities/beings/Human.h"
 #include "entities/beings/goblinoids/Goblin.h"
 #include "items/Scroll.h"

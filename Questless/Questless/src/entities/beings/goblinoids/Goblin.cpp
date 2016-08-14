@@ -8,9 +8,9 @@
 */
 
 #include "entities/beings/goblinoids/Goblin.h"
-#include "entities/beings/Agent.h"
 #include "entities/beings/Body.h"
 #include "entities/beings/BodyPart.h"
+#include "agents/Agent.h"
 
 namespace questless
 {

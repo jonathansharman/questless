@@ -13,8 +13,8 @@
 #include <functional>
 #include <stdexcept>
 
-#include "Being.h"
-#include "WorldView.h"
+#include "entities/beings/Being.h"
+#include "entities/beings/WorldView.h"
 #include "items/Item.h"
 #include "utility/optional.h"
 

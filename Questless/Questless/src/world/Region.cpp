@@ -13,8 +13,9 @@ namespace fs = std::tr2::sys; /// @todo Replace this with proper using statement
 
 #include "Game.h"
 #include "world/Region.h"
-#include "entities/beings/Agent.h"
-#include "entities/beings/LazyAI.h"
+#include "agents/Agent.h"
+#include "agents/LazyAI.h"
+#include "agents/BasicAI.h"
 #include "utility/utility.h"
 
 using std::string;
@@ -63,7 +64,7 @@ namespace questless
 									data += std::to_string(uniform(1, 5)) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
 									if ((section_r != 0 || section_q != 0) && uniform(0, 10) == 0) {
 										RegionTileCoords entity_coords{HexCoords{q, r} + section_coords.hex * section_diameter};
-										auto new_being = make_unique<Goblin>(_game, Agent::make<LazyAI>, BeingId::next());
+										auto new_being = make_unique<Goblin>(_game, Agent::make<BasicAI>, BeingId::next());
 										add<Being>(std::move(new_being), entity_coords);
 									}
 								}
@@ -74,7 +75,7 @@ namespace questless
 							if (new_tile != 0) {
 								if (section_r != 0 && section_q != 0 && uniform(0, 10) == 0) {
 									HexCoords entity_coords = HexCoords{q, r} +section_coords * section_diameter;
-									auto new_being = make_shared<Goblin>(Agent::make<LazyAI>, _name, entity_coords);
+									auto new_being = make_shared<Goblin>(Agent::make<BasicAI>, _name, entity_coords);
 									add_entity(new_being->as_entity());
 								}
 							}
@@ -193,28 +194,6 @@ namespace questless
 			Being& next = *_turn_queue.begin();
 			return &next;
 		}
-
-		/// @todo Put this in a "wandering" AI.
-		//switch (uniform(0, 5)) {
-		//	case 0:
-		//		move_entity(being->as_entity(), being->coords().neighbor(HexCoords::Direction::one));
-		//		break;
-		//	case 1:
-		//		move_entity(being->as_entity(), being->coords().neighbor(HexCoords::Direction::two));
-		//		break;
-		//	case 2:
-		//		move_entity(being->as_entity(), being->coords().neighbor(HexCoords::Direction::three));
-		//		break;
-		//	case 3:
-		//		move_entity(being->as_entity(), being->coords().neighbor(HexCoords::Direction::four));
-		//		break;
-		//	case 4:
-		//		move_entity(being->as_entity(), being->coords().neighbor(HexCoords::Direction::five));
-		//		break;
-		//	case 5:
-		//		move_entity(being->as_entity(), being->coords().neighbor(HexCoords::Direction::six));
-		//		break;
-		//}
 	}
 
 	Being* Region::being(RegionTileCoords tile_coords) const

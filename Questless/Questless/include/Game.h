@@ -43,7 +43,7 @@
 #include "animation/WorldRenderer.h"
 #include "world/Region.h"
 #include "entities/beings/Being.h"
-#include "entities/beings/Agent.h"
+#include "agents/Agent.h"
 #include "items/Item.h"
 
 namespace questless

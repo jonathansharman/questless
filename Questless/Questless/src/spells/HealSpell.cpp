@@ -9,7 +9,7 @@
 
 #include "spells/HealSpell.h"
 #include "entities/beings/Being.h"
-#include "entities/beings/Agent.h"
+#include "agents/Agent.h"
 
 /// @todo double check all the captures to make sure they're the proper type.
 

@@ -160,6 +160,10 @@
     <Font Include="resources\fonts\firamono.ttf" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\agents\Agent.h" />
+    <ClInclude Include="include\agents\BasicAI.h" />
+    <ClInclude Include="include\agents\LazyAI.h" />
+    <ClInclude Include="include\agents\Player.h" />
     <ClInclude Include="include\animation\Animation.h" />
     <ClInclude Include="include\animation\AnimationCollection.h" />
     <ClInclude Include="include\animation\BodyTexturer.h" />
@@ -177,7 +181,6 @@
     <ClInclude Include="include\animation\WorldRenderer.h" />
     <ClInclude Include="include\entities\AllEntities.h" />
     <ClInclude Include="include\entities\beings\Action.h" />
-    <ClInclude Include="include\entities\beings\Agent.h" />
     <ClInclude Include="include\entities\beings\attributes\Attributes.h" />
     <ClInclude Include="include\entities\beings\attributes\MagicPower.h" />
     <ClInclude Include="include\entities\beings\attributes\MagicResistance.h" />
@@ -189,8 +192,6 @@
     <ClInclude Include="include\entities\beings\Damage.h" />
     <ClInclude Include="include\entities\beings\goblinoids\Goblin.h" />
     <ClInclude Include="include\entities\beings\Human.h" />
-    <ClInclude Include="include\entities\beings\LazyAI.h" />
-    <ClInclude Include="include\entities\beings\Player.h" />
     <ClInclude Include="include\entities\beings\Protection.h" />
     <ClInclude Include="include\entities\beings\statuses\Blind.h" />
     <ClInclude Include="include\entities\beings\statuses\Confused.h" />
@@ -269,6 +270,8 @@
     <ClInclude Include="include\world\Tile.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\agents\BasicAI.cpp" />
+    <ClCompile Include="src\agents\Player.cpp" />
     <ClCompile Include="src\animation\Animation.cpp" />
     <ClCompile Include="src\animation\AnimationCollection.cpp" />
     <ClCompile Include="src\animation\BodyTexturer.cpp" />
@@ -288,7 +291,6 @@
     <ClCompile Include="src\entities\beings\Body.cpp" />
     <ClCompile Include="src\entities\beings\BodyPart.cpp" />
     <ClCompile Include="src\entities\beings\Human.cpp" />
-    <ClCompile Include="src\entities\beings\Player.cpp" />
     <ClCompile Include="src\entities\beings\statuses\Discharging.cpp" />
     <ClCompile Include="src\entities\beings\statuses\Healing.cpp" />
     <ClCompile Include="src\entities\beings\statuses\Poisoned.cpp" />

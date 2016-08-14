@@ -9,7 +9,7 @@
 
 #include "spells/Spell.h"
 #include "entities/beings/Being.h"
-#include "entities/beings/Agent.h"
+#include "agents/Agent.h"
 
 using namespace std;
 

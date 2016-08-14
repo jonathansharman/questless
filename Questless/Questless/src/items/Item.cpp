@@ -9,7 +9,7 @@
 
 #include "items/Item.h"
 #include "entities/beings/Being.h"
-#include "entities/beings/Agent.h"
+#include "agents/Agent.h"
 
 #include "Game.h"
 #include "entities/objects/ItemBox.h"

@@ -127,6 +127,12 @@
     <Filter Include="src\items\armor">
       <UniqueIdentifier>{514dd0a6-9b8e-4360-af60-e11397c4d775}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\agents">
+      <UniqueIdentifier>{0c046788-44fc-47b7-a763-9f48de126be5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\agents">
+      <UniqueIdentifier>{b5f4aea7-2040-4a73-b5bc-9ab017196446}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\test.png">
@@ -307,15 +313,6 @@
     <ClInclude Include="include\entities\beings\Protection.h">
       <Filter>include\entities\beings</Filter>
     </ClInclude>
-    <ClInclude Include="include\entities\beings\Agent.h">
-      <Filter>include\entities\beings</Filter>
-    </ClInclude>
-    <ClInclude Include="include\entities\beings\Player.h">
-      <Filter>include\entities\beings</Filter>
-    </ClInclude>
-    <ClInclude Include="include\entities\beings\LazyAI.h">
-      <Filter>include\entities\beings</Filter>
-    </ClInclude>
     <ClInclude Include="include\ui\Dialog.h">
       <Filter>include\ui</Filter>
     </ClInclude>
@@ -481,6 +478,18 @@
     <ClInclude Include="include\spells\TeleportSpell.h">
       <Filter>include\spells</Filter>
     </ClInclude>
+    <ClInclude Include="include\agents\BasicAI.h">
+      <Filter>include\agents</Filter>
+    </ClInclude>
+    <ClInclude Include="include\agents\LazyAI.h">
+      <Filter>include\agents</Filter>
+    </ClInclude>
+    <ClInclude Include="include\agents\Player.h">
+      <Filter>include\agents</Filter>
+    </ClInclude>
+    <ClInclude Include="include\agents\Agent.h">
+      <Filter>include\agents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp" />
@@ -556,9 +565,6 @@
     </ClCompile>
     <ClCompile Include="src\sdl-wrappers\Texture.cpp">
       <Filter>src\sdl-wrappers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\entities\beings\Player.cpp">
-      <Filter>src\entities\beings</Filter>
     </ClCompile>
     <ClCompile Include="src\entities\beings\WorldView.cpp">
       <Filter>src\entities\beings</Filter>
@@ -682,6 +688,12 @@
     </ClCompile>
     <ClCompile Include="src\items\armor\Armor.cpp">
       <Filter>src\items\armor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\agents\Player.cpp">
+      <Filter>src\agents</Filter>
+    </ClCompile>
+    <ClCompile Include="src\agents\BasicAI.cpp">
+      <Filter>src\agents</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
