@@ -29,6 +29,7 @@ namespace questless
 			: slash{slash}, pierce{pierce}, bludgeon{bludgeon}, burn{burn}, freeze{freeze}, blight{blight}
 		{}
 
+		static Damage zero() { return Damage{}; }
 		static Damage from_slash(double slash) { return Damage{slash, 0.0, 0.0, 0.0, 0.0, 0.0}; }
 		static Damage from_pierce(double pierce) { return Damage{0.0, pierce, 0.0, 0.0, 0.0, 0.0}; }
 		static Damage from_bludgeon(double bludgeon) { return Damage{0.0, 0.0, bludgeon, 0.0, 0.0, 0.0}; }

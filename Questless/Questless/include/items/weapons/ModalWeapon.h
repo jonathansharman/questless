@@ -42,6 +42,9 @@ namespace questless
 			/// @return Time after using the weapon before it can be used again.
 			virtual double cooldown() const = 0;
 
+			/// @return The proportion of dealt damage to be applied as wear.
+			virtual double wear_ratio() const = 0;
+
 			/// @return The list of actions that can be performed with the weapon.
 			virtual std::vector<Action::ptr> actions() = 0;
 		private:
@@ -56,6 +59,7 @@ namespace questless
 		double wind_up() const override { return form().wind_up(); }
 		double follow_through() const override { return form().follow_through(); }
 		double cooldown() const override { return form().cooldown(); }
+		double wear_ratio() const override { return form().wear_ratio(); }
 
 		std::vector<Action::ptr> actions() override { return form().actions(); }
 	};

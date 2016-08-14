@@ -22,16 +22,17 @@ namespace questless
 		public:
 			StandardForm(Quarterstaff& quarterstaff) : Form(quarterstaff) {}
 
-			Damage base_damage() const override { return Damage::from_bludgeon(10.0); }
+			Damage base_damage() const override { return Damage::from_bludgeon(25.0); }
 			double wind_up() const override { return 1.0; }
 			double follow_through() const override { return 1.0; }
 			double cooldown() const override { return 2.0; }
+			double wear_ratio() const override { return 0.001; }
 
 			std::vector<Action::ptr> actions() override
 			{
 				std::vector<Action::ptr> actions;
 				if (weapon().ready()) {
-					actions.push_back(Attack::make(weapon()));
+					actions.push_back(MeleeAttack::make(weapon()));
 				} else {
 					actions.push_back(Ready::make(weapon()));
 				}
@@ -46,16 +47,17 @@ namespace questless
 		public:
 			HalfStaffForm(Quarterstaff& quarterstaff) : Form(quarterstaff) {}
 
-			Damage base_damage() const override { return Damage::from_bludgeon(5.0); }
+			Damage base_damage() const override { return Damage::from_bludgeon(15.0); }
 			double wind_up() const override { return 0.75; }
 			double follow_through() const override { return 0.75; }
 			double cooldown() const override { return 1.5; }
+			double wear_ratio() const override { return 0.001; }
 
 			std::vector<Action::ptr> actions() override
 			{
 				std::vector<Action::ptr> actions;
 				if (weapon().ready()) {
-					actions.push_back(Attack::make(weapon()));
+					actions.push_back(MeleeAttack::make(weapon()));
 				} else {
 					actions.push_back(Ready::make(weapon()));
 				}

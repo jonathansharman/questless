@@ -124,6 +124,9 @@
     <Filter Include="resources\music">
       <UniqueIdentifier>{fb2e1f78-6d91-4b36-8493-f2f769247b07}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\items\armor">
+      <UniqueIdentifier>{514dd0a6-9b8e-4360-af60-e11397c4d775}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\test.png">
@@ -676,6 +679,9 @@
     </ClCompile>
     <ClCompile Include="src\spells\TeleportSpell.cpp">
       <Filter>src\spells</Filter>
+    </ClCompile>
+    <ClCompile Include="src\items\armor\Armor.cpp">
+      <Filter>src\items\armor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

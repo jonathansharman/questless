@@ -202,7 +202,7 @@ namespace questless
 		}
 
 		// Target loses health.
-		Damage damage_reduction;
+		Damage damage_reduction = Damage::zero();
 		for (const auto& armor : _equipped_amor) {
 			damage_reduction += armor->apply(damage);
 		}

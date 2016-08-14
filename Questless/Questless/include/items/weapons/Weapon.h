@@ -38,6 +38,9 @@ namespace questless
 		/// @return Time after using the weapon before it can be used again.
 		virtual double cooldown() const = 0;
 
+		/// @return The proportion of dealt damage to be applied as wear.
+		virtual double wear_ratio() const = 0;
+
 		/// @return Time left before the weapon can be used again.
 		double active_cooldown() const { return _active_cooldown; }
 
@@ -62,12 +65,12 @@ namespace questless
 			const std::string _name;
 		};
 
-		class Attack : public Action
+		class MeleeAttack : public Action
 		{
 		public:
-			Attack(Weapon& weapon, std::string name = "Attack") : _weapon{weapon}, _name{std::move(name)} {}
+			MeleeAttack(Weapon& weapon, std::string name = "Attack") : _weapon{weapon}, _name{std::move(name)} {}
 
-			static ptr make(Weapon& weapon, std::string name = "Attack") { return std::make_unique<Attack>(weapon, name); }
+			static ptr make(Weapon& weapon, std::string name = "Attack") { return std::make_unique<MeleeAttack>(weapon, name); }
 
 			std::string name() const override { return _name; }
 

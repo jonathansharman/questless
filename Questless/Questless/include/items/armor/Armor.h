@@ -27,23 +27,13 @@ namespace questless
 		/// @return The base amount of protection the armor provides.
 		virtual Protection base_protection() const = 0;
 
-		/// @return The proportion of 
+		/// @return The proportion of the damage from which this armor protects to be applied as wear.
 		virtual double wear_ratio() const = 0;
 
 		/// Applies the given damage to the armor and returns the reduced damage.
 		/// @param damage The damage applied to the armor.
 		/// @return The reduced damage, accounting for the armor's protection.
-		Damage apply(Damage damage)
-		{
-			// Broken armor has no effect.
-			if (broken()) { return damage; }
-
-			Damage reduction = protection().reduction();
-			Damage reduced_damage = damage - reduction;
-			Damage effective_reduction = damage - reduced_damage;
-			wear(wear_ratio() * effective_reduction.total());
-			return reduced_damage;
-		}
+		Damage apply(Damage damage);
 	};
 }
 

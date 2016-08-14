@@ -300,6 +300,7 @@
     <ClCompile Include="src\entities\beings\goblinoids\Goblin.cpp" />
     <ClCompile Include="src\entities\objects\Object.cpp" />
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\items\armor\Armor.cpp" />
     <ClCompile Include="src\items\Inventory.cpp" />
     <ClCompile Include="src\items\Item.cpp" />
     <ClCompile Include="src\items\weapons\Weapon.cpp" />
