@@ -8,6 +8,9 @@
 */
 
 #include "world/Section.h"
+
+#include <fstream>
+
 #include "world/Region.h"
 
 namespace questless
@@ -36,43 +39,49 @@ namespace questless
 		return SectionTileIndex{x, y};
 	}
 
-	Section::Section(RegionSectionCoords coords) : _coords{coords}
-	{}
-
-	void Section::create(const string& data)
+	Section::Section(RegionSectionCoords coords, std::istream& data_stream) : _coords{coords}
 	{
-		std::istringstream sin(data);
-		read(sin);
-	}
+		using std::make_unique;
+		for (auto& slice : _tiles) {
+			for (auto& tile : slice) {
+				int c;
+				double light_level;
+				double temperature;
 
-	void Section::open(const string& filename)
-	{
-		std::ifstream fin(filename.c_str());
-		if (fin.fail()) {
-			throw logic_error("Could not open section file.");
+				data_stream >> c >> light_level >> temperature;
+
+				switch (static_cast<Tile::TileClass>(c)) {
+					case Tile::TileClass::edge:
+						tile = make_unique<EdgeTile>(light_level, temperature);
+						break;
+					case Tile::TileClass::stone:
+						tile = make_unique<StoneTile>(light_level, temperature);
+						break;
+					case Tile::TileClass::dirt:
+						tile = make_unique<DirtTile>(light_level, temperature);
+						break;
+					case Tile::TileClass::grass:
+						tile = make_unique<GrassTile>(light_level, temperature);
+						break;
+					case Tile::TileClass::water:
+						tile = make_unique<WaterTile>(light_level, temperature);
+						break;
+					case Tile::TileClass::snow:
+						tile = make_unique<SnowTile>(light_level, temperature);
+						break;
+					default:
+						throw std::logic_error{"Unrecognized tile type."};
+				}
+			}
 		}
-		read(fin);
-		fin.close();
 	}
 	
 	void Section::save(const string& filename)
 	{
 		std::ofstream fout(filename.c_str());
-
 		for (auto& r_row : _tiles) {
 			for (auto& tile : r_row) {
 				fout << static_cast<char>(tile->tile_class()) << ' ' << tile->light_level() << ' ' << tile->temperature() << ' ';
-			}
-		}
-
-		fout.close();
-	}
-
-	void Section::close()
-	{
-		for (auto& r_row : _tiles) {
-			for (auto& tile : r_row) {
-				tile = nullptr;
 			}
 		}
 	}
@@ -105,43 +114,5 @@ namespace questless
 	{
 		auto it = _objects.find(tile_coords);
 		return it == _objects.end() ? nullptr : it->second.get();
-	}
-
-	void Section::read(std::istream& in)
-	{
-		using std::make_unique;
-
-		for (auto& slice : _tiles) {
-			for (auto& tile : slice) {
-				int c;
-				double light_level;
-				double temperature;
-
-				in >> c >> light_level >> temperature;
-
-				switch (static_cast<Tile::TileClass>(c)) {
-					case Tile::TileClass::edge:
-						tile = make_unique<EdgeTile>(light_level, temperature);
-						break;
-					case Tile::TileClass::stone:
-						tile = make_unique<StoneTile>(light_level, temperature);
-						break;
-					case Tile::TileClass::dirt:
-						tile = make_unique<DirtTile>(light_level, temperature);
-						break;
-					case Tile::TileClass::grass:
-						tile = make_unique<GrassTile>(light_level, temperature);
-						break;
-					case Tile::TileClass::water:
-						tile = make_unique<WaterTile>(light_level, temperature);
-						break;
-					case Tile::TileClass::snow:
-						tile = make_unique<SnowTile>(light_level, temperature);
-						break;
-					default:
-						throw std::logic_error{"Unrecognized tile type."};
-				}
-			}
-		}
 	}
 }

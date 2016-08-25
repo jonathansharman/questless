@@ -7,10 +7,16 @@ Heaven
     The abode of hosts
 Hell
     The abode of fiends, including the undead, demons, and devils
-The Void
-    An empty realm, inhospitable to most life with the exception of void beasts
-	TODO: I think this should be more like a chaos realm (rename it to something), with lots of energy and mind-boggling 	physics
-Need to add a counterpart to the chaos realm, to represent blue magic.
+The Chaos
+	All of space exists at a single point
+	Contains infinite energy
+	Perpetually changing
+    Inhospitable to life, with the exception of chaos beasts
+The Stasis
+	All points in space are infinitely far apart
+	Contains no energy
+	Everything within it is eternal, unchanging
+	Inhospitable to life, with the exception of stasis guardians
 
 ================================================================================
 Potion brewing
@@ -333,8 +339,8 @@ Black - evil - darkness - hell
         Possess - Take control of a target being for a certain duration. Invocation power times caster's black power divided by target's black resistance must be greater than target's intellect.
         Damn - If the caster is alive after a certain duration, the target dies.
         Curse - Caster chooses an item and curses it. Carrying a cursed item 
+		Enslave Fiend - Enslave target fiend, making it loyal to the caster.
         Summon demons and devils
-            Summon 
     Necrotic Runes
         Rot - Afflict target with rot, causing blight damage over time.
         Exanimate - Extract a target's soul, resulting in a corpse and a wraith under the caster's control.
@@ -346,6 +352,7 @@ Black - evil - darkness - hell
         Enshadow - Decrease the light level in an area around the caster for a certain duration.
         Umbraphile - Temporarily become a shadowphile. Shadowphiles have increased dexterity and mana regen while in dim light.
         Shadow Copy - Summon a temporary shadow copy of the caster onto an adjacent tile. The copy cannot attack and disintegrates when it takes damage.
+		Inflict Nightmares - Gives target being nightmares for a certain duration. Whenever a being with nightmares is asleep, it takes damage.
 Green - nature - earth
     Specializations
         Zoomancer (name?)
@@ -431,6 +438,7 @@ Yellow - chaos - energy
             E.g., spend 100 mana to recover 100 mana over 0 turns. Or spend 100 mana to recover 200 mana over, say, 25 turns.
         Overcharge - Gain mana and then lose twice that much over time. The more mana gained, the faster it depletes.
             E.g., gain 0 mana and lose 0 over 0 turns. Gain 100 mana and lose 200 mana over 10 turns. Gain 200 mana and lose 400 mana over 5 turns.
+			ALTERNATE IDEA: Gain mana immediately, but also gain mana poisoning in proportion to the amount gained. Mana poisoning deals blight damage over time.
         Discharge - Deal burn damage within an area of effect. Does less damage farther from the caster, down to zero damage at maximum range. Does more damage the fuller the caster's mana is before casting, up to 100% extra damage at full mana.
         Lightning bolt - Deal burn damage to a target being. Lightning bolt will chain to nearby beings, with less range and damage for each jump. Targets are chosen first by proximity, then by lowest yellow resistance, then at random. May target the caster and other friendly beings.
         Scroll Magnet - Steal a scroll from target being.

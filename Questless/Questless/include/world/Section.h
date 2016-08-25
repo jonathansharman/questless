@@ -14,8 +14,7 @@
 #include <array>
 #include <unordered_map>
 #include <memory>
-#include <fstream>
-#include <sstream>
+#include <iostream>
 #include <algorithm>
 #include <stdexcept>
 
@@ -26,8 +25,6 @@
 #include "utility/hex-utilities.h"
 #include "world/Tile.h"
 #include "animation/Camera.h"
-
-/// @todo RAII-ify this class.
 
 namespace questless
 {
@@ -42,25 +39,13 @@ namespace questless
 		/// @return Positive hex coordinates relative to the section containing the given region coordinates.
 		static SectionTileIndex tile_index(RegionTileCoords region_tile_coords);
 
-		/// Constructs an empty section.
-		/// @param coords The positive axial coordinates of the section.
-		Section(RegionSectionCoords coords);
-
-		/// Creates a new section from the provided data string.
-		/// @param data A string representing section data.
-		void create(const std::string& data);
-
-		/// Loads the section from the specified file.
-		/// @param filename The section's filename.
-		void open(const std::string& filename);
+		/// @param coords The positive coordinates of the section within its region.
+		/// @param data_stream A stream of section data.
+		Section(RegionSectionCoords coords, std::istream& data_stream);
 
 		/// Saves the section to the specified file.
 		/// @param filename The section's filename.
 		void save(const std::string& filename);
-
-		/// Closes the section by setting its hexes to null, releasing its memory.
-		/// @note Call save() before close() to write the section data back to file.
-		void close();
 
 		/// @return The hex coordinates of the section within the region's sections.
 		RegionSectionCoords coords() const { return _coords; }

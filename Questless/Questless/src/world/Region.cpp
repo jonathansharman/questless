@@ -10,6 +10,8 @@
 #include <filesystem>
 namespace fs = std::tr2::sys; /// @todo Replace this with proper using statements if/when TR2 comes around.
 #include <limits.h>
+#include <sstream>
+#include <fstream>
 
 #include "Game.h"
 #include "world/Region.h"
@@ -48,7 +50,6 @@ namespace questless
 				if (uniform(0, 0)) {
 				} else {
 					RegionSectionCoords section_coords{{section_q, section_r}};
-					_section_map[section_coords] = make_unique<Section>(section_coords);
 
 					// Create a random section.
 					string data;
@@ -82,7 +83,7 @@ namespace questless
 #endif
 						}
 					}
-					_section_map[section_coords]->create(data);
+					_section_map[section_coords] = make_unique<Section>(section_coords, std::istringstream{data});
 				}
 			}
 		}
@@ -114,7 +115,11 @@ namespace questless
 			int section_r = std::stoi(r_string);
 			RegionSectionCoords section_coords{{section_q, section_r}};
 
-			_section_map[section_coords]->open((region_path / it->path()).string());
+			std::ifstream data_stream{(region_path / it->path()).string()};
+			if (data_stream.fail()) {
+				throw logic_error("Could not open section file.");
+			}
+			_section_map[section_coords] = make_unique<Section>(section_coords, data_stream);
 		}
 
 		fs::path entities_filename{"entities"};
