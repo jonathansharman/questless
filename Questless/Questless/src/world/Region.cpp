@@ -51,11 +51,10 @@ namespace questless
 				} else {
 					RegionSectionCoords section_coords{{section_q, section_r}};
 
-					// Create a random section.
+					// Create a section with random terrain.
 					string data;
 					for (int r = -section_radius; r <= section_radius; ++r) {
 						for (int q = -section_radius; q <= section_radius; ++q) {
-#if 1 // Tiles based on coords
 							if (r == section_radius) {
 								data += std::to_string(0) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
 							} else {
@@ -63,27 +62,21 @@ namespace questless
 									data += std::to_string(0) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
 								} else {
 									data += std::to_string(uniform(1, 5)) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
-									if ((section_r != 0 || section_q != 0) && uniform(0, 10) == 0) {
-										RegionTileCoords entity_coords{HexCoords{q, r} + section_coords.hex * section_diameter};
-										auto new_being = make_unique<Goblin>(_game, Agent::make<BasicAI>, BeingId::next());
-										add<Being>(std::move(new_being), entity_coords);
-									}
 								}
 							}
-#else // Random tiles
-							char new_tile = static_cast<char>(uniform(0, 5));
-							data += new_tile;
-							if (new_tile != 0) {
-								if (section_r != 0 && section_q != 0 && uniform(0, 10) == 0) {
-									HexCoords entity_coords = HexCoords{q, r} +section_coords * section_diameter;
-									auto new_being = make_shared<Goblin>(Agent::make<BasicAI>, _name, entity_coords);
-									add_entity(new_being->as_entity());
-								}
-							}
-#endif
 						}
 					}
 					_section_map[section_coords] = make_unique<Section>(section_coords, std::istringstream{data});
+					// Add beings randomly.
+					for (int r = -section_radius; r <= section_radius; ++r) {
+						for (int q = -section_radius; q <= section_radius; ++q) {
+							if ((section_r != 0 || section_q != 0) && uniform(0, 10) == 0) {
+								RegionTileCoords entity_coords{HexCoords{q, r} +section_coords.hex * section_diameter};
+								auto new_being = make_unique<Goblin>(_game, Agent::make<BasicAI>, BeingId::next());
+								add<Being>(std::move(new_being), entity_coords);
+							}
+						}
+					}
 				}
 			}
 		}

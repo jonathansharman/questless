@@ -183,7 +183,7 @@ namespace questless
 
 		Game& _game;
 		std::string _name;
-		std::map<RegionSectionCoords, std::unique_ptr<Section>> _section_map;
+		std::map<RegionSectionCoords, std::unique_ptr<Section>> _section_map; /// @todo Replace unique_ptr with reference_wrapper (disallow null sections).
 		RegionSectionCoords center_section_coords = RegionSectionCoords{{0, 0}};
 
 		std::set<Being::ref, Being::ref_less_t> _turn_queue;
