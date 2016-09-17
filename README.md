@@ -9,3 +9,4 @@ Dependences
   * [SDL Image](https://www.libsdl.org/projects/SDL_image/)
   * [SDL TTF](https://www.libsdl.org/projects/SDL_ttf/)
   * [SDL Mixer](https://www.libsdl.org/projects/SDL_mixer/)
+  * [Boost 1.61.0](http://www.boost.org/)
