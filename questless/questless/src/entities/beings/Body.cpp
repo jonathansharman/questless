@@ -29,67 +29,70 @@ using std::make_shared;
 
 namespace questless
 {
-	Body::Body(std::unique_ptr<BodyPart> root) : _root{std::move(root)}, _parts_count{0}
+	Body::Body(std::unique_ptr<BodyPart> root) : _root{std::move(root)}
 	{
 		int x_min = 0;
 		int y_min = 0;
 		int x_max = 0;
 		int y_max = 0;
-		for (auto part : parts()) {
-			++_parts_count;
-			for (Rect region : part->regions()) {
+
+		// Walk the parts tree to build the parts lists and compute bounds.
+		deque<BodyPart::ref> work_list;
+		work_list.push_back(*_root);
+		while (!work_list.empty()) {
+			BodyPart& part = work_list.front();
+			_parts.push_back(part);
+			PartAttacher attacher{*this};
+			part.accept(attacher);
+
+			for (Rect region : part.regions()) {
 				x_min = min(x_min, region.x);
 				x_max = max(x_max, region.right());
 				y_min = min(y_min, region.y);
 				y_max = max(y_max, region.bottom());
 			}
+
+			// Remove current part from work list and add its children.
+			work_list.pop_front();
+			for (const BodyPart::ptr& child : part.children()) {
+				work_list.push_back(*child);
+			}
 		}
+
 		_bounds = {x_min, y_min, x_max - x_min + 1, y_max - y_min + 1};
 		_offset_to_center = {-x_min, -y_min};
 	}
-	Body::~Body() = default;
 
-	Stream<BodyPart*> Body::parts()
+	void Body::PartAttacher::visit(Torso& torso)
 	{
-		/// @todo Look into the efficiency of this implementation. (Seems bad?)
-
-		auto work_list = make_shared<deque<reference_wrapper<BodyPart>>>();
-		work_list->push_back(*_root);
-
-		shared_ptr<function<Cell<BodyPart*>()>> lambda = make_shared<function<Cell<BodyPart*>()>>();
-		*lambda = [lambda, work_list] {
-			BodyPart& part = work_list->front();
-			work_list->pop_front();
-			for (const BodyPart::ptr& child : part.children()) {
-				work_list->push_back(*child);
-			}
-			return work_list->empty()
-				? Cell<BodyPart*>{&part}
-				: Cell<BodyPart*>{&part, Stream<BodyPart*>{[lambda] { return (*lambda)(); }}};
-		};
-
-		return Stream<BodyPart*>{*lambda};
+		_body._torsos.push_back(torso);
 	}
-
-	Stream<const BodyPart*> Body::parts() const
+	void Body::PartAttacher::visit(Head& head)
 	{
-		/// @todo Make this a template along with the non-const version to avoid code duplication.
-
-		auto work_list = make_shared<deque<reference_wrapper<const BodyPart>>>();
-		work_list->push_back(*_root);
-
-		shared_ptr<function<Cell<const BodyPart*>()>> generator = make_shared<function<Cell<const BodyPart*>()>>();
-		*generator = [generator, work_list] {
-			const BodyPart& part = work_list->front();
-			work_list->pop_front();
-			for (const BodyPart::ptr& child : part.children()) {
-				work_list->push_back(*child);
-			}
-			return work_list->empty()
-				? Cell<const BodyPart*>{&part}
-				: Cell<const BodyPart*>{&part, Stream<const BodyPart*>{[generator] { return (*generator)(); }}};
-		};
-
-		return Stream<const BodyPart*>{*generator};
+		_body._heads.push_back(head);
+	}
+	void Body::PartAttacher::visit(Arm& arm)
+	{
+		_body._arms.push_back(arm);
+	}
+	void Body::PartAttacher::visit(Hand& hand)
+	{
+		_body._hands.push_back(hand);
+	}
+	void Body::PartAttacher::visit(Leg& leg)
+	{
+		_body._legs.push_back(leg);
+	}
+	void Body::PartAttacher::visit(Foot& foot)
+	{
+		_body._feet.push_back(foot);
+	}
+	void Body::PartAttacher::visit(Wing& wing)
+	{
+		_body._wings.push_back(wing);
+	}
+	void Body::PartAttacher::visit(Tail& tail)
+	{
+		_body._tails.push_back(tail);
 	}
 }

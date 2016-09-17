@@ -16,6 +16,7 @@
 
 #include "sdl-wrappers/basic-sdl-wrappers.h"
 #include "attributes/Attributes.h" /// @todo Probably remove this eventually. (BodyParts shouldn't need the full attributes struct.)
+#include "BodyPartVisitor.h"
 
 namespace questless
 {
@@ -23,6 +24,7 @@ namespace questless
 	{
 	public:
 		using ptr = std::unique_ptr<BodyPart>;
+		using ref = std::reference_wrapper<BodyPart>;
 
 		/// @param name The name of the body part.
 		/// @param vitality The body part's vitality, which determines its maximum health.
@@ -31,7 +33,9 @@ namespace questless
 		/// @param regions The set of rectangular regions that this body part occupies. Used for display and hit detection.
 		BodyPart(std::string name, double vitality, Attributes attributes, bool vital, std::vector<sdl::Rect> regions);
 
-		virtual ~BodyPart() = 0 {}; /// @todo Change to default if actual pure virtuals are added later.
+		virtual ~BodyPart() = 0 {}; /// @todo Change to default if actual pure virtuals are added to BodyPart later.
+
+		virtual void accept(BodyPartVisitor& visitor) = 0;
 
 		/// @param name The name of the body part.
 		/// @param vitality The body part's vitality, which determines its maximum health.
@@ -82,44 +86,94 @@ namespace questless
 		const bool _vital;
 	};
 
-	class Head : public virtual BodyPart
-	{
-		using BodyPart::BodyPart;
-	};
+	// Body part subtypes
 
 	class Torso : public virtual BodyPart
 	{
+	public:
+		using ptr = std::unique_ptr<Torso>;
+		using ref = std::reference_wrapper<Torso>;
+
 		using BodyPart::BodyPart;
+
+		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
+	};
+
+	class Head : public virtual BodyPart
+	{
+	public:
+		using ptr = std::unique_ptr<Head>;
+		using ref = std::reference_wrapper<Head>;
+
+		using BodyPart::BodyPart;
+
+		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
 	};
 
 	class Arm : public virtual BodyPart
 	{
+	public:
+		using ptr = std::unique_ptr<Arm>;
+		using ref = std::reference_wrapper<Arm>;
+
 		using BodyPart::BodyPart;
+
+		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
 	};
 
 	class Hand : public virtual BodyPart
 	{
+	public:
+		using ptr = std::unique_ptr<Hand>;
+		using ref = std::reference_wrapper<Hand>;
+
 		using BodyPart::BodyPart;
+
+		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
 	};
 
 	class Leg : public virtual BodyPart
 	{
+	public:
+		using ptr = std::unique_ptr<Leg>;
+		using ref = std::reference_wrapper<Leg>;
+
 		using BodyPart::BodyPart;
+
+		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
 	};
 
 	class Foot : public virtual BodyPart
 	{
+	public:
+		using ptr = std::unique_ptr<Foot>;
+		using ref = std::reference_wrapper<Foot>;
+
 		using BodyPart::BodyPart;
+
+		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
 	};
 
 	class Wing : public virtual BodyPart
 	{
+	public:
+		using ptr = std::unique_ptr<Wing>;
+		using ref = std::reference_wrapper<Wing>;
+
 		using BodyPart::BodyPart;
+
+		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
 	};
 
 	class Tail : public virtual BodyPart
 	{
+	public:
+		using ptr = std::unique_ptr<Tail>;
+		using ref = std::reference_wrapper<Tail>;
+
 		using BodyPart::BodyPart;
+
+		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
 	};
 }
 

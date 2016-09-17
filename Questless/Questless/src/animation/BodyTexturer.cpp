@@ -36,11 +36,11 @@ namespace questless
 			renderer().clear(Color::clear());
 			renderer().draw_rect(Rect{0, 0, _texture->width(), _texture->height()}, Color::red(), false);
 
-			for (auto part : body.parts()) {
-				for (Rect region : part->regions()) {
+			for (const BodyPart& part : body) {
+				for (Rect region : part.regions()) {
 					constexpr double threshold = 1.0 / 2.0;
 
-					double health_percentage = part->health() / part->vitality();
+					double health_percentage = part.health() / part.vitality();
 					uint8_t red;
 					uint8_t green;
 					if (health_percentage < threshold) {

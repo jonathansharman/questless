@@ -490,6 +490,9 @@
     <ClInclude Include="include\agents\Agent.h">
       <Filter>include\agents</Filter>
     </ClInclude>
+    <ClInclude Include="include\entities\beings\BodyPartVisitor.h">
+      <Filter>include\entities\beings</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp" />

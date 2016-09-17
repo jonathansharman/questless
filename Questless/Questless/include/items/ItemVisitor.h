@@ -4,7 +4,7 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION The interface for the ItemVisitor abstract base class.
+* @section DESCRIPTION Implements the visitor pattern for the Item class.
 */
 
 #ifndef ITEM_VISITOR_H
