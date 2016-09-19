@@ -43,7 +43,7 @@ namespace questless
 		{
 			return boost::make_transform_iterator
 				( _parts.begin()
-				, (transform_t)[](BodyPart::ref bp) -> const BodyPart::ref { return std::as_const<BodyPart::ref>(bp); }
+				, (transform_t)[](BodyPart::ref bp) -> const BodyPart::ref { return bp; }
 				);
 		}
 		/// @return Const iterator to end of body parts.
@@ -51,7 +51,7 @@ namespace questless
 		{
 			return boost::make_transform_iterator
 				( _parts.end()
-				, (transform_t)[](BodyPart::ref bp) -> const BodyPart::ref { return std::as_const<BodyPart::ref>(bp); }
+				, (transform_t)[](BodyPart::ref bp) -> const BodyPart::ref { return bp; }
 				);
 		}
 		

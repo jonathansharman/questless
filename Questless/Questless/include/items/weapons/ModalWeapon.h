@@ -27,6 +27,8 @@ namespace questless
 			/// @return The modal weapon of which this is a form.
 			ModalWeapon& weapon() { return _weapon; }
 
+			virtual std::string name() const = 0;
+
 			/// @return The weapon's effective damage per hit, accounting for wear.
 			Damage damage() const { return base_damage() * (1.0 + _weapon.integrity() / _weapon.durability() / 2.0); }
 
@@ -55,6 +57,8 @@ namespace questless
 
 		virtual Form& form() const = 0;
 
+		virtual double switch_time() const = 0;
+
 		Damage base_damage() const override { return form().base_damage(); }
 		double wind_up() const override { return form().wind_up(); }
 		double follow_through() const override { return form().follow_through(); }
@@ -62,6 +66,21 @@ namespace questless
 		double wear_ratio() const override { return form().wear_ratio(); }
 
 		std::vector<Action::ptr> actions() override { return form().actions(); }
+	protected:
+		class SwitchForm : public Action
+		{
+		public:
+			SwitchForm(ModalWeapon& weapon, std::string name = "Switch form") : _weapon{weapon}, _name{std::move(name)} {}
+
+			static ptr make(ModalWeapon& weapon, std::string name = "Switch form") { return std::make_unique<Block>(weapon, name); }
+
+			std::string name() const override { return _name; }
+
+			void perform(Being& actor, cont_t cont) override;
+		private:
+			ModalWeapon& _weapon;
+			const std::string _name;
+		};
 	};
 }
 

@@ -698,5 +698,8 @@
     <ClCompile Include="src\agents\BasicAI.cpp">
       <Filter>src\agents</Filter>
     </ClCompile>
+    <ClCompile Include="src\items\weapons\ModalWeapon.cpp">
+      <Filter>src\items\weapons</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

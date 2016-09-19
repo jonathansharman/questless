@@ -311,6 +311,7 @@
     <ClCompile Include="src\items\armor\Armor.cpp" />
     <ClCompile Include="src\items\Inventory.cpp" />
     <ClCompile Include="src\items\Item.cpp" />
+    <ClCompile Include="src\items\weapons\ModalWeapon.cpp" />
     <ClCompile Include="src\items\weapons\Weapon.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\sdl-wrappers\Font.cpp" />
