@@ -19,8 +19,8 @@ namespace questless
 		static constexpr double light_factor = 1.0;
 
 		double acuity;
-		double ideal_light;
-		double light_tolerance;
+		double ideal_light; // Light level at which a being can see best.
+		double light_tolerance; // Reduces the rate at which visibility falls off as light diverges from the ideal level.
 
 		/// @return The base vision of the given Being subclass.
 		template <typename BeingType>
@@ -39,6 +39,18 @@ namespace questless
 		Vision(double acuity, double ideal_light, double light_tolerance)
 			: acuity{acuity}, ideal_light{ideal_light}, light_tolerance{light_tolerance}
 		{}
+
+		friend std::ostream& operator <<(std::ostream& out, Vision v)
+		{
+			out << v.acuity << ' ' << v.ideal_light << ' ' << v.light_tolerance;
+			return out;
+		}
+
+		friend std::istream& operator >>(std::istream& in, Vision v)
+		{
+			in >> v.acuity >> v.ideal_light >> v.light_tolerance;
+			return in;
+		}
 
 		/// Sets all vision levels that are below their minimum values to their minimum values.
 		void clamp()

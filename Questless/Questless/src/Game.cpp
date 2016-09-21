@@ -613,8 +613,12 @@ namespace questless
 			//_camera->angle(angle / 1.1);
 		}
 
-		// Reset camera.
-		if (_input.down(SDLK_BACKSPACE)) {
+		// Camera follow.
+		static bool follow = true;
+		if (_input.presses(SDLK_BACKSPACE) & 1) { // Odd number of presses
+			follow = !follow;
+		}
+		if (follow) {
 			// Move 1/x of the way back to the default camera values.
 			double x = 5.0;
 

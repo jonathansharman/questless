@@ -15,7 +15,7 @@ namespace questless
 	{
 		if (input.presses(SDLK_z) || input.presses(SDLK_RETURN)) {
 			close();
-			return _cont({Choice::Type::idle, 0});
+			return _cont({Choice::Type::idle, input.shift() ? 1 : 0});
 		} else if (input.presses(SDLK_d)) {
 			close();
 			return _cont({Choice::Type::move, 1});

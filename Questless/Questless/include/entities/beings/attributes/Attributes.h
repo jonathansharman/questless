@@ -314,10 +314,25 @@ namespace questless
 		Attributes(double vitality, double spirit, double health_regen, double mana_regen, double strength, double endurance, double stamina,
 			double agility, double dexterity, double stealth, Vision vision, double hearing, double intellect, double lift,
 			double min_temp, double max_temp, bool mute, MagicPower magic_power, MagicResistance magic_resistance)
-			: vitality{vitality}, spirit{spirit}, health_regen{health_regen}, mana_regen{mana_regen}, strength{strength}, endurance{endurance}, stamina{stamina}, agility{agility}, dexterity{dexterity},
-			stealth{stealth}, vision{vision}, hearing{hearing}, intellect{intellect}, lift{lift}, min_temp{min_temp}, max_temp{max_temp}, mute{mute},
-			magic_power{magic_power}, magic_resistance{magic_resistance}
+			: vitality{vitality}, spirit{spirit}, health_regen{health_regen}, mana_regen{mana_regen}, strength{strength}, endurance{endurance},
+			stamina{stamina}, agility{agility}, dexterity{dexterity}, stealth{stealth}, vision{vision}, hearing{hearing}, intellect{intellect},
+			lift{lift}, min_temp{min_temp}, max_temp{max_temp}, mute{mute}, magic_power{magic_power}, magic_resistance{magic_resistance}
 		{}
+
+		friend std::ostream& operator <<(std::ostream& out, const Attributes& a)
+		{
+			out << a.vitality << ' ' << a.spirit << ' ' << a.health_regen << ' ' << a.mana_regen << ' ' << a.strength << ' ' << a.endurance << ' '
+				<< a.stamina << ' ' << a.agility << ' ' << a.dexterity << ' ' << a.stealth << ' ' << a.vision << ' ' << a.hearing << ' ' << a.intellect
+				<< ' ' << a.lift << ' ' << a.min_temp << ' ' << a.max_temp << ' ' << a.mute << ' ' << a.magic_power << ' ' << a.magic_resistance;
+			return out;
+		}
+
+		friend std::istream& operator >>(std::istream& in, Attributes& a)
+		{
+			in >> a.vitality >> a.spirit >> a.health_regen >> a.mana_regen >> a.strength >> a.endurance >> a.stamina >> a.agility >> a.dexterity
+				>> a.stealth >> a.vision >> a.hearing >> a.intellect >> a.lift >> a.min_temp >> a.max_temp >> a.mute >> a.magic_power >> a.magic_resistance;
+			return in;
+		}
 
 		/// Sets all attributes that are below their minimum values to their minimum values.
 		void clamp()

@@ -20,6 +20,8 @@
 
 namespace questless
 {
+	class Being;
+
 	class BodyPart
 	{
 	public:
@@ -49,6 +51,10 @@ namespace questless
 			return std::make_unique<Type>(std::move(name), vitality, attributes, vital, std::move(regions));
 		}
 
+		/// Advances the body part one time unit.
+		/// @param owner The being that owns this body part.
+		void update(const Being& owner);
+
 		/// Adds the given body part to the list of child parts.
 		void attach(ptr child) { _children.push_back(std::move(child)); }
 
@@ -70,12 +76,15 @@ namespace questless
 		/// @return The body part's current health.
 		double health() const { return _health; }
 
+		void gain_health(double amount);
+		void lose_health(double amount);
+
 		/// @return The body part's vitality.
 		double vitality() const { return _vitality; }
 
-		/// @todo The following method is temporary and for testing purposes only.
+		/// @todo Flesh out this method.
 		/// Deals the given damage to the part.
-		void take_damage(double amount) { _health -= amount; }
+		void take_damage(double amount) { lose_health(amount); }
 	private:
 		std::string _name;
 		std::vector<BodyPart::ptr> _children;

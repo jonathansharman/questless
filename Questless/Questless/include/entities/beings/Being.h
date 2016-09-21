@@ -59,6 +59,18 @@ namespace questless
 			Conditions(double health, double mana, double energy, double satiety, double alertness, double busy_time)
 				: health{health}, mana{mana}, energy{energy}, satiety{satiety}, alertness{alertness}, busy_time{busy_time}
 			{}
+
+			friend std::ostream& operator <<(std::ostream& out, const Conditions& c)
+			{
+				out << c.health << ' ' << c.mana << ' ' << c.energy << ' ' << c.satiety << ' ' << c.alertness << ' ' << c.busy_time;
+				return out;
+			}
+
+			friend std::istream& operator >> (std::istream& in, Conditions& c)
+			{
+				in >> c.health >> c.mana >> c.energy >> c.satiety >> c.alertness >> c.busy_time;
+				return in;
+			}
 		};
 
 		///////////////

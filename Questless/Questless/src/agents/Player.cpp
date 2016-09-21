@@ -20,7 +20,7 @@ namespace questless
 		game.query_player_choice([this, &game](PlayerActionDialog::Choice player_choice) {
 			switch (player_choice.type) {
 				case PlayerActionDialog::Choice::Type::idle:
-					being().gain_busy_time(0.25);
+					being().gain_busy_time(player_choice.data == 1 ? 10.0 : 0.25);
 					break;
 				case PlayerActionDialog::Choice::Type::move:
 					being().gain_busy_time(1.0);

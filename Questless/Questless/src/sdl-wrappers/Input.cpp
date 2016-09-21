@@ -142,14 +142,12 @@ namespace sdl
 
 	unsigned Input::presses(SDL_Keycode key) const
 	{
-		return _presses.count(key) && _presses.at(key);
-		//return _curr_keyboard_state[key] && !_prev_keyboard_state[key];
+		return _presses.count(key);
 	}
 
 	unsigned Input::releases(SDL_Keycode key) const
 	{
-		return _releases.count(key) && _releases.at(key);
-		//return !_curr_keyboard_state[key] && _prev_keyboard_state[key];
+		return _releases.count(key);
 	}
 
 	bool Input::up(SDL_Keycode key) const
@@ -170,17 +168,6 @@ namespace sdl
 			return true;
 		}
 		return !_press_buffer.empty();
-
-		/// @todo Remove if above works.
-		/*if (include_mouse_buttons && _curr_mouse_state & (_curr_mouse_state ^ _prev_mouse_state)) {
-			return true;
-		}
-		for (int i = 0; i < _key_count; ++i) {
-			if (_curr_keyboard_state[i] && !_prev_keyboard_state[i]) {
-				return true;
-			}
-		}
-		return false;*/
 	}
 
 	unsigned Input::any_releases(bool include_mouse_buttons) const
@@ -191,17 +178,6 @@ namespace sdl
 			return true;
 		}
 		return !_release_buffer.empty();
-
-		/// @todo Remove if above works.
-		/*if (include_mouse_buttons && ~_curr_mouse_state & (_curr_mouse_state ^ _prev_mouse_state)) {
-			return true;
-		}
-		for (int i = 0; i < _key_count; ++i) {
-			if (!_curr_keyboard_state[i] && _prev_keyboard_state[i]) {
-				return true;
-			}
-		}
-		return false;*/
 	}
 
 	bool Input::any_down(bool include_mouse_buttons) const

@@ -35,30 +35,9 @@ namespace questless
 		, _body{std::move(body)}
 		, _need_to_calculate_attributes{true}
 	{
-		BeingId::key_t id_key;
-		in >> id_key;
-		_id = id_key;
-
-		double vitality, spirit, health_regen, mana_regen, strength, endurance, stamina, agility, dexterity, stealth,
-			visual_acuity, ideal_light, light_tolerance, hearing, intellect, lift, min_temp, max_temp;
-		bool mute;
-		double white_power, black_power, green_power, red_power, blue_power, yellow_power;
-		double white_resistance, black_resistance, green_resistance, red_resistance, blue_resistance, yellow_resistance;
-
-		in >> vitality >> spirit >> health_regen >> mana_regen >> strength >> endurance >> stamina >> agility >> dexterity >> stealth >> visual_acuity >> ideal_light
-			>> light_tolerance >> hearing >> intellect >> lift >> min_temp >> max_temp >> mute >> white_power >> black_power >> green_power >> red_power >> blue_power
-			>> yellow_power >> white_resistance >> black_resistance >> green_resistance >> red_resistance >> blue_resistance >> yellow_resistance;
-
-		_attributes = Attributes{vitality, spirit, health_regen, mana_regen, strength, endurance, stamina, agility, dexterity,
-			stealth, Vision{visual_acuity, ideal_light, light_tolerance}, hearing, intellect, lift, min_temp, max_temp, mute,
-			MagicPower{white_power, black_power, green_power, red_power, blue_power, yellow_power},
-			MagicResistance{white_resistance, black_resistance, green_resistance, red_resistance, blue_resistance, yellow_resistance}};
-
-		double health, mana, energy, satiety, alertness, busy_time;
-
-		in >> health >> mana >> energy >> satiety >> alertness >> busy_time;
-
-		_conditions = Conditions{health, mana, energy, satiety, alertness, busy_time};
+		in >> _id.key;
+		in >> _attributes;
+		in >> _conditions;
 	}
 
 	void Being::serialize(std::ostream& out) const
@@ -66,15 +45,8 @@ namespace questless
 		Entity::serialize(out);
 
 		out << id().key << ' ';
-
-		// Write attributes.
-		out << vitality() << ' ' << strength() << ' ' << endurance() << ' ' << stamina() << ' ' << agility() << ' ' << dexterity() << ' ' << stealth() << ' '
-			<< visual_acuity() << ' ' << ideal_light() << ' ' << light_tolerance() << ' ' << hearing() << ' ' << intellect() << ' ' << mute() << ' ' << power().white << ' '
-			<< power().black << ' ' << power().green << ' ' << power().red << ' ' << power().blue << ' ' << power().yellow << ' ' << resistance().white << ' '
-			<< resistance().black << ' ' << resistance().green << ' ' << resistance().red << ' ' << resistance().blue << ' ' << resistance().yellow << ' ';
-
-		// Write conditions.
-		out << health() << ' ' << mana() << ' ' << energy() << ' ' << satiety() << ' ' << alertness() << ' ' << busy_time() << ' ';
+		out << _attributes << ' ';
+		out << _conditions << ' ';
 	}
 
 	double Being::power(Spell::Color color) const
@@ -86,8 +58,7 @@ namespace questless
 			case Spell::Color::red:    return _attributes.magic_power.red;
 			case Spell::Color::blue:   return _attributes.magic_power.blue;
 			case Spell::Color::yellow: return _attributes.magic_power.yellow;
-			default:
-				throw logic_error{"Unrecognized spell color."};
+			default: throw logic_error{"Unrecognized spell color."};
 		}
 	}
 
@@ -100,8 +71,7 @@ namespace questless
 			case Spell::Color::red:    return _attributes.magic_resistance.red;
 			case Spell::Color::blue:   return _attributes.magic_resistance.blue;
 			case Spell::Color::yellow: return _attributes.magic_resistance.yellow;
-			default:
-				throw logic_error{"Unrecognized spell color."};
+			default: throw logic_error{"Unrecognized spell color."};
 		}
 	}
 
@@ -114,8 +84,7 @@ namespace questless
 			case Spell::Color::red:    _attributes.magic_power.red = value;
 			case Spell::Color::blue:   _attributes.magic_power.blue = value;
 			case Spell::Color::yellow: _attributes.magic_power.yellow = value;
-			default:
-				throw logic_error{"Unrecognized spell color."};
+			default: throw logic_error{"Unrecognized spell color."};
 		}
 	}
 
@@ -128,8 +97,7 @@ namespace questless
 			case Spell::Color::red:    _attributes.magic_resistance.red = value;
 			case Spell::Color::blue:   _attributes.magic_resistance.blue = value;
 			case Spell::Color::yellow: _attributes.magic_resistance.yellow = value;
-			default:
-				throw logic_error{"Unrecognized spell color."};
+			default: throw logic_error{"Unrecognized spell color."};
 		}
 	}
 
@@ -162,6 +130,12 @@ namespace questless
 		_conditions.energy += energy_rate;
 		_conditions.alertness += alertness_rate;
 		lose_busy_time(1.0);
+
+		// Update body parts.
+
+		for (BodyPart& part : _body) {
+			part.update(*this);
+		}
 
 		// Clamp conditions.
 

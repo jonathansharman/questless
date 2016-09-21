@@ -44,6 +44,18 @@ namespace questless
 			: white{white}, black{black}, green{green}, red{red}, blue{blue}, yellow{yellow}
 		{}
 
+		friend std::ostream& operator <<(std::ostream& out, MagicPower mp)
+		{
+			out << mp.white << ' ' << mp.black << ' ' << mp.green << ' ' << mp.red << ' ' << mp.blue << ' ' << mp.yellow;
+			return out;
+		}
+
+		friend std::istream& operator >> (std::istream& in, MagicPower mp)
+		{
+			in >> mp.white >> mp.black >> mp.green >> mp.red >> mp.blue >> mp.yellow;
+			return in;
+		}
+
 		template <Spell::Color color> double& get();
 		template <> double& get<Spell::Color::white>() { return white; }
 		template <> double& get<Spell::Color::black>() { return black; }

@@ -8,6 +8,7 @@
 */
 
 #include "entities/beings/BodyPart.h"
+#include "entities/beings/Being.h"
 
 using std::string;
 using std::vector;
@@ -27,7 +28,7 @@ namespace questless
 		for (auto& region : _regions) {
 			region.x *= 5;
 			region.y *= 5;
-
+			
 			region.y = -region.y;
 
 			region.w *= 5;
@@ -36,5 +37,22 @@ namespace questless
 			++region.w;
 			++region.h;
 		}
+	}
+
+	void BodyPart::update(const Being& owner)
+	{
+		gain_health(owner.health_regen() * _vitality / owner.vitality());
+	}
+
+	void BodyPart::gain_health(double amount)
+	{
+		_health += amount;
+		if (_health > _vitality) { _health = _vitality; }
+	}
+
+	void BodyPart::lose_health(double amount)
+	{
+		_health -= amount;
+		if (_health < 0) { _health = 0; }
 	}
 }
