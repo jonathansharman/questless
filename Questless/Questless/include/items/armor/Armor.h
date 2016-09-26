@@ -19,6 +19,9 @@ namespace questless
 	class Armor : public virtual Equipable, public virtual Breakable
 	{
 	public:
+		using ptr = std::unique_ptr<Armor>;
+		using ref = std::reference_wrapper<Armor>;
+
 		virtual ~Armor() = default;
 
 		/// @return The armor's effective protection per hit, accounting for wear.

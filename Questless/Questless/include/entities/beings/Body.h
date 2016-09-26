@@ -20,13 +20,16 @@
 
 namespace questless
 {
+	class Being;
+
 	class Body
 	{
 	public:
 		using ptr = std::unique_ptr<Body>;
 
+		/// @param owner The being that owns this body.
 		/// @param root The root of the body parts tree.
-		Body(std::unique_ptr<BodyPart> root);
+		Body(Being& owner, std::unique_ptr<BodyPart> root);
 
 		Body(Body&&) = default;
 
@@ -89,6 +92,8 @@ namespace questless
 			Body& _body;
 		};
 		friend PartAttacher;
+
+		Being& _owner;
 
 		std::unique_ptr<BodyPart> _root;
 

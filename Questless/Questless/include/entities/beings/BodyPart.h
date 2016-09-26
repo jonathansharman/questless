@@ -17,6 +17,10 @@
 #include "sdl-wrappers/basic-sdl-wrappers.h"
 #include "attributes/Attributes.h" /// @todo Probably remove this eventually. (BodyParts shouldn't need the full attributes struct.)
 #include "BodyPartVisitor.h"
+#include "Damage.h"
+#include "items/weapons/Weapon.h"
+#include "items/armor/Armor.h"
+#include "BeingId.h"
 
 namespace questless
 {
@@ -28,17 +32,19 @@ namespace questless
 		using ptr = std::unique_ptr<BodyPart>;
 		using ref = std::reference_wrapper<BodyPart>;
 
+		/// @param owner The being that owns this body.
 		/// @param name The name of the body part.
 		/// @param vitality The body part's vitality, which determines its maximum health.
 		/// @param attributes The body part's attributes, which are added to its owner's attributes.
 		/// @param vital Whether the body part is vital to its being. If true, the being dies when this body part is disabled.
 		/// @param regions The set of rectangular regions that this body part occupies. Used for display and hit detection.
-		BodyPart(std::string name, double vitality, Attributes attributes, bool vital, std::vector<sdl::Rect> regions);
+		BodyPart(Being& owner, std::string name, double vitality, Attributes attributes, bool vital, std::vector<sdl::Rect> regions);
 
 		virtual ~BodyPart() = 0 {}; /// @todo Change to default if actual pure virtuals are added to BodyPart later.
 
 		virtual void accept(BodyPartVisitor& visitor) = 0;
 
+		/// @param owner The being that owns this body.
 		/// @param name The name of the body part.
 		/// @param vitality The body part's vitality, which determines its maximum health.
 		/// @param attributes The body part's attributes, which are added to its owner's attributes.
@@ -46,14 +52,13 @@ namespace questless
 		/// @param regions The set of rectangular regions that this body part occupies. Used for display and hit detection.
 		/// @return A BodyPart pointer from the given data.
 		template <typename Type>
-		static ptr make(std::string name, double vitality, Attributes attributes, bool vital, std::vector<sdl::Rect> regions)
+		static ptr make(Being& owner, std::string name, double vitality, Attributes attributes, bool vital, std::vector<sdl::Rect> regions)
 		{
-			return std::make_unique<Type>(std::move(name), vitality, attributes, vital, std::move(regions));
+			return std::make_unique<Type>(owner, std::move(name), vitality, attributes, vital, std::move(regions));
 		}
 
 		/// Advances the body part one time unit.
-		/// @param owner The being that owns this body part.
-		void update(const Being& owner);
+		void update();
 
 		/// Adds the given body part to the list of child parts.
 		void attach(ptr child) { _children.push_back(std::move(child)); }
@@ -82,17 +87,24 @@ namespace questless
 		/// @return The body part's vitality.
 		double vitality() const { return _vitality; }
 
-		/// @todo Flesh out this method.
-		/// Deals the given damage to the part.
-		void take_damage(double amount) { lose_health(amount); }
+		/// Causes the body part to take damage from the specified source being.
+		/// @param damage Damage to be applied to this being.
+		/// @param source_id The ID of the being which caused the damage, if any.
+		void take_damage(Damage& damage, optional<BeingId> source_id);
 	private:
+		Being& _owner;
+
 		std::string _name;
 		std::vector<BodyPart::ptr> _children;
 		Attributes _attributes;
 		std::vector<sdl::Rect> _regions;
+
 		double _health;
 		double _vitality;
 		const bool _vital;
+
+		std::vector<Weapon::ref> _weapons;
+		std::vector<Armor::ref> _armor;
 	};
 
 	// Body part subtypes

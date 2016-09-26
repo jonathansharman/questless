@@ -53,22 +53,23 @@ namespace questless
 			double satiety;
 			double alertness;
 			double busy_time;
+			bool dead;
 
 			Conditions() {}
 
-			Conditions(double health, double mana, double energy, double satiety, double alertness, double busy_time)
-				: health{health}, mana{mana}, energy{energy}, satiety{satiety}, alertness{alertness}, busy_time{busy_time}
+			Conditions(double health, double mana, double energy, double satiety, double alertness, double busy_time, bool dead)
+				: health{health}, mana{mana}, energy{energy}, satiety{satiety}, alertness{alertness}, busy_time{busy_time}, dead{dead}
 			{}
 
 			friend std::ostream& operator <<(std::ostream& out, const Conditions& c)
 			{
-				out << c.health << ' ' << c.mana << ' ' << c.energy << ' ' << c.satiety << ' ' << c.alertness << ' ' << c.busy_time;
+				out << c.health << ' ' << c.mana << ' ' << c.energy << ' ' << c.satiety << ' ' << c.alertness << ' ' << c.busy_time << ' ' << c.dead;
 				return out;
 			}
 
 			friend std::istream& operator >> (std::istream& in, Conditions& c)
 			{
-				in >> c.health >> c.mana >> c.energy >> c.satiety >> c.alertness >> c.busy_time;
+				in >> c.health >> c.mana >> c.energy >> c.satiety >> c.alertness >> c.busy_time >> c.dead;
 				return in;
 			}
 		};
@@ -187,6 +188,9 @@ namespace questless
 		/// @return The being's inventory.
 		Inventory& inventory() { return _inventory; }
 
+		/// @return The being's equipped shields.
+		const std::vector<std::unique_ptr<Armor>>& shields() { return _shields; }
+
 		/// Adds the given item to the being's inventory.
 		/// @param item An item to be added to the inventory.
 		void give_item(Item::ptr item) { _inventory.add(std::move(item)); }
@@ -209,6 +213,7 @@ namespace questless
 		double satiety() const { return _conditions.satiety; }
 		double alertness() const { return _conditions.alertness; }
 		double busy_time() const { return _conditions.busy_time; }
+		bool dead() const { return _conditions.dead; }
 
 		// Attribute accessors
 
@@ -266,6 +271,9 @@ namespace questless
 		void gain_busy_time(double amount);
 		void lose_busy_time(double amount);
 
+		void die() { _conditions.dead = true; }
+		void resurrect() { _conditions.dead = false; }
+
 		// Attribute mutators
 
 		void vitality(double value) { _attributes.vitality = value; }
@@ -302,7 +310,7 @@ namespace questless
 		/// Causes the being to take damage from the specified source being.
 		/// @param damage Damage to be applied to this being.
 		/// @param source_id The ID of the being which caused the damage, if any.
-		void take_damage(Damage& damage, optional<BeingId> source_id = nullopt);
+		void take_damage(Damage& damage, optional<BeingId> source_id);
 
 		/// Causes the being to be healed by the specified source being.
 		/// @param amount Health to be restored to this being.
@@ -342,7 +350,7 @@ namespace questless
 
 		Inventory _inventory;
 		std::vector<std::unique_ptr<Weapon>> _equipped_weapons;
-		std::vector<std::unique_ptr<Armor>> _equipped_amor;
+		std::vector<std::unique_ptr<Armor>> _shields;
 
 		// Methods
 

@@ -27,7 +27,7 @@ namespace questless
 		, _need_to_calculate_attributes{false}
 		, _base_attributes{base_attributes}
 		, _attributes{_base_attributes}
-		, _conditions{_base_attributes.vitality, _base_attributes.spirit, 0.0, 0.0, 0.0, 0}
+		, _conditions{_base_attributes.vitality, _base_attributes.spirit, 0.0, 0.0, 0.0, 0, false}
 	{}
 
 	Being::Being(Game& game, std::istream& in, Body body)
@@ -134,7 +134,7 @@ namespace questless
 		// Update body parts.
 
 		for (BodyPart& part : _body) {
-			part.update(*this);
+			part.update();
 		}
 
 		// Clamp conditions.
@@ -147,10 +147,10 @@ namespace questless
 		double temp = region().temperature(coords());
 		if (temp > max_temp()) {
 			auto burn = Damage::from_burn((temp - max_temp()) / (max_temp() - min_temp()) * temperature_damage_factor);
-			take_damage(burn);
+			take_damage(burn, nullopt);
 		} else if (temp < min_temp()) {
 			auto freeze = Damage::from_freeze((min_temp() - temp) / (max_temp() - min_temp()) * temperature_damage_factor);
-			take_damage(freeze);
+			take_damage(freeze, nullopt);
 		}
 
 		// Update items.
@@ -177,8 +177,9 @@ namespace questless
 
 		// Target loses health.
 		Damage damage_reduction = Damage::zero();
-		for (const auto& armor : _equipped_amor) {
-			damage_reduction += armor->apply(damage);
+		for (auto armor_it = _shields.rbegin(); armor_it != _shields.rend(); ++armor_it) {
+			// Apply shields in reverse order so more recently equipped shields wear sooner.
+			damage_reduction += (*armor_it)->apply(damage);
 		}
 		double applied_damage = (damage - damage_reduction).total() / (1.0 + endurance_factor * endurance());
 		lose_health(applied_damage);
@@ -191,7 +192,7 @@ namespace questless
 		}
 
 		// Check for death.
-		if (health() <= 0) {
+		if (health() <= 0 && !dead()) {
 			// Target will die.
 			before_die(source_id);
 			// Source will have killed target.
@@ -201,6 +202,7 @@ namespace questless
 			
 			// Target's death occurs here.
 			/// @todo Make corpse, or do whatever is appropriate for the type of being. (Add abstract base classes for Corporeal, Incorporeal, etc.?)
+			die();
 
 			// Source has killed target.
 			if (source != nullptr) {
@@ -209,8 +211,8 @@ namespace questless
 			// Target has died.
 			after_die(source_id);
 
-			// Remove from world.
-			region().remove(*this);
+			// Move to graveyard.
+			game().add_to_graveyard(std::move(region().remove(*this)));
 		}
 	}
 
@@ -347,6 +349,12 @@ namespace questless
 		_need_to_calculate_attributes = false;
 
 		_attributes = _base_attributes;
+
+		// Add body part attributes.
+		for (const BodyPart& part : _body) {
+			part.attributes();
+			/// @todo Add attributes.
+		}
 
 		// Apply status modifiers.
 		for (const auto& status : _statuses) {

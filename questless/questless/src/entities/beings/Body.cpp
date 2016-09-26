@@ -29,7 +29,7 @@ using std::make_shared;
 
 namespace questless
 {
-	Body::Body(std::unique_ptr<BodyPart> root) : _root{std::move(root)}
+	Body::Body(Being& owner, std::unique_ptr<BodyPart> root) : _owner{owner}, _root{std::move(root)}
 	{
 		int x_min = 0;
 		int y_min = 0;

@@ -539,42 +539,25 @@ namespace questless
 		// Update world renderer.
 		_world_renderer->update();
 
-		if (_input.down(SDLK_t)) {
-			_particles.emplace_back(make_unique<WhiteMagic>(_camera->pt_hovered()));
-			_particles.emplace_back(make_unique<WhiteMagic>(_camera->pt_hovered()));
-			_particles.emplace_back(make_unique<WhiteMagic>(_camera->pt_hovered()));
-		}
-		if (_input.down(SDLK_y)) {
-			_particles.emplace_back(make_unique<BlackMagic>(_camera->pt_hovered()));
-			_particles.emplace_back(make_unique<BlackMagic>(_camera->pt_hovered()));
-			_particles.emplace_back(make_unique<BlackMagic>(_camera->pt_hovered()));
-		}
-		if (_input.down(SDLK_u)) {
-			_particles.emplace_back(make_unique<GreenMagic>(_camera->pt_hovered()));
-			_particles.emplace_back(make_unique<GreenMagic>(_camera->pt_hovered()));
-			_particles.emplace_back(make_unique<GreenMagic>(_camera->pt_hovered()));
-		}
-		if (_input.down(SDLK_i)) {
-			_particles.emplace_back(make_unique<RedMagic>(_camera->pt_hovered()));
-			_particles.emplace_back(make_unique<RedMagic>(_camera->pt_hovered()));
-			_particles.emplace_back(make_unique<RedMagic>(_camera->pt_hovered()));
-		}
-		if (_input.down(SDLK_o)) {
-			_particles.emplace_back(make_unique<BlueMagic>(_camera->pt_hovered()));
-			_particles.emplace_back(make_unique<BlueMagic>(_camera->pt_hovered()));
-			_particles.emplace_back(make_unique<BlueMagic>(_camera->pt_hovered()));
-		}
-		if (_input.down(SDLK_p)) {
-			_particles.emplace_back(make_unique<YellowMagic>(_camera->pt_hovered()));
-			_particles.emplace_back(make_unique<YellowMagic>(_camera->pt_hovered()));
-			_particles.emplace_back(make_unique<YellowMagic>(_camera->pt_hovered()));
-		}
+		if (_input.down(SDLK_t))
+			for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<WhiteMagic>(_camera->pt_hovered()));
+		if (_input.down(SDLK_y))
+			for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<BlackMagic>(_camera->pt_hovered()));
+		if (_input.down(SDLK_u))
+			for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<GreenMagic>(_camera->pt_hovered()));
+		if (_input.down(SDLK_i))
+			for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<RedMagic>(_camera->pt_hovered()));
+		if (_input.down(SDLK_o))
+			for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<BlueMagic>(_camera->pt_hovered()));
+		if (_input.down(SDLK_p))
+			for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<YellowMagic>(_camera->pt_hovered()));
 
-		for (size_t i = 0; i < _particles.size(); ++i) {
+		for (size_t i = 0; i < _particles.size();) {
 			_particles[i]->update();
 			if (_particles[i]->dead()) {
 				_particles.erase(_particles.begin() + i);
-				--i;
+			} else {
+				++i;
 			}
 		}
 
@@ -619,19 +602,20 @@ namespace questless
 			follow = !follow;
 		}
 		if (follow) {
-			// Move 1/x of the way back to the default camera values.
-			double x = 5.0;
+			if (Being* player = being(_player_id)) {
+				constexpr double acceleration = 0.2;
 
-			VectorF to_player = PointF{Layout::dflt().to_world(being(_player_id)->coords().hex)} -_camera->position();
-			_camera->position(_camera->position() + to_player / x);
+				VectorF to_player = PointF{Layout::dflt().to_world(player->coords().hex)} -_camera->position();
+				_camera->position(_camera->position() + acceleration * to_player);
 
-			double to_zoom_1 = 1.0 - _camera->zoom();
-			_camera->zoom(_camera->zoom() + to_zoom_1 / x);
-			if (abs(_camera->zoom() - 1.0) < 0.001) {
-				_camera->zoom(1.0);
+				double to_zoom_1 = 1.0 - _camera->zoom();
+				_camera->zoom(_camera->zoom() + acceleration * to_zoom_1);
+				if (abs(_camera->zoom() - 1.0) < 0.001) {
+					_camera->zoom(1.0);
+				}
+
+				_camera->angle(_camera->angle() * (1 - acceleration));
 			}
-
-			_camera->angle(_camera->angle() * (1 - 1.0 / x));
 		}
 	}
 

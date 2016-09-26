@@ -13,7 +13,7 @@
 
 namespace questless
 {
-	void ModalWeapon::SwitchForm::perform(Being& actor, cont_t cont)
+	void ModalWeapon::SwitchForm::perform(Being& /*actor*/, cont_t cont)
 	{
 		/// @todo This.
 

@@ -99,6 +99,9 @@ namespace questless
 		Region& region() { return *_region; }
 		const Region& region() const { return *_region; }
 
+		/// Adds the given being to the graveyard.
+		void add_to_graveyard(Being::ptr being) { _graveyard.push_back(std::move(being)); }
+
 		/// Retrieves a pointer to the specified being from the global being directory, or nullptr if it doeesn't exist.
 		/// If the being exists but isn't in memory, it will be loaded.
 		/// @param id The ID of the being to retrieve.
@@ -237,6 +240,8 @@ namespace questless
 		std::vector<sdl::Point> _splash_flame_positions;
 
 		std::unique_ptr<Region> _region;
+
+		std::vector<Being::ptr> _graveyard;
 
 		clock::time_point _time_last_state_change;
 

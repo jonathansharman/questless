@@ -20,6 +20,7 @@ namespace questless
 	{
 	public:
 		using ptr = std::unique_ptr<Weapon>;
+		using ref = std::reference_wrapper<Weapon>;
 
 		virtual ~Weapon() = default;
 
