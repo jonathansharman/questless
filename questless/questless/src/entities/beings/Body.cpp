@@ -8,24 +8,13 @@
 */
 
 #include <deque>
-using std::deque;
-#include <functional>
-using std::function;
-#include <type_traits>
-using std::reference_wrapper;
 #include <algorithm>
-using std::min;
-using std::max;
 #include <memory>
-using std::make_shared;
 
 #include "entities/beings/Body.h"
 #include "entities/beings/BodyPart.h"
 
 using namespace sdl;
-
-using std::shared_ptr;
-using std::make_shared;
 
 namespace questless
 {
@@ -37,7 +26,7 @@ namespace questless
 		int y_max = 0;
 
 		// Walk the parts tree to build the parts lists and compute bounds.
-		deque<BodyPart::ref> work_list;
+		std::deque<BodyPart::ref> work_list;
 		work_list.push_back(*_root);
 		while (!work_list.empty()) {
 			BodyPart& part = work_list.front();
@@ -46,10 +35,10 @@ namespace questless
 			part.accept(attacher);
 
 			for (Rect region : part.regions()) {
-				x_min = min(x_min, region.x);
-				x_max = max(x_max, region.right());
-				y_min = min(y_min, region.y);
-				y_max = max(y_max, region.bottom());
+				x_min = std::min(x_min, region.x);
+				x_max = std::max(x_max, region.right());
+				y_min = std::min(y_min, region.y);
+				y_max = std::max(y_max, region.bottom());
 			}
 
 			// Remove current part from work list and add its children.

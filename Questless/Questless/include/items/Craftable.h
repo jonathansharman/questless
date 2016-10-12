@@ -25,7 +25,7 @@ namespace questless
 		enum class Action {mix, boil, smoke, crush};
 	protected:
 		Action _action;
-		vector<shared_ptr<Item>> _ingredients;
+		/// @todo Ingredients?
 	};
 }
 

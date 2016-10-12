@@ -38,9 +38,9 @@ namespace questless
 
 	void DigraphMenuController::add_option(const string& page_title, const string& option_name)
 	{
-		optional<int> page_index = find(page_title);
+		boost::optional<int> page_index = find(page_title);
 		if (page_index) {
-			_menu.pages[page_index.value()].options.push_back(DigraphMenuModel::Page::Option(option_name, nullopt));
+			_menu.pages[page_index.value()].options.push_back(DigraphMenuModel::Page::Option(option_name, boost::none));
 			_view.invalidate_render();
 		} else {
 			throw invalid_argument("Attempted to add an option to a nonexistent menu page.");
@@ -49,9 +49,9 @@ namespace questless
 
 	void DigraphMenuController::add_option(const string& location_page_title, const string& option_name, const string& target_page_title)
 	{
-		optional<int> location_page_index = find(location_page_title);
+		boost::optional<int> location_page_index = find(location_page_title);
 		if (location_page_index) {
-			optional<int> target_index = find(target_page_title);
+			boost::optional<int> target_index = find(target_page_title);
 			if (target_index) {
 				_menu.pages[location_page_index.value()].options.push_back(DigraphMenuModel::Page::Option(option_name, target_index.value()));
 				_view.invalidate_render();
@@ -76,7 +76,7 @@ namespace questless
 	
 	void DigraphMenuController::set_option(const string& page_title, unsigned option_index)
 	{
-		optional<int> page_index = find(page_title);
+		boost::optional<int> page_index = find(page_title);
 		if (!page_index) {
 			throw invalid_argument("Attempted to set the option of a nonexistent menu page.");
 		} else {
@@ -102,7 +102,7 @@ namespace questless
 
 		// Get index of option over which the mouse is hovering, if any.
 
-		optional<int> hovered_option_index = nullopt;
+		boost::optional<int> hovered_option_index = boost::none;
 		Point position = _view.content_position();
 		position.y += DigraphMenuView::title_height;
 		for (size_t i = 0; i < current_options().size(); ++i) {
@@ -170,13 +170,13 @@ namespace questless
 		_view.draw();
 	}
 
-	optional<int> DigraphMenuController::find(const string& page_title)
+	boost::optional<int> DigraphMenuController::find(const string& page_title)
 	{
 		for (unsigned i = 0; i < _menu.pages.size(); ++i) {
 			if (_menu.pages[i].title == page_title) {
 				return i;
 			}
 		}
-		return nullopt;
+		return boost::none;
 	}
 }

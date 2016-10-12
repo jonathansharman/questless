@@ -271,9 +271,6 @@
     <ClInclude Include="include\utility\Frequency.h">
       <Filter>include\utility</Filter>
     </ClInclude>
-    <ClInclude Include="include\utility\optional.h">
-      <Filter>include\utility</Filter>
-    </ClInclude>
     <ClInclude Include="include\utility\PointF.h">
       <Filter>include\utility</Filter>
     </ClInclude>
@@ -491,6 +488,9 @@
       <Filter>include\agents</Filter>
     </ClInclude>
     <ClInclude Include="include\entities\beings\BodyPartVisitor.h">
+      <Filter>include\entities\beings</Filter>
+    </ClInclude>
+    <ClInclude Include="include\entities\beings\DamageMultiplier.h">
       <Filter>include\entities\beings</Filter>
     </ClInclude>
   </ItemGroup>

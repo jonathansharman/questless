@@ -12,6 +12,8 @@
 
 #include "spells/Spell.h"
 
+/// @todo Combine this file with MagicResistance using a common template Magic<T>, with T = Resistance or Power (will need to choose a different name for resistance probably).
+
 namespace questless
 {
 	struct MagicPower
@@ -27,14 +29,14 @@ namespace questless
 		template <typename BeingType>
 		static MagicPower of()
 		{
-			using t = BeingType;
+			using T = BeingType;
 			return MagicPower
-				{ t::base_white_power
-				, t::base_black_power
-				, t::base_green_power
-				, t::base_red_power
-				, t::base_blue_power
-				, t::base_yellow_power
+				{ T::base_white_power
+				, T::base_black_power
+				, T::base_green_power
+				, T::base_red_power
+				, T::base_blue_power
+				, T::base_yellow_power
 				};
 		}
 

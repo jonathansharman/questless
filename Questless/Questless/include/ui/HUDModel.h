@@ -12,9 +12,10 @@
 
 #include <array>
 
+#include <boost/optional.hpp>
+
 #include "entities/beings/BeingId.h"
 #include "items/Inventory.h"
-#include "utility/optional.h"
 
 namespace questless
 {
@@ -28,8 +29,8 @@ namespace questless
 
 		// Data
 
-		optional<BeingId> player_id = nullopt;
-		std::array<optional<Inventory::Coords>, hotbar_size> hotbar;
+		boost::optional<BeingId> player_id = boost::none;
+		std::array<boost::optional<Inventory::Coords>, hotbar_size> hotbar;
 
 		bool inv_open = false;
 		size_t inv_page = 0;

@@ -55,7 +55,7 @@ namespace questless
 
 			std::string name() const override { return "Drop"; }
 
-			void perform(Being& actor, cont_t cont) override;
+			Action::Complete perform(Being& actor, cont_t cont) override;
 		private:
 			Item& _item;
 		};
@@ -69,10 +69,10 @@ namespace questless
 
 			std::string name() const override { return "Throw"; }
 
-			void perform(Being& /*actor*/, cont_t cont) override
+			Action::Complete perform(Being& /*actor*/, cont_t cont) override
 			{
 				/// @todo This.
-				cont(Result::success);
+				return cont(Result::success);
 			}
 		private:
 			Item& _item;

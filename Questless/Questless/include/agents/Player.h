@@ -23,68 +23,68 @@ namespace questless
 
 		// Queries and messages
 
-		void message
+		Action::Complete message
 			( const std::string& title
 			, const std::string& prompt
-			, std::function<void()> cont
+			, std::function<Action::Complete()> cont
 			) const override;
 
-		void query_count
+		Action::Complete query_count
 			( const std::string& title
 			, const std::string& prompt
 			, int default
-			, optional<int> min
-			, optional<int> max
-			, std::function<void(optional<int>)> cont
+			, boost::optional<int> min
+			, boost::optional<int> max
+			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override;
-		void query_count
+		Action::Complete query_count
 			( const std::string& title
 			, const std::string& prompt
 			, int default
 			, std::function<bool(int)> predicate
-			, std::function<void(optional<int>)> cont
+			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override;
 
-		void query_duration
+		Action::Complete query_duration
 			( const std::string& title
 			, const std::string& prompt
-			, std::function<void(optional<int>)> cont
+			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override;
 
-		void query_magnitude
+		Action::Complete query_magnitude
 			( const std::string& title
 			, const std::string& prompt
 			, double default
 			, std::function<bool(double)> predicate
-			, std::function<void(optional<double>)> cont
+			, std::function<Action::Complete(boost::optional<double>)> cont
 			) const override;
 
-		void query_tile
+		Action::Complete query_tile
 			( const std::string& title
 			, const std::string& prompt
 			, std::function<bool(RegionTileCoords)> predicate
-			, std::function<void(optional<RegionTileCoords>)> cont
+			, std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont
 			) const override;
 
-		void query_being
+		Action::Complete query_being
 			( const std::string& title
 			, const std::string& prompt
 			, std::function<bool(Being&)> predicate
-			, std::function<void(optional<Being*>)> cont
+			, std::function<Action::Complete(boost::optional<Being*>)> cont
 			) const override;
 
-		void query_range
+		Action::Complete query_range
 			( const std::string& title
 			, const std::string& prompt
-			, std::function<void(optional<int>)> cont
+			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override;
 
-		void query_item
+		Action::Complete query_item
 			( const std::string& title
 			, const std::string& prompt
 			, Being& source
 			, std::function<bool(Being&)> predicate
-			, std::function<void(optional<Item*>)> cont
+			, std::function<Action::Complete(boost::optional<Item*>)> cont
 			) const override;
 	};
 }

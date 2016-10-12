@@ -17,6 +17,8 @@
 #include "MagicPower.h"
 #include "MagicResistance.h"
 #include "utility/constants.h"
+#include "entities/beings/Protection.h"
+#include "entities/beings/DamageMultiplier.h"
 
 namespace questless
 {
@@ -291,8 +293,11 @@ namespace questless
 		double max_temp;
 		bool mute;
 
-		MagicPower magic_power;
+		Protection protection;
+		Resistance resistance;
+		Vulnerability vulnerability;
 
+		MagicPower magic_power;
 		MagicResistance magic_resistance;
 
 		///////////////////////
@@ -303,20 +308,20 @@ namespace questless
 		template <typename BeingType>
 		static Attributes of()
 		{
-			using t = BeingType;
-			return Attributes{t::base_vitality, t::base_spirit, t::base_health_regen, t::base_mana_regen, t::base_strength, t::base_endurance, t::base_stamina,
-				t::base_agility, t::base_dexterity, t::base_stealth, Vision::of<t>(), t::base_hearing, t::base_intellect, t::base_lift,
-				t::base_min_temp, t::base_max_temp, t::base_mute, MagicPower::of<t>(), MagicResistance::of<t>()};
+			using T = BeingType;
+			return Attributes{T::base_vitality, T::base_spirit, T::base_health_regen, T::base_mana_regen, T::base_strength, T::base_endurance, T::base_stamina,
+				T::base_agility, T::base_dexterity, T::base_stealth, Vision::of<T>(), T::base_hearing, T::base_intellect, T::base_lift, T::base_min_temp,
+				T::base_max_temp, T::base_mute, Protection::of<T>(), Resistance::of<T>(), Vulnerability::of<T>(), MagicPower::of<T>(), MagicResistance::of<T>()};
 		}
 
 		Attributes() {}
 
 		Attributes(double vitality, double spirit, double health_regen, double mana_regen, double strength, double endurance, double stamina,
-			double agility, double dexterity, double stealth, Vision vision, double hearing, double intellect, double lift,
-			double min_temp, double max_temp, bool mute, MagicPower magic_power, MagicResistance magic_resistance)
-			: vitality{vitality}, spirit{spirit}, health_regen{health_regen}, mana_regen{mana_regen}, strength{strength}, endurance{endurance},
-			stamina{stamina}, agility{agility}, dexterity{dexterity}, stealth{stealth}, vision{vision}, hearing{hearing}, intellect{intellect},
-			lift{lift}, min_temp{min_temp}, max_temp{max_temp}, mute{mute}, magic_power{magic_power}, magic_resistance{magic_resistance}
+			double agility, double dexterity, double stealth, Vision vision, double hearing, double intellect, double lift, double min_temp, double max_temp,
+			bool mute, Protection protection, Resistance resistance, Vulnerability vulnerability, MagicPower magic_power, MagicResistance magic_resistance)
+			: vitality{vitality}, spirit{spirit}, health_regen{health_regen}, mana_regen{mana_regen}, strength{strength}, endurance{endurance}, stamina{stamina},
+			agility{agility}, dexterity{dexterity}, stealth{stealth}, vision{vision}, hearing{hearing}, intellect{intellect}, lift{lift}, min_temp{min_temp}, max_temp{max_temp},
+			mute{mute}, protection{protection}, resistance{resistance}, vulnerability{vulnerability}, magic_power{magic_power}, magic_resistance{magic_resistance}
 		{}
 
 		friend std::ostream& operator <<(std::ostream& out, const Attributes& a)

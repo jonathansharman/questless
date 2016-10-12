@@ -109,11 +109,11 @@ namespace questless
 
 			std::string name() const override { return _name; }
 
-			void perform(Being& actor, cont_t cont) override
+			Action::Complete perform(Being& actor, cont_t cont) override
 			{
 				_weapon._form = std::make_unique<TargetForm>(_weapon);
 				actor.gain_busy_time(_weapon.switch_time());
-				cont(Result::success);
+				return cont(Result::success);
 			}
 		private:
 			Quarterstaff& _weapon;

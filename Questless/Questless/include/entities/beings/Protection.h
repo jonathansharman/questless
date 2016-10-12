@@ -4,7 +4,7 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION The Protection type, which encapsulates damage mitigation.
+* @section DESCRIPTION Protection reduces damage by a fixed amount.
 */
 
 #ifndef PROTECTION_H
@@ -35,9 +35,44 @@ namespace questless
 		double frostproof;
 		double cleanse;
 
-		Protection(double pad, double deflect, double fireproof, double frostproof, double cleanse)
+		constexpr Protection() : pad{0.0}, deflect{0.0}, fireproof{0.0}, frostproof{0.0}, cleanse{0.0} {}
+
+		constexpr Protection(double pad, double deflect, double fireproof, double frostproof, double cleanse)
 			: pad{pad}, deflect{deflect}, fireproof{fireproof}, frostproof{frostproof}, cleanse{cleanse}
 		{}
+
+		static constexpr Protection zero() { return Protection{}; }
+		static constexpr Protection from_pad(double pad) { return Protection{pad, 0.0, 0.0, 0.0, 0.0}; }
+		static constexpr Protection from_deflect(double deflect) { return Protection{0.0, deflect, 0.0, 0.0, 0.0}; }
+		static constexpr Protection from_fireproof(double fireproof) { return Protection{0.0, 0.0, fireproof, 0.0, 0.0}; }
+		static constexpr Protection from_frostproof(double frostproof) { return Protection{0.0, 0.0, 0.0, frostproof, 0.0}; }
+		static constexpr Protection from_cleanse(double cleanse) { return Protection{0.0, 0.0, 0.0, 0.0, cleanse}; }
+
+		/// @return The base protection of the given Being subclass.
+		template <typename BeingType>
+		static Protection of()
+		{
+			using T = BeingType;
+			return Protection
+				{ T::pad
+				, T::deflect
+				, T::fireproof
+				, T::frostproof
+				, T::cleanse
+				};
+		}
+
+		friend std::ostream& operator <<(std::ostream& out, const Protection& p)
+		{
+			out << p.pad << ' ' << p.deflect << ' ' << p.fireproof << ' ' << p.frostproof << ' ' << p.cleanse;
+			return out;
+		}
+
+		friend std::istream& operator >> (std::istream& in, Protection& p)
+		{
+			in >> p.pad >> p.deflect >> p.fireproof >> p.frostproof >> p.cleanse;
+			return in;
+		}
 
 		friend Protection operator +(const Protection& p1, const Protection& p2)
 		{

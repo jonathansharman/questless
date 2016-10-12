@@ -10,11 +10,11 @@
 #ifndef PLAYER_ACTION_DIALOG_H
 #define PLAYER_ACTION_DIALOG_H
 
+#include <boost/optional.hpp>
+
 #include "Dialog.h"
 #include "HUDController.h"
 #include "utility/utility.h"
-
-#include "utility/optional.h"
 
 namespace questless
 {

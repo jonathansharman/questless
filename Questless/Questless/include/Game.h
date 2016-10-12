@@ -63,33 +63,34 @@ namespace questless
 
 		// Dialogs
 
-		void message(std::string title, std::string prompt, std::function<void()> cont);
-
 		void query_player_choice(std::function<void(PlayerActionDialog::Choice)> cont);
 
+		Action::Complete message(std::string title, std::string prompt, std::function<Action::Complete()> cont);
+
 		template <typename ItemType>
-		void query_list
+		Action::Complete query_list
 			( sdl::Point origin
 			, std::string title
 			, std::vector<ItemType> options
 			, std::function<std::string(const ItemType&)> item_to_name
-			, std::function<void(optional<ItemType>)> cont
+			, std::function<Action::Complete(boost::optional<ItemType>)> cont
 			)
 		{
 			auto dialog = std::make_unique<ListDialog<ItemType>>(origin, std::move(title), std::move(options), std::move(item_to_name), std::move(cont));
 			_dialogs.push_back(std::move(dialog));
+			return Action::Complete{};
 		}
 
-		void query_count(std::string title, std::string prompt, int default, optional<int> min, optional<int> max, std::function<void(optional<int>)> cont);
-		void query_count(std::string title, std::string prompt, int default, std::function<bool(int)> predicate, std::function<void(optional<int>)> cont);
+		Action::Complete query_count(std::string title, std::string prompt, int default, boost::optional<int> min, boost::optional<int> max, std::function<Action::Complete(boost::optional<int>)> cont);
+		Action::Complete query_count(std::string title, std::string prompt, int default, std::function<bool(int)> predicate, std::function<Action::Complete(boost::optional<int>)> cont);
 
-		void query_magnitude(std::string title, std::string prompt, double default, std::function<bool(double)> predicate, std::function<void(optional<double>)> cont);
+		Action::Complete query_magnitude(std::string title, std::string prompt, double default, std::function<bool(double)> predicate, std::function<Action::Complete(boost::optional<double>)> cont);
 
-		void query_tile(std::string title, std::string prompt, std::function<bool(RegionTileCoords)> predicate, std::function<void(optional<RegionTileCoords>)> cont);
+		Action::Complete query_tile(std::string title, std::string prompt, std::function<bool(RegionTileCoords)> predicate, std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont);
 
-		void query_being(std::string title, std::string prompt, std::function<bool(Being&)> predicate, std::function<void(optional<Being*>)> cont);
+		Action::Complete query_being(std::string title, std::string prompt, std::function<bool(Being&)> predicate, std::function<Action::Complete(boost::optional<Being*>)> cont);
 
-		void query_item(std::string title, std::string prompt, Being& source, std::function<bool(Being&)> predicate, std::function<void(optional<Item*>)> cont);
+		Action::Complete query_item(std::string title, std::string prompt, Being& source, std::function<bool(Being&)> predicate, std::function<Action::Complete(boost::optional<Item*>)> cont);
 
 		// Accessors
 

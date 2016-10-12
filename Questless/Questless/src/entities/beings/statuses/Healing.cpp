@@ -14,6 +14,6 @@ namespace questless
 {
 	void Healing::subupdate(Being& target)
 	{
-		target.heal(_magnitude, source());
+		target.heal(_magnitude, boost::none, source());
 	}
 }

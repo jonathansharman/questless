@@ -91,7 +91,7 @@ namespace questless
 			}
 		} else {
 			for (size_t i = 0; i < HUDModel::hotbar_size; ++i) {
-				_hud.hotbar[i] = nullopt;
+				_hud.hotbar[i] = boost::none;
 			}
 		}
 	}

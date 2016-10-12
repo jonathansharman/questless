@@ -277,6 +277,11 @@ Weapons
 				Damage type: piercing
 			Cutlass
 			Xiphos
+			Fireblade
+				Deals burn and slash or pierce damage
+				Very low weight
+				Costs mana over time while equipped
+				Cannot parry
 		Hacking weapons
 			Battle axe
 				Hands: 2

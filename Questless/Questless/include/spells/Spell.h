@@ -13,7 +13,7 @@
 #include <string>
 #include <memory>
 
-#include "utility/optional.h"
+#include <boost/optional.hpp>
 
 #include "entities/beings/Action.h"
 
@@ -34,7 +34,7 @@ namespace questless
 		virtual Color color() const = 0;
 
 		/// @return The maximum number of charges the spell can hold or nullopt if the spell has infinite charges.
-		virtual optional<int> max_charges() const = 0;
+		virtual boost::optional<int> max_charges() const = 0;
 
 		/// @return The current number of spell charges.
 		int charges() const{ return _charges; }

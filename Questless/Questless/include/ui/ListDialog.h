@@ -26,7 +26,7 @@ namespace questless
 			, std::string title
 			, std::vector<ItemType> options
 			, std::function<std::string(const ItemType&)> item_to_name
-			, std::function<void(optional<ItemType>)> cont
+			, std::function<void(boost::optional<ItemType>)> cont
 			)
 			: _bounds{origin.x, origin.y, 0, 0}
 			, _title{std::move(title)}
@@ -44,7 +44,7 @@ namespace questless
 		{
 			if (input.presses(SDLK_BACKSPACE) || input.presses(SDLK_ESCAPE)) {
 				close();
-				return _cont(nullopt);
+				return _cont(boost::none);
 			}
 
 			const size_t option_count = _options.size();
@@ -114,7 +114,7 @@ namespace questless
 		std::string _title;
 		std::vector<ItemType> _options;
 		std::function<std::string(const ItemType&)> _item_to_name;
-		std::function<void(optional<ItemType>)> _cont;
+		std::function<void(boost::optional<ItemType>)> _cont;
 
 		sdl::Texture::ptr _txt_title;
 		std::vector<sdl::Texture::ptr> _txt_options;

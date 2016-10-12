@@ -13,10 +13,11 @@
 #include <functional>
 #include <stdexcept>
 
+#include <boost/optional.hpp>
+
 #include "entities/beings/Being.h"
 #include "entities/beings/WorldView.h"
 #include "items/Item.h"
-#include "utility/optional.h"
 
 namespace questless
 {
@@ -48,68 +49,68 @@ namespace questless
 
 		// Queries and messages
 
-		virtual void message
+		virtual Action::Complete message
 			( const std::string& title
 			, const std::string& prompt
-			, std::function<void()> cont
+			, std::function<Action::Complete()> cont
 			) const = 0;
 
-		virtual void query_count
+		virtual Action::Complete query_count
 			( const std::string& title
 			, const std::string& prompt
 			, int default
-			, optional<int> min
-			, optional<int> max
-			, std::function<void(optional<int>)> cont
+			, boost::optional<int> min
+			, boost::optional<int> max
+			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const = 0;
-		virtual void query_count
+		virtual Action::Complete query_count
 			( const std::string& title
 			, const std::string& prompt
 			, int default
 			, std::function<bool(int)> predicate
-			, std::function<void(optional<int>)> cont
+			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const = 0;
 
-		virtual void query_duration
+		virtual Action::Complete query_duration
 			( const std::string& title
 			, const std::string& prompt
-			, std::function<void(optional<int>)> cont
+			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const = 0;
 
-		virtual void query_magnitude
+		virtual Action::Complete query_magnitude
 			( const std::string& title
 			, const std::string& prompt
 			, double default
 			, std::function<bool(double)> predicate
-			, std::function<void(optional<double>)> cont
+			, std::function<Action::Complete(boost::optional<double>)> cont
 			) const = 0;
 
-		virtual void query_tile
+		virtual Action::Complete query_tile
 			( const std::string& title
 			, const std::string& prompt
 			, std::function<bool(RegionTileCoords)> predicate
-			, std::function<void(optional<RegionTileCoords>)> cont
+			, std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont
 			) const = 0;
 
-		virtual void query_being
+		virtual Action::Complete query_being
 			( const std::string& title
 			, const std::string& prompt
 			, std::function<bool(Being&)> predicate
-			, std::function<void(optional<Being*>)> cont
+			, std::function<Action::Complete(boost::optional<Being*>)> cont
 			) const = 0;
 
-		virtual void query_range
+		virtual Action::Complete query_range
 			( const std::string& title
 			, const std::string& prompt
-			, std::function<void(optional<int>)> cont
+			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const = 0;
 
-		virtual void query_item
+		virtual Action::Complete query_item
 			( const std::string& title
 			, const std::string& prompt
 			, Being& source
 			, std::function<bool(Being&)> predicate
-			, std::function<void(optional<Item*>)> cont
+			, std::function<Action::Complete(boost::optional<Item*>)> cont
 			) const = 0;
 	private:
 		Being& _being;

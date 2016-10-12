@@ -37,6 +37,26 @@ namespace questless
 		static constexpr double base_max_temp = 100.0;
 		static constexpr bool base_mute = false;
 
+		static constexpr double pad = 0.0;
+		static constexpr double deflect = 0.0;
+		static constexpr double fireproof = 0.0;
+		static constexpr double frostproof = 0.0;
+		static constexpr double cleanse = 0.0;
+
+		static constexpr double slash_resistance = 0.0;
+		static constexpr double pierce_resistance = 0.0;
+		static constexpr double bludgeon_resistance = 0.0;
+		static constexpr double burn_resistance = 0.0;
+		static constexpr double freeze_resistance = 0.0;
+		static constexpr double blight_resistance = 0.0;
+
+		static constexpr double slash_vulnerability = 0.0;
+		static constexpr double pierce_vulnerability = 0.0;
+		static constexpr double bludgeon_vulnerability = 0.0;
+		static constexpr double burn_vulnerability = 0.0;
+		static constexpr double freeze_vulnerability = 0.0;
+		static constexpr double blight_vulnerability = 0.0;
+
 		static constexpr double base_white_power = 100.0;
 		static constexpr double base_black_power = 100.0;
 		static constexpr double base_green_power = 100.0;

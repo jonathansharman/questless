@@ -49,7 +49,7 @@ namespace questless
 		out << _conditions << ' ';
 	}
 
-	double Being::power(Spell::Color color) const
+	double Being::magic_power(Spell::Color color) const
 	{
 		switch (color) {
 			case Spell::Color::white:  return _attributes.magic_power.white;
@@ -62,7 +62,7 @@ namespace questless
 		}
 	}
 
-	double Being::resistance(Spell::Color color) const
+	double Being::magic_resistance(Spell::Color color) const
 	{
 		switch (color) {
 			case Spell::Color::white:  return _attributes.magic_resistance.white;
@@ -75,7 +75,7 @@ namespace questless
 		}
 	}
 
-	void Being::power(Spell::Color color, double value)
+	void Being::magic_power(Spell::Color color, double value)
 	{
 		switch (color) {
 			case Spell::Color::white:  _attributes.magic_power.white = value;
@@ -88,7 +88,7 @@ namespace questless
 		}
 	}
 
-	void Being::resistance(Spell::Color color, double value)
+	void Being::magic_resistance(Spell::Color color, double value)
 	{
 		switch (color) {
 			case Spell::Color::white:  _attributes.magic_resistance.white = value;
@@ -147,10 +147,10 @@ namespace questless
 		double temp = region().temperature(coords());
 		if (temp > max_temp()) {
 			auto burn = Damage::from_burn((temp - max_temp()) / (max_temp() - min_temp()) * temperature_damage_factor);
-			take_damage(burn, nullopt);
+			take_damage(burn, boost::none, boost::none);
 		} else if (temp < min_temp()) {
 			auto freeze = Damage::from_freeze((min_temp() - temp) / (max_temp() - min_temp()) * temperature_damage_factor);
-			take_damage(freeze, nullopt);
+			take_damage(freeze, boost::none, boost::none);
 		}
 
 		// Update items.
@@ -160,83 +160,132 @@ namespace questless
 		}
 	}
 
-	void Being::take_damage(Damage& damage, optional<BeingId> source_id)
+	void Being::take_damage(Damage& damage, boost::optional<BodyPart::ref> opt_part, boost::optional<BeingId> opt_source_id)
 	{
 		// Get source.
-		Being* source = nullptr;
-		if (source_id) {
-			source = game().being(*source_id);
-		}
+		Being* source = opt_source_id ? game().being(*opt_source_id) : nullptr;
 
 		// Target will take damage.
-		before_take_damage(damage, source_id);
-		// Source will deal damage.
-		if (source != nullptr) {
-			source->before_deal_damage(damage, id());
-		}
+		if (before_take_damage(damage, opt_part, opt_source_id)) {
+			// Source, if present, will deal damage.
+			if (!source || source->before_deal_damage(damage, opt_part, id())) {
+				// Initialize total resistance and vulnerability to the being's resistance/vulnerability attributes.
+				auto total_resistance = resistance();
+				auto total_vulnerability = vulnerability();
 
-		// Target loses health.
-		Damage damage_reduction = Damage::zero();
-		for (auto armor_it = _shields.rbegin(); armor_it != _shields.rend(); ++armor_it) {
-			// Apply shields in reverse order so more recently equipped shields wear sooner.
-			damage_reduction += (*armor_it)->apply(damage);
-		}
-		double applied_damage = (damage - damage_reduction).total() / (1.0 + endurance_factor * endurance());
-		lose_health(applied_damage);
+				// First, apply shields' protection, in reverse order so that more recently equipped shields wear sooner.
+				for (auto shields_it = _shields.rbegin(); shields_it != _shields.rend(); ++shields_it) {
+					Armor& shield = **shields_it;
+					shield.apply_protection(damage);
+					total_resistance += shield.resistance();
+				}
 
-		// Target has taken damage.
-		after_take_damage(damage, source_id);
-		// Source has dealt damage.
-		if (source != nullptr) {
-			source->after_deal_damage(damage, id());
-		}
+				// Shields take resistance wear based on damage after shield protection is applied.
+				for (const auto& shield : shields()) {
+					shield->take_resistance_wear(damage);
+				}
 
-		// Check for death.
-		if (health() <= 0 && !dead()) {
-			// Target will die.
-			before_die(source_id);
-			// Source will have killed target.
-			if (source != nullptr) {
-				source->before_kill(id());
+				if (opt_part) {
+					// Damage is part-targeted.
+					BodyPart& part = *opt_part;
+
+					// Apply part's armor's protection, also in reverse order.
+					for (auto armor_it = part.armor().rbegin(); armor_it != part.armor().rend(); ++armor_it) {
+						Armor& armor = *armor_it;
+						armor.apply_protection(damage);
+						total_resistance += armor.resistance();
+					}
+
+					// Apply part's and being's protection attributes.
+					damage -= part.protection().reduction() + protection().reduction();
+
+					// Part's armor takes resistance wear based on the final damage to the part before multipliers.
+					for (Armor& armor : part.armor()) {
+						armor.take_resistance_wear(damage);
+					}
+
+					// Add part's resistance and vulnerability attributes to totals.
+					total_resistance += part.resistance();
+					total_vulnerability += part.vulnerability();
+
+					// Part and being lose health.
+					double health_lost = damage.with(total_resistance, total_vulnerability).total() / (1.0 + endurance_factor * endurance());
+					part.lose_health(health_lost);
+					lose_health(health_lost);
+
+					// Check for part disability.
+					if (part.health() <= 0) {
+						/// @todo Disable part.
+						if (part.vital()) {
+							die();
+						}
+					}
+				} else {
+					// Damage is non-part-targeted.
+
+					// Apply being's protection attribute.
+					damage -= protection().reduction();
+
+					// Being loses health.
+					double health_lost = damage.with(total_resistance, total_vulnerability).total() / (1.0 + endurance_factor * endurance());
+					lose_health(health_lost);
+				}
+
+				// Target has taken damage.
+				if (after_take_damage(damage, opt_part, opt_source_id)) {
+					// Source, if present, has dealt damage.
+					if (!source || source->after_deal_damage(damage, opt_part, id())) {
+						// If target took fatal damage, mark it dead.
+						if (health() <= 0) {
+							die();
+						}
+						// Handle death, if target has been marked dead.
+						if (dead()) {
+							// Target will die.
+							if (before_die(opt_source_id)) {
+								// Source, if present, will have killed target.
+								if (!source || source->before_kill(id())) {
+									// Target's death succeeded.
+									// Move it to the graveyard.
+									game().add_to_graveyard(std::move(region().remove(*this)));
+									/// @todo Make corpse, or do whatever is appropriate for the type of being. (Add abstract base classes for Corporeal, Incorporeal, etc.?)
+
+									// Source, if present, has killed target.
+									if (!source || source->after_kill(id())) {
+										// Target has died.
+										if (after_die(opt_source_id)) {
+											return;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
-			
-			// Target's death occurs here.
-			/// @todo Make corpse, or do whatever is appropriate for the type of being. (Add abstract base classes for Corporeal, Incorporeal, etc.?)
-			die();
-
-			// Source has killed target.
-			if (source != nullptr) {
-				source->after_kill(id());
-			}
-			// Target has died.
-			after_die(source_id);
-
-			// Move to graveyard.
-			game().add_to_graveyard(std::move(region().remove(*this)));
 		}
 	}
 
-	void Being::heal(double amount, optional<BeingId> source_id)
+	void Being::heal(double amount, boost::optional<BodyPart::ref> opt_part, boost::optional<BeingId> opt_source_id)
 	{
+		/// @todo Heal the part, if present.
+
 		// Get source.
-		Being* source = nullptr;
-		if (source_id) {
-			source = game().being(*source_id);
-		}
+		Being* source = opt_source_id ? game().being(*opt_source_id) : nullptr;
 
 		// Source will give healing.
 		if (source != nullptr) {
-			source->before_give_heal(amount, id());
+			source->before_give_heal(amount, opt_part, id());
 		}
 		// Target will receive healing.
-		before_receive_heal(amount, source_id);
+		before_receive_heal(amount, opt_part, opt_source_id);
 		// Target gains health.
 		gain_health(amount);
 		// Target has received healing.
-		after_receive_heal(amount, source_id);
+		after_receive_heal(amount, opt_part, opt_source_id);
 		// Source has given healing.
 		if (source != nullptr) {
-			source->after_give_heal(amount, id());
+			source->after_give_heal(amount, opt_part, id());
 		}
 	}
 

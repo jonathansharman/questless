@@ -24,10 +24,10 @@ namespace questless
 			( std::string title
 			, std::string prompt
 			, double default
-			, optional<double> min
-			, optional<double> max
+			, boost::optional<double> min
+			, boost::optional<double> max
 			, std::function<bool(double)> predicate
-			, std::function<void(optional<double>)> cont
+			, std::function<void(boost::optional<double>)> cont
 			)
 			: _title{std::move(title)}
 			, _prompt{std::move(prompt)}
@@ -51,10 +51,10 @@ namespace questless
 		std::string _title;
 		std::string _prompt;
 		double _magnitude;
-		optional<double> _min;
-		optional<double> _max;
+		boost::optional<double> _min;
+		boost::optional<double> _max;
 		std::function<bool(double)> _predicate;
-		std::function<void(optional<double>)> _cont;
+		std::function<void(boost::optional<double>)> _cont;
 
 		sdl::Texture::ptr _txt_title;
 		sdl::Texture::ptr _txt_prompt;

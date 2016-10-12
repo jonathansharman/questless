@@ -18,35 +18,35 @@
 
 namespace questless
 {
-	void LightningBoltSpell::perform(Being& caster, cont_t cont)
+	Action::Complete LightningBoltSpell::perform(Being& caster, cont_t cont)
 	{
 		if (active_cooldown() > 0.0) {
-			return caster.agent().message("This spell is on cooldown.", "This spell will be ready in " + std::to_string(active_cooldown()) + ".", [cont] { cont(Result::aborted); });
+			return caster.agent().message("This spell is on cooldown.", "This spell will be ready in " + std::to_string(active_cooldown()) + ".", [cont] { return cont(Result::aborted); });
 		}
 		if (charges() <= 0) {
-			return caster.agent().message("Out of charges!", "You need incant this spell first.", [cont] { cont(Result::aborted); });
+			return caster.agent().message("Out of charges!", "You need incant this spell first.", [cont] { return cont(Result::aborted); });
 		}
-		caster.agent().query_tile("Lightning Bolt Target", "Select a tile to be zapped with a lightning bolt.", tile_in_range_predicate(caster, _range),
-			[this, &caster, cont](optional<RegionTileCoords> opt_tile_coords) {
+		return caster.agent().query_tile("Lightning Bolt Target", "Select a tile to be zapped with a lightning bolt.", tile_in_range_predicate(caster, _range),
+			[this, &caster, cont](boost::optional<RegionTileCoords> opt_tile_coords) {
 				if (!opt_tile_coords) {
 					return cont(Result::aborted);
 				}
 				RegionTileCoords tile_coords = *opt_tile_coords;
-				caster.agent().query_magnitude("Lightning Bolt Strength", "Choose how strong to make the lightning bolt.", 20.0, [](double amount) { return amount >= 0.0; },
-					[this, &caster, cont, tile_coords](optional<double> opt_magnitude) {
+				return caster.agent().query_magnitude("Lightning Bolt Strength", "Choose how strong to make the lightning bolt.", 20.0, [](double amount) { return amount >= 0.0; },
+					[this, &caster, cont, tile_coords](boost::optional<double> opt_magnitude) {
 						if (!opt_magnitude) {
 							return cont(Result::aborted);
 						}
 						double magnitude = *opt_magnitude;
 						double cost = _cost_factor * magnitude * log2(magnitude + _cost_log);
 						if (caster.mana() < cost) {
-							return caster.agent().message("Not enough mana!", "You need " + std::to_string(cost - caster.mana()) + " more mana to cast this.", [cont] { cont(Result::aborted); });
+							return caster.agent().message("Not enough mana!", "You need " + std::to_string(cost - caster.mana()) + " more mana to cast this.", [cont] { return cont(Result::aborted); });
 						}
 						active_cooldown(cooldown());
 						discharge();
 						caster.lose_mana(cost);
 						if (Being* target = caster.region().being(tile_coords)) {
-							double burn_magnitude = magnitude * caster.power(color()) / target->resistance(color());
+							double burn_magnitude = magnitude * caster.magic_power(color()) / target->magic_resistance(color());
 
 							/// @todo Experimental body part stuff here... Delete or fix.
 

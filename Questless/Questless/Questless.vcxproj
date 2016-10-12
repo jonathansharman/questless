@@ -196,6 +196,7 @@
     <ClInclude Include="include\entities\beings\BodyPart.h" />
     <ClInclude Include="include\entities\beings\BodyPartVisitor.h" />
     <ClInclude Include="include\entities\beings\Damage.h" />
+    <ClInclude Include="include\entities\beings\DamageMultiplier.h" />
     <ClInclude Include="include\entities\beings\goblinoids\Goblin.h" />
     <ClInclude Include="include\entities\beings\Human.h" />
     <ClInclude Include="include\entities\beings\Protection.h" />
@@ -264,7 +265,6 @@
     <ClInclude Include="include\utility\Frequency.h" />
     <ClInclude Include="include\utility\hex-utilities.h" />
     <ClInclude Include="include\utility\Initializer.h" />
-    <ClInclude Include="include\utility\optional.h" />
     <ClInclude Include="include\utility\PointF.h" />
     <ClInclude Include="include\utility\Stream.h" />
     <ClInclude Include="include\utility\utility.h" />

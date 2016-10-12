@@ -17,7 +17,7 @@ namespace questless
 	{
 		if (input.presses(SDLK_BACKSPACE) || input.presses(SDLK_ESCAPE)) {
 			close();
-			return _cont(nullopt);
+			return _cont(boost::none);
 		}
 
 		if (input.pressed(MouseButton::left)) {

@@ -25,7 +25,7 @@ namespace questless
 {
 	WorldView::WorldView(const Being& being, bool find_bounds)
 		: _region{being.region()}
-		, _bounds{nullopt}
+		, _bounds{boost::none}
 	{
 		RegionTileCoords coords = being.coords();
 		Vision vision = being.vision();

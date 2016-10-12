@@ -96,7 +96,7 @@ namespace sdl
 		SDL_SetTextureAlphaMod(_texture, alpha);
 	}
 
-	void Texture::draw(const Rect& dst_rect, const optional<Rect>& src_rect) const
+	void Texture::draw(const Rect& dst_rect, const boost::optional<Rect>& src_rect) const
 	{
 		if (_texture) {
 			SDL_SetTextureColorMod(_texture, _color.r, _color.g, _color.b);
@@ -112,7 +112,7 @@ namespace sdl
 		}
 	}
 
-	void Texture::draw(Point position, HAlign horizontal_alignment, VAlign vertical_alignment, const optional<Rect>& src_rect) const
+	void Texture::draw(Point position, HAlign horizontal_alignment, VAlign vertical_alignment, const boost::optional<Rect>& src_rect) const
 	{
 		if (_texture) {
 			switch (horizontal_alignment) {
@@ -149,14 +149,14 @@ namespace sdl
 
 	void Texture::draw_transformed
 		( Point position
-		, const optional<Point>& origin
+		, const boost::optional<Point>& origin
 		, double horizontal_scale
 		, double vertical_scale
 		, bool flip_horizontally
 		, bool flip_vertically
 		, Color color
 		, double angle
-		, const optional<Rect>& src_rect
+		, const boost::optional<Rect>& src_rect
 		) const
 	{
 		if (_texture != nullptr) {

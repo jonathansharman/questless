@@ -153,23 +153,23 @@ namespace questless
 
 		// Event Handlers
 
-		Event<Damage&, optional<BeingId>> before_take_damage;
-		Event<Damage&, optional<BeingId>> after_take_damage;
+		Event<Damage&, boost::optional<BodyPart::ref>, boost::optional<BeingId>> before_take_damage;
+		Event<Damage&, boost::optional<BodyPart::ref>, boost::optional<BeingId>> after_take_damage;
 
-		Event<Damage&, BeingId> before_deal_damage;
-		Event<Damage&, BeingId> after_deal_damage;
+		Event<Damage&, boost::optional<BodyPart::ref>, BeingId> before_deal_damage;
+		Event<Damage&, boost::optional<BodyPart::ref>, BeingId> after_deal_damage;
 
-		Event<double&, optional<BeingId>> before_receive_heal;
-		Event<double&, optional<BeingId>> after_receive_heal;
+		Event<double&, boost::optional<BodyPart::ref>, boost::optional<BeingId>> before_receive_heal;
+		Event<double&, boost::optional<BodyPart::ref>, boost::optional<BeingId>> after_receive_heal;
 
-		Event<double&, BeingId> after_give_heal;
-		Event<double&, BeingId> before_give_heal;
+		Event<double&, boost::optional<BodyPart::ref>, BeingId> after_give_heal;
+		Event<double&, boost::optional<BodyPart::ref>, BeingId> before_give_heal;
+
+		Event<boost::optional<BeingId>> before_die;
+		Event<boost::optional<BeingId>> after_die;
 
 		Event<BeingId> before_kill;
 		Event<BeingId> after_kill;
-
-		Event<optional<BeingId>> before_die;
-		Event<optional<BeingId>> after_die;
 
 		////////////////////
 		// Public Methods //
@@ -237,13 +237,17 @@ namespace questless
 		double max_temp() const { return _attributes.max_temp; }
 		bool mute() const { return _attributes.mute; }
 
-		MagicPower power() const { return _attributes.magic_power; }
-		template <Spell::Color color> double power() const { return _attributes.magic_power.get<color>(); }
-		double power(Spell::Color color) const;
+		const Protection& protection() const { return _attributes.protection; }
+		const Resistance& resistance() const { return _attributes.resistance; }
+		const Vulnerability& vulnerability() const { return _attributes.vulnerability; }
 
-		MagicResistance resistance() const { return _attributes.magic_resistance; }
-		template <Spell::Color color> double resistance() const { return _attributes.magic_resistance.get<color>(); }
-		double resistance(Spell::Color color) const;
+		const MagicPower& magic_power() const { return _attributes.magic_power; }
+		template <Spell::Color color> double magic_power() const { return _attributes.magic_power.get<color>(); }
+		double magic_power(Spell::Color color) const;
+
+		const MagicResistance& magic_resistance() const { return _attributes.magic_resistance; }
+		template <Spell::Color color> double magic_resistance() const { return _attributes.magic_resistance.get<color>(); }
+		double magic_resistance(Spell::Color color) const;
 
 		// Condition mutators
 
@@ -296,26 +300,32 @@ namespace questless
 		void max_temp(double value) { _attributes.max_temp = value; }
 		void mute(bool value) { _attributes.mute = value; }
 
-		void power(MagicPower value) { _attributes.magic_power = value; }
-		template <Spell::Color color> void power(double value) { _attributes.magic_power.get<color> = value; }
-		void power(Spell::Color color, double value);
+		void protection(const Protection& value) { _attributes.protection = value; }
+		void resistance(const Resistance& value) { _attributes.resistance = value; }
+		void vulnerability(const Vulnerability& value) { _attributes.vulnerability = value; }
 
-		void resistance(MagicResistance value) { _attributes.magic_resistance = value; }
-		template <Spell::Color color> void resistance(double value) { _attributes.magic_resistance.get<color> = value; }
-		void resistance(Spell::Color color, double value);
+		void magic_power(MagicPower value) { _attributes.magic_power = value; }
+		template <Spell::Color color> void magic_power(double value) { _attributes.magic_power.get<color> = value; }
+		void magic_power(Spell::Color color, double value);
+
+		void magic_resistance(MagicResistance value) { _attributes.magic_resistance = value; }
+		template <Spell::Color color> void magic_resistance(double value) { _attributes.magic_resistance.get<color> = value; }
+		void magic_resistance(Spell::Color color, double value);
 
 		/// Advances the being one time unit.
 		void update() override;
 
 		/// Causes the being to take damage from the specified source being.
 		/// @param damage Damage to be applied to this being.
-		/// @param source_id The ID of the being which caused the damage, if any.
-		void take_damage(Damage& damage, optional<BeingId> source_id);
+		/// @param part The body part to damage, or nullopt if the damage should be applied directly to the being.
+		/// @param opt_source_id The ID of the being which caused the damage, if any.
+		void take_damage(Damage& damage, boost::optional<BodyPart::ref> opt_part, boost::optional<BeingId> opt_source_id);
 
 		/// Causes the being to be healed by the specified source being.
 		/// @param amount Health to be restored to this being.
-		/// @param source The ID of the being which caused the healing, if any.
-		void heal(double amount, optional<BeingId> source_id);
+		/// @param part The body part to heal, or nullopt if the damage should be applied directly to the being.
+		/// @param opt_source_id The ID of the being which caused the healing, if any.
+		void heal(double amount, boost::optional<BodyPart::ref> opt_part, boost::optional<BeingId> opt_source_id);
 
 		void add_status(std::unique_ptr<Status> status);
 	protected:
@@ -326,7 +336,7 @@ namespace questless
 	private:
 		BeingId _id;
 
-		std::shared_ptr<Agent> _agent; ///< The agent responsible for this being.
+		std::unique_ptr<Agent> _agent; ///< The agent responsible for this being.
 
 		// Body
 

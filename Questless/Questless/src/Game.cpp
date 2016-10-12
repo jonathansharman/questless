@@ -37,7 +37,6 @@ using std::ostringstream;
 using std::move;
 using std::unique_ptr;
 using std::make_unique;
-using std::make_shared;
 using std::dynamic_pointer_cast;
 using std::function;
 
@@ -162,51 +161,56 @@ namespace questless
 
 	// Dialogs
 
-	void Game::message(string title, string prompt, function<void()> cont)
-	{
-		auto dialog = make_unique<MessageDialog>(move(title), move(prompt), move(cont));
-		_dialogs.push_back(move(dialog));
-	}
-
 	void Game::query_player_choice(function<void(PlayerActionDialog::Choice)> cont)
 	{
 		auto dialog = make_unique<PlayerActionDialog>(*_hud, move(cont));
 		_dialogs.push_back(move(dialog));
 	}
 
-	void Game::query_count(string title, string prompt, int default, optional<int> min, optional<int> max, function<void(optional<int>)> cont)
+	Action::Complete Game::message(string title, string prompt, function<Action::Complete()> cont)
 	{
-		auto dialog = make_unique<CountDialog>(move(title), move(prompt), default, min, max, [](int) { return true; }, move(cont));
+		auto dialog = make_unique<MessageDialog>(move(title), move(prompt), move(cont));
 		_dialogs.push_back(move(dialog));
-	}
-	void Game::query_count(string title, string prompt, int default, function<bool(int)> predicate, function<void(optional<int>)> cont)
-	{
-		auto dialog = make_unique<CountDialog>(move(title), move(prompt), default, nullopt, nullopt, move(predicate), move(cont));
-		_dialogs.push_back(move(dialog));
+		return Action::Complete{};
 	}
 
-	void Game::query_magnitude(string title, string prompt, double default, function<bool(double)> predicate, function<void(optional<double>)> cont)
+	Action::Complete Game::query_count(string title, string prompt, int default, boost::optional<int> min, boost::optional<int> max, function<Action::Complete(boost::optional<int>)> cont)
 	{
-		auto dialog = make_unique<MagnitudeDialog>(move(title), move(prompt), default, nullopt, nullopt, move(predicate), move(cont));
+		auto dialog = make_unique<CountDialog>(move(title), move(prompt), default, min, max, [](int) { return true; }, std::move(cont));
 		_dialogs.push_back(move(dialog));
+		return Action::Complete{};
+	}
+	Action::Complete Game::query_count(string title, string prompt, int default, function<bool(int)> predicate, function<Action::Complete(boost::optional<int>)> cont)
+	{
+		auto dialog = make_unique<CountDialog>(move(title), move(prompt), default, boost::none, boost::none, move(predicate), std::move(cont));
+		_dialogs.push_back(move(dialog));
+		return Action::Complete{};
 	}
 
-	void Game::query_tile(string title, string prompt, function<bool(RegionTileCoords)> predicate, function<void(optional<RegionTileCoords>)> cont)
+	Action::Complete Game::query_magnitude(string title, string prompt, double default, function<bool(double)> predicate, function<Action::Complete(boost::optional<double>)> cont)
 	{
-		auto dialog = make_unique<TileDialog>(move(title), move(prompt), *_camera, move(predicate), move(cont));
+		auto dialog = make_unique<MagnitudeDialog>(move(title), move(prompt), default, boost::none, boost::none, move(predicate), std::move(cont));
 		_dialogs.push_back(move(dialog));
+		return Action::Complete{};
 	}
 
-	void Game::query_being(string /*title*/, string /*prompt*/, function<bool(Being&)> /*predicate*/, function<void(optional<Being*>)> cont)
+	Action::Complete Game::query_tile(string title, string prompt, function<bool(RegionTileCoords)> predicate, function<Action::Complete(boost::optional<RegionTileCoords>)> cont)
+	{
+		auto dialog = make_unique<TileDialog>(move(title), move(prompt), *_camera, move(predicate), std::move(cont));
+		_dialogs.push_back(move(dialog));
+		return Action::Complete{};
+	}
+
+	Action::Complete Game::query_being(string /*title*/, string /*prompt*/, function<bool(Being&)> /*predicate*/, function<Action::Complete(boost::optional<Being*>)> cont)
 	{
 		/// @todo This.
-		cont(nullopt);
+		return cont(boost::none);
 	}
 
-	void Game::query_item(string /*title*/, string /*prompt*/, Being& /*source*/, function<bool(Being&)> /*predicate*/, function<void(optional<Item*>)> cont)
+	Action::Complete Game::query_item(string /*title*/, string /*prompt*/, Being& /*source*/, function<bool(Being&)> /*predicate*/, function<Action::Complete(boost::optional<Item*>)> cont)
 	{
 		/// @todo This.
-		cont(nullopt);
+		return cont(boost::none);
 	}
 
 	// Main Game Logic

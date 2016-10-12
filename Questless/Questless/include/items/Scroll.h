@@ -67,9 +67,9 @@ namespace questless
 
 			std::string name() const override { return "Cast"; }
 
-			void perform(Being& actor, cont_t cont) override
+			Action::Complete perform(Being& actor, cont_t cont) override
 			{
-				_scroll.spell().perform(actor, std::move(cont));
+				return _scroll.spell().perform(actor, std::move(cont));
 			}
 		private:
 			Scroll& _scroll;
@@ -84,11 +84,11 @@ namespace questless
 
 			std::string name() const override { return "Incant"; }
 
-			void perform(Being& /*actor*/, cont_t cont) override
+			Action::Complete perform(Being& /*actor*/, cont_t cont) override
 			{
 				/// @todo Costs, times, etc.
 				_scroll.spell().charge();
-				cont(Result::success);
+				return cont(Result::success);
 			}
 		private:
 			Scroll& _scroll;
@@ -103,11 +103,11 @@ namespace questless
 
 			std::string name() const override { return "Discharge"; }
 
-			void perform(Being& /*actor*/, cont_t cont) override
+			Action::Complete perform(Being& /*actor*/, cont_t cont) override
 			{
 				/// @todo Costs, times, etc.
 				_scroll.spell().discharge();
-				cont(Result::success);
+				return cont(Result::success);
 			}
 		private:
 			Scroll& _scroll;

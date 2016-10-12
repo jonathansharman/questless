@@ -14,7 +14,7 @@
 #include <utility>
 #include <stdexcept>
 
-/// @todo Replace this class with std::optional once it's available.
+/// @todo Remove this file from the repository.
 
 class nullopt_t {} const nullopt;
 class bad_optional_access : public std::logic_error
@@ -124,9 +124,9 @@ private:
 };
 
 template <typename T>
-constexpr optional<typename std::decay<T>::type> make_optional(T&& value)
+constexpr optional<typename std::decay_t<T>> make_optional(T&& value)
 {
-	return optional<typename std::decay<T>::type>{std::forward<T>(value)};
+	return optional<typename std::decay_t<T>>{std::forward<T>(value)};
 }
 
 #endif

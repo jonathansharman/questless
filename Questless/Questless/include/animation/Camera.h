@@ -121,14 +121,14 @@ namespace questless
 		void draw
 			( const sdl::Texture& texture
 			, sdl::Point position
-			, const optional<sdl::Point>& origin = nullopt
+			, const boost::optional<sdl::Point>& origin = boost::none
 			, double horizontal_scale = 1.0
 			, double vertical_scale = 1.0
 			, bool flip_horizontally = false
 			, bool flip_vertically = false
 			, double angle = 0.0
 			, sdl::Color color = sdl::Color::white()
-			, const optional<sdl::Rect>& src_rect = nullopt
+			, const boost::optional<sdl::Rect>& src_rect = boost::none
 			) const;
 	private:
 		sdl::Window& _window;

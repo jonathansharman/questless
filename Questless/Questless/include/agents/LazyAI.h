@@ -23,96 +23,96 @@ namespace questless
 
 		// Queries and messages
 
-		 void message
+		Action::Complete message
 			( const std::string&
 			, const std::string&
-			, std::function<void()> cont
+			, std::function<Action::Complete()> cont
 			) const override
-		 {
+		{
 			 cont();
-		 }
+		}
 
-		 void query_count
+		Action::Complete query_count
 			( const std::string&
 			, const std::string&
 			, int
-			, optional<int>
-			, optional<int>
-			, std::function<void(optional<int>)> cont
+			, boost::optional<int>
+			, boost::optional<int>
+			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override
-		 {
-			 cont(nullopt);
-		 }
-		 void query_count
+		{
+			cont(boost::none);
+		}
+		Action::Complete query_count
 			( const std::string&
 			, const std::string&
 			, int
 			, std::function<bool(int)>
-			, std::function<void(optional<int>)> cont
+			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override
-		 {
-			 cont(nullopt);
-		 }
+		{
+			cont(boost::none);
+		}
 
-		 void query_duration
+		Action::Complete query_duration
 			( const std::string&
 			, const std::string&
-			, std::function<void(optional<int>)> cont
+			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override
-		 {
-			 cont(nullopt);
-		 }
+		{
+			 cont(boost::none);
+		}
 
-		 void query_magnitude
+		Action::Complete query_magnitude
 			( const std::string&
 			, const std::string&
 			, double
 			, std::function<bool(double)>
-			, std::function<void(optional<double>)> cont
+			, std::function<Action::Complete(boost::optional<double>)> cont
 			) const override
-		 {
-			 cont(nullopt);
-		 }
+		{
+			cont(boost::none);
+		}
 
-		 void query_tile
+		Action::Complete query_tile
 			( const std::string&
 			, const std::string&
 			, std::function<bool(RegionTileCoords)>
-			, std::function<void(optional<RegionTileCoords>)> cont
+			, std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont
 			) const override
-		 {
-			 cont(nullopt);
-		 }
+		{
+			cont(boost::none);
+		}
 
-		 void query_being
+		Action::Complete query_being
 			( const std::string&
 			, const std::string&
 			, std::function<bool(Being&)>
-			, std::function<void(optional<Being*>)> cont
+			, std::function<Action::Complete(boost::optional<Being*>)> cont
 			) const override
-		 {
-			 cont(nullopt);
-		 }
+		{
+			cont(boost::none);
+		}
 
-		 void query_range
+		Action::Complete query_range
 			( const std::string&
 			, const std::string&
-			, std::function<void(optional<int>)> cont
+			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override
-		 {
-			 cont(nullopt);
-		 }
+		{
+			cont(boost::none);
+		}
 
-		 void query_item
+		Action::Complete query_item
 			( const std::string&
 			, const std::string&
 			, Being&
 			, std::function<bool(Being&)>
-			, std::function<void(optional<Item*>)> cont
+			, std::function<Action::Complete(boost::optional<Item*>)> cont
 			) const override
-		 {
-			 cont(nullopt);
-		 }
+		{
+			cont(boost::none);
+		}
 	};
 }
 

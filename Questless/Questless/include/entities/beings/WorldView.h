@@ -13,11 +13,12 @@
 #include <vector>
 #include <array>
 
+#include <boost/optional.hpp>
+
 #include "entities/beings/BeingId.h"
 #include "entities/objects/ObjectId.h"
 #include "world/coordinates.h"
 #include "utility/constants.h"
-#include "utility/optional.h"
 
 namespace questless
 {
@@ -85,7 +86,7 @@ namespace questless
 		const Region& region() const { return _region; }
 
 		/// @return A bounding rectangle around the visible tiles or nullopt if initialized with find_bounds set to false or if no tiles are visible.
-		optional<sdl::Rect> bounds() const { return _bounds; }
+		boost::optional<sdl::Rect> bounds() const { return _bounds; }
 	private:
 		static constexpr double _low_perception_threshold = 20.0;
 		static constexpr double _medium_perception_threshold = 40.0;
@@ -97,7 +98,7 @@ namespace questless
 		std::vector<ObjectView> _object_views;
 		const Region& _region;
 
-		optional<sdl::Rect> _bounds;
+		boost::optional<sdl::Rect> _bounds;
 	};
 }
 

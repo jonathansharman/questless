@@ -19,11 +19,11 @@ namespace questless
 	public:
 		TeleportSpell() : Spell(10) {}
 
-		void perform(Being& caster, cont_t cont) override;
+		Action::Complete perform(Being& caster, cont_t cont) override;
 
 		Color color() const override { return Color::yellow; }
 
-		optional<int> max_charges() const override { return 10; }
+		boost::optional<int> max_charges() const override { return 10; }
 
 		double cooldown() const override { return 15.0; }
 	private:

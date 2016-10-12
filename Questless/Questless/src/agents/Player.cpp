@@ -36,18 +36,22 @@ namespace questless
 								, item->name()
 								, item->actions()
 								, [](const Action::ptr& a) { return a->name(); }
-								, [this, &game](optional<Action::ptr> opt_action) {
+								, [this, &game](boost::optional<Action::ptr> opt_action) {
 									if (!opt_action) {
+										// No action selected. Player must try to act again.
 										act();
-										return;
+										return Action::Complete{};
+									} else {
+										// Perform the chosen action.
+										Action::ptr action = std::move(*opt_action);
+										return action->perform(being(), [this, &game](Action::Result result) {
+											if (result == Action::Result::aborted) {
+												// Chosen action aborted. Player must try to act again.
+												act();
+											}
+											return Action::Complete{};
+										});
 									}
-									Action::ptr action = std::move(*opt_action);
-									action->perform(being(), [this, &game](Action::Result result) {
-										if (result == Action::Result::aborted) {
-											act();
-											return;
-										}
-									});
 								});
 						}
 					}
@@ -57,94 +61,94 @@ namespace questless
 		});
 	}
 
-	void Player::message
+	Action::Complete Player::message
 		( const std::string& title
 		, const std::string& prompt
-		, function<void()> cont
+		, function<Action::Complete()> cont
 		) const
 	{
-		being().game().message(title, prompt, std::move(cont));
+		return being().game().message(title, prompt, std::move(cont));
 	}
 
-	void Player::query_count
+	Action::Complete Player::query_count
 		( const std::string& title
 		, const std::string& prompt
 		, int default
-		, optional<int> min
-		, optional<int> max
-		, function<void(optional<int>)> cont
+		, boost::optional<int> min
+		, boost::optional<int> max
+		, function<Action::Complete(boost::optional<int>)> cont
 		) const
 	{
-		being().game().query_count(title, prompt, default, min, max, std::move(cont));
+		return being().game().query_count(title, prompt, default, min, max, std::move(cont));
 	}
-	void Player::query_count
+	Action::Complete Player::query_count
 		( const std::string& title
 		, const std::string& prompt
 		, int default
 		, function<bool(int)> predicate
-		, function<void(optional<int>)> cont
+		, function<Action::Complete(boost::optional<int>)> cont
 		) const
 	{
-		being().game().query_count(title, prompt, default, std::move(predicate), std::move(cont));
+		return being().game().query_count(title, prompt, default, std::move(predicate), std::move(cont));
 	}
 
-	void Player::query_duration
+	Action::Complete Player::query_duration
 		( const std::string& title
 		, const std::string& prompt
-		, function<void(optional<int>)> cont
+		, function<Action::Complete(boost::optional<int>)> cont
 		) const
 	{
-		being().game().query_count(title, prompt, 1, 1, nullopt, std::move(cont));
+		return being().game().query_count(title, prompt, 1, 1, boost::none, std::move(cont));
 	}
 
-	void Player::query_magnitude
+	Action::Complete Player::query_magnitude
 		( const std::string& title
 		, const std::string& prompt
 		, double default
 		, function<bool(double)> predicate
-		, function<void(optional<double>)> cont
+		, function<Action::Complete(boost::optional<double>)> cont
 		) const
 	{
-		being().game().query_magnitude(title, prompt, default, std::move(predicate), std::move(cont));
+		return being().game().query_magnitude(title, prompt, default, std::move(predicate), std::move(cont));
 	}
 
-	void Player::query_tile
+	Action::Complete Player::query_tile
 		( const std::string& title
 		, const std::string& prompt
 		, function<bool(RegionTileCoords)> predicate
-		, function<void(optional<RegionTileCoords>)> cont
+		, function<Action::Complete(boost::optional<RegionTileCoords>)> cont
 		) const
 	{
-		being().game().query_tile(title, prompt, std::move(predicate), std::move(cont));
+		return being().game().query_tile(title, prompt, std::move(predicate), std::move(cont));
 	}
 
-	void Player::query_being
+	Action::Complete Player::query_being
 		( const std::string& title
 		, const std::string& prompt
 		, function<bool(Being&)> predicate
-		, function<void(optional<Being*>)> cont
+		, function<Action::Complete(boost::optional<Being*>)> cont
 		) const
 	{
-		being().game().query_being(title, prompt, std::move(predicate), std::move(cont));
+		return being().game().query_being(title, prompt, std::move(predicate), std::move(cont));
 	}
 
-	void Player::query_range
+	Action::Complete Player::query_range
 		( const std::string& title
 		, const std::string& prompt
-		, function<void(optional<int>)> cont
+		, function<Action::Complete(boost::optional<int>)> cont
 		) const
 	{
-		being().game().query_count(title, prompt, 0, 0, nullopt, std::move(cont));
+		return being().game().query_count(title, prompt, 0, 0, boost::none, std::move(cont));
 	}
 
-	void Player::query_item
+	Action::Complete Player::query_item
 		( const std::string& title
 		, const std::string& prompt
 		, Being& source
 		, function<bool(Being&)> predicate
-		, function<void(optional<Item*>)> cont
+		, function<Action::Complete(boost::optional<Item*>)> cont
 		) const
 	{
-		being().game().query_item(title, prompt, source, std::move(predicate), std::move(cont));
+		return being().game().query_item(title, prompt, source, std::move(predicate), std::move(cont));
 	}
 }

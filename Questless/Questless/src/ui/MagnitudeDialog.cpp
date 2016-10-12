@@ -17,7 +17,7 @@ namespace questless
 	{
 		if (input.presses(SDLK_BACKSPACE) || input.presses(SDLK_ESCAPE)) {
 			close();
-			return _cont(nullopt);
+			return _cont(boost::none);
 		}
 
 		_magnitude += 10.0 * input.presses(SDLK_UP);

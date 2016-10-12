@@ -14,9 +14,10 @@
 #include <stdexcept>
 #include <memory>
 #include <algorithm>
-#include "utility/optional.h"
 #include <functional>
 #include <memory>
+
+#include <boost/optional.hpp>
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -97,7 +98,7 @@ namespace sdl
 		/// @param dst_rect The portion of the screen to which the texture should be copied.
 		/// @param src_rect The portion of the texture which should be copied.
 		/// @param src_rect An optional Rect specifying the portion of the texture to be copied. If nullopt, the entire texture is used.
-		void draw(const Rect& dst_rect, const optional<Rect>& src_rect = nullopt) const;
+		void draw(const Rect& dst_rect, const boost::optional<Rect>& src_rect = boost::none) const;
 	
 		/// Copies all or part of the texture to the current render target.
 		/// @param position The coordinates of the texture on the screen.
@@ -108,7 +109,7 @@ namespace sdl
 			( Point position
 			, HAlign horizontal_alignment = HAlign::left
 			, VAlign vertical_alignment = VAlign::top
-			, const optional<Rect>& src_rect = nullopt
+			, const boost::optional<Rect>& src_rect = boost::none
 			) const;
 
 		/// Copies all or part the texture to the current render target, applying the provided transformations.
@@ -123,14 +124,14 @@ namespace sdl
 		/// @param src_rect An optional Rect specifying the portion of the texture to be copied. If nullopt, the entire texture is used.
 		void draw_transformed
 			( Point position
-			, const optional<Point>& origin = nullopt
+			, const boost::optional<Point>& origin = boost::none
 			, double horizontal_scale = 1.0
 			, double vertical_scale = 1.0
 			, bool flip_horizontally = false
 			, bool flip_vertically = false
 			, Color color = Color::white()
 			, double angle = 0
-			, const optional<Rect>& src_rect = nullopt
+			, const boost::optional<Rect>& src_rect = boost::none
 			) const;
 
 		/// Executes the given code with this texture as the render target so that draw operations will affect this texture instead of the screen buffer.

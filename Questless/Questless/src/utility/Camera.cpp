@@ -45,14 +45,14 @@ namespace questless
 	void Camera::draw
 		( const sdl::Texture& texture
 		, sdl::Point position
-		, const optional<sdl::Point>& origin
+		, const boost::optional<sdl::Point>& origin
 		, double horizontal_scale
 		, double vertical_scale
 		, bool flip_horizontally
 		, bool flip_vertically
 		, double angle
 		, sdl::Color color
-		, const optional<sdl::Rect>& src_rect) const
+		, const boost::optional<sdl::Rect>& src_rect) const
 	{
 		if (origin) {
 			position += sdl::Vector(texture.width() / 2 - origin->x, texture.height() / 2 - origin->y);
@@ -67,7 +67,7 @@ namespace questless
 			};
 		texture.draw_transformed
 			( relative_position.to_point()
-			, nullopt
+			, boost::none
 			, _zoom * horizontal_scale
 			, _zoom * vertical_scale
 			, flip_horizontally

@@ -76,7 +76,7 @@ namespace questless
 
 			std::string name() const override { return _name; }
 
-			void perform(Being& actor, cont_t cont) override;
+			Action::Complete perform(Being& actor, cont_t cont) override;
 		private:
 			ModalWeapon& _weapon;
 			const std::string _name;

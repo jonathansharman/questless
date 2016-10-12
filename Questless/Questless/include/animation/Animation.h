@@ -16,8 +16,9 @@
 #include <exception>
 #include <memory>
 
+#include <boost/optional.hpp>
+
 #include "utility/constants.h"
-#include "utility/optional.h"
 #include "sdl-wrappers/basic-sdl-wrappers.h"
 
 namespace questless

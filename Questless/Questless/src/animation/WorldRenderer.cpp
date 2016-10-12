@@ -126,7 +126,7 @@ namespace questless
 
 	void WorldRenderer::render_terrain()
 	{
-		optional<Rect> opt_bounds = _world_view->bounds();
+		boost::optional<Rect> opt_bounds = _world_view->bounds();
 		if (!opt_bounds) {
 			_terrain_texture = nullptr;
 			return;
@@ -163,7 +163,7 @@ namespace questless
 
 							tile_texture.draw_transformed
 								( coords_in_world - Vector::to(_terrain_bounds.position())
-								, nullopt // Origin
+								, boost::none // Origin
 								, 1.0 // H-scale
 								, 1.0 // V-scale
 								, false // H-flip

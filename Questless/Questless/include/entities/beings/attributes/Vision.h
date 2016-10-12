@@ -26,11 +26,11 @@ namespace questless
 		template <typename BeingType>
 		static Vision of()
 		{
-			using t = BeingType;
+			using T = BeingType;
 			return Vision
-				{ t::base_visual_acuity
-				, t::base_ideal_light
-				, t::base_light_tolerance
+				{ T::base_visual_acuity
+				, T::base_ideal_light
+				, T::base_light_tolerance
 				};
 		}
 
