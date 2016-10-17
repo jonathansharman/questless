@@ -12,6 +12,8 @@
 
 #include "items/weapons/ModalWeapon.h"
 
+/// @todo Implementation file: Quaterstaff.cpp.
+
 namespace questless
 {
 	class Quarterstaff : public ModalWeapon
@@ -35,11 +37,7 @@ namespace questless
 			std::vector<Action::ptr> actions() override
 			{
 				std::vector<Action::ptr> actions;
-				if (weapon().ready()) {
-					actions.push_back(MeleeAttack::make(weapon()));
-				} else {
-					actions.push_back(Ready::make(weapon()));
-				}
+				actions.push_back(BeginMeleeAttack::make(weapon()));
 				actions.push_back(SwitchForm<HalfStaffForm>::make(weapon(), "Switch to half staff"));
 				actions.push_back(Drop::make(weapon()));
 				actions.push_back(Throw::make(weapon()));
@@ -65,11 +63,7 @@ namespace questless
 			std::vector<Action::ptr> actions() override
 			{
 				std::vector<Action::ptr> actions;
-				if (weapon().ready()) {
-					actions.push_back(MeleeAttack::make(weapon()));
-				} else {
-					actions.push_back(Ready::make(weapon()));
-				}
+				actions.push_back(BeginMeleeAttack::make(weapon()));
 				actions.push_back(Block::make(weapon()));
 				actions.push_back(SwitchForm<StandardForm>::make(weapon(), "Switch to quarterstaff"));
 				actions.push_back(Drop::make(weapon()));

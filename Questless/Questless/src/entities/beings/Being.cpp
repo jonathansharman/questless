@@ -49,6 +49,45 @@ namespace questless
 		out << _conditions << ' ';
 	}
 
+	void Being::act()
+	{
+		if (_delayed_actions.empty()) {
+			// No delayed actions; have agent choose a new action to perform.
+			agent().act();
+		} else {
+			// Pop and execute the oldest delayed action, with its continuation.
+			Action::ptr action = std::move(_delayed_actions.front());
+			_delayed_actions.pop_front();
+			Action::cont_t cont = std::move(_delayed_action_conts.front());
+			_delayed_action_conts.pop_front();
+			action->perform(*this, std::move(cont));
+			// If there are additional delayed actions, pop and execute the next delay.
+			if (!_action_delays.empty()) {
+				gain_busy_time(_action_delays.front());
+				_action_delays.pop_front();
+			}
+		}
+	}
+
+	void Being::add_delayed_action(double delay, Action::cont_t cont, Action::ptr action)
+	{
+		// If there are no enqueued delayed actions, just incur the delay immediately instead of enqueueing it.
+		if (_delayed_actions.empty()) {
+			gain_busy_time(delay);
+		} else {
+			_action_delays.push_back(delay);
+		}
+		_delayed_actions.push_back(std::move(action));
+		_delayed_action_conts.push_back(std::move(cont));
+	}
+
+	void Being::clear_delayed_actions()
+	{
+		_action_delays.clear();
+		_delayed_actions.clear();
+		_delayed_action_conts.clear();
+	}
+
 	double Being::magic_power(Spell::Color color) const
 	{
 		switch (color) {

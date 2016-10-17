@@ -174,18 +174,25 @@ Damage
 		Burn
 		Freeze
 		Blight
-	Base damage - Amount of damage per hit intrinsic to a weapon or spell
-	Applied damage - Amount of damage the target actually receives after applying strength, buffs, endurance, armor, etc.
-	Order of calculation: base damage -> attacker strength, attacker weariness -> armor -> defender endurance, defender weariness
-	Formula:
-		applied_damage = (base_damage * attacker_strength / (1 + attacker_weariness / attacker_endurance) - armor) / (defender_endurance / (1 + defender_weariness))
-	Can be dealt to a part or to the body directly.
-		Damage dealt to a body part is also dealt to the being itself.
-	Body part armor applies to all damage targeting its part.
+	Can be dealt to a body part or to the being directly.
+		Damage dealt to a body part is also dealt to the being itself. I.e., part damage is strictly better than being damage.
 	Passive shields apply unconditionally to all damage.
 		Applied newest to oldest, so that temporary shields will soak more damage than permanent ones.
+	Body part armor applies to all damage targeting its part.
+	Resistance and vulnerability apply a multiplier to damage
+		Damage with multipliers = original damage * (1 + max(0, total vulnerability - total resistance) / 100)
+	Resistance and vulnerability are applied after all protection
+	The damage algorithm for part damage is roughly as follows:
+		1) Shields take wear, reduce damage, and contribute to total resistance.
+		2) Shields take resistance wear proportional to maximum possible reduction to current damage.
+		3) The part's armor takes wear, reduces damage, and contributes to total resistance.
+		4) Damage is reduced by the part's and the being's protection attributes.
+		5) Repeat step 2 for the part's armor.
+		6) Damage is modified according to total resistance and vulnerability, from all sources.
+		7) Part and being lose health based on total damage and the being's endurance.
 Protection
-	Protection reduces effective damage by a constant amount per hit, not to exceed the effective damage
+	Protection reduces effective damage by a constant amount per hit
+	No damage component can deceed 0
 	Types
 		Pad
 			100% to bludgeon

@@ -13,32 +13,35 @@
 
 namespace questless
 {
-	Action::Complete Weapon::Ready::perform(Being& actor, cont_t cont)
-	{
-		actor.gain_busy_time(_weapon.active_cooldown() + _weapon.wind_up());
-		_weapon._ready = true;
-		return cont(Result::success);
-	}
-
-	Action::Complete Weapon::MeleeAttack::perform(Being& actor, cont_t cont)
+	Action::Complete Weapon::BeginMeleeAttack::perform(Being& actor, cont_t cont)
 	{
 		Weapon& weapon = _weapon;
 		return actor.game().query_tile("Melee Attack", "Choose attack target.", tile_in_range_predicate(actor, 1),
-			[&actor, cont, &weapon](boost::optional<RegionTileCoords> opt_coords) {
+			[&actor, cont, &weapon](boost::optional<RegionTileCoords> opt_coords) { /// @todo Capturing actor and weapon by reference here is unsafe.
 				if (opt_coords) {
-					if (Being* target = actor.region().being(*opt_coords)) {
-						actor.gain_busy_time(weapon.follow_through());
-						weapon.active_cooldown(weapon.cooldown());
-						weapon._ready = false;
-						Damage damage = weapon.damage();
-						weapon.wear(weapon.wear_ratio() * damage.total());
-						target->take_damage(damage, boost::none, actor.id()); /// @todo Part targeting
-						return cont(Result::success);
-					}
+					double delay = weapon.active_cooldown() + weapon.wind_up();
+					actor.add_delayed_action(delay, std::move(cont), CompleteMeleeAttack::make(weapon, *opt_coords));
+					return cont(Result::success);
+				} else {
+					return cont(Result::aborted);
 				}
-				return cont(Result::aborted);
 			}
 		);
+		return Action::Complete{};
+	}
+
+	Action::Complete Weapon::CompleteMeleeAttack::perform(Being& actor, cont_t cont)
+	{
+		actor.gain_busy_time(_weapon.follow_through());
+		_weapon.active_cooldown(_weapon.cooldown());
+		if (Being* target = actor.region().being(_coords)) {
+			Damage damage = _weapon.damage();
+			_weapon.wear(_weapon.wear_ratio() * damage.total());
+			target->take_damage(damage, boost::none, actor.id()); /// @todo Part targeting
+			return cont(Result::success);
+		} else {
+			return actor.agent().message("Melee Attack", "Miss!", [cont] { return cont(Result::aborted); });
+		}
 	}
 
 	Action::Complete Weapon::Block::perform(Being& /*actor*/, cont_t cont)

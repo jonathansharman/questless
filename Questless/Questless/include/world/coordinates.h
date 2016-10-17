@@ -34,6 +34,8 @@ namespace questless
 	struct SectionTileIndex
 	{
 		int i; int j;
+
+		SectionTileIndex(const SectionTileIndex&) = default;
 	};
 
 	/// Coordinates within the space of tiles in a region.

@@ -179,7 +179,7 @@ inline auto smap(Stream<T> s, F f) -> Stream<decltype(f(s.head()))>
 	if (s.empty()) {
 		return Stream<U>{};
 	}
-	return Stream<U>([s, f]() {
+	return Stream<U>([s, f] {
 		return Cell<U>{f(s.head()), smap(s.tail(), f)};
 	});
 }
@@ -193,7 +193,7 @@ inline auto smapv(Stream<T> s, F f) -> Stream<decltype(f())>
 	if (s.isEmpty()) {
 		return Stream<U>{};
 	}
-	return Stream<U>{[s, f]() {
+	return Stream<U>{[s, f] {
 		return Cell<U>{f(), smapv(s.tail(), f)};
 	}};
 }
@@ -204,7 +204,7 @@ inline Stream<T> sconcat(Stream<T> left, Stream<T> right)
 	if (left.empty()) {
 		return right;
 	}
-	return Stream<T>{[=]() {
+	return Stream<T>{[=] {
 		return Cell<T>{left.head(), sconcat<T>(left.tail(), right)};
 	}};
 }
@@ -218,7 +218,7 @@ inline Stream<T> sjoin(Stream<Stream<T>> s)
 	if (s.empty()) {
 		return Stream<T>{};
 	}
-	return Stream<T>{[s]() {
+	return Stream<T>{[s] {
 		Stream<T> head = s.head();
 		return Cell<T>{head.head(), concat(head.tail(), sjoin(s.tail()))};
 	}};
@@ -244,7 +244,7 @@ inline Stream<void*> sguard(bool b)
 template <typename T>
 inline static Stream<T> singleton(T v)
 {
-	return Stream<T>{[v]() {
+	return Stream<T>{[v] {
 		return Cell<T>{v};
 	}};
 }

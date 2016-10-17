@@ -47,31 +47,13 @@ namespace questless
 
 		/// Sets the time left before the weapon can be used again to the given value.
 		void active_cooldown(double value) { _active_cooldown = value; }
-
-		/// @return Whether the weapon is ready.
-		bool ready() const { return _ready; }
 	protected:
-		class Ready : public Action
+		class BeginMeleeAttack : public Action
 		{
 		public:
-			Ready(Weapon& weapon, std::string name = "Ready") : _weapon{weapon}, _name{std::move(name)} {}
+			BeginMeleeAttack(Weapon& weapon, std::string name = "Attack") : _weapon{weapon}, _name{std::move(name)} {}
 
-			static ptr make(Weapon& weapon, std::string name = "Ready") { return std::make_unique<Ready>(weapon, name); }
-
-			std::string name() const override { return _name; }
-
-			Action::Complete perform(Being& actor, cont_t cont) override;
-		private:
-			Weapon& _weapon;
-			const std::string _name;
-		};
-
-		class MeleeAttack : public Action
-		{
-		public:
-			MeleeAttack(Weapon& weapon, std::string name = "Attack") : _weapon{weapon}, _name{std::move(name)} {}
-
-			static ptr make(Weapon& weapon, std::string name = "Attack") { return std::make_unique<MeleeAttack>(weapon, name); }
+			static ptr make(Weapon& weapon, std::string name = "Attack") { return std::make_unique<BeginMeleeAttack>(weapon, name); }
 
 			std::string name() const override { return _name; }
 
@@ -96,7 +78,21 @@ namespace questless
 			const std::string _name;
 		};
 	private:
-		bool _ready = false;
+		class CompleteMeleeAttack : public Action
+		{
+		public:
+			CompleteMeleeAttack(Weapon& weapon, RegionTileCoords coords) : _weapon{weapon}, _coords(coords) {}
+
+			static ptr make(Weapon& weapon, RegionTileCoords coords) { return std::make_unique<CompleteMeleeAttack>(weapon, coords); }
+
+			std::string name() const override { return ""; }
+
+			Action::Complete perform(Being& actor, cont_t cont) override;
+		private:
+			Weapon& _weapon;
+			RegionTileCoords _coords;
+		};
+
 		double _active_cooldown = 0.0;
 	};
 }

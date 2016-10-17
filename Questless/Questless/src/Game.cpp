@@ -518,7 +518,7 @@ namespace questless
 
 			// Work through the beings ready to take their turns, until all have acted or one of them can't finish acting yet.
 			while (Being* next_ready_being = _region->next_ready_being()) {
-				next_ready_being->agent().act();
+				next_ready_being->act();
 				if (!_dialogs.empty()) {
 					// Awaiting player input to complete current action. Stop taking turns, and start at the next agent once this action is complete.
 

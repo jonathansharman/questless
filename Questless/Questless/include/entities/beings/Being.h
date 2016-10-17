@@ -11,6 +11,7 @@
 #define BEING_H
 
 #include <vector>
+#include <deque>
 #include <utility>
 #include <functional>
 #include <memory>
@@ -185,6 +186,18 @@ namespace questless
 		/// @return The agent responsible for this being.
 		Agent& agent() { return *_agent; }
 
+		/// Causes the being to perform an action.
+		void act();
+
+		/// Adds the given delayed action to the being's delayed actions queue.
+		/// @param delay The delay before the action is performed.
+		/// @param cont The continuation function to call once the action completes.
+		/// @param action The action to perform after the delay.
+		void add_delayed_action(double delay, Action::cont_t cont, Action::ptr action);
+
+		/// Clears the being's delayed actions queue.
+		void clear_delayed_actions();
+
 		/// @return The being's inventory.
 		Inventory& inventory() { return _inventory; }
 
@@ -337,6 +350,11 @@ namespace questless
 		BeingId _id;
 
 		std::unique_ptr<Agent> _agent; ///< The agent responsible for this being.
+
+		/// @todo Maybe use a std::pair of actions and conts, and then use the auto [action, cont] = ... syntax in act() once supported?
+		std::deque<double> _action_delays; ///< The queue of delays before the next action in the delayed actions queue should begin.
+		std::deque<Action::ptr> _delayed_actions; ///< The queue of delayed actions to occur when this being is not busy.
+		std::deque<Action::cont_t> _delayed_action_conts; ///< The queue of delayed action continuations.
 
 		// Body
 

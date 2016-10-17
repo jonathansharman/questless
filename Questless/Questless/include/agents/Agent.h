@@ -38,11 +38,7 @@ namespace questless
 		Being& being() { return _being; }
 		const Being& being() const { return _being; }
 
-		/// Chooses an action for the being to perform and executes it, possibly finishing in a later update cycle.
-		/// @param game The game object, used by the agent to query the game and world state.
-		/// @param cont [out] The continuation to call in the calling code in the next update cycle if the action is not finished.
-		/// @return whether the action is finished.
-		/// @note Doing nothing counts as an action. AI always act immediately, so they will be always return true. The player agent may take multiple update cycles because it's waiting for player input.
+		/// Chooses and executes an action for the agent's being to perform.
 		virtual void act() = 0;
 
 		/// @todo UPDATE DOCUMENTATION HERE.
