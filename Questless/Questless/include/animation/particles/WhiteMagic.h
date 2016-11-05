@@ -18,7 +18,6 @@ namespace questless
 	class WhiteMagic : public Particle
 	{
 	public:
-		/// Constructs a white magic particle with the specified position.
 		/// @param position The particle's starting position.
 		WhiteMagic(const PointF& position) : Particle
 			{ position

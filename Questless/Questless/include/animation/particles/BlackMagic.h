@@ -18,7 +18,6 @@ namespace questless
 	class BlackMagic : public Particle
 	{
 	public:
-		/// Constructs a black magic particle with the specified position.
 		/// @param position The particle's starting position.
 		BlackMagic(const PointF& position) : Particle
 			{ position

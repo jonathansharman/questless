@@ -140,11 +140,15 @@ namespace questless
 		/// @return The removed object.
 		Object::ptr remove(Object& object);
 
+		/// @todo I think section_exists() may be unnecessary. Can probably just use section() everywhere.
+
 		/// @return Whether there is a section at the given section coordinates.
 		bool section_exists(RegionSectionCoords section_coords) const;
 
 		/// @return The section at the given section coordinates.
-		const Section& section(RegionSectionCoords section_coords) const;
+		boost::optional<Section::ref> section(RegionSectionCoords section_coords);
+		/// @return The section at the given section coordinates.
+		boost::optional<Section::cref> section(RegionSectionCoords section_coords) const;
 
 		/// Gets the coordinates of the section that contains the tile with the given coordinates.
 		/// @param tile_coords The tile's hex coordinates in the region.
@@ -152,7 +156,7 @@ namespace questless
 		RegionSectionCoords containing_section_coords(RegionTileCoords tile_coords) const
 		{
 			/// @todo Figure out how to do this without the ugly casting to/from floating-point.
-			return RegionSectionCoords{{lround(tile_coords.hex.q / double{section_diameter}), lround(tile_coords.hex.r / double{section_diameter})}};
+			return RegionSectionCoords{lround(tile_coords.q / double{section_diameter}), lround(tile_coords.r / double{section_diameter})};
 		}
 
 		/// Gets the section that contains the tile with the given coordinates.
@@ -184,7 +188,7 @@ namespace questless
 		Game& _game;
 		std::string _name;
 		std::map<RegionSectionCoords, std::unique_ptr<Section>> _section_map; /// @todo Replace unique_ptr with reference_wrapper (disallow null sections).
-		RegionSectionCoords center_section_coords = RegionSectionCoords{{0, 0}};
+		RegionSectionCoords center_section_coords = RegionSectionCoords{0, 0};
 
 		std::set<Being::ref, Being::ref_less_t> _turn_queue;
 

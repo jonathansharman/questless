@@ -39,7 +39,7 @@ namespace questless
 	{
 		_pt_hovered = _position + VectorF{input.mouse_position() - _window.center()} / _zoom;
 		_pt_hovered.rotate(_position, _angle);
-		_pt_hovered_rounded = Layout::dflt().to_world(Layout::dflt().to_hex_coords(_pt_hovered));
+		_pt_hovered_rounded = Layout::dflt().to_world(Layout::dflt().to_hex_coords<RegionTileCoords>(_pt_hovered)).to_point();
 	}
 
 	void Camera::draw

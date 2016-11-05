@@ -20,7 +20,6 @@ namespace questless
 	class YellowMagic : public Particle
 	{
 	public:
-		/// Constructs a yellow magic particle with the specified position.
 		/// @param position The particle's starting position.
 		YellowMagic(const PointF& position) : Particle
 			{ position + random_displacement(_max_displacement)
@@ -34,6 +33,9 @@ namespace questless
 		{
 			_velocity.rotate(uniform(0.0, 360.0));
 		}
+
+		/// @param position The particle's starting position.
+		static ptr make(const PointF& position) { return std::make_unique<YellowMagic>(position); }
 	private:
 		static constexpr double _max_displacement = 15.0;
 		static constexpr double _v = 100.0;

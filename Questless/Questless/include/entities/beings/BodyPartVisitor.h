@@ -11,7 +11,7 @@
 #define BODY_PART_VISITOR_H
 
 #include <string>
-#include <exception>
+#include <stdexcept>
 #include <memory>
 
 namespace questless

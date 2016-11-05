@@ -20,20 +20,23 @@
 #include "sdl-wrappers/Renderer.h"
 #include "world/Tile.h"
 #include "sdl-wrappers/Renderable.h"
+#include "effects/Effect.h"
+#include "animation/particles/Particle.h"
 
 namespace questless
 {
 	class Game;
 
-	class WorldRenderer : public sdl::Renderable
+	class WorldRenderer : public sdl::Renderable, EffectVisitor
 	{
 	public:
-		/// @param world_view The world view to render.
+		/// @param world_view The initial world view to render.
 		WorldRenderer(const WorldView& world_view) : _world_view{&world_view}, _terrain_render_is_current{false} {}
 
-		/// Resets the world view to a new view.
+		/// Updates the world renderer's world view.
 		/// @param world_view The new world view to render.
-		void reset_view(const WorldView& world_view);
+		/// @param effects Any newly perceived effects to render.
+		void update_view(const WorldView& world_view, std::vector<Effect::ptr> effects);
 
 		/// Updates animations. To be called once per frame.
 		void update();
@@ -51,6 +54,15 @@ namespace questless
 		/// @param game The game object.
 		/// @param camera The camera with which to draw the objects.
 		void draw_objects(const Game& game, const Camera& camera);
+
+		/// Draws visualizations of any active effects in the world.
+		/// @param game The game object.
+		/// @param camera The camera with which to draw the objects.
+		void draw_effects(const Game& game, const Camera& camera);
+
+		// Effect visitor methods.
+
+		void visit(const LightningBoltEffect&) override;
 	private:
 		const WorldView* _world_view;
 
@@ -60,6 +72,8 @@ namespace questless
 		sdl::Texture::ptr _terrain_texture;
 		sdl::Rect _terrain_bounds;
 		bool _terrain_render_is_current;
+
+		std::vector<Particle::ptr> _particles;
 
 		void refresh() override;
 

@@ -24,7 +24,7 @@ namespace questless
 					break;
 				case PlayerActionDialog::Choice::Type::move:
 					being().gain_busy_time(1.0);
-					game.region().move(being(), RegionTileCoords{being().coords().hex.neighbor(static_cast<HexCoords::Direction>(player_choice.data))});
+					game.region().move(being(), RegionTileCoords{being().coords().neighbor(static_cast<RegionTileCoords::Direction>(player_choice.data))});
 					break;
 				case PlayerActionDialog::Choice::Type::use:
 				{
@@ -59,6 +59,18 @@ namespace questless
 				}
 			}
 		});
+	}
+
+	void Player::perceive(const Effect::ptr& effect)
+	{
+		_perceived_effects.push_back(effect);
+	}
+
+	std::vector<Effect::ptr> Player::poll_perceived_effects()
+	{
+		std::vector<Effect::ptr> perceived_effects = std::move(_perceived_effects);
+		_perceived_effects.clear();
+		return perceived_effects;
 	}
 
 	Action::Complete Player::message

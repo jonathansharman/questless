@@ -130,7 +130,7 @@ namespace questless
 			_txt_options.clear();
 			for (const auto& option : _options) {
 				_txt_options.push_back(sdl::Texture::make(sdl::font_manager()[list_option_font_handle()].render(_item_to_name(option), sdl::renderer(), sdl::Color::black())));
-				_bounds.w = max(_bounds.w, _txt_options.back()->width());
+				_bounds.w = std::max(_bounds.w, _txt_options.back()->width());
 			}
 			_bounds.w += 2 * _x_padding;
 			_bounds.h = _title_height + static_cast<int>(_options.size() * _option_height) + 2 * _y_padding;

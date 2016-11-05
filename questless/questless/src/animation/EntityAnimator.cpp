@@ -30,7 +30,7 @@ namespace questless
 
 		_animation = make_unique<AnimationCollection>(ss_handle, 3, 1);
 
-		vector<Animation::Frame> frames
+		std::vector<Animation::Frame> frames
 			{ {double_seconds{0.2}, Point{0, 0}, Point{0, 10}}
 			, {double_seconds{0.2}, Point{1, 0}, Point{0, 10}}
 			, {double_seconds{0.2}, Point{2, 0}, Point{0, 10}}
@@ -52,7 +52,7 @@ namespace questless
 
 		_animation = make_unique<AnimationCollection>(ss_handle, 3, 1);
 
-		vector<Animation::Frame> frames
+		std::vector<Animation::Frame> frames
 			{ {double_seconds{0.2}, Point{0, 0}, Point{0, 10}}
 			, {double_seconds{0.2}, Point{1, 0}, Point{0, 10}}
 			, {double_seconds{0.2}, Point{2, 0}, Point{0, 10}}
@@ -77,7 +77,7 @@ namespace questless
 
 		_animation = make_unique<AnimationCollection>(ss_handle, 1, 1);
 
-		vector<Animation::Frame> frames{{double_seconds{1.0}, Point{0, 0}, Point{0, 4}}};
+		std::vector<Animation::Frame> frames{{double_seconds{1.0}, Point{0, 0}, Point{0, 4}}};
 		_animation->add("being-a-box", Animation::make(frames, true));
 		_animation->start("being-a-box", true);
 	}

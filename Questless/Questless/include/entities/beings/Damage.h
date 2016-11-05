@@ -53,6 +53,7 @@ namespace questless
 		}
 		friend constexpr Damage operator -(const Damage& minuend, const Damage& subtrahend)
 		{
+			using std::max;
 			return Damage
 				{ max(0.0, minuend.slash - subtrahend.slash)
 				, max(0.0, minuend.pierce - subtrahend.pierce)

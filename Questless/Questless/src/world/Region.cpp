@@ -49,7 +49,7 @@ namespace questless
 			for (int section_q = -q_radius; section_q <= q_radius; ++section_q) {
 				if (uniform(0, 0)) {
 				} else {
-					RegionSectionCoords section_coords{{section_q, section_r}};
+					RegionSectionCoords section_coords{section_q, section_r};
 
 					// Create a section with random terrain.
 					string data;
@@ -71,7 +71,7 @@ namespace questless
 					for (int r = -section_radius; r <= section_radius; ++r) {
 						for (int q = -section_radius; q <= section_radius; ++q) {
 							if ((section_r != 0 || section_q != 0) && uniform(0, 10) == 0) {
-								RegionTileCoords entity_coords{HexCoords{q, r} +section_coords.hex * section_diameter};
+								auto entity_coords = Section::region_tile_coords(section_coords, {q, r});
 								auto new_being = make_unique<Goblin>(_game, Agent::make<BasicAI>, BeingId::next());
 								add<Being>(std::move(new_being), entity_coords);
 							}
@@ -106,11 +106,11 @@ namespace questless
 			}
 			int section_q = std::stoi(q_string);
 			int section_r = std::stoi(r_string);
-			RegionSectionCoords section_coords{{section_q, section_r}};
+			RegionSectionCoords section_coords{section_q, section_r};
 
 			std::ifstream data_stream{(region_path / it->path()).string()};
 			if (data_stream.fail()) {
-				throw logic_error("Could not open section file.");
+				throw std::logic_error("Could not open section file.");
 			}
 			_section_map[section_coords] = make_unique<Section>(section_coords, data_stream);
 		}
@@ -216,7 +216,7 @@ namespace questless
 
 		int q = uniform(-section_radius, section_radius);
 		int r = uniform(-section_radius, section_radius);
-		RegionTileCoords player_coords{{q, r}};
+		RegionTileCoords player_coords{q, r};
 
 		// Erase the being currently there, if any.
 		auto& section = containing_section(player_coords);
@@ -229,7 +229,7 @@ namespace questless
 	{
 		Section& src_section = being.section();
 		RegionSectionCoords dst_section_coords = containing_section_coords(coords);
-		if (dst_section_coords.hex != src_section.coords().hex) {
+		if (dst_section_coords != src_section.coords()) {
 			const unique_ptr<Section>& dst_section = _section_map[dst_section_coords];
 			if (dst_section != nullptr) {
 				if (dst_section->being(coords)) {
@@ -260,7 +260,7 @@ namespace questless
 	{
 		Section& src_section = object.section();
 		RegionSectionCoords dst_section_coords = containing_section_coords(coords);
-		if (dst_section_coords.hex != src_section.coords().hex) {
+		if (dst_section_coords != src_section.coords()) {
 			const unique_ptr<Section>& dst_section = _section_map[dst_section_coords];
 			if (dst_section != nullptr) {
 				if (dst_section->being(coords)) {
@@ -316,14 +316,15 @@ namespace questless
 		return it != _section_map.end() && it->second != nullptr;
 	}
 
-	const Section& Region::section(RegionSectionCoords section_coords) const
+	boost::optional<Section::ref> Region::section(RegionSectionCoords section_coords)
 	{
 		auto it = _section_map.find(section_coords);
-		if (it != _section_map.end()) {
-			return *(it->second);
-		} else {
-			throw std::out_of_range{"No section at given coordinates in region."};
-		}
+		return it == _section_map.end() ? boost::none : boost::make_optional(std::ref(*(it->second)));
+	}
+	boost::optional<Section::cref> Region::section(RegionSectionCoords section_coords) const
+	{
+		auto it = _section_map.find(section_coords);
+		return it == _section_map.end() ? boost::none : boost::make_optional(std::cref(*(it->second)));
 	}
 
 	void Region::update()
@@ -354,7 +355,7 @@ namespace questless
 	{
 		for (int r = -_loaded_sections_q_radius; r <= _loaded_sections_q_radius; ++r) {
 			for (int q = -_loaded_sections_r_radius; q <= _loaded_sections_r_radius; ++q) {
-				RegionSectionCoords section_coords{{q, r}};
+				RegionSectionCoords section_coords{q, r};
 				auto it = _section_map.find(section_coords);
 				if (it != _section_map.end() && it->second != nullptr) { /// @todo Null sections...?
 					f(*it->second);

@@ -31,6 +31,9 @@ namespace questless
 	class Section
 	{
 	public:
+		using ref = std::reference_wrapper<Section>;
+		using cref = std::reference_wrapper<const Section>;
+
 		/// @param tile_coords Hex coordinates of a tile relative to the section.
 		/// @return The tile index in the section of the given section coordinates.
 		static SectionTileIndex tile_index(SectionTileCoords tile_coords);
@@ -103,11 +106,20 @@ namespace questless
 			return remove<EntityType>(entity.coords());
 		}
 
+		/// @param section_coords Hex coordinates of a section relative to the region.
+		/// @param tile_coords Hex coordinates of a tile relative to the section.
+		/// @return Hex coordinates relative to the region.
+		static RegionTileCoords region_tile_coords(RegionSectionCoords section_coords, SectionTileCoords tile_coords)
+		{
+			int q = section_coords.q * section_diameter + tile_coords.q;
+			int r = section_coords.r * section_diameter + tile_coords.r;
+			return RegionTileCoords{q, r};
+		}
 		/// @param tile_coords Hex coordinates of a tile relative to the section.
 		/// @return Hex coordinates relative to the region.
 		RegionTileCoords region_tile_coords(SectionTileCoords tile_coords) const
 		{
-			return RegionTileCoords{{_coords.hex * section_diameter + tile_coords.hex}};
+			return region_tile_coords(_coords, tile_coords);
 		}
 
 		/// @param tile_coords Hex coordinates of a tile relative to the section.

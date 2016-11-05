@@ -27,7 +27,6 @@ namespace questless
 				}
 			}
 		);
-		return Action::Complete{};
 	}
 
 	Action::Complete Weapon::CompleteMeleeAttack::perform(Being& actor, cont_t cont)

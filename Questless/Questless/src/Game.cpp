@@ -16,12 +16,7 @@ using std::ostringstream;
 #include "ui/MagnitudeDialog.h"
 #include "ui/TileDialog.h"
 #include "animation/EntityAnimator.h"
-#include "animation/particles/WhiteMagic.h"
-#include "animation/particles/BlackMagic.h"
-#include "animation/particles/GreenMagic.h"
-#include "animation/particles/RedMagic.h"
-#include "animation/particles/BlueMagic.h"
-#include "animation/particles/YellowMagic.h"
+#include "world/coordinates.h"
 
 /// @todo The following are needed only for player spawning. Perhaps this should be the responsibility of a different class.
 #include "agents/Agent.h"
@@ -38,6 +33,7 @@ using std::move;
 using std::unique_ptr;
 using std::make_unique;
 using std::dynamic_pointer_cast;
+using std::string;
 using std::function;
 
 using namespace std::chrono;
@@ -213,6 +209,31 @@ namespace questless
 		return cont(boost::none);
 	}
 
+	void Game::add_effect(const Effect::ptr& effect)
+	{
+		int range = effect->range();
+		auto origin = effect->origin();
+
+		RegionTileCoords min_tile_coords{origin.q - range, origin.r - range};
+		RegionTileCoords max_tile_coords{origin.q + range, origin.r + range};
+
+		RegionSectionCoords min_section_coords = _region->containing_section_coords(min_tile_coords);
+		RegionSectionCoords max_section_coords = _region->containing_section_coords(max_tile_coords);
+
+		for (int r = min_section_coords.r; r <= max_section_coords.r; ++r) {
+			for (int q = min_section_coords.q; q <= max_section_coords.q; ++q) {
+				RegionSectionCoords section_coords = _region->containing_section_coords({q, r});
+				boost::optional<Section::ref> opt_section = _region->section(section_coords);
+				if (opt_section) {
+					Section& section = *opt_section;
+					for (Being& being : section.beings()) {
+						being.agent().perceive(effect);
+					}
+				}
+			}
+		}
+	}
+
 	// Main Game Logic
 
 	void Game::run()
@@ -339,14 +360,14 @@ namespace questless
 		}
 
 		if (_input.any_presses() || clock::now() - _time_last_state_change >= splash_duration) {
-			// Clear/unload/stop splash stuff
+			// End splash.
 
 			_splash_flame_positions.clear();
 			_txt_splash_logo = nullptr;
 			_txt_splash_flame = nullptr;
 			_sfx_splash->stop();
 
-			// Load menu stuff
+			// Initialize menu.
 
 			// Add pages.
 			_mnu_main.add_page("Questless");
@@ -359,7 +380,7 @@ namespace questless
 			_mnu_main.add_option("Settings", "Save", "Questless");
 			_mnu_main.add_option("Settings", "Cancel", "Questless");
 
-			vector<Animation::Frame> frames;
+			std::vector<Animation::Frame> frames;
 			frames.emplace_back(double_seconds{1.0}, Point{0, 0}, Point{0, 0});
 			frames.emplace_back(double_seconds{1.0}, Point{1, 0}, Point{0, 0});
 			frames.emplace_back(double_seconds{1.0}, Point{2, 0}, Point{0, 0});
@@ -401,7 +422,8 @@ namespace questless
 
 					{ // Spawn the player's being.
 						Being::ptr player_being = make_unique<Human>(*this, Agent::make<Player>, BeingId::next());
-						_player_id = player_being->id();
+						_player = dynamic_cast<Player*>(&player_being->agent());
+						_player_being_id = player_being->id();
 						player_being->give_item(make_unique<Scroll>(make_unique<LightningBoltSpell>()));
 						player_being->give_item(make_unique<Scroll>(make_unique<HealSpell>()));
 						player_being->give_item(make_unique<Scroll>(make_unique<TeleportSpell>()));
@@ -409,11 +431,13 @@ namespace questless
 						_region->spawn_player(move(player_being));
 					}
 					// Pass the player's being ID to the HUD.
-					_hud->player_id(_player_id);
-					// Set the initial world view, world renderer, and camera position relative to the player's being.
-					_world_view = make_unique<WorldView>(*being(_player_id), true);
-					_world_renderer = make_unique<WorldRenderer>(*_world_view);
-					_camera->position(PointF{Layout::dflt().to_world(being(_player_id)->coords().hex)});
+					_hud->player_id(_player_being_id);
+					// Update the player's initial world view.
+					_player->update_world_view();
+					// Initialize the world renderer.
+					_world_renderer = make_unique<WorldRenderer>(_player->world_view());
+					// Set the camera position relative to the player's being.
+					_camera->position(PointF{Layout::dflt().to_world(being(_player_being_id)->coords())});
 
 					_time_last_state_change = clock::now();
 					_state = State::playing;
@@ -451,10 +475,7 @@ namespace questless
 
 		_world_renderer->draw_objects(*this, *_camera);
 		_world_renderer->draw_beings(*this, *_camera);
-
-		for (auto& particle : _particles) {
-			particle->draw(*_camera);
-		}
+		_world_renderer->draw_effects(*this, *_camera);
 
 		// Draw HUD.
 		_hud->draw();
@@ -474,7 +495,7 @@ namespace questless
 		ostringstream ss_cam_hex_coords;
 		ss_cam_hex_coords.setf(std::ios::fixed);
 		ss_cam_hex_coords.precision(0);
-		HexCoords cam_hex_coords = Layout::dflt().to_hex_coords(_camera->position());
+		auto cam_hex_coords = Layout::dflt().to_hex_coords<RegionTileCoords>(_camera->position());
 		ss_cam_hex_coords << "(" << cam_hex_coords.q << ", " << cam_hex_coords.r << ")";
 		Texture txt_cam_hex_coords = _fnt_20pt->render(ss_cam_hex_coords.str(), renderer(), Color::white());
 		txt_cam_hex_coords.draw(Point(0, 25));
@@ -502,15 +523,8 @@ namespace questless
 			if (_dialogs.front()->closed()) {
 				_dialogs.pop_front();
 
-				// End of player's turn. Update world view.
 				if (_dialogs.empty()) {
-					/// @todo Do something nice when the player dies.
-					if (Being* player_being = being(_player_id)) {
-						// Reset the world view.
-						_world_view = make_unique<WorldView>(*player_being, true);
-						// Reset the world renderer.
-						_world_renderer->reset_view(*_world_view);
-					}
+					// End of player's turn.
 				}
 			}
 		} else {
@@ -519,16 +533,10 @@ namespace questless
 			// Work through the beings ready to take their turns, until all have acted or one of them can't finish acting yet.
 			while (Being* next_ready_being = _region->next_ready_being()) {
 				next_ready_being->act();
+
 				if (!_dialogs.empty()) {
 					// Awaiting player input to complete current action. Stop taking turns, and start at the next agent once this action is complete.
-
-					// Reset the world view.
-					_world_view = make_unique<WorldView>(*being(_player_id), true);
-					// Reset the world renderer.
-					_world_renderer->reset_view(*_world_view);
-
-					/// @todo The world render should probably be updated more frequently than before and after the player's turn.
-
+					update_player_view();
 					break;
 				}
 			}
@@ -542,28 +550,6 @@ namespace questless
 
 		// Update world renderer.
 		_world_renderer->update();
-
-		if (_input.down(SDLK_t))
-			for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<WhiteMagic>(_camera->pt_hovered()));
-		if (_input.down(SDLK_y))
-			for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<BlackMagic>(_camera->pt_hovered()));
-		if (_input.down(SDLK_u))
-			for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<GreenMagic>(_camera->pt_hovered()));
-		if (_input.down(SDLK_i))
-			for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<RedMagic>(_camera->pt_hovered()));
-		if (_input.down(SDLK_o))
-			for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<BlueMagic>(_camera->pt_hovered()));
-		if (_input.down(SDLK_p))
-			for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<YellowMagic>(_camera->pt_hovered()));
-
-		for (size_t i = 0; i < _particles.size();) {
-			_particles[i]->update();
-			if (_particles[i]->dead()) {
-				_particles.erase(_particles.begin() + i);
-			} else {
-				++i;
-			}
-		}
 
 		_ani_test->update();
 
@@ -606,10 +592,10 @@ namespace questless
 			follow = !follow;
 		}
 		if (follow) {
-			if (Being* player = being(_player_id)) {
+			if (Being* player = being(_player_being_id)) {
 				constexpr double acceleration = 0.2;
 
-				VectorF to_player = PointF{Layout::dflt().to_world(player->coords().hex)} -_camera->position();
+				VectorF to_player = Layout::dflt().to_world(player->coords()) -_camera->position();
 				_camera->position(_camera->position() + acceleration * to_player);
 
 				double to_zoom_1 = 1.0 - _camera->zoom();
@@ -637,7 +623,7 @@ namespace questless
 			GlobalCoords coords = std::get<GlobalCoords>(it->second);
 			Region& region = *_region; /// @todo Load region based on the region name in the coords (coords.region).
 			RegionSectionCoords section = coords.section;
-			for (Being& being : region.section(section).beings()) {
+			for (Being& being : region.section(section).get().get().beings()) {
 				if (being.id() == id) {
 					return &being;
 				}
@@ -660,12 +646,23 @@ namespace questless
 			GlobalCoords coords = std::get<GlobalCoords>(it->second);
 			Region& region = *_region; /// @todo Load region based on the region name in the coords (coords.region).
 			RegionSectionCoords section = coords.section;
-			for (Object& object : region.section(section).objects()) {
+			for (Object& object : region.section(section).get().get().objects()) {
 				if (object.id() == id) {
 					return &object;
 				}
 			}
 			throw std::logic_error{"Object lookup failed."};
+		}
+	}
+
+	void Game::update_player_view()
+	{
+		/// @todo Do something nice when the player dies.
+		if (Being* player_being = being(_player_being_id)) {
+			// Update the player's world view.
+			_player->update_world_view();
+			// Update the world renderer's world view.
+			_world_renderer->update_view(_player->world_view(), _player->poll_perceived_effects());
 		}
 	}
 }

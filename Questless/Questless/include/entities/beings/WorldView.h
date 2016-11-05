@@ -96,7 +96,7 @@ namespace questless
 		std::vector<SectionView> _section_views;
 		std::vector<BeingView> _being_views;
 		std::vector<ObjectView> _object_views;
-		const Region& _region;
+		std::reference_wrapper<const Region> _region;
 
 		boost::optional<sdl::Rect> _bounds;
 	};

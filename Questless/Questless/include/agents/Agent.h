@@ -18,6 +18,7 @@
 #include "entities/beings/Being.h"
 #include "entities/beings/WorldView.h"
 #include "items/Item.h"
+#include "effects/Effect.h"
 
 namespace questless
 {
@@ -41,9 +42,13 @@ namespace questless
 		/// Chooses and executes an action for the agent's being to perform.
 		virtual void act() = 0;
 
-		/// @todo UPDATE DOCUMENTATION HERE.
+		/// Causes the agent to perceive the given effect, possibly updating its state accordingly.
+		/// @param effect The effect to perceive.
+		virtual void perceive(const Effect::ptr& effect) = 0;
 
 		// Queries and messages
+
+		/// @todo UPDATE DOCUMENTATION HERE.
 
 		virtual Action::Complete message
 			( const std::string& title

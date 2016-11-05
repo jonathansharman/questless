@@ -18,14 +18,14 @@ namespace questless
 	function<bool(RegionTileCoords)> Action::tile_in_range_predicate(Being& actor, int range)
 	{
 		return [&actor, range](RegionTileCoords tile_coords) {
-			return actor.coords().hex.distance_to(tile_coords.hex) <= range;
+			return actor.coords().distance_to(tile_coords) <= range;
 		};
 	}
 
 	function<bool(Being&)> Action::being_in_range_predicate(Being& actor, int range)
 	{
 		return [&actor, range](Being& being) {
-			return actor.coords().hex.distance_to(being.coords().hex) <= range;
+			return actor.coords().distance_to(being.coords()) <= range;
 		};
 	}
 }

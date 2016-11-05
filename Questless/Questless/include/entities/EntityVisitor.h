@@ -11,7 +11,7 @@
 #define ENTITY_VISITOR_H
 
 #include <string>
-#include <exception>
+#include <stdexcept>
 
 namespace questless
 {

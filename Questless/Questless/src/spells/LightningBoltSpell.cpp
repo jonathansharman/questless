@@ -10,6 +10,7 @@
 #include "spells/LightningBoltSpell.h"
 #include "Game.h"
 #include "entities/beings/Being.h"
+#include "effects/Effect.h"
 
 /// @todo Body part stuff - remove if not used.
 #include "entities/beings/BodyPart.h"
@@ -45,6 +46,7 @@ namespace questless
 						active_cooldown(cooldown());
 						discharge();
 						caster.lose_mana(cost);
+						caster.game().add_effect(LightningBoltEffect::make(tile_coords));
 						if (Being* target = caster.region().being(tile_coords)) {
 							double burn_magnitude = magnitude * caster.magic_power(color()) / target->magic_resistance(color());
 

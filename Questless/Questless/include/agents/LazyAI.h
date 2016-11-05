@@ -21,6 +21,8 @@ namespace questless
 
 		void act() override { being().gain_busy_time(uniform(1.0, 2.0)); }
 
+		void perceive(const Effect::ptr&) override {}
+
 		// Queries and messages
 
 		Action::Complete message

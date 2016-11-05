@@ -27,15 +27,15 @@ namespace questless
 
 	SectionTileIndex Section::tile_index(SectionTileCoords tile_coords)
 	{
-		int x = tile_coords.hex.r + section_radius;
-		int y = tile_coords.hex.q + section_radius;
+		int x = tile_coords.r + section_radius;
+		int y = tile_coords.q + section_radius;
 		return SectionTileIndex{x, y};
 	}
 
 	SectionTileIndex Section::tile_index(RegionTileCoords region_tile_coords)
 	{
-		int x = (region_tile_coords.hex.q % section_diameter + section_diameter) % section_diameter;
-		int y = (region_tile_coords.hex.r % section_diameter + section_diameter) % section_diameter;
+		int x = (region_tile_coords.q % section_diameter + section_diameter) % section_diameter;
+		int y = (region_tile_coords.r % section_diameter + section_diameter) % section_diameter;
 		return SectionTileIndex{x, y};
 	}
 
@@ -76,9 +76,9 @@ namespace questless
 		}
 	}
 	
-	void Section::save(const string& filename)
+	void Section::save(const std::string& filename)
 	{
-		std::ofstream fout(filename.c_str());
+		std::ofstream fout{filename.c_str()};
 		for (auto& r_row : _tiles) {
 			for (auto& tile : r_row) {
 				fout << static_cast<char>(tile->tile_class()) << ' ' << tile->light_level() << ' ' << tile->temperature() << ' ';

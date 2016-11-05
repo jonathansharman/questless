@@ -21,6 +21,8 @@ namespace questless
 
 		void act() override;
 
+		void perceive(const Effect::ptr&) override {}
+
 		// Queries and messages
 
 		Action::Complete message

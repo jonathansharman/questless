@@ -27,6 +27,7 @@ namespace questless
 		: _region{being.region()}
 		, _bounds{boost::none}
 	{
+		const Region& region = _region;
 		RegionTileCoords coords = being.coords();
 		Vision vision = being.vision();
 		double acuity = vision.acuity;
@@ -40,10 +41,10 @@ namespace questless
 		set<RegionSectionCoords> section_coords_set;
 		for (int r = -visual_range; r <= visual_range; ++r) {
 			for (int q = -visual_range; q <= visual_range; ++q) {
-				HexCoords offset{q, r};
+				RegionTileCoords offset{q, r};
 				if (offset.length() > visual_range) continue;
-				RegionSectionCoords section_coords = _region.containing_section_coords({coords.hex + offset});
-				if (_region.section_exists(section_coords)) {
+				RegionSectionCoords section_coords = region.containing_section_coords({coords + offset});
+				if (region.section_exists(section_coords)) {
 					section_coords_set.insert(section_coords);
 				}
 			}
@@ -56,16 +57,16 @@ namespace questless
 
 			for (int r = -section_radius; r <= section_radius; ++r) {
 				for (int q = -section_radius; q <= section_radius; ++q) {
-					RegionTileCoords tile_coords{HexCoords{q, r} + section_coords.hex * section_diameter};
+					auto tile_coords = Section::region_tile_coords(section_coords, {q, r});
 
-					double light_level = _region.light_level(tile_coords);
+					double light_level = region.light_level(tile_coords);
 					double vision_divisor = 1 + (light_level - ideal_light) * (light_level - ideal_light) / light_tolerance * Vision::light_factor;
-					int distance = coords.hex.distance_to(tile_coords.hex);
+					int distance = coords.distance_to(tile_coords);
 					double tile_visibility = (acuity - distance * distance * Vision::distance_factor) / vision_divisor;
 
 					// Update max and min coordinates.
 					if (find_bounds && tile_visibility > 0.0) {
-						Point world_coords = Layout::dflt().to_world(tile_coords.hex);
+						Point world_coords = Layout::dflt().to_world(tile_coords).to_point();
 						if (!_bounds) {
 							_bounds = Rect{world_coords.x, world_coords.y, 1, 1};
 						} else {
@@ -80,9 +81,9 @@ namespace questless
 			_section_views.push_back(section_view);
 
 			// Calculate being visibilities.
-			for (const Being& other_being : _region.beings(section_coords)) {
+			for (const Being& other_being : region.beings(section_coords)) {
 				RegionTileCoords other_coords = other_being.coords();
-				if (other_coords.hex.distance_to(coords.hex) < visual_range) {
+				if (other_coords.distance_to(coords) < visual_range) {
 					BeingView being_view;
 					being_view.id = other_being.id();
 
@@ -106,9 +107,9 @@ namespace questless
 			}
 
 			// Calculate object visibilities.
-			for (const Object& object : _region.objects(section_coords)) {
+			for (const Object& object : region.objects(section_coords)) {
 				RegionTileCoords other_coords = object.coords();
-				if (other_coords.hex.distance_to(coords.hex) < visual_range) {
+				if (other_coords.distance_to(coords) < visual_range) {
 					ObjectView object_view;
 					object_view.id = object.id();
 

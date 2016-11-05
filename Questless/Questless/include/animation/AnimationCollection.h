@@ -43,12 +43,12 @@ namespace questless
 		/// Adds an animation to the collection.
 		/// @param animation_name The name of the animation to be added.
 		/// @param animation The animation to be added.
-		void add(const string& animation_name, Animation::ptr animation);
+		void add(const std::string& animation_name, Animation::ptr animation);
 
 		/// Starts the given animation from the beginning.
 		/// @param animation_name The name of the animation to be started.
 		/// @param randomize_starting_time If true, resets the animation to a random point.
-		void start(const string& animation_name, bool randomize_starting_time = false);
+		void start(const std::string& animation_name, bool randomize_starting_time = false);
 
 		/// @return Whether the current animation is paused.
 		bool paused() const { return _paused; }

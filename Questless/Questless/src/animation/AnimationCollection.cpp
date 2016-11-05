@@ -22,12 +22,12 @@ namespace questless
 		_cel_height = texture_manager()[_sprite_sheet_handle].height() / cel_rows;
 	}
 
-	void AnimationCollection::add(const string& animation_name, Animation::ptr animation)
+	void AnimationCollection::add(const std::string& animation_name, Animation::ptr animation)
 	{
 		_animations[animation_name] = std::move(animation);
 	}
 	
-	void AnimationCollection::start(const string& animation_name, bool randomize_starting_time)
+	void AnimationCollection::start(const std::string& animation_name, bool randomize_starting_time)
 	{
 		_current_animation = _animations[animation_name].get();
 		if (_current_animation != nullptr) {

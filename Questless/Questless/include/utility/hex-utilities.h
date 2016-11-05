@@ -11,19 +11,12 @@
 #define HEX_UTILITIES
 
 #include <iostream>
-using std::cerr;
-using std::endl;
 #include <string>
-using std::string;
 #include <vector>
-using std::vector;
 #include <array>
 #include <cmath>
-using std::abs;
 #include <algorithm>
-using std::max;
 #include <exception>
-using std::logic_error;
 
 #include "constants.h"
 #include "PointF.h"
@@ -32,6 +25,7 @@ using std::logic_error;
 
 namespace questless
 {
+	template <typename Tag>
 	struct HexCoords
 	{
 		enum class Direction : int { one = 1, two, three, four, five, six };
@@ -83,11 +77,11 @@ namespace questless
 
 		int distance_to(HexCoords other) const { return (*this - other).length(); }
 
-		vector<HexCoords> line_to(HexCoords dest) const
+		std::vector<HexCoords> line_to(HexCoords dest) const
 		{
 			int n = distance_to(dest);
-			vector<HexCoords> results = {};
-			double step = 1.0 / max(n, 1);
+			std::vector<HexCoords> results = {};
+			double step = 1.0 / std::max(n, 1);
 			for (int i = 0; i <= n; i++) {
 				results.push_back(lerp(dest, step * i));
 			}
@@ -108,22 +102,22 @@ namespace questless
 				case Direction::four:  return HexCoords{-1, 0, 1};
 				case Direction::five:  return HexCoords{-1, 1, 0};
 				case Direction::six:   return HexCoords{0, 1, -1};
-				default:               throw logic_error{"Invalid hex coords offset."};
+				default:               throw std::logic_error{"Invalid hex coords offset."};
 			};
 		}
 
 		HexCoords neighbor(Direction direction) const { return *this + offset(direction); }
 
-		HexCoords diagonal_neighbor(HexCoords::Direction direction) const
+		HexCoords diagonal_neighbor(Direction direction) const
 		{
 			switch (direction) {
-				case HexCoords::Direction::one:   return *this + HexCoords{2, -1, -1};
-				case HexCoords::Direction::two:   return *this + HexCoords{1, -2, 1};
-				case HexCoords::Direction::three: return *this + HexCoords{-1, -1, 2};
-				case HexCoords::Direction::four:  return *this + HexCoords{-2, 1, 1};
-				case HexCoords::Direction::five:  return *this + HexCoords{-1, 2, -1};
-				case HexCoords::Direction::six:   return *this + HexCoords{1, 1, -2};
-				default:                          throw logic_error{"Invalid hex coords offset."};
+				case Direction::one:   return *this + HexCoords{2, -1, -1};
+				case Direction::two:   return *this + HexCoords{1, -2, 1};
+				case Direction::three: return *this + HexCoords{-1, -1, 2};
+				case Direction::four:  return *this + HexCoords{-2, 1, 1};
+				case Direction::five:  return *this + HexCoords{-1, 2, -1};
+				case Direction::six:   return *this + HexCoords{1, 1, -2};
+				default:               throw std::logic_error{"Invalid hex coords offset."};
 			};
 		}
 	};
@@ -160,7 +154,7 @@ namespace questless
 		PointF size;
 		PointF origin;
 
-		static Layout dflt()
+		static const Layout& dflt()
 		{
 			static Layout l{orientation_flat, PointF{29.0, 20.5}, PointF{0, 0}};
 			return l;
@@ -168,77 +162,84 @@ namespace questless
 
 		Layout(Orientation orientation, PointF size, PointF origin) : orientation{orientation}, size{size}, origin{origin} {}
 
-		sdl::Point to_world(HexCoords h) const
+		template <typename HexCoordsType>
+		PointF to_world(HexCoordsType h) const /// @todo This function should just work for RegionTileCoords.
 		{
 			double x = (orientation.f0 * h.q + orientation.f1 * h.r) * size.x;
 			double y = (orientation.f2 * h.q + orientation.f3 * h.r) * size.y;
-			return PointF{x + origin.x, y + origin.y}.to_point();
+			return PointF{x + origin.x, y + origin.y};
 		}
 
-		HexCoords to_hex_coords(PointF p) const
+		template <typename HexCoordsType>
+		HexCoordsType to_hex_coords(PointF p) const /// @todo This function should just work for RegionTileCoords.
 		{
 			PointF p_prime{(p.x - origin.x) / size.x, (p.y - origin.y) / size.y};
 			double q = orientation.b0 * p_prime.x + orientation.b1 * p_prime.y;
 			double r = orientation.b2 * p_prime.x + orientation.b3 * p_prime.y;
-			return HexCoords(q, r, -q - r);
+			return HexCoordsType{q, r, -q - r};
 		}
 
 		PointF hex_corner_offset(int corner)
 		{
 			double angle = 2.0 * questless::pi * (corner + orientation.start_angle) / 6;
-			return PointF(size.x * cos(angle), size.y * sin(angle));
+			return PointF{size.x * cos(angle), size.y * sin(angle)};
 		}
 
-		vector<PointF> corner_points(HexCoords h)
+		template <typename HexCoordsType>
+		std::vector<PointF> corner_points(HexCoordsType h) /// @todo This function should just work for RegionTileCoords.
 		{
-			vector<PointF> corners = {};
+			std::vector<PointF> corners = {};
 			PointF center = PointF{to_world(h)};
 			for (int i = 0; i < 6; i++) {
 				PointF offset = hex_corner_offset(i);
-				corners.push_back(PointF(center.x + offset.x, center.y + offset.y));
+				corners.push_back(PointF{center.x + offset.x, center.y + offset.y});
 			}
 			return corners;
 		}
 	};
 
-	inline OffsetCoords q_offset_from_cube(int offset, HexCoords h)
+	template <typename HexCoordsType>
+	inline OffsetCoords q_offset_from_cube(int offset, HexCoordsType h)
 	{
 		int col = h.q;
 		int row = h.r + int((h.q + offset * (h.q & 1)) / 2);
-		return OffsetCoords(col, row);
+		return OffsetCoords{col, row};
 	}
 
-	inline HexCoords q_offset_to_cube(int offset, OffsetCoords h)
+	template <typename HexCoordsType>
+	inline HexCoordsType q_offset_to_cube(int offset, OffsetCoords h)
 	{
 		int q = h.col;
 		int r = h.row - int((h.col + offset * (h.col & 1)) / 2);
 		int s = -q - r;
-		return HexCoords(q, r, s);
+		return HexCoords<Tag>{q, r, s};
 	}
 
-	inline OffsetCoords r_offset_from_cube(int offset, HexCoords h)
+	template <typename HexCoordsType>
+	inline OffsetCoords r_offset_from_cube(int offset, HexCoordsType h)
 	{
 		int col = h.q + int((h.r + offset * (h.r & 1)) / 2);
 		int row = h.r;
-		return OffsetCoords(col, row);
+		return OffsetCoords{col, row};
 	}
 
-	inline HexCoords r_offset_to_cube(int offset, OffsetCoords h)
+	template <typename HexCoordsType>
+	inline HexCoordsType r_offset_to_cube(int offset, OffsetCoords h)
 	{
 		int q = h.col - int((h.row + offset * (h.row & 1)) / 2);
 		int r = h.row;
 		int s = -q - r;
-		return HexCoords(q, r, s);
+		return HexCoordsType{q, r, s};
 	}
 }
 
 // Specialize std::hash.
 namespace std
 {
-	template <>
-	struct hash<questless::HexCoords>
+	template <typename Tag>
+	struct hash<questless::HexCoords<Tag>>
 	{
-		size_t operator()(const questless::HexCoords& coords) const
+		size_t operator()(const questless::HexCoords<Tag>& coords) const
 		{
 			return 31 * coords.q + coords.r;
 		}

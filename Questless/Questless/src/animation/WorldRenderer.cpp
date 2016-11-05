@@ -14,15 +14,20 @@
 #include "sdl-wrappers/Renderable.h"
 #include "animation/TileTexturer.h"
 #include "utility/utility.h"
+#include "animation/particles/YellowMagic.h"
 
 using namespace sdl;
 
 namespace questless
 {
-	void WorldRenderer::reset_view(const WorldView& world_view)
+	void WorldRenderer::update_view(const WorldView& world_view, std::vector<Effect::ptr> effects)
 	{
 		_world_view = &world_view;
 		_terrain_render_is_current = false;
+
+		for (const auto& effect : effects) {
+			effect->accept(*this);
+		}
 
 		/// @todo Should the tile texture and entity animation caches ever be cleaned out? If so, when and how?
 	}
@@ -39,6 +44,17 @@ namespace questless
 		for (const auto& id_and_animation : _object_animations) {
 			if (id_and_animation.second != nullptr) {
 				id_and_animation.second->update();
+			}
+		}
+
+		// Update effect sounds and animations.
+
+		for (size_t i = 0; i < _particles.size();) {
+			_particles[i]->update();
+			if (_particles[i]->dead()) {
+				_particles.erase(_particles.begin() + i);
+			} else {
+				++i;
 			}
 		}
 	}
@@ -66,7 +82,7 @@ namespace questless
 					? *it->second
 					: cache_being_animation(*being);
 
-				being_animation.draw(Layout::dflt().to_world(being->coords().hex), camera);
+				being_animation.draw(Layout::dflt().to_world(being->coords()).to_point(), camera);
 			} else {
 				// Remove the being from the animation cache if it doesn't exist anymore.
 				_being_animations.erase(being_view.id);
@@ -86,12 +102,39 @@ namespace questless
 					? *it->second
 					: cache_object_animation(*object);
 
-				being_animation.draw(Layout::dflt().to_world(object->coords().hex), camera);
+				being_animation.draw(Layout::dflt().to_world(object->coords()).to_point(), camera);
 			} else {
 				// Remove the object from the animation cache if it doesn't exist anymore.
 				_object_animations.erase(object_view.id);
 			}
 		}
+	}
+
+	void WorldRenderer::draw_effects(const Game& game, const Camera& camera)
+	{
+		for (auto& particle : _particles) {
+			particle->draw(camera);
+		}
+	}
+
+	void WorldRenderer::visit(const LightningBoltEffect& e)
+	{
+		RegionTileCoords origin = e.origin();
+		for (int i = 0; i < 15; ++i) {
+			_particles.emplace_back(YellowMagic::make(Layout::dflt().to_world(origin)));
+		}
+		//if (_input.down(SDLK_t))
+		//	for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<WhiteMagic>(_camera->pt_hovered()));
+		//if (_input.down(SDLK_y))
+		//	for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<BlackMagic>(_camera->pt_hovered()));
+		//if (_input.down(SDLK_u))
+		//	for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<GreenMagic>(_camera->pt_hovered()));
+		//if (_input.down(SDLK_i))
+		//	for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<RedMagic>(_camera->pt_hovered()));
+		//if (_input.down(SDLK_o))
+		//	for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<BlueMagic>(_camera->pt_hovered()));
+		//if (_input.down(SDLK_p))
+		//	for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<YellowMagic>(_camera->pt_hovered()));
 	}
 
 	void WorldRenderer::refresh()
@@ -143,32 +186,35 @@ namespace questless
 		_terrain_texture->as_target([&] {
 			renderer().clear(Color::clear());
 			for (const auto& section_view : _world_view->section_views()) {
-				const Section& section = _world_view->region().section(section_view.coords);
-				for (int r = -section_radius; r <= section_radius; ++r) {
-					for (int q = -section_radius; q <= section_radius; ++q) {
-						SectionTileCoords section_tile_coords{{q, r}};
-						SectionTileIndex tile_index = Section::tile_index(section_tile_coords);
-						double tile_visibility = section_view.tile_visibilities[tile_index.i][tile_index.j];
-						if (tile_visibility > 0) {
-							RegionTileCoords region_tile_coords = section.region_tile_coords(section_tile_coords);
-							Point coords_in_world = Layout::dflt().to_world(region_tile_coords.hex);
-							uint8_t luminance = static_cast<uint8_t>(255 * std::min(tile_visibility / 100.0, 1.0));
+				auto opt_section = _world_view->region().section(section_view.coords);
+				if (opt_section) {
+					const Section& section = *opt_section;
+					for (int r = -section_radius; r <= section_radius; ++r) {
+						for (int q = -section_radius; q <= section_radius; ++q) {
+							SectionTileCoords section_tile_coords{q, r};
+							SectionTileIndex tile_index = Section::tile_index(section_tile_coords);
+							double tile_visibility = section_view.tile_visibilities[tile_index.i][tile_index.j];
+							if (tile_visibility > 0) {
+								RegionTileCoords region_tile_coords = section.region_tile_coords(section_tile_coords);
+								Point coords_in_world = Layout::dflt().to_world(region_tile_coords).to_point();
+								uint8_t luminance = static_cast<uint8_t>(255 * std::min(tile_visibility / 100.0, 1.0));
 
-							// Get the current tile.
-							const Tile& tile = section.tile(section_tile_coords);
-							// Search for its texture in the cache.
-							auto it = _tile_textures.find(tile.tile_class());
-							// If it's there, use it. Otherwise, create the texture and cache it.
-							Texture& tile_texture = it != _tile_textures.end() ? *it->second : cache_tile_texture(tile);
+								// Get the current tile.
+								const Tile& tile = section.tile(section_tile_coords);
+								// Search for its texture in the cache.
+								auto it = _tile_textures.find(tile.tile_class());
+								// If it's there, use it. Otherwise, create the texture and cache it.
+								Texture& tile_texture = it != _tile_textures.end() ? *it->second : cache_tile_texture(tile);
 
-							tile_texture.draw_transformed
-								( coords_in_world - Vector::to(_terrain_bounds.position())
-								, boost::none // Origin
-								, 1.0 // H-scale
-								, 1.0 // V-scale
-								, false // H-flip
-								, false // V-flip
-								, Color{luminance, luminance, luminance});
+								tile_texture.draw_transformed
+									( coords_in_world - Vector::to(_terrain_bounds.position())
+									, boost::none // Origin
+									, 1.0 // H-scale
+									, 1.0 // V-scale
+									, false // H-flip
+									, false // V-flip
+									, Color{luminance, luminance, luminance});
+							}
 						}
 					}
 				}

@@ -17,9 +17,23 @@ namespace questless
 	class Player : public Agent
 	{
 	public:
-		Player(Being& being) : Agent{being} {}
+		Player(Being& being)
+			: Agent{being}
+			, _world_view{nullptr}
+		{}
+
+		/// @return The player's current view of the world.
+		const WorldView& world_view() const { return *_world_view; }
+
+		void update_world_view() { _world_view = std::make_unique<WorldView>(being(), true); }
 
 		void act() override;
+
+		void perceive(const Effect::ptr& effect) override;
+
+		/// Gets a list of perceived effects and removes them from the player agent.
+		/// @return All the effects the player has perceived since the last call to poll_effects().
+		std::vector<Effect::ptr> poll_perceived_effects();
 
 		// Queries and messages
 
@@ -86,6 +100,10 @@ namespace questless
 			, std::function<bool(Being&)> predicate
 			, std::function<Action::Complete(boost::optional<Item*>)> cont
 			) const override;
+	private:
+		std::unique_ptr<WorldView> _world_view;
+
+		std::vector<Effect::ptr> _perceived_effects;
 	};
 }
 

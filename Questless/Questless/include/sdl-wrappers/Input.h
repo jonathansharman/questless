@@ -12,7 +12,7 @@
 
 #include <vector>
 #include <map>
-#include <exception>
+#include <stdexcept>
 
 #include <SDL.h>
 

@@ -11,8 +11,7 @@
 #define ITEM_VISITOR_H
 
 #include <string>
-#include <exception>
-#include <memory>
+#include <stdexcept>
 
 namespace questless
 {

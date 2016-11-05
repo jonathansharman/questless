@@ -39,12 +39,12 @@
 #include "sdl-wrappers/Input.h"
 #include "animation/AnimationCollection.h"
 #include "animation/Camera.h"
-#include "animation/particles/Particle.h"
 #include "animation/WorldRenderer.h"
 #include "world/Region.h"
 #include "entities/beings/Being.h"
-#include "agents/Agent.h"
+#include "agents/Player.h"
 #include "items/Item.h"
+#include "effects/Effect.h"
 
 namespace questless
 {
@@ -61,7 +61,7 @@ namespace questless
 		/// Runs a new game of Questless.
 		void run();
 
-		// Dialogs
+		// Dialog Methods
 
 		void query_player_choice(std::function<void(PlayerActionDialog::Choice)> cont);
 
@@ -92,13 +92,17 @@ namespace questless
 
 		Action::Complete query_item(std::string title, std::string prompt, Being& source, std::function<bool(Being&)> predicate, std::function<Action::Complete(boost::optional<Item*>)> cont);
 
-		// Accessors
+		// Other Methods
 
 		sdl::Input& input() { return _input; }
 		const sdl::Input& input() const { return _input; }
 
 		Region& region() { return *_region; }
 		const Region& region() const { return *_region; }
+
+		/// Adds an effect to the world, notifying beings within range of its occurrence.
+		/// @param effect The effect to add.
+		void add_effect(const Effect::ptr& effect);
 
 		/// Adds the given being to the graveyard.
 		void add_to_graveyard(Being::ptr being) { _graveyard.push_back(std::move(being)); }
@@ -227,9 +231,8 @@ namespace questless
 		std::unordered_map<BeingId, std::tuple<GlobalCoords, Being*>> _beings;
 		std::unordered_map<ObjectId, std::tuple<GlobalCoords, Object*>> _objects;
 
-		BeingId _player_id;
-
-		std::unique_ptr<WorldView> _world_view;
+		BeingId _player_being_id;
+		Player* _player;
 
 		double _time;
 
@@ -254,10 +257,6 @@ namespace questless
 
 		std::unique_ptr<HUDController> _hud;
 
-		// Miscellaneous
-
-		std::vector<std::unique_ptr<Particle>> _particles;
-
 		/////////////
 		// Methods //
 		/////////////
@@ -273,6 +272,8 @@ namespace questless
 		void update_splash();
 		void update_menu();
 		void update_playing();
+
+		void update_player_view();
 
 		// Render methods
 

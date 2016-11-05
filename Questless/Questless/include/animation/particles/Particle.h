@@ -20,7 +20,8 @@ namespace questless
 	class Particle
 	{
 	public:
-		/// Constructs a particle with the specified properties.
+		using ptr = std::unique_ptr<Particle>;
+
 		/// @param position The particle's initial position.
 		/// @param velocity The particle's initial velocity.
 		/// @param angle The particle's initial angle, in degrees counter-clockwise from the positive x-axis.

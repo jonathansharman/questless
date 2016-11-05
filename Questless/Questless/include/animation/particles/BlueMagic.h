@@ -18,7 +18,6 @@ namespace questless
 	class BlueMagic : public Particle
 	{
 	public:
-		/// Constructs a blue magic particle with the specified position.
 		/// @param position The particle's starting position.
 		BlueMagic(const PointF& position) : Particle
 			{ position

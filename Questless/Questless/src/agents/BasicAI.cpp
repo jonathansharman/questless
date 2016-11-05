@@ -17,28 +17,28 @@ namespace questless
 	void BasicAI::act()
 	{
 		// To to move to a random neighbor hex.
-		HexCoords neighbor_hex;
+		RegionTileCoords neighbor_hex;
 		switch (uniform(0, 5)) {
 			case 0:
-				neighbor_hex = being().coords().hex.neighbor(HexCoords::Direction::one);
+				neighbor_hex = being().coords().neighbor(RegionTileCoords::Direction::one);
 				break;
 			case 1:
-				neighbor_hex = being().coords().hex.neighbor(HexCoords::Direction::two);
+				neighbor_hex = being().coords().neighbor(RegionTileCoords::Direction::two);
 				break;
 			case 2:
-				neighbor_hex = being().coords().hex.neighbor(HexCoords::Direction::three);
+				neighbor_hex = being().coords().neighbor(RegionTileCoords::Direction::three);
 				break;
 			case 3:
-				neighbor_hex = being().coords().hex.neighbor(HexCoords::Direction::four);
+				neighbor_hex = being().coords().neighbor(RegionTileCoords::Direction::four);
 				break;
 			case 4:
-				neighbor_hex = being().coords().hex.neighbor(HexCoords::Direction::five);
+				neighbor_hex = being().coords().neighbor(RegionTileCoords::Direction::five);
 				break;
 			case 5:
-				neighbor_hex = being().coords().hex.neighbor(HexCoords::Direction::six);
+				neighbor_hex = being().coords().neighbor(RegionTileCoords::Direction::six);
 				break;
 		}
-		being().region().move(being(), RegionTileCoords{neighbor_hex});
+		being().region().move(being(), neighbor_hex);
 
 		// Wait 1 time unit for the movement, then a random additional idle time, up to 10 time units.
 		being().gain_busy_time(uniform(1.0, 11.0));

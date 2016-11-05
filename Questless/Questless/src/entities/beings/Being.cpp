@@ -97,7 +97,7 @@ namespace questless
 			case Spell::Color::red:    return _attributes.magic_power.red;
 			case Spell::Color::blue:   return _attributes.magic_power.blue;
 			case Spell::Color::yellow: return _attributes.magic_power.yellow;
-			default: throw logic_error{"Unrecognized spell color."};
+			default: throw std::logic_error{"Unrecognized spell color."};
 		}
 	}
 
@@ -110,7 +110,7 @@ namespace questless
 			case Spell::Color::red:    return _attributes.magic_resistance.red;
 			case Spell::Color::blue:   return _attributes.magic_resistance.blue;
 			case Spell::Color::yellow: return _attributes.magic_resistance.yellow;
-			default: throw logic_error{"Unrecognized spell color."};
+			default: throw std::logic_error{"Unrecognized spell color."};
 		}
 	}
 
@@ -123,7 +123,7 @@ namespace questless
 			case Spell::Color::red:    _attributes.magic_power.red = value;
 			case Spell::Color::blue:   _attributes.magic_power.blue = value;
 			case Spell::Color::yellow: _attributes.magic_power.yellow = value;
-			default: throw logic_error{"Unrecognized spell color."};
+			default: throw std::logic_error{"Unrecognized spell color."};
 		}
 	}
 
@@ -136,7 +136,7 @@ namespace questless
 			case Spell::Color::red:    _attributes.magic_resistance.red = value;
 			case Spell::Color::blue:   _attributes.magic_resistance.blue = value;
 			case Spell::Color::yellow: _attributes.magic_resistance.yellow = value;
-			default: throw logic_error{"Unrecognized spell color."};
+			default: throw std::logic_error{"Unrecognized spell color."};
 		}
 	}
 

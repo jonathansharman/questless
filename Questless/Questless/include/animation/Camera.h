@@ -103,7 +103,7 @@ namespace questless
 		sdl::Point pt_hovered_rounded() const { return _pt_hovered_rounded; }
 
 		/// @return The hex coordinates of the tile the mouse is hovering over.
-		RegionTileCoords tile_hovered() const { return {Layout::dflt().to_hex_coords(PointF{_pt_hovered_rounded})}; }
+		RegionTileCoords tile_hovered() const { return {Layout::dflt().to_hex_coords<RegionTileCoords>(PointF{_pt_hovered_rounded})}; }
 
 		void update(const sdl::Input& input);
 
@@ -139,7 +139,7 @@ namespace questless
 
 		PointF _pt_hovered;
 		sdl::Point _pt_hovered_rounded;
-		HexCoords _tile_hovered;
+		RegionTileCoords _tile_hovered;
 	};
 }
 
