@@ -100,6 +100,13 @@ namespace questless
 			, std::function<bool(Being&)> predicate
 			, std::function<Action::Complete(boost::optional<Item*>)> cont
 			) const override;
+
+		virtual Action::Complete query_list
+			( sdl::Point origin
+			, std::string title
+			, std::vector<std::string> options
+			, std::function<Action::Complete(boost::optional<int>)> cont
+			) const override;
 	private:
 		std::unique_ptr<WorldView> _world_view;
 

@@ -61,38 +61,10 @@ namespace questless
 		/// Runs a new game of Questless.
 		void run();
 
-		// Dialog Methods
+		/// Adds the given dialog to the dialogs stack.
+		Action::Complete add_dialog(Dialog::ptr dialog);
 
 		void query_player_choice(std::function<void(PlayerActionDialog::Choice)> cont);
-
-		Action::Complete message(std::string title, std::string prompt, std::function<Action::Complete()> cont);
-
-		template <typename ItemType>
-		Action::Complete query_list
-			( sdl::Point origin
-			, std::string title
-			, std::vector<ItemType> options
-			, std::function<std::string(const ItemType&)> item_to_name
-			, std::function<Action::Complete(boost::optional<ItemType>)> cont
-			)
-		{
-			auto dialog = std::make_unique<ListDialog<ItemType>>(origin, std::move(title), std::move(options), std::move(item_to_name), std::move(cont));
-			_dialogs.push_back(std::move(dialog));
-			return Action::Complete{};
-		}
-
-		Action::Complete query_count(std::string title, std::string prompt, int default, boost::optional<int> min, boost::optional<int> max, std::function<Action::Complete(boost::optional<int>)> cont);
-		Action::Complete query_count(std::string title, std::string prompt, int default, std::function<bool(int)> predicate, std::function<Action::Complete(boost::optional<int>)> cont);
-
-		Action::Complete query_magnitude(std::string title, std::string prompt, double default, std::function<bool(double)> predicate, std::function<Action::Complete(boost::optional<double>)> cont);
-
-		Action::Complete query_tile(std::string title, std::string prompt, std::function<bool(RegionTileCoords)> predicate, std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont);
-
-		Action::Complete query_being(std::string title, std::string prompt, std::function<bool(Being&)> predicate, std::function<Action::Complete(boost::optional<Being*>)> cont);
-
-		Action::Complete query_item(std::string title, std::string prompt, Being& source, std::function<bool(Being&)> predicate, std::function<Action::Complete(boost::optional<Item*>)> cont);
-
-		// Other Methods
 
 		sdl::Input& input() { return _input; }
 		const sdl::Input& input() const { return _input; }
@@ -153,6 +125,8 @@ namespace questless
 
 		HUDController& hud() { return *_hud; }
 		const HUDController& hud() const { return *_hud; }
+
+		const Camera& camera() const { return *_camera; }
 	private:
 		///////////////
 		// Constants //

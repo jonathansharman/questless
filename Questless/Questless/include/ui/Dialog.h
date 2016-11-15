@@ -21,6 +21,8 @@ namespace questless
 	class Dialog : public sdl::Renderable
 	{
 	public:
+		using ptr = std::unique_ptr<Dialog>;
+
 		Dialog() : _closed{false} {}
 
 		/// @return Whether the player has completed or closed the dialog.

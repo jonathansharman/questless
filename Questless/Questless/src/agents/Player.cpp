@@ -9,8 +9,13 @@
 
 #include "agents/Player.h"
 #include "Game.h"
+#include "ui/MessageDialog.h"
+#include "ui/CountDialog.h"
+#include "ui/MagnitudeDialog.h"
+#include "ui/TileDialog.h"
 
 using std::function;
+using std::move;
 
 namespace questless
 {
@@ -31,20 +36,25 @@ namespace questless
 					if (auto item_coords = game.hud().hotbar()[player_choice.data]) {
 						Item* item = being().inventory()[*item_coords];
 						if (item != nullptr) { /// @todo Sync the hotbar with changes to the inventory so this is unnecessary.
-							game.query_list<Action::ptr>
+							// Get a list of the item's actions. It's shared so the lambda that captures it is copyable, so the lambda can be passed as a std::function.
+							auto actions = std::make_shared<std::vector<Action::ptr>>(item->actions());
+							// Get the action names from the list of actions.
+							std::vector<std::string> action_names;
+							std::transform(actions->begin(), actions->end(), std::back_inserter(action_names), [](const Action::ptr& action) { return action->name(); });
+
+							query_list
 								( game.input().mouse_position()
 								, item->name()
-								, item->actions()
-								, [](const Action::ptr& a) { return a->name(); }
-								, [this, &game](boost::optional<Action::ptr> opt_action) {
-									if (!opt_action) {
+								, action_names
+								, [this, &game, actions](boost::optional<int> opt_action_idx) {
+									if (!opt_action_idx) {
 										// No action selected. Player must try to act again.
 										act();
 										return Action::Complete{};
 									} else {
 										// Perform the chosen action.
-										Action::ptr action = std::move(*opt_action);
-										return action->perform(being(), [this, &game](Action::Result result) {
+										int action_idx = *opt_action_idx;
+										return (*actions)[action_idx]->perform(being(), [this, &game](Action::Result result) {
 											if (result == Action::Result::aborted) {
 												// Chosen action aborted. Player must try to act again.
 												act();
@@ -68,7 +78,7 @@ namespace questless
 
 	std::vector<Effect::ptr> Player::poll_perceived_effects()
 	{
-		std::vector<Effect::ptr> perceived_effects = std::move(_perceived_effects);
+		std::vector<Effect::ptr> perceived_effects = move(_perceived_effects);
 		_perceived_effects.clear();
 		return perceived_effects;
 	}
@@ -79,7 +89,8 @@ namespace questless
 		, function<Action::Complete()> cont
 		) const
 	{
-		return being().game().message(title, prompt, std::move(cont));
+		auto dialog = std::make_unique<MessageDialog>(move(title), move(prompt), move(cont));
+		return being().game().add_dialog(move(dialog));
 	}
 
 	Action::Complete Player::query_count
@@ -91,7 +102,9 @@ namespace questless
 		, function<Action::Complete(boost::optional<int>)> cont
 		) const
 	{
-		return being().game().query_count(title, prompt, default, min, max, std::move(cont));
+
+		auto dialog = std::make_unique<CountDialog>(move(title), move(prompt), default, min, max, [](int) { return true; }, std::move(cont));
+		return being().game().add_dialog(move(dialog));
 	}
 	Action::Complete Player::query_count
 		( const std::string& title
@@ -101,7 +114,8 @@ namespace questless
 		, function<Action::Complete(boost::optional<int>)> cont
 		) const
 	{
-		return being().game().query_count(title, prompt, default, std::move(predicate), std::move(cont));
+		auto dialog = std::make_unique<CountDialog>(move(title), move(prompt), default, boost::none, boost::none, move(predicate), std::move(cont));
+		return being().game().add_dialog(move(dialog));
 	}
 
 	Action::Complete Player::query_duration
@@ -110,7 +124,7 @@ namespace questless
 		, function<Action::Complete(boost::optional<int>)> cont
 		) const
 	{
-		return being().game().query_count(title, prompt, 1, 1, boost::none, std::move(cont));
+		return query_count(title, prompt, 1, 1, boost::none, std::move(cont));
 	}
 
 	Action::Complete Player::query_magnitude
@@ -121,7 +135,8 @@ namespace questless
 		, function<Action::Complete(boost::optional<double>)> cont
 		) const
 	{
-		return being().game().query_magnitude(title, prompt, default, std::move(predicate), std::move(cont));
+		auto dialog = std::make_unique<MagnitudeDialog>(move(title), move(prompt), default, boost::none, boost::none, move(predicate), std::move(cont));
+		return being().game().add_dialog(move(dialog));
 	}
 
 	Action::Complete Player::query_tile
@@ -131,17 +146,20 @@ namespace questless
 		, function<Action::Complete(boost::optional<RegionTileCoords>)> cont
 		) const
 	{
-		return being().game().query_tile(title, prompt, std::move(predicate), std::move(cont));
+		Game& game = being().game();
+		auto dialog = std::make_unique<TileDialog>(move(title), move(prompt), game.camera(), move(predicate), std::move(cont));
+		return game.add_dialog(move(dialog));
 	}
 
 	Action::Complete Player::query_being
-		( const std::string& title
-		, const std::string& prompt
-		, function<bool(Being&)> predicate
+		( const std::string& //title
+		, const std::string& //prompt
+		, function<bool(Being&)> //predicate
 		, function<Action::Complete(boost::optional<Being*>)> cont
 		) const
 	{
-		return being().game().query_being(title, prompt, std::move(predicate), std::move(cont));
+		/// @todo This.
+		return cont(boost::none);
 	}
 
 	Action::Complete Player::query_range
@@ -150,17 +168,29 @@ namespace questless
 		, function<Action::Complete(boost::optional<int>)> cont
 		) const
 	{
-		return being().game().query_count(title, prompt, 0, 0, boost::none, std::move(cont));
+		return query_count(title, prompt, 0, 0, boost::none, std::move(cont));
 	}
 
 	Action::Complete Player::query_item
-		( const std::string& title
-		, const std::string& prompt
-		, Being& source
-		, function<bool(Being&)> predicate
+		( const std::string& //title
+		, const std::string& //prompt
+		, Being& //source
+		, function<bool(Being&)> //predicate
 		, function<Action::Complete(boost::optional<Item*>)> cont
 		) const
 	{
-		return being().game().query_item(title, prompt, source, std::move(predicate), std::move(cont));
+		/// @todo This.
+		return cont(boost::none);
+	}
+
+	Action::Complete Player::query_list
+		( sdl::Point origin
+		, std::string title
+		, std::vector<std::string> options
+		, std::function<Action::Complete(boost::optional<int>)> cont
+		) const
+	{
+		auto dialog = std::make_unique<ListDialog>(origin, std::move(title), std::move(options), std::move(cont));
+		return being().game().add_dialog(move(dialog));
 	}
 }

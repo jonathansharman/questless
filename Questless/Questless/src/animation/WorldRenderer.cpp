@@ -123,18 +123,6 @@ namespace questless
 		for (int i = 0; i < 15; ++i) {
 			_particles.emplace_back(YellowMagic::make(Layout::dflt().to_world(origin)));
 		}
-		//if (_input.down(SDLK_t))
-		//	for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<WhiteMagic>(_camera->pt_hovered()));
-		//if (_input.down(SDLK_y))
-		//	for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<BlackMagic>(_camera->pt_hovered()));
-		//if (_input.down(SDLK_u))
-		//	for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<GreenMagic>(_camera->pt_hovered()));
-		//if (_input.down(SDLK_i))
-		//	for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<RedMagic>(_camera->pt_hovered()));
-		//if (_input.down(SDLK_o))
-		//	for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<BlueMagic>(_camera->pt_hovered()));
-		//if (_input.down(SDLK_p))
-		//	for (int i = 0; i < 3; ++i) _particles.emplace_back(make_unique<YellowMagic>(_camera->pt_hovered()));
 	}
 
 	void WorldRenderer::refresh()

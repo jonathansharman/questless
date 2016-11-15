@@ -201,6 +201,9 @@ namespace questless
 
 	void Being::take_damage(Damage& damage, boost::optional<BodyPart::ref> opt_part, boost::optional<BeingId> opt_source_id)
 	{
+		// Store whether the being was already dead upon taking this damage.
+		bool was_already_dead = dead();
+
 		// Get source.
 		Being* source = opt_source_id ? game().being(*opt_source_id) : nullptr;
 
@@ -274,12 +277,12 @@ namespace questless
 				if (after_take_damage(damage, opt_part, opt_source_id)) {
 					// Source, if present, has dealt damage.
 					if (!source || source->after_deal_damage(damage, opt_part, id())) {
-						// If target took fatal damage, mark it dead.
+						// If target has taken fatal damage, mark it dead.
 						if (health() <= 0) {
 							die();
 						}
-						// Handle death, if target has been marked dead.
-						if (dead()) {
+						// Handle death, if this damage killed the target.
+						if (!was_already_dead && dead()) {
 							// Target will die.
 							if (before_die(opt_source_id)) {
 								// Source, if present, will have killed target.

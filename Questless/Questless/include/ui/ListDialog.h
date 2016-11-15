@@ -17,21 +17,18 @@
 
 namespace questless
 {
-	template <typename ItemType>
 	class ListDialog : public Dialog
 	{
 	public:
 		ListDialog
 			( sdl::Point origin
 			, std::string title
-			, std::vector<ItemType> options
-			, std::function<std::string(const ItemType&)> item_to_name
-			, std::function<void(boost::optional<ItemType>)> cont
+			, std::vector<std::string> options
+			, std::function<void(boost::optional<int>)> cont
 			)
 			: _bounds{origin.x, origin.y, 0, 0}
 			, _title{std::move(title)}
 			, _options{std::move(options)}
-			, _item_to_name{std::move(item_to_name)}
 			, _cont{std::move(cont)}
 			, _selection{0}
 		{
@@ -47,20 +44,20 @@ namespace questless
 				return _cont(boost::none);
 			}
 
-			const size_t option_count = _options.size();
+			const int option_count = _options.size();
 
 			if (!_options.empty()) {
 				_selection -= input.presses(SDLK_UP);
 				_selection += input.presses(SDLK_DOWN);
-				_selection = _selection % static_cast<int>(option_count);
+				_selection = _selection % option_count;
 				_selection = _selection < 0 ? _selection + option_count : _selection;
 
-				size_t end = option_count <= 10 ? option_count : 10;
-				for (size_t i = 0; i < end; ++i) {
+				int end = option_count <= 10 ? option_count : 10;
+				for (int i = 0; i < end; ++i) {
 					if (input.presses(sdl::Input::index_to_num_key(i))) {
-						if (_selection == static_cast<int>(i)) {
+						if (_selection == i) {
 							close();
-							return _cont(std::move(_options[_selection]));
+							return _cont(_selection);
 						} else {
 							_selection = i;
 							break;
@@ -70,7 +67,7 @@ namespace questless
 
 				if (input.pressed(sdl::MouseButton::left) || input.presses(SDLK_RETURN) || input.presses(SDLK_SPACE)) {
 					close();
-					return _cont(std::move(_options[_selection]));
+					return _cont(_selection);
 				}
 			}
 		}
@@ -112,9 +109,8 @@ namespace questless
 
 		sdl::Rect _bounds;
 		std::string _title;
-		std::vector<ItemType> _options;
-		std::function<std::string(const ItemType&)> _item_to_name;
-		std::function<void(boost::optional<ItemType>)> _cont;
+		std::vector<std::string> _options;
+		std::function<void(boost::optional<int>)> _cont;
 
 		sdl::Texture::ptr _txt_title;
 		std::vector<sdl::Texture::ptr> _txt_options;
@@ -129,7 +125,7 @@ namespace questless
 			_bounds.w = _txt_title->width();
 			_txt_options.clear();
 			for (const auto& option : _options) {
-				_txt_options.push_back(sdl::Texture::make(sdl::font_manager()[list_option_font_handle()].render(_item_to_name(option), sdl::renderer(), sdl::Color::black())));
+				_txt_options.push_back(sdl::Texture::make(sdl::font_manager()[list_option_font_handle()].render(option, sdl::renderer(), sdl::Color::black())));
 				_bounds.w = std::max(_bounds.w, _txt_options.back()->width());
 			}
 			_bounds.w += 2 * _x_padding;

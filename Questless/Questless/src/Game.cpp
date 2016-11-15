@@ -11,10 +11,6 @@
 using std::ostringstream;
 
 #include "Game.h"
-#include "ui/MessageDialog.h"
-#include "ui/CountDialog.h"
-#include "ui/MagnitudeDialog.h"
-#include "ui/TileDialog.h"
 #include "animation/EntityAnimator.h"
 #include "world/coordinates.h"
 
@@ -155,58 +151,16 @@ namespace questless
 		_txt_hex_circle = Texture::make("resources/textures/ui/hex_circle.png", renderer(), SDL_BLENDMODE_BLEND);
 	}
 
-	// Dialogs
+	Action::Complete Game::add_dialog(Dialog::ptr dialog)
+	{
+		_dialogs.push_back(move(dialog));
+		return Action::Complete{};
+	}
 
 	void Game::query_player_choice(function<void(PlayerActionDialog::Choice)> cont)
 	{
 		auto dialog = make_unique<PlayerActionDialog>(*_hud, move(cont));
 		_dialogs.push_back(move(dialog));
-	}
-
-	Action::Complete Game::message(string title, string prompt, function<Action::Complete()> cont)
-	{
-		auto dialog = make_unique<MessageDialog>(move(title), move(prompt), move(cont));
-		_dialogs.push_back(move(dialog));
-		return Action::Complete{};
-	}
-
-	Action::Complete Game::query_count(string title, string prompt, int default, boost::optional<int> min, boost::optional<int> max, function<Action::Complete(boost::optional<int>)> cont)
-	{
-		auto dialog = make_unique<CountDialog>(move(title), move(prompt), default, min, max, [](int) { return true; }, std::move(cont));
-		_dialogs.push_back(move(dialog));
-		return Action::Complete{};
-	}
-	Action::Complete Game::query_count(string title, string prompt, int default, function<bool(int)> predicate, function<Action::Complete(boost::optional<int>)> cont)
-	{
-		auto dialog = make_unique<CountDialog>(move(title), move(prompt), default, boost::none, boost::none, move(predicate), std::move(cont));
-		_dialogs.push_back(move(dialog));
-		return Action::Complete{};
-	}
-
-	Action::Complete Game::query_magnitude(string title, string prompt, double default, function<bool(double)> predicate, function<Action::Complete(boost::optional<double>)> cont)
-	{
-		auto dialog = make_unique<MagnitudeDialog>(move(title), move(prompt), default, boost::none, boost::none, move(predicate), std::move(cont));
-		_dialogs.push_back(move(dialog));
-		return Action::Complete{};
-	}
-
-	Action::Complete Game::query_tile(string title, string prompt, function<bool(RegionTileCoords)> predicate, function<Action::Complete(boost::optional<RegionTileCoords>)> cont)
-	{
-		auto dialog = make_unique<TileDialog>(move(title), move(prompt), *_camera, move(predicate), std::move(cont));
-		_dialogs.push_back(move(dialog));
-		return Action::Complete{};
-	}
-
-	Action::Complete Game::query_being(string /*title*/, string /*prompt*/, function<bool(Being&)> /*predicate*/, function<Action::Complete(boost::optional<Being*>)> cont)
-	{
-		/// @todo This.
-		return cont(boost::none);
-	}
-
-	Action::Complete Game::query_item(string /*title*/, string /*prompt*/, Being& /*source*/, function<bool(Being&)> /*predicate*/, function<Action::Complete(boost::optional<Item*>)> cont)
-	{
-		/// @todo This.
-		return cont(boost::none);
 	}
 
 	void Game::add_effect(const Effect::ptr& effect)

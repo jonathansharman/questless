@@ -88,6 +88,13 @@ namespace questless
 			, std::function<bool(Being&)> predicate
 			, std::function<Action::Complete(boost::optional<Item*>)> cont
 			) const override;
+
+		Action::Complete query_list
+			( sdl::Point
+			, std::string
+			, std::vector<std::string>
+			, std::function<Action::Complete(boost::optional<int>)> cont
+			) const override;
 	};
 }
 

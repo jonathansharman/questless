@@ -45,93 +45,103 @@ namespace questless
 	}
 
 	Action::Complete BasicAI::message
-		( const std::string& title
-		, const std::string& prompt
+		( const std::string& //title
+		, const std::string& //prompt
 		, std::function<Action::Complete()> cont
 		) const
 	{
-		return being().game().message(title, prompt, std::move(cont));
+		return cont();
 	}
 
 	Action::Complete BasicAI::query_count
-		( const std::string& title
-		, const std::string& prompt
-		, int default
-		, boost::optional<int> min
-		, boost::optional<int> max
+		( const std::string& //title
+		, const std::string& //prompt
+		, int //default
+		, boost::optional<int> //min
+		, boost::optional<int> //max
 		, std::function<Action::Complete(boost::optional<int>)> cont
 		) const
 	{
-		return being().game().query_count(title, prompt, default, min, max, std::move(cont));
+		return cont(boost::none);
 	}
 	Action::Complete BasicAI::query_count
-		( const std::string& title
-		, const std::string& prompt
-		, int default
-		, std::function<bool(int)> predicate
+		( const std::string& //title
+		, const std::string& //prompt
+		, int //default
+		, std::function<bool(int)> //predicate
 		, std::function<Action::Complete(boost::optional<int>)> cont
 		) const
 	{
-		return being().game().query_count(title, prompt, default, std::move(predicate), std::move(cont));
+		return cont(boost::none);
 	}
 
 	Action::Complete BasicAI::query_duration
-		( const std::string& title
-		, const std::string& prompt
+		( const std::string& //title
+		, const std::string& //prompt
 		, std::function<Action::Complete(boost::optional<int>)> cont
 		) const
 	{
-		return being().game().query_count(title, prompt, 1, 1, boost::none, std::move(cont));
+		return cont(boost::none);
 	}
 
 	Action::Complete BasicAI::query_magnitude
-		( const std::string& title
-		, const std::string& prompt
-		, double default
-		, std::function<bool(double)> predicate
+		( const std::string& //title
+		, const std::string& //prompt
+		, double //default
+		, std::function<bool(double)> //predicate
 		, std::function<Action::Complete(boost::optional<double>)> cont
 		) const
 	{
-		return being().game().query_magnitude(title, prompt, default, std::move(predicate), std::move(cont));
+		return cont(boost::none);
 	}
 
 	Action::Complete BasicAI::query_tile
-		( const std::string& title
-		, const std::string& prompt
-		, std::function<bool(RegionTileCoords)> predicate
+		( const std::string& //title
+		, const std::string& //prompt
+		, std::function<bool(RegionTileCoords)> //predicate
 		, std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont
 		) const
 	{
-		return being().game().query_tile(title, prompt, std::move(predicate), std::move(cont));
+		return cont(boost::none);
 	}
 
 	Action::Complete BasicAI::query_being
-		( const std::string& title
-		, const std::string& prompt
-		, std::function<bool(Being&)> predicate
+		( const std::string& //title
+		, const std::string& //prompt
+		, std::function<bool(Being&)> //predicate
 		, std::function<Action::Complete(boost::optional<Being*>)> cont
 		) const
 	{
-		return being().game().query_being(title, prompt, std::move(predicate), std::move(cont));
+		return cont(boost::none);
 	}
 
 	Action::Complete BasicAI::query_range
-		( const std::string& title
-		, const std::string& prompt
+		( const std::string& //title
+		, const std::string& //prompt
 		, std::function<Action::Complete(boost::optional<int>)> cont
 		) const
 	{
-		return being().game().query_count(title, prompt, 0, 0, boost::none, std::move(cont));
+		return cont(boost::none);
 	}
 
 	Action::Complete BasicAI::query_item
-		( const std::string& title
-		, const std::string& prompt
-		, Being& source
-		, std::function<bool(Being&)> predicate
+		( const std::string& //title
+		, const std::string& //prompt
+		, Being& //source
+		, std::function<bool(Being&)> //predicate
 		, std::function<Action::Complete(boost::optional<Item*>)> cont
 		) const
 	{
-		return being().game().query_item(title, prompt, source, std::move(predicate), std::move(cont));
+		return cont(boost::none);
+	}
+
+	Action::Complete BasicAI::query_list
+		( sdl::Point //origin
+		, std::string //title
+		, std::vector<std::string> //options
+		, std::function<Action::Complete(boost::optional<int>)> cont
+		) const
+	{
+		return cont(boost::none);
 	}
 }

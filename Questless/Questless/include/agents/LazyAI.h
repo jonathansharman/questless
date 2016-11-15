@@ -31,7 +31,7 @@ namespace questless
 			, std::function<Action::Complete()> cont
 			) const override
 		{
-			 cont();
+			return cont();
 		}
 
 		Action::Complete query_count
@@ -43,7 +43,7 @@ namespace questless
 			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override
 		{
-			cont(boost::none);
+			return cont(boost::none);
 		}
 		Action::Complete query_count
 			( const std::string&
@@ -53,7 +53,7 @@ namespace questless
 			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override
 		{
-			cont(boost::none);
+			return cont(boost::none);
 		}
 
 		Action::Complete query_duration
@@ -62,7 +62,7 @@ namespace questless
 			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override
 		{
-			 cont(boost::none);
+			return cont(boost::none);
 		}
 
 		Action::Complete query_magnitude
@@ -73,7 +73,7 @@ namespace questless
 			, std::function<Action::Complete(boost::optional<double>)> cont
 			) const override
 		{
-			cont(boost::none);
+			return cont(boost::none);
 		}
 
 		Action::Complete query_tile
@@ -83,7 +83,7 @@ namespace questless
 			, std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont
 			) const override
 		{
-			cont(boost::none);
+			return cont(boost::none);
 		}
 
 		Action::Complete query_being
@@ -93,7 +93,7 @@ namespace questless
 			, std::function<Action::Complete(boost::optional<Being*>)> cont
 			) const override
 		{
-			cont(boost::none);
+			return cont(boost::none);
 		}
 
 		Action::Complete query_range
@@ -102,7 +102,7 @@ namespace questless
 			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override
 		{
-			cont(boost::none);
+			return cont(boost::none);
 		}
 
 		Action::Complete query_item
@@ -113,7 +113,17 @@ namespace questless
 			, std::function<Action::Complete(boost::optional<Item*>)> cont
 			) const override
 		{
-			cont(boost::none);
+			return cont(boost::none);
+		}
+
+		Action::Complete query_list
+			( sdl::Point
+			, std::string
+			, std::vector<std::string>
+			, std::function<Action::Complete(boost::optional<int>)> cont
+			) const override
+		{
+			return cont(boost::none);
 		}
 	};
 }
