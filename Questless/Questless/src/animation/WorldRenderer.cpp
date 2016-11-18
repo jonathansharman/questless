@@ -12,6 +12,7 @@
 #include "animation/EntityAnimator.h"
 #include "world/Region.h"
 #include "sdl-wrappers/Renderable.h"
+#include "sdl-wrappers/Sound.h"
 #include "animation/TileTexturer.h"
 #include "utility/utility.h"
 #include "animation/particles/YellowMagic.h"
@@ -20,6 +21,14 @@ using namespace sdl;
 
 namespace questless
 {
+	sdl::Handle<sdl::Sound> WorldRenderer::_lightning_bolt_sound_handle;
+
+	Initializer<WorldRenderer> WorldRenderer::_initializer;
+	void WorldRenderer::initialize()
+	{
+		_lightning_bolt_sound_handle = sound_manager().add([] { return Sound::make("resources/sounds/spells/lightning-bolt.wav"); });
+	}
+
 	void WorldRenderer::update_view(const WorldView& world_view, std::vector<Effect::ptr> effects)
 	{
 		_world_view = &world_view;
@@ -110,7 +119,7 @@ namespace questless
 		}
 	}
 
-	void WorldRenderer::draw_effects(const Game& game, const Camera& camera)
+	void WorldRenderer::draw_effects(const Game&, const Camera& camera)
 	{
 		for (auto& particle : _particles) {
 			particle->draw(camera);
@@ -123,6 +132,7 @@ namespace questless
 		for (int i = 0; i < 15; ++i) {
 			_particles.emplace_back(YellowMagic::make(Layout::dflt().to_world(origin)));
 		}
+		sound_manager()[_lightning_bolt_sound_handle].play();
 	}
 
 	void WorldRenderer::refresh()

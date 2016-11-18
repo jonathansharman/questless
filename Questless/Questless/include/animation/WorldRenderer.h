@@ -22,6 +22,7 @@
 #include "sdl-wrappers/Renderable.h"
 #include "effects/Effect.h"
 #include "animation/particles/Particle.h"
+#include "utility/Initializer.h"
 
 namespace questless
 {
@@ -64,6 +65,12 @@ namespace questless
 
 		void visit(const LightningBoltEffect&) override;
 	private:
+		friend class Initializer<WorldRenderer>;
+		static Initializer<WorldRenderer> _initializer;
+		static void initialize();
+
+		static sdl::Handle<sdl::Sound> _lightning_bolt_sound_handle;
+
 		const WorldView* _world_view;
 
 		std::unordered_map<Tile::TileClass, sdl::Texture::ptr> _tile_textures;

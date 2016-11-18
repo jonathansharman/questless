@@ -20,6 +20,10 @@ namespace sdl
 	template <typename ResourceType>
 	struct Entry
 	{
+		Entry(std::unique_ptr<ResourceType> resource, std::function<std::unique_ptr<ResourceType>()> generator)
+			: resource{std::move(resource)}, generator{std::move(generator)}
+		{}
+
 		mutable std::unique_ptr<ResourceType> resource; // Mutable to support lazy evaluation.
 		std::function<std::unique_ptr<ResourceType>()> generator;
 	};
@@ -39,7 +43,7 @@ namespace sdl
 		/// @return The handle with which the resource can be accessed.
 		Handle<ResourceType> add(std::function<std::unique_ptr<ResourceType>()> generator)
 		{
-			_registry.push_front(Entry<ResourceType>{nullptr, std::move(generator)});
+			_registry.emplace_front(nullptr, std::move(generator));
 			return Handle<ResourceType>{_registry.begin()};
 		}
 
