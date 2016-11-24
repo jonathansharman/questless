@@ -21,7 +21,7 @@ namespace questless
 		if (scroll.blank()) {
 			_texture = Texture::make("resources/textures/items/blank-scroll.png", renderer());
 		} else {
-			const Spell& spell = scroll.spell();
+			const spell::Spell& spell = scroll.spell();
 			if (spell.max_charges() && spell.charges() > 0) {
 				_texture = Texture::make("resources/textures/items/charged-scroll.png", renderer());
 			} else {

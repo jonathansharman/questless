@@ -17,13 +17,13 @@
 
 #include "entities/beings/Action.h"
 
-namespace questless
+namespace questless::spell
 {
+	enum class Color { white, black, green, red, blue, yellow };
+
 	class Spell : public Action
 	{
 	public:
-		enum class Color { white, black, green, red, blue, yellow };
-
 		using ptr = std::unique_ptr<Spell>;
 
 		virtual ~Spell() = default;

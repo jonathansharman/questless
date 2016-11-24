@@ -38,7 +38,7 @@ namespace questless
 			effect->accept(*this);
 		}
 
-		/// @todo Should the tile texture and entity animation caches ever be cleaned out? If so, when and how?
+		/// @todo Should the tile texture and entity animation caches ever be cleaned out? If so, when and how? Consider tracking how long since a texture was last used and purging it after a set time.
 	}
 
 	void WorldRenderer::update()

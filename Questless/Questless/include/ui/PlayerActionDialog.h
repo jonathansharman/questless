@@ -35,7 +35,7 @@ namespace questless
 
 		/// Updates the menu state based on input.
 		/// @param input User input used to update the dialog.
-		void update(const sdl::Input& input) override;
+		bool update(const sdl::Input& input) override;
 
 		/// Draws the dialog to the screen.
 		/// @param window The window.
@@ -43,7 +43,7 @@ namespace questless
 		{}
 	private:
 		HUDController& _hud;
-		std::function<void(Choice)> _cont;
+		Continuation<Choice> _cont;
 
 		void refresh() override {}
 	};

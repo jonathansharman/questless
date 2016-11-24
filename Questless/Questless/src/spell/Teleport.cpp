@@ -4,16 +4,16 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION The implementation for the TeleportSpell class.
+* @section DESCRIPTION The implementation for the Teleport spell class.
 */
 
-#include "spells/TeleportSpell.h"
+#include "spell/Teleport.h"
 #include "Game.h"
 #include "entities/beings/Being.h"
 
-namespace questless
+namespace questless::spell
 {
-	Action::Complete TeleportSpell::perform(Being& caster, cont_t cont)
+	Action::Complete Teleport::perform(Being& caster, cont_t cont)
 	{
 		if (active_cooldown() > 0.0) {
 			return caster.agent().message("This spell is on cooldown.", "This spell will be ready in " + std::to_string(active_cooldown()) + ".", [cont] { return cont(Result::aborted); });

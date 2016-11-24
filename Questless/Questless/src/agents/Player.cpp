@@ -14,6 +14,8 @@
 #include "ui/MagnitudeDialog.h"
 #include "ui/TileDialog.h"
 
+#include "ui/qte/LightningBolt.h"
+
 using std::function;
 using std::move;
 
@@ -190,7 +192,15 @@ namespace questless
 		, std::function<Action::Complete(boost::optional<int>)> cont
 		) const
 	{
-		auto dialog = std::make_unique<ListDialog>(origin, std::move(title), std::move(options), std::move(cont));
+		auto dialog = std::make_unique<ListDialog>(origin, move(title), move(options), std::move(cont));
+		return being().game().add_dialog(move(dialog));
+	}
+
+	// Quick Time Events
+
+	Action::Complete Player::get_lightning_bolt_quality(std::function<Action::Complete(double)> cont)
+	{
+		auto dialog = std::make_unique<qte::LightningBolt>(move(cont));
 		return being().game().add_dialog(move(dialog));
 	}
 }

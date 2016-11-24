@@ -37,7 +37,7 @@ namespace questless
 		static constexpr double _vxi_max = 25.0;
 		static constexpr double _dtheta_max = 720.0;
 		static constexpr Hertz _acceleration_factor = 1.25_Hz;
-		static constexpr double_seconds _lifetime = 2.5s;
+		static constexpr double_seconds _lifetime{2.5};
 
 		void subupdate() override;
 

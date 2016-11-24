@@ -13,10 +13,9 @@ using namespace sdl;
 
 namespace questless
 {
-	void MagnitudeDialog::update(const Input& input)
+	bool MagnitudeDialog::update(const Input& input)
 	{
 		if (input.presses(SDLK_BACKSPACE) || input.presses(SDLK_ESCAPE)) {
-			close();
 			return _cont(boost::none);
 		}
 
@@ -27,10 +26,10 @@ namespace questless
 
 		if (input.pressed(MouseButton::left) || input.presses(SDLK_RETURN)) {
 			if (_predicate(_magnitude)) {
-				close();
 				return _cont(_magnitude);
 			}
 		}
+		return false;
 	}
 
 	void MagnitudeDialog::draw(const Window& window)
@@ -44,9 +43,9 @@ namespace questless
 		_txt_prompt->draw(Point{x_center, _prompt_top}, HAlign::center);
 
 		// Draw the magnitude selector.
-		Texture txt_current = font_manager()[io_font_handle()].render(std::to_string(static_cast<int>(_magnitude)), renderer(), Color::white());
-		renderer().draw_rect(Rect{x_center - txt_current.width() / 2, 100, txt_current.width(), txt_current.height()}, Color{0, 0, 0, 128}, true);
-		txt_current.draw(Point{x_center, 100}, HAlign::center);
+		Texture txt_magnitude = font_manager()[io_font_handle()].render(std::to_string(static_cast<int>(_magnitude)), renderer(), Color::white());
+		renderer().draw_rect(Rect{x_center - txt_magnitude.width() / 2, 100, txt_magnitude.width(), txt_magnitude.height()}, Color{0, 0, 0, 128}, true);
+		txt_magnitude.draw(Point{x_center, 100}, HAlign::center);
 	}
 
 	void MagnitudeDialog::load_textures()

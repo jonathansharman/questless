@@ -13,20 +13,19 @@ using namespace sdl;
 
 namespace questless
 {
-	void TileDialog::update(const Input& input)
+	bool TileDialog::update(const Input& input)
 	{
 		if (input.presses(SDLK_BACKSPACE) || input.presses(SDLK_ESCAPE)) {
-			close();
 			return _cont(boost::none);
 		}
 
 		if (input.pressed(MouseButton::left)) {
 			RegionTileCoords value = _camera.tile_hovered();
 			if (_predicate(value)) {
-				close();
 				return _cont(value);
 			}
 		}
+		return false;
 	}
 
 	void TileDialog::draw(const Window& window)

@@ -1,23 +1,23 @@
 /**
-* @file    HealSpell.h
+* @file    Heal.h
 * @author  Jonathan Sharman
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION The interface for the HealSpell class.
+* @section DESCRIPTION The interface for the Heal spell class.
 */
 
-#ifndef HEAL_SPELL_H
-#define HEAL_SPELL_H
+#ifndef SPELL_HEAL_H
+#define SPELL_HEAL_H
 
 #include "Spell.h"
 
-namespace questless
+namespace questless::spell
 {
-	class HealSpell : public Spell
+	class Heal : public Spell
 	{
 	public:
-		HealSpell() : Spell(10) {}
+		Heal() : Spell{10} {}
 
 		Action::Complete perform(Being& caster, cont_t cont) override;
 

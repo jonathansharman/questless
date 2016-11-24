@@ -37,9 +37,6 @@
     <Filter Include="src\sdl-wrappers">
       <UniqueIdentifier>{b3472b87-ac58-4240-8805-baf8a893ea93}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\spells">
-      <UniqueIdentifier>{ea4c9649-02c6-4da1-bd4a-6628b0a695e4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\ui">
       <UniqueIdentifier>{fe2568e3-155b-4a7b-8a39-df90c7752ec8}</UniqueIdentifier>
     </Filter>
@@ -106,9 +103,6 @@
     <Filter Include="include\sdl-wrappers">
       <UniqueIdentifier>{49155920-0eda-4357-a8a4-557986aac3c1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\spells">
-      <UniqueIdentifier>{bb0e3630-997b-4c1a-ab00-4fe56489233b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="include\ui">
       <UniqueIdentifier>{5d877783-6b45-46ca-9902-97e31b511ac3}</UniqueIdentifier>
     </Filter>
@@ -136,6 +130,18 @@
     <Filter Include="include\effects">
       <UniqueIdentifier>{4a1611eb-a0cb-4b3f-b48b-00af8174a094}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\ui\qte">
+      <UniqueIdentifier>{72087a22-da19-4614-ad5b-a79bc21c2997}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ui\qte">
+      <UniqueIdentifier>{2ce5f407-28a1-4ae5-8c92-0ad7b2916a65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\spell">
+      <UniqueIdentifier>{bb0e3630-997b-4c1a-ab00-4fe56489233b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\spell">
+      <UniqueIdentifier>{ea4c9649-02c6-4da1-bd4a-6628b0a695e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\test.png">
@@ -158,6 +164,24 @@
     </Image>
     <Image Include="resources\textures\items\uncharged-scroll.png">
       <Filter>resources\textures\items</Filter>
+    </Image>
+    <Image Include="resources\textures\glow.png">
+      <Filter>resources\textures</Filter>
+    </Image>
+    <Image Include="resources\textures\human-animation.png">
+      <Filter>resources\textures</Filter>
+    </Image>
+    <Image Include="resources\textures\icon.png">
+      <Filter>resources\textures</Filter>
+    </Image>
+    <Image Include="resources\textures\test2.png">
+      <Filter>resources\textures</Filter>
+    </Image>
+    <Image Include="resources\textures\test3.png">
+      <Filter>resources\textures</Filter>
+    </Image>
+    <Image Include="resources\textures\test-animation.png">
+      <Filter>resources\textures</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
@@ -328,15 +352,6 @@
     <ClInclude Include="include\animation\WorldRenderer.h">
       <Filter>include\animation</Filter>
     </ClInclude>
-    <ClInclude Include="include\spells\Spell.h">
-      <Filter>include\spells</Filter>
-    </ClInclude>
-    <ClInclude Include="include\spells\HealSpell.h">
-      <Filter>include\spells</Filter>
-    </ClInclude>
-    <ClInclude Include="include\spells\LightningBoltSpell.h">
-      <Filter>include\spells</Filter>
-    </ClInclude>
     <ClInclude Include="include\items\Scroll.h">
       <Filter>include\items</Filter>
     </ClInclude>
@@ -475,9 +490,6 @@
     <ClInclude Include="include\entities\objects\ObjectId.h">
       <Filter>include\entities\objects</Filter>
     </ClInclude>
-    <ClInclude Include="include\spells\TeleportSpell.h">
-      <Filter>include\spells</Filter>
-    </ClInclude>
     <ClInclude Include="include\agents\BasicAI.h">
       <Filter>include\agents</Filter>
     </ClInclude>
@@ -501,6 +513,21 @@
     </ClInclude>
     <ClInclude Include="include\effects\EffectVisitor.h">
       <Filter>include\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\qte\LightningBolt.h">
+      <Filter>include\ui\qte</Filter>
+    </ClInclude>
+    <ClInclude Include="include\spell\Heal.h">
+      <Filter>include\spell</Filter>
+    </ClInclude>
+    <ClInclude Include="include\spell\LightningBolt.h">
+      <Filter>include\spell</Filter>
+    </ClInclude>
+    <ClInclude Include="include\spell\Teleport.h">
+      <Filter>include\spell</Filter>
+    </ClInclude>
+    <ClInclude Include="include\spell\Spell.h">
+      <Filter>include\spell</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -587,17 +614,8 @@
     <ClCompile Include="src\animation\WorldRenderer.cpp">
       <Filter>src\animation</Filter>
     </ClCompile>
-    <ClCompile Include="src\spells\HealSpell.cpp">
-      <Filter>src\spells</Filter>
-    </ClCompile>
-    <ClCompile Include="src\spells\LightningBoltSpell.cpp">
-      <Filter>src\spells</Filter>
-    </ClCompile>
     <ClCompile Include="src\animation\TileTexturer.cpp">
       <Filter>src\animation</Filter>
-    </ClCompile>
-    <ClCompile Include="src\spells\Spell.cpp">
-      <Filter>src\spells</Filter>
     </ClCompile>
     <ClCompile Include="src\entities\beings\Human.cpp">
       <Filter>src\entities\beings</Filter>
@@ -695,9 +713,6 @@
     <ClCompile Include="src\entities\objects\Object.cpp">
       <Filter>src\entities\objects</Filter>
     </ClCompile>
-    <ClCompile Include="src\spells\TeleportSpell.cpp">
-      <Filter>src\spells</Filter>
-    </ClCompile>
     <ClCompile Include="src\items\armor\Armor.cpp">
       <Filter>src\items\armor</Filter>
     </ClCompile>
@@ -709,6 +724,21 @@
     </ClCompile>
     <ClCompile Include="src\items\weapons\ModalWeapon.cpp">
       <Filter>src\items\weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\qte\LightningBolt.cpp">
+      <Filter>src\ui\qte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\spell\LightningBolt.cpp">
+      <Filter>src\spell</Filter>
+    </ClCompile>
+    <ClCompile Include="src\spell\Spell.cpp">
+      <Filter>src\spell</Filter>
+    </ClCompile>
+    <ClCompile Include="src\spell\Teleport.cpp">
+      <Filter>src\spell</Filter>
+    </ClCompile>
+    <ClCompile Include="src\spell\Heal.cpp">
+      <Filter>src\spell</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

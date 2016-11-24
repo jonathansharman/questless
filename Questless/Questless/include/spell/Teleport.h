@@ -1,5 +1,5 @@
 /**
-* @file    TeleportSpell.h
+* @file    Teleport.h
 * @author  Jonathan Sharman
 *
 * @section LICENSE See LICENSE.txt.
@@ -7,17 +7,17 @@
 * @section DESCRIPTION The interface for the TeleportSpell class.
 */
 
-#ifndef TELEPORT_SPELL_H
-#define TELEPORT_SPELL_H
+#ifndef SPELL_TELEPORT_H
+#define SPELL_TELEPORT_H
 
 #include "Spell.h"
 
-namespace questless
+namespace questless::spell
 {
-	class TeleportSpell : public Spell
+	class Teleport : public Spell
 	{
 	public:
-		TeleportSpell() : Spell(10) {}
+		Teleport() : Spell{10} {}
 
 		Action::Complete perform(Being& caster, cont_t cont) override;
 

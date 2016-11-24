@@ -13,12 +13,12 @@ using namespace sdl;
 
 namespace questless
 {
-	void MessageDialog::update(const Input& input)
+	bool MessageDialog::update(const Input& input)
 	{
 		if (input.presses(SDLK_BACKSPACE) || input.presses(SDLK_ESCAPE) || input.pressed(MouseButton::left) || input.presses(SDLK_RETURN)) {
-			close();
-			_cont();
+			return _cont();
 		}
+		return false;
 	}
 
 	void MessageDialog::draw(const Window& window)

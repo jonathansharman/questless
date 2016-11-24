@@ -35,12 +35,9 @@ namespace questless
 			load_textures();
 		}
 
-		/// Updates the dialog state based on input.
-		/// @param input User input used to update the dialog.
-		void update(const sdl::Input& input) override
+		bool update(const sdl::Input& input) override
 		{
 			if (input.presses(SDLK_BACKSPACE) || input.presses(SDLK_ESCAPE)) {
-				close();
 				return _cont(boost::none);
 			}
 
@@ -56,7 +53,6 @@ namespace questless
 				for (int i = 0; i < end; ++i) {
 					if (input.presses(sdl::Input::index_to_num_key(i))) {
 						if (_selection == i) {
-							close();
 							return _cont(_selection);
 						} else {
 							_selection = i;
@@ -66,14 +62,13 @@ namespace questless
 				}
 
 				if (input.pressed(sdl::MouseButton::left) || input.presses(SDLK_RETURN) || input.presses(SDLK_SPACE)) {
-					close();
 					return _cont(_selection);
 				}
 			}
+
+			return false;
 		}
 
-		/// Draws the dialog to the screen.
-		/// @param window The window.
 		void draw(const sdl::Window& window) override
 		{
 			/// @todo Confine to game window in the refresh function (need access to the window, will probably need to store the window dimensions :( ).
@@ -110,7 +105,7 @@ namespace questless
 		sdl::Rect _bounds;
 		std::string _title;
 		std::vector<std::string> _options;
-		std::function<void(boost::optional<int>)> _cont;
+		Continuation<boost::optional<int>> _cont;
 
 		sdl::Texture::ptr _txt_title;
 		std::vector<sdl::Texture::ptr> _txt_options;

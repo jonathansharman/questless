@@ -47,7 +47,7 @@ namespace questless
 		/// Calls each event handler in turn, passing them the given arguments.
 		/// @param args The event handler arguments.
 		/// @return True if no callback marked the event as handled, false otherwise.
-		[[nodiscard]] bool operator ()(Args... args)
+		/*[[nodiscard]]*/ bool operator ()(Args... args) /// @todo Uncomment [[nodiscard]] once supported.
 		{
 			for (auto& handler : _handlers) {
 				if (!(*handler)(args...)) {

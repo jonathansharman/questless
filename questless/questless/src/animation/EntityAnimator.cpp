@@ -45,7 +45,7 @@ namespace questless
 		static Handle<Texture> ss_handle;
 		if (first_call) {
 			ss_handle = sdl::texture_manager().add([] {
-				return Texture::make("resources/textures/test_animation.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+				return Texture::make("resources/textures/test-animation.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
 			});
 			first_call = false;
 		}

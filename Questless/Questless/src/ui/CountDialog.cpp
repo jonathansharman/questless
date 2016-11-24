@@ -13,10 +13,9 @@ using namespace sdl;
 
 namespace questless
 {
-	void CountDialog::update(const Input& input)
+	bool CountDialog::update(const Input& input)
 	{
 		if (input.presses(SDLK_BACKSPACE) || input.presses(SDLK_ESCAPE)) {
-			close();
 			return _cont(boost::none);
 		}
 
@@ -27,10 +26,10 @@ namespace questless
 
 		if (input.pressed(MouseButton::left) || input.presses(SDLK_RETURN)) {
 			if (_predicate(_count)) {
-				close();
 				return _cont(_count);
 			}
 		}
+		return false;
 	}
 
 	void CountDialog::draw(const Window& window)
@@ -43,10 +42,10 @@ namespace questless
 		renderer().draw_rect(Rect{x_center - _txt_prompt->width() / 2, _prompt_top, _txt_prompt->width(), _txt_prompt->height()}, Color{0, 0, 0, 128}, true);
 		_txt_prompt->draw(Point{x_center, _prompt_top}, HAlign::center);
 
-		// Draw the magnitude selector.
-		Texture txt_current = font_manager()[io_font_handle()].render(std::to_string(static_cast<int>(_count)), renderer(), Color::white());
-		renderer().draw_rect(Rect{x_center - txt_current.width() / 2, 100, txt_current.width(), txt_current.height()}, Color{0, 0, 0, 128}, true);
-		txt_current.draw(Point{x_center, 100}, HAlign::center);
+		// Draw the count selector.
+		Texture txt_count = font_manager()[io_font_handle()].render(std::to_string(static_cast<int>(_count)), renderer(), Color::white());
+		renderer().draw_rect(Rect{x_center - txt_count.width() / 2, 100, txt_count.width(), txt_count.height()}, Color{0, 0, 0, 128}, true);
+		txt_count.draw(Point{x_center, 100}, HAlign::center);
 	}
 
 	void CountDialog::refresh()

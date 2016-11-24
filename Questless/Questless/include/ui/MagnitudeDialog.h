@@ -40,12 +40,8 @@ namespace questless
 			load_textures();
 		}
 
-		/// Updates the dialog state based on input.
-		/// @param input User input used to update the dialog.
-		void update(const sdl::Input& input) override;
+		bool update(const sdl::Input& input) override;
 
-		/// Draws the dialog to the screen.
-		/// @param window The window.
 		void draw(const sdl::Window& window) override;
 	private:
 		std::string _title;
@@ -54,7 +50,7 @@ namespace questless
 		boost::optional<double> _min;
 		boost::optional<double> _max;
 		std::function<bool(double)> _predicate;
-		std::function<void(boost::optional<double>)> _cont;
+		Continuation<boost::optional<double>> _cont;
 
 		sdl::Texture::ptr _txt_title;
 		sdl::Texture::ptr _txt_prompt;

@@ -7,13 +7,13 @@
 * @section DESCRIPTION The implementation for the Spell abstract base class.
 */
 
-#include "spells/Spell.h"
+#include "spell/Spell.h"
 #include "entities/beings/Being.h"
 #include "agents/Agent.h"
 
 using namespace std;
 
-namespace questless
+namespace questless::spell
 {
 	/// @todo I don't like these optional things... There has to be a better way.
 

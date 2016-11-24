@@ -107,6 +107,10 @@ namespace questless
 			, std::vector<std::string> options
 			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override;
+
+		// Quick Time Events
+
+		Action::Complete get_lightning_bolt_quality(std::function<Action::Complete(double)> cont) override;
 	private:
 		std::unique_ptr<WorldView> _world_view;
 

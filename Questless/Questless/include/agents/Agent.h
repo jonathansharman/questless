@@ -48,7 +48,7 @@ namespace questless
 
 		// Queries and messages
 
-		/// @todo UPDATE DOCUMENTATION HERE.
+		/// @todo Update documentation here after refactoring to decouple these methods from dialogs.
 
 		virtual Action::Complete message
 			( const std::string& title
@@ -120,6 +120,10 @@ namespace questless
 			, std::vector<std::string> options
 			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const = 0;
+
+		// Quick Time Events
+
+		virtual Action::Complete get_lightning_bolt_quality(std::function<Action::Complete(double)> cont) { return cont(1.0); }
 	private:
 		Being& _being;
 	};

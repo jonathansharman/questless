@@ -95,6 +95,8 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -152,12 +154,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Image Include="resources\textures\glow.png" />
+    <Image Include="resources\textures\human-animation.png" />
+    <Image Include="resources\textures\icon.png" />
     <Image Include="resources\textures\items\blank-scroll.png" />
     <Image Include="resources\textures\items\charged-scroll.png" />
     <Image Include="resources\textures\items\uncharged-scroll.png" />
     <Image Include="resources\textures\splash\flame.png" />
     <Image Include="resources\textures\splash\logo.png" />
+    <Image Include="resources\textures\test-animation.png" />
     <Image Include="resources\textures\test.png" />
+    <Image Include="resources\textures\test2.png" />
+    <Image Include="resources\textures\test3.png" />
     <Image Include="resources\textures\ui\hex_circle.png" />
   </ItemGroup>
   <ItemGroup>
@@ -244,10 +252,10 @@
     <ClInclude Include="include\sdl-wrappers\Sound.h" />
     <ClInclude Include="include\sdl-wrappers\Texture.h" />
     <ClInclude Include="include\sdl-wrappers\Window.h" />
-    <ClInclude Include="include\spells\HealSpell.h" />
-    <ClInclude Include="include\spells\LightningBoltSpell.h" />
-    <ClInclude Include="include\spells\Spell.h" />
-    <ClInclude Include="include\spells\TeleportSpell.h" />
+    <ClInclude Include="include\spell\Heal.h" />
+    <ClInclude Include="include\spell\LightningBolt.h" />
+    <ClInclude Include="include\spell\Spell.h" />
+    <ClInclude Include="include\spell\Teleport.h" />
     <ClInclude Include="include\ui\CountDialog.h" />
     <ClInclude Include="include\ui\Dialog.h" />
     <ClInclude Include="include\ui\DigraphMenuController.h" />
@@ -260,6 +268,7 @@
     <ClInclude Include="include\ui\MagnitudeDialog.h" />
     <ClInclude Include="include\ui\MessageDialog.h" />
     <ClInclude Include="include\ui\PlayerActionDialog.h" />
+    <ClInclude Include="include\ui\qte\LightningBolt.h" />
     <ClInclude Include="include\ui\TileDialog.h" />
     <ClInclude Include="include\utility\constants.h" />
     <ClInclude Include="include\utility\Delegate.h" />
@@ -324,10 +333,10 @@
     <ClCompile Include="src\sdl-wrappers\Sound.cpp" />
     <ClCompile Include="src\sdl-wrappers\Texture.cpp" />
     <ClCompile Include="src\sdl-wrappers\Window.cpp" />
-    <ClCompile Include="src\spells\HealSpell.cpp" />
-    <ClCompile Include="src\spells\LightningBoltSpell.cpp" />
-    <ClCompile Include="src\spells\Spell.cpp" />
-    <ClCompile Include="src\spells\TeleportSpell.cpp" />
+    <ClCompile Include="src\spell\Heal.cpp" />
+    <ClCompile Include="src\spell\LightningBolt.cpp" />
+    <ClCompile Include="src\spell\Spell.cpp" />
+    <ClCompile Include="src\spell\Teleport.cpp" />
     <ClCompile Include="src\ui\CountDialog.cpp" />
     <ClCompile Include="src\ui\Dialog.cpp" />
     <ClCompile Include="src\ui\DigraphMenuController.cpp" />
@@ -339,6 +348,7 @@
     <ClCompile Include="src\ui\MagnitudeDialog.cpp" />
     <ClCompile Include="src\ui\MessageDialog.cpp" />
     <ClCompile Include="src\ui\PlayerActionDialog.cpp" />
+    <ClCompile Include="src\ui\qte\LightningBolt.cpp" />
     <ClCompile Include="src\ui\TileDialog.cpp" />
     <ClCompile Include="src\utility\Camera.cpp" />
     <ClCompile Include="src\utility\PointF.cpp" />

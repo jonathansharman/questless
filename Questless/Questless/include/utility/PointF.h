@@ -21,9 +21,9 @@ namespace questless
 		double x;
 		double y;
 
-		constexpr PointF() : x(0.0), y(0.0) {}
-		constexpr PointF(double x, double y) : x(x), y(y) {}
-		constexpr PointF(const PointF& p) : x(p.x), y(p.y) {}
+		constexpr PointF() : x{0.0}, y{0.0} {}
+		constexpr PointF(double x, double y) : x{x}, y{y} {}
+		constexpr PointF(const PointF& p) : x{p.x}, y{p.y} {}
 		constexpr explicit PointF(const sdl::Point& p) : x(p.x), y(p.y) {}
 
 		constexpr bool operator ==(const sdl::Vector& right) const { return x == right.x && y == right.y; }

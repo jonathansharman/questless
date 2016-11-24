@@ -54,13 +54,13 @@ namespace questless
 			return in;
 		}
 
-		template <Spell::Color color> double& get();
-		template <> double& get<Spell::Color::white>() { return white; }
-		template <> double& get<Spell::Color::black>() { return black; }
-		template <> double& get<Spell::Color::green>() { return green; }
-		template <> double& get<Spell::Color::red>() { return red; }
-		template <> double& get<Spell::Color::blue>() { return blue; }
-		template <> double& get<Spell::Color::yellow>() { return yellow; }
+		template <spell::Color color> double& get();
+		template <> double& get<spell::Color::white>() { return white; }
+		template <> double& get<spell::Color::black>() { return black; }
+		template <> double& get<spell::Color::green>() { return green; }
+		template <> double& get<spell::Color::red>() { return red; }
+		template <> double& get<spell::Color::blue>() { return blue; }
+		template <> double& get<spell::Color::yellow>() { return yellow; }
 
 		/// Sets all magic resistance levels that are below their minimum values to their minimum values.
 		void clamp()

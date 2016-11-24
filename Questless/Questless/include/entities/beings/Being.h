@@ -25,7 +25,7 @@
 #include "items/Item.h"
 #include "items/weapons/Weapon.h"
 #include "items/armor/Armor.h"
-#include "spells/Spell.h"
+#include "spell/Spell.h"
 #include "utility/Event.h"
 
 namespace questless
@@ -255,12 +255,12 @@ namespace questless
 		const Vulnerability& vulnerability() const { return _attributes.vulnerability; }
 
 		const MagicPower& magic_power() const { return _attributes.magic_power; }
-		template <Spell::Color color> double magic_power() const { return _attributes.magic_power.get<color>(); }
-		double magic_power(Spell::Color color) const;
+		template <spell::Color color> double magic_power() const { return _attributes.magic_power.get<color>(); }
+		double magic_power(spell::Color color) const;
 
 		const MagicResistance& magic_resistance() const { return _attributes.magic_resistance; }
-		template <Spell::Color color> double magic_resistance() const { return _attributes.magic_resistance.get<color>(); }
-		double magic_resistance(Spell::Color color) const;
+		template <spell::Color color> double magic_resistance() const { return _attributes.magic_resistance.get<color>(); }
+		double magic_resistance(spell::Color color) const;
 
 		// Condition mutators
 
@@ -318,12 +318,12 @@ namespace questless
 		void vulnerability(const Vulnerability& value) { _attributes.vulnerability = value; }
 
 		void magic_power(MagicPower value) { _attributes.magic_power = value; }
-		template <Spell::Color color> void magic_power(double value) { _attributes.magic_power.get<color> = value; }
-		void magic_power(Spell::Color color, double value);
+		template <spell::Color color> void magic_power(double value) { _attributes.magic_power.get<color> = value; }
+		void magic_power(spell::Color color, double value);
 
 		void magic_resistance(MagicResistance value) { _attributes.magic_resistance = value; }
-		template <Spell::Color color> void magic_resistance(double value) { _attributes.magic_resistance.get<color> = value; }
-		void magic_resistance(Spell::Color color, double value);
+		template <spell::Color color> void magic_resistance(double value) { _attributes.magic_resistance.get<color> = value; }
+		void magic_resistance(spell::Color color, double value);
 
 		/// Advances the being one time unit.
 		void update() override;

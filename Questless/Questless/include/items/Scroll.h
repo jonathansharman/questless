@@ -13,14 +13,14 @@
 #include <memory>
 
 #include "Item.h"
-#include "spells/Spell.h"
+#include "spell/Spell.h"
 
 namespace questless
 {
 	class Scroll : public Item
 	{
 	public:
-		Scroll(Spell::ptr spell) : _spell{std::move(spell)} {}
+		Scroll(spell::Spell::ptr spell) : _spell{std::move(spell)} {}
 
 		void accept(ItemVisitor& visitor) const override { return visitor.visit(*this); }
 
@@ -30,8 +30,8 @@ namespace questless
 
 		bool blank() const { return _spell == nullptr; }
 
-		Spell& spell() { return *_spell; }
-		const Spell& spell() const { return *_spell; }
+		spell::Spell& spell() { return *_spell; }
+		const spell::Spell& spell() const { return *_spell; }
 
 		std::vector<Action::ptr> actions() override
 		{
@@ -113,7 +113,7 @@ namespace questless
 			Scroll& _scroll;
 		};
 
-		Spell::ptr _spell;
+		spell::Spell::ptr _spell;
 	};
 }
 

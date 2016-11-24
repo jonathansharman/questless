@@ -1,23 +1,23 @@
 /**
-* @file    LightningBoltSpell.h
+* @file    LightningBolt.h
 * @author  Jonathan Sharman
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION The interface for the LightningBoltSpell class.
+* @section DESCRIPTION The interface for the LightningBolt spell class.
 */
 
-#ifndef LIGHTNING_BOLT_SPELL_H
-#define LIGHTNING_BOLT_SPELL_H
+#ifndef SPELL_LIGHTNING_BOLT_H
+#define SPELL_LIGHTNING_BOLT_H
 
 #include "Spell.h"
 
-namespace questless
+namespace questless::spell
 {
-	class LightningBoltSpell : public Spell
+	class LightningBolt : public Spell
 	{
 	public:
-		LightningBoltSpell() : Spell(10) {}
+		LightningBolt() : Spell{10} {}
 
 		Action::Complete perform(Being& caster, cont_t cont) override;
 

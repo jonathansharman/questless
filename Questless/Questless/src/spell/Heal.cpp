@@ -7,15 +7,15 @@
 * @section DESCRIPTION The implementation for the HealSpell class.
 */
 
-#include "spells/HealSpell.h"
+#include "spell/Heal.h"
 #include "entities/beings/Being.h"
 #include "agents/Agent.h"
 
 /// @todo double check all the captures to make sure they're the proper type.
 
-namespace questless
+namespace questless::spell
 {
-	Action::Complete HealSpell::perform(Being& caster, cont_t cont)
+	Action::Complete Heal::perform(Being& caster, cont_t cont)
 	{
 		if (active_cooldown() > 0.0) {
 			return caster.agent().message("This spell is on cooldown.", "This spell will be ready in " + std::to_string(active_cooldown()) + ".", [cont] { return cont(Result::aborted); });

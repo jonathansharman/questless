@@ -38,12 +38,8 @@ namespace questless
 			, _cont{std::move(cont)}
 		{}
 
-		/// Updates the dialog state based on input.
-		/// @param input User input used to update the dialog.
-		void update(const sdl::Input& input) override;
+		bool update(const sdl::Input& input) override;
 
-		/// Draws the dialog to the screen.
-		/// @param window The window.
 		void draw(const sdl::Window& window) override;
 	private:
 		std::string _title;
@@ -52,7 +48,7 @@ namespace questless
 		boost::optional<int> _min;
 		boost::optional<int> _max;
 		std::function<bool(int)> _predicate;
-		std::function<void(boost::optional<int>)> _cont;
+		Continuation<boost::optional<int>> _cont;
 
 		sdl::Texture::ptr _txt_title;
 		sdl::Texture::ptr _txt_prompt;

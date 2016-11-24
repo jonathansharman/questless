@@ -88,54 +88,54 @@ namespace questless
 		_delayed_action_conts.clear();
 	}
 
-	double Being::magic_power(Spell::Color color) const
+	double Being::magic_power(spell::Color color) const
 	{
 		switch (color) {
-			case Spell::Color::white:  return _attributes.magic_power.white;
-			case Spell::Color::black:  return _attributes.magic_power.black;
-			case Spell::Color::green:  return _attributes.magic_power.green;
-			case Spell::Color::red:    return _attributes.magic_power.red;
-			case Spell::Color::blue:   return _attributes.magic_power.blue;
-			case Spell::Color::yellow: return _attributes.magic_power.yellow;
+			case spell::Color::white:  return _attributes.magic_power.white;
+			case spell::Color::black:  return _attributes.magic_power.black;
+			case spell::Color::green:  return _attributes.magic_power.green;
+			case spell::Color::red:    return _attributes.magic_power.red;
+			case spell::Color::blue:   return _attributes.magic_power.blue;
+			case spell::Color::yellow: return _attributes.magic_power.yellow;
 			default: throw std::logic_error{"Unrecognized spell color."};
 		}
 	}
 
-	double Being::magic_resistance(Spell::Color color) const
+	double Being::magic_resistance(spell::Color color) const
 	{
 		switch (color) {
-			case Spell::Color::white:  return _attributes.magic_resistance.white;
-			case Spell::Color::black:  return _attributes.magic_resistance.black;
-			case Spell::Color::green:  return _attributes.magic_resistance.green;
-			case Spell::Color::red:    return _attributes.magic_resistance.red;
-			case Spell::Color::blue:   return _attributes.magic_resistance.blue;
-			case Spell::Color::yellow: return _attributes.magic_resistance.yellow;
+			case spell::Color::white:  return _attributes.magic_resistance.white;
+			case spell::Color::black:  return _attributes.magic_resistance.black;
+			case spell::Color::green:  return _attributes.magic_resistance.green;
+			case spell::Color::red:    return _attributes.magic_resistance.red;
+			case spell::Color::blue:   return _attributes.magic_resistance.blue;
+			case spell::Color::yellow: return _attributes.magic_resistance.yellow;
 			default: throw std::logic_error{"Unrecognized spell color."};
 		}
 	}
 
-	void Being::magic_power(Spell::Color color, double value)
+	void Being::magic_power(spell::Color color, double value)
 	{
 		switch (color) {
-			case Spell::Color::white:  _attributes.magic_power.white = value;
-			case Spell::Color::black:  _attributes.magic_power.black = value;
-			case Spell::Color::green:  _attributes.magic_power.green = value;
-			case Spell::Color::red:    _attributes.magic_power.red = value;
-			case Spell::Color::blue:   _attributes.magic_power.blue = value;
-			case Spell::Color::yellow: _attributes.magic_power.yellow = value;
+			case spell::Color::white:  _attributes.magic_power.white = value;
+			case spell::Color::black:  _attributes.magic_power.black = value;
+			case spell::Color::green:  _attributes.magic_power.green = value;
+			case spell::Color::red:    _attributes.magic_power.red = value;
+			case spell::Color::blue:   _attributes.magic_power.blue = value;
+			case spell::Color::yellow: _attributes.magic_power.yellow = value;
 			default: throw std::logic_error{"Unrecognized spell color."};
 		}
 	}
 
-	void Being::magic_resistance(Spell::Color color, double value)
+	void Being::magic_resistance(spell::Color color, double value)
 	{
 		switch (color) {
-			case Spell::Color::white:  _attributes.magic_resistance.white = value;
-			case Spell::Color::black:  _attributes.magic_resistance.black = value;
-			case Spell::Color::green:  _attributes.magic_resistance.green = value;
-			case Spell::Color::red:    _attributes.magic_resistance.red = value;
-			case Spell::Color::blue:   _attributes.magic_resistance.blue = value;
-			case Spell::Color::yellow: _attributes.magic_resistance.yellow = value;
+			case spell::Color::white:  _attributes.magic_resistance.white = value;
+			case spell::Color::black:  _attributes.magic_resistance.black = value;
+			case spell::Color::green:  _attributes.magic_resistance.green = value;
+			case spell::Color::red:    _attributes.magic_resistance.red = value;
+			case spell::Color::blue:   _attributes.magic_resistance.blue = value;
+			case spell::Color::yellow: _attributes.magic_resistance.yellow = value;
 			default: throw std::logic_error{"Unrecognized spell color."};
 		}
 	}

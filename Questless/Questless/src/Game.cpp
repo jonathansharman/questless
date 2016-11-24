@@ -20,9 +20,9 @@ using std::ostringstream;
 #include "entities/beings/Human.h"
 #include "entities/beings/goblinoids/Goblin.h"
 #include "items/Scroll.h"
-#include "spells/LightningBoltSpell.h"
-#include "spells/HealSpell.h"
-#include "spells/TeleportSpell.h"
+#include "spell/LightningBolt.h"
+#include "spell/Heal.h"
+#include "spell/Teleport.h"
 #include "items/weapons/Quarterstaff.h"
 
 using std::move;
@@ -90,7 +90,7 @@ namespace questless
 
 		load_textures();
 
-		Handle<Texture> test_ss_handle = texture_manager().add([] { return Texture::make("resources/textures/test_animation.png", renderer(), SDL_BLENDMODE_BLEND); });
+		Handle<Texture> test_ss_handle = texture_manager().add([] { return Texture::make("resources/textures/test-animation.png", renderer(), SDL_BLENDMODE_BLEND); });
 		_ani_test = make_unique<AnimationCollection>(test_ss_handle, 3, 1);
 
 		// Load sounds.
@@ -378,9 +378,9 @@ namespace questless
 						Being::ptr player_being = make_unique<Human>(*this, Agent::make<Player>, BeingId::next());
 						_player = dynamic_cast<Player*>(&player_being->agent());
 						_player_being_id = player_being->id();
-						player_being->give_item(make_unique<Scroll>(make_unique<LightningBoltSpell>()));
-						player_being->give_item(make_unique<Scroll>(make_unique<HealSpell>()));
-						player_being->give_item(make_unique<Scroll>(make_unique<TeleportSpell>()));
+						player_being->give_item(make_unique<Scroll>(make_unique<spell::LightningBolt>()));
+						player_being->give_item(make_unique<Scroll>(make_unique<spell::Heal>()));
+						player_being->give_item(make_unique<Scroll>(make_unique<spell::Teleport>()));
 						player_being->give_item((make_unique<Quarterstaff>()));
 						_region->spawn_player(move(player_being));
 					}
@@ -468,13 +468,9 @@ namespace questless
 		// Update HUD.
 		_hud->update(_input);
 
-		// Update region animations.
-		//_region->update_animations();
-
 		// Update dialogs.
 		if (!_dialogs.empty()) {
-			_dialogs.front()->update(_input);
-			if (_dialogs.front()->closed()) {
+			if (_dialogs.front()->update(_input)) {
 				_dialogs.pop_front();
 
 				if (_dialogs.empty()) {
