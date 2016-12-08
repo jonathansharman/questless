@@ -34,7 +34,7 @@ namespace questless
 			, Hertz angular_velocity
 			, double initial_scale
 			, Hertz scale_velocity
-			, double_seconds lifetime
+			, seconds_f lifetime
 			)
 			: _position{position + random_displacement(max_displacement)}
 			, _velocity{velocity}
@@ -47,7 +47,7 @@ namespace questless
 		{}
 
 		/// @return Whether the particle is dead.
-		bool dead() const { return _time_left < double_seconds::zero(); }
+		bool dead() const { return _time_left < seconds_f::zero(); }
 
 		/// Updates the particle.
 		void update();
@@ -64,8 +64,8 @@ namespace questless
 		Hertz _angular_velocity; ///< The particle's angular velocity in radians per second.
 		double _scale; ///< The particle's size scale.
 		Hertz _scale_velocity; ///< The particle's rate of change in scale per second.
-		double_seconds _lifetime; ///< The total duration in seconds of the particle's lifetime.
-		double_seconds _time_left; ///< The remaining duration in seconds of the particle's lifetime.
+		seconds_f _lifetime; ///< The total duration in seconds of the particle's lifetime.
+		seconds_f _time_left; ///< The remaining duration in seconds of the particle's lifetime.
 
 		/// @return The texture to be used when drawing a particle.
 		virtual sdl::Texture& texture() const = 0;

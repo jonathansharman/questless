@@ -26,7 +26,7 @@ namespace questless
 			, Hertz{uniform(-_dtheta_max, _dtheta_max)}
 			, 1.0
 			, 0.0_Hz
-			, double_seconds{uniform(_lifetime_min, _lifetime_max)}
+			, seconds_f{uniform(_lifetime_min, _lifetime_max)}
 			}
 		{}
 	private:

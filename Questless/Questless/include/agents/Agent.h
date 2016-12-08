@@ -123,7 +123,8 @@ namespace questless
 
 		// Quick Time Events
 
-		virtual Action::Complete get_lightning_bolt_quality(std::function<Action::Complete(double)> cont) { return cont(1.0); }
+		/// @todo Documentation, implementation file.
+		virtual Action::Complete get_lightning_bolt_quality(PointF, std::function<Action::Complete(double)> cont) { return cont(1.0); }
 	private:
 		Being& _being;
 	};

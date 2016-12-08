@@ -33,8 +33,9 @@ namespace sdl
 		/// Move constructor.
 		Sound(Sound&& sound);
 
-		/// @param filename The WAV file from which to load the sound.
-		static ptr make(const std::string& filename) { return std::make_unique<Sound>(filename); }
+		/// @return A unique sound pointer constructed with the given arguments.
+		template <typename... Args>
+		static ptr make(Args&&... args) { return std::make_unique<Sound>(std::forward<Args>(args)...); }
 
 		~Sound();
 

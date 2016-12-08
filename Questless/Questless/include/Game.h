@@ -132,9 +132,9 @@ namespace questless
 		// Constants //
 		///////////////
 
-		const double_seconds splash_fade_out_duration{2.0};
-		const double_seconds splash_fade_in_duration{2.0};
-		const double_seconds splash_duration = splash_fade_out_duration + splash_fade_in_duration;
+		const seconds_f splash_fade_out_duration{2.0};
+		const seconds_f splash_fade_in_duration{2.0};
+		const seconds_f splash_duration = splash_fade_out_duration + splash_fade_in_duration;
 
 		// Debug
 

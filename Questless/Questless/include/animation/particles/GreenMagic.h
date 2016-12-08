@@ -19,15 +19,16 @@ namespace questless
 	{
 	public:
 		/// @param position The particle's starting position.
-		GreenMagic(const PointF& position) : Particle
-			{ position
-			, Velocity{random_displacement(_v_min, _v_max)}
-			, uniform(0.0, 360.0)
-			, Hertz{uniform(-_dtheta_max, _dtheta_max)}
-			, 1.0
-			, 0.0_Hz
-			, double_seconds{uniform(_lifetime_min, _lifetime_max)}
-			}
+		GreenMagic(const PointF& position)
+			: Particle
+				{ position
+				, Velocity{random_displacement(_v_min, _v_max)}
+				, uniform(0.0, 360.0)
+				, Hertz{uniform(-_dtheta_max, _dtheta_max)}
+				, 1.0
+				, 0.0_Hz
+				, seconds_f{uniform(_lifetime_min, _lifetime_max)}
+				}
 			, _turning_right{random_bool()}
 		{}
 	private:

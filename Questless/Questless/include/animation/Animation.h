@@ -30,11 +30,11 @@ namespace questless
 
 		struct Frame
 		{
-			double_seconds duration;
+			seconds_f duration;
 			sdl::Point coords; ///< The cel coordinates within the sprite sheet.
 			sdl::Point origin; ///< The origin of the frame's texture relative to the animation origin.
 
-			Frame(double_seconds duration, sdl::Point coords, sdl::Point origin) : duration{duration}, coords{coords}, origin{origin} {}
+			Frame(seconds_f duration, sdl::Point coords, sdl::Point origin) : duration{duration}, coords{coords}, origin{origin} {}
 		};
 
 		/// Constructs an animation pointer from the provided frames using the provided loop type.
@@ -72,7 +72,7 @@ namespace questless
 		bool over() const { return _over; }
 
 		/// @return The total duration of the animation.
-		double_seconds duration() const;
+		seconds_f duration() const;
 
 		/// Moves to the start or a random point in the animation, sets the loop counter to zero, and sets the over flag to false.
 		/// @param randomize_starting_time If true, resets the animation to a random point.
@@ -83,7 +83,7 @@ namespace questless
 	private:
 		std::vector<Frame> _frames;
 		int _frame_index;
-		double_seconds _accrued_time;
+		seconds_f _accrued_time;
 		bool _looping;
 		unsigned _loops;
 		bool _in_reverse;

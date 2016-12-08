@@ -62,11 +62,9 @@ namespace sdl
 		/// Move constructor.
 		Texture(Texture&& texture);
 
-		/// A convenience function for making a unique texture pointer.
+		/// @return A unique texture pointer constructed with the given arguments.
 		template <typename... Args>
 		static ptr make(Args&&... args) { return std::make_unique<Texture>(std::forward<Args>(args)...); }
-
-		/// @todo Replace all "make" functions with perfect-forwarding versions like this one.
 
 		~Texture();
 
@@ -76,10 +74,6 @@ namespace sdl
 
 		/// @return The internal SDL_Texture pointer.
 		SDL_Texture* const sdl_ptr() { return _texture; }
-
-		/// Sets the alpha multiplier of the texture.
-		/// @param alpha The alpha value from 0 to 255.
-		void alpha(uint8_t alpha);
 
 		/// Sets the color multiplier of the texture.
 		/// @param color The color value.
@@ -115,22 +109,22 @@ namespace sdl
 		/// Copies all or part the texture to the current render target, applying the provided transformations.
 		/// @param position The coordinates of the texture on the screen.
 		/// @param origin The origin point within the texture. If nullopt, the texture's center is used.
+		/// @param color An additional color multiplier, applied on top of the texture's color member.
 		/// @param horizontal_scale The horizontal scale of the texture.
 		/// @param vertical_scale The vertical scale of the texture.
+		/// @param angle The number of degrees to rotate the texture, counter-clockwise.
 		/// @param flip_horizontally Whether to flip the texture horizontally.
 		/// @param flip_horizontally Whether to flip the texture vertically.
-		/// @param color An additional color multiplier, applied on top of the texture's color member.
-		/// @param angle The number of degrees to rotate the texture, counter-clockwise.
 		/// @param src_rect An optional Rect specifying the portion of the texture to be copied. If nullopt, the entire texture is used.
 		void draw_transformed
 			( Point position
 			, const boost::optional<Point>& origin = boost::none
+			, Color color = Color::white()
 			, double horizontal_scale = 1.0
 			, double vertical_scale = 1.0
+			, double angle = 0
 			, bool flip_horizontally = false
 			, bool flip_vertically = false
-			, Color color = Color::white()
-			, double angle = 0
 			, const boost::optional<Rect>& src_rect = boost::none
 			) const;
 
@@ -145,7 +139,7 @@ namespace sdl
 		int _access;
 		int _w;
 		int _h;
-		Color _color;
+		Color _color; /// @todo Is there any purpose to this field?
 	};
 }
 

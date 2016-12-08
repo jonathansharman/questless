@@ -111,25 +111,30 @@ namespace questless
 		/// @param texture The texture to be drawn.
 		/// @param position The in-game coordinates of the texture.
 		/// @param origin The origin point within the texture. If nullopt, the texture's center is used.
+		/// @param color An additional color multiplier, applied on top of the camera's and texture's color members.
 		/// @param horizontal_scale The horizontal scale of the texture.
 		/// @param vertical_scale The vertical scale of the texture.
+		/// @param angle The number of degrees to rotate the texture, counter-clockwise.
 		/// @param flip_horizontally Whether to flip the texture horizontally.
 		/// @param flip_horizontally Whether to flip the texture vertically.
-		/// @param angle The number of degrees to rotate the texture, counter-clockwise.
-		/// @param color An additional color multiplier, applied on top of the camera's and texture's color members.
 		/// @param src_rect An optional Rect specifying the portion of the texture to be copied. If nullopt, the entire texture is used.
 		void draw
 			( const sdl::Texture& texture
 			, sdl::Point position
 			, const boost::optional<sdl::Point>& origin = boost::none
+			, sdl::Color color = sdl::Color::white()
 			, double horizontal_scale = 1.0
 			, double vertical_scale = 1.0
+			, double angle = 0.0
 			, bool flip_horizontally = false
 			, bool flip_vertically = false
-			, double angle = 0.0
-			, sdl::Color color = sdl::Color::white()
 			, const boost::optional<sdl::Rect>& src_rect = boost::none
 			) const;
+
+		/// Draws lines relative to the camera connecting the series of points contained in the vector.
+		/// @param points A vector of SDL points.
+		/// @param color The color of the lines.
+		void draw_lines(std::vector<sdl::Point> points, sdl::Color color) const;
 	private:
 		sdl::Window& _window;
 		PointF _position;
@@ -140,6 +145,12 @@ namespace questless
 		PointF _pt_hovered;
 		sdl::Point _pt_hovered_rounded;
 		RegionTileCoords _tile_hovered;
+
+		/// @return The given point transformed to account for the camera.
+		PointF relative_point(PointF point) const;
+
+		/// @return The given point transformed to account for the camera.
+		sdl::Point relative_point(sdl::Point point) const { return relative_point(PointF{point}).to_point(); }
 	};
 }
 

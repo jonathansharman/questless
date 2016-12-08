@@ -21,7 +21,9 @@ namespace sdl
 		, int height
 		, bool h_centered
 		, bool v_centered
-		, bool resizable)
+		, bool resizable
+		, bool grab_input
+		)
 		: _title{title}, _icon_filename{icon_filename}
 	{
 		_sdl_window = SDL_CreateWindow
@@ -29,7 +31,7 @@ namespace sdl
 			, h_centered ? SDL_WINDOWPOS_CENTERED : SDL_WINDOWPOS_UNDEFINED
 			, v_centered ? SDL_WINDOWPOS_CENTERED : SDL_WINDOWPOS_UNDEFINED
 			, width, height
-			, (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | (resizable ? SDL_WINDOW_RESIZABLE : 0)
+			, (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | (resizable ? SDL_WINDOW_RESIZABLE : 0) | (grab_input ? SDL_WINDOW_INPUT_GRABBED : 0)
 			);
 		if (_sdl_window == nullptr) {
 			throw std::runtime_error{"Failed to create window."};
@@ -45,7 +47,9 @@ namespace sdl
 		, int height
 		, int x
 		, int y
-		, bool resizable)
+		, bool resizable
+		, bool grab_input
+		)
 		: _title{title}, _icon_filename{icon_filename}
 	{
 		_sdl_window = SDL_CreateWindow

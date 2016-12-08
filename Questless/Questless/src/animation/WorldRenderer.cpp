@@ -206,12 +206,9 @@ namespace questless
 
 								tile_texture.draw_transformed
 									( coords_in_world - Vector::to(_terrain_bounds.position())
-									, boost::none // Origin
-									, 1.0 // H-scale
-									, 1.0 // V-scale
-									, false // H-flip
-									, false // V-flip
-									, Color{luminance, luminance, luminance});
+									, boost::none // origin
+									, Color{luminance, luminance, luminance}
+									);
 							}
 						}
 					}

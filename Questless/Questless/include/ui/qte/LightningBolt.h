@@ -16,23 +16,32 @@
 
 #include "../Dialog.h"
 #include "utility/PointF.h"
+#include "utility/Velocity.h"
 #include "utility/Initializer.h"
+#include "animation/Camera.h"
 
 namespace questless::qte
 {
 	class LightningBolt : public Dialog
 	{
 	public:
-		LightningBolt(std::function<void(double)> cont);
+		/// @param camera The game camera.
+		/// @param target The target strike point, in game coordinates.
+		/// @param cont The dialog continuation function.
+		LightningBolt(const Camera& camera, PointF target, std::function<void(double)> cont);
 
-		bool update(const sdl::Input& input) override;
+		bool update(sdl::Input& input) override;
 
 		void draw(const sdl::Window& window) override;
 	private:
-		struct PointCharge
+		static constexpr seconds_f _time_limit = 5.0s;
+		static constexpr int _charges_per_quadrant = 4;
+		static constexpr double _expected_charges = _charges_per_quadrant * 70.0;
+
+		struct Charge
 		{
-			PointF pos;
-			double charge;
+			PointF position;
+			Velocity velocity;
 		};
 
 		friend class Initializer<LightningBolt>;
@@ -41,9 +50,14 @@ namespace questless::qte
 
 		static sdl::Handle<sdl::Texture> LightningBolt::_point_charge_texture_handle;
 
+		const Camera& _camera;
+		PointF _target;
 		Continuation<double> _cont;
 
-		std::vector<PointCharge> _point_charges;
+		seconds_f _elapsed_time = 0.0s;
+		int _quadrant = 0;
+
+		std::vector<Charge> _charges;
 
 		sdl::Texture::ptr _txt_prompt;
 

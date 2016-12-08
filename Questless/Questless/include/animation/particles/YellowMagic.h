@@ -28,7 +28,7 @@ namespace questless
 			, 0.0
 			, 1.0
 			, 0.0_Hz
-			, double_seconds{uniform(_lifetime_min, _lifetime_max)}
+			, seconds_f{uniform(_lifetime_min, _lifetime_max)}
 			}
 		{
 			_velocity.rotate(uniform(0.0, 360.0));

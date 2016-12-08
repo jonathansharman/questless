@@ -64,6 +64,7 @@ namespace sdl
 
 		/// Draws lines connecting the series of points contained in the vector.
 		/// @param points A vector of SDL points.
+		/// @param color The color of the lines.
 		void draw_lines(std::vector<Point> points, Color color);
 
 		/// Draws a rectangle. Can be filled or just an outline.

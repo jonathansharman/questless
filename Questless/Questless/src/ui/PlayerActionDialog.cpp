@@ -11,7 +11,7 @@
 
 namespace questless
 {
-	bool PlayerActionDialog::update(const sdl::Input& input)
+	bool PlayerActionDialog::update(sdl::Input& input)
 	{
 		if (input.presses(SDLK_z) || input.presses(SDLK_RETURN)) {
 			return _cont({Choice::Type::idle, input.shift() ? 1 : 0});

@@ -38,7 +38,7 @@ namespace questless
 			, _cont{std::move(cont)}
 		{}
 
-		bool update(const sdl::Input& input) override;
+		bool update(sdl::Input& input) override;
 
 		void draw(const sdl::Window& window) override;
 	private:

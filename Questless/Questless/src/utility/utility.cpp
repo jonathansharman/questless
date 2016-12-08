@@ -48,14 +48,14 @@ namespace questless
 	// Math //
 	//////////
 
-	uint8_t percentage_to_byte(double percent)
+	uint8_t percentage_to_byte(double percentage)
 	{
-		if (percent <= 0) {
+		if (percentage <= 0) {
 			return 0;
-		} else if (percent >= 1) {
+		} else if (percentage >= 1) {
 			return 255;
 		} else {
-			return static_cast<uint8_t>(255 * percent);
+			return static_cast<uint8_t>(255 * percentage);
 		}
 	}
 

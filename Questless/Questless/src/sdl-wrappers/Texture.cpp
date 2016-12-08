@@ -59,6 +59,7 @@ namespace sdl
 		if (_texture) {
 			SDL_GetTextureBlendMode(_texture, &_blend_mode);
 			SDL_GetTextureColorMod(_texture, &_color.r, &_color.g, &_color.b);
+			SDL_GetTextureAlphaMod(_texture, &_color.a);
 			SDL_QueryTexture(_texture, &_format, &_access, &_w, &_h);
 		}
 	}
@@ -91,21 +92,16 @@ namespace sdl
 		std::swap(first._color, second._color);
 	}
 
-	void Texture::alpha(uint8_t alpha)
-	{
-		SDL_SetTextureAlphaMod(_texture, alpha);
-	}
-
 	void Texture::draw(const Rect& dst_rect, const boost::optional<Rect>& src_rect) const
 	{
 		if (_texture) {
-			SDL_SetTextureColorMod(_texture, _color.r, _color.g, _color.b);
 			SDL_Rect sdl_dst_rect = static_cast<SDL_Rect>(dst_rect);
 			SDL_Rect sdl_src_rect;
 			if (src_rect) {
 				sdl_src_rect = *src_rect;
 			}
 			SDL_SetTextureColorMod(_texture, _color.r, _color.g, _color.b);
+			SDL_SetTextureAlphaMod(_texture, _color.a);
 			SDL_RenderCopy(_renderer.sdl_ptr(), _texture, (src_rect ? &sdl_src_rect : nullptr), &sdl_dst_rect);
 		} else {
 			throw std::runtime_error("Texture is unloaded.");
@@ -141,6 +137,7 @@ namespace sdl
 				sdl_src_rect = *src_rect;
 			}
 			SDL_SetTextureColorMod(_texture, _color.r, _color.g, _color.b);
+			SDL_SetTextureAlphaMod(_texture, _color.a);
 			SDL_RenderCopy(_renderer.sdl_ptr(), _texture, (src_rect ? &sdl_src_rect : nullptr), &sdl_dst_rect);
 		} else {
 			throw std::runtime_error("Texture is unloaded.");
@@ -150,12 +147,12 @@ namespace sdl
 	void Texture::draw_transformed
 		( Point position
 		, const boost::optional<Point>& origin
+		, Color color
 		, double horizontal_scale
 		, double vertical_scale
+		, double angle
 		, bool flip_horizontally
 		, bool flip_vertically
-		, Color color
-		, double angle
 		, const boost::optional<Rect>& src_rect
 		) const
 	{
@@ -176,6 +173,7 @@ namespace sdl
 				, static_cast<uint8_t>((static_cast<uint32_t>(color.g) * _color.g) / 255)
 				, static_cast<uint8_t>((static_cast<uint32_t>(color.b) * _color.b) / 255)
 				);
+			SDL_SetTextureAlphaMod(_texture, static_cast<uint8_t>((static_cast<uint32_t>(color.a) * _color.a) / 255));
 			SDL_RenderCopyEx
 				( _renderer.sdl_ptr()
 				, _texture

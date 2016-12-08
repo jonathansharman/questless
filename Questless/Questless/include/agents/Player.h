@@ -110,7 +110,7 @@ namespace questless
 
 		// Quick Time Events
 
-		Action::Complete get_lightning_bolt_quality(std::function<Action::Complete(double)> cont) override;
+		Action::Complete get_lightning_bolt_quality(PointF target, std::function<Action::Complete(double)> cont) override;
 	private:
 		std::unique_ptr<WorldView> _world_view;
 

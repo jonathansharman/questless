@@ -54,6 +54,9 @@ namespace sdl
 			y -= v.y;
 			return *this;
 		}
+
+		/// @return The square of the vector's length.
+		int length_squared() const { return x * x + y * y; }
 	};
 
 	struct Point
@@ -172,22 +175,22 @@ namespace sdl
 		uint8_t a;
 
 		static constexpr Color clear() { return {0, 0, 0, 0}; }
-		static constexpr Color white() { return {255, 255, 255}; }
-		static constexpr Color silver() { return {192, 192, 192}; }
-		static constexpr Color gray() { return {128, 128, 128}; }
-		static constexpr Color black() { return {0, 0, 0}; }
-		static constexpr Color red() { return {255, 0, 0}; }
-		static constexpr Color lime() { return {0, 255, 0}; }
-		static constexpr Color green() { return {0, 192, 0}; }
-		static constexpr Color blue() { return {0, 0, 255}; }
-		static constexpr Color cyan() { return {0, 255, 255}; }
-		static constexpr Color yellow() { return {255, 255, 0}; }
-		static constexpr Color magenta() { return {255, 0, 255}; }
-		static constexpr Color orange() { return {255, 128, 0}; }
-		static constexpr Color purple() { return {128, 0, 128}; }
-		static constexpr Color teal() { return {0, 128, 128}; }
-		static constexpr Color tan() { return {192, 160, 128}; }
-		static constexpr Color brown() { return {128, 64, 0}; }
+		static constexpr Color white(uint8_t alpha = 255) { return {255, 255, 255, alpha}; }
+		static constexpr Color silver(uint8_t alpha = 255) { return {192, 192, 192, alpha}; }
+		static constexpr Color gray(uint8_t alpha = 255) { return {128, 128, 128, alpha}; }
+		static constexpr Color black(uint8_t alpha = 255) { return {0, 0, 0, alpha}; }
+		static constexpr Color red(uint8_t alpha = 255) { return {255, 0, 0, alpha}; }
+		static constexpr Color lime(uint8_t alpha = 255) { return {0, 255, 0, alpha}; }
+		static constexpr Color green(uint8_t alpha = 255) { return {0, 192, 0, alpha}; }
+		static constexpr Color blue(uint8_t alpha = 255) { return {0, 0, 255, alpha}; }
+		static constexpr Color cyan(uint8_t alpha = 255) { return {0, 255, 255, alpha}; }
+		static constexpr Color yellow(uint8_t alpha = 255) { return {255, 255, 0, alpha}; }
+		static constexpr Color magenta(uint8_t alpha = 255) { return {255, 0, 255, alpha}; }
+		static constexpr Color orange(uint8_t alpha = 255) { return {255, 128, 0, alpha}; }
+		static constexpr Color purple(uint8_t alpha = 255) { return {128, 0, 128, alpha}; }
+		static constexpr Color teal(uint8_t alpha = 255) { return {0, 128, 128, alpha}; }
+		static constexpr Color tan(uint8_t alpha = 255) { return {192, 160, 128, alpha}; }
+		static constexpr Color brown(uint8_t alpha = 255) { return {128, 64, 0, alpha}; }
 
 		constexpr Color() : r{0}, g{0}, b{0}, a{255} {}
 		constexpr Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255) : r{r}, g{g}, b{b}, a{a} {}

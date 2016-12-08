@@ -35,7 +35,7 @@ namespace questless
 			load_textures();
 		}
 
-		bool update(const sdl::Input& input) override
+		bool update(sdl::Input& input) override
 		{
 			if (input.presses(SDLK_BACKSPACE) || input.presses(SDLK_ESCAPE)) {
 				return _cont(boost::none);

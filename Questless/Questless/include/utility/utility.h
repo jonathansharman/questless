@@ -81,6 +81,14 @@ namespace questless
 	/// Extends the given bounding rectangle by the given point.
 	void extend_bounds(sdl::Rect& bounds, sdl::Point point);
 
+	/// @return The square of the given value.
+	template <typename T>
+	T square(T value) { return value * value; }
+
+	/// @return The cube of the given value.
+	template <typename T>
+	T cube(T value) { return value * value * value; }
+
 	///////////////////
 	// Miscellaneous //
 	///////////////////

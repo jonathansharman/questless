@@ -58,8 +58,11 @@ namespace questless
 		/// @param theta The counter-clockwise rotation to apply, in degrees.
 		VectorF rotated(double theta) const;
 
-		/// @return The vector's magnitude.
-		double magnitude() const { return sqrt(x * x + y * y); }
+		/// @return The vector's length.
+		double length() const { return sqrt(x * x + y * y); }
+
+		/// @return The square of the vector's length.
+		double length_squared() const { return x * x + y * y; }
 
 		/// @return The angle of the vector in degrees counter-clockwise from the positive x-axis.
 		double angle() const;

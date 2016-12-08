@@ -53,7 +53,7 @@ namespace questless
 		if (fullscreen) {
 			_window = Window::make("Questless", "resources/textures/icon.png", true);
 		} else {
-			_window = Window::make("Questless", "resources/textures/icon.png", false, dflt_window_width, dflt_window_height, true, true, true);
+			_window = Window::make("Questless", "resources/textures/icon.png", false, dflt_window_width, dflt_window_height, true, true, true, true);
 		}
 
 		renderer(make_unique<Renderer>(*_window, _window->width(), _window->height()));
@@ -146,7 +146,6 @@ namespace questless
 		_txt_splash_flame = Texture::make("resources/textures/splash/flame.png", renderer(), SDL_BLENDMODE_BLEND);
 
 		_txt_hex_highlight = Texture::make("resources/textures/terrain/tile.png", renderer(), SDL_BLENDMODE_BLEND);
-		_txt_hex_highlight->alpha(128);
 
 		_txt_hex_circle = Texture::make("resources/textures/ui/hex_circle.png", renderer(), SDL_BLENDMODE_BLEND);
 	}
@@ -200,7 +199,7 @@ namespace questless
 
 	void Game::game_loop()
 	{
-		double_seconds accrued_time = double_seconds::zero();
+		seconds_f accrued_time = seconds_f::zero();
 		clock::time_point last_update_time = clock::now();
 		for (;;) {
 			// Update
@@ -335,9 +334,9 @@ namespace questless
 			_mnu_main.add_option("Settings", "Cancel", "Questless");
 
 			std::vector<Animation::Frame> frames;
-			frames.emplace_back(double_seconds{1.0}, Point{0, 0}, Point{0, 0});
-			frames.emplace_back(double_seconds{1.0}, Point{1, 0}, Point{0, 0});
-			frames.emplace_back(double_seconds{1.0}, Point{2, 0}, Point{0, 0});
+			frames.emplace_back(seconds_f{1.0}, Point{0, 0}, Point{0, 0});
+			frames.emplace_back(seconds_f{1.0}, Point{1, 0}, Point{0, 0});
+			frames.emplace_back(seconds_f{1.0}, Point{2, 0}, Point{0, 0});
 			_ani_test->add("", Animation::make(frames, true));
 			_ani_test->start("");
 
@@ -349,12 +348,12 @@ namespace questless
 	void Game::render_splash()
 	{
 		if (clock::now() - _time_last_state_change < splash_fade_in_duration) {
-			auto ms_fading_in = duration_cast<double_seconds>(clock::now() - _time_last_state_change).count();
+			auto ms_fading_in = duration_cast<seconds_f>(clock::now() - _time_last_state_change).count();
 			uint8_t intensity = percentage_to_byte(static_cast<double>(ms_fading_in / splash_fade_in_duration.count()));
 			_txt_splash_logo->color(Color{intensity, intensity, intensity});
 			_txt_splash_flame->color(Color{intensity, intensity, intensity});
 		} else {
-			auto ms_fading_out = duration_cast<double_seconds>(clock::now() - _time_last_state_change - splash_fade_in_duration).count();
+			auto ms_fading_out = duration_cast<seconds_f>(clock::now() - _time_last_state_change - splash_fade_in_duration).count();
 			uint8_t intensity = percentage_to_byte(1 - static_cast<double>(ms_fading_out / splash_fade_out_duration.count()));
 			_txt_splash_logo->color(Color{intensity, intensity, intensity});
 			_txt_splash_flame->color(Color{intensity, intensity, intensity});
@@ -424,7 +423,7 @@ namespace questless
 		if (_input.pressed(MouseButton::right)) {
 			pt_clicked_rounded = _camera->pt_hovered_rounded();
 		}
-		_camera->draw(*_txt_hex_highlight, _camera->pt_hovered_rounded());
+		_camera->draw(*_txt_hex_highlight, _camera->pt_hovered_rounded(), boost::none, Color::white(128));
 		_camera->draw(*_txt_hex_circle, pt_clicked_rounded);
 
 		_world_renderer->draw_objects(*this, *_camera);

@@ -23,12 +23,12 @@ namespace questless
 	////////////
 
 	using clock = std::chrono::steady_clock;
-	using double_seconds = std::chrono::duration<double>;
+	using seconds_f = std::chrono::duration<double>;
 
 	const Hertz frame_rate = 60.0_Hz;
-	const double_seconds frame_duration = 1 / frame_rate;
+	const seconds_f frame_duration = 1 / frame_rate;
 
-	const double_seconds accrued_update_time_max{1.0};
+	const seconds_f accrued_update_time_max{1.0};
 
 	//////////
 	// Math //

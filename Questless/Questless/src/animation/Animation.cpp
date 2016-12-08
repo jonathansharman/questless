@@ -17,7 +17,7 @@ namespace questless
 	Animation::Animation(std::vector<Frame> frames, bool looping)
 		: _frames(frames)
 		, _frame_index(0)
-		, _accrued_time(double_seconds::zero())
+		, _accrued_time(seconds_f::zero())
 		, _looping(looping)
 		, _loops(0)
 		, _in_reverse(false)
@@ -25,9 +25,9 @@ namespace questless
 		, _over(false)
 	{}
 
-	double_seconds Animation::duration() const
+	seconds_f Animation::duration() const
 	{
-		auto ret = double_seconds::zero();
+		auto ret = seconds_f::zero();
 		for (const Frame& frame : _frames) {
 			ret += frame.duration;
 		}

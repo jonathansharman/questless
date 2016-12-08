@@ -46,8 +46,12 @@ namespace questless
 		/// @return The period.
 		std::chrono::duration<Rep, Period> period() { return std::chrono::duration<Rep, Period>{1 / _cycles}; }
 
+		constexpr bool operator <(const Frequency<Rep, Period>& right) const { return _cycles < right._cycles; }
+		constexpr bool operator <=(const Frequency<Rep, Period>& right) const { return _cycles <= right._cycles; }
 		constexpr bool operator ==(const Frequency<Rep, Period>& right) const { return _cycles == right._cycles; }
 		constexpr bool operator !=(const Frequency<Rep, Period>& right) const { return _cycles != right._cycles; }
+		constexpr bool operator >=(const Frequency<Rep, Period>& right) const { return _cycles >= right._cycles; }
+		constexpr bool operator >(const Frequency<Rep, Period>& right) const { return _cycles > right._cycles; }
 
 		constexpr friend Frequency<Rep, Period> operator +(Frequency<Rep, Period> f1, Frequency<Rep, Period> f2)
 		{

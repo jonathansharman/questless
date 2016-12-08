@@ -15,16 +15,10 @@
 
 namespace questless
 {
-	class Velocity
+	struct Velocity
 	{
-	public:
 		Hertz x; ///< Horizontal displacement per second.
 		Hertz y; ///< Vertical displacement per second.
-
-		/// Constructs a velocity with the given x and y displacements per second.
-		/// @param x The horizontal displacement per second.
-		/// @param y The vertical displacement per second.
-		Velocity(double x, double y) : x{x}, y{y} {}
 
 		/// Constructs a velocity with the given x and y displacements per second.
 		/// @param x The horizontal displacement per second.
@@ -32,27 +26,38 @@ namespace questless
 		Velocity(Hertz x, Hertz y) : x{x}, y{y} {}
 
 		/// Constructs a velocity from the given displacement per second.
-		/// @param per_second A vector expressing displacement per second.
-		Velocity(const VectorF& per_second) : x{per_second.x}, y{per_second.y} {}
+		/// @param displacement_rate A vector rate expressing displacement per second.
+		Velocity(const Frequency<VectorF>& displacement_rate)
+			: x{displacement_rate.count().x}
+			, y{displacement_rate.count().y}
+		{}
 
-		/// Constructs a velocity from the given unit displacement and duration.
+		/// Constructs a velocity from the given displacement and duration.
 		/// @param displacement A displacement vector.
-		/// @param duration The duration over which the unit displacement occurs.
-		Velocity(const VectorF& displacement, double_seconds duration)
+		/// @param duration The duration over which the displacement occurs.
+		Velocity(const VectorF& displacement, seconds_f duration)
 			: x{displacement.x / duration.count()}
 			, y{displacement.y / duration.count()}
 		{}
+
+		/// Constructs a velocity from the given angle and speed.
+		/// @param angle The angle of the heading in radians, increasing CCW from the positive x-axis.
+		/// @param speed The magnitude of the velocity.
+		static Velocity from_angle_speed(double angle, Hertz speed)
+		{
+			return Velocity{cos(angle) * speed, sin(angle) * speed};
+		}
 
 		bool operator ==(const Velocity& right) const { return x == right.x && y == right.y; }
 		bool operator !=(const Velocity& right) const { return x != right.x || y != right.y; }
 		
 		friend Velocity operator +(const Velocity& v1, const Velocity& v2);
 		friend Velocity operator -(const Velocity& v1, const Velocity& v2);
-		//friend VectorF operator *(const Velocity& velocity, duration<double> duration); /// @todo Reenable when MS fixes the bug with duration *
-		//friend VectorF operator *(duration<double> duration, const Velocity& velocity);
+		//friend VectorF operator *(const Velocity& velocity, double_seconds duration); /// @todo Reenable when MS fixes the bug with duration *
+		//friend VectorF operator *(double_seconds duration, const Velocity& velocity);
 		friend Velocity operator *(const Velocity& v, double factor);
 		friend Velocity operator *(double factor, const Velocity& v);
-		friend Velocity operator /(const VectorF& displacement, double_seconds duration);
+		friend Velocity operator /(const VectorF& displacement, seconds_f duration);
 		friend Velocity operator /(const Velocity& v, double divisor);
 		
 		Velocity& operator +=(const Velocity& v);
@@ -76,7 +81,7 @@ namespace questless
 		/// Calculates the displacement that will occur after the given duration.
 		/// @param duration A duration in seconds.
 		/// @return The displacement.
-		inline VectorF displacement(const double_seconds& duration) const { return VectorF{x * duration, y * duration}; }
+		inline VectorF displacement(const seconds_f& duration) const { return VectorF{x * duration, y * duration}; }
 
 		/// @return The velocity's magnitude.
 		Hertz speed() const { return Hertz{sqrt(x.count() * x.count() + y.count() * y.count())}; }

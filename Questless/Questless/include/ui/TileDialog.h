@@ -28,7 +28,7 @@ namespace questless
 			load_textures();
 		}
 
-		bool update(const sdl::Input& input) override;
+		bool update(sdl::Input& input) override;
 
 		void draw(const sdl::Window& window) override;
 	private:

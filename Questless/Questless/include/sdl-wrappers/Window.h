@@ -35,7 +35,18 @@ namespace sdl
 		/// @param h_centered If true, window is centered horizontally. Otherwise horizontal position is undefined.
 		/// @param v_centered If true, window is centered vertically. Otherwise vertical position is undefined.
 		/// @param resizable If true, window may be resized (enables maximize, restore, and window frame handles).
-		Window(std::string title, std::string icon_filename, bool fullscreen = true, int width = 0, int height = 0, bool h_centered = false, bool v_centered = false, bool resizable = false);
+		/// @param grab_input If true, window captures input, meaning the mouse cannot leave the window.
+		Window
+			( std::string title
+			, std::string icon_filename
+			, bool fullscreen = true
+			, int width = 0
+			, int height = 0
+			, bool h_centered = false
+			, bool v_centered = false
+			, bool resizable = false
+			, bool grab_input = false
+			);
 
 		/// Constructs a window object with the specified properties.
 		/// @param title The title of the window.
@@ -46,12 +57,13 @@ namespace sdl
 		/// @param x The window's x-coordinate.
 		/// @param y The window's y-coordinate.
 		/// @param resizable If true, window may be resized (enables maximize, restore, and window frame handles).
-		Window(std::string title, std::string icon_filename, bool fullscreen, int width, int height, int x, int y, bool resizable);
+		/// @param grab_input If true, window captures input, meaning the mouse cannot leave the window.
+		Window(std::string title, std::string icon_filename, bool fullscreen, int width, int height, int x, int y, bool resizable, bool grab_input);
 
 		Window(const Window& other) = delete;
 		Window(Window&& other) = default;
 
-		/// A convenience function for making a unique window pointer.
+		/// @return A unique window pointer constructed with the given arguments.
 		template <typename... Args>
 		static ptr make(Args&&... args) { return make_unique<Window>(std::forward<Args>(args)...); }
 
@@ -59,7 +71,6 @@ namespace sdl
 
 		Window& operator =(const Window& other) = delete;
 		Window& operator =(Window&& other) = default;
-
 
 		/// Creates a new window pointer with the same properties as the old one and destroys the old one.
 		void recreate();

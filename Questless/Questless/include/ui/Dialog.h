@@ -28,7 +28,7 @@ namespace questless
 		/// Updates the dialog state based on input.
 		/// @param input User input used to update the dialog.
 		/// @return True if the dialog is resolved after this update or false if it's still active.
-		virtual bool update(const sdl::Input& input) = 0;
+		virtual bool update(sdl::Input& input) = 0; /// @todo Take input by ref or const-ref?
 
 		/// Draws the dialog to the screen.
 		/// @param window The window.

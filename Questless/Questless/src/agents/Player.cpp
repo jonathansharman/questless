@@ -198,9 +198,9 @@ namespace questless
 
 	// Quick Time Events
 
-	Action::Complete Player::get_lightning_bolt_quality(std::function<Action::Complete(double)> cont)
+	Action::Complete Player::get_lightning_bolt_quality(PointF target, std::function<Action::Complete(double)> cont)
 	{
-		auto dialog = std::make_unique<qte::LightningBolt>(move(cont));
+		auto dialog = std::make_unique<qte::LightningBolt>(being().game().camera(), target, move(cont));
 		return being().game().add_dialog(move(dialog));
 	}
 }

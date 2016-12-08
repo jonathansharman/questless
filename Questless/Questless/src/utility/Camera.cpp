@@ -7,6 +7,7 @@
 * @section DESCRIPTION The implementation for the Camera class.
 */
 
+#include "sdl-wrappers/resources.h"
 #include "animation/Camera.h"
 
 #include <cmath>
@@ -46,35 +47,49 @@ namespace questless
 		( const sdl::Texture& texture
 		, sdl::Point position
 		, const boost::optional<sdl::Point>& origin
+		, sdl::Color color
 		, double horizontal_scale
 		, double vertical_scale
+		, double angle
 		, bool flip_horizontally
 		, bool flip_vertically
-		, double angle
-		, sdl::Color color
 		, const boost::optional<sdl::Rect>& src_rect) const
 	{
 		if (origin) {
-			position += sdl::Vector(texture.width() / 2 - origin->x, texture.height() / 2 - origin->y);
+			position += sdl::Vector{texture.width() / 2 - origin->x, texture.height() / 2 - origin->y};
 		}
-		sdl::Point window_resolution = _window.resolution();
-		PointF relative_position = _zoom * (PointF{position} -_position) + PointF{window_resolution} / 2;
-		relative_position.rotate(PointF{window_resolution} / 2.0, -_angle);
 		sdl::Color mixed_color = sdl::Color
 			{ static_cast<uint8_t>((static_cast<uint32_t>(color.r) * _color.r) / 255)
 			, static_cast<uint8_t>((static_cast<uint32_t>(color.g) * _color.g) / 255)
 			, static_cast<uint8_t>((static_cast<uint32_t>(color.b) * _color.b) / 255)
+			, static_cast<uint8_t>((static_cast<uint32_t>(color.a) * _color.a) / 255)
 			};
 		texture.draw_transformed
-			( relative_position.to_point()
+			( relative_point(position)
 			, boost::none
+			, mixed_color
 			, _zoom * horizontal_scale
 			, _zoom * vertical_scale
+			, angle - _angle
 			, flip_horizontally
 			, flip_vertically
-			, mixed_color
-			, angle - _angle
 			, src_rect
 			);
+	}
+
+	void Camera::draw_lines(std::vector<sdl::Point> points, sdl::Color color) const
+	{
+		// Transform segment end points.
+		for (sdl::Point& point : points) {
+			point = relative_point(point);
+		}
+		// Draw transformed line segments using the renderer.
+		sdl::renderer().draw_lines(points, color);
+	}
+
+	PointF Camera::relative_point(PointF point) const
+	{
+		PointF window_center = PointF{_window.resolution()} / 2.0;
+		return (_zoom * (point -_position) + window_center).rotated(window_center, -_angle);
 	}
 }
