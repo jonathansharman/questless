@@ -35,7 +35,7 @@ namespace sdl
 		~Renderer();
 
 		Renderer& operator =(const Renderer& other) = delete;
-		Renderer& operator =(Renderer&& other) = default;
+		Renderer& operator =(Renderer&& other) & = default;
 
 		/// @return The internal SDL_Renderer pointer.
 		SDL_Renderer* const sdl_ptr() { return _renderer; }

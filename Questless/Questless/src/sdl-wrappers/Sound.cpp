@@ -29,7 +29,7 @@ namespace sdl
 		Mix_FreeChunk(_chunk);
 	}
 
-	Sound& Sound::operator =(Sound sound)
+	Sound& Sound::operator =(Sound sound) &
 	{
 		swap(*this, sound);
 		return *this;

@@ -81,7 +81,7 @@
     <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Program Files (x86)\Windows Kits\8.1\Include\shared\;$(SourcePath)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(VC_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(BOOST_PATH)\boost_1_61_0;$(VC_IncludePath)</IncludePath>
     <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -128,6 +128,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -278,6 +281,7 @@
     <ClInclude Include="include\utility\Initializer.h" />
     <ClInclude Include="include\utility\PointF.h" />
     <ClInclude Include="include\utility\Stream.h" />
+    <ClInclude Include="include\utility\TaggedType.h" />
     <ClInclude Include="include\utility\utility.h" />
     <ClInclude Include="include\utility\VectorF.h" />
     <ClInclude Include="include\utility\Velocity.h" />

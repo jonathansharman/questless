@@ -22,11 +22,11 @@ namespace questless
 		BlueMagic(const PointF& position) : Particle
 			{ position
 			, Velocity{_v, 0.0}
-			, uniform(0.0, 360.0)
-			, Hertz{uniform(-_dtheta_max, _dtheta_max)}
-			, 1.0
-			, 0.0_Hz
-			, seconds_f{uniform(_lifetime_min, _lifetime_max)}
+			, ANGLE_DEGREES = uniform(0.0, 360.0)
+			, ANGULAR_VELOCITY = Hertz{uniform(-_dtheta_max, _dtheta_max)}
+			, SCALE = 1.0
+			, SCALE_VELOCITY = 0.0_Hz
+			, LIFETIME = seconds_f{uniform(_lifetime_min, _lifetime_max)}
 			}
 		{
 			_velocity.rotate(60.0 * uniform(0, 6));

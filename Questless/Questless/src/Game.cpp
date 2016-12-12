@@ -423,7 +423,7 @@ namespace questless
 		if (_input.pressed(MouseButton::right)) {
 			pt_clicked_rounded = _camera->pt_hovered_rounded();
 		}
-		_camera->draw(*_txt_hex_highlight, _camera->pt_hovered_rounded(), boost::none, Color::white(128));
+		_camera->draw(*_txt_hex_highlight, _camera->pt_hovered_rounded(), ORIGIN = boost::none, Color::white(128));
 		_camera->draw(*_txt_hex_circle, pt_clicked_rounded);
 
 		_world_renderer->draw_objects(*this, *_camera);

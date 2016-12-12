@@ -22,11 +22,11 @@ namespace questless
 		RedMagic(const PointF& position) : Particle
 			{ position
 			, Velocity{random_displacement(_v_max)} + Velocity{0.0, _vyi_adjustment}
-			, uniform(0.0, 360.0)
-			, Hertz{uniform(-_dtheta_max, _dtheta_max)}
-			, 1.0
-			, 0.0_Hz
-			, seconds_f{uniform(_lifetime_min, _lifetime_max)}
+			, ANGLE_DEGREES = uniform(0.0, 360.0)
+			, ANGULAR_VELOCITY = Hertz{uniform(-_dtheta_max, _dtheta_max)}
+			, SCALE = 1.0
+			, SCALE_VELOCITY = 0.0_Hz
+			, LIFETIME = seconds_f{uniform(_lifetime_min, _lifetime_max)}
 			}
 		{}
 	private:

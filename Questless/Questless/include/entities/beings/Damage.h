@@ -121,7 +121,7 @@ namespace questless
 		}
 
 		/// @return The sum of the damage components.
-		double total() const { return slash + pierce + bludgeon + burn + freeze + blight; }
+		constexpr double total() const { return slash + pierce + bludgeon + burn + freeze + blight; }
 	};
 }
 

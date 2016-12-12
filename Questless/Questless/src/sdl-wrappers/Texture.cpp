@@ -75,7 +75,7 @@ namespace sdl
 		SDL_DestroyTexture(_texture);
 	}
 
-	Texture& Texture::operator =(Texture texture)
+	Texture& Texture::operator =(Texture texture) &
 	{
 		swap(*this, texture);
 		return *this;
@@ -146,7 +146,7 @@ namespace sdl
 
 	void Texture::draw_transformed
 		( Point position
-		, const boost::optional<Point>& origin
+		, boost::optional<Point> origin
 		, Color color
 		, double horizontal_scale
 		, double vertical_scale

@@ -50,7 +50,7 @@ namespace sdl
 
 		~Input();
 
-		Input& operator =(Input input);
+		Input& operator =(Input input) &;
 
 		friend void swap(Input& first, Input& second);
 

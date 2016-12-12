@@ -34,9 +34,9 @@ namespace questless
 		int r;
 		int s;
 
-		HexCoords() : q{0}, r{0}, s{0} {}
-		HexCoords(int q, int r, int s) : q{q}, r{r}, s{s} {}
-		HexCoords(int q, int r) : q{q}, r{r}, s{-q - r} {}
+		constexpr HexCoords() : q{0}, r{0}, s{0} {}
+		constexpr HexCoords(int q, int r, int s) : q{q}, r{r}, s{s} {}
+		constexpr HexCoords(int q, int r) : q{q}, r{r}, s{-q - r} {}
 		HexCoords(double q, double r, double s)
 		{
 			this->q = int(round(q));
@@ -56,22 +56,22 @@ namespace questless
 			}
 		}
 
-		friend HexCoords operator +(HexCoords h1, HexCoords h2) { return HexCoords{h1.q + h2.q, h1.r + h2.r, h1.s + h2.s}; }
-		friend HexCoords operator -(HexCoords h1, HexCoords h2) { return HexCoords{h1.q - h2.q, h1.r - h2.r, h1.s - h2.s}; }
+		friend constexpr HexCoords operator +(HexCoords h1, HexCoords h2) { return HexCoords{h1.q + h2.q, h1.r + h2.r, h1.s + h2.s}; }
+		friend constexpr HexCoords operator -(HexCoords h1, HexCoords h2) { return HexCoords{h1.q - h2.q, h1.r - h2.r, h1.s - h2.s}; }
 
-		friend HexCoords operator *(HexCoords h, int k) { return HexCoords(k * h.q, k * h.r, k * h.s); }
-		friend HexCoords operator *(int k, HexCoords h) { return HexCoords(k * h.q, k * h.r, k * h.s); }
+		friend constexpr HexCoords operator *(HexCoords h, int k) { return HexCoords{k * h.q, k * h.r, k * h.s}; }
+		friend constexpr HexCoords operator *(int k, HexCoords h) { return HexCoords{k * h.q, k * h.r, k * h.s}; }
 
-		friend HexCoords operator *(HexCoords h, double k) { return HexCoords(k * h.q, k * h.r, k * h.s); }
-		friend HexCoords operator *(double k, HexCoords h) { return HexCoords(k * h.q, k * h.r, k * h.s); }
+		friend HexCoords operator *(HexCoords h, double k) { return HexCoords{k * h.q, k * h.r, k * h.s}; }
+		friend HexCoords operator *(double k, HexCoords h) { return HexCoords{k * h.q, k * h.r, k * h.s}; }
 
-		friend HexCoords operator /(HexCoords h, int k) { return HexCoords(h.q / k, h.r / k, h.s / k); }
-		friend HexCoords operator /(HexCoords h, double k) { return HexCoords(h.q / k, h.r / k, h.s / k); }
+		friend constexpr HexCoords operator /(HexCoords h, int k) { return HexCoords{h.q / k, h.r / k, h.s / k}; }
+		friend HexCoords operator /(HexCoords h, double k) { return HexCoords{h.q / k, h.r / k, h.s / k}; }
 
 		/// Arbitrary less-than function so that maps are comparable.
-		friend bool operator <(HexCoords h1, HexCoords h2) { return h1.q < h2.q || (h1.q == h2.q && h1.r < h2.r); }
-		friend bool operator ==(HexCoords h1, HexCoords h2) { return h1.q == h2.q && h1.r == h2.r && h1.s == h2.s; }
-		friend bool operator !=(HexCoords h1, HexCoords h2) { return h1.q != h2.q || h1.r != h2.r || h1.s != h2.s; }
+		friend constexpr bool operator <(HexCoords h1, HexCoords h2) { return h1.q < h2.q || (h1.q == h2.q && h1.r < h2.r); }
+		friend constexpr bool operator ==(HexCoords h1, HexCoords h2) { return h1.q == h2.q && h1.r == h2.r && h1.s == h2.s; }
+		friend constexpr bool operator !=(HexCoords h1, HexCoords h2) { return h1.q != h2.q || h1.r != h2.r || h1.s != h2.s; }
 
 		int length() const { return static_cast<int>((abs(q) + abs(r) + abs(s)) / 2); }
 

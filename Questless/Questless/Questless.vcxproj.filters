@@ -529,6 +529,9 @@
     <ClInclude Include="include\spell\Spell.h">
       <Filter>include\spell</Filter>
     </ClInclude>
+    <ClInclude Include="include\utility\TaggedType.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp" />

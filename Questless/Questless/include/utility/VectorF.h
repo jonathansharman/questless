@@ -42,13 +42,13 @@ namespace questless
 		friend VectorF operator *(VectorF v, double factor);
 		friend VectorF operator *(double factor, VectorF v);
 		friend VectorF operator /(VectorF v, double divisor);
-	
-		VectorF& operator =(const VectorF& v);
 
-		VectorF& operator +=(const VectorF& v);
-		VectorF& operator -=(const VectorF& v);
-		VectorF& operator *=(double factor);
-		VectorF& operator /=(double divisor);
+		VectorF& operator =(const VectorF& v) & = default;
+
+		VectorF& operator +=(const VectorF& v) &;
+		VectorF& operator -=(const VectorF& v) &;
+		VectorF& operator *=(double factor) &;
+		VectorF& operator /=(double divisor) &;
 
 		/// Rotates the vector, overwriting the original value.
 		/// @param theta The counter-clockwise rotation to apply, in degrees.

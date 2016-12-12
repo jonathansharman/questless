@@ -50,36 +50,29 @@ namespace questless
 		v.y /= divisor;
 		return v;
 	}
-
-	VectorF& VectorF::operator =(const VectorF& v)
-	{
-		this->x = v.x;
-		this->y = v.y;
-		return *this;
-	}
 	
-	VectorF& VectorF::operator +=(const VectorF& v)
+	VectorF& VectorF::operator +=(const VectorF& v) &
 	{
 		x += v.x;
 		y += v.y;
 		return *this;
 	}
 
-	VectorF& VectorF::operator -=(const VectorF& v)
+	VectorF& VectorF::operator -=(const VectorF& v) &
 	{
 		x -= v.x;
 		y -= v.y;
 		return *this;
 	}
 
-	VectorF& VectorF::operator *=(double factor)
+	VectorF& VectorF::operator *=(double factor) &
 	{
 		x *= factor;
 		y *= factor;
 		return *this;
 	}
 
-	VectorF& VectorF::operator /=(double divisor)
+	VectorF& VectorF::operator /=(double divisor) &
 	{
 		x /= divisor;
 		y /= divisor;

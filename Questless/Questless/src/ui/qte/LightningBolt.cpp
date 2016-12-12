@@ -77,7 +77,7 @@ namespace questless::qte
 			for (int i = 0; i < _charges_per_quadrant; ++i) {
 				_charges.push_back(Charge
 					{ _target + random_displacement(100.0)
-					, Velocity::from_angle_speed(uniform(0.0, tau), 100.0)
+					, Velocity{ANGLE_RADIANS = uniform(0.0, tau), SPEED = 100.0}
 					});
 			}
 		}
@@ -115,16 +115,13 @@ namespace questless::qte
 			_camera.draw
 				( texture_manager()[_point_charge_texture_handle]
 				, point_charge.position.to_point()
-				, boost::none // origin
+				, ORIGIN = boost::none
 				, Color{255, 255, percentage_to_byte(intensity)}
-				, (1.0 + intensity) / 2 // h-scale
-				, (1.0 + intensity) / 2 // v-scale
-				, 0.0 // angle
+				, H_SCALE = (1.0 + intensity) / 2
+				, V_SCALE = (1.0 + intensity) / 2
+				, ANGLE_DEGREES = 0.0
 				);
 		}
-
-		// Draw line.
-		_camera.draw_lines({_target.to_point(), _camera.pt_hovered().to_point()}, Color::yellow());
 
 		// Draw the prompt.
 		renderer().draw_rect(Rect{x_center - _txt_prompt->width() / 2, _prompt_top, _txt_prompt->width(), _txt_prompt->height()}, Color::black(128), true);

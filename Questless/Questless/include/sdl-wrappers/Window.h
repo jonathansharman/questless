@@ -70,7 +70,7 @@ namespace sdl
 		~Window();
 
 		Window& operator =(const Window& other) = delete;
-		Window& operator =(Window&& other) = default;
+		Window& operator =(Window&& other) & = default;
 
 		/// Creates a new window pointer with the same properties as the old one and destroys the old one.
 		void recreate();

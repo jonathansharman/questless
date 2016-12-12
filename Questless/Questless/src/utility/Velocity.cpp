@@ -22,12 +22,12 @@ namespace questless
 	}
 
 	/*
-	VectorF operator *(const Velocity& velocity, double_seconds duration)
+	VectorF operator *(const Velocity& velocity, seconds_f duration)
 	{
 		return VectorF{velocity.x * duration, velocity.y * duration};
 	}
 
-	VectorF operator *(double_seconds duration, const Velocity& velocity)
+	VectorF operator *(seconds_f duration, const Velocity& velocity)
 	{
 		return VectorF{velocity.x * duration, velocity.y * duration};
 	}
@@ -53,28 +53,28 @@ namespace questless
 		return Velocity{v.x / divisor, v.y / divisor};
 	}
 		
-	Velocity& Velocity::operator +=(const Velocity& v)
+	Velocity& Velocity::operator +=(const Velocity& v) &
 	{
 		x += v.x;
 		y += v.y;
 		return *this;
 	}
 
-	Velocity& Velocity::operator -=(const Velocity& v)
+	Velocity& Velocity::operator -=(const Velocity& v) &
 	{
 		x -= v.x;
 		y -= v.y;
 		return *this;
 	}
 
-	Velocity& Velocity::operator *=(double factor)
+	Velocity& Velocity::operator *=(double factor) &
 	{
 		x *= factor;
 		y *= factor;
 		return *this;
 	}
 
-	Velocity& Velocity::operator /=(double divisor)
+	Velocity& Velocity::operator /=(double divisor) &
 	{
 		x /= divisor;
 		y /= divisor;

@@ -14,9 +14,20 @@
 #include "sdl-wrappers/Texture.h"
 #include "animation/Camera.h"
 #include "utility/Velocity.h"
+#include "utility/TaggedType.h"
 
 namespace questless
 {
+	using AngularVelocity = TaggedType<Hertz, struct AngularVelocityTag>;
+	using Scale = TaggedType<double, struct ScaleTag>;
+	using ScaleVelocity = TaggedType<Hertz, struct ScaleVelocityTag>;
+	using Lifetime = TaggedType<seconds_f, struct LifetimeTag>;
+
+	constexpr Argument<AngularVelocity> ANGULAR_VELOCITY;
+	constexpr Argument<Scale> SCALE;
+	constexpr Argument<ScaleVelocity> SCALE_VELOCITY;
+	constexpr Argument<Lifetime> LIFETIME;
+
 	class Particle
 	{
 	public:
@@ -24,17 +35,17 @@ namespace questless
 
 		/// @param position The particle's initial position.
 		/// @param velocity The particle's initial velocity.
-		/// @param angle The particle's initial angle, in degrees counter-clockwise from the positive x-axis.
+		/// @param angle The particle's initial angle, in degrees, counter-clockwise from the positive x-axis.
 		/// @param angular_velocity The particle's angular velocity in degrees per second.
 		/// @param lifetime The duration of the particle's life, after which it is considered expired and should be removed.
 		Particle
 			( const PointF& position
 			, const Velocity& velocity
-			, double angle
-			, Hertz angular_velocity
-			, double initial_scale
-			, Hertz scale_velocity
-			, seconds_f lifetime
+			, AngleDegrees angle
+			, AngularVelocity angular_velocity
+			, Scale initial_scale
+			, ScaleVelocity scale_velocity
+			, Lifetime lifetime
 			)
 			: _position{position + random_displacement(max_displacement)}
 			, _velocity{velocity}

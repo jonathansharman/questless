@@ -56,7 +56,7 @@ namespace sdl
 		delete [] _prev_keyboard_state;
 	}
 
-	Input& Input::operator =(Input input)
+	Input& Input::operator =(Input input) &
 	{
 		swap(*this, input);
 		return *this;

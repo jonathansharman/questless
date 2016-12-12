@@ -68,7 +68,7 @@ namespace sdl
 
 		~Texture();
 
-		Texture& operator =(Texture texture);
+		Texture& operator =(Texture texture) &;
 
 		friend void swap(Texture& first, Texture& second);
 
@@ -118,7 +118,7 @@ namespace sdl
 		/// @param src_rect An optional Rect specifying the portion of the texture to be copied. If nullopt, the entire texture is used.
 		void draw_transformed
 			( Point position
-			, const boost::optional<Point>& origin = boost::none
+			, boost::optional<Point> origin = boost::none
 			, Color color = Color::white()
 			, double horizontal_scale = 1.0
 			, double vertical_scale = 1.0

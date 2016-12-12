@@ -14,13 +14,9 @@
 
 namespace questless
 {
-	struct SectionTileCoordsTag {};
-	struct RegionTileCoordsTag {};
-	struct RegionSectionCoordsTag {};
-
-	using SectionTileCoords = HexCoords<SectionTileCoordsTag>;
-	using RegionTileCoords = HexCoords<RegionTileCoordsTag>;
-	using RegionSectionCoords = HexCoords<RegionSectionCoordsTag>;
+	using SectionTileCoords = HexCoords<struct SectionTileCoordsTag>;
+	using RegionTileCoords = HexCoords<struct RegionTileCoordsTag>;
+	using RegionSectionCoords = HexCoords<struct RegionSectionCoordsTag>;
 
 	/// Index of a tile within a section's tile array.
 	struct SectionTileIndex

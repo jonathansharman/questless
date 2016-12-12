@@ -39,7 +39,7 @@ namespace sdl
 
 		~Sound();
 
-		Sound& operator =(Sound sound);
+		Sound& operator =(Sound sound) &;
 	
 		friend void swap(Sound& first, Sound& second);
 

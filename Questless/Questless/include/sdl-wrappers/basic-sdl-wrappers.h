@@ -36,19 +36,19 @@ namespace sdl
 		constexpr friend Vector operator -(Vector v1, Vector v2) { return {v1.x - v2.x, v1.y - v2.y}; }
 		constexpr friend Vector operator -(const Vector& v) { return{-v.x, -v.y}; }
 
-		Vector& operator =(Vector v)
+		Vector& operator =(Vector v) &
 		{
 			x = v.x;
 			y = v.y;
 			return *this;
 		}
-		Vector& operator +=(Vector v)
+		Vector& operator +=(Vector v) &
 		{
 			x += v.x;
 			y += v.y;
 			return *this;
 		}
-		Vector& operator -=(Vector v)
+		Vector& operator -=(Vector v) &
 		{
 			x -= v.x;
 			y -= v.y;
@@ -76,19 +76,19 @@ namespace sdl
 		constexpr friend Vector operator -(const Point& p1, const Point& p2) { return{p1.x - p2.x, p1.y - p2.y}; }
 		constexpr friend Point operator -(const Point& p) { return{-p.x, -p.y}; }
 
-		Point& operator =(const Point& p)
+		Point& operator =(const Point& p) &
 		{
 			x = p.x;
 			y = p.y;
 			return *this;
 		}
-		Point& operator +=(const Vector& v)
+		Point& operator +=(const Vector& v) &
 		{
 			x += v.x;
 			y += v.y;
 			return *this;
 		}
-		Point& operator -=(const Vector& v)
+		Point& operator -=(const Vector& v) &
 		{
 			x -= v.x;
 			y -= v.y;

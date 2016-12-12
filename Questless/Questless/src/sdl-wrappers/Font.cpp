@@ -36,7 +36,7 @@ namespace sdl
 		}
 	}
 
-	Font& Font::operator =(Font font)
+	Font& Font::operator =(Font font) &
 	{
 		swap(*this, font);
 		return *this;

@@ -13,7 +13,7 @@ using sdl::Point;
 
 namespace questless
 {
-	void PointF::rotate(const PointF& origin, double theta)
+	void PointF::rotate(const PointF& origin, double theta) &
 	{
 		double cos_theta = cos(tau * -theta / 360);
 		double sin_theta = sin(tau * -theta / 360);

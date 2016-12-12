@@ -38,25 +38,27 @@ namespace questless
 		constexpr friend PointF operator *(double k, PointF p) { return PointF{k * p.x, k * p.y}; }
 		constexpr friend PointF operator /(PointF p, double k) { return PointF{p.x / k, p.y / k}; }
 
-		PointF& operator +=(const VectorF& v)
+		PointF& operator =(const PointF& p) & = default;
+
+		PointF& operator +=(const VectorF& v) &
 		{
 			x += v.x;
 			y += v.y;
 			return *this;
 		}
-		PointF& operator -=(const VectorF& v)
+		PointF& operator -=(const VectorF& v) &
 		{
 			x -= v.x;
 			y -= v.y;
 			return *this;
 		}
-		PointF& operator *=(double factor)
+		PointF& operator *=(double factor) &
 		{
 			x *= factor;
 			y *= factor;
 			return *this;
 		}
-		PointF& operator /=(double divisor)
+		PointF& operator /=(double divisor) &
 		{
 			x /= divisor;
 			y /= divisor;
@@ -66,7 +68,7 @@ namespace questless
 		/// Rotates the point about another point, overwriting the original value.
 		/// @param origin The origin around which the point will be rotated.
 		/// @param theta The counter-clockwise rotation to apply, in degrees.
-		void rotate(const PointF& origin, double theta);
+		void rotate(const PointF& origin, double theta) &;
 
 		/// Creates a copy of the point, rotated about another point.
 		/// @param origin The origin around which the point will be rotated.

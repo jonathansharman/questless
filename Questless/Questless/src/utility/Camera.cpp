@@ -46,17 +46,18 @@ namespace questless
 	void Camera::draw
 		( const sdl::Texture& texture
 		, sdl::Point position
-		, const boost::optional<sdl::Point>& origin
+		, Origin origin
 		, sdl::Color color
-		, double horizontal_scale
-		, double vertical_scale
-		, double angle
-		, bool flip_horizontally
-		, bool flip_vertically
-		, const boost::optional<sdl::Rect>& src_rect) const
+		, HScale horizontal_scale
+		, VScale vertical_scale
+		, AngleDegrees angle
+		, HFlip flip_horizontally
+		, VFlip flip_vertically
+		, const SrcRect& src_rect
+		) const
 	{
-		if (origin) {
-			position += sdl::Vector{texture.width() / 2 - origin->x, texture.height() / 2 - origin->y};
+		if (origin.value()) {
+			position += sdl::Vector{texture.width() / 2 - origin.value()->x, texture.height() / 2 - origin.value()->y};
 		}
 		sdl::Color mixed_color = sdl::Color
 			{ static_cast<uint8_t>((static_cast<uint32_t>(color.r) * _color.r) / 255)

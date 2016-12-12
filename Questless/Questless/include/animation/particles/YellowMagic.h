@@ -24,11 +24,11 @@ namespace questless
 		YellowMagic(const PointF& position) : Particle
 			{ position + random_displacement(_max_displacement)
 			, Velocity{_v, 0.0}
-			, uniform(0.0, 360.0)
-			, 0.0
-			, 1.0
-			, 0.0_Hz
-			, seconds_f{uniform(_lifetime_min, _lifetime_max)}
+			, ANGLE_DEGREES = uniform(0.0, 360.0)
+			, ANGULAR_VELOCITY = 0.0
+			, SCALE = 1.0
+			, SCALE_VELOCITY = 0.0_Hz
+			, LIFETIME = seconds_f{uniform(_lifetime_min, _lifetime_max)}
 			}
 		{
 			_velocity.rotate(uniform(0.0, 360.0));

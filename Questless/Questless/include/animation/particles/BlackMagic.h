@@ -22,11 +22,11 @@ namespace questless
 		BlackMagic(const PointF& position) : Particle
 			{ position
 			, Velocity{uniform(_vxi_min, _vxi_max), 0.0}
-			, uniform(0.0, 360.0)
-			, Hertz{uniform(-_dtheta_max, _dtheta_max)}
-			, 1.0
-			, 0.0_Hz
-			, 2.0s
+			, ANGLE_DEGREES = uniform(0.0, 360.0)
+			, ANGULAR_VELOCITY = Hertz{uniform(-_dtheta_max, _dtheta_max)}
+			, SCALE = 1.0
+			, SCALE_VELOCITY = 0.0_Hz
+			, LIFETIME = 2.0s
 			}
 		{
 			_velocity.rotate(uniform(0.0, 360.0));

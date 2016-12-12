@@ -70,10 +70,10 @@ namespace questless
 		WorldView(WorldView&&) = default;
 
 		/// Copy assignment operator.
-		WorldView& operator =(const WorldView&) = default;
+		WorldView& operator =(const WorldView&) & = default;
 
 		/// Move assignment operator.
-		WorldView& operator =(WorldView&&) = default;
+		WorldView& operator =(WorldView&&) & = default;
 
 		/// Constructs the world view of the given being.
 		/// @param being The being whose perspective this world view represents.

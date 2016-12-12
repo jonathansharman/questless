@@ -4,7 +4,7 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION The interface for Velocity, a struct for expressesing change in position per second. Works with Frequency, duration, and VectorF types.
+* @section DESCRIPTION A type for expressesing change in position per second. Works with Frequency, duration, and VectorF types.
 */
 
 #ifndef VELOCITY_H
@@ -12,9 +12,16 @@
 
 #include "VectorF.h"
 #include "utility.h"
+#include "TaggedType.h"
 
 namespace questless
 {
+	using AngleRadians = TaggedType<double, struct AngleTag>;
+	using Speed = TaggedType<double, struct SpeedTag>;
+
+	constexpr Argument<AngleRadians> ANGLE_RADIANS;
+	constexpr Argument<Speed> SPEED;
+
 	struct Velocity
 	{
 		Hertz x; ///< Horizontal displacement per second.
@@ -43,35 +50,37 @@ namespace questless
 		/// Constructs a velocity from the given angle and speed.
 		/// @param angle The angle of the heading in radians, increasing CCW from the positive x-axis.
 		/// @param speed The magnitude of the velocity.
-		static Velocity from_angle_speed(double angle, Hertz speed)
-		{
-			return Velocity{cos(angle) * speed, sin(angle) * speed};
-		}
+		Velocity(AngleRadians angle, Speed speed)
+			: x{cos(angle) * speed}
+			, y{sin(angle) * speed}
+		{}
 
 		bool operator ==(const Velocity& right) const { return x == right.x && y == right.y; }
 		bool operator !=(const Velocity& right) const { return x != right.x || y != right.y; }
 		
 		friend Velocity operator +(const Velocity& v1, const Velocity& v2);
 		friend Velocity operator -(const Velocity& v1, const Velocity& v2);
-		//friend VectorF operator *(const Velocity& velocity, double_seconds duration); /// @todo Reenable when MS fixes the bug with duration *
-		//friend VectorF operator *(double_seconds duration, const Velocity& velocity);
+		//friend VectorF operator *(const Velocity& velocity, seconds_f duration); /// @todo Reenable when MS fixes the bug with duration *
+		//friend VectorF operator *(seconds_f duration, const Velocity& velocity); /// @todo Reenable when MS fixes the bug with duration *
 		friend Velocity operator *(const Velocity& v, double factor);
 		friend Velocity operator *(double factor, const Velocity& v);
 		friend Velocity operator /(const VectorF& displacement, seconds_f duration);
 		friend Velocity operator /(const Velocity& v, double divisor);
-		
-		Velocity& operator +=(const Velocity& v);
-		Velocity& operator -=(const Velocity& v);
-		Velocity& operator *=(double factor);
-		Velocity& operator /=(double divisor);
+
+		Velocity& operator =(const Velocity& v) & = default;
+
+		Velocity& operator +=(const Velocity& v) &;
+		Velocity& operator -=(const Velocity& v) &;
+		Velocity& operator *=(double factor) &;
+		Velocity& operator /=(double divisor) &;
 
 		/// Rotates the velocity, overwriting the original value.
-		/// @param theta The counter-clockwise rotation to apply, in degrees.
-		void rotate(double theta);
+		/// @param angle The counter-clockwise rotation to apply, in degrees.
+		void rotate(double angle);
 
 		/// Creates a rotated copy of the velocity.
-		/// @param theta The counter-clockwise rotation to apply, in degrees.
-		Velocity rotated(double theta) const;
+		/// @param angle The counter-clockwise rotation to apply, in degrees.
+		Velocity rotated(double angle) const;
 
 		/// @return The displacement per second as a VectorF.
 		inline VectorF displacement() const { return VectorF(x.count(), y.count()); }

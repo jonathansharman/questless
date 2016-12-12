@@ -75,7 +75,7 @@ namespace questless
 			_terrain_render_is_current = true;
 		}
 		if (_terrain_texture) {
-			camera.draw(*_terrain_texture, _terrain_bounds.position(), Point{0, 0});
+			camera.draw(*_terrain_texture, _terrain_bounds.position(), ORIGIN = Point{0, 0});
 		}
 	}
 

@@ -29,11 +29,11 @@ namespace questless
 		camera.draw
 			( texture()
 			, _position.to_point()
-			, boost::none // origin
+			, ORIGIN = boost::none
 			, sdl::Color::white(percentage_to_byte(fade_out() ? _time_left.count() / _lifetime.count() : 1.0))
-			, _scale // h-scale
-			, _scale // v-scale
-			, _angle
+			, H_SCALE = _scale
+			, V_SCALE = _scale
+			, ANGLE_DEGREES = _angle
 			);
 	}
 }

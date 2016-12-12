@@ -10,16 +10,33 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "utility/utility.h"
-#include "utility/PointF.h"
 #include "sdl-wrappers/basic-sdl-wrappers.h"
 #include "sdl-wrappers/Texture.h"
 #include "sdl-wrappers/Window.h"
 #include "sdl-wrappers/Input.h"
 #include "world/coordinates.h"
+#include "utility/utility.h"
+#include "utility/PointF.h"
+#include "utility/TaggedType.h"
 
 namespace questless
 {
+	using Origin = TaggedType<boost::optional<sdl::Point>, struct OriginTag>;
+	using HScale = TaggedType<double, struct HScaleTag>;
+	using VScale = TaggedType<double, struct VScaleTag>;
+	using AngleDegrees = TaggedType<double, struct DegreesTag>;
+	using HFlip = TaggedType<bool, struct HScaleTag>;
+	using VFlip = TaggedType<bool, struct VScaleTag>;
+	using SrcRect = TaggedType<boost::optional<sdl::Rect>, struct SrcRectTag>;
+
+	constexpr Argument<Origin> ORIGIN;
+	constexpr Argument<HScale> H_SCALE;
+	constexpr Argument<VScale> V_SCALE;
+	constexpr Argument<AngleDegrees> ANGLE_DEGREES;
+	constexpr Argument<HFlip> H_FLIP;
+	constexpr Argument<VFlip> V_FLIP;
+	constexpr Argument<SrcRect> SRC_RECT;
+
 	class Camera
 	{
 	public:
@@ -121,14 +138,14 @@ namespace questless
 		void draw
 			( const sdl::Texture& texture
 			, sdl::Point position
-			, const boost::optional<sdl::Point>& origin = boost::none
+			, Origin origin = Origin{boost::none}
 			, sdl::Color color = sdl::Color::white()
-			, double horizontal_scale = 1.0
-			, double vertical_scale = 1.0
-			, double angle = 0.0
-			, bool flip_horizontally = false
-			, bool flip_vertically = false
-			, const boost::optional<sdl::Rect>& src_rect = boost::none
+			, HScale horizontal_scale = HScale{1.0}
+			, VScale vertical_scale = VScale{1.0}
+			, AngleDegrees angle = AngleDegrees{0.0}
+			, HFlip flip_horizontally = HFlip{false}
+			, VFlip flip_vertically = VFlip{false}
+			, const SrcRect& src_rect = SrcRect{boost::none}
 			) const;
 
 		/// Draws lines relative to the camera connecting the series of points contained in the vector.

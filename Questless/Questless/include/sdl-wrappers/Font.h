@@ -42,7 +42,7 @@ namespace sdl
 
 		~Font();
 
-		Font& operator =(Font font);
+		Font& operator =(Font font) &;
 
 		friend void swap(Font& first, Font& second);
 
