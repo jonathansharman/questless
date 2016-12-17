@@ -22,6 +22,7 @@ namespace questless
 		BlueMagic(PointF position) : Particle
 			{ position
 			, Velocity{VectorF{AngleRadians{tau / 6.0 * uniform(0, 6)}, Length{_v}}}
+			, Acceleration::zero()
 			, random_angle()
 			, AngularVelocity{uniform(-_dtheta_max, _dtheta_max)}
 			, Scale{1.0}

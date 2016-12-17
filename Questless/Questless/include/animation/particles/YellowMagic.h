@@ -24,6 +24,7 @@ namespace questless
 		YellowMagic(PointF position) : Particle
 			{ position + random_displacement(_max_displacement)
 			, Velocity{VectorF{random_angle(), LengthSquared{_v}}}
+			, Acceleration::zero()
 			, random_angle()
 			, AngularVelocity{0.0}
 			, Scale{1.0}

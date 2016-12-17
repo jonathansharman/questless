@@ -20,7 +20,12 @@ namespace questless
 			return;
 		}
 		_position += _velocity * frame_duration;
-		_angle += _angular_velocity * frame_duration;
+		_velocity += _acceleration * frame_duration;
+		if (face_towards_heading()) {
+			_angle = VectorF{_velocity.step().x, -_velocity.step().y}.angle();
+		} else {
+			_angle += _angular_velocity * frame_duration;
+		}
 		_scale += _scale_velocity * frame_duration;
 	}
 

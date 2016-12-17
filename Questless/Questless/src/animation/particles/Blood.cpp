@@ -14,13 +14,6 @@ using namespace sdl;
 
 namespace questless
 {
-	void Blood::subupdate()
-	{
-		_velocity.step().y += _gravity * frame_duration;
-		_angle = VectorF{_velocity.step().x, -_velocity.step().y}.angle();
-		_scale = 0.5 * _time_left / _lifetime;
-	}
-
 	Texture& Blood::texture() const
 	{
 		static bool first_call = true;

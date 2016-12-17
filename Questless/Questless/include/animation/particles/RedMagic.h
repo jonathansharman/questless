@@ -22,6 +22,7 @@ namespace questless
 		RedMagic(PointF position) : Particle
 			{ position
 			, Velocity{random_displacement(_v_max) + VectorF{0.0, _vyi_adjustment}}
+			, _gravity
 			, random_angle()
 			, AngularVelocity{uniform(-_dtheta_max, _dtheta_max)}
 			, Scale{1.0}
@@ -36,11 +37,11 @@ namespace questless
 		static constexpr double _v_max = 200.0;
 		static constexpr double _vyi_adjustment = -150.0;
 		static constexpr double _dtheta_max = 720.0;
-		static constexpr Hertz _gravity = 300.0_Hz;
+		static constexpr Acceleration _gravity{Velocity{VectorF{0.0, 300.0}}};
 		static constexpr double _lifetime_min = 0.6;
 		static constexpr double _lifetime_max = 1.0;
 
-		void subupdate() override;
+		void subupdate() override {}
 
 		sdl::Texture& texture() const override;
 	};

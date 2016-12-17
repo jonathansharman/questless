@@ -22,6 +22,7 @@ namespace questless
 		BlackMagic(PointF position) : Particle
 			{ position
 			, Velocity{VectorF{random_angle(), Length{uniform(_vi_min, _vi_max)}}}
+			, Acceleration::zero()
 			, random_angle()
 			, AngularVelocity{uniform(-_dtheta_max, _dtheta_max)}
 			, Scale{1.0}

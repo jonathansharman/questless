@@ -16,8 +16,7 @@ namespace questless
 {
 	void WhiteMagic::subupdate()
 	{
-		_velocity.step().y += _gravity * frame_duration;
-		_velocity.step().x *= _vx_factor_per_frame;
+		_velocity.step().x *= 1.0 - _vx_percent_drag_rate * frame_duration;
 	}
 
 	Texture& WhiteMagic::texture() const

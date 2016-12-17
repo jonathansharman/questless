@@ -23,6 +23,7 @@ namespace questless
 			: Particle
 				{ position
 				, Velocity{random_displacement(_v_min, _v_max)}
+				, Acceleration::zero()
 				, random_angle()
 				, AngularVelocity{uniform(-_dtheta_max, _dtheta_max)}
 				, Scale(1.0)

@@ -14,11 +14,6 @@ using namespace sdl;
 
 namespace questless
 {
-	void RedMagic::subupdate()
-	{
-		_velocity.step().y += _gravity * frame_duration;
-	}
-
 	Texture& RedMagic::texture() const
 	{
 		static bool first_call = true;
