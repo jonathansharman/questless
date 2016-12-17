@@ -19,24 +19,27 @@ namespace questless
 	{
 	public:
 		/// @param position The particle's starting position.
-		GreenMagic(const PointF& position)
+		GreenMagic(PointF position)
 			: Particle
 				{ position
 				, Velocity{random_displacement(_v_min, _v_max)}
-				, ANGLE_DEGREES = uniform(0.0, 360.0)
-				, ANGULAR_VELOCITY = Hertz{uniform(-_dtheta_max, _dtheta_max)}
-				, SCALE = 1.0
-				, SCALE_VELOCITY = 0.0_Hz
-				, LIFETIME = seconds_f{uniform(_lifetime_min, _lifetime_max)}
+				, random_angle()
+				, AngularVelocity{uniform(-_dtheta_max, _dtheta_max)}
+				, Scale(1.0)
+				, ScaleVelocity{0.0}
+				, Lifetime{seconds_f{uniform(_lifetime_min, _lifetime_max)}}
 				}
 			, _turning_right{random_bool()}
 		{}
+
+		/// @param position The particle's starting position.
+		static ptr make(PointF position) { return std::make_unique<GreenMagic>(position); }
 	private:
-		static constexpr double _dtheta_max = 720.0;
+		static constexpr double _dtheta_max = 2.0 * tau;
 		static constexpr double _v_min = 20.0;
 		static constexpr double _v_max = 50.0;
 		static constexpr double _inflection_probability = 0.1;
-		static constexpr double _turn_rate = 5.0;
+		static constexpr AngularVelocity _turn_rate{tau};
 		static constexpr double _lifetime_min = 1.8;
 		static constexpr double _lifetime_max = 2.2;
 

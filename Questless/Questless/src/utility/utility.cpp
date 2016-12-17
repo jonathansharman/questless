@@ -30,20 +30,6 @@ namespace questless
 
 	std::mt19937 rng(static_cast<unsigned long>(clock::now().time_since_epoch().count()));
 
-	VectorF random_displacement(double max_length)
-	{
-		VectorF ret{uniform(0.0, max_length), 0.0};
-		ret.rotate(uniform(0.0, 360.0));
-		return ret;
-	}
-
-	VectorF random_displacement(double min_length, double max_length)
-	{
-		VectorF ret{uniform(min_length, max_length), 0.0};
-		ret.rotate(uniform(0.0, 360.0));
-		return ret;
-	}
-
 	//////////
 	// Math //
 	//////////

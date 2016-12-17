@@ -64,12 +64,14 @@ namespace questless
 		// Effect visitor methods.
 
 		void visit(const LightningBoltEffect&) override;
+		void visit(const InjuryEffect&) override;
 	private:
 		friend class Initializer<WorldRenderer>;
 		static Initializer<WorldRenderer> _initializer;
 		static void initialize();
 
 		static sdl::Handle<sdl::Sound> _lightning_bolt_sound_handle;
+		static sdl::Handle<sdl::Sound> _hit_sound_handle;
 
 		const WorldView* _world_view;
 

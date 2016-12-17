@@ -154,17 +154,17 @@ namespace questless
 
 		// Event Handlers
 
-		Event<Damage&, boost::optional<BodyPart::ref>, boost::optional<BeingId>> before_take_damage;
-		Event<Damage&, boost::optional<BodyPart::ref>, boost::optional<BeingId>> after_take_damage;
+		Event<Damage&, BodyPart*, boost::optional<BeingId>> before_take_damage;
+		Event<Damage&, BodyPart*, boost::optional<BeingId>> after_take_damage;
 
-		Event<Damage&, boost::optional<BodyPart::ref>, BeingId> before_deal_damage;
-		Event<Damage&, boost::optional<BodyPart::ref>, BeingId> after_deal_damage;
+		Event<Damage&, BodyPart*, BeingId> before_deal_damage;
+		Event<Damage&, BodyPart*, BeingId> after_deal_damage;
 
-		Event<double&, boost::optional<BodyPart::ref>, boost::optional<BeingId>> before_receive_heal;
-		Event<double&, boost::optional<BodyPart::ref>, boost::optional<BeingId>> after_receive_heal;
+		Event<double&, BodyPart*, boost::optional<BeingId>> before_receive_heal;
+		Event<double&, BodyPart*, boost::optional<BeingId>> after_receive_heal;
 
-		Event<double&, boost::optional<BodyPart::ref>, BeingId> after_give_heal;
-		Event<double&, boost::optional<BodyPart::ref>, BeingId> before_give_heal;
+		Event<double&, BodyPart*, BeingId> after_give_heal;
+		Event<double&, BodyPart*, BeingId> before_give_heal;
 
 		Event<boost::optional<BeingId>> before_die;
 		Event<boost::optional<BeingId>> after_die;
@@ -330,15 +330,15 @@ namespace questless
 
 		/// Causes the being to take damage from the specified source being.
 		/// @param damage Damage to be applied to this being.
-		/// @param part The body part to damage, or nullopt if the damage should be applied directly to the being.
+		/// @param part The body part to damage, or nullptr if the damage should be applied directly to the being.
 		/// @param opt_source_id The ID of the being which caused the damage, if any.
-		void take_damage(Damage& damage, boost::optional<BodyPart::ref> opt_part, boost::optional<BeingId> opt_source_id);
+		void take_damage(Damage& damage, BodyPart* part, boost::optional<BeingId> opt_source_id);
 
 		/// Causes the being to be healed by the specified source being.
 		/// @param amount Health to be restored to this being.
 		/// @param part The body part to heal, or nullopt if the damage should be applied directly to the being.
 		/// @param opt_source_id The ID of the being which caused the healing, if any.
-		void heal(double amount, boost::optional<BodyPart::ref> opt_part, boost::optional<BeingId> opt_source_id);
+		void heal(double amount, BodyPart* part, boost::optional<BeingId> opt_source_id);
 
 		void add_status(std::unique_ptr<Status> status);
 	protected:

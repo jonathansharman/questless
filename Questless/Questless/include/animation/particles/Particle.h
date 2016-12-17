@@ -13,20 +13,12 @@
 #include "sdl-wrappers/Renderer.h"
 #include "sdl-wrappers/Texture.h"
 #include "animation/Camera.h"
-#include "utility/Velocity.h"
-#include "utility/TaggedType.h"
+#include "utility/units/vectors.h"
 
 namespace questless
 {
-	using AngularVelocity = TaggedType<Hertz, struct AngularVelocityTag>;
-	using Scale = TaggedType<double, struct ScaleTag>;
-	using ScaleVelocity = TaggedType<Hertz, struct ScaleVelocityTag>;
 	using Lifetime = TaggedType<seconds_f, struct LifetimeTag>;
-
-	constexpr Argument<AngularVelocity> ANGULAR_VELOCITY;
-	constexpr Argument<Scale> SCALE;
-	constexpr Argument<ScaleVelocity> SCALE_VELOCITY;
-	constexpr Argument<Lifetime> LIFETIME;
+	using MaxDisplacement = TaggedType<double, struct MaxDisplacementTag>;
 
 	class Particle
 	{
@@ -35,17 +27,18 @@ namespace questless
 
 		/// @param position The particle's initial position.
 		/// @param velocity The particle's initial velocity.
-		/// @param angle The particle's initial angle, in degrees, counter-clockwise from the positive x-axis.
-		/// @param angular_velocity The particle's angular velocity in degrees per second.
+		/// @param angle The particle's initial angle, in radians, counter-clockwise from the positive x-axis.
+		/// @param angular_velocity The particle's angular velocity in radians per second.
 		/// @param lifetime The duration of the particle's life, after which it is considered expired and should be removed.
 		Particle
-			( const PointF& position
-			, const Velocity& velocity
-			, AngleDegrees angle
+			( PointF position
+			, Velocity velocity
+			, AngleRadians angle
 			, AngularVelocity angular_velocity
 			, Scale initial_scale
 			, ScaleVelocity scale_velocity
 			, Lifetime lifetime
+			, MaxDisplacement max_displacement = MaxDisplacement{_dflt_max_displacement}
 			)
 			: _position{position + random_displacement(max_displacement)}
 			, _velocity{velocity}
@@ -72,16 +65,16 @@ namespace questless
 		PointF _position; ///< The particle's position in game space.
 		Velocity _velocity; ///< The particle's velocity in pixels per second.
 		double _angle; ///< The particle's angle of rotation in radians.
-		Hertz _angular_velocity; ///< The particle's angular velocity in radians per second.
+		AngularVelocity _angular_velocity; ///< The particle's angular velocity in radians per second.
 		double _scale; ///< The particle's size scale.
-		Hertz _scale_velocity; ///< The particle's rate of change in scale per second.
+		ScaleVelocity _scale_velocity; ///< The particle's rate of change in scale per second.
 		seconds_f _lifetime; ///< The total duration in seconds of the particle's lifetime.
 		seconds_f _time_left; ///< The remaining duration in seconds of the particle's lifetime.
 
 		/// @return The texture to be used when drawing a particle.
 		virtual sdl::Texture& texture() const = 0;
 	private:
-		static constexpr double max_displacement = 15.0;
+		static constexpr double _dflt_max_displacement = 15.0;
 
 		/// @return Whether the particle should fade out as it nears expiration.
 		virtual bool fade_out() const { return true; };

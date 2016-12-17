@@ -142,6 +142,15 @@
     <Filter Include="src\spell">
       <UniqueIdentifier>{ea4c9649-02c6-4da1-bd4a-6628b0a695e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="resources\textures\particles">
+      <UniqueIdentifier>{3e3c900e-a7b3-4318-a7bf-124917710930}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\textures\particles\magic">
+      <UniqueIdentifier>{b471f79e-fdbe-4cef-b79b-d475b49b81e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\utility\units">
+      <UniqueIdentifier>{1c5704ea-8c29-45c3-ba6e-afe277cb35e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\test.png">
@@ -182,6 +191,27 @@
     </Image>
     <Image Include="resources\textures\test-animation.png">
       <Filter>resources\textures</Filter>
+    </Image>
+    <Image Include="resources\textures\particles\magic\black.png">
+      <Filter>resources\textures\particles\magic</Filter>
+    </Image>
+    <Image Include="resources\textures\particles\magic\blue.png">
+      <Filter>resources\textures\particles\magic</Filter>
+    </Image>
+    <Image Include="resources\textures\particles\magic\green.png">
+      <Filter>resources\textures\particles\magic</Filter>
+    </Image>
+    <Image Include="resources\textures\particles\magic\red.png">
+      <Filter>resources\textures\particles\magic</Filter>
+    </Image>
+    <Image Include="resources\textures\particles\magic\white.png">
+      <Filter>resources\textures\particles\magic</Filter>
+    </Image>
+    <Image Include="resources\textures\particles\magic\yellow.png">
+      <Filter>resources\textures\particles\magic</Filter>
+    </Image>
+    <Image Include="resources\textures\particles\blood.png">
+      <Filter>resources\textures\particles</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
@@ -295,9 +325,6 @@
     <ClInclude Include="include\utility\constants.h">
       <Filter>include\utility</Filter>
     </ClInclude>
-    <ClInclude Include="include\utility\Frequency.h">
-      <Filter>include\utility</Filter>
-    </ClInclude>
     <ClInclude Include="include\utility\PointF.h">
       <Filter>include\utility</Filter>
     </ClInclude>
@@ -305,9 +332,6 @@
       <Filter>include\utility</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\VectorF.h">
-      <Filter>include\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="include\utility\Velocity.h">
       <Filter>include\utility</Filter>
     </ClInclude>
     <ClInclude Include="include\sdl-wrappers\Font.h">
@@ -532,15 +556,27 @@
     <ClInclude Include="include\utility\TaggedType.h">
       <Filter>include\utility</Filter>
     </ClInclude>
+    <ClInclude Include="include\animation\particles\Blood.h">
+      <Filter>include\animation\particles</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utility\Rate.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utility\units\geometry.h">
+      <Filter>include\utility\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utility\units\vectors.h">
+      <Filter>include\utility\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utility\Frequency.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\world\Region.cpp">
       <Filter>src\world</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utility\PointF.cpp">
-      <Filter>src\utility</Filter>
     </ClCompile>
     <ClCompile Include="src\world\Section.cpp">
       <Filter>src\world</Filter>
@@ -551,13 +587,7 @@
     <ClCompile Include="src\entities\beings\goblinoids\Goblin.cpp">
       <Filter>src\entities\beings\goblinoids</Filter>
     </ClCompile>
-    <ClCompile Include="src\utility\VectorF.cpp">
-      <Filter>src\utility</Filter>
-    </ClCompile>
     <ClCompile Include="src\utility\utility.cpp">
-      <Filter>src\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utility\Velocity.cpp">
       <Filter>src\utility</Filter>
     </ClCompile>
     <ClCompile Include="src\animation\particles\BlackMagic.cpp">
@@ -742,6 +772,9 @@
     </ClCompile>
     <ClCompile Include="src\spell\Heal.cpp">
       <Filter>src\spell</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\particles\Blood.cpp">
+      <Filter>src\animation\particles</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

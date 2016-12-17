@@ -16,7 +16,7 @@
 
 #include "../Dialog.h"
 #include "utility/PointF.h"
-#include "utility/Velocity.h"
+#include "utility/units/vectors.h"
 #include "utility/Initializer.h"
 #include "animation/Camera.h"
 

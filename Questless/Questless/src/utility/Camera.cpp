@@ -26,20 +26,20 @@ namespace questless
 		return _angle < 0.0 ? _angle + 360.0 : _angle;
 	}
 
-	void Camera::angle(double theta)
+	void Camera::angle(AngleRadians theta)
 	{
-		_angle = fmod(theta, 180.0);
+		_angle = fmod(theta, tau / 2.0);
 	}
 
-	void Camera::rotate(double dtheta)
+	void Camera::rotate(AngleRadians dtheta)
 	{
-		_angle = fmod(_angle + dtheta, 180.0);
+		_angle = fmod(_angle + dtheta, tau / 2.0);
 	}
 
 	void Camera::update(const sdl::Input& input)
 	{
 		_pt_hovered = _position + VectorF{input.mouse_position() - _window.center()} / _zoom;
-		_pt_hovered.rotate(_position, _angle);
+		_pt_hovered.rotate(_position, AngleRadians{_angle});
 		_pt_hovered_rounded = Layout::dflt().to_world(Layout::dflt().to_hex_coords<RegionTileCoords>(_pt_hovered)).to_point();
 	}
 
@@ -50,7 +50,7 @@ namespace questless
 		, sdl::Color color
 		, HScale horizontal_scale
 		, VScale vertical_scale
-		, AngleDegrees angle
+		, AngleRadians angle
 		, HFlip flip_horizontally
 		, VFlip flip_vertically
 		, const SrcRect& src_rect
@@ -91,6 +91,6 @@ namespace questless
 	PointF Camera::relative_point(PointF point) const
 	{
 		PointF window_center = PointF{_window.resolution()} / 2.0;
-		return (_zoom * (point -_position) + window_center).rotated(window_center, -_angle);
+		return (_zoom * (point - _position) + window_center).rotated(window_center, AngleRadians{_angle});
 	}
 }

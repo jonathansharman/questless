@@ -21,9 +21,9 @@ namespace questless
 		}
 
 		if (_turning_right) {
-			_velocity.rotate(-_turn_rate);
+			_velocity.step().rotate(AngleRadians{-1.0 * _turn_rate * frame_duration});
 		} else {
-			_velocity.rotate(_turn_rate);
+			_velocity.step().rotate(AngleRadians{_turn_rate * frame_duration});
 		}
 	}
 

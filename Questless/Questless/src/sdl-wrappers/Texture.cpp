@@ -174,12 +174,14 @@ namespace sdl
 				, static_cast<uint8_t>((static_cast<uint32_t>(color.b) * _color.b) / 255)
 				);
 			SDL_SetTextureAlphaMod(_texture, static_cast<uint8_t>((static_cast<uint32_t>(color.a) * _color.a) / 255));
+
+			constexpr double radians_to_negative_degrees = -360.0 / 6.283185307179586476925;
 			SDL_RenderCopyEx
 				( _renderer.sdl_ptr()
 				, _texture
 				, (src_rect ? &sdl_src_rect : nullptr)
 				, &sdl_dst_rect
-				, -angle
+				, radians_to_negative_degrees * angle
 				, nullptr
 				, static_cast<SDL_RendererFlip>((flip_horizontally ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE) | (flip_vertically ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE))
 				);

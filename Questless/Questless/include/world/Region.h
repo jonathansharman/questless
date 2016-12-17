@@ -146,9 +146,9 @@ namespace questless
 		bool section_exists(RegionSectionCoords section_coords) const;
 
 		/// @return The section at the given section coordinates.
-		boost::optional<Section::ref> section(RegionSectionCoords section_coords);
+		Section* section(RegionSectionCoords section_coords);
 		/// @return The section at the given section coordinates.
-		boost::optional<Section::cref> section(RegionSectionCoords section_coords) const;
+		const Section* section(RegionSectionCoords section_coords) const;
 
 		/// Gets the coordinates of the section that contains the tile with the given coordinates.
 		/// @param tile_coords The tile's hex coordinates in the region.

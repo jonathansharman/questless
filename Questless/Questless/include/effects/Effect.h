@@ -13,6 +13,7 @@
 #include <memory>
 
 #include "EffectVisitor.h"
+#include "entities/beings/Damage.h"
 
 namespace questless
 {
@@ -36,6 +37,8 @@ namespace questless
 		RegionTileCoords _origin;
 	};
 
+	/// @todo Eventually move effect subtypes to individual header files.
+
 	class LightningBoltEffect : public Effect
 	{
 	public:
@@ -49,6 +52,31 @@ namespace questless
 		virtual void accept(EffectVisitor& visitor) const override { visitor.visit(*this); }
 
 		int range() const override { return 10; }
+	};
+
+	class InjuryEffect : public Effect
+	{
+	public:
+		using ptr = std::shared_ptr<InjuryEffect>;
+
+		/// @param origin The coordinates of the effect's origin.
+		/// @param damage The damage dealt.
+		InjuryEffect(RegionTileCoords origin, const Damage& damage)
+			: Effect{origin}
+			, _damage{damage}
+		{}
+
+		/// @param origin The coordinates of the effect's origin.
+		/// @param damage The damage dealt.
+		static ptr make(RegionTileCoords origin, const Damage& damage) { return std::make_shared<InjuryEffect>(origin, damage); }
+
+		virtual void accept(EffectVisitor& visitor) const override { visitor.visit(*this); }
+
+		int range() const override { return 7; }
+
+		const Damage& damage() const { return _damage; }
+	private:
+		const Damage& _damage;
 	};
 }
 

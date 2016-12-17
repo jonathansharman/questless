@@ -56,18 +56,18 @@ namespace questless
 	{
 		if (_current_animation != nullptr) {
 			const Animation::Frame& frame = _current_animation->current_frame();
-			Rect src_rect(_cel_width * frame.coords.x, _cel_height * frame.coords.y, _cel_width, _cel_height);
 			camera.draw
 				( texture_manager()[_sprite_sheet_handle]
 				, origin - Vector{frame.origin.x, frame.origin.y}
-				, ORIGIN = boost::none
+				, Origin{boost::none}
 				, Color::white()
-				, H_SCALE = 1.0
-				, V_SCALE = 1.0
-				, ANGLE_DEGREES = 0.0
-				, H_FLIP = false
-				, V_FLIP = false
-				, SRC_RECT = src_rect);
+				, HScale{1.0}
+				, VScale{1.0}
+				, AngleRadians{0.0}
+				, HFlip{false}
+				, VFlip{false}
+				, SrcRect{Rect{_cel_width * frame.coords.x, _cel_height * frame.coords.y, _cel_width, _cel_height}}
+				);
 		}
 	}
 }

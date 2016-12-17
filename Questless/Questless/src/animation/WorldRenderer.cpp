@@ -16,17 +16,20 @@
 #include "animation/TileTexturer.h"
 #include "utility/utility.h"
 #include "animation/particles/YellowMagic.h"
+#include "animation/particles/Blood.h"
 
 using namespace sdl;
 
 namespace questless
 {
 	sdl::Handle<sdl::Sound> WorldRenderer::_lightning_bolt_sound_handle;
+	sdl::Handle<sdl::Sound> WorldRenderer::_hit_sound_handle;
 
 	Initializer<WorldRenderer> WorldRenderer::_initializer;
 	void WorldRenderer::initialize()
 	{
 		_lightning_bolt_sound_handle = sound_manager().add([] { return Sound::make("resources/sounds/spells/lightning-bolt.wav"); });
+		_hit_sound_handle = sound_manager().add([] { return Sound::make("resources/sounds/weapons/hit.wav"); });
 	}
 
 	void WorldRenderer::update_view(const WorldView& world_view, std::vector<Effect::ptr> effects)
@@ -75,7 +78,7 @@ namespace questless
 			_terrain_render_is_current = true;
 		}
 		if (_terrain_texture) {
-			camera.draw(*_terrain_texture, _terrain_bounds.position(), ORIGIN = Point{0, 0});
+			camera.draw(*_terrain_texture, _terrain_bounds.position(), Origin{Point{0, 0}});
 		}
 	}
 
@@ -124,15 +127,6 @@ namespace questless
 		for (auto& particle : _particles) {
 			particle->draw(camera);
 		}
-	}
-
-	void WorldRenderer::visit(const LightningBoltEffect& e)
-	{
-		RegionTileCoords origin = e.origin();
-		for (int i = 0; i < 15; ++i) {
-			_particles.emplace_back(YellowMagic::make(Layout::dflt().to_world(origin)));
-		}
-		sound_manager()[_lightning_bolt_sound_handle].play();
 	}
 
 	void WorldRenderer::refresh()
@@ -215,5 +209,23 @@ namespace questless
 				}
 			}
 		});
+	}
+
+	// Effect Visitor Functions
+
+	void WorldRenderer::visit(const LightningBoltEffect& e)
+	{
+		for (int i = 0; i < 15; ++i) {
+			_particles.emplace_back(YellowMagic::make(Layout::dflt().to_world(e.origin())));
+		}
+		sound_manager()[_lightning_bolt_sound_handle].play();
+	}
+
+	void WorldRenderer::visit(const InjuryEffect& e)
+	{
+		for (int i = 0; i < 20; ++i) {
+			_particles.emplace_back(Blood::make(Layout::dflt().to_world(e.origin())));
+		}
+		sound_manager()[_hit_sound_handle].play();
 	}
 }

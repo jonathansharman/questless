@@ -58,7 +58,7 @@ namespace questless
 
 		renderer(make_unique<Renderer>(*_window, _window->width(), _window->height()));
 
-		_camera = make_unique<Camera>(*_window, PointF{0, 0});
+		_camera = Camera::make(*_window, PointF{0, 0});
 
 		/// @todo Make render quality a game setting.
 		//SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
@@ -175,11 +175,10 @@ namespace questless
 
 		for (int r = min_section_coords.r; r <= max_section_coords.r; ++r) {
 			for (int q = min_section_coords.q; q <= max_section_coords.q; ++q) {
-				RegionSectionCoords section_coords = _region->containing_section_coords({q, r});
-				boost::optional<Section::ref> opt_section = _region->section(section_coords);
-				if (opt_section) {
-					Section& section = *opt_section;
-					for (Being& being : section.beings()) {
+				RegionSectionCoords section_coords{q, r};
+				Section* section = _region->section(section_coords);
+				if (section) {
+					for (Being& being : section->beings()) {
 						being.agent().perceive(effect);
 					}
 				}
@@ -423,7 +422,7 @@ namespace questless
 		if (_input.pressed(MouseButton::right)) {
 			pt_clicked_rounded = _camera->pt_hovered_rounded();
 		}
-		_camera->draw(*_txt_hex_highlight, _camera->pt_hovered_rounded(), ORIGIN = boost::none, Color::white(128));
+		_camera->draw(*_txt_hex_highlight, _camera->pt_hovered_rounded(), Origin{boost::none}, Color::white(128));
 		_camera->draw(*_txt_hex_circle, pt_clicked_rounded);
 
 		_world_renderer->draw_objects(*this, *_camera);
@@ -528,9 +527,9 @@ namespace questless
 		// Rotate camera.
 		double angle = _camera->angle();
 		if (_input.down(SDLK_KP_9)) {
-			_camera->rotate((-90.0 - angle) / 40.0);
+			_camera->rotate(AngleRadians{(-tau / 6.0 - angle) / 20.0});
 		} else if (_input.down(SDLK_KP_7)) {
-			_camera->rotate((90.0 - angle) / 40.0);
+			_camera->rotate(AngleRadians{(tau / 6.0 - angle) / 20.0});
 		} else {
 			//_camera->angle(angle / 1.1);
 		}
@@ -553,7 +552,10 @@ namespace questless
 					_camera->zoom(1.0);
 				}
 
-				_camera->angle(_camera->angle() * (1 - acceleration));
+				// Only snap camera angle back if the player isn't actively rotating it.
+				if (!_input.down(SDLK_KP_9) && !_input.down(SDLK_KP_7)) {
+					_camera->angle(AngleRadians{_camera->angle() * (1 - acceleration)});
+				}
 			}
 		}
 	}
@@ -571,8 +573,7 @@ namespace questless
 			// Load being from its coordinates.
 			GlobalCoords coords = std::get<GlobalCoords>(it->second);
 			Region& region = *_region; /// @todo Load region based on the region name in the coords (coords.region).
-			RegionSectionCoords section = coords.section;
-			for (Being& being : region.section(section).get().get().beings()) {
+			for (Being& being : region.section(coords.section)->beings()) {
 				if (being.id() == id) {
 					return &being;
 				}
@@ -594,8 +595,7 @@ namespace questless
 			// Load object from its coordinates.
 			GlobalCoords coords = std::get<GlobalCoords>(it->second);
 			Region& region = *_region; /// @todo Load region based on the region name in the coords (coords.region).
-			RegionSectionCoords section = coords.section;
-			for (Object& object : region.section(section).get().get().objects()) {
+			for (Object& object : region.section(coords.section)->objects()) {
 				if (object.id() == id) {
 					return &object;
 				}

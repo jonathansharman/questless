@@ -19,21 +19,26 @@ namespace questless
 	{
 	public:
 		/// @param position The particle's starting position.
-		WhiteMagic(const PointF& position) : Particle
+		WhiteMagic(PointF position) : Particle
 			{ position
-			, Velocity{random_displacement(_vi_max)}
-			, ANGLE_DEGREES = uniform(0.0, 360.0)
-			, ANGULAR_VELOCITY = Hertz{uniform(-_dtheta_max, _dtheta_max)}
-			, SCALE = 1.0
-			, SCALE_VELOCITY = 0.0_Hz
-			, LIFETIME = seconds_f{uniform(_lifetime_min, _lifetime_max)}
+			, random_displacement(_vi_max) / 1.0s
+			, random_angle()
+			, AngularVelocity{uniform(-_dtheta_max, _dtheta_max)}
+			, Scale{1.0}
+			, ScaleVelocity{0.0}
+			, Lifetime{seconds_f{uniform(_lifetime_min, _lifetime_max)}}
 			}
-		{}
+		{
+			Rate<VectorF, double> vel{random_displacement(_vi_max) / 1.0s};
+		}
+
+		/// @param position The particle's starting position.
+		static ptr make(PointF position) { return std::make_unique<WhiteMagic>(position); }
 	private:
-		static constexpr Hertz _gravity{-50.0};
+		static constexpr Hertz _gravity = -50.0_Hz;
 		static constexpr double _vi_max = 80.0;
 		static constexpr double _vx_factor_per_frame = 0.97;
-		static constexpr double _dtheta_max = 720.0;
+		static constexpr double _dtheta_max = 2.0 * tau;
 		static constexpr double _lifetime_min = 2.00;
 		static constexpr double _lifetime_max = 2.50;
 

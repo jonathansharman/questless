@@ -16,6 +16,7 @@
 namespace questless
 {
 	class LightningBoltEffect;
+	class InjuryEffect;
 
 	class EffectVisitor
 	{
@@ -23,6 +24,7 @@ namespace questless
 		virtual ~EffectVisitor() = default;
 
 		virtual void visit(const LightningBoltEffect&) = 0;
+		virtual void visit(const InjuryEffect&) = 0;
 	};
 
 	class BadEffectVisit : public std::runtime_error
@@ -39,6 +41,7 @@ namespace questless
 		virtual ~TrivialEffectVisitor() = default;
 
 		virtual void visit(const LightningBoltEffect&) override { throw BadEffectVisit{_message}; }
+		virtual void visit(const InjuryEffect&) override { throw BadEffectVisit{_message}; }
 	private:
 		std::string _message;
 	};

@@ -163,6 +163,13 @@
     <Image Include="resources\textures\items\blank-scroll.png" />
     <Image Include="resources\textures\items\charged-scroll.png" />
     <Image Include="resources\textures\items\uncharged-scroll.png" />
+    <Image Include="resources\textures\particles\blood.png" />
+    <Image Include="resources\textures\particles\magic\black.png" />
+    <Image Include="resources\textures\particles\magic\blue.png" />
+    <Image Include="resources\textures\particles\magic\green.png" />
+    <Image Include="resources\textures\particles\magic\red.png" />
+    <Image Include="resources\textures\particles\magic\white.png" />
+    <Image Include="resources\textures\particles\magic\yellow.png" />
     <Image Include="resources\textures\splash\flame.png" />
     <Image Include="resources\textures\splash\logo.png" />
     <Image Include="resources\textures\test-animation.png" />
@@ -187,6 +194,7 @@
     <ClInclude Include="include\animation\EntityAnimator.h" />
     <ClInclude Include="include\animation\ItemTexturer.h" />
     <ClInclude Include="include\animation\particles\BlackMagic.h" />
+    <ClInclude Include="include\animation\particles\Blood.h" />
     <ClInclude Include="include\animation\particles\BlueMagic.h" />
     <ClInclude Include="include\animation\particles\GreenMagic.h" />
     <ClInclude Include="include\animation\particles\Particle.h" />
@@ -280,11 +288,13 @@
     <ClInclude Include="include\utility\hex-utilities.h" />
     <ClInclude Include="include\utility\Initializer.h" />
     <ClInclude Include="include\utility\PointF.h" />
+    <ClInclude Include="include\utility\Rate.h" />
     <ClInclude Include="include\utility\Stream.h" />
     <ClInclude Include="include\utility\TaggedType.h" />
+    <ClInclude Include="include\utility\units\geometry.h" />
+    <ClInclude Include="include\utility\units\vectors.h" />
     <ClInclude Include="include\utility\utility.h" />
     <ClInclude Include="include\utility\VectorF.h" />
-    <ClInclude Include="include\utility\Velocity.h" />
     <ClInclude Include="include\world\coordinates.h" />
     <ClInclude Include="include\world\Region.h" />
     <ClInclude Include="include\world\Section.h" />
@@ -299,6 +309,7 @@
     <ClCompile Include="src\animation\EntityAnimator.cpp" />
     <ClCompile Include="src\animation\ItemTexturer.cpp" />
     <ClCompile Include="src\animation\particles\BlackMagic.cpp" />
+    <ClCompile Include="src\animation\particles\Blood.cpp" />
     <ClCompile Include="src\animation\particles\BlueMagic.cpp" />
     <ClCompile Include="src\animation\particles\GreenMagic.cpp" />
     <ClCompile Include="src\animation\particles\Particle.cpp" />
@@ -355,10 +366,7 @@
     <ClCompile Include="src\ui\qte\LightningBolt.cpp" />
     <ClCompile Include="src\ui\TileDialog.cpp" />
     <ClCompile Include="src\utility\Camera.cpp" />
-    <ClCompile Include="src\utility\PointF.cpp" />
     <ClCompile Include="src\utility\utility.cpp" />
-    <ClCompile Include="src\utility\VectorF.cpp" />
-    <ClCompile Include="src\utility\Velocity.cpp" />
     <ClCompile Include="src\world\Region.cpp" />
     <ClCompile Include="src\world\Section.cpp" />
     <ClCompile Include="src\world\Tile.cpp" />

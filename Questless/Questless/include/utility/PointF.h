@@ -33,7 +33,6 @@ namespace questless
 		constexpr friend PointF operator +(const VectorF& v, PointF p) { return PointF{v.x + p.x, v.y + p.y}; }
 		constexpr friend PointF operator -(PointF p, const VectorF& v) { return PointF{p.x - v.x, p.y - v.y}; }
 		constexpr friend VectorF operator -(const PointF& p1, const PointF& p2) { return VectorF{p1.x - p2.x, p1.y - p2.y}; }
-		constexpr friend VectorF operator -(const PointF& p) { return VectorF{-p.x, -p.y}; }
 		constexpr friend PointF operator *(PointF p, double k) { return PointF{k * p.x, k * p.y}; }
 		constexpr friend PointF operator *(double k, PointF p) { return PointF{k * p.x, k * p.y}; }
 		constexpr friend PointF operator /(PointF p, double k) { return PointF{p.x / k, p.y / k}; }
@@ -67,16 +66,30 @@ namespace questless
 
 		/// Rotates the point about another point, overwriting the original value.
 		/// @param origin The origin around which the point will be rotated.
-		/// @param theta The counter-clockwise rotation to apply, in degrees.
-		void rotate(const PointF& origin, double theta) &;
+		/// @param dtheta The counter-clockwise rotation to apply, in radians.
+		void rotate(const PointF& origin, AngleRadians dtheta) &
+		{
+			double cos_dtheta = cos(dtheta);
+			double sin_dtheta = sin(dtheta);
+			VectorF offset = VectorF(origin.x, origin.y);
+			*this -= offset;
+			*this = PointF(x * cos_dtheta - y * sin_dtheta, x * sin_dtheta + y * cos_dtheta) + offset;
+		}
 
 		/// Creates a copy of the point, rotated about another point.
 		/// @param origin The origin around which the point will be rotated.
-		/// @param theta The counter-clockwise rotation to apply, in degrees.
-		PointF rotated(const PointF& origin, double theta) const;
+		/// @param theta The counter-clockwise rotation to apply, in radians.
+		PointF rotated(const PointF& origin, AngleRadians dtheta) const
+		{
+			double cos_dtheta = cos(dtheta);
+			double sin_dtheta = sin(dtheta);
+			VectorF offset = VectorF(origin.x, origin.y);
+			PointF temp = *this - offset;
+			return PointF(temp.x * cos_dtheta - temp.y * sin_dtheta, temp.x * sin_dtheta + temp.y * cos_dtheta) + offset;
+		}
 
 		/// @return A point with integer coordinates. Floating-point coordinates are rounded to the nearest whole number.
-		sdl::Point to_point() const;
+		sdl::Point to_point() const { return sdl::Point(lround(x), lround(y)); }
 	};
 }
 

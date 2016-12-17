@@ -17,6 +17,7 @@
 #include <functional>
 
 #include "constants.h"
+#include "units/vectors.h"
 
 namespace questless
 {
@@ -60,14 +61,26 @@ namespace questless
 		return std::uniform_real_distribution<T>(min, max)(rng);
 	}
 
+	/// @return a random angle in radians.
+	inline AngleRadians random_angle()
+	{
+		return AngleRadians{uniform(0.0, tau)};
+	}
+
 	/// @return A displacement based on a uniform random distance and uniform random angle.
 	/// @param max_length The maximum possible length of the displacement.
-	VectorF random_displacement(double max_length);
+	inline VectorF random_displacement(double max_length)
+	{
+		return VectorF{random_angle(), Length{uniform(0.0, max_length)}};
+	}
 
 	/// @return A displacement based on a uniform random distance and uniform random angle.
 	/// @param min_length The minimum possible length of the displacement.
 	/// @param max_length The maximum possible length of the displacement.
-	VectorF random_displacement(double min_length, double max_length);
+	inline VectorF random_displacement(double min_length, double max_length)
+	{
+		return VectorF{random_angle(), Length{uniform(min_length, max_length)}};
+	}
 
 	//////////
 	// Math //

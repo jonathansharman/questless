@@ -19,25 +19,26 @@ namespace questless
 	{
 	public:
 		/// @param position The particle's starting position.
-		BlackMagic(const PointF& position) : Particle
+		BlackMagic(PointF position) : Particle
 			{ position
-			, Velocity{uniform(_vxi_min, _vxi_max), 0.0}
-			, ANGLE_DEGREES = uniform(0.0, 360.0)
-			, ANGULAR_VELOCITY = Hertz{uniform(-_dtheta_max, _dtheta_max)}
-			, SCALE = 1.0
-			, SCALE_VELOCITY = 0.0_Hz
-			, LIFETIME = 2.0s
+			, Velocity{VectorF{random_angle(), Length{uniform(_vi_min, _vi_max)}}}
+			, random_angle()
+			, AngularVelocity{uniform(-_dtheta_max, _dtheta_max)}
+			, Scale{1.0}
+			, ScaleVelocity{0.0}
+			, Lifetime{_lifetime}
 			}
-		{
-			_velocity.rotate(uniform(0.0, 360.0));
-		}
+		{}
+
+		/// @param position The particle's starting position.
+		static ptr make(PointF position) { return std::make_unique<BlackMagic>(position); }
 	private:
-		static constexpr Hertz _turn_rate = 225.0_Hz;
-		static constexpr double _vxi_min = 5.0;
-		static constexpr double _vxi_max = 25.0;
-		static constexpr double _dtheta_max = 720.0;
+		static constexpr AngularVelocity _turn_rate{4.0};
+		static constexpr double _vi_min = 5.0;
+		static constexpr double _vi_max = 25.0;
+		static constexpr double _dtheta_max = 2.0 * tau;
 		static constexpr Hertz _acceleration_factor = 1.25_Hz;
-		static constexpr seconds_f _lifetime = 2.5s;
+		static constexpr seconds_f _lifetime = 2.0s;
 
 		void subupdate() override;
 

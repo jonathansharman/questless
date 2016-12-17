@@ -43,7 +43,7 @@ namespace questless::spell
 						discharge();
 						caster.lose_mana(cost);
 						double healing = magnitude * caster.magic_power(color());
-						target->heal(healing, boost::none, caster.id());
+						target->heal(healing, nullptr, caster.id());
 						return cont(Result::success);
 					}
 				);

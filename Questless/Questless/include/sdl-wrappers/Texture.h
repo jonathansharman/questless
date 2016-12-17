@@ -112,7 +112,7 @@ namespace sdl
 		/// @param color An additional color multiplier, applied on top of the texture's color member.
 		/// @param horizontal_scale The horizontal scale of the texture.
 		/// @param vertical_scale The vertical scale of the texture.
-		/// @param angle The number of degrees to rotate the texture, counter-clockwise.
+		/// @param angle The counter-clockwise rotation of the the texture, in radians.
 		/// @param flip_horizontally Whether to flip the texture horizontally.
 		/// @param flip_horizontally Whether to flip the texture vertically.
 		/// @param src_rect An optional Rect specifying the portion of the texture to be copied. If nullopt, the entire texture is used.
@@ -122,7 +122,7 @@ namespace sdl
 			, Color color = Color::white()
 			, double horizontal_scale = 1.0
 			, double vertical_scale = 1.0
-			, double angle = 0
+			, double angle = 0.0
 			, bool flip_horizontally = false
 			, bool flip_vertically = false
 			, const boost::optional<Rect>& src_rect = boost::none

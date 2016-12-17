@@ -16,7 +16,7 @@ namespace questless
 {
 	void RedMagic::subupdate()
 	{
-		_velocity.y += Hertz{_gravity * frame_duration};
+		_velocity.step().y += _gravity * frame_duration;
 	}
 
 	Texture& RedMagic::texture() const

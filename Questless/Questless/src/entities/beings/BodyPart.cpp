@@ -72,6 +72,6 @@ namespace questless
 
 	void BodyPart::take_damage(Damage& damage, boost::optional<BeingId> source_id)
 	{
-		_owner.take_damage(damage, std::ref(*this), source_id);
+		_owner.take_damage(damage, this, source_id);
 	}
 }

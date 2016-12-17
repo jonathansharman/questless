@@ -16,8 +16,8 @@ namespace questless
 {
 	void BlackMagic::subupdate()
 	{
-		_velocity += _velocity * (_acceleration_factor * frame_duration);
-		_velocity.rotate(_turn_rate * frame_duration);
+		_velocity *= 1.0 + _acceleration_factor * frame_duration;
+		_velocity.step().rotate(AngleRadians{_turn_rate * frame_duration});
 	}
 
 	Texture& BlackMagic::texture() const

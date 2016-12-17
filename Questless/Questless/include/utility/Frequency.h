@@ -2,13 +2,9 @@
 * @file    Frequency.h
 * @author  Jonathan Sharman
 *
-* @section LICENSE
+* @section LICENSE See LICENSE.txt.
 *
-* @todo This
-*
-* @section DESCRIPTION
-*
-* This file implements a frequency data type designed to complement the STL duration type.
+* @section DESCRIPTION A frequency data type designed to complement the STL duration type.
 */
 
 #ifndef FREQUENCY_H
@@ -24,109 +20,123 @@ namespace questless
 	{
 	public:
 		using rep = Rep;
-		using period_t = Period;
+		using period = Period;
 
-		/// Default constructs a frequency object to 0 Hz.
-		constexpr Frequency() : _cycles{0} {}
+		constexpr Frequency() : _count{rep{}} {}
 
-		/// @todo Mark the following constructor explicit if Microsoft ever fixes the bug in the duration * operator. (see <http://stackoverflow.com/questions/24022142/user-defined-overloaded-operator-with-stdchronoduration/24023059>)
-
-		/// Constructs a frequency object, used to hold the value of a frequency and perform operations with std::duration objects.
 		/// @param cycles The number of cycles per unit period.
-		constexpr Frequency(Rep cycles) : _cycles{cycles} {}
+		constexpr explicit Frequency(rep cycles) : _count{std::move(cycles)} {}
 
-		/// @return The zero frequency for the specified representation and period.
-		constexpr static Frequency<Rep, Period> zero() { return Frequency<Rep, Period>{0}; }
+		/// @return The zero f for the specified representation and period.
+		constexpr static Frequency<rep, period> zero() { return Frequency<rep, period>{std::chrono::duration_values<rep>::zero()}; }
 
-		/// @return The number of cycles per period.
-		Rep count() const { return _cycles; }
+		/// @return The number of cycles per unit period.
+		constexpr rep count() const { return _count; }
 
-		/// Calculates the period corresponding to the frequency, i.e. its reciprocal.
-		/// @note Beware of rounding errors when using an integral representation type.
-		/// @return The period.
-		std::chrono::duration<Rep, Period> period() { return std::chrono::duration<Rep, Period>{1 / _cycles}; }
+		constexpr bool operator <(Frequency<rep, period> right) const { return _count < right._count; }
+		constexpr bool operator <=(Frequency<rep, period> right) const { return _count <= right._count; }
+		constexpr bool operator ==(Frequency<rep, period> right) const { return _count == right._count; }
+		constexpr bool operator !=(Frequency<rep, period> right) const { return _count != right._count; }
+		constexpr bool operator >=(Frequency<rep, period> right) const { return _count >= right._count; }
+		constexpr bool operator >(Frequency<rep, period> right) const { return _count > right._count; }
 
-		constexpr bool operator <(const Frequency<Rep, Period>& right) const { return _cycles < right._cycles; }
-		constexpr bool operator <=(const Frequency<Rep, Period>& right) const { return _cycles <= right._cycles; }
-		constexpr bool operator ==(const Frequency<Rep, Period>& right) const { return _cycles == right._cycles; }
-		constexpr bool operator !=(const Frequency<Rep, Period>& right) const { return _cycles != right._cycles; }
-		constexpr bool operator >=(const Frequency<Rep, Period>& right) const { return _cycles >= right._cycles; }
-		constexpr bool operator >(const Frequency<Rep, Period>& right) const { return _cycles > right._cycles; }
-
-		constexpr friend Frequency<Rep, Period> operator +(Frequency<Rep, Period> f1, Frequency<Rep, Period> f2)
+		// Closed under addition.
+		Frequency<rep, period>& operator +=(Frequency<rep, period> f)
 		{
-			return Frequency<Rep, Period>{f1._cycles + f2._cycles};
-		}
-
-		constexpr friend Frequency<Rep, Period> operator -(Frequency<Rep, Period> f1, Frequency<Rep, Period> f2)
-		{
-			return Frequency<Rep, Period>{f1._cycles - f2._cycles};
-		}
-
-		constexpr friend Frequency<Rep, Period> operator *(const Rep& factor, Frequency<Rep, Period> f)
-		{
-			return Frequency<Rep, Period>{factor * f._cycles};
-		}
-		constexpr friend Frequency<Rep, Period> operator *(Frequency<Rep, Period> f, const Rep& factor)
-		{
-			return Frequency<Rep, Period>{factor * f._cycles};
-		}
-		constexpr friend Rep operator *(Frequency<Rep, Period> f, const std::chrono::duration<Rep, Period> d)
-		{
-			return f._cycles * d.count();
-		}
-		constexpr friend Rep operator *(const std::chrono::duration<Rep, Period> d, Frequency<Rep, Period> f)
-		{
-			return f._cycles * d.count();
-		}
-
-		constexpr friend std::chrono::duration<Rep, Period> operator /(const Rep& dividend, Frequency<Rep, Period> f)
-		{
-			return std::chrono::duration<Rep, Period>{dividend / f._cycles};
-		}
-		constexpr friend Frequency<Rep, Period> operator /(Frequency<Rep, Period> f, const Rep& divisor)
-		{
-			return Frequency<Rep, Period>{f._cycles / divisor};
-		}
-		constexpr friend Frequency<Rep, Period> operator /(const Rep& dividend, const std::chrono::duration<Rep, Period> d)
-		{
-			return Frequency<Rep, Period>{dividend / d.count()};
-		}
-
-		Frequency<Rep, Period>& operator +=(Frequency<Rep, Period> f)
-		{
-			_cycles += f._cycles;
+			_count += f._count;
 			return *this;
 		}
 
-		Frequency<Rep, Period>& operator -=(Frequency<Rep, Period> f)
+		// Closed under subtraction.
+		Frequency<rep, period>& operator -=(Frequency<rep, period> f)
 		{
-			_cycles -= f._cycles;
+			_count -= f._count;
 			return *this;
 		}
 
-		Frequency<Rep, Period>& operator *=(double factor)
+		// Closed under scalar multiplication.
+		Frequency<rep, period>& operator *=(rep factor)
 		{
-			_cycles *= factor;
+			_count *= factor;
 			return *this;
 		}
 
-		Frequency<Rep, Period>& operator /=(double factor)
+		// Closed under scalar division.
+		Frequency<rep, period>& operator /=(rep factor)
 		{
-			_cycles /= factor;
+			_count /= factor;
 			return *this;
 		}
 	private:
-		Rep _cycles; ///> The number of cycles per period.
+		rep _count; ///> The number of cycles per unit period.
 	};
 
-	template<typename ToFrequency, typename Rep, typename Period>
-	ToFrequency frequency_cast(Frequency<Rep, Period> f)
+	// frequency + frequency -> frequency
+	template <typename Rep, typename Period>
+	constexpr Frequency<Rep, Period> operator +(Frequency<Rep, Period> f1, Frequency<Rep, Period> f2)
 	{
-		ToFrequency ret;
-		std::ratio r = std::ratio_divide < ToFrequency::period, Period > ;
-		ret._cycles = static_cast<ToFrequency::rep>{f.cycles * r::num / r::den};
-		return ret;
+		return Frequency<Rep, Period>{f1.count() + f2.count()};
+	}
+
+	// frequency - frequency -> frequency
+	template <typename Rep, typename Period>
+	constexpr Frequency<Rep, Period> operator -(Frequency<Rep, Period> f1, Frequency<Rep, Period> f2)
+	{
+		return Frequency<Rep, Period>{f1.count() - f2.count()};
+	}
+
+	// -frequency -> frequency
+	template <typename Rep, typename Period>
+	constexpr Frequency<Rep, Period> operator -(Frequency<Rep, Period> f)
+	{
+		return Frequency<Rep, Period>{-f.count()};
+	}
+
+	// k * frequency -> frequency
+	template <typename Rep, typename Period>
+	constexpr Frequency<Rep, Period> operator *(Rep factor, Frequency<Rep, Period> f)
+	{
+		return Frequency<Rep, Period>{factor * f.count()};
+	}
+	// frequency * k -> frequency
+	template <typename Rep, typename Period>
+	constexpr Frequency<Rep, Period> operator *(Frequency<Rep, Period> f, Rep factor)
+	{
+		return Frequency<Rep, Period>{factor * f.count()};
+	}
+
+	// frequency * duration -> k
+	template <typename Rep, typename Period>
+	constexpr Rep operator *(Frequency<Rep, Period> f, std::chrono::duration<Rep, Period> duration)
+	{
+		return f.count() * duration.count();
+	}
+	// duration * frequency -> k
+	template <typename Rep, typename Period>
+	constexpr Rep operator *(std::chrono::duration<Rep, Period> duration, Frequency<Rep, Period> f)
+	{
+		return f.count() * duration.count();
+	}
+
+	// k / duration -> frequency
+	template <typename Rep, typename Period>
+	constexpr Frequency<Rep, Period> operator /(Rep dividend, const std::chrono::duration<Rep, Period> duration)
+	{
+		return Frequency<Rep, Period>{dividend / duration.count()};
+	}
+
+	// k / frequency -> duration
+	template <typename Rep, typename Period>
+	constexpr std::chrono::duration<Rep, Period> operator /(Rep dividend, Frequency<Rep, Period> f)
+	{
+		return std::chrono::duration<Rep, Period>{dividend / f.count()};
+	}
+
+	template<typename ToFrequency, typename Rep, typename Period>
+	constexpr ToFrequency frequency_cast(const Frequency<Rep, Period>& f)
+	{
+		using ratio = std::ratio_divide<ToFrequency::period, Period>;
+		return ToFrequency{static_cast<ToFrequency::rep>(f.count() * ratio::den / ratio::num)};
 	}
 
 	/// Frequency type representing cycles per second.
@@ -136,6 +146,34 @@ namespace questless
 
 	constexpr Hertz operator ""_Hz(long double cycles) { return Hertz{static_cast<double>(cycles)}; }
 	constexpr kiloHertz operator ""_kHz(long double cycles) { return kiloHertz{static_cast<double>(cycles)}; }
+}
+
+// Specialize common_type to prevent errors during overload resolution. (These type values don't actually make much sense.)
+namespace std
+{
+	template <typename Rep, typename Period>
+	struct common_type<questless::Frequency<Rep, Period>, std::chrono::duration<Rep, Period>>
+	{
+		using type = Rep;
+	};
+
+	template <typename Rep, typename Period>
+	struct common_type<std::chrono::duration<Rep, Period>, questless::Frequency<Rep, Period>>
+	{
+		using type = Rep;
+	};
+
+	template <typename Rep, typename Period>
+	struct common_type<questless::Frequency<Rep, Period>, Rep>
+	{
+		using type = Rep;
+	};
+
+	template <typename Rep, typename Period>
+	struct common_type<Rep, questless::Frequency<Rep, Period>>
+	{
+		using type = Rep;
+	};
 }
 
 #endif

@@ -21,21 +21,19 @@ namespace questless
 	{
 	public:
 		/// @param position The particle's starting position.
-		YellowMagic(const PointF& position) : Particle
+		YellowMagic(PointF position) : Particle
 			{ position + random_displacement(_max_displacement)
-			, Velocity{_v, 0.0}
-			, ANGLE_DEGREES = uniform(0.0, 360.0)
-			, ANGULAR_VELOCITY = 0.0
-			, SCALE = 1.0
-			, SCALE_VELOCITY = 0.0_Hz
-			, LIFETIME = seconds_f{uniform(_lifetime_min, _lifetime_max)}
+			, Velocity{VectorF{random_angle(), LengthSquared{_v}}}
+			, random_angle()
+			, AngularVelocity{0.0}
+			, Scale{1.0}
+			, ScaleVelocity{0.0}
+			, Lifetime{seconds_f{uniform(_lifetime_min, _lifetime_max)}}
 			}
-		{
-			_velocity.rotate(uniform(0.0, 360.0));
-		}
+		{}
 
 		/// @param position The particle's starting position.
-		static ptr make(const PointF& position) { return std::make_unique<YellowMagic>(position); }
+		static ptr make(PointF position) { return std::make_unique<YellowMagic>(position); }
 	private:
 		static constexpr double _max_displacement = 15.0;
 		static constexpr double _v = 100.0;

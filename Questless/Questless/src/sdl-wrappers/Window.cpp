@@ -56,7 +56,7 @@ namespace sdl
 			( title.c_str()
 			, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED
 			, width, height
-			, (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | (resizable ? SDL_WINDOW_RESIZABLE : 0)
+			, (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | (resizable ? SDL_WINDOW_RESIZABLE : 0) | (grab_input ? SDL_WINDOW_INPUT_GRABBED : 0)
 			);
 		if (_sdl_window == nullptr) {
 			throw std::runtime_error{"Failed to create window."};

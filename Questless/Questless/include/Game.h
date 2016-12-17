@@ -29,7 +29,7 @@
 #include "ui/DigraphMenuController.h"
 #include "ui/PlayerActionDialog.h"
 #include "ui/ListDialog.h"
-#include "utility/Frequency.h"
+#include "utility/Rate.h"
 #include "sdl-wrappers/basic-sdl-wrappers.h"
 #include "sdl-wrappers/Window.h"
 #include "sdl-wrappers/Renderer.h"
@@ -165,7 +165,7 @@ namespace questless
 
 		sdl::Window::ptr _window;
 
-		std::unique_ptr<Camera> _camera;
+		Camera::ptr _camera;
 
 		// Debug
 

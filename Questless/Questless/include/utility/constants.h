@@ -11,7 +11,7 @@
 #define CONSTANTS_H
 
 #include "sdl-wrappers/basic-sdl-wrappers.h"
-#include "utility/Frequency.h"
+#include "utility/Rate.h"
 #include "utility/VectorF.h"
 
 using namespace std::literals;
@@ -25,30 +25,30 @@ namespace questless
 	using clock = std::chrono::steady_clock;
 	using seconds_f = std::chrono::duration<double>;
 
-	const Hertz frame_rate = 60.0_Hz;
-	const seconds_f frame_duration = 1 / frame_rate;
+	constexpr Hertz frame_rate = 60.0_Hz;
+	constexpr seconds_f frame_duration = 1.0 / frame_rate;
 
-	const seconds_f accrued_update_time_max{1.0};
+	constexpr seconds_f accrued_update_time_max{1.0};
 
 	//////////
 	// Math //
 	//////////
 
-	const double pi = 3.14159265358979323846;
-	const double tau = 6.283185307179586476925;
+	constexpr double tau = 6.283185307179586476925;
+	constexpr double pi = tau / 2.0;
 
 	///////////
 	// World //
 	///////////
 
-	const int section_radius = 10;
-	const int section_diameter = 2 * section_radius + 1;
+	constexpr int section_radius = 10;
+	constexpr int section_diameter = 2 * section_radius + 1;
 	
-	const sdl::Vector hex_unit_r{0, 36};
-	const sdl::Vector hex_unit_q{44, -18};
+	constexpr sdl::Vector hex_unit_r{0, 36};
+	constexpr sdl::Vector hex_unit_q{44, -18};
 
-	const int region_background_margin_top = 19;
-	const int region_background_margin_left = 22;
+	constexpr int region_background_margin_top = 19;
+	constexpr int region_background_margin_left = 22;
 }
 
 #endif

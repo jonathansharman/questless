@@ -10,7 +10,6 @@
 #include "ui/qte/LightningBolt.h"
 
 #include "utility/utility.h"
-#include "utility/Velocity.h"
 
 using namespace sdl;
 
@@ -77,7 +76,7 @@ namespace questless::qte
 			for (int i = 0; i < _charges_per_quadrant; ++i) {
 				_charges.push_back(Charge
 					{ _target + random_displacement(100.0)
-					, Velocity{ANGLE_RADIANS = uniform(0.0, tau), SPEED = 100.0}
+					, Velocity{VectorF{random_angle(), Length{100.0}}}
 					});
 			}
 		}
@@ -88,18 +87,19 @@ namespace questless::qte
 
 			if (accelerate) {
 				// Accelerate counter-clockwise from the target.
-				point_charge.velocity += 7'000.0 * Velocity{-r.y, r.x} / square(d);
+				point_charge.velocity.step() += 7'000.0 * VectorF{-r.y, r.x} / square(d);
 			}
 
 			// Apply drag.
 			point_charge.velocity *= 0.99;
 			// Apply random acceleration.
-			point_charge.velocity += Velocity{random_displacement(50.0)};
+			point_charge.velocity.step() += random_displacement(50.0);
 			// Apply attractive and repulsive forces.
-			point_charge.velocity += 20'000.0 * Velocity{r} / std::max(1.0, square(d));
-			point_charge.velocity -= 800'000.0 * Velocity{r} / std::max(1.0, cube(d));
+			auto x = 20'000.0 * Velocity{r} / std::max(1.0, square(d));
+			point_charge.velocity.step() += 20'000.0 * r / std::max(1.0, square(d));
+			point_charge.velocity.step() -= 800'000.0 * r / std::max(1.0, cube(d));
 			// Update position.
-			point_charge.position += point_charge.velocity.displacement(frame_duration);
+			point_charge.position += point_charge.velocity * frame_duration;
 		}
 
 		return false;
@@ -115,11 +115,11 @@ namespace questless::qte
 			_camera.draw
 				( texture_manager()[_point_charge_texture_handle]
 				, point_charge.position.to_point()
-				, ORIGIN = boost::none
+				, Origin{boost::none}
 				, Color{255, 255, percentage_to_byte(intensity)}
-				, H_SCALE = (1.0 + intensity) / 2
-				, V_SCALE = (1.0 + intensity) / 2
-				, ANGLE_DEGREES = 0.0
+				, HScale{(1.0 + intensity) / 2}
+				, VScale{(1.0 + intensity) / 2.0}
+				, AngleRadians{0.0}
 				);
 		}
 

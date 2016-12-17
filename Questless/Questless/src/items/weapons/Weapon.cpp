@@ -36,7 +36,8 @@ namespace questless
 		if (Being* target = actor.region().being(_coords)) {
 			Damage damage = _weapon.damage();
 			_weapon.wear(_weapon.wear_ratio() * damage.total());
-			target->take_damage(damage, boost::none, actor.id()); /// @todo Part targeting
+			target->take_damage(damage, nullptr, actor.id()); /// @todo Part targeting
+			actor.game().add_effect(InjuryEffect::make(target->coords(), damage));
 			return cont(Result::success);
 		} else {
 			return actor.agent().message("Melee Attack", "Miss!", [cont] { return cont(Result::aborted); });

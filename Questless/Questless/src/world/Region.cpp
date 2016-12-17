@@ -316,15 +316,15 @@ namespace questless
 		return it != _section_map.end() && it->second != nullptr;
 	}
 
-	boost::optional<Section::ref> Region::section(RegionSectionCoords section_coords)
+	Section* Region::section(RegionSectionCoords section_coords)
 	{
 		auto it = _section_map.find(section_coords);
-		return it == _section_map.end() ? boost::none : boost::make_optional(std::ref(*(it->second)));
+		return it == _section_map.end() ? nullptr : it->second.get();
 	}
-	boost::optional<Section::cref> Region::section(RegionSectionCoords section_coords) const
+	const Section* Region::section(RegionSectionCoords section_coords) const
 	{
 		auto it = _section_map.find(section_coords);
-		return it == _section_map.end() ? boost::none : boost::make_optional(std::cref(*(it->second)));
+		return it == _section_map.end() ? nullptr : it->second.get();
 	}
 
 	void Region::update()

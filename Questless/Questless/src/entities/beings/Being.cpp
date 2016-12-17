@@ -186,10 +186,10 @@ namespace questless
 		double temp = region().temperature(coords());
 		if (temp > max_temp()) {
 			auto burn = Damage::from_burn((temp - max_temp()) / (max_temp() - min_temp()) * temperature_damage_factor);
-			take_damage(burn, boost::none, boost::none);
+			take_damage(burn, nullptr, boost::none);
 		} else if (temp < min_temp()) {
 			auto freeze = Damage::from_freeze((min_temp() - temp) / (max_temp() - min_temp()) * temperature_damage_factor);
-			take_damage(freeze, boost::none, boost::none);
+			take_damage(freeze, nullptr, boost::none);
 		}
 
 		// Update items.
@@ -199,7 +199,7 @@ namespace questless
 		}
 	}
 
-	void Being::take_damage(Damage& damage, boost::optional<BodyPart::ref> opt_part, boost::optional<BeingId> opt_source_id)
+	void Being::take_damage(Damage& damage, BodyPart* part, boost::optional<BeingId> opt_source_id)
 	{
 		// Store whether the being was already dead upon taking this damage.
 		bool was_already_dead = dead();
@@ -208,9 +208,9 @@ namespace questless
 		Being* source = opt_source_id ? game().being(*opt_source_id) : nullptr;
 
 		// Target will take damage.
-		if (before_take_damage(damage, opt_part, opt_source_id)) {
+		if (before_take_damage(damage, part, opt_source_id)) {
 			// Source, if present, will deal damage.
-			if (!source || source->before_deal_damage(damage, opt_part, id())) {
+			if (!source || source->before_deal_damage(damage, part, id())) {
 				// Initialize total resistance and vulnerability to the being's resistance/vulnerability attributes.
 				auto total_resistance = resistance();
 				auto total_vulnerability = vulnerability();
@@ -227,38 +227,37 @@ namespace questless
 					shield->take_resistance_wear(damage);
 				}
 
-				if (opt_part) {
+				if (part) {
 					// Damage is part-targeted.
-					BodyPart& part = *opt_part;
 
 					// Apply part's armor's protection, also in reverse order.
-					for (auto armor_it = part.armor().rbegin(); armor_it != part.armor().rend(); ++armor_it) {
+					for (auto armor_it = part->armor().rbegin(); armor_it != part->armor().rend(); ++armor_it) {
 						Armor& armor = *armor_it;
 						armor.apply_protection(damage);
 						total_resistance += armor.resistance();
 					}
 
 					// Apply part's and being's protection attributes.
-					damage -= part.protection().reduction() + protection().reduction();
+					damage -= part->protection().reduction() + protection().reduction();
 
 					// Part's armor takes resistance wear based on the final damage to the part before multipliers.
-					for (Armor& armor : part.armor()) {
+					for (Armor& armor : part->armor()) {
 						armor.take_resistance_wear(damage);
 					}
 
 					// Add part's resistance and vulnerability attributes to totals.
-					total_resistance += part.resistance();
-					total_vulnerability += part.vulnerability();
+					total_resistance += part->resistance();
+					total_vulnerability += part->vulnerability();
 
 					// Part and being lose health.
 					double health_lost = damage.with(total_resistance, total_vulnerability).total() / (1.0 + endurance_factor * endurance());
-					part.lose_health(health_lost);
+					part->lose_health(health_lost);
 					lose_health(health_lost);
 
 					// Check for part disability.
-					if (part.health() <= 0) {
+					if (part->health() <= 0) {
 						/// @todo Disable part.
-						if (part.vital()) {
+						if (part->vital()) {
 							die();
 						}
 					}
@@ -274,9 +273,9 @@ namespace questless
 				}
 
 				// Target has taken damage.
-				if (after_take_damage(damage, opt_part, opt_source_id)) {
+				if (after_take_damage(damage, part, opt_source_id)) {
 					// Source, if present, has dealt damage.
-					if (!source || source->after_deal_damage(damage, opt_part, id())) {
+					if (!source || source->after_deal_damage(damage, part, id())) {
 						// If target has taken fatal damage, mark it dead.
 						if (health() <= 0) {
 							die();
@@ -308,7 +307,7 @@ namespace questless
 		}
 	}
 
-	void Being::heal(double amount, boost::optional<BodyPart::ref> opt_part, boost::optional<BeingId> opt_source_id)
+	void Being::heal(double amount, BodyPart* part, boost::optional<BeingId> opt_source_id)
 	{
 		/// @todo Heal the part, if present.
 
@@ -317,17 +316,17 @@ namespace questless
 
 		// Source will give healing.
 		if (source != nullptr) {
-			source->before_give_heal(amount, opt_part, id());
+			source->before_give_heal(amount, part, id());
 		}
 		// Target will receive healing.
-		before_receive_heal(amount, opt_part, opt_source_id);
+		before_receive_heal(amount, part, opt_source_id);
 		// Target gains health.
 		gain_health(amount);
 		// Target has received healing.
-		after_receive_heal(amount, opt_part, opt_source_id);
+		after_receive_heal(amount, part, opt_source_id);
 		// Source has given healing.
 		if (source != nullptr) {
-			source->after_give_heal(amount, opt_part, id());
+			source->after_give_heal(amount, part, id());
 		}
 	}
 

@@ -19,16 +19,19 @@ namespace questless
 	{
 	public:
 		/// @param position The particle's starting position.
-		RedMagic(const PointF& position) : Particle
+		RedMagic(PointF position) : Particle
 			{ position
-			, Velocity{random_displacement(_v_max)} + Velocity{0.0, _vyi_adjustment}
-			, ANGLE_DEGREES = uniform(0.0, 360.0)
-			, ANGULAR_VELOCITY = Hertz{uniform(-_dtheta_max, _dtheta_max)}
-			, SCALE = 1.0
-			, SCALE_VELOCITY = 0.0_Hz
-			, LIFETIME = seconds_f{uniform(_lifetime_min, _lifetime_max)}
+			, Velocity{random_displacement(_v_max) + VectorF{0.0, _vyi_adjustment}}
+			, random_angle()
+			, AngularVelocity{uniform(-_dtheta_max, _dtheta_max)}
+			, Scale{1.0}
+			, ScaleVelocity{0.0}
+			, Lifetime{seconds_f{uniform(_lifetime_min, _lifetime_max)}}
 			}
 		{}
+
+		/// @param position The particle's starting position.
+		static ptr make(PointF position) { return std::make_unique<RedMagic>(position); }
 	private:
 		static constexpr double _v_max = 200.0;
 		static constexpr double _vyi_adjustment = -150.0;

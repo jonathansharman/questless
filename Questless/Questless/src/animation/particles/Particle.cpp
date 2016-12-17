@@ -19,7 +19,7 @@ namespace questless
 		if (dead()) {
 			return;
 		}
-		_position += _velocity.displacement(frame_duration);
+		_position += _velocity * frame_duration;
 		_angle += _angular_velocity * frame_duration;
 		_scale += _scale_velocity * frame_duration;
 	}
@@ -29,11 +29,11 @@ namespace questless
 		camera.draw
 			( texture()
 			, _position.to_point()
-			, ORIGIN = boost::none
+			, Origin{boost::none}
 			, sdl::Color::white(percentage_to_byte(fade_out() ? _time_left.count() / _lifetime.count() : 1.0))
-			, H_SCALE = _scale
-			, V_SCALE = _scale
-			, ANGLE_DEGREES = _angle
+			, HScale{_scale}
+			, VScale{_scale}
+			, AngleRadians{_angle}
 			);
 	}
 }
