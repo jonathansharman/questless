@@ -27,7 +27,7 @@ namespace questless
 		}
 	}
 
-	Texture& GreenMagic::texture() const
+	const Texture& GreenMagic::texture() const
 	{
 		static bool first_call = true;
 		static Handle<Texture> handle;

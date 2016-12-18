@@ -35,7 +35,7 @@ namespace questless
 			( texture()
 			, _position.to_point()
 			, Origin{boost::none}
-			, sdl::Color::white(percentage_to_byte(fade_out() ? _time_left.count() / _lifetime.count() : 1.0))
+			, sdl::Color::white(fade_out() ? percentage_to_byte(_time_left.count() / _lifetime.count()) : 255)
 			, HScale{_scale}
 			, VScale{_scale}
 			, AngleRadians{_angle}

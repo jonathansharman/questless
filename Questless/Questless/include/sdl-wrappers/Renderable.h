@@ -10,7 +10,7 @@
 #ifndef RENDERABLE_H
 #define RENDERABLE_H
 
-#include <set>
+#include <unordered_set>
 
 #include "sdl-wrappers/resources.h" // Included for convenience since virtually all Renderables need access to shared resources.
 
@@ -25,7 +25,7 @@ namespace sdl
 		Renderable() { _registry.insert(this); }
 		~Renderable() { _registry.erase(this); }
 	private:
-		static std::set<Renderable*> _registry;
+		static std::unordered_set<Renderable*> _registry;
 
 		virtual void refresh() = 0;
 	};

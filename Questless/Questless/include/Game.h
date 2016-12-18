@@ -227,7 +227,8 @@ namespace questless
 
 		DigraphMenuController _mnu_main;
 
-		std::deque<std::unique_ptr<Dialog>> _dialogs;
+		std::unique_ptr<PlayerActionDialog> _player_action_dialog;
+		std::deque<Dialog::ptr> _dialogs;
 
 		std::unique_ptr<HUDController> _hud;
 

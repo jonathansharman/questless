@@ -140,12 +140,12 @@ namespace sdl
 		}
 	}
 
-	unsigned Input::presses(SDL_Keycode key) const
+	int Input::presses(SDL_Keycode key) const
 	{
 		return _presses.count(key);
 	}
 
-	unsigned Input::releases(SDL_Keycode key) const
+	int Input::releases(SDL_Keycode key) const
 	{
 		return _releases.count(key);
 	}
@@ -160,7 +160,7 @@ namespace sdl
 		return _curr_keyboard_state[SDL_GetScancodeFromKey(key)] == 1;
 	}
 
-	unsigned Input::any_presses(bool include_mouse_buttons) const
+	int Input::any_presses(bool include_mouse_buttons) const
 	{
 		/// @todo This is returning a bool...
 
@@ -170,7 +170,7 @@ namespace sdl
 		return !_press_buffer.empty();
 	}
 
-	unsigned Input::any_releases(bool include_mouse_buttons) const
+	int Input::any_releases(bool include_mouse_buttons) const
 	{
 		/// @todo This is also returning a bool...
 

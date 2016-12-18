@@ -76,13 +76,13 @@ namespace sdl
 
 		// Keyboard state accessors
 
-		unsigned presses(SDL_Keycode key) const;
-		unsigned releases(SDL_Keycode key) const;
+		int presses(SDL_Keycode key) const;
+		int releases(SDL_Keycode key) const;
 		bool up(SDL_Keycode key) const;
 		bool down(SDL_Keycode key) const;
 
-		unsigned any_presses(bool include_mouse_buttons = true) const;
-		unsigned any_releases(bool include_mouse_buttons = true) const;
+		int any_presses(bool include_mouse_buttons = true) const;
+		int any_releases(bool include_mouse_buttons = true) const;
 		bool any_down(bool include_mouse_buttons = true) const;
 		bool any_up(bool include_mouse_buttons = true) const;
 
@@ -141,8 +141,8 @@ namespace sdl
 		std::vector<SDL_Keycode> _press_buffer;
 		std::vector<SDL_Keycode> _release_buffer;
 
-		std::map<SDL_Keycode, unsigned> _presses;
-		std::map<SDL_Keycode, unsigned> _releases;
+		std::map<SDL_Keycode, int> _presses;
+		std::map<SDL_Keycode, int> _releases;
 		
 		int _x_mouse;
 		int _y_mouse;

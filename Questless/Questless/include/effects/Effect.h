@@ -61,14 +61,14 @@ namespace questless
 
 		/// @param origin The coordinates of the effect's origin.
 		/// @param damage The damage dealt.
-		InjuryEffect(RegionTileCoords origin, const Damage& damage)
+		InjuryEffect(RegionTileCoords origin, Damage damage)
 			: Effect{origin}
 			, _damage{damage}
 		{}
 
 		/// @param origin The coordinates of the effect's origin.
 		/// @param damage The damage dealt.
-		static ptr make(RegionTileCoords origin, const Damage& damage) { return std::make_shared<InjuryEffect>(origin, damage); }
+		static ptr make(RegionTileCoords origin, Damage damage) { return std::make_shared<InjuryEffect>(origin, damage); }
 
 		virtual void accept(EffectVisitor& visitor) const override { visitor.visit(*this); }
 
@@ -76,7 +76,7 @@ namespace questless
 
 		const Damage& damage() const { return _damage; }
 	private:
-		const Damage& _damage;
+		Damage _damage;
 	};
 }
 

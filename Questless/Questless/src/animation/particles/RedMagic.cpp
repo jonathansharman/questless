@@ -14,7 +14,7 @@ using namespace sdl;
 
 namespace questless
 {
-	Texture& RedMagic::texture() const
+	const Texture& RedMagic::texture() const
 	{
 		static bool first_call = true;
 		static Handle<Texture> handle;

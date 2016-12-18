@@ -19,15 +19,16 @@ namespace questless
 			return _cont(boost::none);
 		}
 
-		_magnitude += 10.0 * input.presses(SDLK_UP);
-		_magnitude -= 10.0 * input.presses(SDLK_DOWN);
+		double previous_magnitude = _magnitude;
+		_magnitude += 10.0 * (input.presses(SDLK_UP) - input.presses(SDLK_DOWN) + input.scroll());
+		if (!_predicate(_magnitude)) {
+			_magnitude = previous_magnitude;
+		}
 		_magnitude = (_min && _magnitude < _min.value()) ? _min.value() : _magnitude;
 		_magnitude = (_max && _magnitude > _max.value()) ? _max.value() : _magnitude;
 
 		if (input.pressed(MouseButton::left) || input.presses(SDLK_RETURN)) {
-			if (_predicate(_magnitude)) {
-				return _cont(_magnitude);
-			}
+			return _cont(_magnitude);
 		}
 		return false;
 	}

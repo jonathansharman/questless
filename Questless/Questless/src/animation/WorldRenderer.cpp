@@ -10,13 +10,14 @@
 #include "Game.h"
 #include "animation/WorldRenderer.h"
 #include "animation/EntityAnimator.h"
+#include "animation/TileTexturer.h"
+#include "animation/particles/YellowMagic.h"
+#include "animation/particles/Blood.h"
+#include "animation/particles/TextParticle.h"
 #include "world/Region.h"
 #include "sdl-wrappers/Renderable.h"
 #include "sdl-wrappers/Sound.h"
-#include "animation/TileTexturer.h"
 #include "utility/utility.h"
-#include "animation/particles/YellowMagic.h"
-#include "animation/particles/Blood.h"
 
 using namespace sdl;
 
@@ -215,17 +216,42 @@ namespace questless
 
 	void WorldRenderer::visit(const LightningBoltEffect& e)
 	{
+		PointF position = Layout::dflt().to_world(e.origin());
 		for (int i = 0; i < 15; ++i) {
-			_particles.emplace_back(YellowMagic::make(Layout::dflt().to_world(e.origin())));
+			_particles.emplace_back(YellowMagic::make(position));
 		}
 		sound_manager()[_lightning_bolt_sound_handle].play();
 	}
 
 	void WorldRenderer::visit(const InjuryEffect& e)
 	{
-		for (int i = 0; i < 20; ++i) {
-			_particles.emplace_back(Blood::make(Layout::dflt().to_world(e.origin())));
+		PointF position = Layout::dflt().to_world(e.origin());
+
+		const Damage& d = e.damage();
+		if (d.slash > 0.0 || d.pierce > 0.0 || d.bludgeon > 0.0) {
+			for (int i = 0; i < 20; ++i) {
+				_particles.emplace_back(Blood::make(position));
+			}
 		}
-		sound_manager()[_hit_sound_handle].play();
+
+		if (d.slash > 0.0) {
+			_particles.emplace_back(TextParticle::make(position, std::to_string(lround(e.damage().slash)), Color::white()));
+		}
+		if (d.pierce > 0.0) {
+			_particles.emplace_back(TextParticle::make(position, std::to_string(lround(e.damage().pierce)), Color::white()));
+		}
+		if (d.bludgeon > 0.0) {
+			_particles.emplace_back(TextParticle::make(position, std::to_string(lround(e.damage().bludgeon)), Color::white()));
+			sound_manager()[_hit_sound_handle].play();
+		}
+		if (d.burn > 0.0) {
+			_particles.emplace_back(TextParticle::make(position, std::to_string(lround(e.damage().burn)), Color::orange()));
+		}
+		if (d.freeze > 0.0) {
+			_particles.emplace_back(TextParticle::make(position, std::to_string(lround(e.damage().freeze)), Color::cyan()));
+		}
+		if (d.blight > 0.0) {
+			_particles.emplace_back(TextParticle::make(position, std::to_string(lround(e.damage().blight)), Color::black()));
+		}
 	}
 }

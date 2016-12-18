@@ -19,7 +19,7 @@ namespace questless
 		_velocity.step().x *= 1.0 - _vx_percent_drag_rate * frame_duration;
 	}
 
-	Texture& WhiteMagic::texture() const
+	const Texture& WhiteMagic::texture() const
 	{
 		static bool first_call = true;
 		static Handle<Texture> handle;

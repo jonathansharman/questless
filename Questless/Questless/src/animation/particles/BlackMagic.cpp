@@ -20,7 +20,7 @@ namespace questless
 		_velocity.step().rotate(AngleRadians{_turn_rate * frame_duration});
 	}
 
-	Texture& BlackMagic::texture() const
+	const Texture& BlackMagic::texture() const
 	{
 		static bool first_call = true;
 		static Handle<Texture> handle;

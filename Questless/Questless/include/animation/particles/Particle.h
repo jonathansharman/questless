@@ -78,7 +78,7 @@ namespace questless
 		seconds_f _time_left;
 
 		/// @return The texture to be used when drawing a particle.
-		virtual sdl::Texture& texture() const = 0;
+		virtual const sdl::Texture& texture() const = 0;
 	private:
 		static constexpr double _dflt_max_displacement = 15.0;
 

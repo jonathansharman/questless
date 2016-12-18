@@ -199,6 +199,7 @@
     <ClInclude Include="include\animation\particles\GreenMagic.h" />
     <ClInclude Include="include\animation\particles\Particle.h" />
     <ClInclude Include="include\animation\particles\RedMagic.h" />
+    <ClInclude Include="include\animation\particles\TextParticle.h" />
     <ClInclude Include="include\animation\particles\WhiteMagic.h" />
     <ClInclude Include="include\animation\particles\YellowMagic.h" />
     <ClInclude Include="include\animation\TileTexturer.h" />
@@ -314,6 +315,7 @@
     <ClCompile Include="src\animation\particles\GreenMagic.cpp" />
     <ClCompile Include="src\animation\particles\Particle.cpp" />
     <ClCompile Include="src\animation\particles\RedMagic.cpp" />
+    <ClCompile Include="src\animation\particles\TextParticle.cpp" />
     <ClCompile Include="src\animation\particles\WhiteMagic.cpp" />
     <ClCompile Include="src\animation\particles\YellowMagic.cpp" />
     <ClCompile Include="src\animation\TileTexturer.cpp" />

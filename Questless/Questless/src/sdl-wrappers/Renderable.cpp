@@ -11,7 +11,7 @@
 
 namespace sdl
 {
-	std::set<Renderable*> Renderable::_registry;
+	std::unordered_set<Renderable*> Renderable::_registry;
 
 	void Renderable::refresh_all()
 	{

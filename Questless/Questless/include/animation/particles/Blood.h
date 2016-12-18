@@ -21,8 +21,8 @@ namespace questless
 		/// @param position The particle's starting position.
 		Blood(PointF position) : Particle
 			{ position
-			, Velocity{random_displacement(_vi_max) + VectorF{0.0, _vyi_adjustment}}
-			, _gravity
+			, (random_displacement(_vi_max) + VectorF{0.0, _vyi_adjustment}) / 1.0s
+			, VectorF{0.0, 600.0} / 1.0s / 1.0s
 			, random_angle()
 			, AngularVelocity{AngleRadians{0.0}}
 			, Scale{0.5}
@@ -38,7 +38,6 @@ namespace questless
 	private:
 		static constexpr double _vyi_adjustment = -150.0;
 		static constexpr double _vi_max = 160.0;
-		static constexpr Acceleration _gravity{Velocity{VectorF{0.0, 600.0}}};
 		static constexpr double _lifetime_min = 0.25;
 		static constexpr double _lifetime_max = 0.75;
 
@@ -48,7 +47,7 @@ namespace questless
 
 		void subupdate() override {}
 
-		sdl::Texture& texture() const override;
+		const sdl::Texture& texture() const override;
 	};
 }
 

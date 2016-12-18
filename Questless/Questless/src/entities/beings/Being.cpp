@@ -272,6 +272,9 @@ namespace questless
 					lose_health(health_lost);
 				}
 
+				// Add injury effect.
+				game().add_effect(InjuryEffect::make(coords(), damage));
+
 				// Target has taken damage.
 				if (after_take_damage(damage, part, opt_source_id)) {
 					// Source, if present, has dealt damage.

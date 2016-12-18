@@ -158,8 +158,7 @@ namespace questless
 
 	void Game::query_player_choice(function<void(PlayerActionDialog::Choice)> cont)
 	{
-		auto dialog = make_unique<PlayerActionDialog>(*_hud, move(cont));
-		_dialogs.push_back(move(dialog));
+		_player_action_dialog = make_unique<PlayerActionDialog>(*_hud, move(cont));
 	}
 
 	void Game::add_effect(const Effect::ptr& effect)
@@ -418,7 +417,7 @@ namespace questless
 
 		_ani_test->draw(Point(0, 0));
 
-		static Point pt_clicked_rounded; /// @todo Ewww...
+		static sdl::Point pt_clicked_rounded; /// @todo Ewww...
 		if (_input.pressed(MouseButton::right)) {
 			pt_clicked_rounded = _camera->pt_hovered_rounded();
 		}
@@ -475,6 +474,10 @@ namespace questless
 					// End of player's turn.
 				}
 			}
+		} else if (_player_action_dialog) {
+			if (_player_action_dialog->update(_input)) {
+				_player_action_dialog = nullptr;
+			}
 		} else {
 			// Take turns.
 
@@ -482,13 +485,13 @@ namespace questless
 			while (Being* next_ready_being = _region->next_ready_being()) {
 				next_ready_being->act();
 
-				if (!_dialogs.empty()) {
+				if (_player_action_dialog || !_dialogs.empty()) {
 					// Awaiting player input to complete current action. Stop taking turns, and start at the next agent once this action is complete.
 					update_player_view();
 					break;
 				}
 			}
-			if (_dialogs.empty()) {
+			if (!_player_action_dialog && _dialogs.empty()) {
 				// Advance the time.
 				_time += 1.0;
 				// Update the region.
@@ -501,37 +504,38 @@ namespace questless
 
 		_ani_test->update();
 
-		// Pan camera.
-		if (_input.down(MouseButton::middle)) {
-			VectorF pan = VectorF{_input.last_mouse_position() - _input.mouse_position()} / _camera->zoom();
-			pan.rotate(_camera->angle());
-			_camera->pan(pan);
-		}
-		const double pan_amount = 10.0;
-		if (_input.down(SDLK_KP_8)) {
-			_camera->pan(VectorF{0.0, -pan_amount} / _camera->zoom());
-		}
-		if (_input.down(SDLK_KP_4)) {
-			_camera->pan(VectorF{-pan_amount, 0.0} / _camera->zoom());
-		}
-		if (_input.down(SDLK_KP_2)) {
-			_camera->pan(VectorF{0.0, pan_amount} / _camera->zoom());
-		}
-		if (_input.down(SDLK_KP_6)) {
-			_camera->pan(VectorF{pan_amount, 0.0} / _camera->zoom());
-		}
+		// Disable camera controls during dialogs (except player action dialog).
+		if (_dialogs.empty()) {
+			// Pan camera.
+			if (_input.down(MouseButton::middle)) {
+				VectorF pan = VectorF{_input.last_mouse_position() - _input.mouse_position()} / _camera->zoom();
+				pan.rotate(_camera->angle());
+				_camera->pan(pan);
+			}
+			const double pan_amount = 10.0;
+			if (_input.down(SDLK_KP_8)) {
+				_camera->pan(VectorF{0.0, -pan_amount} / _camera->zoom());
+			}
+			if (_input.down(SDLK_KP_4)) {
+				_camera->pan(VectorF{-pan_amount, 0.0} / _camera->zoom());
+			}
+			if (_input.down(SDLK_KP_2)) {
+				_camera->pan(VectorF{0.0, pan_amount} / _camera->zoom());
+			}
+			if (_input.down(SDLK_KP_6)) {
+				_camera->pan(VectorF{pan_amount, 0.0} / _camera->zoom());
+			}
 
-		// Scale camera.
-		_camera->zoom_factor(1 + _input.scroll() / 10.0f);
+			// Scale camera.
+			_camera->zoom_factor(1 + _input.scroll() / 10.0f);
 
-		// Rotate camera.
-		double angle = _camera->angle();
-		if (_input.down(SDLK_KP_9)) {
-			_camera->rotate(AngleRadians{(-tau / 6.0 - angle) / 20.0});
-		} else if (_input.down(SDLK_KP_7)) {
-			_camera->rotate(AngleRadians{(tau / 6.0 - angle) / 20.0});
-		} else {
-			//_camera->angle(angle / 1.1);
+			// Rotate camera.
+			double angle = _camera->angle();
+			if (_input.down(SDLK_KP_9)) {
+				_camera->rotate(AngleRadians{(-tau / 6.0 - angle) / 20.0});
+			} else if (_input.down(SDLK_KP_7)) {
+				_camera->rotate(AngleRadians{(tau / 6.0 - angle) / 20.0});
+			}
 		}
 
 		// Camera follow.

@@ -571,6 +571,9 @@
     <ClInclude Include="include\utility\Frequency.h">
       <Filter>include\utility</Filter>
     </ClInclude>
+    <ClInclude Include="include\animation\particles\TextParticle.h">
+      <Filter>include\animation\particles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp" />
@@ -774,6 +777,9 @@
       <Filter>src\spell</Filter>
     </ClCompile>
     <ClCompile Include="src\animation\particles\Blood.cpp">
+      <Filter>src\animation\particles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\particles\TextParticle.cpp">
       <Filter>src\animation\particles</Filter>
     </ClCompile>
   </ItemGroup>

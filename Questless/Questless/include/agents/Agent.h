@@ -86,6 +86,8 @@ namespace questless
 			, std::function<Action::Complete(boost::optional<double>)> cont
 			) const = 0;
 
+		/// @todo Add overload with min/max.
+
 		virtual Action::Complete query_tile
 			( const std::string& title
 			, const std::string& prompt
