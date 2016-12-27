@@ -15,7 +15,7 @@
 #include <functional>
 
 #include "../Dialog.h"
-#include "utility/PointF.h"
+#include "utility/Point.h"
 #include "utility/units/vectors.h"
 #include "utility/Initializer.h"
 #include "animation/Camera.h"
@@ -26,9 +26,9 @@ namespace questless::qte
 	{
 	public:
 		/// @param camera The game camera.
-		/// @param target The target strike point, in game coordinates.
+		/// @param target The target strike game point.
 		/// @param cont The dialog continuation function.
-		LightningBolt(const Camera& camera, PointF target, std::function<void(double)> cont);
+		LightningBolt(const Camera& camera, GamePoint target, std::function<void(double)> cont);
 
 		bool update(sdl::Input& input) override;
 
@@ -40,7 +40,7 @@ namespace questless::qte
 
 		struct Charge
 		{
-			PointF position;
+			GamePoint position;
 			Velocity velocity;
 		};
 
@@ -51,7 +51,7 @@ namespace questless::qte
 		static sdl::Handle<sdl::Texture> LightningBolt::_point_charge_texture_handle;
 
 		const Camera& _camera;
-		PointF _target;
+		GamePoint _target;
 		Continuation<double> _cont;
 
 		seconds_f _elapsed_time = 0.0s;

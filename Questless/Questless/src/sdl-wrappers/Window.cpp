@@ -105,11 +105,11 @@ namespace sdl
 		return (flags() & SDL_WINDOW_RESIZABLE) != 0;
 	}
 
-	Point Window::position() const
+	ScreenPoint Window::position() const
 	{
-		int x, y;
-		SDL_GetWindowPosition(_sdl_window, &x, &y);
-		return Point{x, y};
+		ScreenPoint p;
+		SDL_GetWindowPosition(_sdl_window, &p.x, &p.y);
+		return p;
 	}
 	int Window::x() const
 	{
@@ -124,9 +124,9 @@ namespace sdl
 		return y;
 	}
 
-	Point Window::resolution() const
+	ScreenVector Window::resolution() const
 	{
-		return Point{width(), height()};
+		return ScreenVector{width(), height()};
 	}
 	int Window::width() const
 	{
@@ -150,8 +150,8 @@ namespace sdl
 			return height;
 		}
 	}
-	Point Window::center() const
+	ScreenPoint Window::center() const
 	{
-		return Point{width() / 2, height() / 2};
+		return ScreenPoint{width() / 2, height() / 2};
 	}
 }

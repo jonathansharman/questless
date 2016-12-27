@@ -25,10 +25,10 @@ namespace questless::qte
 		});
 	}
 
-	LightningBolt::LightningBolt(const Camera& camera, PointF target, std::function<void(double)> cont)
+	LightningBolt::LightningBolt(const Camera& camera, GamePoint target, std::function<void(double)> cont)
 		: _camera{camera}
 		, _target{target}
-		, _cont { std::move(cont) }
+		, _cont{std::move(cont)}
 	{
 		load_textures();
 	}
@@ -43,29 +43,28 @@ namespace questless::qte
 		// Acclerate only when the mouse moves to the next quadrant over.
 		bool accelerate = false;
 		{
-			double x = _camera.pt_hovered().x - _target.x;
-			double y = _camera.pt_hovered().y - _target.y;
+			GameVector v = _camera.point_hovered() - _target;
 			switch (_quadrant) {
 			case 0:
-				if (x < y && x > -y) {
+				if (v.x < v.y && v.x > -v.y) {
 					_quadrant = 1;
 					accelerate = true;
 				}
 				break;
 			case 1:
-				if (x > y && x > -y) {
+				if (v.x > v.y && v.x > -v.y) {
 					_quadrant = 2;
 					accelerate = true;
 				}
 				break;
 			case 2:
-				if (x > y && x < -y) {
+				if (v.x > v.y && v.x < -v.y) {
 					_quadrant = 3;
 					accelerate = true;
 				}
 				break;
 			case 3:
-				if (x < y && x < -y) {
+				if (v.x < v.y && v.x < -v.y) {
 					_quadrant = 0;
 					accelerate = true;
 				}
@@ -76,18 +75,18 @@ namespace questless::qte
 			for (int i = 0; i < _charges_per_quadrant; ++i) {
 				_charges.push_back(Charge
 					{ _target + random_displacement(100.0)
-					, Velocity{VectorF{random_angle(), Length{100.0}}}
+					, Velocity{GameVector{random_angle(), 100.0}}
 					});
 			}
 		}
 
 		for (auto& point_charge : _charges) {
-			VectorF r = _target - point_charge.position; // displacement to target
+			GameVector r = _target - point_charge.position; // displacement to target
 			double d = r.length(); // distance to target
 
 			if (accelerate) {
 				// Accelerate counter-clockwise from the target.
-				point_charge.velocity.step() += 7'000.0 * VectorF{-r.y, r.x} / square(d);
+				point_charge.velocity.step() += 7'000.0 * GameVector{-r.y, r.x} / square(d);
 			}
 
 			// Apply drag.
@@ -110,11 +109,11 @@ namespace questless::qte
 		int x_center = window.center().x;
 
 		// Draw point charges.
-		for (auto&& point_charge : _charges) {
+		for (const auto& point_charge : _charges) {
 			double intensity = uniform(0.0, 1.0);
 			_camera.draw
 				( texture_manager()[_point_charge_texture_handle]
-				, point_charge.position.to_point()
+				, point_charge.position
 				, Origin{boost::none}
 				, Color{255, 255, percentage_to_byte(intensity)}
 				, HScale{(1.0 + intensity) / 2}
@@ -124,8 +123,8 @@ namespace questless::qte
 		}
 
 		// Draw the prompt.
-		renderer().draw_rect(Rect{x_center - _txt_prompt->width() / 2, _prompt_top, _txt_prompt->width(), _txt_prompt->height()}, Color::black(128), true);
-		_txt_prompt->draw(Point{x_center, _prompt_top}, HAlign::center);
+		renderer().draw_rect(ScreenRect{x_center - _txt_prompt->width() / 2, _prompt_top, _txt_prompt->width(), _txt_prompt->height()}, Color::black(128), true);
+		_txt_prompt->draw(ScreenPoint{x_center, _prompt_top}, HAlign::center);
 	}
 
 	void LightningBolt::load_textures()

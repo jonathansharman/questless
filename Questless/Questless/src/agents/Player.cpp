@@ -144,12 +144,13 @@ namespace questless
 	Action::Complete Player::query_tile
 		( const std::string& title
 		, const std::string& prompt
+		, boost::optional<RegionTileCoords> origin
 		, function<bool(RegionTileCoords)> predicate
 		, function<Action::Complete(boost::optional<RegionTileCoords>)> cont
 		) const
 	{
 		Game& game = being().game();
-		auto dialog = std::make_unique<TileDialog>(move(title), move(prompt), game.camera(), move(predicate), std::move(cont));
+		auto dialog = std::make_unique<TileDialog>(move(title), move(prompt), game.camera(), std::move(origin), move(predicate), std::move(cont));
 		return game.add_dialog(move(dialog));
 	}
 
@@ -186,7 +187,7 @@ namespace questless
 	}
 
 	Action::Complete Player::query_list
-		( sdl::Point origin
+		( ScreenPoint origin
 		, std::string title
 		, std::vector<std::string> options
 		, std::function<Action::Complete(boost::optional<int>)> cont
@@ -198,7 +199,7 @@ namespace questless
 
 	// Quick Time Events
 
-	Action::Complete Player::get_lightning_bolt_quality(PointF target, std::function<Action::Complete(double)> cont)
+	Action::Complete Player::get_lightning_bolt_quality(GamePoint target, std::function<Action::Complete(double)> cont)
 	{
 		auto dialog = std::make_unique<qte::LightningBolt>(being().game().camera(), target, move(cont));
 		return being().game().add_dialog(move(dialog));

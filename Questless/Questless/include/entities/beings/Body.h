@@ -68,12 +68,12 @@ namespace questless
 		const std::vector<Tail::ref>& tails() { return _tails; }
 
 		/// @return The bounding box around the body's parts.
-		sdl::Rect bounds() const { return _bounds; }
+		ScreenRect bounds() const { return _bounds; }
 
 		/// @return The offset from the upper left corner of the bounds to the body's center.
-		sdl::Vector offset_to_center() const { return _offset_to_center; }
+		ScreenVector offset_to_center() const { return _offset_to_center; }
 	private:
-		using transform_t = const BodyPart::ref(*)(BodyPart::ref);
+		using transform_t = const BodyPart::ref (*)(BodyPart::ref);
 
 		class PartAttacher : public BodyPartVisitor
 		{
@@ -97,8 +97,8 @@ namespace questless
 
 		std::unique_ptr<BodyPart> _root;
 
-		sdl::Rect _bounds;
-		sdl::Vector _offset_to_center;
+		ScreenRect _bounds;
+		ScreenVector _offset_to_center;
 
 		std::vector<BodyPart::ref> _parts;
 

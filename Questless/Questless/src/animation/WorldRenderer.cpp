@@ -79,7 +79,7 @@ namespace questless
 			_terrain_render_is_current = true;
 		}
 		if (_terrain_texture) {
-			camera.draw(*_terrain_texture, _terrain_bounds.position(), Origin{Point{0, 0}});
+			camera.draw(*_terrain_texture, GamePoint{_terrain_bounds.position()}, Origin{GamePoint{0, 0}});
 		}
 	}
 
@@ -95,7 +95,7 @@ namespace questless
 					? *it->second
 					: cache_being_animation(*being);
 
-				being_animation.draw(Layout::dflt().to_world(being->coords()).to_point(), camera);
+				being_animation.draw(Layout::dflt().to_world(being->coords()), camera);
 			} else {
 				// Remove the being from the animation cache if it doesn't exist anymore.
 				_being_animations.erase(being_view.id);
@@ -115,7 +115,7 @@ namespace questless
 					? *it->second
 					: cache_object_animation(*object);
 
-				being_animation.draw(Layout::dflt().to_world(object->coords()).to_point(), camera);
+				being_animation.draw(Layout::dflt().to_world(object->coords()), camera);
 			} else {
 				// Remove the object from the animation cache if it doesn't exist anymore.
 				_object_animations.erase(object_view.id);
@@ -162,7 +162,7 @@ namespace questless
 
 	void WorldRenderer::render_terrain()
 	{
-		boost::optional<Rect> opt_bounds = _world_view->bounds();
+		boost::optional<GameRect> opt_bounds = _world_view->bounds();
 		if (!opt_bounds) {
 			_terrain_texture = nullptr;
 			return;
@@ -172,8 +172,8 @@ namespace questless
 		_terrain_texture = std::make_unique<Texture>
 			( sdl::renderer()
 			, SDL_BLENDMODE_BLEND
-			, _terrain_bounds.w
-			, _terrain_bounds.h
+			, lround(_terrain_bounds.w)
+			, lround(_terrain_bounds.h)
 			, true
 			);
 		_terrain_texture->as_target([&] {
@@ -188,9 +188,15 @@ namespace questless
 							SectionTileIndex tile_index = Section::tile_index(section_tile_coords);
 							double tile_visibility = section_view.tile_visibilities[tile_index.i][tile_index.j];
 							if (tile_visibility > 0) {
-								RegionTileCoords region_tile_coords = section.region_tile_coords(section_tile_coords);
-								Point coords_in_world = Layout::dflt().to_world(region_tile_coords).to_point();
-								uint8_t luminance = static_cast<uint8_t>(255 * std::min(tile_visibility / 100.0, 1.0));
+								const RegionTileCoords region_tile_coords = section.region_tile_coords(section_tile_coords);
+								const GamePoint tile_game_point = Layout::dflt().to_world(region_tile_coords);
+								const GamePoint terrain_game_point = _terrain_bounds.position();
+								const ScreenPoint tile_screen_point
+									{ lround(tile_game_point.x - terrain_game_point.x)
+									, lround(terrain_game_point.y - tile_game_point.y + _terrain_bounds.h - 1)
+									};
+
+								const uint8_t luminance = static_cast<uint8_t>(255 * std::min(tile_visibility / 100.0, 1.0));
 
 								// Get the current tile.
 								const Tile& tile = section.tile(section_tile_coords);
@@ -200,7 +206,7 @@ namespace questless
 								Texture& tile_texture = it != _tile_textures.end() ? *it->second : cache_tile_texture(tile);
 
 								tile_texture.draw_transformed
-									( coords_in_world - Vector::to(_terrain_bounds.position())
+									( tile_screen_point
 									, boost::none // origin
 									, Color{luminance, luminance, luminance}
 									);
@@ -216,7 +222,7 @@ namespace questless
 
 	void WorldRenderer::visit(const LightningBoltEffect& e)
 	{
-		PointF position = Layout::dflt().to_world(e.origin());
+		GamePoint position = Layout::dflt().to_world(e.origin());
 		for (int i = 0; i < 15; ++i) {
 			_particles.emplace_back(YellowMagic::make(position));
 		}
@@ -225,7 +231,7 @@ namespace questless
 
 	void WorldRenderer::visit(const InjuryEffect& e)
 	{
-		PointF position = Layout::dflt().to_world(e.origin());
+		GamePoint position = Layout::dflt().to_world(e.origin());
 
 		const Damage& d = e.damage();
 		if (d.slash > 0.0 || d.pierce > 0.0 || d.bludgeon > 0.0) {

@@ -19,9 +19,9 @@ namespace questless
 	{
 	public:
 		/// @param position The particle's starting position.
-		BlueMagic(PointF position) : Particle
+		BlueMagic(GamePoint position) : Particle
 			{ position
-			, VectorF{AngleRadians{tau / 6.0 * uniform(0, 6)}, Length{45.0}} / 1.0s
+			, GameVector{AngleRadians{tau / 6.0 * uniform(0, 6)}, 45.0} / 1.0s
 			, Acceleration::zero()
 			, random_angle()
 			, AngularVelocity{uniform(-_dtheta_max, _dtheta_max)}
@@ -32,7 +32,7 @@ namespace questless
 		{}
 
 		/// @param position The particle's starting position.
-		static ptr make(PointF position) { return std::make_unique<BlueMagic>(position); }
+		static ptr make(GamePoint position) { return std::make_unique<BlueMagic>(position); }
 	private:
 		static constexpr double _dtheta_max = 2.0 * tau;
 

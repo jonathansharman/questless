@@ -37,7 +37,6 @@
 #include "sdl-wrappers/Font.h"
 #include "sdl-wrappers/Sound.h"
 #include "sdl-wrappers/Input.h"
-#include "animation/AnimationCollection.h"
 #include "animation/Camera.h"
 #include "animation/WorldRenderer.h"
 #include "world/Region.h"
@@ -132,9 +131,9 @@ namespace questless
 		// Constants //
 		///////////////
 
-		const seconds_f splash_fade_out_duration{2.0};
-		const seconds_f splash_fade_in_duration{2.0};
-		const seconds_f splash_duration = splash_fade_out_duration + splash_fade_in_duration;
+		static constexpr seconds_f splash_fade_out_duration = 2.0s;
+		static constexpr seconds_f splash_fade_in_duration = 2.0s;
+		static constexpr seconds_f splash_duration = splash_fade_out_duration + splash_fade_in_duration;
 
 		// Debug
 
@@ -143,21 +142,21 @@ namespace questless
 		// Display
 
 #if 1
-		const int dflt_window_width = 1024;
-		const int dflt_window_height = 768;
+		static constexpr int dflt_window_width = 1024;
+		static constexpr int dflt_window_height = 768;
 #else
-		const int dflt_window_width = 1920;
-		const int dflt_window_height = 1080;
+		static constexpr int dflt_window_width = 1920;
+		static constexpr int dflt_window_height = 1080;
 #endif
-		const sdl::Color splash_clear_color = sdl::Color::black();
-		const sdl::Color menu_clear_color = sdl::Color::blue();
-		const sdl::Color playing_clear_color = sdl::Color::blue();
+		static constexpr sdl::Color splash_clear_color = sdl::Color::black();
+		static constexpr sdl::Color menu_clear_color = sdl::Color::blue();
+		static constexpr sdl::Color playing_clear_color = sdl::Color::blue();
 
 		// Splash screen
 
-		const unsigned splash_flames_count = 20;
-		const Hertz splash_flames_speed = 2800.0_Hz;
-		const int splash_logo_jiggle = 3;
+		static constexpr unsigned splash_flames_count = 20;
+		static constexpr Rate<double, double> splash_flames_vy{-2800.0};
+		static constexpr int splash_logo_jiggle = 3;
 
 		//////////
 		// Data //
@@ -184,8 +183,6 @@ namespace questless
 		sdl::Texture::ptr _txt_hex_circle;
 
 		// Animations
-
-		std::unique_ptr<AnimationCollection> _ani_test;
 
 		std::unique_ptr<WorldRenderer> _world_renderer;
 
@@ -215,7 +212,7 @@ namespace questless
 		bool _game_over;
 
 		bool _splash_sound_played;
-		std::vector<sdl::Point> _splash_flame_positions;
+		std::vector<ScreenPoint> _splash_flame_positions;
 
 		std::unique_ptr<Region> _region;
 
@@ -231,6 +228,8 @@ namespace questless
 		std::deque<Dialog::ptr> _dialogs;
 
 		std::unique_ptr<HUDController> _hud;
+
+		GamePoint _point_clicked_rounded{0.0, 0.0};
 
 		/////////////
 		// Methods //

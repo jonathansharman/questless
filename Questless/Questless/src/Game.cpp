@@ -58,11 +58,11 @@ namespace questless
 
 		renderer(make_unique<Renderer>(*_window, _window->width(), _window->height()));
 
-		_camera = Camera::make(*_window, PointF{0, 0});
+		_camera = Camera::make(*_window, GamePoint{0, 0});
 
 		/// @todo Make render quality a game setting.
 		//SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
+		//SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
 
 		if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
 			throw std::runtime_error("Failed to initialize IMG.");
@@ -89,9 +89,6 @@ namespace questless
 		// Load textures and graphics.
 
 		load_textures();
-
-		Handle<Texture> test_ss_handle = texture_manager().add([] { return Texture::make("resources/textures/test-animation.png", renderer(), SDL_BLENDMODE_BLEND); });
-		_ani_test = make_unique<AnimationCollection>(test_ss_handle, 3, 1);
 
 		// Load sounds.
 
@@ -287,7 +284,7 @@ namespace questless
 			oss_fps.precision(2);
 			oss_fps << fps_buffer_sum / _fps_buffer.size();
 			Texture txt_fps = _fnt_20pt->render(oss_fps.str(), renderer(), Color::white());
-			txt_fps.draw(Point(_window->width() - 1, _window->height() - 1), HAlign::right, VAlign::bottom);
+			txt_fps.draw(ScreenPoint(_window->width() - 1, _window->height() - 1), HAlign::right, VAlign::bottom);
 
 			// Present rendering.
 
@@ -302,8 +299,8 @@ namespace questless
 			_sfx_splash->play();
 		}
 
-		for (Point& position : _splash_flame_positions) {
-			position.y -= lround(splash_flames_speed * frame_duration);
+		for (ScreenPoint& position : _splash_flame_positions) {
+			position.y += lround(splash_flames_vy * frame_duration);
 			if (position.y < 0) {
 				position.y += _window->height() + _txt_splash_flame->height();
 				position.x = uniform(0, _window->width() - 1);
@@ -331,13 +328,6 @@ namespace questless
 			_mnu_main.add_option("Settings", "Save", "Questless");
 			_mnu_main.add_option("Settings", "Cancel", "Questless");
 
-			std::vector<Animation::Frame> frames;
-			frames.emplace_back(seconds_f{1.0}, Point{0, 0}, Point{0, 0});
-			frames.emplace_back(seconds_f{1.0}, Point{1, 0}, Point{0, 0});
-			frames.emplace_back(seconds_f{1.0}, Point{2, 0}, Point{0, 0});
-			_ani_test->add("", Animation::make(frames, true));
-			_ani_test->start("");
-
 			_time_last_state_change = clock::now();
 			_state = State::menu;
 		}
@@ -356,8 +346,11 @@ namespace questless
 			_txt_splash_logo->color(Color{intensity, intensity, intensity});
 			_txt_splash_flame->color(Color{intensity, intensity, intensity});
 		}
-		_txt_splash_logo->draw(_window->center() + Vector{uniform(-splash_logo_jiggle, splash_logo_jiggle), uniform(-splash_logo_jiggle, splash_logo_jiggle)}, HAlign::center, VAlign::middle);
-		for (Point position : _splash_flame_positions) {
+
+		ScreenPoint logo_position = _window->center() + ScreenVector{uniform(-splash_logo_jiggle, splash_logo_jiggle), uniform(-splash_logo_jiggle, splash_logo_jiggle)};
+		_txt_splash_logo->draw(logo_position, HAlign::center, VAlign::middle);
+
+		for (ScreenPoint position : _splash_flame_positions) {
 			_txt_splash_flame->draw(position, HAlign::center, VAlign::bottom);
 		}
 	}
@@ -388,7 +381,7 @@ namespace questless
 					// Initialize the world renderer.
 					_world_renderer = make_unique<WorldRenderer>(_player->world_view());
 					// Set the camera position relative to the player's being.
-					_camera->position(PointF{Layout::dflt().to_world(being(_player_being_id)->coords())});
+					_camera->position(GamePoint{Layout::dflt().to_world(being(_player_being_id)->coords())});
 
 					_time_last_state_change = clock::now();
 					_state = State::playing;
@@ -407,22 +400,21 @@ namespace questless
 
 	void Game::render_playing()
 	{
-		const int width = 20;
-		const int count = 18;
-		for (int i = 0; i < count; ++i) {
-			renderer().draw_rect(Rect(_window->center().x - width * i, _window->center().y - width * i, 2 * width * i, 2 * width * i), Color::white(), false);
-		}
+		//{
+		//	constexpr int width = 20;
+		//	constexpr int count = 18;
+		//	for (int i = 0; i < count; ++i) {
+		//		renderer().draw_rect(ScreenRect{_window->center().x - width * i, _window->center().y - width * i, 2 * width * i, 2 * width * i}, Color::white(), false);
+		//	}
+		//}
 
 		_world_renderer->draw_terrain(*_camera);
 
-		_ani_test->draw(Point(0, 0));
-
-		static sdl::Point pt_clicked_rounded; /// @todo Ewww...
 		if (_input.pressed(MouseButton::right)) {
-			pt_clicked_rounded = _camera->pt_hovered_rounded();
+			_point_clicked_rounded = Layout::dflt().to_world(_camera->tile_hovered());
 		}
-		_camera->draw(*_txt_hex_highlight, _camera->pt_hovered_rounded(), Origin{boost::none}, Color::white(128));
-		_camera->draw(*_txt_hex_circle, pt_clicked_rounded);
+		_camera->draw(*_txt_hex_highlight, Layout::dflt().to_world(_camera->tile_hovered()), Origin{boost::none}, Color::white(128));
+		_camera->draw(*_txt_hex_circle, _point_clicked_rounded);
 
 		_world_renderer->draw_objects(*this, *_camera);
 		_world_renderer->draw_beings(*this, *_camera);
@@ -436,25 +428,35 @@ namespace questless
 			dialog->draw(*_window);
 		}
 
-		ostringstream ss_cam_coords;
-		ss_cam_coords.setf(std::ios::fixed);
-		ss_cam_coords.precision(0);
-		ss_cam_coords << "(" << _camera->position().x << ", " << _camera->position().y << ")";
-		Texture txt_cam_coords = _fnt_20pt->render(ss_cam_coords.str(), renderer(), Color::white());
-		txt_cam_coords.draw(Point(0, 0));
+		{
+			ostringstream ss_cam_coords;
+			ss_cam_coords.setf(std::ios::fixed);
+			ss_cam_coords.precision(2);
+			ss_cam_coords << "Cam: ((" << _camera->position().x << ", " << _camera->position().y << "), ";
+			ss_cam_coords << _camera->angle() << ", " << _camera->zoom() << ")";
+			Texture txt_cam_coords = _fnt_20pt->render(ss_cam_coords.str(), renderer(), Color::white());
+			txt_cam_coords.draw(ScreenPoint{0, 0});
+		}
+		{
+			auto cam_hex_coords = Layout::dflt().to_hex_coords<RegionTileCoords>(_camera->position());
+			ostringstream ss_cam_hex_coords;
+			ss_cam_hex_coords << "Cam hex: (" << cam_hex_coords.q << ", " << cam_hex_coords.r << ")";
+			Texture txt_cam_hex_coords = _fnt_20pt->render(ss_cam_hex_coords.str(), renderer(), Color::white());
+			txt_cam_hex_coords.draw(ScreenPoint{0, 25});
+		}
+		{
+			ostringstream ss_time;
+			ss_time << "Time: " << _time;
+			Texture txt_turn = _fnt_20pt->render(ss_time.str(), renderer(), Color::white());
+			txt_turn.draw(ScreenPoint{0, 75});
+		}
 
-		ostringstream ss_cam_hex_coords;
-		ss_cam_hex_coords.setf(std::ios::fixed);
-		ss_cam_hex_coords.precision(0);
-		auto cam_hex_coords = Layout::dflt().to_hex_coords<RegionTileCoords>(_camera->position());
-		ss_cam_hex_coords << "(" << cam_hex_coords.q << ", " << cam_hex_coords.r << ")";
-		Texture txt_cam_hex_coords = _fnt_20pt->render(ss_cam_hex_coords.str(), renderer(), Color::white());
-		txt_cam_hex_coords.draw(Point(0, 25));
-
-		ostringstream ss_turn;
-		ss_turn << "Time: " << _time;
-		Texture txt_turn = _fnt_20pt->render(ss_turn.str(), renderer(), Color::white());
-		txt_turn.draw(Point(0, 50));
+		// Draw q- and r-axes.
+		RegionTileCoords origin{0, 0};
+		RegionTileCoords q_axis{5, 0};
+		RegionTileCoords r_axis{0, 5};
+		camera().draw_lines({Layout::dflt().to_world(origin), Layout::dflt().to_world(q_axis)}, Color::green());
+		camera().draw_lines({Layout::dflt().to_world(origin), Layout::dflt().to_world(r_axis)}, Color::red());
 	}
 
 	void Game::update_playing()
@@ -502,28 +504,27 @@ namespace questless
 		// Update world renderer.
 		_world_renderer->update();
 
-		_ani_test->update();
-
 		// Disable camera controls during dialogs (except player action dialog).
 		if (_dialogs.empty()) {
 			// Pan camera.
 			if (_input.down(MouseButton::middle)) {
-				VectorF pan = VectorF{_input.last_mouse_position() - _input.mouse_position()} / _camera->zoom();
+				ScreenVector mouse_shift = _input.last_mouse_position() - _input.mouse_position();
+				auto pan = GameVector{static_cast<double>(mouse_shift.x), static_cast<double>(mouse_shift.y)} / _camera->zoom();
 				pan.rotate(_camera->angle());
 				_camera->pan(pan);
 			}
 			const double pan_amount = 10.0;
 			if (_input.down(SDLK_KP_8)) {
-				_camera->pan(VectorF{0.0, -pan_amount} / _camera->zoom());
+				_camera->pan(GameVector{0.0, pan_amount} / _camera->zoom());
 			}
 			if (_input.down(SDLK_KP_4)) {
-				_camera->pan(VectorF{-pan_amount, 0.0} / _camera->zoom());
+				_camera->pan(GameVector{-pan_amount, 0.0} / _camera->zoom());
 			}
 			if (_input.down(SDLK_KP_2)) {
-				_camera->pan(VectorF{0.0, pan_amount} / _camera->zoom());
+				_camera->pan(GameVector{0.0, -pan_amount} / _camera->zoom());
 			}
 			if (_input.down(SDLK_KP_6)) {
-				_camera->pan(VectorF{pan_amount, 0.0} / _camera->zoom());
+				_camera->pan(GameVector{pan_amount, 0.0} / _camera->zoom());
 			}
 
 			// Scale camera.
@@ -547,7 +548,7 @@ namespace questless
 			if (Being* player = being(_player_being_id)) {
 				constexpr double acceleration = 0.2;
 
-				VectorF to_player = Layout::dflt().to_world(player->coords()) -_camera->position();
+				GameVector to_player = Layout::dflt().to_world(player->coords()) - _camera->position();
 				_camera->position(_camera->position() + acceleration * to_player);
 
 				double to_zoom_1 = 1.0 - _camera->zoom();

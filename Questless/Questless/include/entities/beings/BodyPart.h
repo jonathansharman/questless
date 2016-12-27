@@ -14,13 +14,13 @@
 #include <vector>
 #include <memory>
 
-#include "sdl-wrappers/basic-sdl-wrappers.h"
 #include "attributes/Attributes.h" /// @todo Probably remove this eventually. (BodyParts shouldn't need the full attributes struct.)
 #include "BodyPartVisitor.h"
 #include "Damage.h"
 #include "items/weapons/Weapon.h"
 #include "items/armor/Armor.h"
 #include "BeingId.h"
+#include "utility/Rect.h"
 
 namespace questless
 {
@@ -50,7 +50,7 @@ namespace questless
 			, Resistance resistance
 			, Vulnerability vulnerability
 			, bool vital
-			, std::vector<sdl::Rect> regions);
+			, std::vector<ScreenRect> regions);
 
 		virtual ~BodyPart() = 0 {}; /// @todo Change to default if actual pure virtuals are added to BodyPart later.
 
@@ -76,7 +76,7 @@ namespace questless
 			, Resistance resistance
 			, Vulnerability vulnerability
 			, bool vital
-			, std::vector<sdl::Rect> regions)
+			, std::vector<ScreenRect> regions)
 		{
 			return std::make_unique<Type>(owner, std::move(name), attributes, vitality, protection, resistance, vulnerability, vital, std::move(regions));
 		}
@@ -94,7 +94,7 @@ namespace questless
 		const std::vector<BodyPart::ptr>& children() const { return _children; }
 
 		/// @return The set of regions that this body part occupies.
-		const std::vector<sdl::Rect>& regions() const { return _regions; }
+		const std::vector<ScreenRect>& regions() const { return _regions; }
 
 		/// @return The body part's attributes, which are added to its owner's attributes.
 		const Attributes& attributes() const { return _attributes; }
@@ -135,7 +135,7 @@ namespace questless
 
 		std::string _name;
 		std::vector<BodyPart::ptr> _children;
-		std::vector<sdl::Rect> _regions;
+		std::vector<ScreenRect> _regions;
 
 		Attributes _attributes;
 

@@ -79,6 +79,7 @@ namespace questless
 		Action::Complete query_tile
 			( const std::string&
 			, const std::string&
+			, boost::optional<RegionTileCoords>
 			, std::function<bool(RegionTileCoords)>
 			, std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont
 			) const override
@@ -117,7 +118,7 @@ namespace questless
 		}
 
 		Action::Complete query_list
-			( sdl::Point
+			( ScreenPoint
 			, std::string
 			, std::vector<std::string>
 			, std::function<Action::Complete(boost::optional<int>)> cont

@@ -19,6 +19,7 @@
 #include "entities/beings/WorldView.h"
 #include "items/Item.h"
 #include "effects/Effect.h"
+#include "utility/Point.h" /// @todo This shouldn't be needed in the base class.
 
 namespace questless
 {
@@ -91,6 +92,7 @@ namespace questless
 		virtual Action::Complete query_tile
 			( const std::string& title
 			, const std::string& prompt
+			, boost::optional<RegionTileCoords> origin
 			, std::function<bool(RegionTileCoords)> predicate
 			, std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont
 			) const = 0;
@@ -117,7 +119,7 @@ namespace questless
 			) const = 0;
 
 		virtual Action::Complete query_list
-			( sdl::Point origin
+			( ScreenPoint origin /// @todo This should not be information required for all agents' query_list methods
 			, std::string title
 			, std::vector<std::string> options
 			, std::function<Action::Complete(boost::optional<int>)> cont
@@ -126,7 +128,7 @@ namespace questless
 		// Quick Time Events
 
 		/// @todo Documentation, implementation file.
-		virtual Action::Complete get_lightning_bolt_quality(PointF, std::function<Action::Complete(double)> cont) { return cont(1.0); }
+		virtual Action::Complete get_lightning_bolt_quality(GamePoint, std::function<Action::Complete(double)> cont) { return cont(1.0); } /// @todo This should not be passed a GamePoint. Maybe the target's location?
 	private:
 		Being& _being;
 	};

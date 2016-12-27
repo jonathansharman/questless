@@ -21,9 +21,9 @@ namespace questless
 	{
 	public:
 		/// @param position The particle's starting position.
-		YellowMagic(PointF position) : Particle
+		YellowMagic(GamePoint position) : Particle
 			{ position
-			, VectorF{random_angle(), LengthSquared{100.0}} / 1.0s
+			, GameVector{random_angle(), 100.0} / 1.0s
 			, Acceleration::zero()
 			, random_angle()
 			, AngularVelocity{0.0}
@@ -35,7 +35,7 @@ namespace questless
 		{}
 
 		/// @param position The particle's starting position.
-		static ptr make(PointF position) { return std::make_unique<YellowMagic>(position); }
+		static ptr make(GamePoint position) { return std::make_unique<YellowMagic>(position); }
 	private:
 		static constexpr double _turn_rate_min = -60.0;
 		static constexpr double _turn_rate_max = 60.0;

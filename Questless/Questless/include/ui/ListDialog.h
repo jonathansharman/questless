@@ -21,7 +21,7 @@ namespace questless
 	{
 	public:
 		ListDialog
-			( sdl::Point origin
+			( ScreenPoint origin
 			, std::string title
 			, std::vector<std::string> options
 			, std::function<void(boost::optional<int>)> cont
@@ -85,15 +85,15 @@ namespace questless
 			sdl::renderer().draw_rect(_bounds, sdl::Color::black(), sdl::Color{255, 200, 150});
 
 			// Draw highlight.
-			sdl::renderer().draw_rect(sdl::Rect{_bounds.x + _x_padding, _bounds.y + _y_padding + _title_height + _selection * _option_height, _bounds.w - 2 * _x_padding, _option_height}, sdl::Color::white(), true);
+			sdl::renderer().draw_rect(ScreenRect{_bounds.x + _x_padding, _bounds.y + _y_padding + _title_height + _selection * _option_height, _bounds.w - 2 * _x_padding, _option_height}, sdl::Color::white(), true);
 
 			// Draw title.
-			_txt_title->draw(sdl::Point{_bounds.x + _x_padding, _bounds.y + _y_padding});
+			_txt_title->draw(ScreenPoint{_bounds.x + _x_padding, _bounds.y + _y_padding});
 
 			// Draw options.
 			for (size_t i = 0; i < _options.size(); ++i) {
 				int y = _bounds.y + _y_padding + _title_height + static_cast<int>(i) * _option_height;
-				_txt_options[i]->draw(sdl::Point{_bounds.x + _x_padding, y});
+				_txt_options[i]->draw(ScreenPoint{_bounds.x + _x_padding, y});
 			}
 		}
 	private:
@@ -102,7 +102,7 @@ namespace questless
 		static constexpr int _x_padding = 10;
 		static constexpr int _y_padding = 10;
 
-		sdl::Rect _bounds;
+		ScreenRect _bounds;
 		std::string _title;
 		std::vector<std::string> _options;
 		Continuation<boost::optional<int>> _cont;

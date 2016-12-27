@@ -43,7 +43,7 @@ namespace questless
 			for (int q = -visual_range; q <= visual_range; ++q) {
 				RegionTileCoords offset{q, r};
 				if (offset.length() > visual_range) continue;
-				RegionSectionCoords section_coords = region.containing_section_coords({coords + offset});
+				RegionSectionCoords section_coords = region.containing_section_coords(coords + offset);
 				if (region.section_exists(section_coords)) {
 					section_coords_set.insert(section_coords);
 				}
@@ -57,20 +57,20 @@ namespace questless
 
 			for (int r = -section_radius; r <= section_radius; ++r) {
 				for (int q = -section_radius; q <= section_radius; ++q) {
-					auto tile_coords = Section::region_tile_coords(section_coords, {q, r});
+					auto region_tile_coords = Section::region_tile_coords(section_coords, SectionTileCoords{q, r});
 
-					double light_level = region.light_level(tile_coords);
-					double vision_divisor = 1 + (light_level - ideal_light) * (light_level - ideal_light) / light_tolerance * Vision::light_factor;
-					int distance = coords.distance_to(tile_coords);
+					double light_level = region.light_level(region_tile_coords);
+					double vision_divisor = 1.0 + (light_level - ideal_light) * (light_level - ideal_light) / light_tolerance * Vision::light_factor;
+					int distance = coords.distance_to(region_tile_coords);
 					double tile_visibility = (acuity - distance * distance * Vision::distance_factor) / vision_divisor;
 
-					// Update max and min coordinates.
+					// Update bounding rectangle.
 					if (find_bounds && tile_visibility > 0.0) {
-						Point world_coords = Layout::dflt().to_world(tile_coords).to_point();
+						GamePoint tile_game_point = Layout::dflt().to_world(region_tile_coords);
 						if (!_bounds) {
-							_bounds = Rect{world_coords.x, world_coords.y, 1, 1};
+							_bounds = GameRect{tile_game_point.x, tile_game_point.y, 0.0, 0.0};
 						} else {
-							extend_bounds(*_bounds, world_coords);
+							extend_bounds(*_bounds, tile_game_point);
 						}
 					}
 
@@ -142,8 +142,8 @@ namespace questless
 			//_bounds->w += double_size.x;
 			//_bounds->h += double_size.y;
 
-			Point size = Layout::dflt().size.to_point();
-			Point double_size = (2 * Layout::dflt().size).to_point();
+			GameVector size = Layout::dflt().size;
+			GameVector double_size = 2 * Layout::dflt().size;
 			_bounds->x -= 31;
 			_bounds->y -= 19;
 			_bounds->w += 62;

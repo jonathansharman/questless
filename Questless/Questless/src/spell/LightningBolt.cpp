@@ -27,7 +27,7 @@ namespace questless::spell
 		if (charges() <= 0) {
 			return caster.agent().message("Out of charges!", "You need to incant this spell first.", [cont] { return cont(Result::aborted); });
 		}
-		return caster.agent().query_tile("Lightning Bolt Target", "Select a tile to be zapped with a lightning bolt.", tile_in_range_predicate(caster, _range),
+		return caster.agent().query_tile("Lightning Bolt Target", "Select a tile to be zapped with a lightning bolt.", caster.coords(), tile_in_range_predicate(caster, _range),
 			[this, &caster, cont](boost::optional<RegionTileCoords> opt_tile_coords) {
 				if (!opt_tile_coords) {
 					return cont(Result::aborted);

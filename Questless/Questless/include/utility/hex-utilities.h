@@ -19,9 +19,8 @@
 #include <exception>
 
 #include "constants.h"
-#include "PointF.h"
-
-/// @todo Get rid of using declarations and move most of these functions to an implementation file.
+#include "utility.h"
+#include "Point.h"
 
 namespace questless
 {
@@ -34,14 +33,17 @@ namespace questless
 		int r;
 		int s;
 
-		constexpr HexCoords() : q{0}, r{0}, s{0} {}
-		constexpr HexCoords(int q, int r, int s) : q{q}, r{r}, s{s} {}
-		constexpr HexCoords(int q, int r) : q{q}, r{r}, s{-q - r} {}
-		HexCoords(double q, double r, double s)
+		constexpr explicit HexCoords() : q{0}, r{0}, s{0} {}
+		constexpr explicit HexCoords(int q, int r) : q{q}, r{r}, s{-q - r} {}
+		constexpr explicit HexCoords(int q, int r, int s) : q{q}, r{r}, s{s} {}
+		explicit HexCoords(double q, double r)
+			: HexCoords{q, r, -q - r}
+		{}
+		explicit HexCoords(double q, double r, double s)
 		{
-			this->q = int(round(q));
-			this->r = int(round(r));
-			this->s = int(round(s));
+			this->q = lround(q);
+			this->r = lround(r);
+			this->s = lround(s);
 			double q_diff = abs(q - this->q);
 			double r_diff = abs(r - this->r);
 			double s_diff = abs(s - this->s);
@@ -62,20 +64,21 @@ namespace questless
 		friend constexpr HexCoords operator *(HexCoords h, int k) { return HexCoords{k * h.q, k * h.r, k * h.s}; }
 		friend constexpr HexCoords operator *(int k, HexCoords h) { return HexCoords{k * h.q, k * h.r, k * h.s}; }
 
-		friend HexCoords operator *(HexCoords h, double k) { return HexCoords{k * h.q, k * h.r, k * h.s}; }
-		friend HexCoords operator *(double k, HexCoords h) { return HexCoords{k * h.q, k * h.r, k * h.s}; }
+		friend constexpr HexCoords operator *(HexCoords h, double k) { return HexCoords{k * h.q, k * h.r, k * h.s}; }
+		friend constexpr HexCoords operator *(double k, HexCoords h) { return HexCoords{k * h.q, k * h.r, k * h.s}; }
 
 		friend constexpr HexCoords operator /(HexCoords h, int k) { return HexCoords{h.q / k, h.r / k, h.s / k}; }
-		friend HexCoords operator /(HexCoords h, double k) { return HexCoords{h.q / k, h.r / k, h.s / k}; }
+		friend constexpr HexCoords operator /(HexCoords h, double k) { return HexCoords{h.q / k, h.r / k, h.s / k}; }
 
-		/// Arbitrary less-than function so that maps are comparable.
-		friend constexpr bool operator <(HexCoords h1, HexCoords h2) { return h1.q < h2.q || (h1.q == h2.q && h1.r < h2.r); }
 		friend constexpr bool operator ==(HexCoords h1, HexCoords h2) { return h1.q == h2.q && h1.r == h2.r && h1.s == h2.s; }
 		friend constexpr bool operator !=(HexCoords h1, HexCoords h2) { return h1.q != h2.q || h1.r != h2.r || h1.s != h2.s; }
 
-		int length() const { return static_cast<int>((abs(q) + abs(r) + abs(s)) / 2); }
+		/// Arbitrary less-than function so that HexCoords are comparable.
+		friend constexpr bool operator <(HexCoords h1, HexCoords h2) { return h1.q < h2.q || (h1.q == h2.q && h1.r < h2.r); }
 
-		int distance_to(HexCoords other) const { return (*this - other).length(); }
+		constexpr int length() const { return static_cast<int>((abs(q) + abs(r) + abs(s)) / 2); }
+
+		constexpr int distance_to(HexCoords other) const { return (*this - other).length(); }
 
 		std::vector<HexCoords> line_to(HexCoords dest) const
 		{
@@ -88,38 +91,26 @@ namespace questless
 			return results;
 		}
 
-		HexCoords lerp(HexCoords dest, double t) const
+		constexpr HexCoords lerp(HexCoords dest, double t) const
 		{
 			return HexCoords{this->q + (dest.q - this->q) * t, this->r + (dest.r - this->r) * t, this->s + (dest.s - this->s) * t};
 		}
 
+		/// @todo Make offset and neighbor constexpr when constexpr-if becomes available.
+
 		static HexCoords offset(Direction direction)
 		{
 			switch (direction) {
-				case Direction::one:   return HexCoords{1, 0, -1};
-				case Direction::two:   return HexCoords{1, -1, 0};
-				case Direction::three: return HexCoords{0, -1, 1};
-				case Direction::four:  return HexCoords{-1, 0, 1};
-				case Direction::five:  return HexCoords{-1, 1, 0};
-				case Direction::six:   return HexCoords{0, 1, -1};
-				default:               throw std::logic_error{"Invalid hex coords offset."};
+				case Direction::one:   return HexCoords{1, 0};
+				case Direction::two:   return HexCoords{0, 1};
+				case Direction::three: return HexCoords{-1, 1};
+				case Direction::four:  return HexCoords{-1, 0};
+				case Direction::five:  return HexCoords{0, -1};
+				default:               return HexCoords{1, -1};
 			};
 		}
 
-		HexCoords neighbor(Direction direction) const { return *this + offset(direction); }
-
-		HexCoords diagonal_neighbor(Direction direction) const
-		{
-			switch (direction) {
-				case Direction::one:   return *this + HexCoords{2, -1, -1};
-				case Direction::two:   return *this + HexCoords{1, -2, 1};
-				case Direction::three: return *this + HexCoords{-1, -1, 2};
-				case Direction::four:  return *this + HexCoords{-2, 1, 1};
-				case Direction::five:  return *this + HexCoords{-1, 2, -1};
-				case Direction::six:   return *this + HexCoords{1, 1, -2};
-				default:               throw std::logic_error{"Invalid hex coords offset."};
-			};
-		}
+		constexpr HexCoords neighbor(Direction direction) const { return *this + offset(direction); }
 	};
 
 	struct OffsetCoords
@@ -131,75 +122,90 @@ namespace questless
 
 	struct Orientation
 	{
+		// Forward matrix, used to go from hex coords to world coords.
+		//  [[f0 f1]
+		//   [f2 f2]]
 		double f0;
 		double f1;
 		double f2;
 		double f3;
+		// Backwards matrix (inverse of forward matrix), used to go from world coords to hex coords.
+		//  [[b0 b1]
+		//   [b2 b3]]
 		double b0;
 		double b1;
 		double b2;
 		double b3;
 		double start_angle;
-		Orientation(double f0, double f1, double f2, double f3, double b0, double b1, double b2, double b3, double start_angle)
+
+		constexpr Orientation(double f0, double f1, double f2, double f3, double b0, double b1, double b2, double b3, double start_angle)
 			: f0{f0}, f1{f1}, f2{f2}, f3{f3}, b0{b0}, b1{b1}, b2{b2}, b3{b3}, start_angle{start_angle}
+		{}
+
+		constexpr Orientation(double f0, double f1, double f2, double f3, double start_angle)
+			: f0{f0}, f1{f1}, f2{f2}, f3{f3}
+			, b0{1.0 / (f0 * f3 - f1 * f2) * f3}
+			, b1{1.0 / (f0 * f3 - f1 * f2) * -f1}
+			, b2{1.0 / (f0 * f3 - f1 * f2) * -f2}
+			, b3{1.0 / (f0 * f3 - f1 * f2) * f0}
+			, start_angle{start_angle}
 		{}
 	};
 
-	const Orientation orientation_pointy{sqrt(3.0), sqrt(3.0) / 2.0, 0.0, 3.0 / 2.0, sqrt(3.0) / 3.0, -1.0 / 3.0, 0.0, 2.0 / 3.0, 0.5};
-	const Orientation orientation_flat{3.0 / 2.0, 0.0, sqrt(3.0) / 2.0, sqrt(3.0), 2.0 / 3.0, 0.0, -1.0 / 3.0, sqrt(3.0) / 3.0, 0.0};
+	constexpr Orientation orientation_pointy{csqrt(3.0), csqrt(3.0) / 2.0, 0.0, 3.0 / 2.0, 0.5};
+	constexpr Orientation orientation_flat{3.0 / 2.0, 0.0, csqrt(3.0) / 2.0, csqrt(3.0), 0.0};
 
 	struct Layout
 	{
 		Orientation orientation;
-		PointF size;
-		PointF origin;
+		GameVector size;
+		GamePoint origin;
 
-		static const Layout& dflt()
-		{
-			static Layout l{orientation_flat, PointF{29.0, 20.5}, PointF{0, 0}};
-			return l;
-		}
+		static constexpr Layout dflt() { return Layout{orientation_flat, GameVector{29.0, 35.5 / csqrt(3.0)}, GamePoint{0, 0}}; }
 
-		Layout(Orientation orientation, PointF size, PointF origin) : orientation{orientation}, size{size}, origin{origin} {}
+		constexpr Layout(Orientation orientation, GameVector size, GamePoint origin)
+			: orientation{orientation}, size{std::move(size)}, origin{std::move(origin)}
+		{}
 
 		template <typename HexCoordsType>
-		PointF to_world(HexCoordsType h) const /// @todo This function should just work for RegionTileCoords.
+		constexpr GamePoint to_world(HexCoordsType h) const /// @todo This function should just work for RegionTileCoords.
 		{
-			double x = (orientation.f0 * h.q + orientation.f1 * h.r) * size.x;
-			double y = (orientation.f2 * h.q + orientation.f3 * h.r) * size.y;
-			return PointF{x + origin.x, y + origin.y};
-		}
-
-		template <typename HexCoordsType>
-		HexCoordsType to_hex_coords(PointF p) const /// @todo This function should just work for RegionTileCoords.
-		{
-			PointF p_prime{(p.x - origin.x) / size.x, (p.y - origin.y) / size.y};
-			double q = orientation.b0 * p_prime.x + orientation.b1 * p_prime.y;
-			double r = orientation.b2 * p_prime.x + orientation.b3 * p_prime.y;
-			return HexCoordsType{q, r, -q - r};
-		}
-
-		PointF hex_corner_offset(int corner)
-		{
-			double angle = 2.0 * questless::pi * (corner + orientation.start_angle) / 6;
-			return PointF{size.x * cos(angle), size.y * sin(angle)};
+			return GamePoint
+				{ ((orientation.f0 * h.q + orientation.f1 * h.r) * size.x + origin.x)
+				, ((orientation.f2 * h.q + orientation.f3 * h.r) * size.y + origin.y)
+				};
 		}
 
 		template <typename HexCoordsType>
-		std::vector<PointF> corner_points(HexCoordsType h) /// @todo This function should just work for RegionTileCoords.
+		constexpr HexCoordsType to_hex_coords(GamePoint p) const /// @todo This function should just work for RegionTileCoords.
 		{
-			std::vector<PointF> corners = {};
-			PointF center = PointF{to_world(h)};
+			return HexCoordsType
+				{ orientation.b0 * (p.x - origin.x) / size.x + orientation.b1 * (p.y - origin.y) / size.y
+				, orientation.b2 * (p.x - origin.x) / size.x + orientation.b3 * (p.y - origin.y) / size.y
+				};
+		}
+
+		GamePoint hex_corner_offset(int corner)
+		{
+			double angle = 2.0 * questless::pi * (corner + orientation.start_angle) / 6.0;
+			return GamePoint{size.x * cos(angle), size.y * sin(angle)};
+		}
+
+		template <typename HexCoordsType>
+		std::vector<GamePoint> corner_points(HexCoordsType h) /// @todo This function should just work for RegionTileCoords.
+		{
+			std::vector<GamePoint> corners = {};
+			GamePoint center = to_world_f(h);
 			for (int i = 0; i < 6; i++) {
-				PointF offset = hex_corner_offset(i);
-				corners.push_back(PointF{center.x + offset.x, center.y + offset.y});
+				GamePoint offset = hex_corner_offset(i);
+				corners.push_back(GamePoint{center.x + offset.x, center.y + offset.y});
 			}
 			return corners;
 		}
 	};
 
 	template <typename HexCoordsType>
-	inline OffsetCoords q_offset_from_cube(int offset, HexCoordsType h)
+	OffsetCoords q_offset_from_cube(int offset, HexCoordsType h)
 	{
 		int col = h.q;
 		int row = h.r + int((h.q + offset * (h.q & 1)) / 2);
@@ -207,7 +213,7 @@ namespace questless
 	}
 
 	template <typename HexCoordsType>
-	inline HexCoordsType q_offset_to_cube(int offset, OffsetCoords h)
+	HexCoordsType q_offset_to_cube(int offset, OffsetCoords h)
 	{
 		int q = h.col;
 		int r = h.row - int((h.col + offset * (h.col & 1)) / 2);
@@ -216,7 +222,7 @@ namespace questless
 	}
 
 	template <typename HexCoordsType>
-	inline OffsetCoords r_offset_from_cube(int offset, HexCoordsType h)
+	OffsetCoords r_offset_from_cube(int offset, HexCoordsType h)
 	{
 		int col = h.q + int((h.r + offset * (h.r & 1)) / 2);
 		int row = h.r;
@@ -224,7 +230,7 @@ namespace questless
 	}
 
 	template <typename HexCoordsType>
-	inline HexCoordsType r_offset_to_cube(int offset, OffsetCoords h)
+	HexCoordsType r_offset_to_cube(int offset, OffsetCoords h)
 	{
 		int q = h.col - int((h.row + offset * (h.row & 1)) / 2);
 		int r = h.row;
@@ -329,9 +335,9 @@ void test_hex_linedraw()
 void test_layout()
 {
 	HexCoords h{3, 4, -7};
-	Layout flat{orientation_flat, PointF{10, 15}, PointF{35, 71}};
+	Layout flat{orientation_flat, GamePoint{10, 15}, GamePoint{35, 71}};
 	equal_hex("layout", h, flat.to_hex_coords(flat.to_world(h)));
-	Layout pointy = Layout(orientation_pointy, PointF{10, 15}, PointF{35, 71});
+	Layout pointy = Layout(orientation_pointy, GamePoint{10, 15}, GamePoint{35, 71});
 	equal_hex("layout", h, pointy.to_hex_coords(pointy.to_world(h)));
 }
 

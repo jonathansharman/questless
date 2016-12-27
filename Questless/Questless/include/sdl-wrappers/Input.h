@@ -16,8 +16,8 @@
 
 #include <SDL.h>
 
-#include "sdl-wrappers/basic-sdl-wrappers.h"
 #include "sdl-wrappers/Window.h"
+#include "utility/Point.h"
 
 namespace sdl
 {
@@ -96,13 +96,13 @@ namespace sdl
 		// Mouse state accessors
 		
 		bool mouse_visible() const { return SDL_ShowCursor(-1) == 1; }
-		int x_mouse() const { return _x_mouse; }
-		int y_mouse() const { return _y_mouse; }
-		int last_x_mouse() const { return _prev_x_mouse; }
-		int last_y_mouse() const { return _prev_y_mouse; }
-		Point mouse_position() const { return Point(_x_mouse, _y_mouse); }
-		Point last_mouse_position() const { return Point(_prev_x_mouse, _prev_y_mouse); }
-		bool mouse_moved() const { return _x_mouse != _prev_x_mouse || _y_mouse != _prev_y_mouse; }
+		int x_mouse() const { return _mouse_position.x; }
+		int y_mouse() const { return _mouse_position.y; }
+		int last_x_mouse() const { return _prev_mouse_position.x; }
+		int last_y_mouse() const { return _prev_mouse_position.y; }
+		ScreenPoint mouse_position() const { return _mouse_position; }
+		ScreenPoint last_mouse_position() const { return _prev_mouse_position; }
+		bool mouse_moved() const { return _mouse_position != _prev_mouse_position; }
 
 		bool pressed(MouseButton button) const;
 		bool released(MouseButton button) const;
@@ -117,7 +117,7 @@ namespace sdl
 		/// Sets the position of the mouse cursor in the window.
 		/// @param window The window relative to which to the cursor is moved.
 		/// @param position The position to which the cursor is moved.
-		void move_mouse(const Window& window, const Point& position);
+		void move_mouse(const Window& window, const ScreenPoint& position);
 
 		/// Hides the mouse cursor.
 		void hide_mouse() const { SDL_ShowCursor(0); }
@@ -144,10 +144,8 @@ namespace sdl
 		std::map<SDL_Keycode, int> _presses;
 		std::map<SDL_Keycode, int> _releases;
 		
-		int _x_mouse;
-		int _y_mouse;
-		int _prev_x_mouse;
-		int _prev_y_mouse;
+		ScreenPoint _mouse_position;
+		ScreenPoint _prev_mouse_position;
 
 		uint32_t _prev_mouse_state;
 		uint32_t _curr_mouse_state;

@@ -18,6 +18,8 @@
 
 #include "constants.h"
 #include "units/vectors.h"
+#include "utility/Point.h"
+#include "utility/Rect.h"
 
 namespace questless
 {
@@ -43,22 +45,22 @@ namespace questless
 	/// @param min The minimum possible value.
 	/// @param max The maxium possible value.
 	/// @return A random integral value in [min, max].
-	template<typename T>
-	typename std::enable_if<std::is_integral<T>::value, T>::type
-	inline uniform(T min, T max)
+	template<typename Integer>
+	typename std::enable_if_t<std::is_integral<Integer>::value, Integer>
+	inline uniform(Integer min, Integer max)
 	{
-		return std::uniform_int_distribution<T>(min, max)(rng);
+		return std::uniform_int_distribution<Integer>(min, max)(rng);
 	}
 
 	/// Generates a random floating-point value with a uniform distribution.
 	/// @param min The minimum possible value.
 	/// @param max The maxium possible value.
 	/// @return A random floating-point value in [min, max].
-	template<typename T>
-	typename std::enable_if<std::is_floating_point<T>::value, T>::type
-	inline uniform(T min, T max)
+	template<typename Floating>
+	typename std::enable_if_t<std::is_floating_point<Floating>::value, Floating>
+	inline uniform(Floating min, Floating max)
 	{
-		return std::uniform_real_distribution<T>(min, max)(rng);
+		return std::uniform_real_distribution<Floating>(min, max)(rng);
 	}
 
 	/// @return a random angle in radians.
@@ -69,17 +71,17 @@ namespace questless
 
 	/// @return A displacement based on a uniform random distance and uniform random angle.
 	/// @param max_length The maximum possible length of the displacement.
-	inline VectorF random_displacement(double max_length)
+	inline GameVector random_displacement(double max_length)
 	{
-		return VectorF{random_angle(), Length{uniform(0.0, max_length)}};
+		return GameVector{random_angle(), uniform(0.0, max_length)};
 	}
 
 	/// @return A displacement based on a uniform random distance and uniform random angle.
 	/// @param min_length The minimum possible length of the displacement.
 	/// @param max_length The maximum possible length of the displacement.
-	inline VectorF random_displacement(double min_length, double max_length)
+	inline GameVector random_displacement(double min_length, double max_length)
 	{
-		return VectorF{random_angle(), Length{uniform(min_length, max_length)}};
+		return GameVector{random_angle(), uniform(min_length, max_length)};
 	}
 
 	//////////
@@ -92,15 +94,50 @@ namespace questless
 	uint8_t percentage_to_byte(double percent);
 
 	/// Extends the given bounding rectangle by the given point.
-	void extend_bounds(sdl::Rect& bounds, sdl::Point point);
+	template <typename LengthType, typename SpaceType>
+	void extend_bounds(Rect<LengthType, SpaceType>& bounds, const Point<LengthType, SpaceType>& point)
+	{
+		if (point.x < bounds.x) {
+			bounds.w += bounds.x - point.x;
+			bounds.x = point.x;
+		} else if (point.x > bounds.x + bounds.w) {
+			bounds.w = point.x - bounds.x;
+		}
+		if (point.y < bounds.y) {
+			bounds.h += bounds.y - point.y;
+			bounds.y = point.y;
+		} else if (point.y > bounds.y + bounds.h) {
+			bounds.h = point.y - bounds.y;
+		}
+	}
 
 	/// @return The square of the given value.
 	template <typename T>
-	T square(T value) { return value * value; }
+	constexpr T square(T value) { return value * value; }
 
 	/// @return The cube of the given value.
 	template <typename T>
-	T cube(T value) { return value * value * value; }
+	constexpr T cube(T value) { return value * value * value; }
+
+	namespace detail
+	{
+		template <typename Floating, typename = std::enable_if_t<std::is_floating_point<Floating>::value>>
+		constexpr Floating constexpr_sqrt_iterative(Floating x, Floating current, Floating previous) {
+			return current == previous
+				? current
+				: constexpr_sqrt_iterative(x, 0.5 * (current + x / current), current);
+		}
+	}
+	/// constexpr version of sqrt function.
+	/// @return The square root of the given floating-point number.
+	template <typename Floating, typename = std::enable_if_t<std::is_floating_point<Floating>::value>>
+	constexpr Floating csqrt(Floating x)
+	{
+		/// @todo Replace detail::constexpr_sqrt_iterative with constexpr lambda when better supported.
+		return detail::constexpr_sqrt_iterative(x, 0.5 * x, 0.0);
+	}
+
+	constexpr double root_three = csqrt(3.0);
 
 	///////////////////
 	// Miscellaneous //

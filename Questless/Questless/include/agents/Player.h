@@ -76,6 +76,7 @@ namespace questless
 		Action::Complete query_tile
 			( const std::string& title
 			, const std::string& prompt
+			, boost::optional<RegionTileCoords> origin
 			, std::function<bool(RegionTileCoords)> predicate
 			, std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont
 			) const override;
@@ -102,7 +103,7 @@ namespace questless
 			) const override;
 
 		virtual Action::Complete query_list
-			( sdl::Point origin
+			( ScreenPoint origin
 			, std::string title
 			, std::vector<std::string> options
 			, std::function<Action::Complete(boost::optional<int>)> cont
@@ -110,7 +111,7 @@ namespace questless
 
 		// Quick Time Events
 
-		Action::Complete get_lightning_bolt_quality(PointF target, std::function<Action::Complete(double)> cont) override;
+		Action::Complete get_lightning_bolt_quality(GamePoint target, std::function<Action::Complete(double)> cont) override;
 	private:
 		std::unique_ptr<WorldView> _world_view;
 

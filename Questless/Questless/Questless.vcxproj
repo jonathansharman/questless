@@ -97,6 +97,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+      <DisableSpecificWarnings>4268;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -131,6 +132,7 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+      <DisableSpecificWarnings>4268;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -288,14 +290,15 @@
     <ClInclude Include="include\utility\Frequency.h" />
     <ClInclude Include="include\utility\hex-utilities.h" />
     <ClInclude Include="include\utility\Initializer.h" />
-    <ClInclude Include="include\utility\PointF.h" />
+    <ClInclude Include="include\utility\Point.h" />
     <ClInclude Include="include\utility\Rate.h" />
+    <ClInclude Include="include\utility\Rect.h" />
     <ClInclude Include="include\utility\Stream.h" />
     <ClInclude Include="include\utility\TaggedType.h" />
     <ClInclude Include="include\utility\units\geometry.h" />
     <ClInclude Include="include\utility\units\vectors.h" />
     <ClInclude Include="include\utility\utility.h" />
-    <ClInclude Include="include\utility\VectorF.h" />
+    <ClInclude Include="include\utility\Vector.h" />
     <ClInclude Include="include\world\coordinates.h" />
     <ClInclude Include="include\world\Region.h" />
     <ClInclude Include="include\world\Section.h" />

@@ -34,7 +34,7 @@ namespace questless
 		/// @param scale_velocity Initial rate of change in size scale per second.
 		/// @param lifetime The duration of the particle's life, after which it is considered expired and should be removed.
 		Particle
-			( PointF position
+			( GamePoint position
 			, Velocity velocity
 			, Acceleration acceleration
 			, AngleRadians angle
@@ -55,6 +55,8 @@ namespace questless
 			, _time_left{lifetime}
 		{}
 
+		virtual ~Particle() = default;
+
 		/// @return Whether the particle is dead.
 		bool dead() const { return _time_left < seconds_f::zero(); }
 
@@ -67,7 +69,7 @@ namespace questless
 	protected:
 		/// @todo Are these protected variables the right way to do this?
 
-		PointF _position;
+		GamePoint _position;
 		Velocity _velocity;
 		Acceleration _acceleration;
 		double _angle;

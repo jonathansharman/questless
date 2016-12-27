@@ -12,11 +12,11 @@
 
 #include "geometry.h"
 #include "../Rate.h"
-#include "../VectorF.h"
+#include "../Vector.h"
 
 namespace questless
 {
-	using Velocity = Rate<VectorF, double>;
+	using Velocity = Rate<GameVector, double>;
 	using Acceleration = Rate<Velocity, double>;
 
 	using AngularVelocity = Rate<double, double>;

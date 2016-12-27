@@ -19,7 +19,7 @@ namespace questless
 	{
 	public:
 		/// @param position The particle's starting position.
-		GreenMagic(PointF position)
+		GreenMagic(GamePoint position)
 			: Particle
 				{ position
 				, Velocity{random_displacement(20.0, 50.0)}
@@ -34,7 +34,7 @@ namespace questless
 		{}
 
 		/// @param position The particle's starting position.
-		static ptr make(PointF position) { return std::make_unique<GreenMagic>(position); }
+		static ptr make(GamePoint position) { return std::make_unique<GreenMagic>(position); }
 	private:
 		static constexpr double _dtheta_max = 2.0 * tau;
 		static constexpr double _inflection_probability = 0.1;

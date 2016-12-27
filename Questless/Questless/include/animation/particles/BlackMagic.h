@@ -19,9 +19,9 @@ namespace questless
 	{
 	public:
 		/// @param position The particle's starting position.
-		BlackMagic(PointF position) : Particle
+		BlackMagic(GamePoint position) : Particle
 			{ position
-			, Velocity{VectorF{random_angle(), Length{uniform(5.0, 25.0)}}}
+			, Velocity{GameVector{random_angle(), uniform(5.0, 25.0)}}
 			, Acceleration::zero()
 			, random_angle()
 			, AngularVelocity{uniform(-_dtheta_max, _dtheta_max)}
@@ -32,7 +32,7 @@ namespace questless
 		{}
 
 		/// @param position The particle's starting position.
-		static ptr make(PointF position) { return std::make_unique<BlackMagic>(position); }
+		static ptr make(GamePoint position) { return std::make_unique<BlackMagic>(position); }
 	private:
 		static constexpr AngularVelocity _turn_rate{4.0};
 		static constexpr double _dtheta_max = 2.0 * tau;

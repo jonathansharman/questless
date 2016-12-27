@@ -19,6 +19,22 @@ namespace questless
 			return _cont(boost::none);
 		}
 
+		if (_origin) {
+			if (input.presses(SDLK_e)) {
+				return _cont(_origin->neighbor(RegionTileCoords::Direction::one));
+			} else if (input.presses(SDLK_w)) {
+				return _cont(_origin->neighbor(RegionTileCoords::Direction::two));
+			} else if (input.presses(SDLK_q)) {
+				return _cont(_origin->neighbor(RegionTileCoords::Direction::three));
+			} else if (input.presses(SDLK_a)) {
+				return _cont(_origin->neighbor(RegionTileCoords::Direction::four));
+			} else if (input.presses(SDLK_s)) {
+				return _cont(_origin->neighbor(RegionTileCoords::Direction::five));
+			} else if (input.presses(SDLK_d)) {
+				return _cont(_origin->neighbor(RegionTileCoords::Direction::six));
+			}
+		}
+
 		if (input.pressed(MouseButton::left)) {
 			RegionTileCoords value = _camera.tile_hovered();
 			if (_predicate(value)) {
@@ -33,10 +49,10 @@ namespace questless
 		int x_center = window.center().x;
 
 		// Draw the title and prompt.
-		renderer().draw_rect(Rect{x_center - _txt_title->width() / 2, 0, _txt_title->width(), _txt_title->height()}, Color::black(128), true);
-		_txt_title->draw(Point{x_center, 0}, HAlign::center);
-		renderer().draw_rect(Rect{x_center - _txt_prompt->width() / 2, _prompt_top, _txt_prompt->width(), _txt_prompt->height()}, Color::black(128), true);
-		_txt_prompt->draw(Point{x_center, _prompt_top}, HAlign::center);
+		renderer().draw_rect(ScreenRect{x_center - _txt_title->width() / 2, 0, _txt_title->width(), _txt_title->height()}, Color::black(128), true);
+		_txt_title->draw(ScreenPoint{x_center, 0}, HAlign::center);
+		renderer().draw_rect(ScreenRect{x_center - _txt_prompt->width() / 2, _prompt_top, _txt_prompt->width(), _txt_prompt->height()}, Color::black(128), true);
+		_txt_prompt->draw(ScreenPoint{x_center, _prompt_top}, HAlign::center);
 
 		// Highlight valid tiles.
 		/// @todo This.

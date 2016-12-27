@@ -16,17 +16,17 @@
 #include "sdl-wrappers/Input.h"
 #include "world/coordinates.h"
 #include "utility/utility.h"
-#include "utility/PointF.h"
+#include "utility/Point.h"
 #include "utility/TaggedType.h"
 
 namespace questless
 {
-	using Origin = TaggedType<boost::optional<sdl::Point>, struct OriginTag>;
+	using Origin = TaggedType<boost::optional<GamePoint>, struct OriginTag>;
 	using HScale = TaggedType<double, struct HScaleTag>;
 	using VScale = TaggedType<double, struct VScaleTag>;
 	using HFlip = TaggedType<bool, struct HScaleTag>;
 	using VFlip = TaggedType<bool, struct VScaleTag>;
-	using SrcRect = TaggedType<boost::optional<sdl::Rect>, struct SrcRectTag>;
+	using SrcRect = TaggedType<boost::optional<TextureRect>, struct SrcRectTag>;
 
 	class Camera
 	{
@@ -36,18 +36,7 @@ namespace questless
 		/// Constructs a camera with the specified starting position.
 		/// @param window The window.
 		/// @param position The starting position of the camera.
-		Camera(sdl::Window& window, PointF position)
-			: _window{window}
-			, _position{position}
-			, _zoom{1.0}
-			, _angle{0}
-			, _color{sdl::Color::white()}
-		{}
-
-		/// Constructs a camera with the specified starting position.
-		/// @param window The window.
-		/// @param position The starting position of the camera.
-		Camera(sdl::Window& window, sdl::Point position)
+		Camera(sdl::Window& window, GamePoint position)
 			: _window{window}
 			, _position{position}
 			, _zoom{1.0}
@@ -68,15 +57,15 @@ namespace questless
 		const sdl::Window& window() const { return _window; }
 
 		/// @return The camera's position.
-		PointF position() const { return _position; }
+		GamePoint position() const { return _position; }
 
 		/// Sets the camera's position.
 		/// @param position The new camera position.
-		void position(const PointF& position) { _position = position; }
+		void position(const GamePoint& position) { _position = position; }
 
 		/// Pans the camera the specified amount.
 		/// @param offset The offset which is added to the camera's position.
-		void pan(VectorF offset) { _position += offset; }
+		void pan(const GameVector& offset) { _position += offset; }
 
 		/// @return The camera's zoom.
 		inline double zoom() const { return _zoom; }
@@ -110,14 +99,11 @@ namespace questless
 		/// @param color The new color multiplier.
 		sdl::Color color(sdl::Color color) { _color = color; }
 
-		/// @return The exact point the mouse is hovering over.
-		PointF pt_hovered() const { return _pt_hovered; }
-
-		/// @return The rounded point the mouse is hovering over.
-		sdl::Point pt_hovered_rounded() const { return _pt_hovered_rounded; }
+		/// @return The game point the mouse is hovering over.
+		GamePoint point_hovered() const { return _point_hovered; }
 
 		/// @return The hex coordinates of the tile the mouse is hovering over.
-		RegionTileCoords tile_hovered() const { return {Layout::dflt().to_hex_coords<RegionTileCoords>(PointF{_pt_hovered_rounded})}; }
+		RegionTileCoords tile_hovered() const { return _tile_hovered; }
 
 		void update(const sdl::Input& input);
 
@@ -134,7 +120,7 @@ namespace questless
 		/// @param src_rect An optional Rect specifying the portion of the texture to be copied. If nullopt, the entire texture is used.
 		void draw
 			( const sdl::Texture& texture
-			, sdl::Point position
+			, GamePoint position
 			, Origin origin = Origin{boost::none}
 			, sdl::Color color = sdl::Color::white()
 			, HScale horizontal_scale = HScale{1.0}
@@ -146,25 +132,21 @@ namespace questless
 			) const;
 
 		/// Draws lines relative to the camera connecting the series of points contained in the vector.
-		/// @param points A vector of SDL points.
+		/// @param points A vector of game points.
 		/// @param color The color of the lines.
-		void draw_lines(std::vector<sdl::Point> points, sdl::Color color) const;
+		void draw_lines(std::vector<GamePoint> points, sdl::Color color) const;
 	private:
 		sdl::Window& _window;
-		PointF _position;
+		GamePoint _position;
 		double _zoom;
 		double _angle;
 		sdl::Color _color;
 
-		PointF _pt_hovered;
-		sdl::Point _pt_hovered_rounded;
+		GamePoint _point_hovered;
 		RegionTileCoords _tile_hovered;
 
-		/// @return The given point transformed to account for the camera.
-		PointF relative_point(PointF point) const;
-
-		/// @return The given point transformed to account for the camera.
-		sdl::Point relative_point(sdl::Point point) const { return relative_point(PointF{point}).to_point(); }
+		/// @return The given game point transformed to screen space, accounting for the camera.
+		ScreenPoint screen_point(GamePoint point) const;
 	};
 }
 

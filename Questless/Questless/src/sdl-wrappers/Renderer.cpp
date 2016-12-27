@@ -60,27 +60,31 @@ namespace sdl
 		SDL_RenderClear(_renderer);
 	}
 
-	void Renderer::draw_lines(vector<Point> points, Color color)
+	void Renderer::draw_lines(vector<ScreenPoint> points, Color color)
 	{
 		set_draw_color(color);
-		vector<SDL_Point> sdl_points(points.begin(), points.end());
-		SDL_RenderDrawLines(_renderer, &sdl_points[0], points.size());
+		// This reinterpret_cast is safe because SDL_Point and ScreenPoint have the same data structure.
+		SDL_RenderDrawLines(_renderer, reinterpret_cast<SDL_Point*>(&points[0]), points.size());
 	}
 
-	void Renderer::draw_rect(Rect rect, Color color, bool filled)
+	void Renderer::draw_rect(const ScreenRect& rect, Color color, bool filled)
 	{
 		set_draw_color(color);
-		SDL_Rect sdl_rect = rect;
+
+		// This reinterpret_cast is safe because SDL_Rect and ScreenRect have the same data structure.
+		const SDL_Rect* sdl_rect = reinterpret_cast<const SDL_Rect*>(&rect);
+
 		if (filled) {
-			SDL_RenderFillRect(_renderer, &sdl_rect);
+			SDL_RenderFillRect(_renderer, sdl_rect);
 		} else {
-			SDL_RenderDrawRect(_renderer, &sdl_rect);
+			SDL_RenderDrawRect(_renderer, sdl_rect);
 		}
 	}
 
-	void Renderer::draw_rect(Rect rect, Color border_color, Color fill_color)
+	void Renderer::draw_rect(const ScreenRect& rect, Color border_color, Color fill_color)
 	{
-		SDL_Rect sdl_rect = rect;
+		SDL_Rect sdl_rect{rect.x, rect.y, rect.w, rect.h};
+
 		set_draw_color(border_color);
 		SDL_RenderDrawRect(_renderer, &sdl_rect);
 		set_draw_color(fill_color);

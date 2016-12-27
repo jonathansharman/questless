@@ -22,7 +22,7 @@ namespace questless
 		_position += _velocity * frame_duration;
 		_velocity += _acceleration * frame_duration;
 		if (face_towards_heading()) {
-			_angle = VectorF{_velocity.step().x, -_velocity.step().y}.angle();
+			_angle = _velocity.step().angle();
 		} else {
 			_angle += _angular_velocity * frame_duration;
 		}
@@ -33,7 +33,7 @@ namespace questless
 	{
 		camera.draw
 			( texture()
-			, _position.to_point()
+			, _position
 			, Origin{boost::none}
 			, sdl::Color::white(fade_out() ? percentage_to_byte(_time_left.count() / _lifetime.count()) : 255)
 			, HScale{_scale}

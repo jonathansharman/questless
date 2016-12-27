@@ -34,14 +34,14 @@ namespace questless
 			// Draw the condition bars.
 			{
 				int left = 0;
-				renderer().draw_rect(Rect{left, _screen_bottom, _condition_bar_width * _conditions_count, _condition_bar_height, Rect::Origin::lower_left}, Color::black(), true);
+				renderer().draw_rect(ScreenRect{left, _screen_bottom, _condition_bar_width * _conditions_count, _condition_bar_height, ScreenRect::Origin::lower_left}, Color::black(), true);
 				// Health
 				int health_bar_height = static_cast<int>(_condition_bar_height * player_being->health() / player_being->vitality());
-				renderer().draw_rect(Rect{left + 1, _screen_bottom, _condition_bar_width - 2, health_bar_height - 1, Rect::Origin::lower_left}, Color::red(), true);
+				renderer().draw_rect(ScreenRect{left + 1, _screen_bottom, _condition_bar_width - 2, health_bar_height - 1, ScreenRect::Origin::lower_left}, Color::red(), true);
 				left += _condition_bar_width;
 				// Mana
 				int mana_bar_height = static_cast<int>(_condition_bar_height * player_being->mana() / player_being->spirit());
-				renderer().draw_rect(Rect{left + 1, _screen_bottom, _condition_bar_width - 2, mana_bar_height - 1, Rect::Origin::lower_left}, Color::blue(), true);
+				renderer().draw_rect(ScreenRect{left + 1, _screen_bottom, _condition_bar_width - 2, mana_bar_height - 1, ScreenRect::Origin::lower_left}, Color::blue(), true);
 				left += _condition_bar_width;
 			}
 
@@ -50,7 +50,7 @@ namespace questless
 				BodyTexturer texturer;
 				texturer.visit(player_being->body());
 				Texture::ptr texture = texturer.texture();
-				texture->draw(Point{0, _screen_bottom - _condition_bar_height}, HAlign::left, VAlign::bottom);
+				texture->draw(ScreenPoint{0, _screen_bottom - _condition_bar_height}, HAlign::left, VAlign::bottom);
 			}
 
 			// Draw hotbar items.
@@ -59,13 +59,13 @@ namespace questless
 				for (int i = 0; i < hud.hotbar_size; ++i) {
 					int x = _hotbar_x_start + (_hotbar_slot_width + _hotbar_interslot_gap) * i;
 					int y = _screen_bottom - _hotbar_bottom_gap;
-					_hotbar_slot_texture->draw(Point{x, y}, HAlign::left, VAlign::bottom);
+					_hotbar_slot_texture->draw(ScreenPoint{x, y}, HAlign::left, VAlign::bottom);
 					if (auto inv_coords = hud.hotbar[i]) {
 						Item* item = player_being->inventory()[*inv_coords];
 						if (item != nullptr) { /// @todo Find a way to sync the hotbar with the inventory so these checks aren't necessary.
 							item->accept(texturer);
 							Texture::ptr texture = texturer.texture();
-							texture->draw(Point{x + _hotbar_slot_h_padding, y - _hotbar_slot_v_padding}, HAlign::left, VAlign::bottom);
+							texture->draw(ScreenPoint{x + _hotbar_slot_h_padding, y - _hotbar_slot_v_padding}, HAlign::left, VAlign::bottom);
 						}
 					}
 				}
@@ -74,7 +74,7 @@ namespace questless
 			// Draw the inventory if it's open.
 
 			if (hud.inv_open) {
-				renderer().draw_rect(Rect{_inv_left, _inv_top, _inv_width, _inv_height}, Color::black(), Color::gray());
+				renderer().draw_rect(ScreenRect{_inv_left, _inv_top, _inv_width, _inv_height}, Color::black(), Color::gray());
 				ItemTexturer texturer;
 				const auto& items = player_being->inventory().page(hud.inv_page).items;
 				for (int row = 0; row < Inventory::Page::rows; ++row) {
@@ -82,9 +82,9 @@ namespace questless
 						if (const auto& item = items[row][column]) {
 							item->accept(texturer);
 							Texture::ptr texture = texturer.texture();
-							texture->draw(Point{_inv_left + column * HUDView::item_icon_width, _inv_top + row * HUDView::item_icon_height});
+							texture->draw(ScreenPoint{_inv_left + column * HUDView::item_icon_width, _inv_top + row * HUDView::item_icon_height});
 						} else {
-							renderer().draw_rect(Rect{_inv_left + column * HUDView::item_icon_width, _inv_top + row * HUDView::item_icon_height, HUDView::item_icon_width, HUDView::item_icon_height}, Color::black(), Color::gray());
+							renderer().draw_rect(ScreenRect{_inv_left + column * HUDView::item_icon_width, _inv_top + row * HUDView::item_icon_height, HUDView::item_icon_width, HUDView::item_icon_height}, Color::black(), Color::gray());
 						}
 					}
 				}

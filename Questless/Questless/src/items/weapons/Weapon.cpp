@@ -16,7 +16,7 @@ namespace questless
 	Action::Complete Weapon::BeginMeleeAttack::perform(Being& actor, cont_t cont)
 	{
 		Weapon& weapon = _weapon;
-		return actor.agent().query_tile("Melee Attack", "Choose attack target.", tile_in_range_predicate(actor, 1),
+		return actor.agent().query_tile("Melee Attack", "Choose attack target.", actor.coords(), tile_in_range_predicate(actor, 1),
 			[&actor, cont, &weapon](boost::optional<RegionTileCoords> opt_coords) { /// @todo Capturing actor and weapon by reference here is unsafe.
 				if (opt_coords) {
 					double delay = weapon.active_cooldown() + weapon.wind_up();

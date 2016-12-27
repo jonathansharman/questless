@@ -14,9 +14,6 @@
 
 namespace questless
 {
-	using Length = TaggedType<double, struct LengthTag>;
-	using LengthSquared = TaggedType<double, struct LengthSquaredTag>;
-
 	using AngleRadians = TaggedType<double, struct AngleRadiansTag>;
 
 	using Scale = TaggedType<double, struct ScaleTag>;

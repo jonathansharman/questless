@@ -29,15 +29,15 @@ namespace questless
 {
 	void BodyTexturer::visit(const Body& body)
 	{
-		Rect bounds = body.bounds();
+		ScreenRect bounds = body.bounds();
 
 		_texture = Texture::make(renderer(), SDL_BLENDMODE_BLEND, bounds.w, bounds.h, true);
 		_texture->as_target([this, &body] {
 			renderer().clear(Color::clear());
-			renderer().draw_rect(Rect{0, 0, _texture->width(), _texture->height()}, Color::red(), false);
+			renderer().draw_rect(ScreenRect{0, 0, _texture->width(), _texture->height()}, Color::red(), false);
 
 			for (const BodyPart& part : body) {
-				for (Rect region : part.regions()) {
+				for (const ScreenRect& region : part.regions()) {
 					constexpr double threshold = 1.0 / 2.0;
 
 					double health_percentage = part.health() / part.vitality();

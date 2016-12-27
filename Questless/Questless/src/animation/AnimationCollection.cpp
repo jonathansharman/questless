@@ -42,23 +42,23 @@ namespace questless
 		}
 	}
 
-	void AnimationCollection::draw(Point origin) const
+	void AnimationCollection::draw(GamePoint origin) const
 	{
 		if (_current_animation != nullptr) {
 			const Animation::Frame& frame = _current_animation->current_frame();
-			Rect dst_rect(origin.x - frame.origin.x, origin.y - frame.origin.y, _cel_width, _cel_height);
-			Rect src_rect(_cel_width * frame.coords.x, _cel_height * frame.coords.y, _cel_width, _cel_height);
+			ScreenRect dst_rect{lround(origin.x - frame.origin.x), lround(origin.y - frame.origin.y), _cel_width, _cel_height};
+			TextureRect src_rect{_cel_width * frame.coords.x, _cel_height * frame.coords.y, _cel_width, _cel_height};
 			texture_manager()[_sprite_sheet_handle].draw(dst_rect, src_rect);
 		}
 	}
 
-	void AnimationCollection::draw(Point origin, const Camera& camera) const
+	void AnimationCollection::draw(GamePoint origin, const Camera& camera) const
 	{
 		if (_current_animation != nullptr) {
 			const Animation::Frame& frame = _current_animation->current_frame();
 			camera.draw
 				( texture_manager()[_sprite_sheet_handle]
-				, origin - Vector{frame.origin.x, frame.origin.y}
+				, GamePoint{origin - GameVector{static_cast<double>(frame.origin.x), static_cast<double>(-frame.origin.y)}} /// @todo Uncouth point casting here.
 				, Origin{boost::none}
 				, Color::white()
 				, HScale{1.0}
@@ -66,7 +66,7 @@ namespace questless
 				, AngleRadians{0.0}
 				, HFlip{false}
 				, VFlip{false}
-				, SrcRect{Rect{_cel_width * frame.coords.x, _cel_height * frame.coords.y, _cel_width, _cel_height}}
+				, SrcRect{TextureRect{_cel_width * frame.coords.x, _cel_height * frame.coords.y, _cel_width, _cel_height}}
 				);
 		}
 	}

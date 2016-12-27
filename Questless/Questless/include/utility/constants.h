@@ -12,7 +12,7 @@
 
 #include "sdl-wrappers/basic-sdl-wrappers.h"
 #include "utility/Rate.h"
-#include "utility/VectorF.h"
+#include "utility/Vector.h"
 
 using namespace std::literals;
 
@@ -44,8 +44,8 @@ namespace questless
 	constexpr int section_radius = 10;
 	constexpr int section_diameter = 2 * section_radius + 1;
 	
-	constexpr sdl::Vector hex_unit_r{0, 36};
-	constexpr sdl::Vector hex_unit_q{44, -18};
+	constexpr GameVector hex_unit_r{0.0, 36.0};
+	constexpr GameVector hex_unit_q{44.0, -18.0};
 
 	constexpr int region_background_margin_top = 19;
 	constexpr int region_background_margin_left = 22;

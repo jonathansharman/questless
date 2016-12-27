@@ -103,12 +103,12 @@ namespace questless
 		// Get index of option over which the mouse is hovering, if any.
 
 		boost::optional<int> hovered_option_index = boost::none;
-		Point position = _view.content_position();
+		ScreenPoint position = _view.content_position();
 		position.y += DigraphMenuView::title_height;
 		for (size_t i = 0; i < current_options().size(); ++i) {
-			Point dimensions = _view.page(_menu.page_index).option_textures[i].dimensions();
-			Rect rect = Rect(position.x, position.y, dimensions.x, dimensions.y);
-			Point point = input.mouse_position();
+			ScreenVector dimensions = _view.page(_menu.page_index).option_textures[i].dimensions();
+			ScreenRect rect = ScreenRect{position.x, position.y, dimensions.x, dimensions.y};
+			ScreenPoint point = input.mouse_position();
 			if (rect.contains(point)) {
 				hovered_option_index = static_cast<int>(i);
 				break;
@@ -161,7 +161,7 @@ namespace questless
 		return selections;
 	}
 
-	void DigraphMenuController::draw(Point origin, HAlign horizontal_alignment, VAlign vertical_alignment)
+	void DigraphMenuController::draw(ScreenPoint origin, HAlign horizontal_alignment, VAlign vertical_alignment)
 	{
 		if (!_view.render_is_current()) {
 			_view.render(_menu);

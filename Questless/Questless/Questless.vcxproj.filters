@@ -325,13 +325,7 @@
     <ClInclude Include="include\utility\constants.h">
       <Filter>include\utility</Filter>
     </ClInclude>
-    <ClInclude Include="include\utility\PointF.h">
-      <Filter>include\utility</Filter>
-    </ClInclude>
     <ClInclude Include="include\utility\utility.h">
-      <Filter>include\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="include\utility\VectorF.h">
       <Filter>include\utility</Filter>
     </ClInclude>
     <ClInclude Include="include\sdl-wrappers\Font.h">
@@ -573,6 +567,15 @@
     </ClInclude>
     <ClInclude Include="include\animation\particles\TextParticle.h">
       <Filter>include\animation\particles</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utility\Vector.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utility\Point.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utility\Rect.h">
+      <Filter>include\utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

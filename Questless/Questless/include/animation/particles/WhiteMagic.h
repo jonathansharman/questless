@@ -19,10 +19,10 @@ namespace questless
 	{
 	public:
 		/// @param position The particle's starting position.
-		WhiteMagic(PointF position) : Particle
+		WhiteMagic(GamePoint position) : Particle
 			{ position
 			, random_displacement(80.0) / 1.0s
-			, VectorF{0.0, -50.0} / 1.0s / 1.0s
+			, GameVector{0.0, 50.0} / 1.0s / 1.0s
 			, random_angle()
 			, AngularVelocity{uniform(-_dtheta_max, _dtheta_max)}
 			, Scale{1.0}
@@ -32,7 +32,7 @@ namespace questless
 		{}
 
 		/// @param position The particle's starting position.
-		static ptr make(PointF position) { return std::make_unique<WhiteMagic>(position); }
+		static ptr make(GamePoint position) { return std::make_unique<WhiteMagic>(position); }
 	private:
 		static constexpr Hertz _vx_percent_drag_rate = 1.8_Hz;
 		static constexpr double _dtheta_max = 2.0 * tau;

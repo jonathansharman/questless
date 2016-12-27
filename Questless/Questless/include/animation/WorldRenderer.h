@@ -79,7 +79,7 @@ namespace questless
 		std::unordered_map<BeingId, std::unique_ptr<AnimationCollection>> _being_animations;
 		std::unordered_map<ObjectId, std::unique_ptr<AnimationCollection>> _object_animations;
 		sdl::Texture::ptr _terrain_texture;
-		sdl::Rect _terrain_bounds;
+		GameRect _terrain_bounds;
 		bool _terrain_render_is_current;
 
 		std::vector<Particle::ptr> _particles;

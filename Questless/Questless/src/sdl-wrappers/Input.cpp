@@ -12,14 +12,12 @@
 namespace sdl
 {
 	Input::Input()
-		: _quit(false)
-		, _key_count(0)
-		, _curr_mouse_state(0)
-		, _prev_mouse_state(0)
-		, _x_mouse(0)
-		, _y_mouse(0)
-		, _prev_x_mouse(0)
-		, _prev_y_mouse(0)
+		: _quit{false}
+		, _key_count{0}
+		, _curr_mouse_state{0}
+		, _prev_mouse_state{0}
+		, _mouse_position{0, 0}
+		, _prev_mouse_position{0, 0}
 	{
 		_curr_keyboard_state = SDL_GetKeyboardState(&_key_count);
 		_prev_keyboard_state = new uint8_t[_key_count];
@@ -29,16 +27,14 @@ namespace sdl
 	}
 
 	Input::Input(const Input& input)
-		: _quit(input._quit)
-		, _key_count(input._key_count)
-		, _curr_keyboard_state(input._curr_keyboard_state)
-		, _prev_keyboard_state(new uint8_t[_key_count])
-		, _prev_mouse_state(input._prev_mouse_state)
-		, _curr_mouse_state(input._curr_mouse_state)
-		, _x_mouse(input._x_mouse)
-		, _y_mouse(input._y_mouse)
-		, _prev_x_mouse(input._x_mouse)
-		, _prev_y_mouse(input._y_mouse)
+		: _quit{input._quit}
+		, _key_count{input._key_count}
+		, _curr_keyboard_state{input._curr_keyboard_state}
+		, _prev_keyboard_state{new uint8_t[_key_count]}
+		, _prev_mouse_state{input._prev_mouse_state}
+		, _curr_mouse_state{input._curr_mouse_state}
+		, _mouse_position(input._mouse_position)
+		, _prev_mouse_position(input._prev_mouse_position)
 	{
 		for (int i = 0; i < _key_count; ++i) {
 			_prev_keyboard_state[i] = input._prev_keyboard_state[i];
@@ -70,10 +66,8 @@ namespace sdl
 		std::swap(first._prev_keyboard_state, second._prev_keyboard_state);
 		std::swap(first._prev_mouse_state, second._prev_mouse_state);
 		std::swap(first._curr_mouse_state, second._curr_mouse_state);
-		std::swap(first._x_mouse, second._x_mouse);
-		std::swap(first._y_mouse, second._y_mouse);
-		std::swap(first._prev_x_mouse, second._prev_x_mouse);
-		std::swap(first._prev_y_mouse, second._prev_y_mouse);
+		std::swap(first._mouse_position, second._mouse_position);
+		std::swap(first._prev_mouse_position, second._prev_mouse_position);
 	}
 
 	void Input::update()
@@ -83,9 +77,8 @@ namespace sdl
 		}
 
 		_prev_mouse_state = _curr_mouse_state;
-		_prev_x_mouse = _x_mouse;
-		_prev_y_mouse = _y_mouse;
-		_curr_mouse_state = SDL_GetMouseState(&_x_mouse, &_y_mouse);
+		_prev_mouse_position = _mouse_position;
+		_curr_mouse_state = SDL_GetMouseState(&_mouse_position.x, &_mouse_position.y);
 
 		_scroll = 0;
 
@@ -282,10 +275,9 @@ namespace sdl
 		}
 	}
 
-	void Input::move_mouse(const Window& window, const Point& position)
+	void Input::move_mouse(const Window& window, const ScreenPoint& position)
 	{
 		SDL_WarpMouseInWindow(window.sdl_ptr(), position.x, position.y);
-		_x_mouse = position.x;
-		_y_mouse = position.y;
+		_mouse_position = position;
 	}
 }

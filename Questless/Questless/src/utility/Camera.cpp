@@ -7,10 +7,11 @@
 * @section DESCRIPTION The implementation for the Camera class.
 */
 
-#include "sdl-wrappers/resources.h"
 #include "animation/Camera.h"
 
 #include <cmath>
+
+#include "sdl-wrappers/resources.h"
 
 namespace questless
 {
@@ -38,14 +39,16 @@ namespace questless
 
 	void Camera::update(const sdl::Input& input)
 	{
-		_pt_hovered = _position + VectorF{input.mouse_position() - _window.center()} / _zoom;
-		_pt_hovered.rotate(_position, AngleRadians{_angle});
-		_pt_hovered_rounded = Layout::dflt().to_world(Layout::dflt().to_hex_coords<RegionTileCoords>(_pt_hovered)).to_point();
+		ScreenVector center_to_mouse = input.mouse_position() - _window.center();
+		GameVector scaled_center_to_mouse = GameVector{static_cast<double>(center_to_mouse.x), static_cast<double>(-center_to_mouse.y)} / _zoom;
+		_point_hovered = _position + scaled_center_to_mouse;
+		_point_hovered.rotate(_position, AngleRadians{_angle});
+		_tile_hovered = Layout::dflt().to_hex_coords<RegionTileCoords>(_point_hovered);
 	}
 
 	void Camera::draw
 		( const sdl::Texture& texture
-		, sdl::Point position
+		, GamePoint position
 		, Origin origin
 		, sdl::Color color
 		, HScale horizontal_scale
@@ -57,7 +60,7 @@ namespace questless
 		) const
 	{
 		if (origin.value()) {
-			position += sdl::Vector{texture.width() / 2 - origin.value()->x, texture.height() / 2 - origin.value()->y};
+			position += GameVector{texture.width() / 2 - origin.value()->x, texture.height() / 2 - origin.value()->y};
 		}
 		sdl::Color mixed_color = sdl::Color
 			{ static_cast<uint8_t>((static_cast<uint32_t>(color.r) * _color.r) / 255)
@@ -66,7 +69,7 @@ namespace questless
 			, static_cast<uint8_t>((static_cast<uint32_t>(color.a) * _color.a) / 255)
 			};
 		texture.draw_transformed
-			( relative_point(position)
+			( screen_point(position)
 			, boost::none
 			, mixed_color
 			, _zoom * horizontal_scale
@@ -78,19 +81,24 @@ namespace questless
 			);
 	}
 
-	void Camera::draw_lines(std::vector<sdl::Point> points, sdl::Color color) const
+	void Camera::draw_lines(std::vector<GamePoint> points, sdl::Color color) const
 	{
 		// Transform segment end points.
-		for (sdl::Point& point : points) {
-			point = relative_point(point);
+		std::vector<ScreenPoint> screen_points;
+		for (const GamePoint& point : points) {
+			screen_points.push_back(screen_point(point));
 		}
+
 		// Draw transformed line segments using the renderer.
-		sdl::renderer().draw_lines(points, color);
+		sdl::renderer().draw_lines(screen_points, color);
 	}
 
-	PointF Camera::relative_point(PointF point) const
+	ScreenPoint Camera::screen_point(GamePoint point) const
 	{
-		PointF window_center = PointF{_window.resolution()} / 2.0;
-		return (_zoom * (point - _position) + window_center).rotated(window_center, AngleRadians{_angle});
+		const GamePoint game_window_center = GamePoint{static_cast<double>(_window.width()), static_cast<double>(_window.height())} / 2.0;
+		const GameVector camera_to_point = point - _position;
+		const GamePoint scaled_point = _zoom * GameVector{camera_to_point.x, -camera_to_point.y} + game_window_center;
+		const GamePoint rotated_scaled_point = scaled_point.rotated(game_window_center, AngleRadians{_angle});
+		return ScreenPoint{lround(rotated_scaled_point.x), lround(rotated_scaled_point.y)};
 	}
 }

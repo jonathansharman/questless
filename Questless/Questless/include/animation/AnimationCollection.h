@@ -66,13 +66,13 @@ namespace questless
 		void update();
 
 		/// Draws the current animation at the specified coordinates.
-		/// @param origin The origin point of the animation on the screen.
-		void draw(sdl::Point origin) const;
+		/// @param origin The origin game point of the animation.
+		void draw(GamePoint origin) const;
 
 		/// Draws the current animation at the specified coordinates using the provided camera.
-		/// @param origin The origin point of the animation on the screen.
+		/// @param origin The origin game point of the animation on the screen.
 		/// @param camera A camera object.
-		void draw(sdl::Point origin, const Camera& camera) const;
+		void draw(GamePoint origin, const Camera& camera) const;
 	private:
 		sdl::Handle<sdl::Texture> _sprite_sheet_handle;
 		int _cel_width;

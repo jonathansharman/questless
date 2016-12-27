@@ -17,6 +17,8 @@
 
 #include "basic-sdl-wrappers.h"
 #include "Window.h"
+#include "utility/Point.h"
+#include "utility/Rect.h"
 
 namespace sdl
 {
@@ -63,21 +65,21 @@ namespace sdl
 		void clear(Color color);
 
 		/// Draws lines connecting the series of points contained in the vector.
-		/// @param points A vector of SDL points.
+		/// @param points A vector of screen points.
 		/// @param color The color of the lines.
-		void draw_lines(std::vector<Point> points, Color color);
+		void draw_lines(std::vector<ScreenPoint> points, Color color);
 
 		/// Draws a rectangle. Can be filled or just an outline.
 		/// @param rect The rectangle to be drawn.
 		/// @param color The color of the rectangle.
 		/// @param filled If true, a filled rectangle is drawn. Otherwise, only its outline is drawn.
-		void draw_rect(Rect rect, Color color, bool filled);
+		void draw_rect(const ScreenRect& rect, Color color, bool filled);
 
 		/// Draws a filled rectangle with a border.
 		/// @param rect The rectangle to be drawn.
 		/// @param border_color The color of the rectangle's border.
 		/// @param fill_color The color of the rectangle's interior.
-		void draw_rect(Rect rect, Color border_color, Color fill_color);
+		void draw_rect(const ScreenRect& rect, Color border_color, Color fill_color);
 	private:
 		SDL_Renderer* _renderer;
 		int _w;

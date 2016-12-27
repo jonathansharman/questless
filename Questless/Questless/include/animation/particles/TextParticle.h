@@ -23,11 +23,11 @@ namespace questless
 		/// @param position The particle's starting position.
 		/// @param text The text for the particle to show.
 		/// @param color The color of the particle's text.
-		TextParticle(PointF position, std::string text, sdl::Color color)
+		TextParticle(GamePoint position, std::string text, sdl::Color color)
 			: Particle
 				{ position
-				, Velocity{random_displacement(120.0) + VectorF{0.0, -160.0}}
-				, VectorF{0.0, 400.0} / 1.0s / 1.0s
+				, Velocity{random_displacement(120.0) + GameVector{0.0, 160.0}}
+				, GameVector{0.0, -400.0} / 1.0s / 1.0s
 				, AngleRadians{0.0}
 				, AngularVelocity{AngleRadians{0.0}}
 				, Scale{1.0}
@@ -40,7 +40,7 @@ namespace questless
 		{}
 
 		/// @param position The particle's starting position.
-		static ptr make(PointF position, std::string text, sdl::Color color) { return std::make_unique<TextParticle>(position, std::move(text), color); }
+		static ptr make(GamePoint position, std::string text, sdl::Color color) { return std::make_unique<TextParticle>(position, std::move(text), color); }
 	private:
 		friend class Initializer<TextParticle>;
 		static Initializer<TextParticle> _initializer;

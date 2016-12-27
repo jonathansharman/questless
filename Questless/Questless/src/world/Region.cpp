@@ -47,34 +47,27 @@ namespace questless
 
 		for (int section_r = -r_radius; section_r <= r_radius; ++section_r) {
 			for (int section_q = -q_radius; section_q <= q_radius; ++section_q) {
-				if (uniform(0, 0)) {
-				} else {
-					RegionSectionCoords section_coords{section_q, section_r};
+				RegionSectionCoords section_coords{section_q, section_r};
 
-					// Create a section with random terrain.
-					string data;
-					for (int r = -section_radius; r <= section_radius; ++r) {
-						for (int q = -section_radius; q <= section_radius; ++q) {
-							if (r == section_radius) {
-								data += std::to_string(0) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
-							} else {
-								if (q == section_radius) {
-									data += std::to_string(0) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
-								} else {
-									data += std::to_string(uniform(1, 5)) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
-								}
-							}
+				// Create a section with random terrain.
+				string data;
+				for (int r = -section_radius; r <= section_radius; ++r) {
+					for (int q = -section_radius; q <= section_radius; ++q) {
+						if (r == section_radius || q == section_radius) {
+							data += std::to_string(0) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
+						} else {
+							data += std::to_string(uniform(1, 5)) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
 						}
 					}
-					_section_map[section_coords] = make_unique<Section>(section_coords, std::istringstream{data});
-					// Add beings randomly.
-					for (int r = -section_radius; r <= section_radius; ++r) {
-						for (int q = -section_radius; q <= section_radius; ++q) {
-							if ((section_r != 0 || section_q != 0) && uniform(0, 10) == 0) {
-								auto entity_coords = Section::region_tile_coords(section_coords, {q, r});
-								auto new_being = make_unique<Goblin>(_game, Agent::make<BasicAI>, BeingId::next());
-								add<Being>(std::move(new_being), entity_coords);
-							}
+				}
+				_section_map[section_coords] = make_unique<Section>(section_coords, std::istringstream{data});
+				// Add beings randomly.
+				for (int r = -section_radius; r <= section_radius; ++r) {
+					for (int q = -section_radius; q <= section_radius; ++q) {
+						if ((section_r != 0 || section_q != 0) && uniform(0, 10) == 0) {
+							auto entity_coords = Section::region_tile_coords(section_coords, SectionTileCoords{q, r});
+							auto new_being = make_unique<Goblin>(_game, Agent::make<BasicAI>, BeingId::next());
+							add<Being>(std::move(new_being), entity_coords);
 						}
 					}
 				}

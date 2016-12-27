@@ -19,7 +19,7 @@
 #include <boost/optional.hpp>
 
 #include "utility/constants.h"
-#include "sdl-wrappers/basic-sdl-wrappers.h"
+#include "utility/Point.h"
 
 namespace questless
 {
@@ -31,10 +31,12 @@ namespace questless
 		struct Frame
 		{
 			seconds_f duration;
-			sdl::Point coords; ///< The cel coordinates within the sprite sheet.
-			sdl::Point origin; ///< The origin of the frame's texture relative to the animation origin.
+			SpriteSheetPoint coords; ///< The cel coordinates within the sprite sheet.
+			TexturePoint origin; ///< The origin of the frame's texture relative to the animation origin.
 
-			Frame(seconds_f duration, sdl::Point coords, sdl::Point origin) : duration{duration}, coords{coords}, origin{origin} {}
+			Frame(seconds_f duration, SpriteSheetPoint coords, TexturePoint origin)
+				: duration{duration}, coords{coords}, origin{origin}
+			{}
 		};
 
 		/// Constructs an animation pointer from the provided frames using the provided loop type.

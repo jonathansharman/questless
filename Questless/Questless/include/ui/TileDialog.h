@@ -22,8 +22,20 @@ namespace questless
 	class TileDialog : public Dialog
 	{
 	public:
-		TileDialog(std::string title, std::string prompt, const Camera& camera, std::function<bool(RegionTileCoords)> predicate, std::function<void(boost::optional<RegionTileCoords>)> cont)
-			: _title{std::move(title)}, _prompt{std::move(prompt)}, _camera{camera}, _predicate{std::move(predicate)}, _cont{std::move(cont)}
+		TileDialog
+			( std::string title
+			, std::string prompt
+			, const Camera& camera
+			, boost::optional<RegionTileCoords> origin
+			, std::function<bool(RegionTileCoords)> predicate
+			, std::function<void(boost::optional<RegionTileCoords>)> cont
+			)
+			: _title{std::move(title)}
+			, _prompt{std::move(prompt)}
+			, _camera{camera}
+			, _origin{std::move(origin)}
+			, _predicate{std::move(predicate)}
+			, _cont{std::move(cont)}
 		{
 			load_textures();
 		}
@@ -35,6 +47,7 @@ namespace questless
 		std::string _title;
 		std::string _prompt;
 		const Camera& _camera;
+		boost::optional<RegionTileCoords> _origin;
 		std::function<bool(RegionTileCoords)> _predicate;
 		Continuation<boost::optional<RegionTileCoords>> _cont;
 

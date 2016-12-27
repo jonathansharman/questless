@@ -114,24 +114,24 @@ namespace questless
 			// Interior
 			for (int x = 0; x < _content_width / tile_width; ++x) {
 				for (int y = 0; y < _content_height / tile_height; ++y) {
-					texture_manager()[_tile_handle].draw(Point{left_margin + tile_width * x, top_margin + tile_height * y});
+					texture_manager()[_tile_handle].draw(ScreenPoint{left_margin + tile_width * x, top_margin + tile_height * y});
 				}
 			}
 			// Top and bottom margins
 			for (int x = 0; x < _content_width / tile_width; ++x) {
-				texture_manager()[_u_handle].draw(Point{left_margin + tile_width * x, 0});
-				texture_manager()[_d_handle].draw(Point{left_margin + tile_width * x, top_margin + _content_height});
+				texture_manager()[_u_handle].draw(ScreenPoint{left_margin + tile_width * x, 0});
+				texture_manager()[_d_handle].draw(ScreenPoint{left_margin + tile_width * x, top_margin + _content_height});
 			}
 			// Left and right margins
 			for (int y = 0; y < _content_height / tile_height; ++y) {
-				texture_manager()[_l_handle].draw(Point{0, top_margin + tile_width * y});
-				texture_manager()[_r_handle].draw(Point{left_margin + _content_width, top_margin + tile_width * y});
+				texture_manager()[_l_handle].draw(ScreenPoint{0, top_margin + tile_width * y});
+				texture_manager()[_r_handle].draw(ScreenPoint{left_margin + _content_width, top_margin + tile_width * y});
 			}
 			// Corners
-			texture_manager()[_ul_handle].draw(Point{0, 0});
-			texture_manager()[_ur_handle].draw(Point{left_margin + _content_width, 0});
-			texture_manager()[_dl_handle].draw(Point{0, top_margin + _content_height});
-			texture_manager()[_dr_handle].draw(Point{left_margin + _content_width, top_margin + _content_height});
+			texture_manager()[_ul_handle].draw(ScreenPoint{0, 0});
+			texture_manager()[_ur_handle].draw(ScreenPoint{left_margin + _content_width, 0});
+			texture_manager()[_dl_handle].draw(ScreenPoint{0, top_margin + _content_height});
+			texture_manager()[_dr_handle].draw(ScreenPoint{left_margin + _content_width, top_margin + _content_height});
 		});
 
 		_render_is_current = true;
@@ -143,7 +143,7 @@ namespace questless
 		_current_option_index = menu.current_option_index();
 	}
 
-	void DigraphMenuView::position(Point origin, HAlign horizontal_alignment, VAlign vertical_alignment)
+	void DigraphMenuView::position(ScreenPoint origin, HAlign horizontal_alignment, VAlign vertical_alignment)
 	{
 		_content_position = origin;
 		switch (horizontal_alignment) {
@@ -172,7 +172,7 @@ namespace questless
 	{
 		// Draw background.
 
-		_background->draw(Point(_content_position.x - _left_margin.get(), _content_position.y - _top_margin.get()));
+		_background->draw(position());
 
 		// Draw text.
 	
@@ -181,7 +181,7 @@ namespace questless
 		for (size_t i = 0; i < _page_views[_page_index].option_textures.size(); ++i) {
 			_page_views[_page_index].option_textures[i].color(static_cast<size_t>(_current_option_index) == i ? selected_color() : unselected_color());
 
-			Point option_position(_content_position.x, _content_position.y + title_height + i * option_height);
+			ScreenPoint option_position{_content_position.x, _content_position.y + title_height + static_cast<int>(i) * option_height};
 			_page_views[_page_index].option_textures[i].draw(option_position);
 		}
 	}

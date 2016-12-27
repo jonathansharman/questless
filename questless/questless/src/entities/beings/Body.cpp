@@ -34,7 +34,7 @@ namespace questless
 			PartAttacher attacher{*this};
 			part.accept(attacher);
 
-			for (Rect region : part.regions()) {
+			for (const ScreenRect& region : part.regions()) {
 				x_min = std::min(x_min, region.x);
 				x_max = std::max(x_max, region.right());
 				y_min = std::min(y_min, region.y);
@@ -48,8 +48,8 @@ namespace questless
 			}
 		}
 
-		_bounds = {x_min, y_min, x_max - x_min + 1, y_max - y_min + 1};
-		_offset_to_center = {-x_min, -y_min};
+		_bounds = ScreenRect{x_min, y_min, x_max - x_min + 1, y_max - y_min + 1};
+		_offset_to_center = ScreenVector{-x_min, -y_min};
 	}
 
 	void Body::PartAttacher::visit(Torso& torso)

@@ -26,7 +26,7 @@ namespace questless
 		, Resistance resistance
 		, Vulnerability vulnerability
 		, bool vital
-		, std::vector<sdl::Rect> regions
+		, std::vector<ScreenRect> regions
 		)
 		: _owner{owner}
 		, _name{std::move(name)}

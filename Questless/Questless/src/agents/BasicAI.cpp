@@ -98,6 +98,7 @@ namespace questless
 	Action::Complete BasicAI::query_tile
 		( const std::string& //title
 		, const std::string& //prompt
+		, boost::optional<RegionTileCoords> //origin
 		, std::function<bool(RegionTileCoords)> //predicate
 		, std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont
 		) const
@@ -136,7 +137,7 @@ namespace questless
 	}
 
 	Action::Complete BasicAI::query_list
-		( sdl::Point //origin
+		( ScreenPoint //origin
 		, std::string //title
 		, std::vector<std::string> //options
 		, std::function<Action::Complete(boost::optional<int>)> cont

@@ -19,28 +19,23 @@ namespace questless
 	{
 	public:
 		/// @param position The particle's starting position.
-		Blood(PointF position) : Particle
+		Blood(GamePoint position) : Particle
 			{ position
-			, (random_displacement(_vi_max) + VectorF{0.0, _vyi_adjustment}) / 1.0s
-			, VectorF{0.0, 600.0} / 1.0s / 1.0s
+			, (random_displacement(160.0) + GameVector{0.0, 150.0}) / 1.0s
+			, GameVector{0.0, -600.0} / 1.0s / 1.0s
 			, random_angle()
 			, AngularVelocity{AngleRadians{0.0}}
 			, Scale{0.5}
 			, ScaleVelocity{Scale{0.0}}
-			, Lifetime{seconds_f{uniform(_lifetime_min, _lifetime_max)}}
+			, Lifetime{seconds_f{uniform(0.25, 0.75)}}
 			}
 		{
 			_scale_velocity = AngularVelocity{Scale{-_scale / _lifetime.count()}};
 		}
 
 		/// @param position The particle's starting position.
-		static ptr make(PointF position) { return std::make_unique<Blood>(position); }
+		static ptr make(GamePoint position) { return std::make_unique<Blood>(position); }
 	private:
-		static constexpr double _vyi_adjustment = -150.0;
-		static constexpr double _vi_max = 160.0;
-		static constexpr double _lifetime_min = 0.25;
-		static constexpr double _lifetime_max = 0.75;
-
 		bool fade_out() const override { return false; };
 
 		bool face_towards_heading() const override { return true; }
