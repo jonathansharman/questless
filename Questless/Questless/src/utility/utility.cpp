@@ -8,6 +8,7 @@
 */
 
 #include "utility/utility.h"
+#include "Game.h"
 
 using std::function;
 
@@ -19,16 +20,16 @@ namespace questless
 
 	double time(function<void()> code)
 	{
-		auto start_time = clock::now();
+		auto start_time = Game::clock::now();
 		code();
-		return std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(clock::now() - start_time).count();
+		return std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(Game::clock::now() - start_time).count();
 	}
 
 	//////////////////////////////
 	// Random number generation //
 	//////////////////////////////
 
-	std::mt19937 rng(static_cast<unsigned long>(clock::now().time_since_epoch().count()));
+	std::mt19937 rng(static_cast<unsigned long>(Game::clock::now().time_since_epoch().count()));
 
 	//////////
 	// Math //

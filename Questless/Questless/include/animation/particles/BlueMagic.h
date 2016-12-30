@@ -19,22 +19,22 @@ namespace questless
 	{
 	public:
 		/// @param position The particle's starting position.
-		BlueMagic(GamePoint position) : Particle
+		BlueMagic(units::GamePoint position) : Particle
 			{ position
-			, GameVector{AngleRadians{tau / 6.0 * uniform(0, 6)}, 45.0} / 1.0s
-			, Acceleration::zero()
+			, units::GameVector{units::GameRadians::circle() / 6.0 * uniform(0, 6), 45.0} / 1.0s
+			, units::GameAcceleration::zero()
 			, random_angle()
-			, AngularVelocity{uniform(-_dtheta_max, _dtheta_max)}
+			, uniform(-1.0, 1.0) * _dtheta_max / 1.0s
 			, Scale{1.0}
-			, ScaleVelocity{0.0}
-			, Lifetime{seconds_f{uniform(2.0, 2.4)}}
+			, units::GameScaleVelocity{0.0}
+			, Lifetime{units::GameSeconds{uniform(2.0, 2.4)}}
 			}
 		{}
 
 		/// @param position The particle's starting position.
-		static ptr make(GamePoint position) { return std::make_unique<BlueMagic>(position); }
+		static ptr make(units::GamePoint position) { return std::make_unique<BlueMagic>(position); }
 	private:
-		static constexpr double _dtheta_max = 2.0 * tau;
+		static constexpr units::GameRadians _dtheta_max = 2.0 * units::GameRadians::circle();
 
 		void subupdate() override {}
 

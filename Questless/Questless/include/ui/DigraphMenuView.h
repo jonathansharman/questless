@@ -13,13 +13,12 @@
 #include <future>
 #include <memory>
 
-#include "sdl-wrappers/basic-sdl-wrappers.h"
 #include "sdl-wrappers/Texture.h"
 #include "sdl-wrappers/Font.h"
 #include "sdl-wrappers/Renderable.h"
 #include "DigraphMenuModel.h"
 #include "utility/Initializer.h"
-#include "utility/Point.h"
+#include "units/Point.h"
 
 namespace questless
 {
@@ -54,7 +53,7 @@ namespace questless
 		const std::vector<PageView>& pages() const { return _page_views; }
 
 		/// @return The coordinate of the upper-left corner of the content region (which excludes margins) of the most recently rendered menu.
-		ScreenPoint content_position() const { return _content_position; }
+		units::ScreenPoint content_position() const { return _content_position; }
 
 		/// @return Whether the menu needs to be rerendered.
 		bool render_is_current() const { return _render_is_current; }
@@ -69,13 +68,13 @@ namespace questless
 		void update_indices(const DigraphMenuModel& menu);
 
 		/// Gets the position of the menu view.
-		ScreenPoint position() const { return ScreenPoint{_content_position.x - _left_margin.get(), _content_position.y - _top_margin.get()}; }
+		units::ScreenPoint position() const { return units::ScreenPoint{_content_position.x - _left_margin.get(), _content_position.y - _top_margin.get()}; }
 
 		/// Sets the position of the menu view.
 		/// @param origin The origin point of the menu on the screen.
 		/// @param horizontal_alignment The horizontal alignment of the menu relative to the origin point.
 		/// @param vertical_alignment The vertical alignment of the menu relative to the origin point.
-		void position(ScreenPoint origin, sdl::HAlign horizontal_alignment = sdl::HAlign::left, sdl::VAlign vertical_alignment = sdl::VAlign::top);
+		void position(units::ScreenPoint origin, sdl::HAlign horizontal_alignment = sdl::HAlign::left, sdl::VAlign vertical_alignment = sdl::VAlign::top);
 
 		/// Draws the most recently rendered menu.
 		void draw() const;
@@ -96,7 +95,7 @@ namespace questless
 		std::vector<PageView> _page_views;
 		int _page_index;
 		int _current_option_index;
-		ScreenPoint _content_position;
+		units::ScreenPoint _content_position;
 		int _min_width, _min_height;
 		int _content_width, _content_height;
 		sdl::Texture::ptr _background;

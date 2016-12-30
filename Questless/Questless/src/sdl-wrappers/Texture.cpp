@@ -9,6 +9,8 @@
 
 #include "sdl-wrappers/Texture.h"
 
+using namespace units;
+
 namespace sdl
 {
 	Texture::Texture(Renderer& renderer, SDL_BlendMode blend_mode, int width, int height, bool targetable)
@@ -143,7 +145,7 @@ namespace sdl
 		, Color color
 		, double horizontal_scale
 		, double vertical_scale
-		, double angle
+		, units::GameRadians angle
 		, bool flip_horizontally
 		, bool flip_vertically
 		, const boost::optional<TextureRect>& src_rect
@@ -174,7 +176,7 @@ namespace sdl
 			, _texture
 			, sdl_src_rect
 			, &sdl_dst_rect
-			, radians_to_negative_degrees * angle
+			, radians_to_negative_degrees * angle.count()
 			, nullptr
 			, static_cast<SDL_RendererFlip>((flip_horizontally ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE) | (flip_vertically ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE))
 			);

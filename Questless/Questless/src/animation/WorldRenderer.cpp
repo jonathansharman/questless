@@ -20,6 +20,7 @@
 #include "utility/utility.h"
 
 using namespace sdl;
+using namespace units;
 
 namespace questless
 {
@@ -182,8 +183,8 @@ namespace questless
 				auto opt_section = _world_view->region().section(section_view.coords);
 				if (opt_section) {
 					const Section& section = *opt_section;
-					for (int r = -section_radius; r <= section_radius; ++r) {
-						for (int q = -section_radius; q <= section_radius; ++q) {
+					for (int r = -Section::radius; r <= Section::radius; ++r) {
+						for (int q = -Section::radius; q <= Section::radius; ++q) {
 							SectionTileCoords section_tile_coords{q, r};
 							SectionTileIndex tile_index = Section::tile_index(section_tile_coords);
 							double tile_visibility = section_view.tile_visibilities[tile_index.i][tile_index.j];

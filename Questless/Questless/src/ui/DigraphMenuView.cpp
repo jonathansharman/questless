@@ -15,7 +15,8 @@ using std::max;
 using std::async;
 using std::shared_future;
 
-using namespace::sdl;
+using namespace sdl;
+using namespace units;
 
 namespace questless
 {

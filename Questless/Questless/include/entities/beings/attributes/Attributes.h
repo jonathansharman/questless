@@ -16,7 +16,6 @@
 #include "Vision.h"
 #include "MagicPower.h"
 #include "MagicResistance.h"
-#include "utility/constants.h"
 #include "entities/beings/Protection.h"
 #include "entities/beings/DamageMultiplier.h"
 

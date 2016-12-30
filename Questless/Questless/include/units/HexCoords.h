@@ -4,26 +4,43 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION Hexagonal coordinate system utility, adapted from http://www.redblobgames.com/grids/hexagons/.
+* @section DESCRIPTION Hexagonal coordinate type, adapted from http://www.redblobgames.com/grids/hexagons/.
 */
 
-#ifndef HEX_UTILITIES
-#define HEX_UTILITIES
+#ifndef HEX_COORDS_H
+#define HEX_COORDS_H
 
-#include <iostream>
-#include <string>
 #include <vector>
-#include <array>
 #include <cmath>
 #include <algorithm>
 #include <exception>
 
-#include "constants.h"
-#include "utility.h"
-#include "Point.h"
+#include "GameVector.h"
+#include "GamePoint.h"
+#include "GameRadians.h"
 
-namespace questless
+namespace units
 {
+	namespace detail
+	{
+		template <typename Floating, typename = std::enable_if_t<std::is_floating_point<Floating>::value>>
+		constexpr Floating constexpr_sqrt_iterative(Floating x, Floating current, Floating previous)
+		{
+			return current == previous
+				? current
+				: constexpr_sqrt_iterative(x, 0.5 * (current + x / current), current);
+		}
+
+		/// constexpr version of sqrt().
+		/// @return The square root of the given floating-point number.
+		template <typename Floating, typename = std::enable_if_t<std::is_floating_point<Floating>::value>>
+		constexpr Floating csqrt(Floating x)
+		{
+			/// @todo Replace constexpr_sqrt_iterative with constexpr lambda when better supported.
+			return detail::constexpr_sqrt_iterative(x, 0.5 * x, 0.0);
+		}
+	}
+
 	template <typename Tag>
 	struct HexCoords
 	{
@@ -152,32 +169,32 @@ namespace questless
 		{}
 	};
 
-	constexpr Orientation orientation_pointy{csqrt(3.0), csqrt(3.0) / 2.0, 0.0, 3.0 / 2.0, 0.5};
-	constexpr Orientation orientation_flat{3.0 / 2.0, 0.0, csqrt(3.0) / 2.0, csqrt(3.0), 0.0};
+	constexpr Orientation orientation_pointy{detail::csqrt(3.0), detail::csqrt(3.0) / 2.0, 0.0, 3.0 / 2.0, 0.5};
+	constexpr Orientation orientation_flat{3.0 / 2.0, 0.0, detail::csqrt(3.0) / 2.0, detail::csqrt(3.0), 0.0};
 
 	struct Layout
 	{
 		Orientation orientation;
-		GameVector size;
-		GamePoint origin;
+		units::GameVector size;
+		units::GamePoint origin;
 
-		static constexpr Layout dflt() { return Layout{orientation_flat, GameVector{29.0, 35.5 / csqrt(3.0)}, GamePoint{0, 0}}; }
+		static constexpr Layout dflt() { return Layout{orientation_flat, units::GameVector{29.0, 35.5 / detail::csqrt(3.0)}, units::GamePoint{0, 0}}; }
 
-		constexpr Layout(Orientation orientation, GameVector size, GamePoint origin)
+		constexpr Layout(Orientation orientation, units::GameVector size, units::GamePoint origin)
 			: orientation{orientation}, size{std::move(size)}, origin{std::move(origin)}
 		{}
 
 		template <typename HexCoordsType>
-		constexpr GamePoint to_world(HexCoordsType h) const /// @todo This function should just work for RegionTileCoords.
+		constexpr units::GamePoint to_world(HexCoordsType h) const /// @todo This function should just work for RegionTileCoords.
 		{
-			return GamePoint
+			return units::GamePoint
 				{ ((orientation.f0 * h.q + orientation.f1 * h.r) * size.x + origin.x)
 				, ((orientation.f2 * h.q + orientation.f3 * h.r) * size.y + origin.y)
 				};
 		}
 
 		template <typename HexCoordsType>
-		constexpr HexCoordsType to_hex_coords(GamePoint p) const /// @todo This function should just work for RegionTileCoords.
+		constexpr HexCoordsType to_hex_coords(units::GamePoint p) const /// @todo This function should just work for RegionTileCoords.
 		{
 			return HexCoordsType
 				{ orientation.b0 * (p.x - origin.x) / size.x + orientation.b1 * (p.y - origin.y) / size.y
@@ -185,20 +202,20 @@ namespace questless
 				};
 		}
 
-		GamePoint hex_corner_offset(int corner)
+		units::GamePoint hex_corner_offset(int corner)
 		{
-			double angle = 2.0 * questless::pi * (corner + orientation.start_angle) / 6.0;
-			return GamePoint{size.x * cos(angle), size.y * sin(angle)};
+			units::GameRadians angle = units::GameRadians::circle() * (corner + orientation.start_angle) / 6.0;
+			return units::GamePoint{size.x * cos(angle.count()), size.y * sin(angle.count())};
 		}
 
 		template <typename HexCoordsType>
-		std::vector<GamePoint> corner_points(HexCoordsType h) /// @todo This function should just work for RegionTileCoords.
+		std::vector<units::GamePoint> corner_points(HexCoordsType h) /// @todo This function should just work for RegionTileCoords.
 		{
-			std::vector<GamePoint> corners = {};
-			GamePoint center = to_world_f(h);
+			std::vector<units::GamePoint> corners = {};
+			units::GamePoint center = to_world_f(h);
 			for (int i = 0; i < 6; i++) {
-				GamePoint offset = hex_corner_offset(i);
-				corners.push_back(GamePoint{center.x + offset.x, center.y + offset.y});
+				units::GamePoint offset = hex_corner_offset(i);
+				corners.push_back(units::GamePoint{center.x + offset.x, center.y + offset.y});
 			}
 			return corners;
 		}
@@ -243,9 +260,9 @@ namespace questless
 namespace std
 {
 	template <typename Tag>
-	struct hash<questless::HexCoords<Tag>>
+	struct hash<units::HexCoords<Tag>>
 	{
-		size_t operator()(const questless::HexCoords<Tag>& coords) const
+		size_t operator()(const units::HexCoords<Tag>& coords) const
 		{
 			return 31 * coords.q + coords.r;
 		}
@@ -335,9 +352,9 @@ void test_hex_linedraw()
 void test_layout()
 {
 	HexCoords h{3, 4, -7};
-	Layout flat{orientation_flat, GamePoint{10, 15}, GamePoint{35, 71}};
+	Layout flat{orientation_flat, units::GamePoint{10, 15}, units::GamePoint{35, 71}};
 	equal_hex("layout", h, flat.to_hex_coords(flat.to_world(h)));
-	Layout pointy = Layout(orientation_pointy, GamePoint{10, 15}, GamePoint{35, 71});
+	Layout pointy = Layout(orientation_pointy, units::GamePoint{10, 15}, units::GamePoint{35, 71});
 	equal_hex("layout", h, pointy.to_hex_coords(pointy.to_world(h)));
 }
 

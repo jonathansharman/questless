@@ -35,6 +35,7 @@ using std::function;
 using namespace std::chrono;
 
 using namespace sdl;
+using namespace units;
 
 namespace questless
 {
@@ -53,7 +54,7 @@ namespace questless
 		if (fullscreen) {
 			_window = Window::make("Questless", "resources/textures/icon.png", true);
 		} else {
-			_window = Window::make("Questless", "resources/textures/icon.png", false, dflt_window_width, dflt_window_height, true, true, true, true);
+			_window = Window::make("Questless", "resources/textures/icon.png", false, _dflt_window_width, _dflt_window_height, true, true, true, true);
 		}
 
 		renderer(make_unique<Renderer>(*_window, _window->width(), _window->height()));
@@ -96,8 +97,8 @@ namespace questless
 
 		// Initialize game state.
 
-		for (unsigned i = 0; i < splash_flames_count; ++i) {
-			_splash_flame_positions.emplace_back(uniform(0, _window->width() - 1), (i + 1) * _window->height() / splash_flames_count);
+		for (unsigned i = 0; i < _splash_flames_count; ++i) {
+			_splash_flame_positions.emplace_back(uniform(0, _window->width() - 1), (i + 1) * _window->height() / _splash_flames_count);
 		}
 
 		_time_last_state_change = clock::now();
@@ -194,7 +195,7 @@ namespace questless
 
 	void Game::game_loop()
 	{
-		seconds_f accrued_time = seconds_f::zero();
+		GameSeconds accrued_time = GameSeconds::zero();
 		clock::time_point last_update_time = clock::now();
 		for (;;) {
 			// Update
@@ -242,8 +243,8 @@ namespace questless
 			std::this_thread::sleep_for(duration_cast<milliseconds>(frame_duration - accrued_time));
 
 			accrued_time -= frame_duration;
-			if (accrued_time > accrued_update_time_max) {
-				accrued_time = accrued_update_time_max;
+			if (accrued_time > _max_accrued_update_time) {
+				accrued_time = _max_accrued_update_time;
 			}
 
 			// Update FPS.
@@ -252,7 +253,7 @@ namespace questless
 			if (frame_ms != 0) {
 				_fps_buffer.push_back(1000.0 / frame_ms);
 			}
-			if (_fps_buffer.size() > max_fps_buffer_size) {
+			if (_fps_buffer.size() > _max_fps_buffer_size) {
 				_fps_buffer.pop_front();
 			}
 
@@ -260,15 +261,15 @@ namespace questless
 
 			switch (_state) {
 				case State::splash:
-					renderer().clear(splash_clear_color);
+					renderer().clear(_splash_clear_color);
 					render_splash();
 					break;
 				case State::menu:
-					renderer().clear(menu_clear_color);
+					renderer().clear(_menu_clear_color);
 					render_menu();
 					break;
 				case State::playing:
-					renderer().clear(playing_clear_color);
+					renderer().clear(_playing_clear_color);
 					render_playing();
 					break;
 			}
@@ -300,14 +301,14 @@ namespace questless
 		}
 
 		for (ScreenPoint& position : _splash_flame_positions) {
-			position.y += lround(splash_flames_vy * frame_duration);
+			position.y += lround(_splash_flames_vy * frame_duration);
 			if (position.y < 0) {
 				position.y += _window->height() + _txt_splash_flame->height();
 				position.x = uniform(0, _window->width() - 1);
 			}
 		}
 
-		if (_input.any_presses() || clock::now() - _time_last_state_change >= splash_duration) {
+		if (_input.any_presses() || clock::now() - _time_last_state_change >= _splash_duration) {
 			// End splash.
 
 			_splash_flame_positions.clear();
@@ -335,19 +336,19 @@ namespace questless
 	
 	void Game::render_splash()
 	{
-		if (clock::now() - _time_last_state_change < splash_fade_in_duration) {
-			auto ms_fading_in = duration_cast<seconds_f>(clock::now() - _time_last_state_change).count();
-			uint8_t intensity = percentage_to_byte(static_cast<double>(ms_fading_in / splash_fade_in_duration.count()));
+		if (clock::now() - _time_last_state_change < _splash_fade_in_duration) {
+			auto ms_fading_in = duration_cast<GameSeconds>(clock::now() - _time_last_state_change).count();
+			uint8_t intensity = percentage_to_byte(static_cast<double>(ms_fading_in / _splash_fade_in_duration.count()));
 			_txt_splash_logo->color(Color{intensity, intensity, intensity});
 			_txt_splash_flame->color(Color{intensity, intensity, intensity});
 		} else {
-			auto ms_fading_out = duration_cast<seconds_f>(clock::now() - _time_last_state_change - splash_fade_in_duration).count();
-			uint8_t intensity = percentage_to_byte(1 - static_cast<double>(ms_fading_out / splash_fade_out_duration.count()));
+			auto ms_fading_out = duration_cast<GameSeconds>(clock::now() - _time_last_state_change - _splash_fade_in_duration).count();
+			uint8_t intensity = percentage_to_byte(1 - static_cast<double>(ms_fading_out / _splash_fade_out_duration.count()));
 			_txt_splash_logo->color(Color{intensity, intensity, intensity});
 			_txt_splash_flame->color(Color{intensity, intensity, intensity});
 		}
 
-		ScreenPoint logo_position = _window->center() + ScreenVector{uniform(-splash_logo_jiggle, splash_logo_jiggle), uniform(-splash_logo_jiggle, splash_logo_jiggle)};
+		ScreenPoint logo_position = _window->center() + ScreenVector{uniform(-_splash_logo_jiggle, _splash_logo_jiggle), uniform(-_splash_logo_jiggle, _splash_logo_jiggle)};
 		_txt_splash_logo->draw(logo_position, HAlign::center, VAlign::middle);
 
 		for (ScreenPoint position : _splash_flame_positions) {
@@ -433,7 +434,7 @@ namespace questless
 			ss_cam_coords.setf(std::ios::fixed);
 			ss_cam_coords.precision(2);
 			ss_cam_coords << "Cam: ((" << _camera->position().x << ", " << _camera->position().y << "), ";
-			ss_cam_coords << _camera->angle() << ", " << _camera->zoom() << ")";
+			ss_cam_coords << _camera->angle().count() << ", " << _camera->zoom() << ")";
 			Texture txt_cam_coords = _fnt_20pt->render(ss_cam_coords.str(), renderer(), Color::white());
 			txt_cam_coords.draw(ScreenPoint{0, 0});
 		}
@@ -448,7 +449,7 @@ namespace questless
 			ostringstream ss_time;
 			ss_time << "Time: " << _time;
 			Texture txt_turn = _fnt_20pt->render(ss_time.str(), renderer(), Color::white());
-			txt_turn.draw(ScreenPoint{0, 75});
+			txt_turn.draw(ScreenPoint{0, 50});
 		}
 
 		// Draw q- and r-axes.
@@ -531,11 +532,11 @@ namespace questless
 			_camera->zoom_factor(1 + _input.scroll() / 10.0f);
 
 			// Rotate camera.
-			double angle = _camera->angle();
+			GameRadians angle = _camera->angle();
 			if (_input.down(SDLK_KP_9)) {
-				_camera->rotate(AngleRadians{(-tau / 6.0 - angle) / 20.0});
+				_camera->rotate((-GameRadians::circle() / 6.0 - angle) / 20.0);
 			} else if (_input.down(SDLK_KP_7)) {
-				_camera->rotate(AngleRadians{(tau / 6.0 - angle) / 20.0});
+				_camera->rotate((GameRadians::circle() / 6.0 - angle) / 20.0);
 			}
 		}
 
@@ -559,7 +560,7 @@ namespace questless
 
 				// Only snap camera angle back if the player isn't actively rotating it.
 				if (!_input.down(SDLK_KP_9) && !_input.down(SDLK_KP_7)) {
-					_camera->angle(AngleRadians{_camera->angle() * (1 - acceleration)});
+					_camera->angle(_camera->angle() * (1 - acceleration));
 				}
 			}
 		}

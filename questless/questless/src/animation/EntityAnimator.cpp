@@ -9,6 +9,9 @@
 
 #include "animation/EntityAnimator.h"
 
+#include "units/Point.h"
+using namespace units;
+
 using std::make_unique;
 
 using namespace sdl;
@@ -31,10 +34,10 @@ namespace questless
 		_animation = make_unique<AnimationCollection>(ss_handle, 3, 1);
 
 		std::vector<Animation::Frame> frames
-			{ {seconds_f{0.2}, SpriteSheetPoint{0, 0}, TexturePoint{0, 10}}
-			, {seconds_f{0.2}, SpriteSheetPoint{1, 0}, TexturePoint{0, 10}}
-			, {seconds_f{0.2}, SpriteSheetPoint{2, 0}, TexturePoint{0, 10}}
-			, {seconds_f{0.2}, SpriteSheetPoint{1, 0}, TexturePoint{0, 10}}
+			{ {GameSeconds{0.2}, SpriteSheetPoint{0, 0}, TexturePoint{0, 10}}
+			, {GameSeconds{0.2}, SpriteSheetPoint{1, 0}, TexturePoint{0, 10}}
+			, {GameSeconds{0.2}, SpriteSheetPoint{2, 0}, TexturePoint{0, 10}}
+			, {GameSeconds{0.2}, SpriteSheetPoint{1, 0}, TexturePoint{0, 10}}
 			};
 		_animation->add("walking", Animation::make(frames, true));
 		_animation->start("walking", true);
@@ -53,10 +56,10 @@ namespace questless
 		_animation = make_unique<AnimationCollection>(ss_handle, 3, 1);
 
 		std::vector<Animation::Frame> frames
-			{ {seconds_f{0.2}, SpriteSheetPoint{0, 0}, TexturePoint{0, 10}}
-			, {seconds_f{0.2}, SpriteSheetPoint{1, 0}, TexturePoint{0, 10}}
-			, {seconds_f{0.2}, SpriteSheetPoint{2, 0}, TexturePoint{0, 10}}
-			, {seconds_f{0.2}, SpriteSheetPoint{1, 0}, TexturePoint{0, 10}}
+			{ {GameSeconds{0.2}, SpriteSheetPoint{0, 0}, TexturePoint{0, 10}}
+			, {GameSeconds{0.2}, SpriteSheetPoint{1, 0}, TexturePoint{0, 10}}
+			, {GameSeconds{0.2}, SpriteSheetPoint{2, 0}, TexturePoint{0, 10}}
+			, {GameSeconds{0.2}, SpriteSheetPoint{1, 0}, TexturePoint{0, 10}}
 			};
 		_animation->add("walking", Animation::make(frames, true));
 		_animation->start("walking", true);
@@ -77,7 +80,7 @@ namespace questless
 
 		_animation = make_unique<AnimationCollection>(ss_handle, 1, 1);
 
-		std::vector<Animation::Frame> frames{{seconds_f{1.0}, SpriteSheetPoint{0, 0}, TexturePoint{0, 4}}};
+		std::vector<Animation::Frame> frames{{GameSeconds{1.0}, SpriteSheetPoint{0, 0}, TexturePoint{0, 4}}};
 		_animation->add("being-a-box", Animation::make(frames, true));
 		_animation->start("being-a-box", true);
 	}

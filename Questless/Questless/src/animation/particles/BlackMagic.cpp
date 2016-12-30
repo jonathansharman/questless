@@ -8,16 +8,18 @@
 */
 
 #include "animation/particles/BlackMagic.h"
+#include "Game.h"
 #include "sdl-wrappers/resources.h"
 
 using namespace sdl;
+using namespace units;
 
 namespace questless
 {
 	void BlackMagic::subupdate()
 	{
-		_velocity *= 1.0 + _acceleration_factor * frame_duration;
-		_velocity.step().rotate(AngleRadians{_turn_rate * frame_duration});
+		_velocity *= 1.0 + _acceleration_factor * Game::frame_duration;
+		_velocity.step().rotate(GameRadians{_turn_rate * Game::frame_duration});
 	}
 
 	const Texture& BlackMagic::texture() const

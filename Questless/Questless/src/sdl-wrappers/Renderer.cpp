@@ -13,6 +13,8 @@ using std::vector;
 using std::runtime_error;
 using namespace std::string_literals;
 
+using namespace units;
+
 namespace sdl
 {
 	Renderer::Renderer(Window& window, int width, int height) : _w{width}, _h{height}, _target{nullptr}

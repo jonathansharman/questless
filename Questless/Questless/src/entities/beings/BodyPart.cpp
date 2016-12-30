@@ -13,7 +13,7 @@
 using std::string;
 using std::vector;
 
-using namespace sdl;
+using namespace units;
 
 namespace questless
 {

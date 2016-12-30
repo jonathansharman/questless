@@ -17,7 +17,7 @@
 #include <SDL.h>
 
 #include "sdl-wrappers/Window.h"
-#include "utility/Point.h"
+#include "units/Point.h"
 
 namespace sdl
 {
@@ -100,8 +100,8 @@ namespace sdl
 		int y_mouse() const { return _mouse_position.y; }
 		int last_x_mouse() const { return _prev_mouse_position.x; }
 		int last_y_mouse() const { return _prev_mouse_position.y; }
-		ScreenPoint mouse_position() const { return _mouse_position; }
-		ScreenPoint last_mouse_position() const { return _prev_mouse_position; }
+		units::ScreenPoint mouse_position() const { return _mouse_position; }
+		units::ScreenPoint last_mouse_position() const { return _prev_mouse_position; }
 		bool mouse_moved() const { return _mouse_position != _prev_mouse_position; }
 
 		bool pressed(MouseButton button) const;
@@ -117,7 +117,7 @@ namespace sdl
 		/// Sets the position of the mouse cursor in the window.
 		/// @param window The window relative to which to the cursor is moved.
 		/// @param position The position to which the cursor is moved.
-		void move_mouse(const Window& window, const ScreenPoint& position);
+		void move_mouse(const Window& window, const units::ScreenPoint& position);
 
 		/// Hides the mouse cursor.
 		void hide_mouse() const { SDL_ShowCursor(0); }
@@ -144,8 +144,8 @@ namespace sdl
 		std::map<SDL_Keycode, int> _presses;
 		std::map<SDL_Keycode, int> _releases;
 		
-		ScreenPoint _mouse_position;
-		ScreenPoint _prev_mouse_position;
+		units::ScreenPoint _mouse_position;
+		units::ScreenPoint _prev_mouse_position;
 
 		uint32_t _prev_mouse_state;
 		uint32_t _curr_mouse_state;

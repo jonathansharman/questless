@@ -12,9 +12,9 @@
 #include "entities/beings/Being.h"
 #include "animation/ItemTexturer.h"
 #include "animation/BodyTexturer.h"
-#include "sdl-wrappers/basic-sdl-wrappers.h"
 
 using namespace sdl;
+using namespace units;
 
 namespace questless
 {

@@ -29,8 +29,7 @@
 #include "ui/DigraphMenuController.h"
 #include "ui/PlayerActionDialog.h"
 #include "ui/ListDialog.h"
-#include "utility/Rate.h"
-#include "sdl-wrappers/basic-sdl-wrappers.h"
+#include "units/Rate.h"
 #include "sdl-wrappers/Window.h"
 #include "sdl-wrappers/Renderer.h"
 #include "sdl-wrappers/Texture.h"
@@ -50,6 +49,12 @@ namespace questless
 	class Game : public sdl::Renderable
 	{
 	public:
+		using clock = std::chrono::steady_clock;
+		using seconds = std::chrono::duration<double>;
+
+		static constexpr units::Hertz frame_rate = 60.0_Hz;
+		static constexpr units::GameSeconds frame_duration = 1.0 / frame_rate;
+
 		/// Creates a game object, initializes the environment, and loads game resources.
 		/// @param fullscreen Whether to run the game in fullscreen mode.
 		Game(bool fullscreen);
@@ -131,32 +136,34 @@ namespace questless
 		// Constants //
 		///////////////
 
-		static constexpr seconds_f splash_fade_out_duration = 2.0s;
-		static constexpr seconds_f splash_fade_in_duration = 2.0s;
-		static constexpr seconds_f splash_duration = splash_fade_out_duration + splash_fade_in_duration;
+		static constexpr units::GameSeconds _max_accrued_update_time = 1.0s;
+
+		static constexpr units::GameSeconds _splash_fade_out_duration = 2.0s;
+		static constexpr units::GameSeconds _splash_fade_in_duration = 2.0s;
+		static constexpr units::GameSeconds _splash_duration = _splash_fade_out_duration + _splash_fade_in_duration;
 
 		// Debug
 
-		const size_t max_fps_buffer_size = 25;
+		const size_t _max_fps_buffer_size = 25;
 
 		// Display
 
 #if 1
-		static constexpr int dflt_window_width = 1024;
-		static constexpr int dflt_window_height = 768;
+		static constexpr int _dflt_window_width = 1024;
+		static constexpr int _dflt_window_height = 768;
 #else
-		static constexpr int dflt_window_width = 1920;
-		static constexpr int dflt_window_height = 1080;
+		static constexpr int _dflt_window_width = 1920;
+		static constexpr int _dflt_window_height = 1080;
 #endif
-		static constexpr sdl::Color splash_clear_color = sdl::Color::black();
-		static constexpr sdl::Color menu_clear_color = sdl::Color::blue();
-		static constexpr sdl::Color playing_clear_color = sdl::Color::blue();
+		static constexpr sdl::Color _splash_clear_color = sdl::Color::black();
+		static constexpr sdl::Color _menu_clear_color = sdl::Color::blue();
+		static constexpr sdl::Color _playing_clear_color = sdl::Color::blue();
 
 		// Splash screen
 
-		static constexpr unsigned splash_flames_count = 20;
-		static constexpr Rate<double, double> splash_flames_vy{-2800.0};
-		static constexpr int splash_logo_jiggle = 3;
+		static constexpr unsigned _splash_flames_count = 20;
+		static constexpr units::Rate<double, double> _splash_flames_vy{-2800.0};
+		static constexpr int _splash_logo_jiggle = 3;
 
 		//////////
 		// Data //
@@ -212,7 +219,7 @@ namespace questless
 		bool _game_over;
 
 		bool _splash_sound_played;
-		std::vector<ScreenPoint> _splash_flame_positions;
+		std::vector<units::ScreenPoint> _splash_flame_positions;
 
 		std::unique_ptr<Region> _region;
 
@@ -229,7 +236,7 @@ namespace questless
 
 		std::unique_ptr<HUDController> _hud;
 
-		GamePoint _point_clicked_rounded{0.0, 0.0};
+		units::GamePoint _point_clicked_rounded{0.0, 0.0};
 
 		/////////////
 		// Methods //

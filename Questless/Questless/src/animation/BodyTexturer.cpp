@@ -24,6 +24,7 @@ using std::make_pair;
 #include "utility/utility.h"
 
 using namespace sdl;
+using namespace units;
 
 namespace questless
 {

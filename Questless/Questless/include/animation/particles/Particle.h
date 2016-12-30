@@ -13,11 +13,16 @@
 #include "sdl-wrappers/Renderer.h"
 #include "sdl-wrappers/Texture.h"
 #include "animation/Camera.h"
-#include "utility/units/vectors.h"
+#include "units/GameSeconds.h"
+#include "units/GameVelocity.h"
+#include "units/GameAcceleration.h"
+#include "units/GameRadiansPerSec.h"
+#include "units/GameScaleVelocity.h"
 
 namespace questless
 {
-	using Lifetime = TaggedType<seconds_f, struct LifetimeTag>;
+	using Scale = TaggedType<double, struct ScaleTag>;
+	using Lifetime = TaggedType<units::GameSeconds, struct LifetimeTag>;
 	using MaxDisplacement = TaggedType<double, struct MaxDisplacementTag>;
 
 	class Particle
@@ -34,21 +39,21 @@ namespace questless
 		/// @param scale_velocity Initial rate of change in size scale per second.
 		/// @param lifetime The duration of the particle's life, after which it is considered expired and should be removed.
 		Particle
-			( GamePoint position
-			, Velocity velocity
-			, Acceleration acceleration
-			, AngleRadians angle
-			, AngularVelocity angular_velocity
+			( units::GamePoint position
+			, units::GameVelocity velocity
+			, units::GameAcceleration acceleration
+			, units::GameRadians angle
+			, units::GameRadiansPerSec angular_velocity
 			, Scale scale
-			, ScaleVelocity scale_velocity
+			, units::GameScaleVelocity scale_velocity
 			, Lifetime lifetime
 			, MaxDisplacement max_displacement = MaxDisplacement{_dflt_max_displacement}
 			)
 			: _position{position + random_displacement(max_displacement)}
-			, _velocity{velocity}
-			, _acceleration{acceleration}
-			, _angle{angle}
-			, _angular_velocity{angular_velocity}
+			, _velocity{std::move(velocity)}
+			, _acceleration{std::move(acceleration)}
+			, _angle{std::move(angle)}
+			, _angular_velocity{std::move(angular_velocity)}
 			, _scale{scale}
 			, _scale_velocity{scale_velocity}
 			, _lifetime{lifetime}
@@ -58,7 +63,7 @@ namespace questless
 		virtual ~Particle() = default;
 
 		/// @return Whether the particle is dead.
-		bool dead() const { return _time_left < seconds_f::zero(); }
+		bool dead() const { return _time_left < units::GameSeconds::zero(); }
 
 		/// Updates the particle.
 		void update();
@@ -69,15 +74,15 @@ namespace questless
 	protected:
 		/// @todo Are these protected variables the right way to do this?
 
-		GamePoint _position;
-		Velocity _velocity;
-		Acceleration _acceleration;
-		double _angle;
-		AngularVelocity _angular_velocity;
+		units::GamePoint _position;
+		units::GameVelocity _velocity;
+		units::GameAcceleration _acceleration;
+		units::GameRadians _angle;
+		units::GameRadiansPerSec _angular_velocity;
 		double _scale;
-		ScaleVelocity _scale_velocity;
-		seconds_f _lifetime;
-		seconds_f _time_left;
+		units::GameScaleVelocity _scale_velocity;
+		units::GameSeconds _lifetime;
+		units::GameSeconds _time_left;
 
 		/// @return The texture to be used when drawing a particle.
 		virtual const sdl::Texture& texture() const = 0;

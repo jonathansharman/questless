@@ -51,9 +51,9 @@ namespace questless
 
 				// Create a section with random terrain.
 				string data;
-				for (int r = -section_radius; r <= section_radius; ++r) {
-					for (int q = -section_radius; q <= section_radius; ++q) {
-						if (r == section_radius || q == section_radius) {
+				for (int r = -Section::radius; r <= Section::radius; ++r) {
+					for (int q = -Section::radius; q <= Section::radius; ++q) {
+						if (r == Section::radius || q == Section::radius) {
 							data += std::to_string(0) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
 						} else {
 							data += std::to_string(uniform(1, 5)) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
@@ -62,8 +62,8 @@ namespace questless
 				}
 				_section_map[section_coords] = make_unique<Section>(section_coords, std::istringstream{data});
 				// Add beings randomly.
-				for (int r = -section_radius; r <= section_radius; ++r) {
-					for (int q = -section_radius; q <= section_radius; ++q) {
+				for (int r = -Section::radius; r <= Section::radius; ++r) {
+					for (int q = -Section::radius; q <= Section::radius; ++q) {
 						if ((section_r != 0 || section_q != 0) && uniform(0, 10) == 0) {
 							auto entity_coords = Section::region_tile_coords(section_coords, SectionTileCoords{q, r});
 							auto new_being = make_unique<Goblin>(_game, Agent::make<BasicAI>, BeingId::next());
@@ -207,8 +207,8 @@ namespace questless
 
 		// Put the player's character somewhere in the middle section.
 
-		int q = uniform(-section_radius, section_radius);
-		int r = uniform(-section_radius, section_radius);
+		int q = uniform(-Section::radius, Section::radius);
+		int r = uniform(-Section::radius, Section::radius);
 		RegionTileCoords player_coords{q, r};
 
 		// Erase the being currently there, if any.

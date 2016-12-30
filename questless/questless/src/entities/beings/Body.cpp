@@ -7,14 +7,15 @@
 * @section DESCRIPTION The implementation for the Body class.
 */
 
+#include "entities/beings/Body.h"
+
 #include <deque>
 #include <algorithm>
 #include <memory>
 
-#include "entities/beings/Body.h"
 #include "entities/beings/BodyPart.h"
 
-using namespace sdl;
+using namespace units;
 
 namespace questless
 {

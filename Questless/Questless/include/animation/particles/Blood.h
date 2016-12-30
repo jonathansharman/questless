@@ -11,7 +11,6 @@
 #define BLOOD_H
 
 #include "animation/particles/Particle.h"
-#include "utility/utility.h"
 
 namespace questless
 {
@@ -19,22 +18,22 @@ namespace questless
 	{
 	public:
 		/// @param position The particle's starting position.
-		Blood(GamePoint position) : Particle
+		Blood(units::GamePoint position) : Particle
 			{ position
-			, (random_displacement(160.0) + GameVector{0.0, 150.0}) / 1.0s
-			, GameVector{0.0, -600.0} / 1.0s / 1.0s
+			, (random_displacement(160.0) + units::GameVector{0.0, 150.0}) / 1.0s
+			, units::GameVector{0.0, -600.0} / 1.0s / 1.0s
 			, random_angle()
-			, AngularVelocity{AngleRadians{0.0}}
+			, units::GameRadians{0.0} / 1.0s
 			, Scale{0.5}
-			, ScaleVelocity{Scale{0.0}}
-			, Lifetime{seconds_f{uniform(0.25, 0.75)}}
+			, units::GameScaleVelocity{Scale{0.0}}
+			, Lifetime{units::GameSeconds{uniform(0.25, 0.75)}}
 			}
 		{
-			_scale_velocity = AngularVelocity{Scale{-_scale / _lifetime.count()}};
+			_scale_velocity = units::GameScaleVelocity{Scale{-_scale / _lifetime.count()}};
 		}
 
 		/// @param position The particle's starting position.
-		static ptr make(GamePoint position) { return std::make_unique<Blood>(position); }
+		static ptr make(units::GamePoint position) { return std::make_unique<Blood>(position); }
 	private:
 		bool fade_out() const override { return false; };
 

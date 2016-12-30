@@ -137,7 +137,7 @@ namespace questless
 	}
 
 	Action::Complete BasicAI::query_list
-		( ScreenPoint //origin
+		( units::ScreenPoint //origin
 		, std::string //title
 		, std::vector<std::string> //options
 		, std::function<Action::Complete(boost::optional<int>)> cont

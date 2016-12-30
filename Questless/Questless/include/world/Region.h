@@ -156,7 +156,7 @@ namespace questless
 		RegionSectionCoords containing_section_coords(RegionTileCoords tile_coords) const
 		{
 			/// @todo Figure out how to do this without the ugly casting to/from floating-point.
-			return RegionSectionCoords{lround(tile_coords.q / double{section_diameter}), lround(tile_coords.r / double{section_diameter})};
+			return RegionSectionCoords{lround(1.0 * tile_coords.q / Section::diameter), lround(1.0 * tile_coords.r / Section::diameter)};
 		}
 
 		/// Gets the section that contains the tile with the given coordinates.

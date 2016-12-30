@@ -16,10 +16,10 @@ using std::set;
 #include "Game.h"
 #include "entities/beings/Being.h"
 #include "entities/objects/Object.h"
-#include "utility/hex-utilities.h"
-#include "sdl-wrappers/basic-sdl-wrappers.h"
+#include "units/HexCoords.h"
 
 using namespace sdl;
+using namespace units;
 
 namespace questless
 {
@@ -55,8 +55,8 @@ namespace questless
 			SectionView section_view;
 			section_view.coords = section_coords;
 
-			for (int r = -section_radius; r <= section_radius; ++r) {
-				for (int q = -section_radius; q <= section_radius; ++q) {
+			for (int r = -Section::radius; r <= Section::radius; ++r) {
+				for (int q = -Section::radius; q <= Section::radius; ++q) {
 					auto region_tile_coords = Section::region_tile_coords(section_coords, SectionTileCoords{q, r});
 
 					double light_level = region.light_level(region_tile_coords);
@@ -70,11 +70,11 @@ namespace questless
 						if (!_bounds) {
 							_bounds = GameRect{tile_game_point.x, tile_game_point.y, 0.0, 0.0};
 						} else {
-							extend_bounds(*_bounds, tile_game_point);
+							_bounds->extend(tile_game_point);
 						}
 					}
 
-					section_view.tile_visibilities[r + section_radius][q + section_radius] = tile_visibility;
+					section_view.tile_visibilities[r + Section::radius][q + Section::radius] = tile_visibility;
 				}
 			}
 

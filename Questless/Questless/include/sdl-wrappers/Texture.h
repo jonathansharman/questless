@@ -22,10 +22,14 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-#include "basic-sdl-wrappers.h"
 #include "Renderer.h"
-#include "utility/Point.h"
-#include "utility/Rect.h"
+#include "Color.h"
+#include "units/ScreenVector.h"
+#include "units/ScreenPoint.h"
+#include "units/ScreenRect.h"
+#include "units/TexturePoint.h"
+#include "units/TextureRect.h"
+#include "units/GameRadians.h"
 
 namespace sdl
 {
@@ -88,13 +92,13 @@ namespace sdl
 		int height() const { return _h; }
 
 		/// @return A point containing the width and height of the texture, respectively.
-		ScreenVector dimensions() const { return ScreenVector{_w, _h}; }
+		units::ScreenVector dimensions() const { return units::ScreenVector{_w, _h}; }
 
 		/// Copies all or part of the texture to the current render target.
 		/// @param dst_rect The portion of the screen to which the texture should be copied.
 		/// @param src_rect The portion of the texture which should be copied.
 		/// @param src_rect An optional Rect specifying the portion of the texture to be copied. If nullopt, the entire texture is used.
-		void draw(const ScreenRect& dst_rect, const boost::optional<TextureRect>& src_rect = boost::none) const;
+		void draw(const units::ScreenRect& dst_rect, const boost::optional<units::TextureRect>& src_rect = boost::none) const;
 	
 		/// Copies all or part of the texture to the current render target.
 		/// @param position The coordinates of the texture on the screen.
@@ -102,10 +106,10 @@ namespace sdl
 		/// @param vertical_alignment The vertical alignment of the texture.
 		/// @param src_rect An optional Rect specifying the portion of the texture to be copied. If nullopt, the entire texture is used.
 		void draw
-			( ScreenPoint position
+			( units::ScreenPoint position
 			, HAlign horizontal_alignment = HAlign::left
 			, VAlign vertical_alignment = VAlign::top
-			, const boost::optional<TextureRect>& src_rect = boost::none
+			, const boost::optional<units::TextureRect>& src_rect = boost::none
 			) const;
 
 		/// Copies all or part the texture to the current render target, applying the provided transformations.
@@ -119,15 +123,15 @@ namespace sdl
 		/// @param flip_horizontally Whether to flip the texture vertically.
 		/// @param src_rect An optional Rect specifying the portion of the texture to be copied. If nullopt, the entire texture is used.
 		void draw_transformed
-			( ScreenPoint position
-			, boost::optional<TexturePoint> origin = boost::none
+			(units::ScreenPoint position
+			, boost::optional<units::TexturePoint> origin = boost::none
 			, Color color = Color::white()
 			, double horizontal_scale = 1.0
 			, double vertical_scale = 1.0
-			, double angle = 0.0
+			, units::GameRadians angle = units::GameRadians{0.0} /// @todo This should probably use "ScreenRadians" or something.
 			, bool flip_horizontally = false
 			, bool flip_vertically = false
-			, const boost::optional<TextureRect>& src_rect = boost::none
+			, const boost::optional<units::TextureRect>& src_rect = boost::none
 			) const;
 
 		/// Executes the given code with this texture as the render target so that draw operations will affect this texture instead of the screen buffer.

@@ -148,8 +148,8 @@
     <Filter Include="resources\textures\particles\magic">
       <UniqueIdentifier>{b471f79e-fdbe-4cef-b79b-d475b49b81e8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\utility\units">
-      <UniqueIdentifier>{1c5704ea-8c29-45c3-ba6e-afe277cb35e6}</UniqueIdentifier>
+    <Filter Include="include\units">
+      <UniqueIdentifier>{13a4e0e2-0fa8-4a11-ba4c-c7ccfc778251}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -322,9 +322,6 @@
     <ClInclude Include="include\world\Section.h">
       <Filter>include\world</Filter>
     </ClInclude>
-    <ClInclude Include="include\utility\constants.h">
-      <Filter>include\utility</Filter>
-    </ClInclude>
     <ClInclude Include="include\utility\utility.h">
       <Filter>include\utility</Filter>
     </ClInclude>
@@ -342,9 +339,6 @@
     </ClInclude>
     <ClInclude Include="include\sdl-wrappers\Window.h">
       <Filter>include\sdl-wrappers</Filter>
-    </ClInclude>
-    <ClInclude Include="include\utility\hex-utilities.h">
-      <Filter>include\utility</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\Delegate.h">
       <Filter>include\utility</Filter>
@@ -387,9 +381,6 @@
     </ClInclude>
     <ClInclude Include="include\entities\beings\Human.h">
       <Filter>include\entities\beings</Filter>
-    </ClInclude>
-    <ClInclude Include="include\sdl-wrappers\basic-sdl-wrappers.h">
-      <Filter>include\sdl-wrappers</Filter>
     </ClInclude>
     <ClInclude Include="include\animation\ItemTexturer.h">
       <Filter>include\animation</Filter>
@@ -553,29 +544,92 @@
     <ClInclude Include="include\animation\particles\Blood.h">
       <Filter>include\animation\particles</Filter>
     </ClInclude>
-    <ClInclude Include="include\utility\Rate.h">
-      <Filter>include\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="include\utility\units\geometry.h">
-      <Filter>include\utility\units</Filter>
-    </ClInclude>
-    <ClInclude Include="include\utility\units\vectors.h">
-      <Filter>include\utility\units</Filter>
-    </ClInclude>
-    <ClInclude Include="include\utility\Frequency.h">
-      <Filter>include\utility</Filter>
-    </ClInclude>
     <ClInclude Include="include\animation\particles\TextParticle.h">
       <Filter>include\animation\particles</Filter>
     </ClInclude>
-    <ClInclude Include="include\utility\Vector.h">
-      <Filter>include\utility</Filter>
+    <ClInclude Include="include\units\Point.h">
+      <Filter>include\units</Filter>
     </ClInclude>
-    <ClInclude Include="include\utility\Point.h">
-      <Filter>include\utility</Filter>
+    <ClInclude Include="include\units\Rate.h">
+      <Filter>include\units</Filter>
     </ClInclude>
-    <ClInclude Include="include\utility\Rect.h">
-      <Filter>include\utility</Filter>
+    <ClInclude Include="include\units\Rect.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\Vector.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\Frequency.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\HexCoords.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\Velocity.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sdl-wrappers\Color.h">
+      <Filter>include\sdl-wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\Angle.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\ScreenSpace.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\SpriteSheetSpace.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\TextureSpace.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\GameSpace.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\ScreenPoint.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\TexturePoint.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\GameVector.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\SpriteSheetPoint.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\ScreenVector.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\ScreenRect.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\GameRadians.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\GamePoint.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\GameRect.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\TextureRect.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\GameVelocity.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\GameAcceleration.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\GameRadiansPerSec.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\GameScaleVelocity.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\GameSeconds.h">
+      <Filter>include\units</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

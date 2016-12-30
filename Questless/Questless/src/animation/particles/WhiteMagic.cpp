@@ -8,6 +8,7 @@
 */
 
 #include "animation/particles/WhiteMagic.h"
+#include "Game.h"
 #include "sdl-wrappers/resources.h"
 
 using namespace sdl;
@@ -16,7 +17,7 @@ namespace questless
 {
 	void WhiteMagic::subupdate()
 	{
-		_velocity.step().x *= 1.0 - _vx_percent_drag_rate * frame_duration;
+		_velocity.step().x *= 1.0 - _vx_percent_drag_rate * Game::frame_duration;
 	}
 
 	const Texture& WhiteMagic::texture() const

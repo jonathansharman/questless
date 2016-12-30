@@ -10,13 +10,14 @@
 #include "animation/AnimationCollection.h"
 
 using namespace sdl;
+using namespace units;
 
 /// @todo Make AnimationCollection a Renderable and cache the sprite sheet?
 
 namespace questless
 {
 	AnimationCollection::AnimationCollection(sdl::Handle<Texture> sprite_sheet_handle, int cel_columns, int cel_rows)
-		: _sprite_sheet_handle{sprite_sheet_handle}, _current_animation{nullptr}, _paused{false}
+		: _sprite_sheet_handle{std::move(sprite_sheet_handle)}, _current_animation{nullptr}, _paused{false}
 	{
 		_cel_width = texture_manager()[_sprite_sheet_handle].width() / cel_columns;
 		_cel_height = texture_manager()[_sprite_sheet_handle].height() / cel_rows;
@@ -63,7 +64,7 @@ namespace questless
 				, Color::white()
 				, HScale{1.0}
 				, VScale{1.0}
-				, AngleRadians{0.0}
+				, GameRadians{0.0}
 				, HFlip{false}
 				, VFlip{false}
 				, SrcRect{TextureRect{_cel_width * frame.coords.x, _cel_height * frame.coords.y, _cel_width, _cel_height}}

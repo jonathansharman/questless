@@ -15,8 +15,6 @@
 
 #include <boost/optional.hpp>
 
-#include "utility/constants.h"
-
 namespace questless
 {
 	struct DigraphMenuModel

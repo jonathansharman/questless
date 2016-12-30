@@ -10,6 +10,7 @@
 #include "ui/TileDialog.h"
 
 using namespace sdl;
+using namespace units;
 
 namespace questless
 {

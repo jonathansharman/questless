@@ -8,10 +8,11 @@
 */
 
 #include "ui/qte/LightningBolt.h"
-
+#include "Game.h"
 #include "utility/utility.h"
 
 using namespace sdl;
+using namespace units;
 
 namespace questless::qte
 {
@@ -35,7 +36,7 @@ namespace questless::qte
 
 	bool LightningBolt::update(Input&)
 	{
-		_elapsed_time += frame_duration;
+		_elapsed_time += Game::frame_duration;
 		if (_elapsed_time > _time_limit) {
 			return _cont(_charges.size() / _expected_charges);
 		}
@@ -75,7 +76,7 @@ namespace questless::qte
 			for (int i = 0; i < _charges_per_quadrant; ++i) {
 				_charges.push_back(Charge
 					{ _target + random_displacement(100.0)
-					, Velocity{GameVector{random_angle(), 100.0}}
+					, GameVelocity{GameVector{random_angle(), 100.0}}
 					});
 			}
 		}
@@ -94,11 +95,10 @@ namespace questless::qte
 			// Apply random acceleration.
 			point_charge.velocity.step() += random_displacement(50.0);
 			// Apply attractive and repulsive forces.
-			auto x = 20'000.0 * Velocity{r} / std::max(1.0, square(d));
 			point_charge.velocity.step() += 20'000.0 * r / std::max(1.0, square(d));
 			point_charge.velocity.step() -= 800'000.0 * r / std::max(1.0, cube(d));
 			// Update position.
-			point_charge.position += point_charge.velocity * frame_duration;
+			point_charge.position += point_charge.velocity * Game::frame_duration;
 		}
 
 		return false;
@@ -116,9 +116,9 @@ namespace questless::qte
 				, point_charge.position
 				, Origin{boost::none}
 				, Color{255, 255, percentage_to_byte(intensity)}
-				, HScale{(1.0 + intensity) / 2}
+				, HScale{(1.0 + intensity) / 2.0}
 				, VScale{(1.0 + intensity) / 2.0}
-				, AngleRadians{0.0}
+				, GameRadians{0.0}
 				);
 		}
 

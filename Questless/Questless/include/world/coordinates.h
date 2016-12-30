@@ -10,13 +10,13 @@
 #ifndef COORDINATES_H
 #define COORDINATES_H
 
-#include "utility/hex-utilities.h"
+#include "units/HexCoords.h"
 
 namespace questless
 {
-	using SectionTileCoords = HexCoords<struct SectionTileCoordsTag>;
-	using RegionTileCoords = HexCoords<struct RegionTileCoordsTag>;
-	using RegionSectionCoords = HexCoords<struct RegionSectionCoordsTag>;
+	using SectionTileCoords = units::HexCoords<struct SectionTileCoordsTag>;
+	using RegionTileCoords = units::HexCoords<struct RegionTileCoordsTag>;
+	using RegionSectionCoords = units::HexCoords<struct RegionSectionCoordsTag>;
 
 	/// Index of a tile within a section's tile array.
 	struct SectionTileIndex

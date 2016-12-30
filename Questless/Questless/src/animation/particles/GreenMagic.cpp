@@ -8,9 +8,11 @@
 */
 
 #include "animation/particles/GreenMagic.h"
+#include "Game.h"
 #include "sdl-wrappers/resources.h"
 
 using namespace sdl;
+using namespace units;
 
 namespace questless
 {
@@ -21,9 +23,9 @@ namespace questless
 		}
 
 		if (_turning_right) {
-			_velocity.step().rotate(AngleRadians{-1.0 * _turn_rate * frame_duration});
+			_velocity.step().rotate(GameRadians{-1.0 * _turn_rate * Game::frame_duration});
 		} else {
-			_velocity.step().rotate(AngleRadians{_turn_rate * frame_duration});
+			_velocity.step().rotate(GameRadians{_turn_rate * Game::frame_duration});
 		}
 	}
 

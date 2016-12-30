@@ -17,7 +17,8 @@
 
 #include <SDL.h>
 
-#include "utility/Point.h"
+#include "units/ScreenVector.h"
+#include "units/ScreenPoint.h"
 
 namespace sdl
 {
@@ -94,20 +95,20 @@ namespace sdl
 		bool resizable() const;
 
 		/// @return The position of the window.
-		ScreenPoint position() const;
+		units::ScreenPoint position() const;
 		/// @return The x-coordinate of the window.
 		int x() const;
 		/// @return The y-coordinate of the window.
 		int y() const;
 
 		/// @return The resolution of the window, width x height.
-		ScreenVector resolution() const;
+		units::ScreenVector resolution() const;
 		/// @return The window width.
 		int width() const;
 		/// @return The window height.
 		int height() const;
 		/// @return The center point of the window.
-		ScreenPoint center() const;
+		units::ScreenPoint center() const;
 	private:
 		SDL_Window* _sdl_window;
 		std::string _title;

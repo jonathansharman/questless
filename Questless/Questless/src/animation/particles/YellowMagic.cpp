@@ -16,7 +16,7 @@ namespace questless
 {
 	void YellowMagic::subupdate()
 	{
-		_velocity.step().rotate(AngleRadians{uniform(_turn_rate_min, _turn_rate_max)});
+		_velocity.step().rotate(uniform(-1.0, 1.0) * _max_turn_rate);
 		_angle = _velocity.step().angle();
 	}
 

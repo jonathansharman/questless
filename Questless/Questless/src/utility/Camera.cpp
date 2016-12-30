@@ -13,6 +13,8 @@
 
 #include "sdl-wrappers/resources.h"
 
+using namespace units;
+
 namespace questless
 {
 	void Camera::zoom_factor(double factor)
@@ -22,19 +24,19 @@ namespace questless
 		}
 	}
 
-	double Camera::positive_angle() const
+	GameRadians Camera::positive_angle() const
 	{
-		return _angle < 0.0 ? _angle + 360.0 : _angle;
+		return _angle < GameRadians::zero() ? _angle + GameRadians::circle() : _angle;
 	}
 
-	void Camera::angle(AngleRadians theta)
+	void Camera::angle(GameRadians theta)
 	{
-		_angle = fmod(theta, tau / 2.0);
+		_angle.count() = fmod(theta.count(), GameRadians::circle().count() / 2.0);
 	}
 
-	void Camera::rotate(AngleRadians dtheta)
+	void Camera::rotate(GameRadians dtheta)
 	{
-		_angle = fmod(_angle + dtheta, tau / 2.0);
+		_angle.count() = fmod((_angle + dtheta).count(), GameRadians::circle().count() / 2.0);
 	}
 
 	void Camera::update(const sdl::Input& input)
@@ -42,7 +44,7 @@ namespace questless
 		ScreenVector center_to_mouse = input.mouse_position() - _window.center();
 		GameVector scaled_center_to_mouse = GameVector{static_cast<double>(center_to_mouse.x), static_cast<double>(-center_to_mouse.y)} / _zoom;
 		_point_hovered = _position + scaled_center_to_mouse;
-		_point_hovered.rotate(_position, AngleRadians{_angle});
+		_point_hovered.rotate(_position, _angle);
 		_tile_hovered = Layout::dflt().to_hex_coords<RegionTileCoords>(_point_hovered);
 	}
 
@@ -53,7 +55,7 @@ namespace questless
 		, sdl::Color color
 		, HScale horizontal_scale
 		, VScale vertical_scale
-		, AngleRadians angle
+		, GameRadians angle
 		, HFlip flip_horizontally
 		, VFlip flip_vertically
 		, const SrcRect& src_rect
@@ -98,7 +100,7 @@ namespace questless
 		const GamePoint game_window_center = GamePoint{static_cast<double>(_window.width()), static_cast<double>(_window.height())} / 2.0;
 		const GameVector camera_to_point = point - _position;
 		const GamePoint scaled_point = _zoom * GameVector{camera_to_point.x, -camera_to_point.y} + game_window_center;
-		const GamePoint rotated_scaled_point = scaled_point.rotated(game_window_center, AngleRadians{_angle});
+		const GamePoint rotated_scaled_point = scaled_point.rotated(game_window_center, _angle);
 		return ScreenPoint{lround(rotated_scaled_point.x), lround(rotated_scaled_point.y)};
 	}
 }

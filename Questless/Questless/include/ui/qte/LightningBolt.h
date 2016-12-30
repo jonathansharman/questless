@@ -15,10 +15,10 @@
 #include <functional>
 
 #include "../Dialog.h"
-#include "utility/Point.h"
-#include "utility/units/vectors.h"
 #include "utility/Initializer.h"
 #include "animation/Camera.h"
+#include "units/Point.h"
+#include "units/GameVelocity.h"
 
 namespace questless::qte
 {
@@ -28,20 +28,20 @@ namespace questless::qte
 		/// @param camera The game camera.
 		/// @param target The target strike game point.
 		/// @param cont The dialog continuation function.
-		LightningBolt(const Camera& camera, GamePoint target, std::function<void(double)> cont);
+		LightningBolt(const Camera& camera, units::GamePoint target, std::function<void(double)> cont);
 
 		bool update(sdl::Input& input) override;
 
 		void draw(const sdl::Window& window) override;
 	private:
-		static constexpr seconds_f _time_limit = 5.0s;
+		static constexpr units::GameSeconds _time_limit = 5.0s;
 		static constexpr int _charges_per_quadrant = 4;
 		static constexpr double _expected_charges = _charges_per_quadrant * 70.0;
 
 		struct Charge
 		{
-			GamePoint position;
-			Velocity velocity;
+			units::GamePoint position;
+			units::GameVelocity velocity;
 		};
 
 		friend class Initializer<LightningBolt>;
@@ -51,10 +51,10 @@ namespace questless::qte
 		static sdl::Handle<sdl::Texture> LightningBolt::_point_charge_texture_handle;
 
 		const Camera& _camera;
-		GamePoint _target;
+		units::GamePoint _target;
 		Continuation<double> _cont;
 
-		seconds_f _elapsed_time = 0.0s;
+		units::GameSeconds _elapsed_time = 0.0s;
 		int _quadrant = 0;
 
 		std::vector<Charge> _charges;

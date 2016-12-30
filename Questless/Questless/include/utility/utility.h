@@ -12,14 +12,11 @@
 
 #include <string>
 #include <random>
-#include <chrono>
 #include <cmath>
 #include <functional>
 
-#include "constants.h"
-#include "units/vectors.h"
-#include "utility/Point.h"
-#include "utility/Rect.h"
+#include "units/GameVector.h"
+#include "units/GameRadians.h"
 
 namespace questless
 {
@@ -64,24 +61,24 @@ namespace questless
 	}
 
 	/// @return a random angle in radians.
-	inline AngleRadians random_angle()
+	inline units::GameRadians random_angle()
 	{
-		return AngleRadians{uniform(0.0, tau)};
+		return uniform(0.0, 1.0) * units::GameRadians::circle();
 	}
 
 	/// @return A displacement based on a uniform random distance and uniform random angle.
 	/// @param max_length The maximum possible length of the displacement.
-	inline GameVector random_displacement(double max_length)
+	inline units::GameVector random_displacement(double max_length)
 	{
-		return GameVector{random_angle(), uniform(0.0, max_length)};
+		return units::GameVector{random_angle(), uniform(0.0, max_length)};
 	}
 
 	/// @return A displacement based on a uniform random distance and uniform random angle.
 	/// @param min_length The minimum possible length of the displacement.
 	/// @param max_length The maximum possible length of the displacement.
-	inline GameVector random_displacement(double min_length, double max_length)
+	inline units::GameVector random_displacement(double min_length, double max_length)
 	{
-		return GameVector{random_angle(), uniform(min_length, max_length)};
+		return units::GameVector{random_angle(), uniform(min_length, max_length)};
 	}
 
 	//////////
@@ -92,24 +89,6 @@ namespace questless
 	/// @param percent A double in the range [0, 1].
 	/// @return The corresponding 8-bit integer.
 	uint8_t percentage_to_byte(double percent);
-
-	/// Extends the given bounding rectangle by the given point.
-	template <typename LengthType, typename SpaceType>
-	void extend_bounds(Rect<LengthType, SpaceType>& bounds, const Point<LengthType, SpaceType>& point)
-	{
-		if (point.x < bounds.x) {
-			bounds.w += bounds.x - point.x;
-			bounds.x = point.x;
-		} else if (point.x > bounds.x + bounds.w) {
-			bounds.w = point.x - bounds.x;
-		}
-		if (point.y < bounds.y) {
-			bounds.h += bounds.y - point.y;
-			bounds.y = point.y;
-		} else if (point.y > bounds.y + bounds.h) {
-			bounds.h = point.y - bounds.y;
-		}
-	}
 
 	/// @return The square of the given value.
 	template <typename T>

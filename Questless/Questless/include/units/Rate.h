@@ -12,7 +12,7 @@
 
 #include "Frequency.h"
 
-namespace questless
+namespace units
 {
 	template <typename QuantityType, typename TimeRep, typename Period = std::ratio<1>>
 	class Rate
@@ -31,7 +31,7 @@ namespace questless
 		constexpr static Rate<quantity_t, time_rep, period> zero() { return Rate<quantity_t, time_rep, period>{quantity_t{}}; }
 
 		/// @return The amount of the quantity type per unit period.
-		const quantity_t& step() const & { return _step; }
+		constexpr const quantity_t& step() const & { return _step; }
 		/// @return The amount of the quantity type per unit period.
 		quantity_t&& step() && { return std::move(_step); }
 		/// @return The amount of the quantity type per unit period.
@@ -45,30 +45,30 @@ namespace questless
 		constexpr bool operator >(const Rate<quantity_t, time_rep, period>& right) const { return _step > right._step; }
 
 		// Closed under addition.
-		Rate<quantity_t, time_rep, period>& operator +=(const Rate<quantity_t, time_rep, period>& rate)
+		Rate<quantity_t, time_rep, period>& operator +=(const Rate<quantity_t, time_rep, period>& rate) &
 		{
 			_step += rate._step;
 			return *this;
 		}
 
 		// Closed under subtraction.
-		Rate<quantity_t, time_rep, period>& operator -=(const Rate<quantity_t, time_rep, period>& rate)
+		Rate<quantity_t, time_rep, period>& operator -=(const Rate<quantity_t, time_rep, period>& rate) &
 		{
 			_step -= rate._step;
 			return *this;
 		}
 
 		// Closed under scalar multiplication.
-		Rate<quantity_t, time_rep, period>& operator *=(const time_rep& factor)
+		Rate<quantity_t, time_rep, period>& operator *=(const time_rep& k) &
 		{
-			_step *= factor;
+			_step *= k;
 			return *this;
 		}
 
 		// Closed under scalar division.
-		Rate<quantity_t, time_rep, period>& operator /=(const time_rep& factor)
+		Rate<quantity_t, time_rep, period>& operator /=(const time_rep& k) &
 		{
-			_step /= factor;
+			_step /= k;
 			return *this;
 		}
 	private:
@@ -91,22 +91,22 @@ namespace questless
 
 	// -rate -> rate
 	template <typename QuantityType, typename TimeRep, typename Period>
-	constexpr Rate<QuantityType, TimeRep, Period> operator -(Rate<QuantityType, TimeRep, Period> rate)
+	constexpr Rate<QuantityType, TimeRep, Period> operator -(const Rate<QuantityType, TimeRep, Period>& rate)
 	{
 		return Rate<QuantityType, TimeRep, Period>{-rate.step()};
 	}
 
 	// k * rate -> rate
 	template <typename QuantityType, typename TimeRep, typename Period>
-	constexpr Rate<QuantityType, TimeRep, Period> operator *(const TimeRep& factor, const Rate<QuantityType, TimeRep, Period>& rate)
+	constexpr Rate<QuantityType, TimeRep, Period> operator *(const TimeRep& k, const Rate<QuantityType, TimeRep, Period>& rate)
 	{
-		return Rate<QuantityType, TimeRep, Period>{factor * rate.step()};
+		return Rate<QuantityType, TimeRep, Period>{k * rate.step()};
 	}
 	// rate * k -> rate
 	template <typename QuantityType, typename TimeRep, typename Period>
-	constexpr Rate<QuantityType, TimeRep, Period> operator *(const Rate<QuantityType, TimeRep, Period>& rate, const TimeRep& factor)
+	constexpr Rate<QuantityType, TimeRep, Period> operator *(const Rate<QuantityType, TimeRep, Period>& rate, const TimeRep& k)
 	{
-		return Rate<QuantityType, TimeRep, Period>{factor * rate.step()};
+		return Rate<QuantityType, TimeRep, Period>{k * rate.step()};
 	}
 
 	// rate * duration -> quantity
@@ -137,9 +137,9 @@ namespace questless
 
 	// rate / k -> rate
 	template <typename QuantityType, typename TimeRep, typename Period>
-	constexpr Rate<QuantityType, TimeRep, Period> operator /(const Rate<QuantityType, TimeRep, Period>& rate, const TimeRep& divisor)
+	constexpr Rate<QuantityType, TimeRep, Period> operator /(const Rate<QuantityType, TimeRep, Period>& rate, const TimeRep& k)
 	{
-		return Rate<QuantityType, TimeRep, Period>{rate.step() / divisor};
+		return Rate<QuantityType, TimeRep, Period>{rate.step() / k};
 	}
 
 	// rate / quantity -> frequency
@@ -183,25 +183,25 @@ namespace questless
 namespace std
 {
 	template <typename QuantityType, typename TimeRep, typename Period>
-	struct common_type<questless::Rate<QuantityType, TimeRep, Period>, std::chrono::duration<TimeRep, Period>>
+	struct common_type<units::Rate<QuantityType, TimeRep, Period>, std::chrono::duration<TimeRep, Period>>
 	{
 		using type = TimeRep;
 	};
 
 	template <typename QuantityType, typename TimeRep, typename Period>
-	struct common_type<std::chrono::duration<TimeRep, Period>, questless::Rate<QuantityType, TimeRep, Period>>
+	struct common_type<std::chrono::duration<TimeRep, Period>, units::Rate<QuantityType, TimeRep, Period>>
 	{
 		using type = TimeRep;
 	};
 
 	template <typename QuantityType, typename TimeRep, typename Period>
-	struct common_type<questless::Rate<QuantityType, TimeRep, Period>, TimeRep>
+	struct common_type<units::Rate<QuantityType, TimeRep, Period>, TimeRep>
 	{
 		using type = TimeRep;
 	};
 
 	template <typename QuantityType, typename TimeRep, typename Period>
-	struct common_type<TimeRep, questless::Rate<QuantityType, TimeRep, Period>>
+	struct common_type<TimeRep, units::Rate<QuantityType, TimeRep, Period>>
 	{
 		using type = TimeRep;
 	};

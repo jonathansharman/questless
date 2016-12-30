@@ -11,6 +11,8 @@
 
 #include "SDL_image.h"
 
+using namespace units;
+
 namespace sdl
 {
 	Window::Window

@@ -27,15 +27,15 @@ namespace questless
 
 	SectionTileIndex Section::tile_index(SectionTileCoords tile_coords)
 	{
-		int x = tile_coords.r + section_radius;
-		int y = tile_coords.q + section_radius;
+		int x = tile_coords.r + Section::radius;
+		int y = tile_coords.q + Section::radius;
 		return SectionTileIndex{x, y};
 	}
 
 	SectionTileIndex Section::tile_index(RegionTileCoords region_tile_coords)
 	{
-		int x = (region_tile_coords.q % section_diameter + section_diameter) % section_diameter;
-		int y = (region_tile_coords.r % section_diameter + section_diameter) % section_diameter;
+		int x = (region_tile_coords.q % Section::diameter + Section::diameter) % Section::diameter;
+		int y = (region_tile_coords.r % Section::diameter + Section::diameter) % Section::diameter;
 		return SectionTileIndex{x, y};
 	}
 

@@ -16,7 +16,7 @@
 #include <boost/iterator/transform_iterator.hpp>
 
 #include "entities/beings/BodyPart.h"
-#include "sdl-wrappers/basic-sdl-wrappers.h"
+#include "units/ScreenVector.h"
 
 namespace questless
 {
@@ -68,10 +68,10 @@ namespace questless
 		const std::vector<Tail::ref>& tails() { return _tails; }
 
 		/// @return The bounding box around the body's parts.
-		ScreenRect bounds() const { return _bounds; }
+		units::ScreenRect bounds() const { return _bounds; }
 
 		/// @return The offset from the upper left corner of the bounds to the body's center.
-		ScreenVector offset_to_center() const { return _offset_to_center; }
+		units::ScreenVector offset_to_center() const { return _offset_to_center; }
 	private:
 		using transform_t = const BodyPart::ref (*)(BodyPart::ref);
 
@@ -97,8 +97,8 @@ namespace questless
 
 		std::unique_ptr<BodyPart> _root;
 
-		ScreenRect _bounds;
-		ScreenVector _offset_to_center;
+		units::ScreenRect _bounds;
+		units::ScreenVector _offset_to_center;
 
 		std::vector<BodyPart::ref> _parts;
 

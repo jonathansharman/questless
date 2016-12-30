@@ -187,7 +187,7 @@ namespace questless
 	}
 
 	Action::Complete Player::query_list
-		( ScreenPoint origin
+		( units::ScreenPoint origin
 		, std::string title
 		, std::vector<std::string> options
 		, std::function<Action::Complete(boost::optional<int>)> cont
@@ -199,7 +199,7 @@ namespace questless
 
 	// Quick Time Events
 
-	Action::Complete Player::get_lightning_bolt_quality(GamePoint target, std::function<Action::Complete(double)> cont)
+	Action::Complete Player::get_lightning_bolt_quality(units::GamePoint target, std::function<Action::Complete(double)> cont)
 	{
 		auto dialog = std::make_unique<qte::LightningBolt>(being().game().camera(), target, move(cont));
 		return being().game().add_dialog(move(dialog));

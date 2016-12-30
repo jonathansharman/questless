@@ -13,7 +13,6 @@
 #include <memory>
 
 #include "animation/particles/Particle.h"
-#include "utility/utility.h"
 
 namespace questless
 {
@@ -21,24 +20,23 @@ namespace questless
 	{
 	public:
 		/// @param position The particle's starting position.
-		YellowMagic(GamePoint position) : Particle
+		YellowMagic(units::GamePoint position) : Particle
 			{ position
-			, GameVector{random_angle(), 100.0} / 1.0s
-			, Acceleration::zero()
+			, units::GameVector{random_angle(), 100.0} / 1.0s
+			, units::GameAcceleration::zero()
 			, random_angle()
-			, AngularVelocity{0.0}
+			, units::GameRadians{0.0} / 1.0s
 			, Scale{1.0}
-			, ScaleVelocity{0.0}
-			, Lifetime{seconds_f{uniform(0.8, 1.2)}}
+			, units::GameScaleVelocity::zero()
+			, Lifetime{units::GameSeconds{uniform(0.8, 1.2)}}
 			, MaxDisplacement{30.0}
 			}
 		{}
 
 		/// @param position The particle's starting position.
-		static ptr make(GamePoint position) { return std::make_unique<YellowMagic>(position); }
+		static ptr make(units::GamePoint position) { return std::make_unique<YellowMagic>(position); }
 	private:
-		static constexpr double _turn_rate_min = -60.0;
-		static constexpr double _turn_rate_max = 60.0;
+		static constexpr units::GameRadians _max_turn_rate = units::GameRadians::circle() / 6.0;
 
 		void subupdate() override;
 

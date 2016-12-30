@@ -10,23 +10,23 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "sdl-wrappers/basic-sdl-wrappers.h"
 #include "sdl-wrappers/Texture.h"
 #include "sdl-wrappers/Window.h"
 #include "sdl-wrappers/Input.h"
+#include "sdl-wrappers/Color.h"
 #include "world/coordinates.h"
 #include "utility/utility.h"
-#include "utility/Point.h"
 #include "utility/TaggedType.h"
+#include "units/Point.h"
 
 namespace questless
 {
-	using Origin = TaggedType<boost::optional<GamePoint>, struct OriginTag>;
+	using Origin = TaggedType<boost::optional<units::GamePoint>, struct OriginTag>;
 	using HScale = TaggedType<double, struct HScaleTag>;
 	using VScale = TaggedType<double, struct VScaleTag>;
 	using HFlip = TaggedType<bool, struct HScaleTag>;
 	using VFlip = TaggedType<bool, struct VScaleTag>;
-	using SrcRect = TaggedType<boost::optional<TextureRect>, struct SrcRectTag>;
+	using SrcRect = TaggedType<boost::optional<units::TextureRect>, struct SrcRectTag>;
 
 	class Camera
 	{
@@ -36,7 +36,7 @@ namespace questless
 		/// Constructs a camera with the specified starting position.
 		/// @param window The window.
 		/// @param position The starting position of the camera.
-		Camera(sdl::Window& window, GamePoint position)
+		Camera(sdl::Window& window, units::GamePoint position)
 			: _window{window}
 			, _position{position}
 			, _zoom{1.0}
@@ -57,15 +57,15 @@ namespace questless
 		const sdl::Window& window() const { return _window; }
 
 		/// @return The camera's position.
-		GamePoint position() const { return _position; }
+		units::GamePoint position() const { return _position; }
 
 		/// Sets the camera's position.
 		/// @param position The new camera position.
-		void position(const GamePoint& position) { _position = position; }
+		void position(const units::GamePoint& position) { _position = position; }
 
 		/// Pans the camera the specified amount.
 		/// @param offset The offset which is added to the camera's position.
-		void pan(const GameVector& offset) { _position += offset; }
+		void pan(const units::GameVector& offset) { _position += offset; }
 
 		/// @return The camera's zoom.
 		inline double zoom() const { return _zoom; }
@@ -78,19 +78,19 @@ namespace questless
 		/// @param factor A non-negative double by which zoom is multiplied.
 		void zoom_factor(double factor);
 
-		/// @return The camera's counter-clockwise rotation in degrees, in the range [-180, 180].
-		AngleRadians angle() const { return AngleRadians{_angle}; }
+		/// @return The camera's counter-clockwise rotation in radians, in the range [-pi, pi].
+		units::GameRadians angle() const { return _angle; }
 
-		/// @return The camera's counter-clockwise rotation in degrees, in the range [0, 360).
-		double positive_angle() const;
+		/// @return The camera's counter-clockwise rotation in radians, in the range [0, tau).
+		units::GameRadians positive_angle() const;
 
 		/// Sets the camera's angle.
-		/// @param theta A double in the range [0, tau) representing the camera's counter-clockwise rotation in radians.
-		void angle(AngleRadians theta);
+		/// @param theta The camera's counter-clockwise rotation in radians, in the range [0, tau).
+		void angle(units::GameRadians theta);
 
 		/// Adjusts the camera's angle.
 		/// @param dtheta The number of radians to offset the angle.
-		void rotate(AngleRadians dtheta);
+		void rotate(units::GameRadians dtheta);
 
 		/// @return The camera's color multiplier.
 		sdl::Color color() const { return _color; }
@@ -100,7 +100,7 @@ namespace questless
 		sdl::Color color(sdl::Color color) { _color = color; }
 
 		/// @return The game point the mouse is hovering over.
-		GamePoint point_hovered() const { return _point_hovered; }
+		units::GamePoint point_hovered() const { return _point_hovered; }
 
 		/// @return The hex coordinates of the tile the mouse is hovering over.
 		RegionTileCoords tile_hovered() const { return _tile_hovered; }
@@ -120,12 +120,12 @@ namespace questless
 		/// @param src_rect An optional Rect specifying the portion of the texture to be copied. If nullopt, the entire texture is used.
 		void draw
 			( const sdl::Texture& texture
-			, GamePoint position
+			, units::GamePoint position
 			, Origin origin = Origin{boost::none}
 			, sdl::Color color = sdl::Color::white()
 			, HScale horizontal_scale = HScale{1.0}
 			, VScale vertical_scale = VScale{1.0}
-			, AngleRadians angle = AngleRadians{0.0}
+			, units::GameRadians angle = units::GameRadians{0.0}
 			, HFlip flip_horizontally = HFlip{false}
 			, VFlip flip_vertically = VFlip{false}
 			, const SrcRect& src_rect = SrcRect{boost::none}
@@ -134,19 +134,19 @@ namespace questless
 		/// Draws lines relative to the camera connecting the series of points contained in the vector.
 		/// @param points A vector of game points.
 		/// @param color The color of the lines.
-		void draw_lines(std::vector<GamePoint> points, sdl::Color color) const;
+		void draw_lines(std::vector<units::GamePoint> points, sdl::Color color) const;
 	private:
 		sdl::Window& _window;
-		GamePoint _position;
+		units::GamePoint _position;
 		double _zoom;
-		double _angle;
+		units::GameRadians _angle;
 		sdl::Color _color;
 
-		GamePoint _point_hovered;
+		units::GamePoint _point_hovered;
 		RegionTileCoords _tile_hovered;
 
 		/// @return The given game point transformed to screen space, accounting for the camera.
-		ScreenPoint screen_point(GamePoint point) const;
+		units::ScreenPoint screen_point(units::GamePoint point) const;
 	};
 }
 

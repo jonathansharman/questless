@@ -275,7 +275,7 @@ namespace sdl
 		}
 	}
 
-	void Input::move_mouse(const Window& window, const ScreenPoint& position)
+	void Input::move_mouse(const Window& window, const units::ScreenPoint& position)
 	{
 		SDL_WarpMouseInWindow(window.sdl_ptr(), position.x, position.y);
 		_mouse_position = position;

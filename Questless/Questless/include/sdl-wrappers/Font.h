@@ -16,7 +16,6 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 
-#include "basic-sdl-wrappers.h"
 #include "Texture.h"
 
 namespace sdl

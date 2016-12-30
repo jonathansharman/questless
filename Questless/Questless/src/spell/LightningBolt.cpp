@@ -43,7 +43,7 @@ namespace questless::spell
 						if (caster.mana() < cost) {
 							return caster.agent().message("Not enough mana!", "You need " + std::to_string(cost - caster.mana()) + " more mana to cast this.", [cont] { return cont(Result::aborted); });
 						}
-						return caster.agent().get_lightning_bolt_quality(Layout::dflt().to_world(tile_coords), [this, &caster, cont, tile_coords, magnitude, cost](double quality) {
+						return caster.agent().get_lightning_bolt_quality(units::Layout::dflt().to_world(tile_coords), [this, &caster, cont, tile_coords, magnitude, cost](double quality) {
 							active_cooldown(cooldown());
 							discharge();
 							caster.lose_mana(cost);

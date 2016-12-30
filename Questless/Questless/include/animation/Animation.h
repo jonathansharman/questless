@@ -18,8 +18,9 @@
 
 #include <boost/optional.hpp>
 
-#include "utility/constants.h"
-#include "utility/Point.h"
+#include "units/SpriteSheetPoint.h"
+#include "units/TexturePoint.h"
+#include "units/GameSeconds.h"
 
 namespace questless
 {
@@ -30,11 +31,11 @@ namespace questless
 
 		struct Frame
 		{
-			seconds_f duration;
-			SpriteSheetPoint coords; ///< The cel coordinates within the sprite sheet.
-			TexturePoint origin; ///< The origin of the frame's texture relative to the animation origin.
+			units::GameSeconds duration;
+			units::SpriteSheetPoint coords; ///< The cel coordinates within the sprite sheet.
+			units::TexturePoint origin; ///< The origin of the frame's texture relative to the animation origin.
 
-			Frame(seconds_f duration, SpriteSheetPoint coords, TexturePoint origin)
+			Frame(units::GameSeconds duration, units::SpriteSheetPoint coords, units::TexturePoint origin)
 				: duration{duration}, coords{coords}, origin{origin}
 			{}
 		};
@@ -74,7 +75,7 @@ namespace questless
 		bool over() const { return _over; }
 
 		/// @return The total duration of the animation.
-		seconds_f duration() const;
+		units::GameSeconds duration() const;
 
 		/// Moves to the start or a random point in the animation, sets the loop counter to zero, and sets the over flag to false.
 		/// @param randomize_starting_time If true, resets the animation to a random point.
@@ -85,7 +86,7 @@ namespace questless
 	private:
 		std::vector<Frame> _frames;
 		int _frame_index;
-		seconds_f _accrued_time;
+		units::GameSeconds _accrued_time;
 		bool _looping;
 		unsigned _loops;
 		bool _in_reverse;

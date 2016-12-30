@@ -17,7 +17,7 @@
 
 #include "ItemVisitor.h"
 #include "entities/beings/Action.h"
-#include "utility/hex-utilities.h"
+#include "units/HexCoords.h"
 
 namespace questless
 {

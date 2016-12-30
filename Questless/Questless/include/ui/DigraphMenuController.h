@@ -76,7 +76,7 @@ namespace questless
 		/// @param origin The origin point of the menu on the screen.
 		/// @param horizontal_alignment The horizontal alignment of the menu relative to the origin point.
 		/// @param vertical_alignment The vertical alignment of the menu relative to the origin point.
-		void draw(ScreenPoint origin, sdl::HAlign horizontal_alignment = sdl::HAlign::left, sdl::VAlign vertical_alignment = sdl::VAlign::top);
+		void draw(units::ScreenPoint origin, sdl::HAlign horizontal_alignment = sdl::HAlign::left, sdl::VAlign vertical_alignment = sdl::VAlign::top);
 	private:
 		friend class Initializer<DigraphMenuController>;
 		static Initializer<DigraphMenuController> _initializer;

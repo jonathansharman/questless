@@ -10,6 +10,7 @@
 #include "ui/MagnitudeDialog.h"
 
 using namespace sdl;
+using namespace units;
 
 namespace questless
 {

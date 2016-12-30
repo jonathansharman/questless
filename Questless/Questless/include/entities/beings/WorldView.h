@@ -18,8 +18,8 @@
 #include "entities/beings/BeingId.h"
 #include "entities/objects/ObjectId.h"
 #include "world/coordinates.h"
-#include "utility/constants.h"
-#include "utility/Rect.h"
+#include "world/Section.h"
+#include "units/GameRect.h"
 
 namespace questless
 {
@@ -33,7 +33,7 @@ namespace questless
 		struct SectionView
 		{
 			RegionSectionCoords coords;
-			std::array<std::array<double, section_diameter>, section_diameter> tile_visibilities; ///< Indices are r-major.
+			std::array<std::array<double, Section::diameter>, Section::diameter> tile_visibilities; ///< Indices are r-major.
 		};
 
 		struct BeingView
@@ -87,7 +87,7 @@ namespace questless
 		const Region& region() const { return _region; }
 
 		/// @return A bounding rectangle around the visible tiles or nullopt if initialized with find_bounds set to false or if no tiles are visible.
-		boost::optional<GameRect> bounds() const { return _bounds; }
+		boost::optional<units::GameRect> bounds() const { return _bounds; }
 	private:
 		static constexpr double _low_perception_threshold = 20.0;
 		static constexpr double _medium_perception_threshold = 40.0;
@@ -99,7 +99,7 @@ namespace questless
 		std::vector<ObjectView> _object_views;
 		std::reference_wrapper<const Region> _region;
 
-		boost::optional<GameRect> _bounds;
+		boost::optional<units::GameRect> _bounds;
 	};
 }
 

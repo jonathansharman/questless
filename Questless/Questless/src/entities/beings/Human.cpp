@@ -12,6 +12,8 @@
 #include "entities/beings/BodyPart.h"
 #include "agents/Agent.h"
 
+using namespace units;
+
 namespace questless
 {
 	Human::Human(Game& game, std::function<std::unique_ptr<Agent>(Being&)> agent_factory, BeingId id)

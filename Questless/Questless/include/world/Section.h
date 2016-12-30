@@ -21,8 +21,7 @@
 #include "coordinates.h"
 #include "entities/beings/Being.h"
 #include "entities/objects/Object.h"
-#include "utility/constants.h"
-#include "utility/hex-utilities.h"
+#include "units/HexCoords.h"
 #include "world/Tile.h"
 #include "animation/Camera.h"
 
@@ -33,6 +32,9 @@ namespace questless
 	public:
 		using ref = std::reference_wrapper<Section>;
 		using cref = std::reference_wrapper<const Section>;
+
+		static constexpr int radius = 10;
+		static constexpr int diameter = 2 * radius + 1;
 
 		/// @param tile_coords Hex coordinates of a tile relative to the section.
 		/// @return The tile index in the section of the given section coordinates.
@@ -111,8 +113,8 @@ namespace questless
 		/// @return Hex coordinates relative to the region.
 		static RegionTileCoords region_tile_coords(RegionSectionCoords section_coords, SectionTileCoords tile_coords)
 		{
-			int q = section_coords.q * section_diameter + tile_coords.q;
-			int r = section_coords.r * section_diameter + tile_coords.r;
+			int q = section_coords.q * diameter + tile_coords.q;
+			int r = section_coords.r * diameter + tile_coords.r;
 			return RegionTileCoords{q, r};
 		}
 		/// @param tile_coords Hex coordinates of a tile relative to the section.
@@ -151,7 +153,7 @@ namespace questless
 		/// @return The temperature at the given region coordinates.
 		double temperature(RegionTileCoords region_tile_coords) const { return tile(region_tile_coords).temperature(); }
 	private:
-		std::array<std::array<std::unique_ptr<Tile>, section_diameter>, section_diameter> _tiles; ///< An r-major array of tiles, representing a rhomboid section of world data centered around the section's hex coordinates.
+		std::array<std::array<std::unique_ptr<Tile>, diameter>, diameter> _tiles; ///< An r-major array of tiles, representing a rhomboid section of world data centered around the section's hex coordinates.
 		RegionSectionCoords _coords; ///< The hex coordinates of the section within the region. The section's center's region tile coordinates are _coords * section_diameter.
 
 		std::unordered_map<RegionTileCoords, Being::ptr> _beings;

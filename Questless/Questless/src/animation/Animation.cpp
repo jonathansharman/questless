@@ -8,16 +8,16 @@
 */
 
 #include "animation/Animation.h"
-#include "utility/utility.h"
+#include "Game.h"
 
-using std::chrono::duration;
+using namespace units;
 
 namespace questless
 {
 	Animation::Animation(std::vector<Frame> frames, bool looping)
 		: _frames(frames)
 		, _frame_index(0)
-		, _accrued_time(seconds_f::zero())
+		, _accrued_time(GameSeconds::zero())
 		, _looping(looping)
 		, _loops(0)
 		, _in_reverse(false)
@@ -25,9 +25,9 @@ namespace questless
 		, _over(false)
 	{}
 
-	seconds_f Animation::duration() const
+	GameSeconds Animation::duration() const
 	{
-		auto ret = seconds_f::zero();
+		auto ret = GameSeconds::zero();
 		for (const Frame& frame : _frames) {
 			ret += frame.duration;
 		}
@@ -51,7 +51,7 @@ namespace questless
 			return;
 		}
 
-		_accrued_time += _time_scale * frame_duration;
+		_accrued_time += _time_scale * Game::frame_duration;
 		while (_accrued_time > _frames[_frame_index].duration) {
 			_accrued_time -= _frames[_frame_index].duration;
 			if (_in_reverse) {
