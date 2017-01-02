@@ -18,29 +18,10 @@
 #include "GameVector.h"
 #include "GamePoint.h"
 #include "GameRadians.h"
+#include "constexpr-math.h"
 
 namespace units
 {
-	namespace detail
-	{
-		template <typename Floating, typename = std::enable_if_t<std::is_floating_point<Floating>::value>>
-		constexpr Floating constexpr_sqrt_iterative(Floating x, Floating current, Floating previous)
-		{
-			return current == previous
-				? current
-				: constexpr_sqrt_iterative(x, 0.5 * (current + x / current), current);
-		}
-
-		/// constexpr version of sqrt().
-		/// @return The square root of the given floating-point number.
-		template <typename Floating, typename = std::enable_if_t<std::is_floating_point<Floating>::value>>
-		constexpr Floating csqrt(Floating x)
-		{
-			/// @todo Replace constexpr_sqrt_iterative with constexpr lambda when better supported.
-			return detail::constexpr_sqrt_iterative(x, 0.5 * x, 0.0);
-		}
-	}
-
 	template <typename Tag>
 	struct HexCoords
 	{
@@ -169,8 +150,8 @@ namespace units
 		{}
 	};
 
-	constexpr Orientation orientation_pointy{detail::csqrt(3.0), detail::csqrt(3.0) / 2.0, 0.0, 3.0 / 2.0, 0.5};
-	constexpr Orientation orientation_flat{3.0 / 2.0, 0.0, detail::csqrt(3.0) / 2.0, detail::csqrt(3.0), 0.0};
+	constexpr Orientation orientation_pointy{constexpr_math::sqrt(3.0), constexpr_math::sqrt(3.0) / 2.0, 0.0, 3.0 / 2.0, 0.5};
+	constexpr Orientation orientation_flat{3.0 / 2.0, 0.0, constexpr_math::sqrt(3.0) / 2.0, constexpr_math::sqrt(3.0), 0.0};
 
 	struct Layout
 	{
@@ -178,7 +159,7 @@ namespace units
 		units::GameVector size;
 		units::GamePoint origin;
 
-		static constexpr Layout dflt() { return Layout{orientation_flat, units::GameVector{29.0, 35.5 / detail::csqrt(3.0)}, units::GamePoint{0, 0}}; }
+		static constexpr Layout dflt() { return Layout{orientation_flat, units::GameVector{29.0, 35.5 / constexpr_math::sqrt(3.0)}, units::GamePoint{0, 0}}; }
 
 		constexpr Layout(Orientation orientation, units::GameVector size, units::GamePoint origin)
 			: orientation{orientation}, size{std::move(size)}, origin{std::move(origin)}

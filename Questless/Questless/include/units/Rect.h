@@ -51,6 +51,12 @@ namespace units
 			}
 		}
 
+		friend std::ostream& operator <<(std::ostream& out, const Rect& r)
+		{
+			out << '(' << r.x << ", " << r.y << ", " << r.w << ", " << r.h << ')';
+			return out;
+		}
+
 		constexpr friend bool operator ==(const Rect& left, const Rect& right)
 		{
 			return left.x == right.x && left.y == right.y && left.w == right.w && left.h == right.h;

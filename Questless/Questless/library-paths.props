@@ -4,6 +4,7 @@
   <PropertyGroup Label="UserMacros">
     <SDL_PATH>C:\vc-libs\</SDL_PATH>
     <BOOST_PATH>C:\vc-libs\</BOOST_PATH>
+    <DOCTEST_PATH>C:\vc-libs\</DOCTEST_PATH>
   </PropertyGroup>
   <PropertyGroup />
   <ItemDefinitionGroup />
@@ -14,6 +15,10 @@
     </BuildMacro>
     <BuildMacro Include="BOOST_PATH">
       <Value>$(BOOST_PATH)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="DOCTEST_PATH">
+      <Value>$(DOCTEST_PATH)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
   </ItemGroup>

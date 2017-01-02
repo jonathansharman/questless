@@ -29,7 +29,6 @@
 #include "ui/DigraphMenuController.h"
 #include "ui/PlayerActionDialog.h"
 #include "ui/ListDialog.h"
-#include "units/Rate.h"
 #include "sdl-wrappers/Window.h"
 #include "sdl-wrappers/Renderer.h"
 #include "sdl-wrappers/Texture.h"

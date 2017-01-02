@@ -17,6 +17,14 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Test|Win32">
+      <Configuration>Test</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Test|x64">
+      <Configuration>Test</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D44739D1-4AB7-4180-BCAE-393BA1F74BDA}</ProjectGuid>
@@ -30,7 +38,19 @@
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Test|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
@@ -57,7 +77,15 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="library-paths.props" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="library-paths.props" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="library-paths.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Test|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="library-paths.props" />
   </ImportGroup>
@@ -73,15 +101,23 @@
     <SDL_PATH>C:\vc-libs\</SDL_PATH>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(BOOST_PATH)\boost_1_61_0;$(VC_IncludePath)</IncludePath>
-    <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(BOOST_PATH)\boost_1_61_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(BOOST_PATH)boost_1_61_0;$(DOCTEST_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">
+    <IncludePath>$(ProjectDir)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(BOOST_PATH)boost_1_61_0;$(DOCTEST_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>C:\Program Files (x86)\Windows Kits\8.1\Include\shared\;$(SourcePath)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(VC_IncludePath)</IncludePath>
     <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Test|x64'">
+    <IncludePath>C:\Program Files (x86)\Windows Kits\8.1\Include\shared\;$(SourcePath)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(VC_IncludePath)</IncludePath>
+    <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(BOOST_PATH)\boost_1_61_0;$(VC_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(BOOST_PATH)boost_1_61_0;$(DOCTEST_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -107,7 +143,41 @@
       <PerUserRedirection>true</PerUserRedirection>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+      <DisableSpecificWarnings>4268;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(BOOST_PATH)\boost_1_61_0\stage\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libboost_system-vc140-mt-gd-1_61.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
+      <PerUserRedirection>true</PerUserRedirection>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Test|x64'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
@@ -285,6 +355,7 @@
     <ClInclude Include="include\ui\qte\LightningBolt.h" />
     <ClInclude Include="include\ui\TileDialog.h" />
     <ClInclude Include="include\units\Angle.h" />
+    <ClInclude Include="include\units\constexpr-math.h" />
     <ClInclude Include="include\units\Frequency.h" />
     <ClInclude Include="include\units\GameAcceleration.h" />
     <ClInclude Include="include\units\GamePoint.h" />

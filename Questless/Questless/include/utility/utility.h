@@ -44,7 +44,7 @@ namespace questless
 	/// @return A random integral value in [min, max].
 	template<typename Integer>
 	typename std::enable_if_t<std::is_integral<Integer>::value, Integer>
-	inline uniform(Integer min, Integer max)
+	uniform(Integer min, Integer max)
 	{
 		return std::uniform_int_distribution<Integer>(min, max)(rng);
 	}
@@ -55,7 +55,7 @@ namespace questless
 	/// @return A random floating-point value in [min, max].
 	template<typename Floating>
 	typename std::enable_if_t<std::is_floating_point<Floating>::value, Floating>
-	inline uniform(Floating min, Floating max)
+	uniform(Floating min, Floating max)
 	{
 		return std::uniform_real_distribution<Floating>(min, max)(rng);
 	}

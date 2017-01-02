@@ -13,7 +13,6 @@
 #include <vector>
 #include <string>
 #include <chrono>
-#include <stdexcept>
 #include <memory>
 
 #include <boost/optional.hpp>

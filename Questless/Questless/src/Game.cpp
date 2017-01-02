@@ -510,7 +510,7 @@ namespace questless
 			// Pan camera.
 			if (_input.down(MouseButton::middle)) {
 				ScreenVector mouse_shift = _input.last_mouse_position() - _input.mouse_position();
-				auto pan = GameVector{static_cast<double>(mouse_shift.x), static_cast<double>(mouse_shift.y)} / _camera->zoom();
+				auto pan = GameVector{static_cast<double>(mouse_shift.x), static_cast<double>(-mouse_shift.y)} / _camera->zoom();
 				pan.rotate(_camera->angle());
 				_camera->pan(pan);
 			}

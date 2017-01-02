@@ -631,10 +631,11 @@
     <ClInclude Include="include\units\GameSeconds.h">
       <Filter>include\units</Filter>
     </ClInclude>
+    <ClInclude Include="include\units\constexpr-math.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\world\Region.cpp">
       <Filter>src\world</Filter>
     </ClCompile>
@@ -838,6 +839,12 @@
     </ClCompile>
     <ClCompile Include="src\animation\particles\TextParticle.cpp">
       <Filter>src\animation\particles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
