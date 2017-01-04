@@ -96,7 +96,27 @@ namespace questless
 					? *it->second
 					: cache_being_animation(*being);
 
-				being_animation.draw(Layout::dflt().to_world(being->coords()), camera);
+				// Draw heading.
+				GamePoint start = Layout::dflt().to_world(being->coords());
+				GamePoint end = Layout::dflt().to_world(being->coords().neighbor(being->direction()));
+				camera.draw_lines({start, end}, Color::magenta());
+
+				uint8_t luminance;
+				switch (being_view.perception) {
+				case WorldView::BeingView::Perception::low:
+					luminance = 128;
+					break;
+				case WorldView::BeingView::Perception::medium:
+					luminance = 192;
+					break;
+				case WorldView::BeingView::Perception::high:
+				case WorldView::BeingView::Perception::full:
+					luminance = 255;
+					break;
+				default:
+					throw std::logic_error{"Invalid perception level."};
+				}
+				being_animation.draw(Layout::dflt().to_world(being->coords()), camera, Color{luminance, luminance, luminance});
 			} else {
 				// Remove the being from the animation cache if it doesn't exist anymore.
 				_being_animations.erase(being_view.id);
@@ -112,11 +132,26 @@ namespace questless
 				// Search for the object's animation in the cache.
 				auto it = _object_animations.find(object_view.id);
 				// If it's there, use it. Otherwise, create the animation and cache it.
-				AnimationCollection& being_animation = it != _object_animations.end()
+				AnimationCollection& object_animation = it != _object_animations.end()
 					? *it->second
 					: cache_object_animation(*object);
 
-				being_animation.draw(Layout::dflt().to_world(object->coords()), camera);
+				uint8_t luminance;
+				switch (object_view.perception) {
+					case WorldView::ObjectView::Perception::low:
+						luminance = 128;
+						break;
+					case WorldView::ObjectView::Perception::medium:
+						luminance = 192;
+						break;
+					case WorldView::ObjectView::Perception::high:
+					case WorldView::ObjectView::Perception::full:
+						luminance = 255;
+						break;
+					default:
+						throw std::logic_error{"Invalid perception level."};
+				}
+				object_animation.draw(Layout::dflt().to_world(object->coords()), camera, Color{luminance, luminance, luminance});
 			} else {
 				// Remove the object from the animation cache if it doesn't exist anymore.
 				_object_animations.erase(object_view.id);

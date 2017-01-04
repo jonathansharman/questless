@@ -53,7 +53,7 @@ namespace questless
 		}
 	}
 
-	void AnimationCollection::draw(GamePoint origin, const Camera& camera) const
+	void AnimationCollection::draw(GamePoint origin, const Camera& camera, Color color) const
 	{
 		if (_current_animation != nullptr) {
 			const Animation::Frame& frame = _current_animation->current_frame();
@@ -61,7 +61,7 @@ namespace questless
 				( texture_manager()[_sprite_sheet_handle]
 				, GamePoint{origin - GameVector{static_cast<double>(frame.origin.x), static_cast<double>(-frame.origin.y)}} /// @todo Uncouth point casting here.
 				, Origin{boost::none}
-				, Color::white()
+				, color
 				, HScale{1.0}
 				, VScale{1.0}
 				, GameRadians{0.0}

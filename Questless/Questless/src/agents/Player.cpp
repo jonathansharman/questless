@@ -27,12 +27,21 @@ namespace questless
 		game.query_player_choice([this, &game](PlayerActionDialog::Choice player_choice) {
 			switch (player_choice.type) {
 				case PlayerActionDialog::Choice::Type::idle:
-					being().gain_busy_time(player_choice.data == 1 ? 10.0 : 0.25);
+					being().gain_busy_time(player_choice.data == 1 ? 10.0 : 1.0);
 					break;
 				case PlayerActionDialog::Choice::Type::move:
-					being().gain_busy_time(1.0);
-					game.region().move(being(), RegionTileCoords{being().coords().neighbor(static_cast<RegionTileCoords::Direction>(player_choice.data))});
+				{
+					auto direction = static_cast<RegionTileCoords::Direction>(player_choice.data);
+					if (direction == being().direction()) {
+						being().gain_busy_time(1.0); /// @todo Calculate move time from attributes and terrain.
+						being().region().move(being(), being().coords().neighbor(direction));
+					} else {
+						/// @todo Calculate turn time from attributes and terrain.
+						being().gain_busy_time(0.05 + 0.05 * RegionTileCoords::distance(being().direction(), direction));
+						being().direction(direction);
+					}
 					break;
+				}
 				case PlayerActionDialog::Choice::Type::use:
 				{
 					if (auto item_coords = game.hud().hotbar()[player_choice.data]) {

@@ -15,33 +15,24 @@
 
 namespace questless
 {
-	/// @todo Remove if still not used anywhere later.
-	//bool being_comparison_function(const Being::ptr& first, const Being::ptr& second)
-	//{
-	//	// Sort beings by lower y-coordinate first (so beings can be quickly drawn front-to-back), then lower entity ID.
-	//	// This is a safe key to use because whenever a being's coordinates change, it is removed and reinserted with the new coordinates.
-	//	int f_y = Layout::dflt().to_world(first->coords()).y;
-	//	int s_y = Layout::dflt().to_world(second->coords()).y;
-	//	return f_y < s_y || (f_y == s_y && first->entity_id() < second->entity_id());
-	//}
-
 	SectionTileIndex Section::tile_index(SectionTileCoords tile_coords)
 	{
-		int x = tile_coords.r + Section::radius;
-		int y = tile_coords.q + Section::radius;
-		return SectionTileIndex{x, y};
+		return SectionTileIndex
+			{ tile_coords.r + Section::radius
+			, tile_coords.q + Section::radius
+			};
 	}
 
 	SectionTileIndex Section::tile_index(RegionTileCoords region_tile_coords)
 	{
-		int x = (region_tile_coords.q % Section::diameter + Section::diameter) % Section::diameter;
-		int y = (region_tile_coords.r % Section::diameter + Section::diameter) % Section::diameter;
-		return SectionTileIndex{x, y};
+		return SectionTileIndex
+			{ ((region_tile_coords.r + Section::radius) % Section::diameter + Section::diameter) % Section::diameter
+			, ((region_tile_coords.q + Section::radius) % Section::diameter + Section::diameter) % Section::diameter
+			};
 	}
 
 	Section::Section(RegionSectionCoords coords, std::istream& data_stream) : _coords{coords}
 	{
-		using std::make_unique;
 		for (auto& slice : _tiles) {
 			for (auto& tile : slice) {
 				int c;
@@ -52,22 +43,22 @@ namespace questless
 
 				switch (static_cast<Tile::TileClass>(c)) {
 					case Tile::TileClass::edge:
-						tile = make_unique<EdgeTile>(light_level, temperature);
+						tile = std::make_unique<EdgeTile>(light_level, temperature);
 						break;
 					case Tile::TileClass::stone:
-						tile = make_unique<StoneTile>(light_level, temperature);
+						tile = std::make_unique<StoneTile>(light_level, temperature);
 						break;
 					case Tile::TileClass::dirt:
-						tile = make_unique<DirtTile>(light_level, temperature);
+						tile = std::make_unique<DirtTile>(light_level, temperature);
 						break;
 					case Tile::TileClass::grass:
-						tile = make_unique<GrassTile>(light_level, temperature);
+						tile = std::make_unique<GrassTile>(light_level, temperature);
 						break;
 					case Tile::TileClass::water:
-						tile = make_unique<WaterTile>(light_level, temperature);
+						tile = std::make_unique<WaterTile>(light_level, temperature);
 						break;
 					case Tile::TileClass::snow:
-						tile = make_unique<SnowTile>(light_level, temperature);
+						tile = std::make_unique<SnowTile>(light_level, temperature);
 						break;
 					default:
 						throw std::logic_error{"Unrecognized tile type."};

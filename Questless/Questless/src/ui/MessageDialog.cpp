@@ -16,7 +16,7 @@ namespace questless
 {
 	bool MessageDialog::update(Input& input)
 	{
-		if(input.presses(SDLK_BACKSPACE) || input.presses(SDLK_ESCAPE) || input.pressed(MouseButton::left) || input.presses(SDLK_RETURN) || input.presses(SDLK_SPACE)) {
+		if(input.any_presses()) {
 			return _cont();
 		}
 		return false;

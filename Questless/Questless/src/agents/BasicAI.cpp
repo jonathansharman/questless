@@ -16,32 +16,19 @@ namespace questless
 {
 	void BasicAI::act()
 	{
-		// To to move to a random neighbor hex.
-		RegionTileCoords neighbor_hex;
-		switch (uniform(0, 5)) {
-			case 0:
-				neighbor_hex = being().coords().neighbor(RegionTileCoords::Direction::one);
-				break;
-			case 1:
-				neighbor_hex = being().coords().neighbor(RegionTileCoords::Direction::two);
-				break;
-			case 2:
-				neighbor_hex = being().coords().neighbor(RegionTileCoords::Direction::three);
-				break;
-			case 3:
-				neighbor_hex = being().coords().neighbor(RegionTileCoords::Direction::four);
-				break;
-			case 4:
-				neighbor_hex = being().coords().neighbor(RegionTileCoords::Direction::five);
-				break;
-			case 5:
-				neighbor_hex = being().coords().neighbor(RegionTileCoords::Direction::six);
-				break;
+		// Move to or turn towards a random neighbor hex, favoring movement.
+		auto direction = uniform(0, 1) ? being().direction() : static_cast<RegionTileCoords::Direction>(uniform(1, 6));
+		if (direction == being().direction()) {
+			being().gain_busy_time(1.0); /// @todo Calculate move time from attributes and terrain.
+			being().region().move(being(), being().coords().neighbor(direction));
+		} else {
+			/// @todo Calculate turn time from attributes and terrain.
+			being().gain_busy_time(0.05 + 0.05 * RegionTileCoords::distance(being().direction(), direction));
+			being().direction(direction);
 		}
-		being().region().move(being(), neighbor_hex);
 
-		// Wait 1 time unit for the movement, then a random additional idle time, up to 10 time units.
-		being().gain_busy_time(uniform(1.0, 11.0));
+		// Wait for a random additional idle time, up to 10 time units.
+		being().gain_busy_time(uniform(0.0, 10.0));
 	}
 
 	Action::Complete BasicAI::message

@@ -27,7 +27,7 @@ namespace questless
 		, _need_to_calculate_attributes{false}
 		, _base_attributes{base_attributes}
 		, _attributes{_base_attributes}
-		, _conditions{_base_attributes.vitality, _base_attributes.spirit, 0.0, 0.0, 0.0, 0, false}
+		, _conditions{_base_attributes.vitality, _base_attributes.spirit, 0.0, 0.0, 0.0, 0, false, static_cast<RegionTileCoords::Direction>(uniform(1, 6))}
 	{}
 
 	Being::Being(Game& game, std::istream& in, Body body)

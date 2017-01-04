@@ -31,6 +31,13 @@ namespace units
 		int r;
 		int s;
 
+		/// @return The shortest distance between the two given directions.
+		static int distance(Direction d1, Direction d2)
+		{
+			int diff = static_cast<int>(d1) - static_cast<int>(d2);
+			return std::min((diff + 6) % 6, (-diff + 6) % 6);
+		}
+
 		constexpr explicit HexCoords() : q{0}, r{0}, s{0} {}
 		constexpr explicit HexCoords(int q, int r) : q{q}, r{r}, s{-q - r} {}
 		constexpr explicit HexCoords(int q, int r, int s) : q{q}, r{r}, s{s} {}

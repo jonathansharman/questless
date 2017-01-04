@@ -55,22 +55,25 @@ namespace questless
 			double alertness;
 			double busy_time;
 			bool dead;
+			RegionTileCoords::Direction direction;
 
 			Conditions() {}
 
-			Conditions(double health, double mana, double energy, double satiety, double alertness, double busy_time, bool dead)
-				: health{health}, mana{mana}, energy{energy}, satiety{satiety}, alertness{alertness}, busy_time{busy_time}, dead{dead}
+			Conditions(double health, double mana, double energy, double satiety, double alertness, double busy_time, bool dead, RegionTileCoords::Direction direction)
+				: health{health}, mana{mana}, energy{energy}, satiety{satiety}, alertness{alertness}, busy_time{busy_time}, dead{dead}, direction{direction}
 			{}
 
 			friend std::ostream& operator <<(std::ostream& out, const Conditions& c)
 			{
-				out << c.health << ' ' << c.mana << ' ' << c.energy << ' ' << c.satiety << ' ' << c.alertness << ' ' << c.busy_time << ' ' << c.dead;
+				out << c.health << ' ' << c.mana << ' ' << c.energy << ' ' << c.satiety << ' ' << c.alertness << ' ' << c.busy_time << ' ' << c.dead << ' ' << static_cast<int>(c.direction);
 				return out;
 			}
 
-			friend std::istream& operator >> (std::istream& in, Conditions& c)
+			friend std::istream& operator >>(std::istream& in, Conditions& c)
 			{
-				in >> c.health >> c.mana >> c.energy >> c.satiety >> c.alertness >> c.busy_time >> c.dead;
+				int direction;
+				in >> c.health >> c.mana >> c.energy >> c.satiety >> c.alertness >> c.busy_time >> c.dead >> direction;
+				c.direction = static_cast<RegionTileCoords::Direction>(direction);
 				return in;
 			}
 		};
@@ -227,6 +230,7 @@ namespace questless
 		double alertness() const { return _conditions.alertness; }
 		double busy_time() const { return _conditions.busy_time; }
 		bool dead() const { return _conditions.dead; }
+		RegionTileCoords::Direction direction() const { return _conditions.direction; }
 
 		// Attribute accessors
 
@@ -290,6 +294,8 @@ namespace questless
 
 		void die() { _conditions.dead = true; }
 		void resurrect() { _conditions.dead = false; }
+
+		void direction(RegionTileCoords::Direction direction) { _conditions.direction = direction; }
 
 		// Attribute mutators
 

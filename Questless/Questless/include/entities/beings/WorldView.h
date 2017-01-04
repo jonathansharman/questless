@@ -39,8 +39,7 @@ namespace questless
 		struct BeingView
 		{
 			enum class Perception
-				{ none   // Imperceptible.
-				, low    // Can tell there's an entity there but can't identify it.
+				{ low    // Can tell there's an entity there but can't identify it.
 				, medium // Can tell what type of being is there.
 				, high   // Can tell what type of being is there, as well as its health, mana, and equipped items.
 				, full   // Knows everything about the being.
@@ -53,8 +52,7 @@ namespace questless
 		struct ObjectView
 		{
 			enum class Perception
-				{ none   // Imperceptible.
-				, low    // Can tell there's an entity there but can't identify it.
+				{ low    // Can tell there's an entity there but can't identify it.
 				, medium // Can tell what type of object is there.
 				, high   // Can tell what type of object is there, as well as its health, mana, and equipped items.
 				, full   // Knows everything about the being.

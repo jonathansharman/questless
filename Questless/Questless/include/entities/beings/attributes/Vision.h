@@ -15,7 +15,7 @@ namespace questless
 	struct Vision
 	{
 		// Visibility at a tile = (acuity - distance^2 * vision distance factor) / (1 + (light level at tile - ideal light)^2 / light tolerance * vision affinity factor).
-		static constexpr double distance_factor = 1;
+		static constexpr double distance_factor = 1.0;
 		static constexpr double light_factor = 1.0;
 
 		double acuity;
