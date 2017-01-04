@@ -18,6 +18,7 @@ namespace questless
 	class Human;
 	class Goblin;
 
+	class Corpse;
 	class ItemBox;
 
 	class EntityVisitor
@@ -28,6 +29,7 @@ namespace questless
 		virtual void visit(const Human&) = 0;
 		virtual void visit(const Goblin&) = 0;
 
+		virtual void visit(const Corpse&) = 0;
 		virtual void visit(const ItemBox&) = 0;
 	};
 
@@ -47,6 +49,7 @@ namespace questless
 		virtual void visit(const Human&) override { throw BadEntityVisit{_message}; }
 		virtual void visit(const Goblin&) override { throw BadEntityVisit{_message}; }
 
+		virtual void visit(const Corpse&) override { throw BadEntityVisit{_message}; }
 		virtual void visit(const ItemBox&) override { throw BadEntityVisit{_message}; }
 	private:
 		std::string _message;

@@ -20,7 +20,13 @@
 
 namespace questless
 {
-	enum class EntityClass : unsigned { HumanClass, GoblinClass, TrollClass, ItemBoxClass };
+	enum class EntityClass : unsigned
+		{ HumanClass
+		, GoblinClass
+		, TrollClass
+		, CorpseClass
+		, ItemBoxClass
+		};
 	class Game;
 	class Region;
 	class Section;

@@ -4,7 +4,7 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION The interface for the ItemBox class.
+* @section DESCRIPTION A box holding some items.
 */
 
 #ifndef ITEM_BOX_H

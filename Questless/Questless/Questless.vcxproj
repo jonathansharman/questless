@@ -289,10 +289,12 @@
     <ClInclude Include="include\entities\beings\Body.h" />
     <ClInclude Include="include\entities\beings\BodyPart.h" />
     <ClInclude Include="include\entities\beings\BodyPartVisitor.h" />
+    <ClInclude Include="include\entities\beings\CorporealBeing.h" />
     <ClInclude Include="include\entities\beings\Damage.h" />
     <ClInclude Include="include\entities\beings\DamageMultiplier.h" />
     <ClInclude Include="include\entities\beings\goblinoids\Goblin.h" />
     <ClInclude Include="include\entities\beings\Human.h" />
+    <ClInclude Include="include\entities\beings\IncorporealBeing.h" />
     <ClInclude Include="include\entities\beings\Protection.h" />
     <ClInclude Include="include\entities\beings\statuses\Blind.h" />
     <ClInclude Include="include\entities\beings\statuses\Confused.h" />
@@ -310,6 +312,7 @@
     <ClInclude Include="include\entities\beings\WorldView.h" />
     <ClInclude Include="include\entities\Entity.h" />
     <ClInclude Include="include\entities\EntityVisitor.h" />
+    <ClInclude Include="include\entities\objects\Corpse.h" />
     <ClInclude Include="include\entities\objects\ItemBox.h" />
     <ClInclude Include="include\entities\objects\Object.h" />
     <ClInclude Include="include\entities\objects\ObjectId.h" />
@@ -416,7 +419,9 @@
     <ClCompile Include="src\entities\beings\Being.cpp" />
     <ClCompile Include="src\entities\beings\Body.cpp" />
     <ClCompile Include="src\entities\beings\BodyPart.cpp" />
+    <ClCompile Include="src\entities\beings\CorporealBeing.cpp" />
     <ClCompile Include="src\entities\beings\Human.cpp" />
+    <ClCompile Include="src\entities\beings\IncorporealBeing.cpp" />
     <ClCompile Include="src\entities\beings\statuses\Discharging.cpp" />
     <ClCompile Include="src\entities\beings\statuses\Healing.cpp" />
     <ClCompile Include="src\entities\beings\statuses\Poisoned.cpp" />

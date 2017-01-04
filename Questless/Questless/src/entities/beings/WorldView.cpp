@@ -80,6 +80,8 @@ namespace questless
 						case RegionTileCoords::Direction::six:
 							in_front = offset.q >= 0 && offset.r <= 0;
 							break;
+						default:
+							throw std::logic_error{"Invalid direction."};
 					}
 					if (in_front) {
 						double light_level = region.light_level(region_tile_coords);

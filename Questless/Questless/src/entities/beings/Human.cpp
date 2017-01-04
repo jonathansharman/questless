@@ -17,10 +17,10 @@ using namespace units;
 namespace questless
 {
 	Human::Human(Game& game, std::function<std::unique_ptr<Agent>(Being&)> agent_factory, BeingId id)
-		: Being(game, std::move(agent_factory), id, make_body(), Attributes::of<Human>())
+		: CorporealBeing(game, std::move(agent_factory), id, make_body(), Attributes::of<Human>())
 	{}
 
-	Human::Human(Game& game, std::istream& in) : Being(game, in, make_body()) {}
+	Human::Human(Game& game, std::istream& in) : CorporealBeing(game, in, make_body()) {}
 
 	void Human::serialize(std::ostream& out) const
 	{

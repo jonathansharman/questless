@@ -4,7 +4,7 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION The interface for the Object class, which includes all inanimate entities.
+* @section DESCRIPTION An inanimate entity.
 */
 
 #ifndef OBJECT_H

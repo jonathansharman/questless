@@ -9,6 +9,7 @@
 
 #include "entities/beings/Being.h"
 #include "entities/beings/Body.h"
+#include "entities/objects/Corpse.h"
 #include "Game.h"
 #include "agents/Agent.h"
 #include "world/Section.h"
@@ -290,9 +291,17 @@ namespace questless
 								// Source, if present, will have killed target.
 								if (!source || source->before_kill(id())) {
 									// Target's death succeeded.
-									// Move it to the graveyard.
-									game().add_to_graveyard(std::move(region().remove(*this)));
-									/// @todo Make corpse, or do whatever is appropriate for the type of being. (Add abstract base classes for Corporeal, Incorporeal, etc.?)
+
+									if (corporeal()) {
+										// Spawn corpse.
+										Region& corpse_region = region(); // Save region since the being's region pointer will be nulled when it's removed.
+										auto corpse = std::make_unique<Corpse>(game(), ObjectId::next(), corpse_region.remove(*this));
+										corpse_region.add<Object>(std::move(corpse), coords());
+									} else {
+										/// @todo Eliminate graveyard. It is a crutch to deal with references to annihilated beings.
+										// Move target to the graveyard.
+										game().add_to_graveyard(region().remove(*this));
+									}
 
 									// Source, if present, has killed target.
 									if (!source || source->after_kill(id())) {

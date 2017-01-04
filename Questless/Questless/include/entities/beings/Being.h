@@ -4,7 +4,7 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION The interface for the Being class, which includes the player and all NPCs.
+* @section DESCRIPTION A sentient entity. Includes the player and all NPCs.
 */
 
 #ifndef BEING_H
@@ -188,6 +188,9 @@ namespace questless
 
 		/// @return The agent responsible for this being.
 		Agent& agent() { return *_agent; }
+
+		/// @return Whether the being is corporeal.
+		virtual bool corporeal() const = 0;
 
 		/// Causes the being to perform an action.
 		void act();

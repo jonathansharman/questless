@@ -10,11 +10,11 @@
 #ifndef HUMAN_H
 #define HUMAN_H
 
-#include "entities/beings/Being.h"
+#include "entities/beings/CorporealBeing.h"
 
 namespace questless
 {
-	class Human : public Being
+	class Human : public CorporealBeing
 	{
 	public:
 		static constexpr double base_vitality = 100.0;

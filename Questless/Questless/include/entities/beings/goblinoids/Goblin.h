@@ -10,11 +10,11 @@
 #ifndef GOBLIN_H
 #define GOBLIN_H
 
-#include "entities/beings/Being.h"
+#include "entities/beings/CorporealBeing.h"
 
 namespace questless
 {
-	class Goblin : public Being
+	class Goblin : public CorporealBeing
 	{
 	public:
 		static constexpr double base_vitality = 100.0;

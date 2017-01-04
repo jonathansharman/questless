@@ -634,6 +634,15 @@
     <ClInclude Include="include\units\constexpr-math.h">
       <Filter>include\units</Filter>
     </ClInclude>
+    <ClInclude Include="include\entities\objects\Corpse.h">
+      <Filter>include\entities\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\entities\beings\CorporealBeing.h">
+      <Filter>include\entities\beings</Filter>
+    </ClInclude>
+    <ClInclude Include="include\entities\beings\IncorporealBeing.h">
+      <Filter>include\entities\beings</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\world\Region.cpp">
@@ -845,6 +854,12 @@
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\beings\CorporealBeing.cpp">
+      <Filter>src\entities\beings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\beings\IncorporealBeing.cpp">
+      <Filter>src\entities\beings</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
