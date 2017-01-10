@@ -26,8 +26,6 @@ namespace questless
 	public:
 		enum class Type { debuff, neutral, buff };
 
-		using modifiers_t = std::vector<std::unique_ptr<Attributes::Modifier>>;
-
 		/// @return The name of the status modifier displayed to the player.
 		std::string name() const { return _name; }
 
@@ -41,10 +39,10 @@ namespace questless
 		virtual Type type() const = 0;
 
 		/// @return The list of attribute modifiers associated with this status.
-		virtual const modifiers_t& modifiers() const
+		virtual const Attributes::modifiers_t& modifiers() const
 		{
 			// No modifiers by default.
-			static modifiers_t modifiers;
+			static Attributes::modifiers_t modifiers;
 			return modifiers;
 		}
 

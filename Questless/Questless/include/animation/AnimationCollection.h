@@ -11,7 +11,7 @@
 #define ANIMATION_COLLECTION_H
 
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <memory>
 
 #include "sdl-wrappers/resources.h"
@@ -79,7 +79,7 @@ namespace questless
 		int _cel_width;
 		int _cel_height;
 
-		std::map<std::string, Animation::ptr> _animations;
+		std::unordered_map<std::string, Animation::ptr> _animations;
 		Animation* _current_animation;
 
 		bool _paused;

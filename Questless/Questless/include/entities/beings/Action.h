@@ -4,7 +4,7 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION The interface for the Action abstract base class, which encapsulates an action that a being can perform.
+* @section DESCRIPTION An action that a being can perform.
 */
 
 #ifndef ACTION_H
@@ -43,6 +43,7 @@ namespace questless
 		/// @return An Action::Complete object.
 		virtual Complete perform(Being& actor, cont_t cont) = 0;
 
+		/// @todo Do these belong here?
 		static std::function<bool(RegionTileCoords)> tile_in_range_predicate(Being& actor, int range);
 		static std::function<bool(Being&)> being_in_range_predicate(Being& actor, int range);
 	};

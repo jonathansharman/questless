@@ -861,5 +861,8 @@
     <ClCompile Include="src\entities\beings\IncorporealBeing.cpp">
       <Filter>src\entities\beings</Filter>
     </ClCompile>
+    <ClCompile Include="src\items\Scroll.cpp">
+      <Filter>src\items</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

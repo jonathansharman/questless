@@ -30,8 +30,12 @@ namespace questless
 		class Modifier
 		{
 		public:
+			using ptr = std::unique_ptr<Modifier>;
+
 			virtual void apply(Attributes& attributes) = 0;
 		};
+
+		using modifiers_t = std::vector<Modifier::ptr>;
 
 		/// Overrides whether the being is mute.
 		class MuteModifier : public Modifier
@@ -363,7 +367,7 @@ namespace questless
 
 		/// Modifies the attribute according to the given modifiers.
 		/// @param modifiers A vector of attribute modifiers.
-		void modify(const std::vector<std::unique_ptr<Attributes::Modifier>>& modifiers)
+		void modify(const modifiers_t& modifiers)
 		{
 			for (const auto& modifier : modifiers) {
 				modifier->apply(*this);

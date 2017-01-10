@@ -298,7 +298,7 @@ namespace questless
 										auto corpse = std::make_unique<Corpse>(game(), ObjectId::next(), corpse_region.remove(*this));
 										corpse_region.add<Object>(std::move(corpse), coords());
 									} else {
-										/// @todo Eliminate graveyard. It is a crutch to deal with references to annihilated beings.
+										/// @todo Eliminate graveyard. It is a crutch to deal with references to annihilated beings when dealing fatal damage to a body part.
 										// Move target to the graveyard.
 										game().add_to_graveyard(region().remove(*this));
 									}
@@ -452,13 +452,12 @@ namespace questless
 
 		_attributes = _base_attributes;
 
-		// Add body part attributes.
+		// Add body part attribute modifiers.
 		for (const BodyPart& part : _body) {
-			part.attributes();
-			/// @todo Add attributes.
+			_attributes.modify(part.attribute_modifiers());
 		}
 
-		// Apply status modifiers.
+		// Apply status attribute modifiers.
 		for (const auto& status : _statuses) {
 			_attributes.modify(status->modifiers());
 		}

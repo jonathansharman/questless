@@ -34,7 +34,7 @@ namespace questless
 
 		/// @param owner The being that owns this body.
 		/// @param name The name of the body part.
-		/// @param attributes The body part's attributes, which are added to its owner's attributes.
+		/// @param attribute_modifiers Attribute modifiers to apply to the part's owner.
 		/// @param vitality The body part's vitality, which determines its maximum health.
 		/// @param protection The body part's protection attribute.
 		/// @param resistance The body part's resistance attribute.
@@ -44,13 +44,14 @@ namespace questless
 		BodyPart
 			( Being& owner
 			, std::string name
-			, Attributes attributes
+			, Attributes::modifiers_t attribute_modifiers
 			, double vitality
 			, Protection protection
 			, Resistance resistance
 			, Vulnerability vulnerability
 			, bool vital
-			, std::vector<units::ScreenRect> regions);
+			, std::vector<units::ScreenRect> regions
+			);
 
 		virtual ~BodyPart() = 0 {}; /// @todo Change to default if actual pure virtuals are added to BodyPart later.
 
@@ -58,7 +59,7 @@ namespace questless
 
 		/// @param owner The being that owns this body.
 		/// @param name The name of the body part.
-		/// @param attributes The body part's attributes, which are added to its owner's attributes.
+		/// @param attribute_modifiers Attribute modifiers to apply to the part's owner.
 		/// @param vitality The body part's vitality, which determines its maximum health.
 		/// @param protection The body part's protection attribute.
 		/// @param resistance The body part's resistance attribute.
@@ -70,7 +71,7 @@ namespace questless
 		static ptr make
 			( Being& owner
 			, std::string name
-			, Attributes attributes
+			, Attributes::modifiers_t attribute_modifiers
 			, double vitality
 			, Protection protection
 			, Resistance resistance
@@ -78,7 +79,17 @@ namespace questless
 			, bool vital
 			, std::vector<units::ScreenRect> regions)
 		{
-			return std::make_unique<Type>(owner, std::move(name), attributes, vitality, protection, resistance, vulnerability, vital, std::move(regions));
+			return std::make_unique<Type>
+				( owner
+				, std::move(name)
+				, std::move(attribute_modifiers)
+				, vitality
+				, protection
+				, resistance
+				, vulnerability
+				, vital
+				, std::move(regions)
+				);
 		}
 
 		/// Advances the body part one time unit.
@@ -96,8 +107,8 @@ namespace questless
 		/// @return The set of regions that this body part occupies.
 		const std::vector<units::ScreenRect>& regions() const { return _regions; }
 
-		/// @return The body part's attributes, which are added to its owner's attributes.
-		const Attributes& attributes() const { return _attributes; }
+		/// @return Attribute modifiers to apply to the part's owner.
+		const Attributes::modifiers_t& attribute_modifiers() const { return _modifiers; }
 
 		/// @return The body part's current health.
 		double health() const { return _health; }
@@ -137,7 +148,7 @@ namespace questless
 		std::vector<BodyPart::ptr> _children;
 		std::vector<units::ScreenRect> _regions;
 
-		Attributes _attributes;
+		Attributes::modifiers_t _modifiers;
 
 		/// @todo Group these into a BodyPartAttributes struct or something.
 

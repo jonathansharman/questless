@@ -31,7 +31,7 @@ namespace questless
 		Agent(Being& being) : _being{being} {}
 
 		template <typename Derived>
-		static ptr make(Being& being) { return ptr(new Derived{being}); }
+		static ptr make(Being& being) { return std::make_unique<Derived>(being); }
 
 		virtual ~Agent() = default;
 

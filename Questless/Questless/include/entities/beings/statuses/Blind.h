@@ -28,10 +28,10 @@ namespace questless
 
 		virtual Type type() const { return Type::debuff; }
 
-		const modifiers_t& modifiers() const override { return _modifiers; }
+		const Attributes::modifiers_t& modifiers() const override { return _modifiers; }
 	private:
 		double _magnitude;
-		modifiers_t _modifiers;
+		Attributes::modifiers_t _modifiers;
 	};
 }
 

@@ -58,6 +58,14 @@ namespace questless
 			return in;
 		}
 
+		template <spell::Color color> double get() const;
+		template <> double get<spell::Color::white>() const { return white; }
+		template <> double get<spell::Color::black>() const { return black; }
+		template <> double get<spell::Color::green>() const { return green; }
+		template <> double get<spell::Color::red>() const { return red; }
+		template <> double get<spell::Color::blue>() const { return blue; }
+		template <> double get<spell::Color::yellow>() const { return yellow; }
+
 		template <spell::Color color> double& get();
 		template <> double& get<spell::Color::white>() { return white; }
 		template <> double& get<spell::Color::black>() { return black; }

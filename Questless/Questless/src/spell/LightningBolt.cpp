@@ -19,29 +19,23 @@
 
 namespace questless::spell
 {
-	Action::Complete LightningBolt::perform(Being& caster, cont_t cont)
+	Action::Complete LightningBolt::perform_cast(Being& caster, Action::cont_t cont)
 	{
-		if (active_cooldown() > 0.0) {
-			return caster.agent().message("This spell is on cooldown.", "This spell will be ready in " + std::to_string(active_cooldown()) + ".", [cont] { return cont(Result::aborted); });
-		}
-		if (charges() <= 0) {
-			return caster.agent().message("Out of charges!", "You need to incant this spell first.", [cont] { return cont(Result::aborted); });
-		}
-		return caster.agent().query_tile("Lightning Bolt Target", "Select a tile to be zapped with a lightning bolt.", caster.coords(), tile_in_range_predicate(caster, _range),
+		return caster.agent().query_tile("Lightning Bolt Target", "Select a tile to be zapped with a lightning bolt.", caster.coords(), Action::tile_in_range_predicate(caster, _range),
 			[this, &caster, cont](boost::optional<RegionTileCoords> opt_tile_coords) {
 				if (!opt_tile_coords) {
-					return cont(Result::aborted);
+					return cont(Action::Result::aborted);
 				}
 				RegionTileCoords tile_coords = *opt_tile_coords;
 				return caster.agent().query_magnitude("Lightning Bolt Strength", "Choose how strong to make the lightning bolt.", 20.0, [](double amount) { return amount >= 0.0; },
 					[this, &caster, cont, tile_coords](boost::optional<double> opt_magnitude) {
 						if (!opt_magnitude) {
-							return cont(Result::aborted);
+							return cont(Action::Result::aborted);
 						}
 						double magnitude = *opt_magnitude;
 						double cost = _cost_factor * magnitude * log2(magnitude + _cost_log);
 						if (caster.mana() < cost) {
-							return caster.agent().message("Not enough mana!", "You need " + std::to_string(cost - caster.mana()) + " more mana to cast this.", [cont] { return cont(Result::aborted); });
+							return caster.agent().message("Not enough mana!", "You need " + std::to_string(cost - caster.mana()) + " more mana to cast this.", [cont] { return cont(Action::Result::aborted); });
 						}
 						return caster.agent().get_lightning_bolt_quality(units::Layout::dflt().to_world(tile_coords), [this, &caster, cont, tile_coords, magnitude, cost](double quality) {
 							active_cooldown(cooldown());
@@ -49,7 +43,7 @@ namespace questless::spell
 							caster.lose_mana(cost);
 							caster.game().add_effect(LightningBoltEffect::make(tile_coords));
 							if (Being* target = caster.region().being(tile_coords)) {
-								double burn_magnitude = magnitude * quality * caster.magic_power(color()) / target->magic_resistance(color());
+								double burn_magnitude = magnitude * quality * caster.magic_power<Color::yellow>() / target->magic_resistance<Color::yellow>();
 
 								/// @todo Experimental body part stuff here... Delete or fix.
 
@@ -65,7 +59,7 @@ namespace questless::spell
 									struck_part->take_damage(burn, caster.id());
 								}
 							}
-							return cont(Result::success);
+							return cont(Action::Result::success);
 						});
 					}
 				);

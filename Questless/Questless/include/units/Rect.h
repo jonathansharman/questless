@@ -11,6 +11,7 @@
 #define RECT_H
 
 #include "Vector.h"
+#include "Point.h"
 
 namespace units
 {
@@ -66,9 +67,9 @@ namespace units
 			return left.x != right.x || left.y != right.y || left.w != right.w || left.h != right.h;
 		}
 
-		constexpr auto position() const { return Point<space_t>{x, y}; }
-		constexpr scalar_t right() const { return x + w - 1; } /// @todo This is space-dependent.
-		constexpr scalar_t bottom() const { return y + h - 1; } /// @todo This is space-dependent.
+		constexpr Point<space_t> position() const { return Point<space_t>{x, y}; }
+		constexpr scalar_t right() const { return x + w; } /// @todo This is space-dependent.
+		constexpr scalar_t bottom() const { return y + h; } /// @todo This is space-dependent.
 
 		constexpr bool contains(Point<space_t> point) const
 		{

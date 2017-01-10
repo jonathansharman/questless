@@ -148,6 +148,9 @@ namespace questless
 		// Endurance
 		static constexpr double endurance_factor = 0.01; ///< Proportion of endurance by which damage after armor is divided.
 
+		// Intellect
+		static constexpr double intellect_factor = 0.01; ///< Proportion of intelligence by which spell incantations are divided.
+
 		// Temperature
 		static constexpr double temperature_damage_factor = 1.0; ///< Burn damage taken = (temp - max) / (max - min)) * factor. Freeze damage taken = (min - temp) / (max - min)) * factor.
 
