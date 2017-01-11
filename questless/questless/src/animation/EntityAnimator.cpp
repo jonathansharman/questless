@@ -31,16 +31,17 @@ namespace questless
 			first_call = false;
 		}
 
-		_animation = make_unique<AnimationCollection>(ss_handle, 3, 1);
+		_animation_set = make_unique<AnimationSet>(ss_handle, 3, 1);
 
-		std::vector<Animation::Frame> frames
-			{ {GameSeconds{0.2}, SpriteSheetPoint{0, 0}, TexturePoint{0, 10}}
-			, {GameSeconds{0.2}, SpriteSheetPoint{1, 0}, TexturePoint{0, 10}}
-			, {GameSeconds{0.2}, SpriteSheetPoint{2, 0}, TexturePoint{0, 10}}
-			, {GameSeconds{0.2}, SpriteSheetPoint{1, 0}, TexturePoint{0, 10}}
-			};
-		_animation->add("walking", Animation::make(frames, true));
-		_animation->start("walking", true);
+		auto animation = _animation_set->add(Animation
+			{ { {GameSeconds{0.2}, SpriteSheetPoint{0, 0}, TexturePoint{0, 10}}
+			  , {GameSeconds{0.2}, SpriteSheetPoint{1, 0}, TexturePoint{0, 10}}
+			  , {GameSeconds{0.2}, SpriteSheetPoint{2, 0}, TexturePoint{0, 10}}
+			  , {GameSeconds{0.2}, SpriteSheetPoint{1, 0}, TexturePoint{0, 10}}
+			  }
+			, Looping{true}
+			});
+		_animation_set->start(animation, RandomizeStartTime{true});
 	}
 	void EntityAnimator::visit(const Goblin&)
 	{
@@ -53,16 +54,17 @@ namespace questless
 			first_call = false;
 		}
 
-		_animation = make_unique<AnimationCollection>(ss_handle, 3, 1);
+		_animation_set = make_unique<AnimationSet>(ss_handle, 3, 1);
 
-		std::vector<Animation::Frame> frames
-			{ {GameSeconds{0.2}, SpriteSheetPoint{0, 0}, TexturePoint{0, 10}}
-			, {GameSeconds{0.2}, SpriteSheetPoint{1, 0}, TexturePoint{0, 10}}
-			, {GameSeconds{0.2}, SpriteSheetPoint{2, 0}, TexturePoint{0, 10}}
-			, {GameSeconds{0.2}, SpriteSheetPoint{1, 0}, TexturePoint{0, 10}}
-			};
-		_animation->add("walking", Animation::make(frames, true));
-		_animation->start("walking", true);
+		auto animation = _animation_set->add(Animation
+			{ { {GameSeconds{0.2}, SpriteSheetPoint{0, 0}, TexturePoint{0, 10}}
+			  , {GameSeconds{0.2}, SpriteSheetPoint{1, 0}, TexturePoint{0, 10}}
+			  , {GameSeconds{0.2}, SpriteSheetPoint{2, 0}, TexturePoint{0, 10}}
+			  , {GameSeconds{0.2}, SpriteSheetPoint{1, 0}, TexturePoint{0, 10}}
+			  }
+			, Looping{true}
+			});
+		_animation_set->start(animation, RandomizeStartTime{true});
 	}
 
 	// Objects
@@ -78,11 +80,13 @@ namespace questless
 			first_call = false;
 		}
 
-		_animation = make_unique<AnimationCollection>(ss_handle, 1, 1);
+		_animation_set = make_unique<AnimationSet>(ss_handle, 1, 1);
 
-		std::vector<Animation::Frame> frames{{GameSeconds{1.0}, SpriteSheetPoint{0, 0}, TexturePoint{0, 10}}};
-		_animation->add("resting-in-peace", Animation::make(frames, true));
-		_animation->start("resting-in-peace", true);
+		auto animation = _animation_set->add(Animation
+			{ {{GameSeconds{1.0}, SpriteSheetPoint{0, 0}, TexturePoint{0, 10}}}
+			, Looping{true}
+			});
+		_animation_set->start(animation, RandomizeStartTime{true});
 	}
 	void EntityAnimator::visit(const ItemBox&)
 	{
@@ -95,10 +99,12 @@ namespace questless
 			first_call = false;
 		}
 
-		_animation = make_unique<AnimationCollection>(ss_handle, 1, 1);
+		_animation_set = make_unique<AnimationSet>(ss_handle, 1, 1);
 
-		std::vector<Animation::Frame> frames{{GameSeconds{1.0}, SpriteSheetPoint{0, 0}, TexturePoint{0, 4}}};
-		_animation->add("being-a-box", Animation::make(frames, true));
-		_animation->start("being-a-box", true);
+		auto animation = _animation_set->add(Animation
+			{ {{GameSeconds{1.0}, SpriteSheetPoint{0, 0}, TexturePoint{0, 4}}}
+			, Looping{true}
+			});
+		_animation_set->start(animation, RandomizeStartTime{true});
 	}
 }

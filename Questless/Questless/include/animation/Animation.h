@@ -4,7 +4,7 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION The interface for the Animation class, which handles basic 2D animation.
+* @section DESCRIPTION Provides basic 2D animation.
 */
 
 #ifndef ANIMATION_H
@@ -13,21 +13,22 @@
 #include <vector>
 #include <string>
 #include <chrono>
-#include <memory>
 
 #include <boost/optional.hpp>
 
 #include "units/SpriteSheetPoint.h"
 #include "units/TexturePoint.h"
 #include "units/GameSeconds.h"
+#include "utility/TaggedType.h"
 
 namespace questless
 {
+	using Looping = TaggedType<bool, struct LoopingTag>;
+	using RandomizeStartTime = TaggedType<bool, struct RandomizeStartTimeTag>;
+
 	class Animation
 	{
 	public:
-		using ptr = std::unique_ptr<Animation>;
-
 		struct Frame
 		{
 			units::GameSeconds duration;
@@ -39,18 +40,10 @@ namespace questless
 			{}
 		};
 
-		/// Constructs an animation pointer from the provided frames using the provided loop type.
-		/// @param frames The sequence of frames that compose the animation.
-		/// @param looping Whether to loop the animation or play just once.
-		static Animation::ptr make(std::vector<Frame> frames, bool looping)
-		{
-			return std::make_unique<Animation>(std::move(frames), looping);
-		}
-
 		/// Constructs an animation object from the provided frames using the provided loop type.
 		/// @param frames The sequence of frames that compose the animation.
 		/// @param looping Whether to loop the animation or play just once.
-		Animation(std::vector<Frame> frames, bool looping);
+		Animation(std::vector<Frame> frames, Looping looping);
 
 		/// @return Whether the animation is looping.
 		bool looping() const { return _looping; }
@@ -76,9 +69,9 @@ namespace questless
 		/// @return The total duration of the animation.
 		units::GameSeconds duration() const;
 
-		/// Moves to the start or a random point in the animation, sets the loop counter to zero, and sets the over flag to false.
-		/// @param randomize_starting_time If true, resets the animation to a random point.
-		void reset(bool randomize_starting_time = false);
+		/// Moves to the start or a random time point in the animation, sets the loop counter to zero, and sets the over flag to false.
+		/// @param randomize_start_time If true, resets the animation to a random time point.
+		void reset(RandomizeStartTime randomize_start_time = RandomizeStartTime{false});
 
 		/// Advances the animation. Should be called once per game update.
 		void update();

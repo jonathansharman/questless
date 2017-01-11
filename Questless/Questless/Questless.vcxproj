@@ -260,7 +260,7 @@
     <ClInclude Include="include\agents\LazyAI.h" />
     <ClInclude Include="include\agents\Player.h" />
     <ClInclude Include="include\animation\Animation.h" />
-    <ClInclude Include="include\animation\AnimationCollection.h" />
+    <ClInclude Include="include\animation\AnimationSet.h" />
     <ClInclude Include="include\animation\BodyTexturer.h" />
     <ClInclude Include="include\animation\Camera.h" />
     <ClInclude Include="include\animation\EntityAnimator.h" />
@@ -401,7 +401,7 @@
     <ClCompile Include="src\agents\BasicAI.cpp" />
     <ClCompile Include="src\agents\Player.cpp" />
     <ClCompile Include="src\animation\Animation.cpp" />
-    <ClCompile Include="src\animation\AnimationCollection.cpp" />
+    <ClCompile Include="src\animation\AnimationSet.cpp" />
     <ClCompile Include="src\animation\BodyTexturer.cpp" />
     <ClCompile Include="src\animation\EntityAnimator.cpp" />
     <ClCompile Include="src\animation\ItemTexturer.cpp" />

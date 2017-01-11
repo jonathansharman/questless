@@ -14,27 +14,27 @@ using namespace units;
 
 namespace questless
 {
-	Animation::Animation(std::vector<Frame> frames, bool looping)
-		: _frames(frames)
-		, _frame_index(0)
-		, _accrued_time(GameSeconds::zero())
-		, _looping(looping)
-		, _loops(0)
-		, _in_reverse(false)
-		, _time_scale(1.0)
-		, _over(false)
+	Animation::Animation(std::vector<Frame> frames, Looping looping)
+		: _frames{std::move(frames)}
+		, _frame_index{0}
+		, _accrued_time{GameSeconds::zero()}
+		, _looping{looping}
+		, _loops{0}
+		, _in_reverse{false}
+		, _time_scale{1.0}
+		, _over{false}
 	{}
 
 	GameSeconds Animation::duration() const
 	{
-		auto ret = GameSeconds::zero();
+		auto total = GameSeconds::zero();
 		for (const Frame& frame : _frames) {
-			ret += frame.duration;
+			total += frame.duration;
 		}
-		return ret;
+		return total;
 	}
 
-	void Animation::reset(bool randomize_starting_time)
+	void Animation::reset(RandomizeStartTime randomize_starting_time)
 	{
 		if (randomize_starting_time) {
 			// The next time update() is called, the animation will advance to a random point.

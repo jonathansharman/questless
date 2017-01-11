@@ -11,7 +11,7 @@
 #define ENTITY_ANIMATOR_H
 
 #include "entities/EntityVisitor.h"
-#include "AnimationCollection.h"
+#include "AnimationSet.h"
 #include "sdl-wrappers/resources.h"
 
 namespace questless
@@ -25,9 +25,10 @@ namespace questless
 		void visit(const Corpse&) override;
 		void visit(const ItemBox&) override;
 
-		AnimationCollection::ptr animation() { return std::move(_animation); }
+		/// @return The animation set produced by the last visit. Moves the animation set out of the animator.
+		AnimationSet::ptr animation_set() { return std::move(_animation_set); }
 	private:
-		AnimationCollection::ptr _animation;
+		AnimationSet::ptr _animation_set;
 	};
 }
 

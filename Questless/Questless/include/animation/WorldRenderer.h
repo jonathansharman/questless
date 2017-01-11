@@ -14,7 +14,7 @@
 #include <memory>
 
 #include "Camera.h"
-#include "AnimationCollection.h"
+#include "AnimationSet.h"
 #include "entities/Entity.h"
 #include "entities/beings/WorldView.h"
 #include "sdl-wrappers/Renderer.h"
@@ -76,8 +76,8 @@ namespace questless
 		const WorldView* _world_view;
 
 		std::unordered_map<Tile::TileClass, sdl::Texture::ptr> _tile_textures;
-		std::unordered_map<BeingId, std::unique_ptr<AnimationCollection>> _being_animations;
-		std::unordered_map<ObjectId, std::unique_ptr<AnimationCollection>> _object_animations;
+		std::unordered_map<BeingId, std::unique_ptr<AnimationSet>> _being_animation_sets;
+		std::unordered_map<ObjectId, std::unique_ptr<AnimationSet>> _object_animations;
 		sdl::Texture::ptr _terrain_texture;
 		units::GameRect _terrain_bounds;
 		bool _terrain_render_is_current;
@@ -87,8 +87,8 @@ namespace questless
 		void refresh() override;
 
 		sdl::Texture& cache_tile_texture(const Tile& tile);
-		AnimationCollection& cache_being_animation(const Being& being);
-		AnimationCollection& cache_object_animation(const Object& object);
+		AnimationSet& cache_being_animation(const Being& being);
+		AnimationSet& cache_object_animation(const Object& object);
 		void render_terrain();
 	};
 }

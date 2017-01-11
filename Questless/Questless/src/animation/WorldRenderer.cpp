@@ -50,7 +50,7 @@ namespace questless
 	{
 		// Update cached being and object animations.
 
-		for (const auto& id_and_animation : _being_animations) {
+		for (const auto& id_and_animation : _being_animation_sets) {
 			if (id_and_animation.second != nullptr) {
 				id_and_animation.second->update();
 			}
@@ -90,9 +90,9 @@ namespace questless
 			// Attempt to load the being.
 			if (const Being* being = game.being(being_view.id)) {
 				// Search for the being's animation in the cache.
-				auto it = _being_animations.find(being_view.id);
+				auto it = _being_animation_sets.find(being_view.id);
 				// If it's there, use it. Otherwise, create the animation and cache it.
-				AnimationCollection& being_animation = it != _being_animations.end()
+				AnimationSet& being_animation = it != _being_animation_sets.end()
 					? *it->second
 					: cache_being_animation(*being);
 
@@ -119,7 +119,7 @@ namespace questless
 				being_animation.draw(Layout::dflt().to_world(being->coords()), camera, Color{luminance, luminance, luminance});
 			} else {
 				// Remove the being from the animation cache if it doesn't exist anymore.
-				_being_animations.erase(being_view.id);
+				_being_animation_sets.erase(being_view.id);
 			}
 		}
 	}
@@ -132,7 +132,7 @@ namespace questless
 				// Search for the object's animation in the cache.
 				auto it = _object_animations.find(object_view.id);
 				// If it's there, use it. Otherwise, create the animation and cache it.
-				AnimationCollection& object_animation = it != _object_animations.end()
+				AnimationSet& object_animation = it != _object_animations.end()
 					? *it->second
 					: cache_object_animation(*object);
 
@@ -180,19 +180,19 @@ namespace questless
 		return *_tile_textures[tile.tile_class()];
 	};
 
-	AnimationCollection& WorldRenderer::cache_being_animation(const Being& being)
+	AnimationSet& WorldRenderer::cache_being_animation(const Being& being)
 	{
 		EntityAnimator entity_animator;
 		being.accept(entity_animator);
-		_being_animations[being.id()] = entity_animator.animation();
-		return *_being_animations[being.id()];
+		_being_animation_sets[being.id()] = entity_animator.animation_set();
+		return *_being_animation_sets[being.id()];
 	};
 
-	AnimationCollection& WorldRenderer::cache_object_animation(const Object& object)
+	AnimationSet& WorldRenderer::cache_object_animation(const Object& object)
 	{
 		EntityAnimator entity_animator;
 		object.accept(entity_animator);
-		_object_animations[object.id()] = entity_animator.animation();
+		_object_animations[object.id()] = entity_animator.animation_set();
 		return *_object_animations[object.id()];
 	};
 

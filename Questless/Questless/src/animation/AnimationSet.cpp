@@ -1,49 +1,46 @@
 /**
-* @file    AnimationCollection.cpp
+* @file    AnimationSet.cpp
 * @author  Jonathan Sharman
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION The implementation of the AnimationCollection class.
+* @section DESCRIPTION The implementation of the AnimationSet class.
 */
 
-#include "animation/AnimationCollection.h"
+#include "animation/AnimationSet.h"
 
 using namespace sdl;
 using namespace units;
 
-/// @todo Make AnimationCollection a Renderable and cache the sprite sheet?
-
 namespace questless
 {
-	AnimationCollection::AnimationCollection(sdl::Handle<Texture> sprite_sheet_handle, int cel_columns, int cel_rows)
+	AnimationSet::AnimationSet(sdl::Handle<Texture> sprite_sheet_handle, int cel_columns, int cel_rows)
 		: _sprite_sheet_handle{std::move(sprite_sheet_handle)}, _current_animation{nullptr}, _paused{false}
 	{
 		_cel_width = texture_manager()[_sprite_sheet_handle].width() / cel_columns;
 		_cel_height = texture_manager()[_sprite_sheet_handle].height() / cel_rows;
 	}
 
-	void AnimationCollection::add(const std::string& animation_name, Animation::ptr animation)
+	AnimationSet::Handle AnimationSet::add(Animation animation)
 	{
-		_animations[animation_name] = std::move(animation);
+		_animations.push_back(std::move(animation));
+		return Handle{_animations.size() - 1};
 	}
 	
-	void AnimationCollection::start(const std::string& animation_name, bool randomize_starting_time)
+	void AnimationSet::start(Handle animation_handle, RandomizeStartTime randomize_start_time)
 	{
-		_current_animation = _animations[animation_name].get();
-		if (_current_animation != nullptr) {
-			_current_animation->reset(randomize_starting_time);
-		}
+		_current_animation = &_animations[animation_handle.index];
+		_current_animation->reset(randomize_start_time);
 	}
 
-	void AnimationCollection::update()
+	void AnimationSet::update()
 	{
 		if (!_paused && _current_animation != nullptr) {
 			_current_animation->update();
 		}
 	}
 
-	void AnimationCollection::draw(GamePoint origin) const
+	void AnimationSet::draw(GamePoint origin) const
 	{
 		if (_current_animation != nullptr) {
 			const Animation::Frame& frame = _current_animation->current_frame();
@@ -53,7 +50,7 @@ namespace questless
 		}
 	}
 
-	void AnimationCollection::draw(GamePoint origin, const Camera& camera, Color color) const
+	void AnimationSet::draw(GamePoint origin, const Camera& camera, Color color) const
 	{
 		if (_current_animation != nullptr) {
 			const Animation::Frame& frame = _current_animation->current_frame();

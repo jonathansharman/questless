@@ -229,9 +229,6 @@
     <ClInclude Include="include\animation\Animation.h">
       <Filter>include\animation</Filter>
     </ClInclude>
-    <ClInclude Include="include\animation\AnimationCollection.h">
-      <Filter>include\animation</Filter>
-    </ClInclude>
     <ClInclude Include="include\animation\Camera.h">
       <Filter>include\animation</Filter>
     </ClInclude>
@@ -646,6 +643,9 @@
     <ClInclude Include="include\entities\beings\attributes\Modifier.h">
       <Filter>include\entities\beings\attributes</Filter>
     </ClInclude>
+    <ClInclude Include="include\animation\AnimationSet.h">
+      <Filter>include\animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\world\Region.cpp">
@@ -685,9 +685,6 @@
       <Filter>src\animation\particles</Filter>
     </ClCompile>
     <ClCompile Include="src\animation\Animation.cpp">
-      <Filter>src\animation</Filter>
-    </ClCompile>
-    <ClCompile Include="src\animation\AnimationCollection.cpp">
       <Filter>src\animation</Filter>
     </ClCompile>
     <ClCompile Include="src\utility\Camera.cpp">
@@ -866,6 +863,9 @@
     </ClCompile>
     <ClCompile Include="src\items\Scroll.cpp">
       <Filter>src\items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\AnimationSet.cpp">
+      <Filter>src\animation</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
