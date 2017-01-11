@@ -142,6 +142,9 @@ namespace units
 	using Gradians = Angle<SpaceType, std::ratio<400>>;
 }
 
+#ifndef _DEBUG
+#define DOCTEST_CONFIG_DISABLE
+#endif
 #include <doctest/doctest.h>
 
 TEST_CASE("[Angle] operations")

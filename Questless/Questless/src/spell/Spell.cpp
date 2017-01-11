@@ -19,15 +19,9 @@ namespace questless::spell
 		{
 		public:
 			CompleteCast(Spell& spell) : _spell{spell} {}
-
 			static ptr make(Spell& spell) { return std::make_unique<CompleteCast>(spell); }
-
 			std::string name() const override { return ""; }
-
-			Action::Complete perform(Being& actor, cont_t cont) override
-			{
-				return _spell.perform_cast(actor, cont);
-			}
+			Action::Complete perform(Being& actor, cont_t cont) override { return _spell.perform_cast(actor, cont); }
 		private:
 			Spell& _spell;
 		};

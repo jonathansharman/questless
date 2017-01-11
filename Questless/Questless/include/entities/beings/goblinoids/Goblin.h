@@ -78,7 +78,7 @@ namespace questless
 		static constexpr double leg_vitality = 25.0;
 		static constexpr double foot_vitality = 15.0;
 
-		Goblin(Game& game, std::function<std::unique_ptr<Agent>(Being&)> agent_factory, BeingId id);
+		Goblin(Game& game, const std::function<std::unique_ptr<Agent>(Being&)>& agent_factory, BeingId id);
 		Goblin(Game& game, std::istream& in);
 
 		void accept(EntityVisitor& visitor) override { return visitor.visit(*this); }

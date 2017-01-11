@@ -643,6 +643,9 @@
     <ClInclude Include="include\entities\beings\IncorporealBeing.h">
       <Filter>include\entities\beings</Filter>
     </ClInclude>
+    <ClInclude Include="include\entities\beings\attributes\Modifier.h">
+      <Filter>include\entities\beings\attributes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\world\Region.cpp">

@@ -20,7 +20,7 @@ namespace questless
 	BodyPart::BodyPart
 		( Being& owner
 		, std::string name
-		, Attributes::modifiers_t attribute_modifiers
+		, std::vector<Modifier::ptr> modifiers
 		, double vitality
 		, Protection protection
 		, Resistance resistance
@@ -30,7 +30,7 @@ namespace questless
 		)
 		: _owner{owner}
 		, _name{std::move(name)}
-		, _modifiers{std::move(attribute_modifiers)}
+		, _modifiers{std::move(modifiers)}
 		, _health{vitality}
 		, _vitality{vitality}
 		, _protection{protection}

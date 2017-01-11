@@ -16,8 +16,6 @@
 
 namespace questless
 {
-	class Being;
-
 	class HUDController
 	{
 	public:

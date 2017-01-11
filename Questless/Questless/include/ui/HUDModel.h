@@ -19,8 +19,6 @@
 
 namespace questless
 {
-	class Being;
-
 	struct HUDModel
 	{
 		// Constants

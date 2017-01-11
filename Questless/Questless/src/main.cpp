@@ -7,10 +7,11 @@
 * @section DESCRIPTION Creates and runs an instance of the game Questless.
 */
 
-#ifdef _DEBUG
+#ifndef _DEBUG
+#define DOCTEST_CONFIG_DISABLE
+#endif
 #define DOCTEST_CONFIG_IMPLEMENT
 #include <doctest/doctest.h>
-#endif
 
 #include "Game.h"
 

@@ -30,11 +30,8 @@ namespace questless::spell
 		{
 		public:
 			Cast(Spell& spell) : _spell{spell} {}
-
 			static ptr make(Spell& spell) { return std::make_unique<Cast>(spell); }
-
 			std::string name() const override { return "Cast"; }
-
 			Action::Complete perform(Being& actor, cont_t cont) override;
 		private:
 			Spell& _spell;
@@ -44,11 +41,8 @@ namespace questless::spell
 		{
 		public:
 			Incant(Spell& spell) : _spell{spell} {}
-
 			static ptr make(Spell& spell) { return std::make_unique<Incant>(spell); }
-
 			std::string name() const override { return "Incant"; }
-
 			Action::Complete perform(Being& actor, cont_t cont) override;
 		private:
 			Spell& _spell;
@@ -58,11 +52,8 @@ namespace questless::spell
 		{
 		public:
 			Discharge(Spell& spell) : _spell{spell} {}
-
 			static ptr make(Spell& spell) { return std::make_unique<Discharge>(spell); }
-
 			std::string name() const override { return "Discharge"; }
-
 			Action::Complete perform(Being& actor, cont_t cont) override;
 		private:
 			Spell& _spell;

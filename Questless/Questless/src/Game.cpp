@@ -49,12 +49,12 @@ namespace questless
 		// Initialize video.
 
 		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
-			throw std::runtime_error("Failed to initialize SDL.");
+			throw std::runtime_error("Failed to initialize SDL. SDL Error: " + string{SDL_GetError()});
 		}
 		if (fullscreen) {
 			_window = Window::make("Questless", "resources/textures/icon.png", true);
 		} else {
-			_window = Window::make("Questless", "resources/textures/icon.png", false, _dflt_window_width, _dflt_window_height, true, true, true, true);
+			_window = Window::make("Questless", "resources/textures/icon.png", false, _dflt_window_width, _dflt_window_height, true, true, true, false);
 		}
 
 		renderer(make_unique<Renderer>(*_window, _window->width(), _window->height()));
@@ -63,10 +63,10 @@ namespace questless
 
 		/// @todo Make render quality a game setting.
 		//SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-		//SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
 
 		if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
-			throw std::runtime_error("Failed to initialize IMG.");
+			throw std::runtime_error("Failed to initialize IMG. SDL Error: " + string{SDL_GetError()});
 		}
 
 		// Initialize and load fonts.
@@ -80,7 +80,7 @@ namespace questless
 		// Initialize sound.
 
 	    if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 1024)) {
-			throw std::runtime_error("Failed to initialize Mix.");
+			throw std::runtime_error("Failed to initialize Mix. SDL Error: " + string{SDL_GetError()});
 	    }
 
 		// Initialize and load menu resources.

@@ -122,13 +122,16 @@ namespace questless::qte
 				);
 		}
 
-		// Draw the prompt.
+		// Draw the title and prompt.
+		renderer().draw_rect(ScreenRect{x_center - _txt_title->width() / 2, 0, _txt_title->width(), _txt_title->height()}, Color::black(128), true);
+		_txt_title->draw(ScreenPoint{x_center, 0}, HAlign::center);
 		renderer().draw_rect(ScreenRect{x_center - _txt_prompt->width() / 2, _prompt_top, _txt_prompt->width(), _txt_prompt->height()}, Color::black(128), true);
 		_txt_prompt->draw(ScreenPoint{x_center, _prompt_top}, HAlign::center);
 	}
 
 	void LightningBolt::load_textures()
 	{
-		_txt_prompt = Texture::make(font_manager()[prompt_font_handle()].render("Build up a charge!", renderer(), Color::white()));
+		_txt_title = Texture::make(font_manager()[title_font_handle()].render("Build up a charge!", renderer(), Color::white()));
+		_txt_prompt = Texture::make(font_manager()[prompt_font_handle()].render("Circle the target counter-clockwise as fast as you can!", renderer(), Color::white()));
 	}
 }

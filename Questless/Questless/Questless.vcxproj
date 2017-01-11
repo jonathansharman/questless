@@ -283,6 +283,7 @@
     <ClInclude Include="include\entities\beings\attributes\Attributes.h" />
     <ClInclude Include="include\entities\beings\attributes\MagicPower.h" />
     <ClInclude Include="include\entities\beings\attributes\MagicResistance.h" />
+    <ClInclude Include="include\entities\beings\attributes\Modifier.h" />
     <ClInclude Include="include\entities\beings\attributes\Vision.h" />
     <ClInclude Include="include\entities\beings\Being.h" />
     <ClInclude Include="include\entities\beings\BeingId.h" />

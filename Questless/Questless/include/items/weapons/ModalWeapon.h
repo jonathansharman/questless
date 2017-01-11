@@ -71,11 +71,8 @@ namespace questless
 		{
 		public:
 			SwitchForm(ModalWeapon& weapon, std::string name = "Switch form") : _weapon{weapon}, _name{std::move(name)} {}
-
 			static ptr make(ModalWeapon& weapon, std::string name = "Switch form") { return std::make_unique<Block>(weapon, name); }
-
 			std::string name() const override { return _name; }
-
 			Action::Complete perform(Being& actor, cont_t cont) override;
 		private:
 			ModalWeapon& _weapon;

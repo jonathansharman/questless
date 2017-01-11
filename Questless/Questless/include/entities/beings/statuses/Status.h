@@ -15,6 +15,7 @@
 #include <memory>
 
 #include "entities/beings/attributes/Attributes.h"
+#include "entities/beings/attributes/Modifier.h"
 #include "entities/beings/BeingId.h"
 
 namespace questless
@@ -39,10 +40,10 @@ namespace questless
 		virtual Type type() const = 0;
 
 		/// @return The list of attribute modifiers associated with this status.
-		virtual const Attributes::modifiers_t& modifiers() const
+		virtual const std::vector<Modifier::ptr>& modifiers() const
 		{
 			// No modifiers by default.
-			static Attributes::modifiers_t modifiers;
+			static std::vector<Modifier::ptr> modifiers;
 			return modifiers;
 		}
 

@@ -14,7 +14,7 @@
 #include <vector>
 #include <memory>
 
-#include "attributes/Attributes.h" /// @todo Probably remove this eventually. (BodyParts shouldn't need the full attributes struct.)
+#include "attributes/Modifier.h"
 #include "BodyPartVisitor.h"
 #include "Damage.h"
 #include "items/weapons/Weapon.h"
@@ -34,7 +34,7 @@ namespace questless
 
 		/// @param owner The being that owns this body.
 		/// @param name The name of the body part.
-		/// @param attribute_modifiers Attribute modifiers to apply to the part's owner.
+		/// @param modifiers Attribute modifiers to apply to the part's owner.
 		/// @param vitality The body part's vitality, which determines its maximum health.
 		/// @param protection The body part's protection attribute.
 		/// @param resistance The body part's resistance attribute.
@@ -44,7 +44,7 @@ namespace questless
 		BodyPart
 			( Being& owner
 			, std::string name
-			, Attributes::modifiers_t attribute_modifiers
+			, std::vector<Modifier::ptr> modifiers
 			, double vitality
 			, Protection protection
 			, Resistance resistance
@@ -59,7 +59,7 @@ namespace questless
 
 		/// @param owner The being that owns this body.
 		/// @param name The name of the body part.
-		/// @param attribute_modifiers Attribute modifiers to apply to the part's owner.
+		/// @param modifiers Attribute modifiers to apply to the part's owner.
 		/// @param vitality The body part's vitality, which determines its maximum health.
 		/// @param protection The body part's protection attribute.
 		/// @param resistance The body part's resistance attribute.
@@ -71,7 +71,7 @@ namespace questless
 		static ptr make
 			( Being& owner
 			, std::string name
-			, Attributes::modifiers_t attribute_modifiers
+			, std::vector<Modifier::ptr> modifiers
 			, double vitality
 			, Protection protection
 			, Resistance resistance
@@ -82,7 +82,7 @@ namespace questless
 			return std::make_unique<Type>
 				( owner
 				, std::move(name)
-				, std::move(attribute_modifiers)
+				, std::move(modifiers)
 				, vitality
 				, protection
 				, resistance
@@ -108,7 +108,7 @@ namespace questless
 		const std::vector<units::ScreenRect>& regions() const { return _regions; }
 
 		/// @return Attribute modifiers to apply to the part's owner.
-		const Attributes::modifiers_t& attribute_modifiers() const { return _modifiers; }
+		const std::vector<Modifier::ptr>& modifiers() const { return _modifiers; }
 
 		/// @return The body part's current health.
 		double health() const { return _health; }
@@ -148,7 +148,7 @@ namespace questless
 		std::vector<BodyPart::ptr> _children;
 		std::vector<units::ScreenRect> _regions;
 
-		Attributes::modifiers_t _modifiers;
+		std::vector<Modifier::ptr> _modifiers;
 
 		/// @todo Group these into a BodyPartAttributes struct or something.
 

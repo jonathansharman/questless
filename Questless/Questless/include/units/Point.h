@@ -111,6 +111,9 @@ namespace units
 	};
 }
 
+#ifndef _DEBUG
+#define DOCTEST_CONFIG_DISABLE
+#endif
 #include <doctest/doctest.h>
 
 TEST_CASE("[Point] operations")

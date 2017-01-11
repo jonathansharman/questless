@@ -30,8 +30,6 @@
 
 namespace questless
 {
-	// Forward class declarations.
-
 	class Agent;
 
 	class Being : public Entity
@@ -182,7 +180,7 @@ namespace questless
 		// Public Methods //
 		////////////////////
 
-		virtual ~Being() = default;
+		virtual ~Being();
 
 		/// @param out A stream object into which the serialized being is inserted.
 		void serialize(std::ostream& out) const override;
@@ -354,7 +352,7 @@ namespace questless
 
 		void add_status(std::unique_ptr<Status> status);
 	protected:
-		Being(Game& game, std::function<std::unique_ptr<Agent>(Being&)> agent_factory, BeingId id, Body body, Attributes base_attributes);
+		Being(Game& game, const std::function<std::unique_ptr<Agent>(Being&)>& agent_factory, BeingId id, Body body, Attributes base_attributes);
 		Being(Game& game, std::istream& in, Body body);
 
 		virtual Body make_body() = 0;

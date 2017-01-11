@@ -20,7 +20,7 @@ using std::function;
 
 namespace questless
 {
-	Being::Being(Game& game, function<unique_ptr<Agent>(Being&)> agent_factory, BeingId id, Body body, Attributes base_attributes)
+	Being::Being(Game& game, const function<unique_ptr<Agent>(Being&)>& agent_factory, BeingId id, Body body, Attributes base_attributes)
 		: Entity(game)
 		, _id{id}
 		, _agent{agent_factory(*this)}
@@ -40,6 +40,8 @@ namespace questless
 		in >> _attributes;
 		in >> _conditions;
 	}
+
+	Being::~Being() = default;
 
 	void Being::serialize(std::ostream& out) const
 	{
@@ -454,12 +456,12 @@ namespace questless
 
 		// Add body part attribute modifiers.
 		for (const BodyPart& part : _body) {
-			_attributes.modify(part.attribute_modifiers());
+			Modifier::apply_all(part.modifiers(), _attributes);
 		}
 
 		// Apply status attribute modifiers.
 		for (const auto& status : _statuses) {
-			_attributes.modify(status->modifiers());
+			Modifier::apply_all(status->modifiers(), _attributes);
 		}
 
 		// Apply condition effects.

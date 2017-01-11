@@ -52,11 +52,8 @@ namespace questless
 		{
 		public:
 			BeginMeleeAttack(Weapon& weapon, std::string name = "Attack") : _weapon{weapon}, _name{std::move(name)} {}
-
 			static ptr make(Weapon& weapon, std::string name = "Attack") { return std::make_unique<BeginMeleeAttack>(weapon, name); }
-
 			std::string name() const override { return _name; }
-
 			Action::Complete perform(Being& actor, cont_t cont) override;
 		private:
 			Weapon& _weapon;
@@ -67,11 +64,8 @@ namespace questless
 		{
 		public:
 			Block(Weapon& weapon, std::string name = "Block") : _weapon{weapon}, _name{std::move(name)} {}
-
 			static ptr make(Weapon& weapon, std::string name = "Block") { return std::make_unique<Block>(weapon, name); }
-
 			std::string name() const override { return _name; }
-
 			Action::Complete perform(Being& actor, cont_t cont) override;
 		private:
 			Weapon& _weapon;
@@ -82,11 +76,8 @@ namespace questless
 		{
 		public:
 			CompleteMeleeAttack(Weapon& weapon, RegionTileCoords coords) : _weapon{weapon}, _coords(coords) {}
-
 			static ptr make(Weapon& weapon, RegionTileCoords coords) { return std::make_unique<CompleteMeleeAttack>(weapon, coords); }
-
 			std::string name() const override { return ""; }
-
 			Action::Complete perform(Being& actor, cont_t cont) override;
 		private:
 			Weapon& _weapon;
