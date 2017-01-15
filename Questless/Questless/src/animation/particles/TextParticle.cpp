@@ -20,7 +20,7 @@ namespace questless
 	void TextParticle::initialize()
 	{
 		_font_handle = font_manager().add([] {
-			return Font::make("resources/fonts/firamono.ttf", 20, SDL_BLENDMODE_BLEND);
+			return std::make_unique<Font>("resources/fonts/firamono.ttf", 20, SDL_BLENDMODE_BLEND);
 		});
 	}
 

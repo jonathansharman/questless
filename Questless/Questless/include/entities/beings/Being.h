@@ -32,6 +32,14 @@ namespace questless
 {
 	class Agent;
 
+	struct Health : TaggedType<double> { using TaggedType::TaggedType; };
+	struct Mana : TaggedType<double> { using TaggedType::TaggedType; };
+	struct Energy : TaggedType<double> { using TaggedType::TaggedType; };
+	struct Satiety : TaggedType<double> { using TaggedType::TaggedType; };
+	struct Alertness : TaggedType<double> { using TaggedType::TaggedType; };
+	struct BusyTime : TaggedType<double> { using TaggedType::TaggedType; };
+	struct Dead : TaggedType<bool> { using TaggedType::TaggedType; };
+
 	class Being : public Entity
 	{
 	public:
@@ -46,19 +54,19 @@ namespace questless
 
 		struct Conditions
 		{
-			double health;
-			double mana;
-			double energy;
-			double satiety;
-			double alertness;
-			double busy_time;
-			bool dead;
-			RegionTileCoords::Direction direction;
+			double health = 0.0;
+			double mana = 0.0;
+			double energy = 0.0;
+			double satiety = 0.0;
+			double alertness = 0.0;
+			double busy_time = 0.0;
+			bool dead = false;
+			RegionTileCoords::Direction direction = RegionTileCoords::Direction::one;
 
-			Conditions() {}
+			constexpr Conditions() = default;
 
-			Conditions(double health, double mana, double energy, double satiety, double alertness, double busy_time, bool dead, RegionTileCoords::Direction direction)
-				: health{health}, mana{mana}, energy{energy}, satiety{satiety}, alertness{alertness}, busy_time{busy_time}, dead{dead}, direction{direction}
+			constexpr Conditions(Health health, Mana mana, Energy energy, Satiety satiety, Alertness alertness, BusyTime busy_time, Dead dead, RegionTileCoords::Direction direction)
+				: health{std::move(health)}, mana{std::move(mana)}, energy{std::move(energy)}, satiety{std::move(satiety)}, alertness{std::move(alertness)}, busy_time{std::move(busy_time)}, dead{std::move(dead)}, direction{std::move(direction)}
 			{}
 
 			friend std::ostream& operator <<(std::ostream& out, const Conditions& c)
@@ -82,43 +90,6 @@ namespace questless
 
 		/// @todo Probably move some of these to private? (Sleeping stuff goes in Sleeping?)
 
-		// Maxima
-		static constexpr double max_satiety = 100.0;
-		static constexpr double max_alertness = 100.0;
-
-		// Default Stats
-		static constexpr double dflt_vitality = 100.0;
-		static constexpr double dflt_spirit = 100.0;
-		static constexpr double dflt_health_regen = 0.0;
-		static constexpr double dflt_mana_regen = 0.0;
-		static constexpr double dflt_strength = 100.0;
-		static constexpr double dflt_endurance = 100.0;
-		static constexpr double dflt_stamina = 100.0;
-		static constexpr double dflt_agility = 100.0;
-		static constexpr double dflt_dexterity = 100.0;
-		static constexpr double dflt_stealth = 100.0;
-		static constexpr double dflt_vision = 100.0;
-		static constexpr double dflt_light_affinity = 100.0;
-		static constexpr double dflt_hearing = 100.0;
-		static constexpr double dflt_intellect = 100.0;
-		static constexpr double dflt_min_temp = -100.0;
-		static constexpr double dflt_max_temp = 100.0;
-		static constexpr bool dflt_mute = true;
-
-		static constexpr double dflt_white_power = 100.0;
-		static constexpr double dflt_black_power = 100.0;
-		static constexpr double dflt_green_power = 100.0;
-		static constexpr double dflt_red_power = 100.0;
-		static constexpr double dflt_blue_power = 100.0;
-		static constexpr double dflt_yellow_power = 100.0;
-
-		static constexpr double dflt_white_resistance = 100.0;
-		static constexpr double dflt_black_resistance = 100.0;
-		static constexpr double dflt_green_resistance = 100.0;
-		static constexpr double dflt_red_resistance = 100.0;
-		static constexpr double dflt_blue_resistance = 100.0;
-		static constexpr double dflt_yellow_resistance = 100.0;
-
 		// Energy
 		static constexpr double energy_rate = 1.0; ///< Energy gained per turn (awake or asleep).
 		static constexpr double energy_rate_asleep = 2.0; ///< Additional energy gained per turn asleep.
@@ -126,12 +97,14 @@ namespace questless
 		static constexpr double energy_endurance_penalty = 0.5; ///< Proportion of base endurance removed at zero energy.
 
 		// Satiety
+		static constexpr double max_satiety = 100.0;
 		static constexpr double satiety_rate = -1.0; ///< Satiety gained per turn (awake or asleep).
 		static constexpr double satiety_rate_asleep = 0.5; ///< Additional satiety gained per turn asleep.
 		static constexpr double satiety_health_regen_penalty = 1.0; ///< Proportion of base health regeneration removed at zero satiety.
 		static constexpr double satiety_mana_regen_penalty = 1.0; ///< Proportion of base mana regeneration removed at zero satiety.
 
 		// Alertness
+		static constexpr double max_alertness = 100.0;
 		static constexpr double alertness_rate = -1.0; ///< Alertness gained per turn (awake or asleep).
 		static constexpr double alertness_rate_asleep = 3.0; ///< Additional alertness gained per turn asleep.
 		static constexpr double alertness_agility_penalty = 0.75; ///< Proportion of base agility removed at zero alertness.
@@ -249,9 +222,9 @@ namespace questless
 		double dexterity() const { return _attributes.dexterity; }
 		double stealth() const { return _attributes.stealth; }
 		Vision vision() const { return _attributes.vision; }
-		double visual_acuity() const { return _attributes.vision.acuity; }
-		double ideal_light() const { return _attributes.vision.ideal_light; }
-		double light_tolerance() const { return _attributes.vision.light_tolerance; }
+		double visual_acuity() const { return _attributes.vision.acuity(); }
+		double ideal_light() const { return _attributes.vision.ideal_light(); }
+		double light_tolerance() const { return _attributes.vision.light_tolerance(); }
 		double hearing() const { return _attributes.hearing; }
 		double intellect() const { return _attributes.intellect; }
 		double min_temp() const { return _attributes.min_temp; }
@@ -314,9 +287,9 @@ namespace questless
 		void dexterity(double value) { _attributes.dexterity = value; }
 		void stealth(double value) { _attributes.stealth = value; }
 		void vision(Vision value) { _attributes.vision = value; }
-		void visual_acuity(double value) { _attributes.vision.acuity = value; }
-		void ideal_light(double value) { _attributes.vision.ideal_light = value; }
-		void light_tolerance(double value) { _attributes.vision.light_tolerance = value; }
+		void visual_acuity(double value) { _attributes.vision.acuity(value); }
+		void ideal_light(double value) { _attributes.vision.ideal_light(value); }
+		void light_tolerance(double value) { _attributes.vision.light_tolerance(value); }
 		void hearing(double value) { _attributes.hearing = value; }
 		void intellect(double value) { _attributes.intellect = value; }
 		void min_temp(double value) { _attributes.min_temp = value; }
@@ -352,7 +325,7 @@ namespace questless
 
 		void add_status(std::unique_ptr<Status> status);
 	protected:
-		Being(Game& game, const std::function<std::unique_ptr<Agent>(Being&)>& agent_factory, BeingId id, Body body, Attributes base_attributes);
+		Being(Game& game, const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, BeingId id, Body body, const std::function<Attributes()>& make_base_attributes);
 		Being(Game& game, std::istream& in, Body body);
 
 		virtual Body make_body() = 0;

@@ -21,9 +21,9 @@
 
 namespace questless
 {
-	using Scale = TaggedType<double, struct ScaleTag>;
-	using Lifetime = TaggedType<units::GameSeconds, struct LifetimeTag>;
-	using MaxDisplacement = TaggedType<double, struct MaxDisplacementTag>;
+	struct Scale : TaggedType<double> { using TaggedType::TaggedType; };
+	struct Lifetime : TaggedType<units::GameSeconds> { using TaggedType::TaggedType; };
+	struct MaxDisplacement : TaggedType<double> { using TaggedType::TaggedType; };
 
 	class Particle
 	{

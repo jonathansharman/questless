@@ -4,7 +4,12 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION Supports creation of strongly typed wrappers around MoveConstructible types.
+* @section DESCRIPTION
+*
+* Supports creation of strongly typed wrappers around MoveConstructible types.
+*
+* Example tagged type definition:
+*   struct Meters : TaggedType<double> { using TaggedType::TaggedType; };
 */
 
 #ifndef TAGGED_TYPE_H
@@ -12,24 +17,20 @@
 
 namespace questless
 {
-	/// Adds a type tag to an existing type.
-	template <typename RawType, typename TagType>
-	class TaggedType
+	template <typename RawType>
+	struct TaggedType
 	{
-	public:
 		using raw_t = RawType;
-		using tag_t = TagType;
 
-		constexpr explicit TaggedType(raw_t value) : _value{std::move(value)} {}
+		raw_t value;
 
-		constexpr const raw_t& value() const & { return _value; }
-		raw_t&& value() && { return std::move(_value); }
-		raw_t& value() & { return _value; }
+		constexpr explicit TaggedType(raw_t value) : value{std::move(value)} {}
 
-		constexpr operator const raw_t&() const & { return _value; }
-		operator raw_t && () && { return std::move(_value); }
-	private:
-		raw_t _value;
+		constexpr operator const raw_t&() const & noexcept { return value; }
+		operator raw_t&() & noexcept { return value; }
+
+		constexpr const raw_t* operator ->() const { return &value; }
+		raw_t* operator ->() { return &value; }
 	};
 }
 

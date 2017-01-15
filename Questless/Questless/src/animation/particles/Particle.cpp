@@ -4,7 +4,7 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION The implementation for the Particle class.
+* @section DESCRIPTION Particle implementation.
 */
 
 #include "animation/particles/Particle.h"

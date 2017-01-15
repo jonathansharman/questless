@@ -20,7 +20,7 @@ namespace questless
 {
 	HUDView::HUDView(Game& game, const Window& window) : _game{game}, _window{window}
 	{
-		_fnt_item_count = Font::make("resources/fonts/dumbledor1.ttf", _item_count_font_size, SDL_BLENDMODE_BLEND);
+		_fnt_item_count = std::make_unique<Font>("resources/fonts/dumbledor1.ttf", _item_count_font_size, SDL_BLENDMODE_BLEND);
 
 		load_textures_and_layout();
 	}
@@ -94,7 +94,7 @@ namespace questless
 
 	void HUDView::load_textures_and_layout()
 	{
-		_hotbar_slot_texture = Texture::make("resources/textures/ui/hud/hotbar-slot.png", renderer());
+		_hotbar_slot_texture = std::make_unique<Texture>("resources/textures/ui/hud/hotbar-slot.png", renderer());
 
 		int window_width = _window.width();
 		int window_height = _window.height();

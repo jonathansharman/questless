@@ -53,44 +53,9 @@ namespace questless
 			, std::vector<units::ScreenRect> regions
 			);
 
-		virtual ~BodyPart() = 0 {}; /// @todo Change to default if actual pure virtuals are added to BodyPart later.
+		virtual ~BodyPart() = default;
 
 		virtual void accept(BodyPartVisitor& visitor) = 0;
-
-		/// @param owner The being that owns this body.
-		/// @param name The name of the body part.
-		/// @param modifiers Attribute modifiers to apply to the part's owner.
-		/// @param vitality The body part's vitality, which determines its maximum health.
-		/// @param protection The body part's protection attribute.
-		/// @param resistance The body part's resistance attribute.
-		/// @param vulnerability The body part's vulnerability attribute.
-		/// @param vital Whether the body part is vital to its being. If true, the being dies when this body part is disabled.
-		/// @param regions The set of rectangular regions that this body part occupies. Used for display and hit detection.
-		/// @return A BodyPart pointer from the given data.
-		template <typename Type>
-		static ptr make
-			( Being& owner
-			, std::string name
-			, std::vector<Modifier::ptr> modifiers
-			, double vitality
-			, Protection protection
-			, Resistance resistance
-			, Vulnerability vulnerability
-			, bool vital
-			, std::vector<units::ScreenRect> regions)
-		{
-			return std::make_unique<Type>
-				( owner
-				, std::move(name)
-				, std::move(modifiers)
-				, vitality
-				, protection
-				, resistance
-				, vulnerability
-				, vital
-				, std::move(regions)
-				);
-		}
 
 		/// Advances the body part one time unit.
 		void update();
@@ -165,26 +130,78 @@ namespace questless
 
 	// Body part subtypes
 
-	class Torso : public virtual BodyPart
-	{
-	public:
-		using ptr = std::unique_ptr<Torso>;
-		using ref = std::reference_wrapper<Torso>;
-
-		using BodyPart::BodyPart;
-
-		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
-	};
-
 	class Head : public virtual BodyPart
 	{
 	public:
 		using ptr = std::unique_ptr<Head>;
 		using ref = std::reference_wrapper<Head>;
 
-		using BodyPart::BodyPart;
+		Head
+			( Being& owner
+			, std::string name
+			, double intellect
+			, double vitality
+			, Protection protection
+			, Resistance resistance
+			, Vulnerability vulnerability
+			, bool vital
+			, std::vector<units::ScreenRect> regions
+			)
+			: BodyPart
+				{ owner
+				, std::move(name)
+				, Modifier::make_vector(std::make_unique<IntellectModifier>(intellect))
+				, vitality
+				, protection
+				, resistance
+				, vulnerability
+				, vital
+				, std::move(regions)
+				}
+			, _intellect{intellect}
+		{}
 
 		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
+	private:
+		double _intellect;
+	};
+
+	class Torso : public virtual BodyPart
+	{
+	public:
+		using ptr = std::unique_ptr<Torso>;
+		using ref = std::reference_wrapper<Torso>;
+		
+		Torso
+			( Being& owner
+			, std::string name
+			, double strength
+			, double vitality
+			, Protection protection
+			, Resistance resistance
+			, Vulnerability vulnerability
+			, bool vital
+			, std::vector<units::ScreenRect> regions
+			)
+			: BodyPart
+				{ owner
+				, std::move(name)
+				, Modifier::make_vector(std::make_unique<StrengthModifier>(strength))
+				, vitality
+				, protection
+				, resistance
+				, vulnerability
+				, vital
+				, std::move(regions)
+				}
+			, _strength{strength}
+		{}
+
+		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
+
+		double strength() const { return _strength; }
+	private:
+		double _strength;
 	};
 
 	class Arm : public virtual BodyPart
@@ -192,10 +209,37 @@ namespace questless
 	public:
 		using ptr = std::unique_ptr<Arm>;
 		using ref = std::reference_wrapper<Arm>;
-
-		using BodyPart::BodyPart;
+		
+		Arm
+			( Being& owner
+			, std::string name
+			, double strength
+			, double vitality
+			, Protection protection
+			, Resistance resistance
+			, Vulnerability vulnerability
+			, bool vital
+			, std::vector<units::ScreenRect> regions
+			)
+			: BodyPart
+				{ owner
+				, std::move(name)
+				, Modifier::make_vector(std::make_unique<StrengthModifier>(strength))
+				, vitality
+				, protection
+				, resistance
+				, vulnerability
+				, vital
+				, std::move(regions)
+				}
+			, _strength{strength}
+		{}
 
 		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
+
+		double strength() const { return _strength; }
+	private:
+		double _strength;
 	};
 
 	class Hand : public virtual BodyPart
@@ -204,9 +248,34 @@ namespace questless
 		using ptr = std::unique_ptr<Hand>;
 		using ref = std::reference_wrapper<Hand>;
 
-		using BodyPart::BodyPart;
+		Hand
+			( Being& owner
+			, std::string name
+			, double dexterity
+			, double vitality
+			, Protection protection
+			, Resistance resistance
+			, Vulnerability vulnerability
+			, bool vital
+			, std::vector<units::ScreenRect> regions
+			)
+			: BodyPart
+				{ owner
+				, std::move(name)
+				, Modifier::make_vector(std::make_unique<DexterityModifier>(dexterity))
+				, vitality
+				, protection
+				, resistance
+				, vulnerability
+				, vital
+				, std::move(regions)
+				}
+			, _dexterity{dexterity}
+		{}
 
 		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
+	private:
+		double _dexterity;
 	};
 
 	class Leg : public virtual BodyPart
@@ -215,9 +284,40 @@ namespace questless
 		using ptr = std::unique_ptr<Leg>;
 		using ref = std::reference_wrapper<Leg>;
 
-		using BodyPart::BodyPart;
+		Leg
+			( Being& owner
+			, std::string name
+			, double agility
+			, double strength
+			, double vitality
+			, Protection protection
+			, Resistance resistance
+			, Vulnerability vulnerability
+			, bool vital
+			, std::vector<units::ScreenRect> regions
+			)
+			: BodyPart
+				{ owner
+				, std::move(name)
+				, Modifier::make_vector(std::make_unique<AgilityModifier>(agility), std::make_unique<StrengthModifier>(strength))
+				, vitality
+				, protection
+				, resistance
+				, vulnerability
+				, vital
+				, std::move(regions)
+				}
+			, _agility{agility}
+			, _strength{strength}
+		{}
 
 		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
+
+		double agility() const { return _agility; }
+		double strength() const { return _strength; }
+	private:
+		double _agility;
+		double _strength;
 	};
 
 	class Foot : public virtual BodyPart
@@ -225,10 +325,37 @@ namespace questless
 	public:
 		using ptr = std::unique_ptr<Foot>;
 		using ref = std::reference_wrapper<Foot>;
-
-		using BodyPart::BodyPart;
+		
+		Foot
+			( Being& owner
+			, std::string name
+			, double agility
+			, double vitality
+			, Protection protection
+			, Resistance resistance
+			, Vulnerability vulnerability
+			, bool vital
+			, std::vector<units::ScreenRect> regions
+			)
+			: BodyPart
+				{ owner
+				, std::move(name)
+				, Modifier::make_vector(std::make_unique<AgilityModifier>(agility))
+				, vitality
+				, protection
+				, resistance
+				, vulnerability
+				, vital
+				, std::move(regions)
+				}
+			, _agility{agility}
+		{}
 
 		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
+
+		double agility() const { return _agility; }
+	private:
+		double _agility;
 	};
 
 	class Wing : public virtual BodyPart
@@ -236,10 +363,37 @@ namespace questless
 	public:
 		using ptr = std::unique_ptr<Wing>;
 		using ref = std::reference_wrapper<Wing>;
-
-		using BodyPart::BodyPart;
+		
+		Wing
+			( Being& owner
+			, std::string name
+			, double lift
+			, double vitality
+			, Protection protection
+			, Resistance resistance
+			, Vulnerability vulnerability
+			, bool vital
+			, std::vector<units::ScreenRect> regions
+			)
+			: BodyPart
+				{ owner
+				, std::move(name)
+				, Modifier::make_vector(std::make_unique<LiftModifier>(lift))
+				, vitality
+				, protection
+				, resistance
+				, vulnerability
+				, vital
+				, std::move(regions)
+				}
+			, _lift{lift}
+		{}
 
 		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
+
+		double lift() const { return _lift; }
+	private:
+		double _lift;
 	};
 
 	class Tail : public virtual BodyPart

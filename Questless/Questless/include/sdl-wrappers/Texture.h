@@ -68,10 +68,6 @@ namespace sdl
 		/// Move constructor.
 		Texture(Texture&& texture);
 
-		/// @return A unique texture pointer constructed with the given arguments.
-		template <typename... Args>
-		static ptr make(Args&&... args) { return std::make_unique<Texture>(std::forward<Args>(args)...); }
-
 		~Texture();
 
 		Texture& operator =(Texture texture) &;

@@ -4,67 +4,85 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION Resistance reduces damage by some multiple. Vulnerability increases damage by some multiple.
+* @section DESCRIPTION Defines Resistance and Vulnerability, which reduce and increase damage taken, respectively.
 */
 
 #ifndef DAMAGE_MULTIPLIER_H
 #define DAMAGE_MULTIPLIER_H
 
+#include "utility/TaggedType.h"
+
 namespace questless
 {
+	struct Slash : TaggedType<double> { using TaggedType::TaggedType; };
+	struct Pierce : TaggedType<double> { using TaggedType::TaggedType; };
+	struct Bludgeon : TaggedType<double> { using TaggedType::TaggedType; };
+	struct Burn : TaggedType<double> { using TaggedType::TaggedType; };
+	struct Freeze : TaggedType<double> { using TaggedType::TaggedType; };
+	struct Blight : TaggedType<double> { using TaggedType::TaggedType; };
+
 	template <typename Derived>
-	struct DamageMultiplier
+	class DamageMultiplier
 	{
-		double slash;
-		double pierce;
-		double bludgeon;
-		double burn;
-		double freeze;
-		double blight;
+	public:
+		constexpr DamageMultiplier() = default;
 
-		constexpr DamageMultiplier() : slash{0.0}, pierce{0.0}, bludgeon{0.0}, burn{0.0}, freeze{0.0}, blight{0.0} {}
-
-		constexpr DamageMultiplier(double slash, double pierce, double bludgeon, double burn, double freeze, double blight)
-			: slash{slash}, pierce{pierce}, bludgeon{bludgeon}, burn{burn}, freeze{freeze}, blight{blight}
+		constexpr DamageMultiplier(Slash slash, Pierce pierce, Bludgeon bludgeon, Burn burn, Freeze freeze, Blight blight)
+			: _slash{slash}, _pierce{pierce}, _bludgeon{bludgeon}, _burn{burn}, _freeze{freeze}, _blight{blight}
 		{}
 
-		static constexpr Derived zero() { return Derived{}; }
-		static constexpr Derived from_slash(double slash) { return Derived{slash, 0.0, 0.0, 0.0, 0.0, 0.0}; }
-		static constexpr Derived from_pierce(double pierce) { return Derived{0.0, pierce, 0.0, 0.0, 0.0, 0.0}; }
-		static constexpr Derived from_bludgeon(double bludgeon) { return Derived{0.0, 0.0, bludgeon, 0.0, 0.0, 0.0}; }
-		static constexpr Derived from_burn(double burn) { return Derived{0.0, 0.0, 0.0, burn, 0.0, 0.0}; }
-		static constexpr Derived from_freeze(double freeze) { return Derived{0.0, 0.0, 0.0, 0.0, freeze, 0.0}; }
-		static constexpr Derived from_blight(double blight) { return Derived{0.0, 0.0, 0.0, 0.0, 0.0, blight}; }
+		constexpr DamageMultiplier(Slash slash) : _slash{slash}, _pierce{0.0}, _bludgeon{0.0}, _burn{0.0}, _freeze{0.0}, _blight{0.0} {}
+		constexpr DamageMultiplier(Pierce pierce) : slash{0.0}, pierce{pierce}, bludgeon{0.0}, burn{0.0}, freeze{0.0}, blight{0.0} {}
+		constexpr DamageMultiplier(Bludgeon bludgeon) : slash{0.0}, pierce{0.0}, bludgeon{bludgeon}, burn{0.0}, freeze{0.0}, blight{0.0} {}
+		constexpr DamageMultiplier(Burn burn) : slash{0.0}, pierce{0.0}, bludgeon{0.0}, burn{burn}, freeze{0.0}, blight{0.0} {}
+		constexpr DamageMultiplier(Freeze freeze) : slash{0.0}, pierce{0.0}, bludgeon{0.0}, burn{0.0}, freeze{freeze}, blight{0.0} {}
+		constexpr DamageMultiplier(Blight blight) : slash{0.0}, pierce{0.0}, bludgeon{0.0}, burn{0.0}, freeze{0.0}, blight{blight} {}
 
-		constexpr friend Derived operator +(const Derived& d1, const Derived& addend2)
+		static constexpr Derived zero() { return Derived{}; }
+
+		constexpr friend Derived operator +(const Derived& d1, const Derived& d2)
 		{
 			return Derived
-				{ d1.slash + addend2.slash
-				, d1.pierce + addend2.pierce
-				, d1.bludgeon + addend2.bludgeon
-				, d1.burn + addend2.burn
-				, d1.freeze + addend2.freeze
-				, d1.blight + addend2.blight
+				{ d1.slash + d2.slash
+				, d1.pierce + d2.pierce
+				, d1.bludgeon + d2.bludgeon
+				, d1.burn + d2.burn
+				, d1.freeze + d2.freeze
+				, d1.blight + d2.blight
 				};
 		}
-		friend constexpr Derived operator -(const Derived& minuend, const Derived& subtrahend)
+		friend constexpr Derived operator -(const Derived& d1, const Derived& d2)
 		{
 			Derived difference;
-			difference.slash = max(0.0, minuend.slash - subtrahend.slash);
-			difference.pierce = max(0.0, minuend.pierce - subtrahend.pierce);
-			difference.bludgeon = max(0.0, minuend.bludgeon - subtrahend.bludgeon);
-			difference.burn = max(0.0, minuend.burn - subtrahend.burn);
-			difference.freeze = max(0.0, minuend.freeze - subtrahend.freeze);
-			difference.blight = max(0.0, minuend.blight - subtrahend.blight);
+			difference.slash = max(0.0, d1.slash - d2.slash);
+			difference.pierce = max(0.0, d1.pierce - d2.pierce);
+			difference.bludgeon = max(0.0, d1.bludgeon - d2.bludgeon);
+			difference.burn = max(0.0, d1.burn - d2.burn);
+			difference.freeze = max(0.0, d1.freeze - d2.freeze);
+			difference.blight = max(0.0, d1.blight - d2.blight);
 			return difference;
 		}
 		friend constexpr Derived operator *(const Derived& d, double k)
 		{
-			return Derived{k * d.slash, k * d.pierce, k * d.bludgeon, k * d.burn, k * d.freeze, k * d.blight};
+			return Derived
+				{ Slash{k * d._slash}
+				, Pierce{k * d._pierce}
+				, Bludgeon{k * d._bludgeon}
+				, Burn{k * d._burn}
+				, Freeze{k * d._freeze}
+				, Blight{k * d._blight}
+				};
 		}
 		friend constexpr Derived operator *(double k, const Derived& d)
 		{
-			return Derived{k * d.slash, k * d.pierce, k * d.bludgeon, k * d.burn, k * d.freeze, k * d.blight};
+			return Derived
+				{ Slash{k * d._slash}
+				, Pierce{k * d._pierce}
+				, Bludgeon{k * d._bludgeon}
+				, Burn{k * d._burn}
+				, Freeze{k * d._freeze}
+				, Blight{k * d._blight}
+				};
 		}
 		friend constexpr Derived operator /(const Derived& d, double k)
 		{
@@ -73,74 +91,60 @@ namespace questless
 
 		Derived& operator +=(const Derived& addend)
 		{
-			slash += addend.slash;
-			pierce += addend.pierce;
-			bludgeon += addend.bludgeon;
-			burn += addend.burn;
-			freeze += addend.freeze;
-			blight += addend.blight;
+			_slash += addend._slash;
+			_pierce += addend._pierce;
+			_bludgeon += addend._bludgeon;
+			_burn += addend._burn;
+			_freeze += addend._freeze;
+			_blight += addend._blight;
 			return static_cast<Derived&>(*this);
 		}
-		Derived& operator -=(const Derived& subtrahend)
+		Derived& operator -=(const Derived& d)
 		{
-			slash -= subtrahend.slash;
-			pierce -= subtrahend.pierce;
-			bludgeon -= subtrahend.bludgeon;
-			burn -= subtrahend.burn;
-			freeze -= subtrahend.freeze;
-			blight -= subtrahend.blight;
+			_slash -= d._slash;
+			_pierce -= d._pierce;
+			_bludgeon -= d._bludgeon;
+			_burn -= d._burn;
+			_freeze -= d._freeze;
+			_blight -= d._blight;
 			return static_cast<Derived&>(*this);
 		}
 		Derived& operator *=(double k)
 		{
-			slash *= k;
-			pierce *= k;
-			bludgeon *= k;
-			burn *= k;
-			freeze *= k;
-			blight *= k;
+			_slash *= k;
+			_pierce *= k;
+			_bludgeon *= k;
+			_burn *= k;
+			_freeze *= k;
+			_blight *= k;
 			return static_cast<Derived&>(*this);
 		}
+
+		constexpr double slash() const { return _slash; }
+		constexpr double pierce() const { return _pierce; }
+		constexpr double bludgeon() const { return _bludgeon; }
+		constexpr double burn() const { return _burn; }
+		constexpr double freeze() const { return _freeze; }
+		constexpr double blight() const { return _blight; }
+	private:
+		double _slash = 0.0;
+		double _pierce = 0.0;
+		double _bludgeon = 0.0;
+		double _burn = 0.0;
+		double _freeze = 0.0;
+		double _blight = 0.0;
 	};
 
-	struct Resistance : public DamageMultiplier<Resistance>
+	class Resistance : public DamageMultiplier<Resistance>
 	{
+	public:
 		using DamageMultiplier<Resistance>::DamageMultiplier;
-
-		/// @return The base resistance of the given Being subclass.
-		template <typename BeingType>
-		static constexpr Resistance of()
-		{
-			using T = BeingType;
-			return Resistance
-				{ T::slash_resistance
-				, T::pierce_resistance
-				, T::bludgeon_resistance
-				, T::burn_resistance
-				, T::freeze_resistance
-				, T::blight_resistance
-				};
-		}
 	};
 
-	struct Vulnerability : public DamageMultiplier<Vulnerability>
+	class Vulnerability : public DamageMultiplier<Vulnerability>
 	{
+	public:
 		using DamageMultiplier<Vulnerability>::DamageMultiplier;
-
-		/// @return The base vulnerability of the given Being subclass.
-		template <typename BeingType>
-		static constexpr Vulnerability of()
-		{
-			using T = BeingType;
-			return Vulnerability
-				{ T::slash_vulnerability
-				, T::pierce_vulnerability
-				, T::bludgeon_vulnerability
-				, T::burn_vulnerability
-				, T::freeze_vulnerability
-				, T::blight_vulnerability
-				};
-		}
 	};
 }
 

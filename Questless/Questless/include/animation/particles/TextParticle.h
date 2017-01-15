@@ -38,9 +38,6 @@ namespace questless
 			, _color{color}
 			, _texture{make_texture()}
 		{}
-
-		/// @param position The particle's starting position.
-		static ptr make(units::GamePoint position, std::string text, sdl::Color color) { return std::make_unique<TextParticle>(position, std::move(text), color); }
 	private:
 		friend class Initializer<TextParticle>;
 		static Initializer<TextParticle> _initializer;

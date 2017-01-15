@@ -1,5 +1,5 @@
 /**
-* @file    Blood.h
+* @file    BloodParticle.h
 * @author  Jonathan Sharman
 *
 * @section LICENSE See LICENSE.txt.
@@ -7,18 +7,18 @@
 * @section DESCRIPTION A blood drop particle.
 */
 
-#ifndef BLOOD_H
-#define BLOOD_H
+#ifndef BLOOD_PARTICLE_H
+#define BLOOD_PARTICLE_H
 
 #include "animation/particles/Particle.h"
 
 namespace questless
 {
-	class Blood : public Particle
+	class BloodParticle : public Particle
 	{
 	public:
 		/// @param position The particle's starting position.
-		Blood(units::GamePoint position) : Particle
+		BloodParticle(units::GamePoint position) : Particle
 			{ position
 			, (random_displacement(160.0) + units::GameVector{0.0, 150.0}) / 1.0s
 			, units::GameVector{0.0, -600.0} / 1.0s / 1.0s
@@ -31,9 +31,6 @@ namespace questless
 		{
 			_scale_velocity = units::GameScaleVelocity{Scale{-_scale / _lifetime.count()}};
 		}
-
-		/// @param position The particle's starting position.
-		static ptr make(units::GamePoint position) { return std::make_unique<Blood>(position); }
 	private:
 		bool fade_out() const override { return false; };
 

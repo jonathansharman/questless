@@ -1,25 +1,25 @@
 /**
-* @file    GreenMagic.h
+* @file    GreenMagicParticle.h
 * @author  Jonathan Sharman
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION The interface for the GreenMagic particle class.
+* @section DESCRIPTION The interface for the green magic particle class.
 */
 
-#ifndef GREEN_MAGIC_H
-#define GREEN_MAGIC_H
+#ifndef GREEN_MAGIC_PARTICLE_H
+#define GREEN_MAGIC_PARTICLE_H
 
 #include "animation/particles/Particle.h"
 #include "utility/utility.h"
 
 namespace questless
 {
-	class GreenMagic : public Particle
+	class GreenMagicParticle : public Particle
 	{
 	public:
 		/// @param position The particle's starting position.
-		GreenMagic(units::GamePoint position)
+		GreenMagicParticle(units::GamePoint position)
 			: Particle
 				{ position
 				, random_displacement(20.0, 50.0) / 1.0s
@@ -32,9 +32,6 @@ namespace questless
 				}
 			, _turning_right{random_bool()}
 		{}
-
-		/// @param position The particle's starting position.
-		static ptr make(units::GamePoint position) { return std::make_unique<GreenMagic>(position); }
 	private:
 		static constexpr units::GameRadians _dtheta_max = 2.0 * units::GameRadians::circle();
 		static constexpr double _inflection_probability = 0.1;

@@ -35,10 +35,6 @@ namespace sdl
 
 		Font(Font&& font);
 
-		/// @return A unique font pointer constructed with the given arguments.
-		template <typename... Args>
-		static ptr make(Args&&... args) { return std::make_unique<Font>(std::forward<Args>(args)...); }
-
 		~Font();
 
 		Font& operator =(Font font) &;

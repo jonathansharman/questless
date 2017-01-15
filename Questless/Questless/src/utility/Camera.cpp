@@ -61,8 +61,8 @@ namespace questless
 		, const SrcRect& src_rect
 		) const
 	{
-		if (origin.value()) {
-			position += GameVector{texture.width() / 2 - origin.value()->x, texture.height() / 2 - origin.value()->y};
+		if (origin.value) {
+			position += GameVector{texture.width() / 2 - origin.value->x, texture.height() / 2 - origin.value->y};
 		}
 		sdl::Color mixed_color = sdl::Color
 			{ static_cast<uint8_t>((static_cast<uint32_t>(color.r) * _color.r) / 255)

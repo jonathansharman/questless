@@ -17,93 +17,88 @@
 
 namespace questless
 {
-	struct Damage
+	class Damage
 	{
-		double slash;
-		double pierce;
-		double bludgeon;
-		double burn;
-		double freeze;
-		double blight;
-
-		constexpr Damage() : slash{0.0}, pierce{0.0}, bludgeon{0.0}, burn{0.0}, freeze{0.0}, blight{0.0} {}
+	public:
+		constexpr Damage() = default;
 
 		constexpr Damage(double slash, double pierce, double bludgeon, double burn, double freeze, double blight)
-			: slash{slash}, pierce{pierce}, bludgeon{bludgeon}, burn{burn}, freeze{freeze}, blight{blight}
+			: _slash{slash}, _pierce{pierce}, _bludgeon{bludgeon}, _burn{burn}, _freeze{freeze}, _blight{blight}
 		{}
 
-		static constexpr Damage zero() { return Damage{}; }
-		static constexpr Damage from_slash(double slash) { return Damage{slash, 0.0, 0.0, 0.0, 0.0, 0.0}; }
-		static constexpr Damage from_pierce(double pierce) { return Damage{0.0, pierce, 0.0, 0.0, 0.0, 0.0}; }
-		static constexpr Damage from_bludgeon(double bludgeon) { return Damage{0.0, 0.0, bludgeon, 0.0, 0.0, 0.0}; }
-		static constexpr Damage from_burn(double burn) { return Damage{0.0, 0.0, 0.0, burn, 0.0, 0.0}; }
-		static constexpr Damage from_freeze(double freeze) { return Damage{0.0, 0.0, 0.0, 0.0, freeze, 0.0}; }
-		static constexpr Damage from_blight(double blight) { return Damage{0.0, 0.0, 0.0, 0.0, 0.0, blight}; }
+		constexpr Damage(Slash slash) : _slash{std::move(slash)}, _pierce{0.0}, _bludgeon{0.0}, _burn{0.0}, _freeze{0.0}, _blight{0.0} {}
+		constexpr Damage(Pierce pierce) : _slash{0.0}, _pierce{std::move(pierce)}, _bludgeon{0.0}, _burn{0.0}, _freeze{0.0}, _blight{0.0} {}
+		constexpr Damage(Bludgeon bludgeon) : _slash{0.0}, _pierce{0.0}, _bludgeon{std::move(bludgeon)}, _burn{0.0}, _freeze{0.0}, _blight{0.0} {}
+		constexpr Damage(Burn burn) : _slash{0.0}, _pierce{0.0}, _bludgeon{0.0}, _burn{std::move(burn)}, _freeze{0.0}, _blight{0.0} {}
+		constexpr Damage(Freeze freeze) : _slash{0.0}, _pierce{0.0}, _bludgeon{0.0}, _burn{0.0}, _freeze{std::move(freeze)}, _blight{0.0} {}
+		constexpr Damage(Blight blight) : _slash{0.0}, _pierce{0.0}, _bludgeon{0.0}, _burn{0.0}, _freeze{0.0}, _blight{std::move(blight)} {}
 
-		friend constexpr Damage operator +(const Damage& d1, const Damage& addend2)
+		static constexpr Damage zero() { return Damage{}; }
+
+		friend constexpr Damage operator +(const Damage& d1, const Damage& d2)
 		{
 			return Damage
-				{ d1.slash + addend2.slash
-				, d1.pierce + addend2.pierce
-				, d1.bludgeon + addend2.bludgeon
-				, d1.burn + addend2.burn
-				, d1.freeze + addend2.freeze
-				, d1.blight + addend2.blight
+				{ Slash{d1._slash + d2._slash}
+				, Pierce{d1._pierce + d2._pierce}
+				, Bludgeon{d1._bludgeon + d2._bludgeon}
+				, Burn{d1._burn + d2._burn}
+				, Freeze{d1._freeze + d2._freeze}
+				, Blight{d1._blight + d2._blight}
 				};
 		}
-		friend constexpr Damage operator -(const Damage& minuend, const Damage& subtrahend)
+		friend constexpr Damage operator -(const Damage& d1, const Damage& d2)
 		{
 			using std::max;
 			return Damage
-				{ max(0.0, minuend.slash - subtrahend.slash)
-				, max(0.0, minuend.pierce - subtrahend.pierce)
-				, max(0.0, minuend.bludgeon - subtrahend.bludgeon)
-				, max(0.0, minuend.burn - subtrahend.burn)
-				, max(0.0, minuend.freeze - subtrahend.freeze)
-				, max(0.0, minuend.blight - subtrahend.blight)
+				{ Slash{max(0.0, d1._slash - d2._slash)}
+				, Pierce{max(0.0, d1._pierce - d2._pierce)}
+				, Bludgeon{max(0.0, d1._bludgeon - d2._bludgeon)}
+				, Burn{max(0.0, d1._burn - d2._burn)}
+				, Freeze{max(0.0, d1._freeze - d2._freeze)}
+				, Blight{max(0.0, d1._blight - d2._blight)}
 				};
 		}
 		friend constexpr Damage operator *(const Damage& d, double k)
 		{
-			return Damage{k * d.slash, k * d.pierce, k * d.bludgeon, k * d.burn, k * d.freeze, k * d.blight};
+			return Damage{Slash{k * d._slash}, Pierce{k * d._pierce}, Bludgeon{k * d._bludgeon}, Burn{k * d._burn}, Freeze{k * d._freeze}, Blight{k * d._blight}};
 		}
 		friend constexpr Damage operator *(double k, const Damage& d)
 		{
-			return Damage{k * d.slash, k * d.pierce, k * d.bludgeon, k * d.burn, k * d.freeze, k * d.blight};
+			return Damage{Slash{k * d._slash}, Pierce{k * d._pierce}, Bludgeon{k * d._bludgeon}, Burn{k * d._burn}, Freeze{k * d._freeze}, Blight{k * d._blight}};
 		}
 		friend constexpr Damage operator /(const Damage& d, double k)
 		{
-			return Damage{d.slash / k, d.pierce / k, d.bludgeon / k, d.burn / k, d.freeze / k, d.blight / k};
+			return Damage{Slash{d._slash / k}, Pierce{d._pierce / k}, Bludgeon{d._bludgeon / k}, Burn{d._burn / k}, Freeze{d._freeze / k}, Blight{d._blight / k}};
 		}
 
-		Damage& operator +=(const Damage& addend)
+		Damage& operator +=(const Damage& d)
 		{
-			slash += addend.slash;
-			pierce += addend.pierce;
-			bludgeon += addend.bludgeon;
-			burn += addend.burn;
-			freeze += addend.freeze;
-			blight += addend.blight;
+			_slash += d._slash;
+			_pierce += d._pierce;
+			_bludgeon += d._bludgeon;
+			_burn += d._burn;
+			_freeze += d._freeze;
+			_blight += d._blight;
 			return *this;
 		}
-		Damage& operator -=(const Damage& subtrahend)
+		Damage& operator -=(const Damage& d)
 		{
-			slash -= subtrahend.slash;
-			pierce -= subtrahend.pierce;
-			bludgeon -= subtrahend.bludgeon;
-			burn -= subtrahend.burn;
-			freeze -= subtrahend.freeze;
-			blight -= subtrahend.blight;
+			_slash -= d._slash;
+			_pierce -= d._pierce;
+			_bludgeon -= d._bludgeon;
+			_burn -= d._burn;
+			_freeze -= d._freeze;
+			_blight -= d._blight;
 			return *this;
 		}
 		Damage& operator *=(double k)
 		{
-			slash *= k;
-			pierce *= k;
-			bludgeon *= k;
-			burn *= k;
-			freeze *= k;
-			blight *= k;
+			_slash *= k;
+			_pierce *= k;
+			_bludgeon *= k;
+			_burn *= k;
+			_freeze *= k;
+			_blight *= k;
 			return *this;
 		}
 
@@ -111,17 +106,31 @@ namespace questless
 		constexpr Damage with(const Resistance& resistance, const Vulnerability& vulnerability) const
 		{
 			return Damage
-				{ slash * (1.0 + std::max(0.0, vulnerability.slash - resistance.slash) / 100.0)
-				, pierce * (1.0 + std::max(0.0, vulnerability.pierce - resistance.pierce) / 100.0)
-				, bludgeon * (1.0 + std::max(0.0, vulnerability.bludgeon - resistance.bludgeon) / 100.0)
-				, burn * (1.0 + std::max(0.0, vulnerability.burn - resistance.burn) / 100.0)
-				, freeze * (1.0 + std::max(0.0, vulnerability.freeze - resistance.freeze) / 100.0)
-				, blight * (1.0 + std::max(0.0, vulnerability.blight - resistance.blight) / 100.0)
-			};
+				{ Slash{std::max(0.0, _slash * (1.0 + (vulnerability.slash() - resistance.slash()) / 100.0))}
+				, Pierce{std::max(0.0, _pierce * (1.0 + (vulnerability.pierce() - resistance.pierce()) / 100.0))}
+				, Bludgeon{std::max(0.0, _bludgeon * (1.0 + (vulnerability.bludgeon() - resistance.bludgeon()) / 100.0))}
+				, Burn{std::max(0.0, _burn * (1.0 + (vulnerability.burn() - resistance.burn()) / 100.0))}
+				, Freeze{std::max(0.0, _freeze * (1.0 + (vulnerability.freeze() - resistance.freeze()) / 100.0))}
+				, Blight{std::max(0.0, _blight * (1.0 + (vulnerability.blight() - resistance.blight()) / 100.0))}
+				};
 		}
 
+		constexpr double slash() const { return _slash; }
+		constexpr double pierce() const { return _pierce; }
+		constexpr double bludgeon() const { return _bludgeon; }
+		constexpr double burn() const { return _burn; }
+		constexpr double freeze() const { return _freeze; }
+		constexpr double blight() const { return _blight; }
+
 		/// @return The sum of the damage components.
-		constexpr double total() const { return slash + pierce + bludgeon + burn + freeze + blight; }
+		constexpr double total() const { return _slash + _pierce + _bludgeon + _burn + _freeze + _blight; }
+	private:
+		double _slash = 0.0;
+		double _pierce = 0.0;
+		double _bludgeon = 0.0;
+		double _burn = 0.0;
+		double _freeze = 0.0;
+		double _blight = 0.0;
 	};
 }
 

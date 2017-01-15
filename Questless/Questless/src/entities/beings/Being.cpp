@@ -20,15 +20,24 @@ using std::function;
 
 namespace questless
 {
-	Being::Being(Game& game, const function<unique_ptr<Agent>(Being&)>& agent_factory, BeingId id, Body body, Attributes base_attributes)
+	Being::Being(Game& game, const function<unique_ptr<Agent>(Being&)>& make_agent, BeingId id, Body body, const function<Attributes()>& make_base_attributes)
 		: Entity(game)
 		, _id{id}
-		, _agent{agent_factory(*this)}
+		, _agent{make_agent(*this)}
 		, _body{std::move(body)}
 		, _need_to_calculate_attributes{false}
-		, _base_attributes{base_attributes}
+		, _base_attributes{make_base_attributes()}
 		, _attributes{_base_attributes}
-		, _conditions{_base_attributes.vitality, _base_attributes.spirit, 0.0, 0.0, 0.0, 0, false, static_cast<RegionTileCoords::Direction>(uniform(1, 6))}
+		, _conditions
+			{ Health{_base_attributes.vitality}
+			, Mana{_base_attributes.spirit}
+			, Energy{0.0}
+			, Satiety{0.0}
+			, Alertness{0.0}
+			, BusyTime{0.0}
+			, Dead{false}
+			, static_cast<RegionTileCoords::Direction>(uniform(1, 6))
+			}
 	{}
 
 	Being::Being(Game& game, std::istream& in, Body body)
@@ -94,12 +103,12 @@ namespace questless
 	double Being::magic_power(spell::Color color) const
 	{
 		switch (color) {
-			case spell::Color::white:  return _attributes.magic_power.white;
-			case spell::Color::black:  return _attributes.magic_power.black;
-			case spell::Color::green:  return _attributes.magic_power.green;
-			case spell::Color::red:    return _attributes.magic_power.red;
-			case spell::Color::blue:   return _attributes.magic_power.blue;
-			case spell::Color::yellow: return _attributes.magic_power.yellow;
+			case spell::Color::white:  return _attributes.magic_power.white();
+			case spell::Color::black:  return _attributes.magic_power.black();
+			case spell::Color::green:  return _attributes.magic_power.green();
+			case spell::Color::red:    return _attributes.magic_power.red();
+			case spell::Color::blue:   return _attributes.magic_power.blue();
+			case spell::Color::yellow: return _attributes.magic_power.yellow();
 			default: throw std::logic_error{"Unrecognized spell color."};
 		}
 	}
@@ -107,12 +116,12 @@ namespace questless
 	double Being::magic_resistance(spell::Color color) const
 	{
 		switch (color) {
-			case spell::Color::white:  return _attributes.magic_resistance.white;
-			case spell::Color::black:  return _attributes.magic_resistance.black;
-			case spell::Color::green:  return _attributes.magic_resistance.green;
-			case spell::Color::red:    return _attributes.magic_resistance.red;
-			case spell::Color::blue:   return _attributes.magic_resistance.blue;
-			case spell::Color::yellow: return _attributes.magic_resistance.yellow;
+			case spell::Color::white:  return _attributes.magic_resistance.white();
+			case spell::Color::black:  return _attributes.magic_resistance.black();
+			case spell::Color::green:  return _attributes.magic_resistance.green();
+			case spell::Color::red:    return _attributes.magic_resistance.red();
+			case spell::Color::blue:   return _attributes.magic_resistance.blue();
+			case spell::Color::yellow: return _attributes.magic_resistance.yellow();
 			default: throw std::logic_error{"Unrecognized spell color."};
 		}
 	}
@@ -120,12 +129,12 @@ namespace questless
 	void Being::magic_power(spell::Color color, double value)
 	{
 		switch (color) {
-			case spell::Color::white:  _attributes.magic_power.white = value;
-			case spell::Color::black:  _attributes.magic_power.black = value;
-			case spell::Color::green:  _attributes.magic_power.green = value;
-			case spell::Color::red:    _attributes.magic_power.red = value;
-			case spell::Color::blue:   _attributes.magic_power.blue = value;
-			case spell::Color::yellow: _attributes.magic_power.yellow = value;
+			case spell::Color::white:  _attributes.magic_power.white(value);
+			case spell::Color::black:  _attributes.magic_power.black(value);
+			case spell::Color::green:  _attributes.magic_power.green(value);
+			case spell::Color::red:    _attributes.magic_power.red(value);
+			case spell::Color::blue:   _attributes.magic_power.blue(value);
+			case spell::Color::yellow: _attributes.magic_power.yellow(value);
 			default: throw std::logic_error{"Unrecognized spell color."};
 		}
 	}
@@ -133,12 +142,12 @@ namespace questless
 	void Being::magic_resistance(spell::Color color, double value)
 	{
 		switch (color) {
-			case spell::Color::white:  _attributes.magic_resistance.white = value;
-			case spell::Color::black:  _attributes.magic_resistance.black = value;
-			case spell::Color::green:  _attributes.magic_resistance.green = value;
-			case spell::Color::red:    _attributes.magic_resistance.red = value;
-			case spell::Color::blue:   _attributes.magic_resistance.blue = value;
-			case spell::Color::yellow: _attributes.magic_resistance.yellow = value;
+			case spell::Color::white:  _attributes.magic_resistance.white(value);
+			case spell::Color::black:  _attributes.magic_resistance.black(value);
+			case spell::Color::green:  _attributes.magic_resistance.green(value);
+			case spell::Color::red:    _attributes.magic_resistance.red(value);
+			case spell::Color::blue:   _attributes.magic_resistance.blue(value);
+			case spell::Color::yellow: _attributes.magic_resistance.yellow(value);
 			default: throw std::logic_error{"Unrecognized spell color."};
 		}
 	}
@@ -188,10 +197,10 @@ namespace questless
 
 		double temp = region().temperature(coords());
 		if (temp > max_temp()) {
-			auto burn = Damage::from_burn((temp - max_temp()) / (max_temp() - min_temp()) * temperature_damage_factor);
+			Damage burn{Burn{(temp - max_temp()) / (max_temp() - min_temp()) * temperature_damage_factor}};
 			take_damage(burn, nullptr, boost::none);
 		} else if (temp < min_temp()) {
-			auto freeze = Damage::from_freeze((min_temp() - temp) / (max_temp() - min_temp()) * temperature_damage_factor);
+			Damage freeze{Freeze{(min_temp() - temp) / (max_temp() - min_temp()) * temperature_damage_factor}};
 			take_damage(freeze, nullptr, boost::none);
 		}
 
@@ -454,12 +463,12 @@ namespace questless
 
 		_attributes = _base_attributes;
 
-		// Add body part attribute modifiers.
+		// Add body part attribute modifiers first.
 		for (const BodyPart& part : _body) {
 			Modifier::apply_all(part.modifiers(), _attributes);
 		}
 
-		// Apply status attribute modifiers.
+		// Apply status attribute modifiers second (may override body part modifiers).
 		for (const auto& status : _statuses) {
 			Modifier::apply_all(status->modifiers(), _attributes);
 		}

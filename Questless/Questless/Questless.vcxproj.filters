@@ -235,24 +235,6 @@
     <ClInclude Include="include\animation\particles\Particle.h">
       <Filter>include\animation\particles</Filter>
     </ClInclude>
-    <ClInclude Include="include\animation\particles\RedMagic.h">
-      <Filter>include\animation\particles</Filter>
-    </ClInclude>
-    <ClInclude Include="include\animation\particles\WhiteMagic.h">
-      <Filter>include\animation\particles</Filter>
-    </ClInclude>
-    <ClInclude Include="include\animation\particles\YellowMagic.h">
-      <Filter>include\animation\particles</Filter>
-    </ClInclude>
-    <ClInclude Include="include\animation\particles\BlackMagic.h">
-      <Filter>include\animation\particles</Filter>
-    </ClInclude>
-    <ClInclude Include="include\animation\particles\BlueMagic.h">
-      <Filter>include\animation\particles</Filter>
-    </ClInclude>
-    <ClInclude Include="include\animation\particles\GreenMagic.h">
-      <Filter>include\animation\particles</Filter>
-    </ClInclude>
     <ClInclude Include="include\entities\AllEntities.h">
       <Filter>include\entities</Filter>
     </ClInclude>
@@ -475,12 +457,6 @@
     <ClInclude Include="include\entities\beings\attributes\Attributes.h">
       <Filter>include\entities\beings\attributes</Filter>
     </ClInclude>
-    <ClInclude Include="include\entities\beings\attributes\MagicPower.h">
-      <Filter>include\entities\beings\attributes</Filter>
-    </ClInclude>
-    <ClInclude Include="include\entities\beings\attributes\MagicResistance.h">
-      <Filter>include\entities\beings\attributes</Filter>
-    </ClInclude>
     <ClInclude Include="include\entities\beings\attributes\Vision.h">
       <Filter>include\entities\beings\attributes</Filter>
     </ClInclude>
@@ -537,9 +513,6 @@
     </ClInclude>
     <ClInclude Include="include\utility\TaggedType.h">
       <Filter>include\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="include\animation\particles\Blood.h">
-      <Filter>include\animation\particles</Filter>
     </ClInclude>
     <ClInclude Include="include\animation\particles\TextParticle.h">
       <Filter>include\animation\particles</Filter>
@@ -646,6 +619,30 @@
     <ClInclude Include="include\animation\AnimationSet.h">
       <Filter>include\animation</Filter>
     </ClInclude>
+    <ClInclude Include="include\entities\beings\attributes\MagicAttribute.h">
+      <Filter>include\entities\beings\attributes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\animation\particles\BlueMagicParticle.h">
+      <Filter>include\animation\particles</Filter>
+    </ClInclude>
+    <ClInclude Include="include\animation\particles\GreenMagicParticle.h">
+      <Filter>include\animation\particles</Filter>
+    </ClInclude>
+    <ClInclude Include="include\animation\particles\RedMagicParticle.h">
+      <Filter>include\animation\particles</Filter>
+    </ClInclude>
+    <ClInclude Include="include\animation\particles\WhiteMagicParticle.h">
+      <Filter>include\animation\particles</Filter>
+    </ClInclude>
+    <ClInclude Include="include\animation\particles\YellowMagicParticle.h">
+      <Filter>include\animation\particles</Filter>
+    </ClInclude>
+    <ClInclude Include="include\animation\particles\BlackMagicParticle.h">
+      <Filter>include\animation\particles</Filter>
+    </ClInclude>
+    <ClInclude Include="include\animation\particles\BloodParticle.h">
+      <Filter>include\animation\particles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\world\Region.cpp">
@@ -662,24 +659,6 @@
     </ClCompile>
     <ClCompile Include="src\utility\utility.cpp">
       <Filter>src\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="src\animation\particles\BlackMagic.cpp">
-      <Filter>src\animation\particles</Filter>
-    </ClCompile>
-    <ClCompile Include="src\animation\particles\BlueMagic.cpp">
-      <Filter>src\animation\particles</Filter>
-    </ClCompile>
-    <ClCompile Include="src\animation\particles\GreenMagic.cpp">
-      <Filter>src\animation\particles</Filter>
-    </ClCompile>
-    <ClCompile Include="src\animation\particles\RedMagic.cpp">
-      <Filter>src\animation\particles</Filter>
-    </ClCompile>
-    <ClCompile Include="src\animation\particles\WhiteMagic.cpp">
-      <Filter>src\animation\particles</Filter>
-    </ClCompile>
-    <ClCompile Include="src\animation\particles\YellowMagic.cpp">
-      <Filter>src\animation\particles</Filter>
     </ClCompile>
     <ClCompile Include="src\animation\particles\Particle.cpp">
       <Filter>src\animation\particles</Filter>
@@ -843,9 +822,6 @@
     <ClCompile Include="src\spell\Heal.cpp">
       <Filter>src\spell</Filter>
     </ClCompile>
-    <ClCompile Include="src\animation\particles\Blood.cpp">
-      <Filter>src\animation\particles</Filter>
-    </ClCompile>
     <ClCompile Include="src\animation\particles\TextParticle.cpp">
       <Filter>src\animation\particles</Filter>
     </ClCompile>
@@ -866,6 +842,27 @@
     </ClCompile>
     <ClCompile Include="src\animation\AnimationSet.cpp">
       <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\particles\WhiteMagicParticle.cpp">
+      <Filter>src\animation\particles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\particles\YellowMagicParticle.cpp">
+      <Filter>src\animation\particles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\particles\BlackMagicParticle.cpp">
+      <Filter>src\animation\particles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\particles\BloodParticle.cpp">
+      <Filter>src\animation\particles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\particles\BlueMagicParticle.cpp">
+      <Filter>src\animation\particles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\particles\GreenMagicParticle.cpp">
+      <Filter>src\animation\particles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\particles\RedMagicParticle.cpp">
+      <Filter>src\animation\particles</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

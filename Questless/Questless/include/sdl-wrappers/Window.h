@@ -64,10 +64,6 @@ namespace sdl
 		Window(const Window& other) = delete;
 		Window(Window&& other) = default;
 
-		/// @return A unique window pointer constructed with the given arguments.
-		template <typename... Args>
-		static ptr make(Args&&... args) { return make_unique<Window>(std::forward<Args>(args)...); }
-
 		~Window();
 
 		Window& operator =(const Window& other) = delete;

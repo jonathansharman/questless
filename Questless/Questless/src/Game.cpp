@@ -52,14 +52,14 @@ namespace questless
 			throw std::runtime_error("Failed to initialize SDL. SDL Error: " + string{SDL_GetError()});
 		}
 		if (fullscreen) {
-			_window = Window::make("Questless", "resources/textures/icon.png", true);
+			_window = make_unique<Window>("Questless", "resources/textures/icon.png", true);
 		} else {
-			_window = Window::make("Questless", "resources/textures/icon.png", false, _dflt_window_width, _dflt_window_height, true, true, true, false);
+			_window = make_unique<Window>("Questless", "resources/textures/icon.png", false, _dflt_window_width, _dflt_window_height, true, true, true, false);
 		}
 
 		renderer(make_unique<Renderer>(*_window, _window->width(), _window->height()));
 
-		_camera = Camera::make(*_window, GamePoint{0, 0});
+		_camera = make_unique<Camera>(*_window, GamePoint{0, 0});
 
 		/// @todo Make render quality a game setting.
 		//SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
@@ -75,7 +75,7 @@ namespace questless
 			throw std::runtime_error("Failed to initialize TTF. SDL Error: " + string{SDL_GetError()});
 		}
 
-		_fnt_20pt = Font::make("resources/fonts/firamono.ttf", 20, SDL_BLENDMODE_BLEND);
+		_fnt_20pt = make_unique<Font>("resources/fonts/firamono.ttf", 20, SDL_BLENDMODE_BLEND);
 
 		// Initialize sound.
 
@@ -93,7 +93,7 @@ namespace questless
 
 		// Load sounds.
 
-		_sfx_splash = Sound::make("resources/sounds/splash.wav");
+		_sfx_splash = make_unique<Sound>("resources/sounds/splash.wav");
 
 		// Initialize game state.
 
@@ -135,17 +135,17 @@ namespace questless
 
 	void Game::load_textures()
 	{
-		_txt_test = Texture::make("resources/textures/test.png", renderer(), SDL_BLENDMODE_BLEND);
-		_txt_test2 = Texture::make("resources/textures/test2.png", renderer(), SDL_BLENDMODE_BLEND);
-		_txt_test3 = Texture::make("resources/textures/test3.png", renderer(), SDL_BLENDMODE_BLEND);
+		_txt_test = make_unique<Texture>("resources/textures/test.png", renderer(), SDL_BLENDMODE_BLEND);
+		_txt_test2 = make_unique<Texture>("resources/textures/test2.png", renderer(), SDL_BLENDMODE_BLEND);
+		_txt_test3 = make_unique<Texture>("resources/textures/test3.png", renderer(), SDL_BLENDMODE_BLEND);
 
-		_txt_splash_logo = Texture::make("resources/textures/splash/logo.png", renderer(), SDL_BLENDMODE_BLEND);
+		_txt_splash_logo = make_unique<Texture>("resources/textures/splash/logo.png", renderer(), SDL_BLENDMODE_BLEND);
 
-		_txt_splash_flame = Texture::make("resources/textures/splash/flame.png", renderer(), SDL_BLENDMODE_BLEND);
+		_txt_splash_flame = make_unique<Texture>("resources/textures/splash/flame.png", renderer(), SDL_BLENDMODE_BLEND);
 
-		_txt_hex_highlight = Texture::make("resources/textures/terrain/tile.png", renderer(), SDL_BLENDMODE_BLEND);
+		_txt_hex_highlight = make_unique<Texture>("resources/textures/terrain/tile.png", renderer(), SDL_BLENDMODE_BLEND);
 
-		_txt_hex_circle = Texture::make("resources/textures/ui/hex_circle.png", renderer(), SDL_BLENDMODE_BLEND);
+		_txt_hex_circle = make_unique<Texture>("resources/textures/ui/hex_circle.png", renderer(), SDL_BLENDMODE_BLEND);
 	}
 
 	Action::Complete Game::add_dialog(Dialog::ptr dialog)
@@ -574,6 +574,7 @@ namespace questless
 			return nullptr;
 		} else {
 			if (Being* being = std::get<Being*>(it->second)) {
+				// Being is already loaded.
 				return being;
 			}
 			// Load being from its coordinates.
@@ -596,6 +597,7 @@ namespace questless
 			return nullptr;
 		} else {
 			if (Object* object = std::get<Object*>(it->second)) {
+				// Object is already loaded.
 				return object;
 			}
 			// Load object from its coordinates.

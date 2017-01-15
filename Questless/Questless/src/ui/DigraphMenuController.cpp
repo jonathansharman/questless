@@ -22,8 +22,8 @@ namespace questless
 	Initializer<DigraphMenuController> DigraphMenuController::_initializer;
 	void DigraphMenuController::initialize()
 	{
-		_hover_sound_handle = sound_manager().add([] { return Sound::make("resources/sounds/menu/hover.wav"); });
-		_select_sound_handle = sound_manager().add([] { return Sound::make("resources/sounds/menu/select.wav"); });
+		_hover_sound_handle = sound_manager().add([] { return std::make_unique<Sound>("resources/sounds/menu/hover.wav"); });
+		_select_sound_handle = sound_manager().add([] { return std::make_unique<Sound>("resources/sounds/menu/select.wav"); });
 	}
 
 	DigraphMenuController::DigraphMenuController(int min_width, int min_height) : _view{min_width, min_height} {}

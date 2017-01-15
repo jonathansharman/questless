@@ -23,8 +23,8 @@
 
 namespace questless
 {
-	using Looping = TaggedType<bool, struct LoopingTag>;
-	using RandomizeStartTime = TaggedType<bool, struct RandomizeStartTimeTag>;
+	struct Looping : TaggedType<bool> { using TaggedType::TaggedType; };
+	struct RandomizeStartTime : TaggedType<bool> { using TaggedType::TaggedType; };
 
 	class Animation
 	{

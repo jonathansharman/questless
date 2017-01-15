@@ -43,18 +43,18 @@ namespace questless
 	Initializer<DigraphMenuView> DigraphMenuView::_initializer;
 	void DigraphMenuView::initialize()
 	{
-		_title_font_handle = font_manager().add([] { return Font::make("resources/fonts/dumbledor1.ttf", title_font_size, SDL_BLENDMODE_BLEND); });
-		_option_font_handle = font_manager().add([] { return Font::make("resources/fonts/dumbledor1.ttf", option_font_size, SDL_BLENDMODE_BLEND); });
+		_title_font_handle = font_manager().add([] { return std::make_unique<Font>("resources/fonts/dumbledor1.ttf", title_font_size, SDL_BLENDMODE_BLEND); });
+		_option_font_handle = font_manager().add([] { return std::make_unique<Font>("resources/fonts/dumbledor1.ttf", option_font_size, SDL_BLENDMODE_BLEND); });
 
-		_ul_handle = texture_manager().add([] { return Texture::make("resources/textures/menu/ul.png", renderer(), SDL_BLENDMODE_BLEND); });
-		_ur_handle = texture_manager().add([] { return Texture::make("resources/textures/menu/ur.png", renderer(), SDL_BLENDMODE_BLEND); });
-		_dl_handle = texture_manager().add([] { return Texture::make("resources/textures/menu/dl.png", renderer(), SDL_BLENDMODE_BLEND); });
-		_dr_handle = texture_manager().add([] { return Texture::make("resources/textures/menu/dr.png", renderer(), SDL_BLENDMODE_BLEND); });
-		_u_handle = texture_manager().add([] { return Texture::make("resources/textures/menu/u.png", renderer(), SDL_BLENDMODE_BLEND); });
-		_d_handle = texture_manager().add([] { return Texture::make("resources/textures/menu/d.png", renderer(), SDL_BLENDMODE_BLEND); });
-		_l_handle = texture_manager().add([] { return Texture::make("resources/textures/menu/l.png", renderer(), SDL_BLENDMODE_BLEND); });
-		_r_handle = texture_manager().add([] { return Texture::make("resources/textures/menu/r.png", renderer(), SDL_BLENDMODE_BLEND); });
-		_tile_handle = texture_manager().add([] { return Texture::make("resources/textures/menu/tile.png", renderer(), SDL_BLENDMODE_BLEND); });
+		_ul_handle = texture_manager().add([] { return std::make_unique<Texture>("resources/textures/menu/ul.png", renderer(), SDL_BLENDMODE_BLEND); });
+		_ur_handle = texture_manager().add([] { return std::make_unique<Texture>("resources/textures/menu/ur.png", renderer(), SDL_BLENDMODE_BLEND); });
+		_dl_handle = texture_manager().add([] { return std::make_unique<Texture>("resources/textures/menu/dl.png", renderer(), SDL_BLENDMODE_BLEND); });
+		_dr_handle = texture_manager().add([] { return std::make_unique<Texture>("resources/textures/menu/dr.png", renderer(), SDL_BLENDMODE_BLEND); });
+		_u_handle = texture_manager().add([] { return std::make_unique<Texture>("resources/textures/menu/u.png", renderer(), SDL_BLENDMODE_BLEND); });
+		_d_handle = texture_manager().add([] { return std::make_unique<Texture>("resources/textures/menu/d.png", renderer(), SDL_BLENDMODE_BLEND); });
+		_l_handle = texture_manager().add([] { return std::make_unique<Texture>("resources/textures/menu/l.png", renderer(), SDL_BLENDMODE_BLEND); });
+		_r_handle = texture_manager().add([] { return std::make_unique<Texture>("resources/textures/menu/r.png", renderer(), SDL_BLENDMODE_BLEND); });
+		_tile_handle = texture_manager().add([] { return std::make_unique<Texture>("resources/textures/menu/tile.png", renderer(), SDL_BLENDMODE_BLEND); });
 
 		_top_margin = async(std::launch::deferred, [&] { return texture_manager()[_u_handle].height(); });
 		_bottom_margin = async(std::launch::deferred, [&] { return texture_manager()[_d_handle].height(); });
@@ -101,7 +101,7 @@ namespace questless
 
 		// Render background.
 
-		_background = Texture::make
+		_background = std::make_unique<Texture>
 			( renderer()
 			, SDL_BLENDMODE_BLEND
 			, _content_width + left_margin + right_margin

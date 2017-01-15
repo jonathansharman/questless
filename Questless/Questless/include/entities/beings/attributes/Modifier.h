@@ -17,13 +17,13 @@
 
 namespace questless
 {
-	class Modifier
+	struct Modifier
 	{
-	public:
 		using ptr = std::unique_ptr<Modifier>;
 
 		/// Makes a vector of modifiers from the given modifier.
-		static std::vector<ptr> make_vector(ptr modifier)
+		template <typename ModifierPtr>
+		static std::vector<ptr> make_vector(ModifierPtr modifier)
 		{
 			std::vector<ptr> modifiers;
 			modifiers.push_back(std::move(modifier));
@@ -31,11 +31,13 @@ namespace questless
 		}
 
 		/// Makes a vector of modifiers from the given non-empty variadic list of modifiers.
-		template <typename... RestModifiers, typename LastModifier>
-		static std::vector<ptr> make_vector(RestModifiers... rest, LastModifier last)
+		template <typename FirstModifierPtr, typename... RestModifierPtrs>
+		static std::vector<ptr> make_vector(FirstModifierPtr first, RestModifierPtrs... rest)
 		{
-			std::vector<ptr> modifiers = make_vector(std::forward<RestModifiers...>(rest));
-			modifiers.push_back(last);
+			std::vector<ptr> modifiers;
+			modifiers.push_back(std::move(first));
+			auto rest = make_vector(std::forward<RestModifierPtrs>(rest)...);
+			modifiers.insert(modifiers.end(), std::make_move_iterator(rest.begin()), std::make_move_iterator(rest.end()));
 			return modifiers;
 		}
 
@@ -55,7 +57,7 @@ namespace questless
 	class MuteModifier : public Modifier
 	{
 	public:
-		MuteModifier(bool mute) : _mute{mute} {}
+		constexpr MuteModifier(bool mute) : _mute{mute} {}
 		static ptr make(bool mute) { return std::make_unique<MuteModifier>(mute); }
 		void apply(Attributes& attributes) override { attributes.mute = _mute; }
 	private:
@@ -66,257 +68,170 @@ namespace questless
 	class ScalarModifier : public Modifier
 	{
 	public:
-		ScalarModifier(double magnitude) : _magnitude{magnitude} {}
-		void apply(Attributes& attributes) override { attribute(attributes) += _magnitude; }
+		constexpr ScalarModifier(double magnitude) : _magnitude{magnitude} {}
+		constexpr double magnitude() const { return _magnitude; }
 	private:
 		double _magnitude;
-		virtual double& attribute(Attributes& attributes) = 0;
 	};
-	class VitalityModifier : public ScalarModifier
+	struct VitalityModifier : public ScalarModifier
 	{
-	public:
-		VitalityModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<VitalityModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.vitality; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.vitality += magnitude(); }
 	};
-	class SpiritModifier : public ScalarModifier
+	struct SpiritModifier : public ScalarModifier
 	{
-	public:
-		SpiritModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<SpiritModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.spirit; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.spirit += magnitude(); }
 	};
-	class HealthRegenModifier : public ScalarModifier
+	struct HealthRegenModifier : public ScalarModifier
 	{
-	public:
-		HealthRegenModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<HealthRegenModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.health_regen; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.health_regen += magnitude(); }
 	};
-	class ManaRegenModifier : public ScalarModifier
+	struct ManaRegenModifier : public ScalarModifier
 	{
-	public:
-		ManaRegenModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<ManaRegenModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.mana_regen; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.mana_regen += magnitude(); }
 	};
-	class StrengthModifier : public ScalarModifier
+	struct StrengthModifier : public ScalarModifier
 	{
-	public:
-		StrengthModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<StrengthModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.strength; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.strength += magnitude(); }
 	};
-	class EnduranceModifier : public ScalarModifier
+	struct EnduranceModifier : public ScalarModifier
 	{
-	public:
-		EnduranceModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<EnduranceModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.endurance; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.endurance += magnitude(); }
 	};
-	class StaminaModifier : public ScalarModifier
+	struct StaminaModifier : public ScalarModifier
 	{
-	public:
-		StaminaModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<StaminaModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.stamina; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.stamina += magnitude(); }
 	};
-	class AgilityModifier : public ScalarModifier
+	struct AgilityModifier : public ScalarModifier
 	{
-	public:
-		AgilityModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<AgilityModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.agility; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.agility += magnitude(); }
 	};
-	class DexterityModifier : public ScalarModifier
+	struct DexterityModifier : public ScalarModifier
 	{
-	public:
-		DexterityModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<DexterityModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.dexterity; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.dexterity += magnitude(); }
 	};
-	class StealthModifier : public ScalarModifier
+	struct StealthModifier : public ScalarModifier
 	{
-	public:
-		StealthModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<StealthModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.stealth; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.stealth += magnitude(); }
 	};
-	class VisualAcuityModifier : public ScalarModifier
+
+	// Vision Modifiers
+
+	struct VisualAcuityModifier : public ScalarModifier
 	{
-	public:
-		VisualAcuityModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<VisualAcuityModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.vision.acuity; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.vision.acuity(attributes.vision.acuity() + magnitude()); }
 	};
-	class IdealLightModifier : public ScalarModifier
+	struct IdealLightModifier : public ScalarModifier
 	{
-	public:
-		IdealLightModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<IdealLightModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.vision.ideal_light; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.vision.ideal_light(attributes.vision.ideal_light() + magnitude()); }
 	};
-	class LightToleranceModifier : public ScalarModifier
+	struct LightToleranceModifier : public ScalarModifier
 	{
-	public:
-		LightToleranceModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<LightToleranceModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.vision.light_tolerance; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.vision.light_tolerance(attributes.vision.light_tolerance() + magnitude()); }
 	};
-	class HearingModifier : public ScalarModifier
+
+	struct HearingModifier : public ScalarModifier
 	{
-	public:
-		HearingModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<HearingModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.hearing; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.hearing += magnitude(); }
 	};
-	class IntellectModifier : public ScalarModifier
+	struct IntellectModifier : public ScalarModifier
 	{
-	public:
-		IntellectModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<IntellectModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.intellect; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.intellect += magnitude(); }
 	};
-	class LiftModifier : public ScalarModifier
+	struct LiftModifier : public ScalarModifier
 	{
-	public:
-		LiftModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<LiftModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.lift; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.lift += magnitude(); }
 	};
-	class MinTempModifier : public ScalarModifier
+	struct MinTempModifier : public ScalarModifier
 	{
-	public:
-		MinTempModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<MinTempModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.min_temp; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.min_temp += magnitude(); }
 	};
-	class MaxTempModifier : public ScalarModifier
+	struct MaxTempModifier : public ScalarModifier
 	{
-	public:
-		MaxTempModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<MaxTempModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.max_temp; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.max_temp += magnitude(); }
 	};
 
 	// Magic Power Modifers
 
-	class WhitePowerModifier : public ScalarModifier
+	struct WhitePowerModifier : public ScalarModifier
 	{
-	public:
-		WhitePowerModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<WhitePowerModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.magic_power.white; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.magic_power.white(attributes.magic_power.white() + magnitude()); }
 	};
-	class BlackPowerModifier : public ScalarModifier
+	struct BlackPowerModifier : public ScalarModifier
 	{
-	public:
-		BlackPowerModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<BlackPowerModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.magic_power.black; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.magic_power.black(attributes.magic_power.black() + magnitude()); }
 	};
-	class GreenPowerModifier : public ScalarModifier
+	struct GreenPowerModifier : public ScalarModifier
 	{
-	public:
-		GreenPowerModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<GreenPowerModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.magic_power.green; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.magic_power.green(attributes.magic_power.green() + magnitude()); }
 	};
-	class RedPowerModifier : public ScalarModifier
+	struct RedPowerModifier : public ScalarModifier
 	{
-	public:
-		RedPowerModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<RedPowerModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.magic_power.red; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.magic_power.red(attributes.magic_power.red() + magnitude()); }
 	};
-	class BluePowerModifier : public ScalarModifier
+	struct BluePowerModifier : public ScalarModifier
 	{
-	public:
-		BluePowerModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<BluePowerModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.magic_power.blue; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.magic_power.blue(attributes.magic_power.blue() + magnitude()); }
 	};
-	class YellowPowerModifier : public ScalarModifier
+	struct YellowPowerModifier : public ScalarModifier
 	{
-	public:
-		YellowPowerModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<YellowPowerModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.magic_power.yellow; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.magic_power.yellow(attributes.magic_power.yellow() + magnitude()); }
 	};
 
 	// Magic Resistance Modifiers
 
-	class WhiteResistanceModifier : public ScalarModifier
+	struct WhiteResistanceModifier : public ScalarModifier
 	{
-	public:
-		WhiteResistanceModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<WhiteResistanceModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.magic_resistance.white; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.magic_resistance.white(attributes.magic_resistance.white() + magnitude()); }
 	};
-	class BlackResistanceModifier : public ScalarModifier
+	struct BlackResistanceModifier : public ScalarModifier
 	{
-	public:
-		BlackResistanceModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<BlackResistanceModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.magic_resistance.black; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.magic_resistance.black(attributes.magic_resistance.black() + magnitude()); }
 	};
-	class GreenResistanceModifier : public ScalarModifier
+	struct GreenResistanceModifier : public ScalarModifier
 	{
-	public:
-		GreenResistanceModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<GreenResistanceModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.magic_resistance.green; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.magic_resistance.green(attributes.magic_resistance.green() + magnitude()); }
 	};
-	class RedResistanceModifier : public ScalarModifier
+	struct RedResistanceModifier : public ScalarModifier
 	{
-	public:
-		RedResistanceModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<RedResistanceModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.magic_resistance.red; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.magic_resistance.red(attributes.magic_resistance.red() + magnitude()); }
 	};
-	class BlueResistanceModifier : public ScalarModifier
+	struct BlueResistanceModifier : public ScalarModifier
 	{
-	public:
-		BlueResistanceModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<BlueResistanceModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.magic_resistance.blue; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.magic_resistance.blue(attributes.magic_resistance.blue() + magnitude()); }
 	};
-	class YellowResistanceModifier : public ScalarModifier
+	struct YellowResistanceModifier : public ScalarModifier
 	{
-	public:
-		YellowResistanceModifier(double magnitude) : ScalarModifier(magnitude) {}
-		static ptr make(double magnitude) { return std::make_unique<YellowResistanceModifier>(magnitude); }
-	private:
-		double& attribute(Attributes& attributes) override { return attributes.magic_resistance.yellow; }
+		using ScalarModifier::ScalarModifier;
+		void apply(Attributes& attributes) override { attributes.magic_resistance.yellow(attributes.magic_resistance.yellow() + magnitude()); }
 	};
 }
 

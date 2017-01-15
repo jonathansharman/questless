@@ -21,12 +21,12 @@
 
 namespace questless
 {
-	using Origin = TaggedType<boost::optional<units::GamePoint>, struct OriginTag>;
-	using HScale = TaggedType<double, struct HScaleTag>;
-	using VScale = TaggedType<double, struct VScaleTag>;
-	using HFlip = TaggedType<bool, struct HScaleTag>;
-	using VFlip = TaggedType<bool, struct VScaleTag>;
-	using SrcRect = TaggedType<boost::optional<units::TextureRect>, struct SrcRectTag>;
+	struct Origin : TaggedType<boost::optional<units::GamePoint>> { using TaggedType::TaggedType; };
+	struct HScale : TaggedType<double> { using TaggedType::TaggedType; };
+	struct VScale : TaggedType<double> { using TaggedType::TaggedType; };
+	struct HFlip : TaggedType<bool> { using TaggedType::TaggedType; };
+	struct VFlip : TaggedType<bool> { using TaggedType::TaggedType; };
+	struct SrcRect : TaggedType<boost::optional<units::TextureRect>> { using TaggedType::TaggedType; };
 
 	class Camera
 	{
@@ -43,10 +43,6 @@ namespace questless
 			, _angle{0}
 			, _color{sdl::Color::white()}
 		{}
-
-		/// @return A unique camera pointer constructed with the given arguments.
-		template <typename... Args>
-		static ptr make(Args&&... args) { return make_unique<Camera>(std::forward<Args>(args)...); }
 
 		Camera& operator =(const Camera&) = delete;
 

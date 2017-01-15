@@ -32,7 +32,7 @@ namespace questless
 	{
 		ScreenRect bounds = body.bounds();
 
-		_texture = Texture::make(renderer(), SDL_BLENDMODE_BLEND, bounds.w, bounds.h, true);
+		_texture = std::make_unique<Texture>(renderer(), SDL_BLENDMODE_BLEND, bounds.w, bounds.h, true);
 		_texture->as_target([this, &body] {
 			renderer().clear(Color::clear());
 			renderer().draw_rect(ScreenRect{0, 0, _texture->width(), _texture->height()}, Color::red(), false);

@@ -1,26 +1,26 @@
 /**
-* @file    RedMagic.cpp
+* @file    RedMagicParticle.cpp
 * @author  Jonathan Sharman
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION The implementation for the RedMagic particle class.
+* @section DESCRIPTION Red magic particle implementation.
 */
 
-#include "animation/particles/RedMagic.h"
+#include "animation/particles/RedMagicParticle.h"
 #include "sdl-wrappers/resources.h"
 
 using namespace sdl;
 
 namespace questless
 {
-	const Texture& RedMagic::texture() const
+	const Texture& RedMagicParticle::texture() const
 	{
 		static bool first_call = true;
 		static Handle<Texture> handle;
 		if (first_call) {
 			handle = texture_manager().add([] {
-				return Texture::make("resources/textures/particles/magic/red.png", renderer(), SDL_BLENDMODE_BLEND);
+				return std::make_unique<Texture>("resources/textures/particles/magic/red.png", renderer(), SDL_BLENDMODE_BLEND);
 			});
 			first_call = false;
 		}

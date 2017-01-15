@@ -30,9 +30,9 @@ namespace questless
 		const Region& region = _region;
 		RegionTileCoords coords = being.coords();
 		Vision vision = being.vision();
-		double acuity = vision.acuity;
-		double ideal_light = vision.ideal_light;
-		double light_tolerance = vision.light_tolerance;
+		double acuity = vision.acuity();
+		double ideal_light = vision.ideal_light();
+		double light_tolerance = vision.light_tolerance();
 
 		// Calculate the maximum distance the being can see.
 		int visual_range = static_cast<int>(sqrt(acuity / Vision::distance_factor));

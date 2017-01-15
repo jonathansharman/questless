@@ -1,26 +1,26 @@
 /**
-* @file    Blood.cpp
+* @file    BlueMagicParticle.cpp
 * @author  Jonathan Sharman
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION Blood particle implementation.
+* @section DESCRIPTION Blue magic particle implementation.
 */
 
-#include "animation/particles/Blood.h"
+#include "animation/particles/BlueMagicParticle.h"
 #include "sdl-wrappers/resources.h"
 
 using namespace sdl;
 
 namespace questless
 {
-	const Texture& Blood::texture() const
+	const Texture& BlueMagicParticle::texture() const
 	{
 		static bool first_call = true;
 		static Handle<Texture> handle;
 		if (first_call) {
 			handle = texture_manager().add([] {
-				return Texture::make("resources/textures/particles/blood.png", renderer(), SDL_BLENDMODE_BLEND);
+				return std::make_unique<Texture>("resources/textures/particles/magic/blue.png", renderer(), SDL_BLENDMODE_BLEND);
 			});
 			first_call = false;
 		}

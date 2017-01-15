@@ -26,7 +26,7 @@ namespace questless
 		static Handle<Texture> ss_handle;
 		if (first_call) {
 			ss_handle = sdl::texture_manager().add([] {
-				return Texture::make("resources/textures/human-animation.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+				return make_unique<Texture>("resources/textures/human-animation.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
 			});
 			first_call = false;
 		}
@@ -49,7 +49,7 @@ namespace questless
 		static Handle<Texture> ss_handle;
 		if (first_call) {
 			ss_handle = sdl::texture_manager().add([] {
-				return Texture::make("resources/textures/test-animation.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+				return make_unique<Texture>("resources/textures/test-animation.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
 			});
 			first_call = false;
 		}
@@ -75,7 +75,7 @@ namespace questless
 		static Handle<Texture> ss_handle;
 		if (first_call) {
 			ss_handle = sdl::texture_manager().add([] {
-				return Texture::make("resources/textures/entities/objects/grave.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+				return make_unique<Texture>("resources/textures/entities/objects/grave.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
 			});
 			first_call = false;
 		}
@@ -94,7 +94,7 @@ namespace questless
 		static Handle<Texture> ss_handle;
 		if (first_call) {
 			ss_handle = sdl::texture_manager().add([] {
-				return Texture::make("resources/textures/entities/objects/item-box.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+				return make_unique<Texture>("resources/textures/entities/objects/item-box.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
 			});
 			first_call = false;
 		}

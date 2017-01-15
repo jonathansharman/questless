@@ -33,8 +33,6 @@ namespace units
 		/// @return The number of cycles per unit period.
 		constexpr const rep& count() const & { return _count; }
 		/// @return The number of cycles per unit period.
-		rep&& count() && { return std::move(_count); }
-		/// @return The number of cycles per unit period.
 		rep& count() & { return _count; }
 
 		constexpr bool operator <(Frequency<rep, period> right) const { return _count < right._count; }

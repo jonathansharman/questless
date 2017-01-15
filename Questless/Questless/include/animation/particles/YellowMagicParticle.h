@@ -1,14 +1,14 @@
 /**
-* @file    YellowMagic.h
+* @file    YellowMagicParticle.h
 * @author  Jonathan Sharman
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION The interface for the YellowMagic particle class.
+* @section DESCRIPTION The interface for the yellow magic particle class.
 */
 
-#ifndef YELLOW_MAGIC_H
-#define YELLOW_MAGIC_H
+#ifndef YELLOW_MAGIC_PARTICLE_H
+#define YELLOW_MAGIC_PARTICLE_H
 
 #include <memory>
 
@@ -16,11 +16,11 @@
 
 namespace questless
 {
-	class YellowMagic : public Particle
+	class YellowMagicParticle : public Particle
 	{
 	public:
 		/// @param position The particle's starting position.
-		YellowMagic(units::GamePoint position) : Particle
+		YellowMagicParticle(units::GamePoint position) : Particle
 			{ position
 			, units::GameVector{random_angle(), 100.0} / 1.0s
 			, units::GameAcceleration::zero()
@@ -32,9 +32,6 @@ namespace questless
 			, MaxDisplacement{30.0}
 			}
 		{}
-
-		/// @param position The particle's starting position.
-		static ptr make(units::GamePoint position) { return std::make_unique<YellowMagic>(position); }
 	private:
 		static constexpr units::GameRadians _max_turn_rate = units::GameRadians::circle() / 6.0;
 

@@ -22,9 +22,9 @@ namespace questless
 	void Dialog::initialize()
 	{
 		using namespace sdl;
-		_title_font_handle = font_manager().add([] { return Font::make("resources/fonts/dumbledor1.ttf", 32, SDL_BLENDMODE_BLEND); });
-		_prompt_font_handle = font_manager().add([] { return Font::make("resources/fonts/dumbledor1.ttf", 20, SDL_BLENDMODE_BLEND); });
-		_io_font_handle = font_manager().add([] { return Font::make("resources/fonts/dumbledor1.ttf", 32, SDL_BLENDMODE_BLEND); });
-		_list_option_font_handle = font_manager().add([] { return Font::make("resources/fonts/dumbledor1.ttf", 20, SDL_BLENDMODE_BLEND); });
+		_title_font_handle = font_manager().add([] { return std::make_unique<Font>("resources/fonts/dumbledor1.ttf", 32, SDL_BLENDMODE_BLEND); });
+		_prompt_font_handle = font_manager().add([] { return std::make_unique<Font>("resources/fonts/dumbledor1.ttf", 20, SDL_BLENDMODE_BLEND); });
+		_io_font_handle = font_manager().add([] { return std::make_unique<Font>("resources/fonts/dumbledor1.ttf", 32, SDL_BLENDMODE_BLEND); });
+		_list_option_font_handle = font_manager().add([] { return std::make_unique<Font>("resources/fonts/dumbledor1.ttf", 20, SDL_BLENDMODE_BLEND); });
 	}
 }

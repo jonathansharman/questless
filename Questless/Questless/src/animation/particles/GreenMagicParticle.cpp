@@ -1,13 +1,13 @@
 /**
-* @file    GreenMagic.cpp
+* @file    GreenMagicParticle.cpp
 * @author  Jonathan Sharman
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION The implementation for the GreenMagic particle class.
+* @section DESCRIPTION Green magic particle implementation.
 */
 
-#include "animation/particles/GreenMagic.h"
+#include "animation/particles/GreenMagicParticle.h"
 #include "Game.h"
 #include "sdl-wrappers/resources.h"
 
@@ -16,7 +16,7 @@ using namespace units;
 
 namespace questless
 {
-	void GreenMagic::subupdate()
+	void GreenMagicParticle::subupdate()
 	{
 		if (uniform(0.0, 1.0) < _inflection_probability) {
 			_turning_right = !_turning_right;
@@ -29,13 +29,13 @@ namespace questless
 		}
 	}
 
-	const Texture& GreenMagic::texture() const
+	const Texture& GreenMagicParticle::texture() const
 	{
 		static bool first_call = true;
 		static Handle<Texture> handle;
 		if (first_call) {
 			handle = texture_manager().add([] {
-				return Texture::make("resources/textures/particles/magic/green.png", renderer(), SDL_BLENDMODE_BLEND);
+				return std::make_unique<Texture>("resources/textures/particles/magic/green.png", renderer(), SDL_BLENDMODE_BLEND);
 			});
 			first_call = false;
 		}

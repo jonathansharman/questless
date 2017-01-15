@@ -22,7 +22,7 @@ namespace questless::qte
 	void LightningBolt::initialize()
 	{
 		_point_charge_texture_handle = sdl::texture_manager().add([] {
-			return Texture::make("resources/textures/glow.png", renderer(), SDL_BLENDMODE_BLEND);
+			return std::make_unique<Texture>("resources/textures/glow.png", renderer(), SDL_BLENDMODE_BLEND);
 		});
 	}
 
@@ -131,7 +131,8 @@ namespace questless::qte
 
 	void LightningBolt::load_textures()
 	{
-		_txt_title = Texture::make(font_manager()[title_font_handle()].render("Build up a charge!", renderer(), Color::white()));
-		_txt_prompt = Texture::make(font_manager()[prompt_font_handle()].render("Circle the target counter-clockwise as fast as you can!", renderer(), Color::white()));
+		_txt_title = std::make_unique<Texture>(font_manager()[title_font_handle()].render("Build up a charge!", renderer(), Color::white()));
+
+		_txt_prompt = std::make_unique<Texture>(font_manager()[prompt_font_handle()].render("Circle the target counter-clockwise as fast as you can!", renderer(), Color::white()));
 	}
 }

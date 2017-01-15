@@ -7,17 +7,19 @@
 * @section DESCRIPTION The implementation for the WorldRenderer class.
 */
 
-#include "Game.h"
 #include "animation/WorldRenderer.h"
+#include "Game.h"
 #include "animation/EntityAnimator.h"
 #include "animation/TileTexturer.h"
-#include "animation/particles/YellowMagic.h"
-#include "animation/particles/Blood.h"
+#include "animation/particles/YellowMagicParticle.h"
+#include "animation/particles/BloodParticle.h"
 #include "animation/particles/TextParticle.h"
 #include "world/Region.h"
 #include "sdl-wrappers/Renderable.h"
 #include "sdl-wrappers/Sound.h"
 #include "utility/utility.h"
+
+using std::make_unique;
 
 using namespace sdl;
 using namespace units;
@@ -30,8 +32,8 @@ namespace questless
 	Initializer<WorldRenderer> WorldRenderer::_initializer;
 	void WorldRenderer::initialize()
 	{
-		_lightning_bolt_sound_handle = sound_manager().add([] { return Sound::make("resources/sounds/spells/lightning-bolt.wav"); });
-		_hit_sound_handle = sound_manager().add([] { return Sound::make("resources/sounds/weapons/hit.wav"); });
+		_lightning_bolt_sound_handle = sound_manager().add([] { return make_unique<Sound>("resources/sounds/spells/lightning-bolt.wav"); });
+		_hit_sound_handle = sound_manager().add([] { return make_unique<Sound>("resources/sounds/weapons/hit.wav"); });
 	}
 
 	void WorldRenderer::update_view(const WorldView& world_view, std::vector<Effect::ptr> effects)
@@ -205,7 +207,7 @@ namespace questless
 		}
 		_terrain_bounds = *opt_bounds;
 
-		_terrain_texture = std::make_unique<Texture>
+		_terrain_texture = make_unique<Texture>
 			( sdl::renderer()
 			, SDL_BLENDMODE_BLEND
 			, lround(_terrain_bounds.w)
@@ -260,7 +262,7 @@ namespace questless
 	{
 		GamePoint position = Layout::dflt().to_world(e.origin());
 		for (int i = 0; i < 15; ++i) {
-			_particles.emplace_back(YellowMagic::make(position));
+			_particles.emplace_back(make_unique<YellowMagicParticle>(position));
 		}
 		sound_manager()[_lightning_bolt_sound_handle].play();
 	}
@@ -270,30 +272,30 @@ namespace questless
 		GamePoint position = Layout::dflt().to_world(e.origin());
 
 		const Damage& d = e.damage();
-		if (d.slash > 0.0 || d.pierce > 0.0 || d.bludgeon > 0.0) {
+		if (d.slash() > 0.0 || d.pierce() > 0.0 || d.bludgeon() > 0.0) {
 			for (int i = 0; i < 20; ++i) {
-				_particles.emplace_back(Blood::make(position));
+				_particles.emplace_back(make_unique<BloodParticle>(position));
 			}
 		}
 
-		if (d.slash > 0.0) {
-			_particles.emplace_back(TextParticle::make(position, std::to_string(lround(e.damage().slash)), Color::white()));
+		if (d.slash() > 0.0) {
+			_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(e.damage().slash())), Color::white()));
 		}
-		if (d.pierce > 0.0) {
-			_particles.emplace_back(TextParticle::make(position, std::to_string(lround(e.damage().pierce)), Color::white()));
+		if (d.pierce() > 0.0) {
+			_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(e.damage().pierce())), Color::white()));
 		}
-		if (d.bludgeon > 0.0) {
-			_particles.emplace_back(TextParticle::make(position, std::to_string(lround(e.damage().bludgeon)), Color::white()));
+		if (d.bludgeon() > 0.0) {
+			_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(e.damage().bludgeon())), Color::white()));
 			sound_manager()[_hit_sound_handle].play();
 		}
-		if (d.burn > 0.0) {
-			_particles.emplace_back(TextParticle::make(position, std::to_string(lround(e.damage().burn)), Color::orange()));
+		if (d.burn() > 0.0) {
+			_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(e.damage().burn())), Color::orange()));
 		}
-		if (d.freeze > 0.0) {
-			_particles.emplace_back(TextParticle::make(position, std::to_string(lround(e.damage().freeze)), Color::cyan()));
+		if (d.freeze() > 0.0) {
+			_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(e.damage().freeze())), Color::cyan()));
 		}
-		if (d.blight > 0.0) {
-			_particles.emplace_back(TextParticle::make(position, std::to_string(lround(e.damage().blight)), Color::black()));
+		if (d.blight() > 0.0) {
+			_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(e.damage().blight())), Color::black()));
 		}
 	}
 }
