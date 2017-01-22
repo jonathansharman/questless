@@ -7,8 +7,7 @@
 * @section DESCRIPTION Defines points in the sprite sheet space.
 */
 
-#ifndef SPRITE_SHEET_POINT_H
-#define SPRITE_SHEET_POINT_H
+#pragma once
 
 #include "Point.h"
 #include "SpriteSheetSpace.h"
@@ -17,5 +16,3 @@ namespace units
 {
 	using SpriteSheetPoint = Point<SpriteSheetSpace>;
 }
-
-#endif

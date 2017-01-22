@@ -7,8 +7,7 @@
 * @section DESCRIPTION Represents an angle in some space.
 */
 
-#ifndef ANGLE_H
-#define ANGLE_H
+#pragma once
 
 #include <ratio>
 #include <ostream>
@@ -160,5 +159,3 @@ TEST_CASE("[Angle] operations")
 		CHECK(circle_degrees.count() == doctest::Approx(360.0));
 	}
 }
-
-#endif

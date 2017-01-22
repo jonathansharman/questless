@@ -7,8 +7,7 @@
 * @section DESCRIPTION Defines GameVelocity as a rate of vector / sec.
 */
 
-#ifndef GAME_VELOCITY_H
-#define GAME_VELOCITY_H
+#pragma once
 
 #include "units/Rate.h"
 #include "units/Vector.h"
@@ -18,5 +17,3 @@ namespace units
 {
 	using GameVelocity = units::Rate<units::GameVector, double>;
 }
-
-#endif

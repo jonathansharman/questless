@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the LazyAI class, which is an AI that does nothing.
 */
 
-#ifndef LAZY_AI_H
-#define LAZY_AI_H
+#pragma once
 
 #include "Agent.h"
 
@@ -128,5 +127,3 @@ namespace questless
 		}
 	};
 }
-
-#endif

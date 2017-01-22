@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the input class. Handles mouse and keyboard input as well as other SDL events.
 */
 
-#ifndef INPUT_H
-#define INPUT_H
+#pragma once
 
 #include <vector>
 #include <map>
@@ -153,5 +152,3 @@ namespace sdl
 		int _scroll; ///< The number of ticks the mouse wheel has been scrolled since the last call to update. Negative value indicates scroll down.
 	};
 }
-
-#endif

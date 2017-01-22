@@ -7,8 +7,7 @@
 * @section DESCRIPTION Provides basic 2D animation.
 */
 
-#ifndef ANIMATION_H
-#define ANIMATION_H
+#pragma once
 
 #include <vector>
 #include <string>
@@ -86,5 +85,3 @@ namespace questless
 		bool _over;
 	};
 }
-
-#endif

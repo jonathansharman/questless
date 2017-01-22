@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the DigraphMenuController class.
 */
 
-#ifndef DIGRAPH_MENU_CONTROLLER_H
-#define DIGRAPH_MENU_CONTROLLER_H
+#pragma once
 
 #include <utility>
 #include <memory>
@@ -94,5 +93,3 @@ namespace questless
 		boost::optional<int> find(const std::string& page_title);
 	};
 }
-
-#endif

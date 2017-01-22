@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface and implementation for the Delegate class, which holds a modifiable list of callback functions that can be invoked in order.
 */
 
-#ifndef DELEGATE_H
-#define DELEGATE_H
+#pragma once
 
 #include <vector>
 #include <functional>
@@ -55,5 +54,3 @@ namespace questless
 		std::vector<callback_t> _callbacks; ///< The list of callbacks, in the order they will be called.
 	};
 }
-
-#endif

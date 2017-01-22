@@ -12,8 +12,7 @@
 *   struct Meters : TaggedType<double> { using TaggedType::TaggedType; };
 */
 
-#ifndef TAGGED_TYPE_H
-#define TAGGED_TYPE_H
+#pragma once
 
 namespace questless
 {
@@ -33,5 +32,3 @@ namespace questless
 		raw_t* operator ->() { return &value; }
 	};
 }
-
-#endif

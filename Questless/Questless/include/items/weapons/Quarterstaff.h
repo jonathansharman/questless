@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Quarterstaff class.
 */
 
-#ifndef QUARTERSTAFF_H
-#define QUARTERSTAFF_H
+#pragma once
 
 #include "items/weapons/ModalWeapon.h"
 
@@ -120,5 +119,3 @@ namespace questless
 		std::unique_ptr<Form> _form;
 	};
 }
-
-#endif

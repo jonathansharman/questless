@@ -7,8 +7,7 @@
 * @section DESCRIPTION Defines rectangles in the texture space.
 */
 
-#ifndef TEXTURE_RECT_H
-#define TEXTURE_RECT_H
+#pragma once
 
 #include "Rect.h"
 #include "TextureSpace.h"
@@ -17,5 +16,3 @@ namespace units
 {
 	using TextureRect = Rect<TextureSpace>;
 }
-
-#endif

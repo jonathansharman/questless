@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Heal spell class.
 */
 
-#ifndef SPELL_HEAL_H
-#define SPELL_HEAL_H
+#pragma once
 
 #include "Spell.h"
 
@@ -38,5 +37,3 @@ namespace questless::spell
 		static constexpr int _range = 10;
 	};
 }
-
-#endif

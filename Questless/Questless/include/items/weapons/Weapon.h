@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Weapon abstract base class.
 */
 
-#ifndef WEAPON_H
-#define WEAPON_H
+#pragma once
 
 #include "items/Equipable.h"
 #include "items/Breakable.h"
@@ -87,5 +86,3 @@ namespace questless
 		double _active_cooldown = 0.0;
 	};
 }
-
-#endif

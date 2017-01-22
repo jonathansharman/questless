@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the AnimationSet class.
 */
 
-#ifndef ANIMATION_COLLECTION_H
-#define ANIMATION_COLLECTION_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -90,5 +89,3 @@ namespace questless
 		bool _paused;
 	};
 }
-
-#endif

@@ -7,8 +7,7 @@
 * @section DESCRIPTION A box holding some items.
 */
 
-#ifndef ITEM_BOX_H
-#define ITEM_BOX_H
+#pragma once
 
 #include <vector>
 
@@ -33,5 +32,3 @@ namespace questless
 		std::vector<Item::ptr> _items;
 	};
 }
-
-#endif

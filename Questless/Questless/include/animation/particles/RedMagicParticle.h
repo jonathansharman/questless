@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the red magic particle class.
 */
 
-#ifndef RED_MAGIC_PARTICLE_H
-#define RED_MAGIC_PARTICLE_H
+#pragma once
 
 #include "animation/particles/Particle.h"
 #include "utility/utility.h"
@@ -38,5 +37,3 @@ namespace questless
 		const sdl::Texture& texture() const override;
 	};
 }
-
-#endif

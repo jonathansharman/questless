@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the CountDialog class.
 */
 
-#ifndef COUNT_DIALOG_CONTROLLER_H
-#define COUNT_DIALOG_CONTROLLER_H
+#pragma once
 
 #include <string>
 #include <functional>
@@ -57,5 +56,3 @@ namespace questless
 		void refresh() override;
 	};
 }
-
-#endif

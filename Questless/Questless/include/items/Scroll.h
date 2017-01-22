@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Scroll class.
 */
 
-#ifndef SCROLL_H
-#define SCROLL_H
+#pragma once
 
 #include <memory>
 
@@ -40,5 +39,3 @@ namespace questless
 		spell::Spell::ptr _spell;
 	};
 }
-
-#endif

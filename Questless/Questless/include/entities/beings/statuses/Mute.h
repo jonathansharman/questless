@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface and implementation for the Mute status class.
 */
 
-#ifndef MUTE_H
-#define MUTE_H
+#pragma once
 
 #include "entities/beings/statuses/Status.h"
 
@@ -30,5 +29,3 @@ namespace questless
 		Stats::modifiers_t _modifiers;
 	};
 }
-
-#endif

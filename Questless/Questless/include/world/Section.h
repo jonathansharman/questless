@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Section class, which represents a hexagonal collection of hexes in the world.
 */
 
-#ifndef SECTION_H
-#define SECTION_H
+#pragma once
 
 #include <string>
 #include <array>
@@ -170,5 +169,3 @@ namespace questless
 		void read(std::istream& in);
 	};
 }
-
-#endif

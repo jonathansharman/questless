@@ -7,8 +7,7 @@
 * @section DESCRIPTION A being with no physical body.
 */
 
-#ifndef INCORPOREAL_BEING_H
-#define INCORPOREAL_BEING_H
+#pragma once
 
 #include "Being.h"
 
@@ -23,5 +22,3 @@ namespace questless
 		IncorporealBeing(Game& game, std::istream& in, Body body);
 	};
 }
-
-#endif

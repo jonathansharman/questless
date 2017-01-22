@@ -7,8 +7,7 @@
 * @section DESCRIPTION Defines vectors in the screen space.
 */
 
-#ifndef SCREEN_VECTOR_H
-#define SCREEN_VECTOR_H
+#pragma once
 
 #include "Vector.h"
 #include "ScreenSpace.h"
@@ -17,5 +16,3 @@ namespace units
 {
 	using ScreenVector = Vector<ScreenSpace>;
 }
-
-#endif

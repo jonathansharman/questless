@@ -7,8 +7,7 @@
 * @section DESCRIPTION An inanimate entity.
 */
 
-#ifndef OBJECT_H
-#define OBJECT_H
+#pragma once
 
 #include <iostream>
 #include <memory>
@@ -54,5 +53,3 @@ namespace questless
 		ObjectId _id;
 	};
 }
-
-#endif

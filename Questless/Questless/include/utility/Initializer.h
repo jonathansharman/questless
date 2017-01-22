@@ -22,8 +22,7 @@
 * 		static void initialize();
 */
 
-#ifndef INITIALIZER_H
-#define INITIALIZER_H
+#pragma once
 
 template <typename T>
 class Initializer
@@ -34,5 +33,3 @@ public:
 		T::initialize();
 	}
 };
-
-#endif

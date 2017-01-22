@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Breakable abstract base class, for items which can be worn down and broken.
 */
 
-#ifndef BREAKABLE_H
-#define BREAKABLE_H
+#pragma once
 
 #include "items/Item.h"
 
@@ -60,5 +59,3 @@ namespace questless
 		double _integrity;
 	};
 }
-
-#endif

@@ -7,8 +7,7 @@
 * @section DESCRIPTION The Vision class, which encapsulates stats of a being's vision.
 */
 
-#ifndef VISION_H
-#define VISION_H
+#pragma once
 
 #include <algorithm>
 
@@ -63,5 +62,3 @@ namespace questless
 		double _light_tolerance;
 	};
 }
-
-#endif

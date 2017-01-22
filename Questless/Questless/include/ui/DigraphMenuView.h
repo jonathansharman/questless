@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the DigraphMenuView class.
 */
 
-#ifndef DIGRAPH_MENU_VIEW_H
-#define DIGRAPH_MENU_VIEW_H
+#pragma once
 
 #include <future>
 #include <memory>
@@ -104,5 +103,3 @@ namespace questless
 		void refresh() override { _render_is_current = false; }
 	};
 }
-
-#endif

@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the HUDController, which manages the HUD model and view and handles input to the HUD.
 */
 
-#ifndef HUD_CONTROLLER_H
-#define HUD_CONTROLLER_H
+#pragma once
 
 #include "HUDModel.h"
 #include "HUDView.h"
@@ -35,5 +34,3 @@ namespace questless
 		HUDView _view;
 	};
 }
-
-#endif

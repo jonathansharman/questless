@@ -7,8 +7,7 @@
 * @section DESCRIPTION An action that a being can perform.
 */
 
-#ifndef ACTION_H
-#define ACTION_H
+#pragma once
 
 #include <vector>
 #include <string>
@@ -48,5 +47,3 @@ namespace questless
 		static std::function<bool(Being&)> being_in_range_predicate(Being& actor, int range);
 	};
 }
-
-#endif

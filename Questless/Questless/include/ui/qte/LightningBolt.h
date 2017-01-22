@@ -7,8 +7,7 @@
 * @section DESCRIPTION Quick time event to determine lightning bolt strength.
 */
 
-#ifndef QTE_LIGHTNING_BOLT_H
-#define QTE_LIGHTNING_BOLT_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -67,5 +66,3 @@ namespace questless::qte
 		void load_textures();
 	};
 }
-
-#endif

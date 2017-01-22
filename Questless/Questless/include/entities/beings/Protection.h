@@ -7,8 +7,7 @@
 * @section DESCRIPTION Protection reduces damage by a fixed amount.
 */
 
-#ifndef PROTECTION_H
-#define PROTECTION_H
+#pragma once
 
 #include "Damage.h"
 
@@ -148,5 +147,3 @@ namespace questless
 		double _cleanse = 0.0;
 	};
 }
-
-#endif

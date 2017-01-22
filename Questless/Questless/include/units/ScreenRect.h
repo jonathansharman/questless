@@ -7,8 +7,7 @@
 * @section DESCRIPTION Defines rectangles in the screen space.
 */
 
-#ifndef SCREEN_RECT_H
-#define SCREEN_RECT_H
+#pragma once
 
 #include "Rect.h"
 #include "ScreenSpace.h"
@@ -17,5 +16,3 @@ namespace units
 {
 	using ScreenRect = Rect<ScreenSpace>;
 }
-
-#endif

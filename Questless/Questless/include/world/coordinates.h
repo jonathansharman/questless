@@ -7,8 +7,7 @@
 * @section DESCRIPTION Defines types for the various coordinate spaces in the game.
 */
 
-#ifndef COORDINATES_H
-#define COORDINATES_H
+#pragma once
 
 #include "units/HexCoords.h"
 
@@ -42,5 +41,3 @@ namespace questless
 		}
 	};
 }
-
-#endif

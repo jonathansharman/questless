@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for Texture, a simple wrapper class around SDL_Texture.
 */
 
-#ifndef TEXTURE_H
-#define TEXTURE_H
+#pragma once
 
 #include <string>
 #include <stdexcept>
@@ -144,5 +143,3 @@ namespace sdl
 		Color _color; /// @todo Is there any purpose to this field?
 	};
 }
-
-#endif

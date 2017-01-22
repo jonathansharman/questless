@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the TileTexturer class.
 */
 
-#ifndef TILE_TEXTURER_H
-#define TILE_TEXTURER_H
+#pragma once
 
 #include "world/Tile.h"
 #include "sdl-wrappers/Texture.h"
@@ -30,5 +29,3 @@ namespace questless
 		sdl::Texture::ptr _texture;
 	};
 }
-
-#endif

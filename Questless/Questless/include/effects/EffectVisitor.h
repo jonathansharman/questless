@@ -7,8 +7,7 @@
 * @section DESCRIPTION Implements the visitor pattern for the Effect class.
 */
 
-#ifndef EFFECT_VISITOR_H
-#define EFFECT_VISITOR_H
+#pragma once
 
 #include <string>
 #include <stdexcept>
@@ -46,5 +45,3 @@ namespace questless
 		std::string _message;
 	};
 }
-
-#endif

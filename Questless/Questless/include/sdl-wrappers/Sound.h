@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for Sound, a simple wrapper class around Mix_Chunk.
 */
 
-#ifndef SOUND_H
-#define SOUND_H
+#pragma once
 
 #include <string>
 #include <algorithm>
@@ -53,5 +52,3 @@ namespace sdl
 		mutable int _channel;
 	};
 }
-
-#endif

@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Equipable abstract base class, for items that can be equiped on a being.
 */
 
-#ifndef EQUIPABLE_H
-#define EQUIPABLE_H
+#pragma once
 
 #include "items/Item.h"
 
@@ -29,5 +28,3 @@ namespace questless
 		virtual int hands() const = 0; ///< The number of hands required to wield the weapon.
 	};
 }
-
-#endif

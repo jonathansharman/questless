@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Status class, which represents a status effect on a being.
 */
 
-#ifndef STATUS_H
-#define STATUS_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -71,5 +70,3 @@ namespace questless
 		virtual void subupdate(Being& target);
 	};
 }
-
-#endif

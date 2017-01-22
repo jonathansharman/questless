@@ -7,8 +7,7 @@
 * @section DESCRIPTION Represents a modification to a stat.
 */
 
-#ifndef MODIFIER_H
-#define MODIFIER_H
+#pragma once
 
 #include <memory>
 #include <vector>
@@ -234,5 +233,3 @@ namespace questless
 		void apply(Stats& stats) override { stats.antimagic.yellow += magnitude(); }
 	};
 }
-
-#endif

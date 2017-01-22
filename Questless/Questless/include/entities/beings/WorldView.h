@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the WorldView class, which represents all that an agent can perceive about its surrounding environment.
 */
 
-#ifndef WORLD_VIEW
-#define WORLD_VIEW
+#pragma once
 
 #include <vector>
 #include <array>
@@ -100,5 +99,3 @@ namespace questless
 		boost::optional<units::GameRect> _bounds;
 	};
 }
-
-#endif

@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the HUDView class, which is responsible for drawing the HUD.
 */
 
-#ifndef HUD_MENU_VIEW_H
-#define HUD_MENU_VIEW_H
+#pragma once
 
 #include "sdl-wrappers/Renderable.h"
 #include "sdl-wrappers/Font.h"
@@ -85,5 +84,3 @@ namespace questless
 		void load_textures_and_layout();
 	};
 }
-
-#endif

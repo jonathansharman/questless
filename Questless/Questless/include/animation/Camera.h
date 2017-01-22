@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Camera class.
 */
 
-#ifndef CAMERA_H
-#define CAMERA_H
+#pragma once
 
 #include "sdl-wrappers/Texture.h"
 #include "sdl-wrappers/Window.h"
@@ -145,5 +144,3 @@ namespace questless
 		units::ScreenPoint screen_point(units::GamePoint point) const;
 	};
 }
-
-#endif

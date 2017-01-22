@@ -7,8 +7,7 @@
 * @section DESCRIPTION Implements the visitor pattern for the BodyPart class.
 */
 
-#ifndef BODY_PART_VISITOR_H
-#define BODY_PART_VISITOR_H
+#pragma once
 
 #include <string>
 #include <stdexcept>
@@ -65,5 +64,3 @@ namespace questless
 		std::string _message;
 	};
 }
-
-#endif

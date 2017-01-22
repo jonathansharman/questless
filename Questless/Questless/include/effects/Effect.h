@@ -7,8 +7,7 @@
 * @section DESCRIPTION Represents an in-game effect perceivable by beings, such as lighting and sound effects.
 */
 
-#ifndef EFFECT_H
-#define EFFECT_H
+#pragma once
 
 #include <memory>
 
@@ -79,5 +78,3 @@ namespace questless
 		Damage _damage;
 	};
 }
-
-#endif

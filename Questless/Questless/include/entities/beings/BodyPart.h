@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the BodyPart class, which represents a tree of body parts.
 */
 
-#ifndef BODY_PART_H
-#define BODY_PART_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -499,5 +498,3 @@ namespace questless
 		virtual std::vector<Action::ptr> abilities() const { return{}; }
 	};
 }
-
-#endif

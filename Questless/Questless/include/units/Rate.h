@@ -7,8 +7,7 @@
 * @section DESCRIPTION A rate data type designed to complement std::chrono::duration.
 */
 
-#ifndef RATE_H
-#define RATE_H
+#pragma once
 
 #include "Frequency.h"
 
@@ -206,5 +205,3 @@ namespace std
 		using type = TimeRep;
 	};
 }
-
-#endif

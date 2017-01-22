@@ -7,8 +7,7 @@
 * @section DESCRIPTION Defines sprite sheet space
 */
 
-#ifndef SPRITE_SHEET_SPACE_H
-#define SPRITE_SHEET_SPACE_H
+#pragma once
 
 namespace units
 {
@@ -17,5 +16,3 @@ namespace units
 		using scalar_t = int;
 	};
 }
-
-#endif

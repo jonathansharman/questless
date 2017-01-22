@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface and implementation for the Numb status class.
 */
 
-#ifndef DEAF_H
-#define DEAF_H
+#pragma once
 
 #include "entities/beings/statuses/Status.h"
 
@@ -34,5 +33,3 @@ namespace questless
 		Stats::modifiers_t _modifiers;
 	};
 }
-
-#endif

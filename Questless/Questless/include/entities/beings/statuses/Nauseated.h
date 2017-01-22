@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface and implementation for the Nauseated status class.
 */
 
-#ifndef NAUSEATED_H
-#define NAUSEATED_H
+#pragma once
 
 #include "entities/beings/statuses/Status.h"
 
@@ -37,5 +36,3 @@ namespace questless
 		Stats::modifiers_t _modifiers;
 	};
 }
-
-#endif

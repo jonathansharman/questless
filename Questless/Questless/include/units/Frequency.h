@@ -7,8 +7,7 @@
 * @section DESCRIPTION A frequency data type designed to complement the STL duration type.
 */
 
-#ifndef FREQUENCY_H
-#define FREQUENCY_H
+#pragma once
 
 #include <ratio>
 #include <chrono>
@@ -186,5 +185,3 @@ namespace std
 		using type = Rep;
 	};
 }
-
-#endif

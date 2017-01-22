@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the BasicAI class, an AI suitable for most NPCs.
 */
 
-#ifndef BASIC_AI_H
-#define BASIC_AI_H
+#pragma once
 
 #include "Agent.h"
 
@@ -98,5 +97,3 @@ namespace questless
 			) const override;
 	};
 }
-
-#endif

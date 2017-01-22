@@ -7,8 +7,7 @@
 * @section DESCRIPTION Defines Magic and Antimagic, which represent a being's proficiency with or resistance to the six forms of magic, respectively.
 */
 
-#ifndef MAGIC_ATTRIBUTE_H
-#define MAGIC_ATTRIBUTE_H
+#pragma once
 
 #include "spell/Spell.h"
 #include "utility/TaggedType.h"
@@ -90,5 +89,3 @@ namespace questless
 		using MagicStat<Antimagic>::MagicStat;
 	};
 }
-
-#endif

@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Inventory class.
 */
 
-#ifndef INVENTORY_H
-#define INVENTORY_H
+#pragma once
 
 #include <vector>
 #include <array>
@@ -81,5 +80,3 @@ namespace questless
 		Stream<Item*> items(size_t page, size_t row_start, size_t column_start);
 	};
 }
-
-#endif

@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Poisoned status class.
 */
 
-#ifndef POISONED_H
-#define POISONED_H
+#pragma once
 
 #include "entities/beings/statuses/Status.h"
 
@@ -31,5 +30,3 @@ namespace questless
 		double _magnitude;
 	};
 }
-
-#endif

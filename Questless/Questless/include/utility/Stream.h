@@ -9,8 +9,7 @@
 * Iterator adapted from http://codereview.stackexchange.com/questions/74609/custom-iterator-for-a-linked-list-class.
 */
 
-#ifndef STREAM_H
-#define STREAM_H
+#pragma once
 
 #include <functional>
 #include <memory>
@@ -250,5 +249,3 @@ inline static Stream<T> singleton(T v)
 }
 
 /// @todo This whole thing is still a bit of a mess.
-
-#endif

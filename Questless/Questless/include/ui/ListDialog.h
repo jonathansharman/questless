@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the ListDialog class, which allows the player to choose from a list of options.
 */
 
-#ifndef LIST_DIALOG_H
-#define LIST_DIALOG_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -128,5 +127,3 @@ namespace questless
 		}
 	};
 }
-
-#endif

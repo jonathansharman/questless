@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Renderable abstract base class. Includes texture and font managers for shared resources.
 */
 
-#ifndef RENDERABLE_H
-#define RENDERABLE_H
+#pragma once
 
 #include <unordered_set>
 
@@ -30,5 +29,3 @@ namespace sdl
 		virtual void refresh() = 0;
 	};
 }
-
-#endif

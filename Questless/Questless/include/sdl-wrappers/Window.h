@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for Window, a simple wrapper class around SDL_Window.
 */
 
-#ifndef WINDOW_H
-#define WINDOW_H
+#pragma once
 
 #include <string>
 #include <memory>
@@ -116,5 +115,3 @@ namespace sdl
 		Uint32 flags() const { return SDL_GetWindowFlags(_sdl_window); }
 	};
 }
-
-#endif

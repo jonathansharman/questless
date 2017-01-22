@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Player class, which is the agent responsible for the player's being.
 */
 
-#ifndef PLAYER_H
-#define PLAYER_H
+#pragma once
 
 #include "Agent.h"
 
@@ -118,5 +117,3 @@ namespace questless
 		std::vector<Effect::ptr> _perceived_effects;
 	};
 }
-
-#endif

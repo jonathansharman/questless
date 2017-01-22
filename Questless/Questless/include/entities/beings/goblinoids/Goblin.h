@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Goblin class.
 */
 
-#ifndef GOBLIN_H
-#define GOBLIN_H
+#pragma once
 
 #include "entities/beings/CorporealBeing.h"
 
@@ -105,5 +104,3 @@ namespace questless
 		Body make_body() override;
 	};
 }
-
-#endif

@@ -7,8 +7,7 @@
 * @section DESCRIPTION The remains of a deceased corporeal being.
 */
 
-#ifndef CORPSE_H
-#define CORPSE_H
+#pragma once
 
 #include "Object.h"
 #include "entities/beings/Being.h"
@@ -38,5 +37,3 @@ namespace questless
 		Being::ptr _being;
 	};
 }
-
-#endif

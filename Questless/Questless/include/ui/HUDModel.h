@@ -7,8 +7,7 @@
 * @section DESCRIPTION The HUDModel struct, which encapsulates the HUD model data.
 */
 
-#ifndef HUD_MODEL_H
-#define HUD_MODEL_H
+#pragma once
 
 #include <array>
 
@@ -38,5 +37,3 @@ namespace questless
 		void update_being_info();
 	};
 }
-
-#endif

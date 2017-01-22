@@ -7,8 +7,7 @@
 * @section DESCRIPTION Defines angles in radians in the game space.
 */
 
-#ifndef GAME_RADIANS_H
-#define GAME_RADIANS_H
+#pragma once
 
 #include "Angle.h"
 #include "GameSpace.h"
@@ -17,5 +16,3 @@ namespace units
 {
 	using GameRadians = Radians<GameSpace>;
 }
-
-#endif

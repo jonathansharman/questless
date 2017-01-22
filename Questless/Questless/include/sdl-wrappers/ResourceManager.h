@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the ResourceManager class template, which manages shared resources of a given type.
 */
 
-#ifndef RESOURCE_MANAGER_H
-#define RESOURCE_MANAGER_H
+#pragma once
 
 #include <string>
 #include <list>
@@ -85,5 +84,3 @@ namespace sdl
 		std::list<Entry<ResourceType>> _registry;
 	};
 }
-
-#endif

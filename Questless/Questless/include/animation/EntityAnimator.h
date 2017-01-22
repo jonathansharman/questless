@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the entity animator class, which generates animations for entities.
 */
 
-#ifndef ENTITY_ANIMATOR_H
-#define ENTITY_ANIMATOR_H
+#pragma once
 
 #include "entities/EntityVisitor.h"
 #include "AnimationSet.h"
@@ -31,5 +30,3 @@ namespace questless
 		AnimationSet::ptr _animation_set;
 	};
 }
-
-#endif

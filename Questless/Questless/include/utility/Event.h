@@ -8,8 +8,7 @@
 *          Differs from Delegate in that handlers may return false to indicate not to continue invoking callbacks.
 */
 
-#ifndef EVENT_H
-#define EVENT_H
+#pragma once
 
 #include <vector>
 #include <functional>
@@ -60,5 +59,3 @@ namespace questless
 		std::vector<handler_t> _handlers; ///< The list of callbacks, in the order they will be called.
 	};
 }
-
-#endif

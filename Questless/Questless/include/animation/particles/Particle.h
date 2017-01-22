@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Particle class, which enables the creation of particle effects.
 */
 
-#ifndef PARTICLE_H
-#define PARTICLE_H
+#pragma once
 
 #include "sdl-wrappers/Renderer.h"
 #include "sdl-wrappers/Texture.h"
@@ -99,5 +98,3 @@ namespace questless
 		virtual void subupdate() = 0;
 	};
 }
-
-#endif

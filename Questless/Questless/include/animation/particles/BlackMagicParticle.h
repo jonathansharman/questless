@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the black magic particle class.
 */
 
-#ifndef BLACK_MAGIC_PARTICLE_H
-#define BLACK_MAGIC_PARTICLE_H
+#pragma once
 
 #include "animation/particles/Particle.h"
 #include "utility/utility.h"
@@ -40,5 +39,3 @@ namespace questless
 		const sdl::Texture& texture() const override;
 	};
 }
-
-#endif

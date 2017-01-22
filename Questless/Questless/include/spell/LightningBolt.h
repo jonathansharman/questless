@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the LightningBolt spell class.
 */
 
-#ifndef SPELL_LIGHTNING_BOLT_H
-#define SPELL_LIGHTNING_BOLT_H
+#pragma once
 
 #include "Spell.h"
 
@@ -38,5 +37,3 @@ namespace questless::spell
 		static constexpr int _range = 3;
 	};
 }
-
-#endif

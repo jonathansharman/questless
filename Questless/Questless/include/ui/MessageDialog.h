@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the MessageDialog class, which displays a message to the player.
 */
 
-#ifndef MESSAGE_DIALOG_H
-#define MESSAGE_DIALOG_H
+#pragma once
 
 #include <string>
 
@@ -41,5 +40,3 @@ namespace questless
 		void load_textures();
 	};
 }
-
-#endif

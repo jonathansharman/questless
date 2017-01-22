@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the TileDialog class, which retrives tile coordinates from the player.
 */
 
-#ifndef TILE_DIALOG_H
-#define TILE_DIALOG_H
+#pragma once
 
 #include <string>
 #include <functional>
@@ -60,5 +59,3 @@ namespace questless
 
 	};
 }
-
-#endif

@@ -7,8 +7,7 @@
 * @section DESCRIPTION Provides constexpr versions of a subset of standard math functions.
 */
 
-#ifndef CONSTEXPR_MATH_H
-#define CONSTEXPR_MATH_H
+#pragma once
 
 namespace units::constexpr_math
 {
@@ -43,5 +42,3 @@ namespace units::constexpr_math
 		return static_cast<Integer>(detail::sqrt_iterative(static_cast<double>(x), 0.5 * x, 0.0));
 	}
 }
-
-#endif

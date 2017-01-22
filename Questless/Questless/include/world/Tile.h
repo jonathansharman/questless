@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Tile class.
 */
 
-#ifndef TILE_H
-#define TILE_H
+#pragma once
 
 #include "sdl-wrappers/Renderer.h"
 #include "sdl-wrappers/Texture.h"
@@ -127,5 +126,3 @@ namespace questless
 		void accept(TileVisitor& visitor) const override { visitor.visit(*this); }
 	};
 }
-
-#endif

@@ -7,8 +7,7 @@
 * @section DESCRIPTION A generic 2D vector, with parameterized length and space types.
 */
 
-#ifndef VECTOR_H
-#define VECTOR_H
+#pragma once
 
 #include <cmath>
 #include <ostream>
@@ -206,5 +205,3 @@ TEST_CASE("[Vector] operations")
 		CHECK(vd.y == doctest::Approx(vd_rot.y));
 	}
 }
-
-#endif

@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface and implementation for the Healing status class.
 */
 
-#ifndef HEALING_H
-#define HEALING_H
+#pragma once
 
 #include "entities/beings/statuses/Status.h"
 
@@ -31,5 +30,3 @@ namespace questless
 		double _magnitude;
 	};
 }
-
-#endif

@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the PlayerActionDialog class.
 */
 
-#ifndef PLAYER_ACTION_DIALOG_H
-#define PLAYER_ACTION_DIALOG_H
+#pragma once
 
 #include <boost/optional.hpp>
 
@@ -48,5 +47,3 @@ namespace questless
 		void refresh() override {}
 	};
 }
-
-#endif

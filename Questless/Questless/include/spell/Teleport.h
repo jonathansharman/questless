@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the TeleportSpell class.
 */
 
-#ifndef SPELL_TELEPORT_H
-#define SPELL_TELEPORT_H
+#pragma once
 
 #include "Spell.h"
 
@@ -37,5 +36,3 @@ namespace questless::spell
 		static constexpr int _range = 15;
 	};
 }
-
-#endif

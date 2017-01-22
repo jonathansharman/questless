@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Item abstract base class.
 */
 
-#ifndef ITEM_H
-#define ITEM_H
+#pragma once
 
 #include <vector>
 #include <string>
@@ -79,5 +78,3 @@ namespace questless
 		};
 	};
 }
-
-#endif

@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the BodyTexturer class.
 */
 
-#ifndef BODY_TEXTURER_H
-#define BODY_TEXTURER_H
+#pragma once
 
 #include "sdl-wrappers/Texture.h"
 #include "entities/beings/Body.h"
@@ -25,5 +24,3 @@ namespace questless
 		sdl::Texture::ptr _texture;
 	};
 }
-
-#endif

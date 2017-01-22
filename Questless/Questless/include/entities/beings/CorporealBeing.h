@@ -7,8 +7,7 @@
 * @section DESCRIPTION A being with a physical body.
 */
 
-#ifndef CORPOREAL_BEING_H
-#define CORPOREAL_BEING_H
+#pragma once
 
 #include "Being.h"
 
@@ -23,5 +22,3 @@ namespace questless
 		CorporealBeing(Game& game, std::istream& in, Body body);
 	};
 }
-
-#endif

@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Potion class.
 */
 
-#ifndef POTION_H
-#define POTION_H
+#pragma once
 
 #include <functional>
 
@@ -25,5 +24,3 @@ namespace questless
 		function<void> _effect;
 	};
 }
-
-#endif

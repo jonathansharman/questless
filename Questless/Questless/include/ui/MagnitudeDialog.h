@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the MagnitudeDialog class, which allows the player to choose a floating-point value.
 */
 
-#ifndef MAGNITUDE_DIALOG_H
-#define MAGNITUDE_DIALOG_H
+#pragma once
 
 #include <string>
 #include <functional>
@@ -61,5 +60,3 @@ namespace questless
 		void load_textures();
 	};
 }
-
-#endif

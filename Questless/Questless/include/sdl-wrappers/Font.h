@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for Font, a simple wrapper class around TTF_Font.
 */
 
-#ifndef FONT_H
-#define FONT_H
+#pragma once
 
 #include <string>
 #include <algorithm>
@@ -75,5 +74,3 @@ namespace sdl
 		SDL_BlendMode _blend_mode;
 	};
 }
-
-#endif

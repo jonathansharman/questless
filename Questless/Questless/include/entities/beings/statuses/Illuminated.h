@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface and implementation for the Illuminated status class.
 */
 
-#ifndef ILLUMINATED_H
-#define ILLUMINATED_H
+#pragma once
 
 #include "entities/beings/statuses/Status.h"
 #include "entities/beings/stats/Modifier.h"
@@ -38,5 +37,3 @@ namespace questless
 		std::vector<Modifier::ptr> _modifiers;
 	};
 }
-
-#endif

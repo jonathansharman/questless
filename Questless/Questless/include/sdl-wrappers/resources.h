@@ -7,8 +7,7 @@
 * @section DESCRIPTION Provides access to shared resources.
 */
 
-#ifndef SDL_RESOURCES_H
-#define SDL_RESOURCES_H
+#pragma once
 
 #include <memory>
 
@@ -27,5 +26,3 @@ namespace sdl
 	ResourceManager<Font>& font_manager();
 	ResourceManager<Sound>& sound_manager();
 }
-
-#endif

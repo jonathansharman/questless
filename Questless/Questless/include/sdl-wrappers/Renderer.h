@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for Renderer, a simple wrapper class around SDL_Renderer.
 */
 
-#ifndef RENDERER_H
-#define RENDERER_H
+#pragma once
 
 #include <vector>
 #include <stdexcept>
@@ -90,5 +89,3 @@ namespace sdl
 		void set_draw_color(Color color);
 	};
 }
-
-#endif

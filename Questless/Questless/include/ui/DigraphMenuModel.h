@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the DigraphMenuModel class, which represents a directed graph menu system with pages and links.
 */
 
-#ifndef DIGRAPH_MENU_MODEL_H
-#define DIGRAPH_MENU_MODEL_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -65,5 +64,3 @@ namespace questless
 		int current_option_index() const;
 	};
 }
-
-#endif

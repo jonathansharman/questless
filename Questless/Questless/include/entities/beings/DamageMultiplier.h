@@ -7,8 +7,7 @@
 * @section DESCRIPTION Defines Resistance and Vulnerability, which reduce and increase damage taken, respectively.
 */
 
-#ifndef DAMAGE_MULTIPLIER_H
-#define DAMAGE_MULTIPLIER_H
+#pragma once
 
 #include "utility/TaggedType.h"
 
@@ -147,5 +146,3 @@ namespace questless
 		using DamageMultiplier<Vulnerability>::DamageMultiplier;
 	};
 }
-
-#endif

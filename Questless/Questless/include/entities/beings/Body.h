@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Body class, which represents a being's body. Holds a BodyPart tree.
 */
 
-#ifndef BODY_H
-#define BODY_H
+#pragma once
 
 #include <memory>
 #include <vector>
@@ -112,5 +111,3 @@ namespace questless
 		std::vector<Tail::ref> _tails;
 	};
 }
-
-#endif

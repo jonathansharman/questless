@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Armor class.
 */
 
-#ifndef ARMOR_H
-#define ARMOR_H
+#pragma once
 
 #include "items/Equipable.h"
 #include "items/Breakable.h"
@@ -49,5 +48,3 @@ namespace questless
 		void take_resistance_wear(const Damage& damage);
 	};
 }
-
-#endif

@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Dialog abstract base class.
 */
 
-#ifndef DIALOG_H
-#define DIALOG_H
+#pragma once
 
 #include "sdl-wrappers/Renderable.h"
 #include "sdl-wrappers/resources.h"
@@ -81,5 +80,3 @@ namespace questless
 		static sdl::Handle<sdl::Font> _list_option_font_handle;
 	};
 }
-
-#endif

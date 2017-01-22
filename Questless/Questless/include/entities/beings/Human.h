@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Human class.
 */
 
-#ifndef HUMAN_H
-#define HUMAN_H
+#pragma once
 
 #include "entities/beings/CorporealBeing.h"
 
@@ -105,5 +104,3 @@ namespace questless
 		Body make_body() override;
 	};
 }
-
-#endif

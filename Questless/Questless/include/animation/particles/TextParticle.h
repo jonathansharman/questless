@@ -7,8 +7,7 @@
 * @section DESCRIPTION A text particle.
 */
 
-#ifndef TEXT_PARTICLE_H
-#define TEXT_PARTICLE_H
+#pragma once
 
 #include "animation/particles/Particle.h"
 #include "sdl-wrappers/Renderable.h"
@@ -59,5 +58,3 @@ namespace questless
 		sdl::Texture make_texture() const;
 	};
 }
-
-#endif

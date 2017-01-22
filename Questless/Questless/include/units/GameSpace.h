@@ -7,8 +7,7 @@
 * @section DESCRIPTION Defines game space.
 */
 
-#ifndef GAME_SPACE_H
-#define GAME_SPACE_H
+#pragma once
 
 namespace units
 {
@@ -17,5 +16,3 @@ namespace units
 		using scalar_t = double;
 	};
 }
-
-#endif

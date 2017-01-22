@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Agent abstract base class, representing an agent acting on behalf of some number of beings. E.g., the player agent.
 */
 
-#ifndef AGENT_H
-#define AGENT_H
+#pragma once
 
 #include <functional>
 #include <stdexcept>
@@ -133,5 +132,3 @@ namespace questless
 		Being& _being;
 	};
 }
-
-#endif

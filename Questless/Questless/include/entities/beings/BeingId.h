@@ -7,8 +7,7 @@
 * @section DESCRIPTION The definition of the BeingId type, used to uniquely identify beings.
 */
 
-#ifndef BEING_ID_H
-#define BEING_ID_H
+#pragma once
 
 namespace questless
 {
@@ -45,5 +44,3 @@ namespace std
 		}
 	};
 }
-
-#endif

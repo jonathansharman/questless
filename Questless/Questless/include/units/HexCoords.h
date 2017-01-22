@@ -7,8 +7,7 @@
 * @section DESCRIPTION Hexagonal coordinate type, adapted from http://www.redblobgames.com/grids/hexagons/.
 */
 
-#ifndef HEX_COORDS_H
-#define HEX_COORDS_H
+#pragma once
 
 #include <vector>
 #include <cmath>
@@ -393,5 +392,3 @@ int main()
 }
 
 /**/
-
-#endif

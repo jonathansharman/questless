@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Region class, which represents a set of connected hexagonal sections.
 */
 
-#ifndef REGION_H
-#define REGION_H
+#pragma once
 
 #include <string>
 #include <set>
@@ -197,5 +196,3 @@ namespace questless
 		void for_each_loaded_section(std::function<void(Section&)> f);
 	};
 }
-
-#endif

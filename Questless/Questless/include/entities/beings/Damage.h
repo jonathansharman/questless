@@ -7,8 +7,7 @@
 * @section DESCRIPTION The Damage type, which encapsulates a set of damage components inflicted together.
 */
 
-#ifndef DAMAGE_H
-#define DAMAGE_H
+#pragma once
 
 #include <vector>
 #include <cmath>
@@ -133,5 +132,3 @@ namespace questless
 		double _blight = 0.0;
 	};
 }
-
-#endif

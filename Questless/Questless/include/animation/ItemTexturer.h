@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the ItemTexturer class.
 */
 
-#ifndef ITEM_TEXTURER_H
-#define ITEM_TEXTURER_H
+#pragma once
 
 #include "items/ItemVisitor.h"
 #include "sdl-wrappers/Texture.h"
@@ -26,5 +25,3 @@ namespace questless
 		sdl::Texture::ptr _texture;
 	};
 }
-
-#endif

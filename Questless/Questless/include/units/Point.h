@@ -7,8 +7,7 @@
 * @section DESCRIPTION A generic 2D point, with parameterized length and space types.
 */
 
-#ifndef POINT_H
-#define POINT_H
+#pragma once
 
 #include "Vector.h"
 
@@ -187,5 +186,3 @@ TEST_CASE("[Point] operations")
 		CHECK(pd.y == doctest::Approx(pd_rot.y));
 	}
 }
-
-#endif

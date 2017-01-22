@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the abstract Craftable class. Items which can be crafted from other items should multiply inherit from this class and Item.
 */
 
-#ifndef CRAFTABLE_H
-#define CRAFTABLE_H
+#pragma once
 
 #include <vector>
 #include <memory>
@@ -28,5 +27,3 @@ namespace questless
 		/// @todo Ingredients?
 	};
 }
-
-#endif

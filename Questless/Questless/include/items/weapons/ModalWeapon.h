@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Weapon class, which represents weapons with more than one mode of use.
 */
 
-#ifndef MODAL_WEAPON_H
-#define MODAL_WEAPON_H
+#pragma once
 
 #include "items/weapons/Weapon.h"
 
@@ -80,5 +79,3 @@ namespace questless
 		};
 	};
 }
-
-#endif

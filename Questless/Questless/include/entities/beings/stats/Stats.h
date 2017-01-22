@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Stats type, which holds a Being's stats.
 */
 
-#ifndef ATTRIBUTES_H
-#define ATTRIBUTES_H
+#pragma once
 
 #include <vector>
 #include <memory>
@@ -137,5 +136,3 @@ namespace questless
 		}
 	};
 }
-
-#endif

@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Entity visitor abstract base class.
 */
 
-#ifndef ENTITY_VISITOR_H
-#define ENTITY_VISITOR_H
+#pragma once
 
 #include <string>
 #include <stdexcept>
@@ -55,5 +54,3 @@ namespace questless
 		std::string _message;
 	};
 }
-
-#endif

@@ -7,8 +7,7 @@
 * @section DESCRIPTION A blood drop particle.
 */
 
-#ifndef BLOOD_PARTICLE_H
-#define BLOOD_PARTICLE_H
+#pragma once
 
 #include "animation/particles/Particle.h"
 
@@ -41,5 +40,3 @@ namespace questless
 		const sdl::Texture& texture() const override;
 	};
 }
-
-#endif

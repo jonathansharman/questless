@@ -7,8 +7,7 @@
 * @section DESCRIPTION A generic 2D rectangle, with parameterized length and space types.
 */
 
-#ifndef RECT_H
-#define RECT_H
+#pragma once
 
 #include "Vector.h"
 #include "Point.h"
@@ -104,5 +103,3 @@ namespace units
 		}
 	};
 }
-
-#endif

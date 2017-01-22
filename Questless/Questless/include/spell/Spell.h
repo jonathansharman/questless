@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Spell abstract base class.
 */
 
-#ifndef SPELL_H
-#define SPELL_H
+#pragma once
 
 #include <string>
 #include <memory>
@@ -119,5 +118,3 @@ namespace questless::spell
 		virtual Action::Complete perform_cast(Being& actor, Action::cont_t cont) = 0;
 	};
 }
-
-#endif

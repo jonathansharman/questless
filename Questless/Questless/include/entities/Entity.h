@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Entity class, which includes both beings and objects that can exist on the map.
 */
 
-#ifndef ENTITY_H
-#define ENTITY_H
+#pragma once
 
 #include <string>
 #include <iostream>
@@ -83,5 +82,3 @@ namespace questless
 		RegionTileCoords _coords;
 	};
 }
-
-#endif

@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the WorldRenderer class, which draws the elements of the world that the player can see.
 */
 
-#ifndef WORLD_RENDERER_H
-#define WORLD_RENDERER_H
+#pragma once
 
 #include <unordered_map>
 #include <memory>
@@ -92,5 +91,3 @@ namespace questless
 		void render_terrain();
 	};
 }
-
-#endif

@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the Questless Game class.
 */
 
-#ifndef QUESTLESS_H
-#define QUESTLESS_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -267,5 +266,3 @@ namespace questless
 		Object* _object(ObjectId id) const;
 	};
 }
-
-#endif

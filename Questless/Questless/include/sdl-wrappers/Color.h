@@ -7,8 +7,7 @@
 * @section DESCRIPTION A color type, convertible to SDL_Color.
 */
 
-#ifndef COLOR_H
-#define COLOR_H
+#pragma once
 
 #include <cstdint>
 
@@ -75,5 +74,3 @@ namespace sdl
 		constexpr operator SDL_Color() const { return {r, g, b, a}; }
 	};
 }
-
-#endif

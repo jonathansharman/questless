@@ -7,8 +7,7 @@
 * @section DESCRIPTION The interface for the yellow magic particle class.
 */
 
-#ifndef YELLOW_MAGIC_PARTICLE_H
-#define YELLOW_MAGIC_PARTICLE_H
+#pragma once
 
 #include <memory>
 
@@ -40,5 +39,3 @@ namespace questless
 		const sdl::Texture& texture() const override;
 	};
 }
-
-#endif
