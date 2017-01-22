@@ -23,11 +23,11 @@ using namespace units;
 
 namespace questless
 {
-	WorldView::WorldView(const Being& being, bool find_bounds)
+	WorldView::WorldView(Being const& being, bool find_bounds)
 		: _region{being.region()}
 		, _bounds{boost::none}
 	{
-		const Region& region = _region;
+		Region const& region = _region;
 		RegionTileCoords coords = being.coords();
 		Vision vision = being.stats.vision;
 		double acuity = vision.acuity();
@@ -109,7 +109,7 @@ namespace questless
 			_section_views.push_back(section_view);
 
 			// Calculate being visibilities.
-			for (const Being& other_being : region.beings(section_coords)) {
+			for (Being const& other_being : region.beings(section_coords)) {
 				RegionTileCoords other_coords = other_being.coords();
 				if (other_coords.distance_to(coords) < visual_range) {
 					SectionTileIndex other_tile_index = Section::tile_index(other_coords);
@@ -133,7 +133,7 @@ namespace questless
 			}
 
 			// Calculate object visibilities.
-			for (const Object& object : region.objects(section_coords)) {
+			for (Object const& object : region.objects(section_coords)) {
 				RegionTileCoords other_coords = object.coords();
 				if (other_coords.distance_to(coords) < visual_range) {
 					SectionTileIndex other_tile_index = Section::tile_index(other_coords);

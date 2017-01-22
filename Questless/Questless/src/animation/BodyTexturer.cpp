@@ -28,7 +28,7 @@ using namespace units;
 
 namespace questless
 {
-	void BodyTexturer::visit(const Body& body)
+	void BodyTexturer::visit(Body const& body)
 	{
 		ScreenRect bounds = body.bounds();
 
@@ -37,8 +37,8 @@ namespace questless
 			renderer().clear(Color::clear());
 			renderer().draw_rect(ScreenRect{0, 0, _texture->width(), _texture->height()}, Color::red(), false);
 
-			for (const BodyPart& part : body) {
-				for (const ScreenRect& region : part.regions()) {
+			for (BodyPart const& part : body) {
+				for (ScreenRect const& region : part.regions()) {
 					constexpr double threshold = 1.0 / 2.0;
 
 					double health_percentage = part.health() / part.vitality();

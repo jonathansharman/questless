@@ -18,14 +18,14 @@ using namespace units;
 
 namespace questless
 {
-	HUDView::HUDView(Game& game, const Window& window) : _game{game}, _window{window}
+	HUDView::HUDView(Game& game, Window const& window) : _game{game}, _window{window}
 	{
 		_fnt_item_count = std::make_unique<Font>("resources/fonts/dumbledor1.ttf", _item_count_font_size, SDL_BLENDMODE_BLEND);
 
 		load_textures_and_layout();
 	}
 
-	void HUDView::draw(const HUDModel& hud)
+	void HUDView::draw(HUDModel const& hud)
 	{
 		if (!hud.player_id) {
 			return;
@@ -76,10 +76,10 @@ namespace questless
 			if (hud.inv_open) {
 				renderer().draw_rect(ScreenRect{_inv_left, _inv_top, _inv_width, _inv_height}, Color::black(), Color::gray());
 				ItemTexturer texturer;
-				const auto& items = player_being->inventory().page(hud.inv_page).items;
+				auto const& items = player_being->inventory().page(hud.inv_page).items;
 				for (int row = 0; row < Inventory::Page::rows; ++row) {
 					for (int column = 0; column < Inventory::Page::columns; ++column) {
-						if (const auto& item = items[row][column]) {
+						if (auto const& item = items[row][column]) {
 							item->accept(texturer);
 							Texture::ptr texture = texturer.texture();
 							texture->draw(ScreenPoint{_inv_left + column * HUDView::item_icon_width, _inv_top + row * HUDView::item_icon_height});

@@ -39,7 +39,7 @@ namespace questless
 
 		static constexpr Derived zero() { return Derived{}; }
 
-		constexpr friend Derived operator +(const Derived& d1, const Derived& d2)
+		constexpr friend Derived operator +(Derived const& d1, Derived const& d2)
 		{
 			return Derived
 				{ d1.slash + d2.slash
@@ -50,7 +50,7 @@ namespace questless
 				, d1.blight + d2.blight
 				};
 		}
-		friend constexpr Derived operator -(const Derived& d1, const Derived& d2)
+		friend constexpr Derived operator -(Derived const& d1, Derived const& d2)
 		{
 			Derived difference;
 			difference.slash = max(0.0, d1.slash - d2.slash);
@@ -61,7 +61,7 @@ namespace questless
 			difference.blight = max(0.0, d1.blight - d2.blight);
 			return difference;
 		}
-		friend constexpr Derived operator *(const Derived& d, double k)
+		friend constexpr Derived operator *(Derived const& d, double k)
 		{
 			return Derived
 				{ Slash{k * d._slash}
@@ -72,7 +72,7 @@ namespace questless
 				, Blight{k * d._blight}
 				};
 		}
-		friend constexpr Derived operator *(double k, const Derived& d)
+		friend constexpr Derived operator *(double k, Derived const& d)
 		{
 			return Derived
 				{ Slash{k * d._slash}
@@ -83,12 +83,12 @@ namespace questless
 				, Blight{k * d._blight}
 				};
 		}
-		friend constexpr Derived operator /(const Derived& d, double k)
+		friend constexpr Derived operator /(Derived const& d, double k)
 		{
 			return Derived{d.slash / k, d.pierce / k, d.bludgeon / k, d.burn / k, d.freeze / k, d.blight / k};
 		}
 
-		Derived& operator +=(const Derived& addend)
+		Derived& operator +=(Derived const& addend)
 		{
 			_slash += addend._slash;
 			_pierce += addend._pierce;
@@ -98,7 +98,7 @@ namespace questless
 			_blight += addend._blight;
 			return static_cast<Derived&>(*this);
 		}
-		Derived& operator -=(const Derived& d)
+		Derived& operator -=(Derived const& d)
 		{
 			_slash -= d._slash;
 			_pierce -= d._pierce;

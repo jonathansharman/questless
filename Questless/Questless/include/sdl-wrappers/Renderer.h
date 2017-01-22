@@ -35,7 +35,7 @@ namespace sdl
 
 		~Renderer();
 
-		Renderer& operator =(const Renderer& other) = delete;
+		Renderer& operator =(Renderer const& other) = delete;
 		Renderer& operator =(Renderer&& other) & = default;
 
 		/// @return The internal SDL_Renderer pointer.
@@ -72,13 +72,13 @@ namespace sdl
 		/// @param rect The rectangle to be drawn.
 		/// @param color The color of the rectangle.
 		/// @param filled If true, a filled rectangle is drawn. Otherwise, only its outline is drawn.
-		void draw_rect(const units::ScreenRect& rect, Color color, bool filled);
+		void draw_rect(units::ScreenRect const& rect, Color color, bool filled);
 
 		/// Draws a filled rectangle with a border.
 		/// @param rect The rectangle to be drawn.
 		/// @param border_color The color of the rectangle's border.
 		/// @param fill_color The color of the rectangle's interior.
-		void draw_rect(const units::ScreenRect& rect, Color border_color, Color fill_color);
+		void draw_rect(units::ScreenRect const& rect, Color border_color, Color fill_color);
 	private:
 		SDL_Renderer* _renderer;
 		int _w;

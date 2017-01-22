@@ -12,7 +12,7 @@
 
 namespace sdl
 {
-	Font::Font(const std::string& filename, int size, SDL_BlendMode blend_mode)
+	Font::Font(std::string const& filename, int size, SDL_BlendMode blend_mode)
 		: _blend_mode(blend_mode), _size(size)
 	{
 		_font = TTF_OpenFont(filename.c_str(), _size);
@@ -49,7 +49,7 @@ namespace sdl
 		std::swap(first._blend_mode, second._blend_mode);
 	}
 
-	Texture Font::render(const std::string& text, Renderer& renderer, Color text_color) const
+	Texture Font::render(std::string const& text, Renderer& renderer, Color text_color) const
 	{
 		SDL_Surface* surface = TTF_RenderText_Blended(_font, text.c_str(), static_cast<SDL_Color>(text_color));
 		if (surface == nullptr) {
@@ -64,7 +64,7 @@ namespace sdl
 		return texture;
 	}
 
-	Texture Font::render(const std::string& text, Renderer& renderer, Color text_color, Color background_color) const
+	Texture Font::render(std::string const& text, Renderer& renderer, Color text_color, Color background_color) const
 	{
 		SDL_Surface* surface = TTF_RenderText_Shaded(_font, text.c_str(), static_cast<SDL_Color>(text_color), static_cast<SDL_Color>(background_color));
 		if (surface == nullptr) {
@@ -79,7 +79,7 @@ namespace sdl
 		return texture;
 	}
 
-	Texture Font::quick_render(const std::string& text, Renderer& renderer, Color text_color) const
+	Texture Font::quick_render(std::string const& text, Renderer& renderer, Color text_color) const
 	{
 		SDL_Surface* surface = TTF_RenderText_Solid(_font, text.c_str(), static_cast<SDL_Color>(text_color));
 		if (surface == nullptr) {

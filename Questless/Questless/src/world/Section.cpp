@@ -67,7 +67,7 @@ namespace questless
 		}
 	}
 	
-	void Section::save(const std::string& filename)
+	void Section::save(std::string const& filename)
 	{
 		std::ofstream fout{filename.c_str()};
 		for (auto& r_row : _tiles) {
@@ -80,7 +80,7 @@ namespace questless
 	std::vector<Being::ref> Section::beings() const
 	{
 		std::vector<Being::ref> beings;
-		for (const auto& pair : _beings) {
+		for (auto const& pair : _beings) {
 			beings.push_back(*pair.second);
 		}
 		return beings;
@@ -89,7 +89,7 @@ namespace questless
 	std::vector<Object::ref> Section::objects() const
 	{
 		std::vector<Object::ref> objects;
-		for (const auto& pair : _objects) {
+		for (auto const& pair : _objects) {
 			objects.push_back(*pair.second);
 		}
 		return objects;

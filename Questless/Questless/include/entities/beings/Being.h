@@ -51,8 +51,8 @@ namespace questless
 
 		using ptr = std::unique_ptr<Being>;
 		using ref = std::reference_wrapper<Being>;
-		using ptr_less_t = std::function<bool(const Being::ptr&, const Being::ptr&)>;
-		using ref_less_t = std::function<bool(const Being&, const Being&)>;
+		using ptr_less_t = std::function<bool(Being::ptr const&, Being::ptr const&)>;
+		using ref_less_t = std::function<bool(Being const&, Being const&)>;
 
 		///////////////
 		// Constants //
@@ -112,7 +112,7 @@ namespace questless
 		DynamicProperty<double> mana;
 		DynamicProperty<double> energy;
 
-		static void satiety_mutator(double& satiety, const double& new_satiety)
+		static void satiety_mutator(double& satiety, double const& new_satiety)
 		{
 			satiety = new_satiety < 0.0
 				? 0.0
@@ -123,7 +123,7 @@ namespace questless
 		}
 		Property<double, satiety_mutator> satiety;
 
-		static void alertness_mutator(double& alertness, const double& new_alertness)
+		static void alertness_mutator(double& alertness, double const& new_alertness)
 		{
 			alertness = new_alertness < 0.0
 				? 0.0
@@ -191,7 +191,7 @@ namespace questless
 		Inventory& inventory() { return _inventory; }
 
 		/// @return The being's equipped shields.
-		const std::vector<std::unique_ptr<Armor>>& shields() { return _shields; }
+		std::vector<std::unique_ptr<Armor>> const& shields() { return _shields; }
 
 		/// Adds the given item to the being's inventory.
 		/// @param item An item to be added to the inventory.
@@ -200,7 +200,7 @@ namespace questless
 		/// Takes the given item from the being's inventory.
 		/// @param item An item to be taken from the inventory.
 		/// @return The item taken.
-		Item::ptr take_item(const Item& item) { return _inventory.remove(item); }
+		Item::ptr take_item(Item const& item) { return _inventory.remove(item); }
 
 		/// Advances the being one time unit.
 		void update() override;
@@ -249,9 +249,9 @@ namespace questless
 		Stats base_stats_plus_body_stats();
 		Stats effective_stats();
 
-		std::function<void(double&, const double&)> health_mutator();
-		std::function<void(double&, const double&)> mana_mutator();
-		std::function<void(double&, const double&)> energy_mutator();
-		std::function<void(double&, const double&)> busy_time_mutator();
+		std::function<void(double&, double const&)> health_mutator();
+		std::function<void(double&, double const&)> mana_mutator();
+		std::function<void(double&, double const&)> energy_mutator();
+		std::function<void(double&, double const&)> busy_time_mutator();
 	};
 }

@@ -40,7 +40,7 @@ namespace questless
 				return _cont(boost::none);
 			}
 
-			const int option_count = _options.size();
+			int const option_count = _options.size();
 
 			if (!_options.empty()) {
 				_selection -= input.presses(SDLK_UP);
@@ -68,7 +68,7 @@ namespace questless
 			return false;
 		}
 
-		void draw(const sdl::Window& window) override
+		void draw(sdl::Window const& window) override
 		{
 			/// @todo Confine to game window in the refresh function (need access to the window, will probably need to store the window dimensions :( ).
 
@@ -118,7 +118,7 @@ namespace questless
 			_txt_title = std::make_unique<sdl::Texture>(sdl::font_manager()[title_font_handle()].render(_title, sdl::renderer(), sdl::Color::black()));
 			_bounds.w = _txt_title->width();
 			_txt_options.clear();
-			for (const auto& option : _options) {
+			for (auto const& option : _options) {
 				_txt_options.push_back(std::make_unique<sdl::Texture>(sdl::font_manager()[list_option_font_handle()].render(option, sdl::renderer(), sdl::Color::black())));
 				_bounds.w = std::max(_bounds.w, _txt_options.back()->width());
 			}

@@ -42,9 +42,9 @@ namespace questless
 
 		/// Modifies the stat according to the given modifiers.
 		/// @param modifiers A vector of stat modifiers.
-		static void apply_all(const std::vector<Modifier::ptr>& modifiers, Stats& stats)
+		static void apply_all(std::vector<Modifier::ptr> const& modifiers, Stats& stats)
 		{
-			for (const auto& modifier : modifiers) {
+			for (auto const& modifier : modifiers) {
 				modifier->apply(stats);
 			}
 		}

@@ -16,32 +16,32 @@ using namespace sdl;
 
 namespace questless
 {
-	void TileTexturer::visit(const EdgeTile&)
+	void TileTexturer::visit(EdgeTile const&)
 	{
 		_texture = make_unique<Texture>("resources/textures/terrain/tile.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
 		_texture->color(Color::black());
 	}
-	void TileTexturer::visit(const StoneTile&)
+	void TileTexturer::visit(StoneTile const&)
 	{
 		_texture = make_unique<Texture>("resources/textures/terrain/tile.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
 		_texture->color(Color::gray());
 	}
-	void TileTexturer::visit(const DirtTile&)
+	void TileTexturer::visit(DirtTile const&)
 	{
 		_texture = make_unique<Texture>("resources/textures/terrain/tile.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
 		_texture->color(Color::brown());
 	}
-	void TileTexturer::visit(const GrassTile&)
+	void TileTexturer::visit(GrassTile const&)
 	{
 		_texture = make_unique<Texture>("resources/textures/terrain/tile.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
 		_texture->color(Color::green());
 	}
-	void TileTexturer::visit(const WaterTile&)
+	void TileTexturer::visit(WaterTile const&)
 	{
 		_texture = make_unique<Texture>("resources/textures/terrain/tile.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
 		_texture->color(Color::blue());
 	}
-	void TileTexturer::visit(const SnowTile&)
+	void TileTexturer::visit(SnowTile const&)
 	{
 		_texture = make_unique<Texture>("resources/textures/terrain/tile.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
 		_texture->color(Color::white());

@@ -204,7 +204,7 @@ namespace questless
 				}
 
 				// Shields take resistance wear based on damage after shield protection is applied.
-				for (const auto& shield : shields()) {
+				for (auto const& shield : shields()) {
 					shield->take_resistance_wear(damage);
 				}
 
@@ -338,7 +338,7 @@ namespace questless
 		Stats result = base_stats;
 
 		// Apply body part stat modifiers, and sum weight.
-		for (const BodyPart& part : body) {
+		for (BodyPart const& part : body) {
 			Modifier::apply_all(part.modifiers(), result);
 
 			result.weight += part.weight();
@@ -352,7 +352,7 @@ namespace questless
 		Stats result = base_stats_plus_body_stats();
 
 		// Apply status stat modifiers (may override body part modifiers).
-		for (const auto& status : _statuses) {
+		for (auto const& status : _statuses) {
 			Modifier::apply_all(status->modifiers(), result);
 		}
 
@@ -374,30 +374,30 @@ namespace questless
 		return result;
 	}
 
-	std::function<void(double&, const double&)> Being::health_mutator()
+	std::function<void(double&, double const&)> Being::health_mutator()
 	{
-		return [this](double& health, const double& new_health)
+		return [this](double& health, double const& new_health)
 		{
 			health = clamp(new_health, 0.0, stats.vitality.get());
 		};
 	}
 	std::function<void(double&, double const&)> Being::mana_mutator()
 	{
-		return [this](double& mana, const double& new_mana)
+		return [this](double& mana, double const& new_mana)
 		{
 			mana = clamp(new_mana, 0.0, stats.spirit.get());
 		};
 	}
-	std::function<void(double&, const double&)> Being::energy_mutator()
+	std::function<void(double&, double const&)> Being::energy_mutator()
 	{
-		return [this](double& energy, const double& new_energy)
+		return [this](double& energy, double const& new_energy)
 		{
 			energy = clamp(new_energy, 0.0, stats.stamina.get());
 		};
 	}
-	std::function<void(double&, const double&)> Being::busy_time_mutator()
+	std::function<void(double&, double const&)> Being::busy_time_mutator()
 	{
-		return [this](double& busy_time, const double& new_busy_time) {
+		return [this](double& busy_time, double const& new_busy_time) {
 			region().remove_from_turn_queue(*this);
 			busy_time = new_busy_time;
 			region().add_to_turn_queue(*this);

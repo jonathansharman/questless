@@ -18,11 +18,11 @@ namespace questless
 	class EntityAnimator : public EntityVisitor
 	{
 	public:
-		void visit(const Human&) override;
-		void visit(const Goblin&) override;
+		void visit(Human const&) override;
+		void visit(Goblin const&) override;
 
-		void visit(const Corpse&) override;
-		void visit(const ItemBox&) override;
+		void visit(Corpse const&) override;
+		void visit(ItemBox const&) override;
 
 		/// @return The animation set produced by the last visit. Moves the animation set out of the animator.
 		AnimationSet::ptr animation_set() { return std::move(_animation_set); }

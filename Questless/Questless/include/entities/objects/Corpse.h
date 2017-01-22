@@ -31,7 +31,7 @@ namespace questless
 
 		virtual EntityClass entity_class() const { return EntityClass::CorpseClass; }
 
-		const Being& being() const { return *_being; }
+		Being const& being() const { return *_being; }
 		Being& being() { return *_being; }
 	private:
 		Being::ptr _being;

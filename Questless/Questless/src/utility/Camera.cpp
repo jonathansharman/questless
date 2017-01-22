@@ -39,7 +39,7 @@ namespace questless
 		_angle.count() = fmod((_angle + dtheta).count(), GameRadians::circle().count() / 2.0);
 	}
 
-	void Camera::update(const sdl::Input& input)
+	void Camera::update(sdl::Input const& input)
 	{
 		ScreenVector center_to_mouse = input.mouse_position() - _window.center();
 		GameVector scaled_center_to_mouse = GameVector{static_cast<double>(center_to_mouse.x), static_cast<double>(-center_to_mouse.y)} / _zoom;
@@ -49,7 +49,7 @@ namespace questless
 	}
 
 	void Camera::draw
-		( const sdl::Texture& texture
+		( sdl::Texture const& texture
 		, GamePoint position
 		, Origin origin
 		, sdl::Color color
@@ -58,7 +58,7 @@ namespace questless
 		, GameRadians angle
 		, HFlip flip_horizontally
 		, VFlip flip_vertically
-		, const SrcRect& src_rect
+		, SrcRect const& src_rect
 		) const
 	{
 		if (origin.value) {
@@ -87,7 +87,7 @@ namespace questless
 	{
 		// Transform segment end points.
 		std::vector<ScreenPoint> screen_points;
-		for (const GamePoint& point : points) {
+		for (GamePoint const& point : points) {
 			screen_points.push_back(screen_point(point));
 		}
 
@@ -97,10 +97,10 @@ namespace questless
 
 	ScreenPoint Camera::screen_point(GamePoint point) const
 	{
-		const GamePoint game_window_center = GamePoint{static_cast<double>(_window.width()), static_cast<double>(_window.height())} / 2.0;
-		const GameVector camera_to_point = point - _position;
-		const GamePoint scaled_point = _zoom * GameVector{camera_to_point.x, -camera_to_point.y} + game_window_center;
-		const GamePoint rotated_scaled_point = scaled_point.rotated(game_window_center, _angle);
+		GamePoint const game_window_center = GamePoint{static_cast<double>(_window.width()), static_cast<double>(_window.height())} / 2.0;
+		GameVector const camera_to_point = point - _position;
+		GamePoint const scaled_point = _zoom * GameVector{camera_to_point.x, -camera_to_point.y} + game_window_center;
+		GamePoint const rotated_scaled_point = scaled_point.rotated(game_window_center, _angle);
 		return ScreenPoint{lround(rotated_scaled_point.x), lround(rotated_scaled_point.y)};
 	}
 }

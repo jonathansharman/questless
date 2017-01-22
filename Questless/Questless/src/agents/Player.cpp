@@ -51,7 +51,7 @@ namespace questless
 							auto actions = std::make_shared<std::vector<Action::ptr>>(item->actions());
 							// Get the action names from the list of actions.
 							std::vector<std::string> action_names;
-							std::transform(actions->begin(), actions->end(), std::back_inserter(action_names), [](const Action::ptr& action) { return action->name(); });
+							std::transform(actions->begin(), actions->end(), std::back_inserter(action_names), [](Action::ptr const& action) { return action->name(); });
 
 							query_list
 								( game.input().mouse_position()
@@ -82,7 +82,7 @@ namespace questless
 		});
 	}
 
-	void Player::perceive(const Effect::ptr& effect)
+	void Player::perceive(Effect::ptr const& effect)
 	{
 		_perceived_effects.push_back(effect);
 	}
@@ -95,8 +95,8 @@ namespace questless
 	}
 
 	Action::Complete Player::message
-		( const std::string& title
-		, const std::string& prompt
+		( std::string const& title
+		, std::string const& prompt
 		, function<Action::Complete()> cont
 		) const
 	{
@@ -105,8 +105,8 @@ namespace questless
 	}
 
 	Action::Complete Player::query_count
-		( const std::string& title
-		, const std::string& prompt
+		( std::string const& title
+		, std::string const& prompt
 		, int default
 		, boost::optional<int> min
 		, boost::optional<int> max
@@ -118,8 +118,8 @@ namespace questless
 		return being().game().add_dialog(move(dialog));
 	}
 	Action::Complete Player::query_count
-		( const std::string& title
-		, const std::string& prompt
+		( std::string const& title
+		, std::string const& prompt
 		, int default
 		, function<bool(int)> predicate
 		, function<Action::Complete(boost::optional<int>)> cont
@@ -130,8 +130,8 @@ namespace questless
 	}
 
 	Action::Complete Player::query_duration
-		( const std::string& title
-		, const std::string& prompt
+		( std::string const& title
+		, std::string const& prompt
 		, function<Action::Complete(boost::optional<int>)> cont
 		) const
 	{
@@ -139,8 +139,8 @@ namespace questless
 	}
 
 	Action::Complete Player::query_magnitude
-		( const std::string& title
-		, const std::string& prompt
+		( std::string const& title
+		, std::string const& prompt
 		, double default
 		, function<bool(double)> predicate
 		, function<Action::Complete(boost::optional<double>)> cont
@@ -151,8 +151,8 @@ namespace questless
 	}
 
 	Action::Complete Player::query_tile
-		( const std::string& title
-		, const std::string& prompt
+		( std::string const& title
+		, std::string const& prompt
 		, boost::optional<RegionTileCoords> origin
 		, function<bool(RegionTileCoords)> predicate
 		, function<Action::Complete(boost::optional<RegionTileCoords>)> cont
@@ -164,8 +164,8 @@ namespace questless
 	}
 
 	Action::Complete Player::query_being
-		( const std::string& //title
-		, const std::string& //prompt
+		( std::string const& //title
+		, std::string const& //prompt
 		, function<bool(Being&)> //predicate
 		, function<Action::Complete(boost::optional<Being*>)> cont
 		) const
@@ -175,8 +175,8 @@ namespace questless
 	}
 
 	Action::Complete Player::query_range
-		( const std::string& title
-		, const std::string& prompt
+		( std::string const& title
+		, std::string const& prompt
 		, function<Action::Complete(boost::optional<int>)> cont
 		) const
 	{
@@ -184,8 +184,8 @@ namespace questless
 	}
 
 	Action::Complete Player::query_item
-		( const std::string& //title
-		, const std::string& //prompt
+		( std::string const& //title
+		, std::string const& //prompt
 		, Being& //source
 		, function<bool(Being&)> //predicate
 		, function<Action::Complete(boost::optional<Item*>)> cont

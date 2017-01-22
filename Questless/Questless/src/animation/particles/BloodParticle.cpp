@@ -14,7 +14,7 @@ using namespace sdl;
 
 namespace questless
 {
-	const Texture& BloodParticle::texture() const
+	Texture const& BloodParticle::texture() const
 	{
 		static bool first_call = true;
 		static Handle<Texture> handle;

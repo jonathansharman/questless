@@ -32,8 +32,8 @@ namespace questless
 	}
 
 	Action::Complete BasicAI::message
-		( const std::string& //title
-		, const std::string& //prompt
+		( std::string const& //title
+		, std::string const& //prompt
 		, std::function<Action::Complete()> cont
 		) const
 	{
@@ -41,8 +41,8 @@ namespace questless
 	}
 
 	Action::Complete BasicAI::query_count
-		( const std::string& //title
-		, const std::string& //prompt
+		( std::string const& //title
+		, std::string const& //prompt
 		, int //default
 		, boost::optional<int> //min
 		, boost::optional<int> //max
@@ -52,8 +52,8 @@ namespace questless
 		return cont(boost::none);
 	}
 	Action::Complete BasicAI::query_count
-		( const std::string& //title
-		, const std::string& //prompt
+		( std::string const& //title
+		, std::string const& //prompt
 		, int //default
 		, std::function<bool(int)> //predicate
 		, std::function<Action::Complete(boost::optional<int>)> cont
@@ -63,8 +63,8 @@ namespace questless
 	}
 
 	Action::Complete BasicAI::query_duration
-		( const std::string& //title
-		, const std::string& //prompt
+		( std::string const& //title
+		, std::string const& //prompt
 		, std::function<Action::Complete(boost::optional<int>)> cont
 		) const
 	{
@@ -72,8 +72,8 @@ namespace questless
 	}
 
 	Action::Complete BasicAI::query_magnitude
-		( const std::string& //title
-		, const std::string& //prompt
+		( std::string const& //title
+		, std::string const& //prompt
 		, double //default
 		, std::function<bool(double)> //predicate
 		, std::function<Action::Complete(boost::optional<double>)> cont
@@ -83,8 +83,8 @@ namespace questless
 	}
 
 	Action::Complete BasicAI::query_tile
-		( const std::string& //title
-		, const std::string& //prompt
+		( std::string const& //title
+		, std::string const& //prompt
 		, boost::optional<RegionTileCoords> //origin
 		, std::function<bool(RegionTileCoords)> //predicate
 		, std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont
@@ -94,8 +94,8 @@ namespace questless
 	}
 
 	Action::Complete BasicAI::query_being
-		( const std::string& //title
-		, const std::string& //prompt
+		( std::string const& //title
+		, std::string const& //prompt
 		, std::function<bool(Being&)> //predicate
 		, std::function<Action::Complete(boost::optional<Being*>)> cont
 		) const
@@ -104,8 +104,8 @@ namespace questless
 	}
 
 	Action::Complete BasicAI::query_range
-		( const std::string& //title
-		, const std::string& //prompt
+		( std::string const& //title
+		, std::string const& //prompt
 		, std::function<Action::Complete(boost::optional<int>)> cont
 		) const
 	{
@@ -113,8 +113,8 @@ namespace questless
 	}
 
 	Action::Complete BasicAI::query_item
-		( const std::string& //title
-		, const std::string& //prompt
+		( std::string const& //title
+		, std::string const& //prompt
 		, Being& //source
 		, std::function<bool(Being&)> //predicate
 		, std::function<Action::Complete(boost::optional<Item*>)> cont

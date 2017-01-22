@@ -249,27 +249,27 @@ namespace std
 	template <typename Tag>
 	struct hash<units::HexCoords<Tag>>
 	{
-		size_t operator()(const units::HexCoords<Tag>& coords) const
+		size_t operator()(units::HexCoords<Tag> const& coords) const
 		{
 			return 31 * coords.q + coords.r;
 		}
 	};
 }
 
-/// @todo Move tests to proper location.
+/// @todo Replace these with doctest tests.
 /*
 
 // Tests
 
-const int even = 1;
-const int odd = -1;
+int const even = 1;
+int const odd = -1;
 
-void complain(const string& name)
+void complain(string const& name)
 {
 	cerr << "FAIL " << name << endl;
 }
 
-void equal_hex(const string& name, HexCoords a, HexCoords b)
+void equal_hex(string const& name, HexCoords a, HexCoords b)
 {
 	if (!(a.q == b.q && a.s == b.s && a.r == b.r)) {
 		complain(name);
@@ -283,14 +283,14 @@ void equal_offsetcoord(const char* name, OffsetCoords a, OffsetCoords b)
 	}
 }
 
-void equal_int(const string& name, int a, int b)
+void equal_int(string const& name, int a, int b)
 {
 	if (a != b) {
 		complain(name);
 	}
 }
 
-void equal_hex_array(const string& name, vector<HexCoords> a, vector<HexCoords> b)
+void equal_hex_array(string const& name, vector<HexCoords> a, vector<HexCoords> b)
 {
 	equal_int(name, a.size(), b.size());
 	for (int i = 0; i < a.size(); i++) {

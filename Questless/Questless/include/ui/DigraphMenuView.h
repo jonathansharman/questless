@@ -46,10 +46,10 @@ namespace questless
 		{}
 
 		/// @return The page view at the specified index.
-		const PageView& page(size_t index) const { return _page_views[index]; }
+		PageView const& page(size_t index) const { return _page_views[index]; }
 
 		/// @return A constant reference to the vector of page views.
-		const std::vector<PageView>& pages() const { return _page_views; }
+		std::vector<PageView> const& pages() const { return _page_views; }
 
 		/// @return The coordinate of the upper-left corner of the content region (which excludes margins) of the most recently rendered menu.
 		units::ScreenPoint content_position() const { return _content_position; }
@@ -61,10 +61,10 @@ namespace questless
 
 		/// Renders or rerenders menu view textures based on the provided menu.
 		/// @param menu The menu to be rendered.
-		void render(const DigraphMenuModel& menu);
+		void render(DigraphMenuModel const& menu);
 
 		/// Updates the menu view's page and option indices to match the menu's.
-		void update_indices(const DigraphMenuModel& menu);
+		void update_indices(DigraphMenuModel const& menu);
 
 		/// Gets the position of the menu view.
 		units::ScreenPoint position() const { return units::ScreenPoint{_content_position.x - _left_margin.get(), _content_position.y - _top_margin.get()}; }

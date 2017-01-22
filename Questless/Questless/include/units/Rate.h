@@ -30,42 +30,42 @@ namespace units
 		constexpr static Rate<quantity_t, time_rep, period> zero() { return Rate<quantity_t, time_rep, period>{quantity_t{}}; }
 
 		/// @return The amount of the quantity type per unit period.
-		constexpr const quantity_t& step() const & { return _step; }
+		constexpr quantity_t const& step() const& { return _step; }
 		/// @return The amount of the quantity type per unit period.
 		quantity_t&& step() && { return std::move(_step); }
 		/// @return The amount of the quantity type per unit period.
 		quantity_t& step() & { return _step; }
 
-		constexpr bool operator <(const Rate<quantity_t, time_rep, period>& right) const { return _step < right._step; }
-		constexpr bool operator <=(const Rate<quantity_t, time_rep, period>& right) const { return _step <= right._step; }
-		constexpr bool operator ==(const Rate<quantity_t, time_rep, period>& right) const { return _step == right._step; }
-		constexpr bool operator !=(const Rate<quantity_t, time_rep, period>& right) const { return _step != right._step; }
-		constexpr bool operator >=(const Rate<quantity_t, time_rep, period>& right) const { return _step >= right._step; }
-		constexpr bool operator >(const Rate<quantity_t, time_rep, period>& right) const { return _step > right._step; }
+		constexpr bool operator <(Rate<quantity_t, time_rep, period> const& right) const { return _step < right._step; }
+		constexpr bool operator <=(Rate<quantity_t, time_rep, period> const& right) const { return _step <= right._step; }
+		constexpr bool operator ==(Rate<quantity_t, time_rep, period> const& right) const { return _step == right._step; }
+		constexpr bool operator !=(Rate<quantity_t, time_rep, period> const& right) const { return _step != right._step; }
+		constexpr bool operator >=(Rate<quantity_t, time_rep, period> const& right) const { return _step >= right._step; }
+		constexpr bool operator >(Rate<quantity_t, time_rep, period> const& right) const { return _step > right._step; }
 
 		// Closed under addition.
-		Rate<quantity_t, time_rep, period>& operator +=(const Rate<quantity_t, time_rep, period>& rate) &
+		Rate<quantity_t, time_rep, period>& operator +=(Rate<quantity_t, time_rep, period> const& rate) &
 		{
 			_step += rate._step;
 			return *this;
 		}
 
 		// Closed under subtraction.
-		Rate<quantity_t, time_rep, period>& operator -=(const Rate<quantity_t, time_rep, period>& rate) &
+		Rate<quantity_t, time_rep, period>& operator -=(Rate<quantity_t, time_rep, period> const& rate) &
 		{
 			_step -= rate._step;
 			return *this;
 		}
 
 		// Closed under scalar multiplication.
-		Rate<quantity_t, time_rep, period>& operator *=(const time_rep& k) &
+		Rate<quantity_t, time_rep, period>& operator *=(time_rep const& k) &
 		{
 			_step *= k;
 			return *this;
 		}
 
 		// Closed under scalar division.
-		Rate<quantity_t, time_rep, period>& operator /=(const time_rep& k) &
+		Rate<quantity_t, time_rep, period>& operator /=(time_rep const& k) &
 		{
 			_step /= k;
 			return *this;
@@ -76,88 +76,88 @@ namespace units
 
 	// rate + rate -> rate
 	template <typename QuantityType, typename TimeRep, typename Period>
-	constexpr Rate<QuantityType, TimeRep, Period> operator +(const Rate<QuantityType, TimeRep, Period>& rate1, const Rate<QuantityType, TimeRep, Period>& rate2)
+	constexpr Rate<QuantityType, TimeRep, Period> operator +(Rate<QuantityType, TimeRep, Period> const& rate1, Rate<QuantityType, TimeRep, Period> const& rate2)
 	{
 		return Rate<QuantityType, TimeRep, Period>{rate1.step() + rate2.step()};
 	}
 
 	// rate - rate -> rate
 	template <typename QuantityType, typename TimeRep, typename Period>
-	constexpr Rate<QuantityType, TimeRep, Period> operator -(const Rate<QuantityType, TimeRep, Period>& rate1, const Rate<QuantityType, TimeRep, Period>& rate2)
+	constexpr Rate<QuantityType, TimeRep, Period> operator -(Rate<QuantityType, TimeRep, Period> const& rate1, Rate<QuantityType, TimeRep, Period> const& rate2)
 	{
 		return Rate<QuantityType, TimeRep, Period>{rate1.step() - rate2.step()};
 	}
 
 	// -rate -> rate
 	template <typename QuantityType, typename TimeRep, typename Period>
-	constexpr Rate<QuantityType, TimeRep, Period> operator -(const Rate<QuantityType, TimeRep, Period>& rate)
+	constexpr Rate<QuantityType, TimeRep, Period> operator -(Rate<QuantityType, TimeRep, Period> const& rate)
 	{
 		return Rate<QuantityType, TimeRep, Period>{-rate.step()};
 	}
 
 	// k * rate -> rate
 	template <typename QuantityType, typename TimeRep, typename Period>
-	constexpr Rate<QuantityType, TimeRep, Period> operator *(const TimeRep& k, const Rate<QuantityType, TimeRep, Period>& rate)
+	constexpr Rate<QuantityType, TimeRep, Period> operator *(TimeRep const& k, Rate<QuantityType, TimeRep, Period> const& rate)
 	{
 		return Rate<QuantityType, TimeRep, Period>{k * rate.step()};
 	}
 	// rate * k -> rate
 	template <typename QuantityType, typename TimeRep, typename Period>
-	constexpr Rate<QuantityType, TimeRep, Period> operator *(const Rate<QuantityType, TimeRep, Period>& rate, const TimeRep& k)
+	constexpr Rate<QuantityType, TimeRep, Period> operator *(Rate<QuantityType, TimeRep, Period> const& rate, TimeRep const& k)
 	{
 		return Rate<QuantityType, TimeRep, Period>{k * rate.step()};
 	}
 
 	// rate * duration -> quantity
 	template <typename QuantityType, typename TimeRep, typename Period>
-	constexpr QuantityType operator *(const Rate<QuantityType, TimeRep, Period>& rate, const std::chrono::duration<TimeRep, Period>& duration)
+	constexpr QuantityType operator *(Rate<QuantityType, TimeRep, Period> const& rate, std::chrono::duration<TimeRep, Period> const& duration)
 	{
 		return rate.step() * duration.count();
 	}
 	// duration * rate -> quantity
 	template <typename QuantityType, typename TimeRep, typename Period>
-	constexpr QuantityType operator *(const std::chrono::duration<TimeRep, Period>& duration, const Rate<QuantityType, TimeRep, Period>& rate)
+	constexpr QuantityType operator *(std::chrono::duration<TimeRep, Period> const& duration, Rate<QuantityType, TimeRep, Period> const& rate)
 	{
 		return rate.step() * duration.count();
 	}
 
 	// quantity * frequency -> rate
 	template <typename QuantityType, typename TimeRep, typename Period>
-	constexpr Rate<QuantityType, TimeRep, Period> operator *(const QuantityType& quantity, Frequency<TimeRep, Period> f)
+	constexpr Rate<QuantityType, TimeRep, Period> operator *(QuantityType const& quantity, Frequency<TimeRep, Period> f)
 	{
 		return Rate<QuantityType, TimeRep, Period>{quantity * f.count()};
 	}
 	// frequency * quantity -> rate
 	template <typename QuantityType, typename TimeRep, typename Period>
-	constexpr Rate<QuantityType, TimeRep, Period> operator *(Frequency<TimeRep, Period> f, const QuantityType& quantity)
+	constexpr Rate<QuantityType, TimeRep, Period> operator *(Frequency<TimeRep, Period> f, QuantityType const& quantity)
 	{
 		return Rate<QuantityType, TimeRep, Period>{quantity * f.count()};
 	}
 
 	// rate / k -> rate
 	template <typename QuantityType, typename TimeRep, typename Period>
-	constexpr Rate<QuantityType, TimeRep, Period> operator /(const Rate<QuantityType, TimeRep, Period>& rate, const TimeRep& k)
+	constexpr Rate<QuantityType, TimeRep, Period> operator /(Rate<QuantityType, TimeRep, Period> const& rate, TimeRep const& k)
 	{
 		return Rate<QuantityType, TimeRep, Period>{rate.step() / k};
 	}
 
 	// rate / quantity -> frequency
 	template <typename QuantityType, typename TimeRep, typename Period>
-	constexpr Frequency<TimeRep, Period> operator /(const Rate<QuantityType, TimeRep, Period>& rate, const QuantityType& quantity)
+	constexpr Frequency<TimeRep, Period> operator /(Rate<QuantityType, TimeRep, Period> const& rate, QuantityType const& quantity)
 	{
 		return Frequency<TimeRep, Period>{rate.step() / quantity};
 	}
 
 	// rate / frequency -> quantity
 	template <typename QuantityType, typename TimeRep, typename Period>
-	constexpr QuantityType operator /(const Rate<QuantityType, TimeRep, Period>& rate, Frequency<TimeRep, Period> f)
+	constexpr QuantityType operator /(Rate<QuantityType, TimeRep, Period> const& rate, Frequency<TimeRep, Period> f)
 	{
 		return rate.step() / f.count();
 	}
 
 	// quantity / rate -> duration
 	template <typename QuantityType, typename TimeRep, typename Period>
-	constexpr std::chrono::duration<TimeRep, Period> operator /(const QuantityType& quantity, const Rate<QuantityType, TimeRep, Period>& rate)
+	constexpr std::chrono::duration<TimeRep, Period> operator /(QuantityType const& quantity, Rate<QuantityType, TimeRep, Period> const& rate)
 	{
 		return std::chrono::duration<QuantityType, TimeRep, Period>{quantity / rate._quantity};
 	}
@@ -165,13 +165,13 @@ namespace units
 	/// @todo Why doesn't this seem to work in constexpr's?
 	// quantity / duration -> rate
 	template <typename QuantityType, typename TimeRep, typename Period>
-	constexpr Rate<QuantityType, TimeRep, Period> operator /(const QuantityType& quantity, const std::chrono::duration<TimeRep, Period>& duration)
+	constexpr Rate<QuantityType, TimeRep, Period> operator /(QuantityType const& quantity, std::chrono::duration<TimeRep, Period> const& duration)
 	{
 		return Rate<QuantityType, TimeRep, Period>{quantity / duration.count()};
 	}
 
 	template<typename ToRate, typename QuantityType, typename TimeRep, typename Period>
-	constexpr ToRate rate_cast(const Rate<QuantityType, TimeRep, Period>& rate)
+	constexpr ToRate rate_cast(Rate<QuantityType, TimeRep, Period> const& rate)
 	{
 		using ratio = std::ratio_divide<ToRate::Period, Period>;
 		return ToRate{static_cast<ToRate::quantity_t>(rate.quantity() * r::den / r::num)};

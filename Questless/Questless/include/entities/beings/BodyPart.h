@@ -70,13 +70,13 @@ namespace questless
 		void attach(ptr child) { _children.push_back(std::move(child)); }
 
 		/// @return The player-visisble name of the body part.
-		const std::string& name() const { return _name; }
+		std::string const& name() const { return _name; }
 
 		/// @return The body part to which this body part is attached.
-		const std::vector<BodyPart::ptr>& children() const { return _children; }
+		std::vector<BodyPart::ptr> const& children() const { return _children; }
 
 		/// @return The set of regions that this body part occupies.
-		const std::vector<units::ScreenRect>& regions() const { return _regions; }
+		std::vector<units::ScreenRect> const& regions() const { return _regions; }
 
 		/// @return The body part's current health.
 		double health() const { return _health; }
@@ -91,19 +91,19 @@ namespace questless
 		double weight() const { return _weight; }
 
 		/// @return The body part's protection stat.
-		const Protection& protection() const { return _protection; }
+		Protection const& protection() const { return _protection; }
 
 		/// @return The body part's resistance stat.
-		const Resistance& resistance() const { return _resistance; }
+		Resistance const& resistance() const { return _resistance; }
 
 		/// @return The body part's vulnerability stat.
-		const Vulnerability& vulnerability() const { return _vulnerability; }
+		Vulnerability const& vulnerability() const { return _vulnerability; }
 
 		/// @return The part's equipped weapons.
-		const std::vector<Weapon::ref>& weapons() { return _weapons; }
+		std::vector<Weapon::ref> const& weapons() { return _weapons; }
 
 		/// @return The part's equipped armor.
-		const std::vector<Armor::ref>& armor() { return _armor; }
+		std::vector<Armor::ref> const& armor() { return _armor; }
 
 		/// Causes the body part to take damage from the specified source being.
 		/// @param damage Damage to be applied to this being.

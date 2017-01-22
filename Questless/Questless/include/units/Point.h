@@ -24,35 +24,35 @@ namespace units
 
 		constexpr explicit Point() : x{scalar_t{}}, y{scalar_t{}} {}
 		constexpr explicit Point(scalar_t x, scalar_t y) : x{x}, y{y} {}
-		constexpr Point(const Point& p) : x{p.x}, y{p.y} {}
+		constexpr Point(Point const& p) : x{p.x}, y{p.y} {}
 
-		friend std::ostream& operator <<(std::ostream& out, const Point& p)
+		friend std::ostream& operator <<(std::ostream& out, Point const& p)
 		{
 			out << '(' << p.x << ", " << p.y << ')';
 			return out;
 		}
 
-		constexpr bool operator ==(const Point& right) const { return x == right.x && y == right.y; }
-		constexpr bool operator !=(const Point& right) const { return x != right.x || y != right.y; }
+		constexpr bool operator ==(Point const& right) const { return x == right.x && y == right.y; }
+		constexpr bool operator !=(Point const& right) const { return x != right.x || y != right.y; }
 		
-		constexpr friend Point operator +(const Point& p, const Vector<space_t>& v) { return Point{p.x + v.x, p.y + v.y}; }
-		constexpr friend Point operator +(const Vector<space_t>& v, Point p) { return Point{v.x + p.x, v.y + p.y}; }
-		constexpr friend Point operator -(const Point& p, const Vector<space_t>& v) { return Point{p.x - v.x, p.y - v.y}; }
-		constexpr friend Vector<space_t> operator -(const Point& p1, const Point& p2) { return Vector<space_t>{p1.x - p2.x, p1.y - p2.y}; }
-		constexpr friend Point operator -(const Point& p) { return Point{-p.x, -p.y}; }
-		constexpr friend Point operator *(const Point& p, scalar_t k) { return Point{k * p.x, k * p.y}; }
-		constexpr friend Point operator *(scalar_t k, const Point& p) { return Point{k * p.x, k * p.y}; }
-		constexpr friend Point operator /(const Point& p, scalar_t k) { return Point{p.x / k, p.y / k}; }
+		constexpr friend Point operator +(Point const& p, Vector<space_t> const& v) { return Point{p.x + v.x, p.y + v.y}; }
+		constexpr friend Point operator +(Vector<space_t> const& v, Point p) { return Point{v.x + p.x, v.y + p.y}; }
+		constexpr friend Point operator -(Point const& p, Vector<space_t> const& v) { return Point{p.x - v.x, p.y - v.y}; }
+		constexpr friend Vector<space_t> operator -(Point const& p1, Point const& p2) { return Vector<space_t>{p1.x - p2.x, p1.y - p2.y}; }
+		constexpr friend Point operator -(Point const& p) { return Point{-p.x, -p.y}; }
+		constexpr friend Point operator *(Point const& p, scalar_t k) { return Point{k * p.x, k * p.y}; }
+		constexpr friend Point operator *(scalar_t k, Point const& p) { return Point{k * p.x, k * p.y}; }
+		constexpr friend Point operator /(Point const& p, scalar_t k) { return Point{p.x / k, p.y / k}; }
 
-		Point& operator =(const Point& p) & = default;
+		Point& operator =(Point const& p) & = default;
 
-		Point& operator +=(const Vector<space_t>& v) &
+		Point& operator +=(Vector<space_t> const& v) &
 		{
 			x += v.x;
 			y += v.y;
 			return *this;
 		}
-		Point& operator -=(const Vector<space_t>& v) &
+		Point& operator -=(Vector<space_t> const& v) &
 		{
 			x -= v.x;
 			y -= v.y;
@@ -75,11 +75,11 @@ namespace units
 		/// @param origin The origin around which the point will be rotated.
 		/// @param dtheta The counter-clockwise rotation to apply, in radians.
 		template <typename UnitsPerCircle, typename = std::enable_if_t<std::is_floating_point<scalar_t>::value>>
-		void rotate(const Point& origin, const Angle<space_t, UnitsPerCircle>& dtheta) &
+		void rotate(Point const& origin, Angle<space_t, UnitsPerCircle> const& dtheta) &
 		{
-			const scalar_t dtheta_radians = angle_cast<Radians<space_t>>(dtheta).count();
-			const auto cos_dtheta = static_cast<scalar_t>(cos(dtheta_radians));
-			const auto sin_dtheta = static_cast<scalar_t>(sin(dtheta_radians));
+			scalar_t const dtheta_radians = angle_cast<Radians<space_t>>(dtheta).count();
+			auto const cos_dtheta = static_cast<scalar_t>(cos(dtheta_radians));
+			auto const sin_dtheta = static_cast<scalar_t>(sin(dtheta_radians));
 			auto offset = Vector<space_t>{origin.x, origin.y};
 			*this -= offset;
 			*this = Point
@@ -93,11 +93,11 @@ namespace units
 		/// @param origin The origin around which the point will be rotated.
 		/// @param theta The counter-clockwise rotation to apply, in radians.
 		template <typename UnitsPerCircle, typename = std::enable_if_t<std::is_floating_point<scalar_t>::value>>
-		Point rotated(const Point& origin, const Angle<space_t, UnitsPerCircle>& dtheta) const /// @todo Cannot be constexpr because of cos() and sin().
+		Point rotated(Point const& origin, Angle<space_t, UnitsPerCircle> const& dtheta) const /// @todo Cannot be constexpr because of cos() and sin().
 		{
-			const scalar_t dtheta_radians = angle_cast<Radians<space_t>>(dtheta).count();
-			const auto cos_dtheta = static_cast<scalar_t>(cos(dtheta_radians));
-			const auto sin_dtheta = static_cast<scalar_t>(sin(dtheta_radians));
+			scalar_t const dtheta_radians = angle_cast<Radians<space_t>>(dtheta).count();
+			auto const cos_dtheta = static_cast<scalar_t>(cos(dtheta_radians));
+			auto const sin_dtheta = static_cast<scalar_t>(sin(dtheta_radians));
 			auto offset = Vector<space_t>{origin.x, origin.y};
 			Point result = *this - offset;
 			result = Point

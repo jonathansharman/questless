@@ -49,7 +49,7 @@ namespace questless
 
 		static constexpr Protection zero() { return Protection{}; }
 
-		friend std::ostream& operator <<(std::ostream& out, const Protection& p)
+		friend std::ostream& operator <<(std::ostream& out, Protection const& p)
 		{
 			out << p._pad << ' ' << p._deflect << ' ' << p._fireproof << ' ' << p._frostproof << ' ' << p._cleanse;
 			return out;
@@ -61,7 +61,7 @@ namespace questless
 			return in;
 		}
 
-		friend Protection operator +(const Protection& p1, const Protection& p2)
+		friend Protection operator +(Protection const& p1, Protection const& p2)
 		{
 			return Protection
 				{ Pad{p1._pad + p2._pad}
@@ -71,7 +71,7 @@ namespace questless
 				, Cleanse{p1._cleanse + p2._cleanse}
 				};
 		}
-		friend Protection operator *(const Protection& p, double k)
+		friend Protection operator *(Protection const& p, double k)
 		{
 			return Protection
 				{ Pad{k * p._pad}
@@ -81,7 +81,7 @@ namespace questless
 				, Cleanse{k * p._cleanse}
 				};
 		}
-		friend Protection operator *(double k, const Protection& p)
+		friend Protection operator *(double k, Protection const& p)
 		{
 			return Protection
 				{ Pad{k * p._pad}
@@ -91,7 +91,7 @@ namespace questless
 				, Cleanse{k * p._cleanse}
 				};
 		}
-		friend Protection operator /(const Protection& p, double k)
+		friend Protection operator /(Protection const& p, double k)
 		{
 			return Protection
 				{ Pad{p._pad / k}
@@ -102,7 +102,7 @@ namespace questless
 				};
 		}
 
-		Protection& operator +=(const Protection& p)
+		Protection& operator +=(Protection const& p)
 		{
 			_pad += p._pad;
 			_deflect += p._deflect;

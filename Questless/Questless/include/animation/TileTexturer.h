@@ -17,12 +17,12 @@ namespace questless
 	class TileTexturer : public TileVisitor
 	{
 	public:
-		void visit(const EdgeTile&) override;
-		void visit(const StoneTile&) override;
-		void visit(const DirtTile&) override;
-		void visit(const GrassTile&) override;
-		void visit(const WaterTile&) override;
-		void visit(const SnowTile&) override;
+		void visit(EdgeTile const&) override;
+		void visit(StoneTile const&) override;
+		void visit(DirtTile const&) override;
+		void visit(GrassTile const&) override;
+		void visit(WaterTile const&) override;
+		void visit(SnowTile const&) override;
 
 		sdl::Texture::ptr texture() { return std::move(_texture); }
 	private:

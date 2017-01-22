@@ -25,11 +25,11 @@ namespace questless
 	public:
 		virtual ~EntityVisitor() = default;
 
-		virtual void visit(const Human&) = 0;
-		virtual void visit(const Goblin&) = 0;
+		virtual void visit(Human const&) = 0;
+		virtual void visit(Goblin const&) = 0;
 
-		virtual void visit(const Corpse&) = 0;
-		virtual void visit(const ItemBox&) = 0;
+		virtual void visit(Corpse const&) = 0;
+		virtual void visit(ItemBox const&) = 0;
 	};
 
 	class BadEntityVisit : public std::runtime_error
@@ -45,11 +45,11 @@ namespace questless
 
 		virtual ~TrivialEntityVisitor() = default;
 
-		virtual void visit(const Human&) override { throw BadEntityVisit{_message}; }
-		virtual void visit(const Goblin&) override { throw BadEntityVisit{_message}; }
+		virtual void visit(Human const&) override { throw BadEntityVisit{_message}; }
+		virtual void visit(Goblin const&) override { throw BadEntityVisit{_message}; }
 
-		virtual void visit(const Corpse&) override { throw BadEntityVisit{_message}; }
-		virtual void visit(const ItemBox&) override { throw BadEntityVisit{_message}; }
+		virtual void visit(Corpse const&) override { throw BadEntityVisit{_message}; }
+		virtual void visit(ItemBox const&) override { throw BadEntityVisit{_message}; }
 	private:
 		std::string _message;
 	};

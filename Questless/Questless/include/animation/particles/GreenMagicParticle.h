@@ -40,6 +40,6 @@ namespace questless
 
 		void subupdate() override;
 
-		const sdl::Texture& texture() const override;
+		sdl::Texture const& texture() const override;
 	};
 }

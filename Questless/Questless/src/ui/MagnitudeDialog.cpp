@@ -34,7 +34,7 @@ namespace questless
 		return false;
 	}
 
-	void MagnitudeDialog::draw(const Window& window)
+	void MagnitudeDialog::draw(Window const& window)
 	{
 		int x_center = window.center().x;
 

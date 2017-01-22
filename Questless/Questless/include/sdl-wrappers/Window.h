@@ -60,12 +60,12 @@ namespace sdl
 		/// @param grab_input If true, window captures input, meaning the mouse cannot leave the window.
 		Window(std::string title, std::string icon_filename, bool fullscreen, int width, int height, int x, int y, bool resizable, bool grab_input);
 
-		Window(const Window& other) = delete;
+		Window(Window const& other) = delete;
 		Window(Window&& other) = default;
 
 		~Window();
 
-		Window& operator =(const Window& other) = delete;
+		Window& operator =(Window const& other) = delete;
 		Window& operator =(Window&& other) & = default;
 
 		/// Creates a new window pointer with the same properties as the old one and destroys the old one.

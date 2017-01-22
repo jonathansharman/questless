@@ -159,7 +159,7 @@ namespace questless
 		_player_action_dialog = make_unique<PlayerActionDialog>(*_hud, move(cont));
 	}
 
-	void Game::add_effect(const Effect::ptr& effect)
+	void Game::add_effect(Effect::ptr const& effect)
 	{
 		int range = effect->range();
 		auto origin = effect->origin();
@@ -359,7 +359,7 @@ namespace questless
 	void Game::update_menu()
 	{
 		_mnu_main.update(_input);
-		for (const auto& option : _mnu_main.poll_selections()) {
+		for (auto const& option : _mnu_main.poll_selections()) {
 			if (option.first == "Questless") {
 				if (option.second == "Continue" || option.second == "Begin Anew") {
 					_region = make_unique<Region>(*this, "Region1");
@@ -425,7 +425,7 @@ namespace questless
 		_hud->draw();
 
 		// Draw dialogs.
-		for (const auto& dialog : _dialogs) {
+		for (auto const& dialog : _dialogs) {
 			dialog->draw(*_window);
 		}
 
@@ -514,7 +514,7 @@ namespace questless
 				pan.rotate(_camera->angle());
 				_camera->pan(pan);
 			}
-			const double pan_amount = 10.0;
+			double const pan_amount = 10.0;
 			if (_input.down(SDLK_KP_8)) {
 				_camera->pan(GameVector{0.0, pan_amount} / _camera->zoom());
 			}

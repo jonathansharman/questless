@@ -25,7 +25,7 @@ namespace questless
 		static constexpr int item_icon_width = 55;
 		static constexpr int item_icon_height = 55;
 
-		HUDView(Game& game, const sdl::Window& window);
+		HUDView(Game& game, sdl::Window const& window);
 
 		/// @return The inventory's width.
 		int inv_width() const { return _inv_width; }
@@ -44,7 +44,7 @@ namespace questless
 
 		/// Draws the given HUD.
 		/// @param hud The HUD to be drawn.
-		void draw(const HUDModel& hud);
+		void draw(HUDModel const& hud);
 	private:
 		static const int _item_count_font_size = 10;
 		
@@ -73,7 +73,7 @@ namespace questless
 
 		Game& _game;
 
-		const sdl::Window& _window;
+		sdl::Window const& _window;
 
 		sdl::Texture::ptr _hotbar_slot_texture;
 

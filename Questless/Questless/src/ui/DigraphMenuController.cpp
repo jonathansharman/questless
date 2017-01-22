@@ -28,7 +28,7 @@ namespace questless
 
 	DigraphMenuController::DigraphMenuController(int min_width, int min_height) : _view{min_width, min_height} {}
 
-	void DigraphMenuController::add_page(const string& title)
+	void DigraphMenuController::add_page(string const& title)
 	{
 		if (!find(title)) {
 			_menu.pages.push_back(DigraphMenuModel::Page(title));
@@ -38,7 +38,7 @@ namespace questless
 		}
 	}
 
-	void DigraphMenuController::add_option(const string& page_title, const string& option_name)
+	void DigraphMenuController::add_option(string const& page_title, string const& option_name)
 	{
 		boost::optional<int> page_index = find(page_title);
 		if (page_index) {
@@ -49,7 +49,7 @@ namespace questless
 		}
 	}
 
-	void DigraphMenuController::add_option(const string& location_page_title, const string& option_name, const string& target_page_title)
+	void DigraphMenuController::add_option(string const& location_page_title, string const& option_name, string const& target_page_title)
 	{
 		boost::optional<int> location_page_index = find(location_page_title);
 		if (location_page_index) {
@@ -65,7 +65,7 @@ namespace questless
 		}
 	}
 
-	void DigraphMenuController::set_page(const string& title)
+	void DigraphMenuController::set_page(string const& title)
 	{
 		for (unsigned index = 0; index < _menu.pages.size(); ++index) {
 			if (_menu.pages[index].title == title) {
@@ -76,7 +76,7 @@ namespace questless
 		throw invalid_argument("Attempted to navigate to a nonexistent menu page.");
 	}
 	
-	void DigraphMenuController::set_option(const string& page_title, unsigned option_index)
+	void DigraphMenuController::set_option(string const& page_title, unsigned option_index)
 	{
 		boost::optional<int> page_index = find(page_title);
 		if (!page_index) {
@@ -96,7 +96,7 @@ namespace questless
 		_view.invalidate_render();
 	}
 
-	void DigraphMenuController::update(const Input& input)
+	void DigraphMenuController::update(Input const& input)
 	{
 		if (_menu.pages.size() == 0 || !_view.render_is_current()) {
 			return;
@@ -172,7 +172,7 @@ namespace questless
 		_view.draw();
 	}
 
-	boost::optional<int> DigraphMenuController::find(const string& page_title)
+	boost::optional<int> DigraphMenuController::find(string const& page_title)
 	{
 		for (unsigned i = 0; i < _menu.pages.size(); ++i) {
 			if (_menu.pages[i].title == page_title) {

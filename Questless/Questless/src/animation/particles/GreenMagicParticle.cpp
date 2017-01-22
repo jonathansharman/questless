@@ -29,7 +29,7 @@ namespace questless
 		}
 	}
 
-	const Texture& GreenMagicParticle::texture() const
+	Texture const& GreenMagicParticle::texture() const
 	{
 		static bool first_call = true;
 		static Handle<Texture> handle;

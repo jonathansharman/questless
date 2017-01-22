@@ -35,14 +35,14 @@ namespace questless
 		/// @param game The game object.
 		/// @param save_name The name of the region's save file.
 		/// @param region_name The name of the region.
-		Region(Game& game, const std::string& save_name, const std::string& region_name);
+		Region(Game& game, std::string const& save_name, std::string const& region_name);
 
 		/// @return The region's name, as it appears in game and on disk.
 		std::string name() const { return _name; }
 
 		/// Saves the region to disk.
 		/// @param save_name The name of the region's save file.
-		void save(const std::string& save_name);
+		void save(std::string const& save_name);
 
 		/// Removes the given being from the turn queue if it's there.
 		/// @param being A being.
@@ -147,7 +147,7 @@ namespace questless
 		/// @return The section at the given section coordinates.
 		Section* section(RegionSectionCoords section_coords);
 		/// @return The section at the given section coordinates.
-		const Section* section(RegionSectionCoords section_coords) const;
+		Section const* section(RegionSectionCoords section_coords) const;
 
 		/// Gets the coordinates of the section that contains the tile with the given coordinates.
 		/// @param tile_coords The tile's hex coordinates in the region.
@@ -165,7 +165,7 @@ namespace questless
 		/// Gets the section that contains the tile with the given coordinates.
 		/// @param tile_coords The tile's hex coordinates in the region.
 		/// @return The containing section.
-		const Section& containing_section(RegionTileCoords tile_coords) const { return *_section_map.find(containing_section_coords(tile_coords))->second; }
+		Section const& containing_section(RegionTileCoords tile_coords) const { return *_section_map.find(containing_section_coords(tile_coords))->second; }
 
 		/// Gets the light level at the given hex coordinates.
 		/// @param tile_coords Hex coordinates in the region.

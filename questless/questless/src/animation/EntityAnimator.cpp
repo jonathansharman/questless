@@ -20,7 +20,7 @@ namespace questless
 {
 	// Beings
 
-	void EntityAnimator::visit(const Human&)
+	void EntityAnimator::visit(Human const&)
 	{
 		static bool first_call = true;
 		static Handle<Texture> ss_handle;
@@ -43,7 +43,7 @@ namespace questless
 			});
 		_animation_set->start(animation, RandomizeStartTime{true});
 	}
-	void EntityAnimator::visit(const Goblin&)
+	void EntityAnimator::visit(Goblin const&)
 	{
 		static bool first_call = true;
 		static Handle<Texture> ss_handle;
@@ -69,7 +69,7 @@ namespace questless
 
 	// Objects
 
-	void EntityAnimator::visit(const Corpse&)
+	void EntityAnimator::visit(Corpse const&)
 	{
 		static bool first_call = true;
 		static Handle<Texture> ss_handle;
@@ -88,7 +88,7 @@ namespace questless
 			});
 		_animation_set->start(animation, RandomizeStartTime{true});
 	}
-	void EntityAnimator::visit(const ItemBox&)
+	void EntityAnimator::visit(ItemBox const&)
 	{
 		static bool first_call = true;
 		static Handle<Texture> ss_handle;

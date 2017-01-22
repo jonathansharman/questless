@@ -11,7 +11,7 @@
 
 namespace sdl
 {
-	Sound::Sound(const std::string& filename)
+	Sound::Sound(std::string const& filename)
 	{
 		_chunk = Mix_LoadWAV(filename.c_str());
 		if (!_chunk) {

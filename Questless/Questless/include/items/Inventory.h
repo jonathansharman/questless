@@ -48,7 +48,7 @@ namespace questless
 		/// Finds and removes the given item from the inventory.
 		/// @param item An item to remove from the inventory.
 		/// @return The removed item or nullptr if not found.
-		Item::ptr remove(const Item& item);
+		Item::ptr remove(Item const& item);
 
 		/// Removes the item at the given coordinates from the inventory.
 		/// @param coords The inventory coordinates of the item to remove.

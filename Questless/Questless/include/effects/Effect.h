@@ -73,7 +73,7 @@ namespace questless
 
 		int range() const override { return 7; }
 
-		const Damage& damage() const { return _damage; }
+		Damage const& damage() const { return _damage; }
 	private:
 		Damage _damage;
 	};

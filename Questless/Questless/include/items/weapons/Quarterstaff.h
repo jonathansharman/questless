@@ -110,7 +110,7 @@ namespace questless
 			}
 		private:
 			Quarterstaff& _weapon;
-			const std::string _name;
+			std::string const _name;
 		};
 
 		template <typename TargetForm>

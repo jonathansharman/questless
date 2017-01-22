@@ -69,7 +69,7 @@ namespace questless
 
 		/// Draws the particle.
 		/// @param camera The camera with respect to which the particle will be drawn.
-		void draw(const Camera& camera);
+		void draw(Camera const& camera);
 	protected:
 		/// @todo Are these protected variables the right way to do this?
 
@@ -84,7 +84,7 @@ namespace questless
 		units::GameSeconds _time_left;
 
 		/// @return The texture to be used when drawing a particle.
-		virtual const sdl::Texture& texture() const = 0;
+		virtual sdl::Texture const& texture() const = 0;
 	private:
 		static constexpr double _dflt_max_displacement = 15.0;
 

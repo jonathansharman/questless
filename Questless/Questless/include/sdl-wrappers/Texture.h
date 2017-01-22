@@ -55,14 +55,14 @@ namespace sdl
 		/// @param width The initial width of the blank texture.
 		/// @param height The initial height of the blank texture.
 		/// @param targetable Whether the texture can be used as a render target.
-		Texture(const std::string& filename, Renderer& renderer, SDL_BlendMode blend_mode = SDL_BLENDMODE_BLEND, bool targetable = false);
+		Texture(std::string const& filename, Renderer& renderer, SDL_BlendMode blend_mode = SDL_BLENDMODE_BLEND, bool targetable = false);
 
 		/// Constructs a texture object from an SDL texture.
 		/// @param texture An SDL texture pointer.
 		Texture(SDL_Texture* texture, Renderer& renderer);
 
 		/// Copy constructor disabled.
-		Texture(const Texture& texture) = delete;
+		Texture(Texture const& texture) = delete;
 
 		/// Move constructor.
 		Texture(Texture&& texture);
@@ -93,7 +93,7 @@ namespace sdl
 		/// @param dst_rect The portion of the screen to which the texture should be copied.
 		/// @param src_rect The portion of the texture which should be copied.
 		/// @param src_rect An optional Rect specifying the portion of the texture to be copied. If nullopt, the entire texture is used.
-		void draw(const units::ScreenRect& dst_rect, const boost::optional<units::TextureRect>& src_rect = boost::none) const;
+		void draw(units::ScreenRect const& dst_rect, boost::optional<units::TextureRect> const& src_rect = boost::none) const;
 	
 		/// Copies all or part of the texture to the current render target.
 		/// @param position The coordinates of the texture on the screen.
@@ -104,7 +104,7 @@ namespace sdl
 			( units::ScreenPoint position
 			, HAlign horizontal_alignment = HAlign::left
 			, VAlign vertical_alignment = VAlign::top
-			, const boost::optional<units::TextureRect>& src_rect = boost::none
+			, boost::optional<units::TextureRect> const& src_rect = boost::none
 			) const;
 
 		/// Copies all or part the texture to the current render target, applying the provided transformations.
@@ -126,7 +126,7 @@ namespace sdl
 			, units::GameRadians angle = units::GameRadians{0.0} /// @todo This should probably use "ScreenRadians" or something.
 			, bool flip_horizontally = false
 			, bool flip_vertically = false
-			, const boost::optional<units::TextureRect>& src_rect = boost::none
+			, boost::optional<units::TextureRect> const& src_rect = boost::none
 			) const;
 
 		/// Executes the given code with this texture as the render target so that draw operations will affect this texture instead of the screen buffer.

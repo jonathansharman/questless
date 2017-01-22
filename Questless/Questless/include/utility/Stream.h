@@ -20,20 +20,20 @@ class Suspension
 public:
 	Suspension(std::function<T()> f) : _f{f}, _thunk{&force_thunk} {}
 
-	const T& get() { return _thunk(*this); }
-	const T& operator *() { return _thunk(*this); }
-	const T* operator ->() { return &_thunk(*this); }
+	T const& get() { return _thunk(*this); }
+	T const& operator *() { return _thunk(*this); }
+	T const* operator ->() { return &_thunk(*this); }
 private:
-	mutable const T& (*_thunk)(Suspension&);
+	mutable T const& (*_thunk)(Suspension&);
 	mutable T _memo;
 
 	std::function<T()> _f;
 
-	static const T& force_thunk(Suspension& s) { return s.set_memo(); }
-	static const T& get_thunk(Suspension& s) { return s.get_memo(); }
+	static T const& force_thunk(Suspension& s) { return s.set_memo(); }
+	static T const& get_thunk(Suspension& s) { return s.get_memo(); }
 
-	const T& get_memo() const { return _memo; }
-	const T& set_memo() const
+	T const& get_memo() const { return _memo; }
+	T const& set_memo() const
 	{
 		_memo = _f();
 		_thunk = &get_thunk;
@@ -50,7 +50,7 @@ class Cell
 public:
 	Cell() {}
 	Cell(T head) : _head{head} {}
-	Cell(T head, const Stream<T>& tail) : _head{head}, _tail{tail} {}
+	Cell(T head, Stream<T> const& tail) : _head{head}, _tail{tail} {}
 
 	T head() const { return _head; }
 
@@ -93,10 +93,10 @@ public:
 		}
 
 		template <typename OtherType>
-		bool operator ==(const ForwardIterator<OtherType>& other) const { return _itr == other._itr; }
+		bool operator ==(ForwardIterator<OtherType> const& other) const { return _itr == other._itr; }
 
 		template <typename OtherType>
-		bool operator !=(const ForwardIterator<OtherType>& other) const { return _itr != other._itr; }
+		bool operator !=(ForwardIterator<OtherType> const& other) const { return _itr != other._itr; }
 
 		Type operator *() const
 		{
@@ -130,8 +130,8 @@ public:
 	Stream() {}
 	explicit Stream(std::function<Cell<T>()> f) : _lazy_cell{std::make_shared<Suspension<Cell<T>>>(f)} {}
 
-	bool operator ==(const Stream& other) const { return _lazy_cell == other._lazy_cell; }
-	bool operator !=(const Stream& other) const { return _lazy_cell != other._lazy_cell; }
+	bool operator ==(Stream const& other) const { return _lazy_cell == other._lazy_cell; }
+	bool operator !=(Stream const& other) const { return _lazy_cell != other._lazy_cell; }
 
 	bool empty() const { return !_lazy_cell; }
 

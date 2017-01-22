@@ -49,7 +49,7 @@ namespace questless
 
 		/// Saves the section to the specified file.
 		/// @param filename The section's filename.
-		void save(const std::string& filename);
+		void save(std::string const& filename);
 
 		/// @return The hex coordinates of the section within the region's sections.
 		RegionSectionCoords coords() const { return _coords; }
@@ -102,7 +102,7 @@ namespace questless
 		/// @return The unique pointer to the removed entity or nullptr if not present.
 		/// @tparam EntityType The type of entity to remove. Possible values are Being and Object.
 		template <typename EntityType>
-		typename EntityType::ptr remove(typename const EntityType& entity)
+		typename EntityType::ptr remove(typename EntityType const& entity)
 		{
 			return remove<EntityType>(entity.coords());
 		}
@@ -125,14 +125,14 @@ namespace questless
 
 		/// @param tile_coords Hex coordinates of a tile relative to the section.
 		/// @return The tile at the given section tile coordinates.
-		const Tile& tile(SectionTileCoords tile_coords) const
+		Tile const& tile(SectionTileCoords tile_coords) const
 		{
 			SectionTileIndex index = tile_index(tile_coords);
 			return *_tiles[index.i][index.j];
 		}
 		/// @param region_tile_coords Hex coordinates of a tile relative to the region.
 		/// @return The tile at the given region tile coordinates.
-		const Tile& tile(RegionTileCoords region_tile_coords) const
+		Tile const& tile(RegionTileCoords region_tile_coords) const
 		{
 			SectionTileIndex index = tile_index(region_tile_coords);
 			return *_tiles[index.i][index.j];

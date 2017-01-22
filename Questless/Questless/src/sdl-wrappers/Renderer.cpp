@@ -69,12 +69,12 @@ namespace sdl
 		SDL_RenderDrawLines(_renderer, reinterpret_cast<SDL_Point*>(&points[0]), points.size());
 	}
 
-	void Renderer::draw_rect(const ScreenRect& rect, Color color, bool filled)
+	void Renderer::draw_rect(ScreenRect const& rect, Color color, bool filled)
 	{
 		set_draw_color(color);
 
 		// This reinterpret_cast is safe because SDL_Rect and ScreenRect have the same data structure.
-		const SDL_Rect* sdl_rect = reinterpret_cast<const SDL_Rect*>(&rect);
+		SDL_Rect const* sdl_rect = reinterpret_cast<const SDL_Rect*>(&rect);
 
 		if (filled) {
 			SDL_RenderFillRect(_renderer, sdl_rect);
@@ -83,7 +83,7 @@ namespace sdl
 		}
 	}
 
-	void Renderer::draw_rect(const ScreenRect& rect, Color border_color, Color fill_color)
+	void Renderer::draw_rect(ScreenRect const& rect, Color border_color, Color fill_color)
 	{
 		SDL_Rect sdl_rect{rect.x, rect.y, rect.w, rect.h};
 

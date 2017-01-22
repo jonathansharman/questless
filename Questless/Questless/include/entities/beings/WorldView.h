@@ -62,13 +62,13 @@ namespace questless
 		};
 		
 		/// Copy constructor.
-		WorldView(const WorldView&) = default;
+		WorldView(WorldView const&) = default;
 		
 		/// Move constructor.
 		WorldView(WorldView&&) = default;
 
 		/// Copy assignment operator.
-		WorldView& operator =(const WorldView&) & = default;
+		WorldView& operator =(WorldView const&) & = default;
 
 		/// Move assignment operator.
 		WorldView& operator =(WorldView&&) & = default;
@@ -76,12 +76,12 @@ namespace questless
 		/// Constructs the world view of the given being.
 		/// @param being The being whose perspective this world view represents.
 		/// @param find_bounds If true, the world view will find a bounding rectangle in world space around the visible tiles.
-		WorldView(const Being& being, bool find_bounds);
+		WorldView(Being const& being, bool find_bounds);
 
-		const std::vector<SectionView>& section_views() const { return _section_views; }
-		const std::vector<BeingView>& being_views() const { return _being_views; }
-		const std::vector<ObjectView>& object_views() const { return _object_views; }
-		const Region& region() const { return _region; }
+		std::vector<SectionView> const& section_views() const { return _section_views; }
+		std::vector<BeingView> const& being_views() const { return _being_views; }
+		std::vector<ObjectView> const& object_views() const { return _object_views; }
+		Region const& region() const { return _region; }
 
 		/// @return A bounding rectangle around the visible tiles or nullopt if initialized with find_bounds set to false or if no tiles are visible.
 		boost::optional<units::GameRect> bounds() const { return _bounds; }

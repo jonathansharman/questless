@@ -64,7 +64,7 @@ namespace questless
 		_tile_height = async(std::launch::deferred, [&] { return texture_manager()[_tile_handle].height(); });
 	}
 
-	void DigraphMenuView::render(const DigraphMenuModel& menu)
+	void DigraphMenuView::render(DigraphMenuModel const& menu)
 	{
 		static int top_margin = _top_margin.get();
 		static int bottom_margin = _bottom_margin.get();
@@ -138,7 +138,7 @@ namespace questless
 		_render_is_current = true;
 	}
 
-	void DigraphMenuView::update_indices(const DigraphMenuModel& menu)
+	void DigraphMenuView::update_indices(DigraphMenuModel const& menu)
 	{
 		_page_index = menu.page_index;
 		_current_option_index = menu.current_option_index();

@@ -26,7 +26,7 @@ namespace sdl
 		}
 	}
 
-	Input::Input(const Input& input)
+	Input::Input(Input const& input)
 		: _quit{input._quit}
 		, _key_count{input._key_count}
 		, _curr_keyboard_state{input._curr_keyboard_state}
@@ -275,7 +275,7 @@ namespace sdl
 		}
 	}
 
-	void Input::move_mouse(const Window& window, const units::ScreenPoint& position)
+	void Input::move_mouse(Window const& window, units::ScreenPoint const& position)
 	{
 		SDL_WarpMouseInWindow(window.sdl_ptr(), position.x, position.y);
 		_mouse_position = position;

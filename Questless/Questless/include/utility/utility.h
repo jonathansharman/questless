@@ -105,7 +105,7 @@ namespace questless
 	/// @param container A container.
 	/// @param predicate A predicate over elements of the container. Elements for which the predicate is true are removed.
 	template <typename ContainerType, typename PredicateType>
-	void erase_if(ContainerType& container, const PredicateType& predicate)
+	void erase_if(ContainerType& container, PredicateType const& predicate)
 	{
 		for (auto it = container.begin(); it != container.end();) {
 			if (predicate(*it)) {

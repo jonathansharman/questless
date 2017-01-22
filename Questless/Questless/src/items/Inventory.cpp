@@ -29,7 +29,7 @@ namespace questless
 		_pages.back().items[0][0] = std::move(item);
 	}
 
-	Item::ptr Inventory::remove(const Item& item)
+	Item::ptr Inventory::remove(Item const& item)
 	{
 		for (size_t page = 0; page < _pages.size(); ++page) {
 			for (size_t row = 0; row < Page::rows; ++row) {

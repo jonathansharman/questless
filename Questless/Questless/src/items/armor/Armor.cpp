@@ -25,7 +25,7 @@ namespace questless
 		}
 	}
 
-	void Armor::take_resistance_wear(const Damage& damage)
+	void Armor::take_resistance_wear(Damage const& damage)
 	{
 		Damage max_reduction = damage - damage.with(resistance(), Vulnerability::zero());
 		wear(wear_ratio() * max_reduction.total());

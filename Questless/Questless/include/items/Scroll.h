@@ -30,7 +30,7 @@ namespace questless
 		bool blank() const { return _spell == nullptr; }
 
 		spell::Spell& spell() { return *_spell; }
-		const spell::Spell& spell() const { return *_spell; }
+		spell::Spell const& spell() const { return *_spell; }
 
 		std::vector<Action::ptr> actions() override;
 

@@ -28,7 +28,7 @@ namespace questless
 	GameSeconds Animation::duration() const
 	{
 		auto total = GameSeconds::zero();
-		for (const Frame& frame : _frames) {
+		for (Frame const& frame : _frames) {
 			total += frame.duration;
 		}
 		return total;

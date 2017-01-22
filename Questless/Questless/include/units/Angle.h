@@ -34,32 +34,32 @@ namespace units
 		/// @return The zero angle for the specified space and unit size, constructed using the default constructor of the scalar type.
 		constexpr static Angle<SpaceType, UnitsPerCircle> zero() { return Angle<SpaceType, UnitsPerCircle>{scalar_t{}}; }
 
-		constexpr const scalar_t& count() const & { return _count; }
+		constexpr scalar_t const& count() const& { return _count; }
 		scalar_t&& count() && { return std::move(_count); }
 		scalar_t& count() & { return _count; }
 
-		friend std::ostream& operator <<(std::ostream& out, const Angle& theta)
+		friend std::ostream& operator <<(std::ostream& out, Angle const& theta)
 		{
 			out << theta.count();
 			return out;
 		}
 
-		constexpr bool operator <(const Angle<space_t, units_per_circle>& right) const { return _count < right._count; }
-		constexpr bool operator <=(const Angle<space_t, units_per_circle>& right) const { return _count <= right._count; }
-		constexpr bool operator ==(const Angle<space_t, units_per_circle>& right) const { return _count == right._count; }
-		constexpr bool operator !=(const Angle<space_t, units_per_circle>& right) const { return _count != right._count; }
-		constexpr bool operator >=(const Angle<space_t, units_per_circle>& right) const { return _count >= right._count; }
-		constexpr bool operator >(const Angle<space_t, units_per_circle>& right) const { return _count > right._count; }
+		constexpr bool operator <(Angle<space_t, units_per_circle> const& right) const { return _count < right._count; }
+		constexpr bool operator <=(Angle<space_t, units_per_circle> const& right) const { return _count <= right._count; }
+		constexpr bool operator ==(Angle<space_t, units_per_circle> const& right) const { return _count == right._count; }
+		constexpr bool operator !=(Angle<space_t, units_per_circle> const& right) const { return _count != right._count; }
+		constexpr bool operator >=(Angle<space_t, units_per_circle> const& right) const { return _count >= right._count; }
+		constexpr bool operator >(Angle<space_t, units_per_circle> const& right) const { return _count > right._count; }
 
 		// Closed under addition.
-		Angle<space_t, units_per_circle>& operator +=(const Angle<space_t, units_per_circle>& theta) &
+		Angle<space_t, units_per_circle>& operator +=(Angle<space_t, units_per_circle> const& theta) &
 		{
 			_count += theta._count;
 			return *this;
 		}
 
 		// Closed under subtraction.
-		Angle<space_t, units_per_circle>& operator -=(const Angle<space_t, units_per_circle>& theta) &
+		Angle<space_t, units_per_circle>& operator -=(Angle<space_t, units_per_circle> const& theta) &
 		{
 			_count -= theta._count;
 			return *this;
@@ -84,47 +84,47 @@ namespace units
 
 	// angle + angle -> angle
 	template <typename SpaceType, typename UnitsPerCircle>
-	constexpr Angle<SpaceType, UnitsPerCircle> operator +(const Angle<SpaceType, UnitsPerCircle>& theta1, const Angle<SpaceType, UnitsPerCircle>& theta2)
+	constexpr Angle<SpaceType, UnitsPerCircle> operator +(Angle<SpaceType, UnitsPerCircle> const& theta1, Angle<SpaceType, UnitsPerCircle> const& theta2)
 	{
 		return Angle<SpaceType, UnitsPerCircle>{theta1.count() + theta2.count()};
 	}
 
 	// angle - angle -> angle
 	template <typename SpaceType, typename UnitsPerCircle>
-	constexpr Angle<SpaceType, UnitsPerCircle> operator -(const Angle<SpaceType, UnitsPerCircle>& theta1, const Angle<SpaceType, UnitsPerCircle>& theta2)
+	constexpr Angle<SpaceType, UnitsPerCircle> operator -(Angle<SpaceType, UnitsPerCircle> const& theta1, Angle<SpaceType, UnitsPerCircle> const& theta2)
 	{
 		return Angle<SpaceType, UnitsPerCircle>{theta1.count() - theta2.count()};
 	}
 
 	// -angle -> angle
 	template <typename SpaceType, typename UnitsPerCircle>
-	constexpr Angle<SpaceType, UnitsPerCircle> operator -(const Angle<SpaceType, UnitsPerCircle>& theta)
+	constexpr Angle<SpaceType, UnitsPerCircle> operator -(Angle<SpaceType, UnitsPerCircle> const& theta)
 	{
 		return Angle<SpaceType, UnitsPerCircle>{-theta.count()};
 	}
 
 	// k * angle -> angle
 	template <typename SpaceType, typename UnitsPerCircle>
-	constexpr Angle<SpaceType, UnitsPerCircle> operator *(typename SpaceType::scalar_t k, const Angle<SpaceType, UnitsPerCircle>& theta)
+	constexpr Angle<SpaceType, UnitsPerCircle> operator *(typename SpaceType::scalar_t k, Angle<SpaceType, UnitsPerCircle> const& theta)
 	{
 		return Angle<SpaceType, UnitsPerCircle>{k * theta.count()};
 	}
 	// angle * k -> angle
 	template <typename SpaceType, typename UnitsPerCircle>
-	constexpr Angle<SpaceType, UnitsPerCircle> operator *(const Angle<SpaceType, UnitsPerCircle>& theta, typename SpaceType::scalar_t k)
+	constexpr Angle<SpaceType, UnitsPerCircle> operator *(Angle<SpaceType, UnitsPerCircle> const& theta, typename SpaceType::scalar_t k)
 	{
 		return Angle<SpaceType, UnitsPerCircle>{k * theta.count()};
 	}
 
 	// angle / k -> angle
 	template <typename SpaceType, typename UnitsPerCircle>
-	constexpr Angle<SpaceType, UnitsPerCircle> operator /(const Angle<SpaceType, UnitsPerCircle>& theta, typename SpaceType::scalar_t k)
+	constexpr Angle<SpaceType, UnitsPerCircle> operator /(Angle<SpaceType, UnitsPerCircle> const& theta, typename SpaceType::scalar_t k)
 	{
 		return Angle<SpaceType, UnitsPerCircle>{theta.count() / k};
 	}
 
 	template<typename ToAngle, typename SpaceType, typename UnitsPerCircle>
-	constexpr ToAngle angle_cast(const Angle<SpaceType, UnitsPerCircle>& theta)
+	constexpr ToAngle angle_cast(Angle<SpaceType, UnitsPerCircle> const& theta)
 	{
 		using from_angle_t = Angle<SpaceType, UnitsPerCircle>;
 		using ratio = std::ratio_divide<ToAngle::units_per_circle, UnitsPerCircle>;

@@ -34,7 +34,7 @@ namespace questless
 
 		static constexpr Damage zero() { return Damage{}; }
 
-		friend constexpr Damage operator +(const Damage& d1, const Damage& d2)
+		friend constexpr Damage operator +(Damage const& d1, Damage const& d2)
 		{
 			return Damage
 				{ Slash{d1._slash + d2._slash}
@@ -45,7 +45,7 @@ namespace questless
 				, Blight{d1._blight + d2._blight}
 				};
 		}
-		friend constexpr Damage operator -(const Damage& d1, const Damage& d2)
+		friend constexpr Damage operator -(Damage const& d1, Damage const& d2)
 		{
 			using std::max;
 			return Damage
@@ -57,20 +57,20 @@ namespace questless
 				, Blight{max(0.0, d1._blight - d2._blight)}
 				};
 		}
-		friend constexpr Damage operator *(const Damage& d, double k)
+		friend constexpr Damage operator *(Damage const& d, double k)
 		{
 			return Damage{Slash{k * d._slash}, Pierce{k * d._pierce}, Bludgeon{k * d._bludgeon}, Burn{k * d._burn}, Freeze{k * d._freeze}, Blight{k * d._blight}};
 		}
-		friend constexpr Damage operator *(double k, const Damage& d)
+		friend constexpr Damage operator *(double k, Damage const& d)
 		{
 			return Damage{Slash{k * d._slash}, Pierce{k * d._pierce}, Bludgeon{k * d._bludgeon}, Burn{k * d._burn}, Freeze{k * d._freeze}, Blight{k * d._blight}};
 		}
-		friend constexpr Damage operator /(const Damage& d, double k)
+		friend constexpr Damage operator /(Damage const& d, double k)
 		{
 			return Damage{Slash{d._slash / k}, Pierce{d._pierce / k}, Bludgeon{d._bludgeon / k}, Burn{d._burn / k}, Freeze{d._freeze / k}, Blight{d._blight / k}};
 		}
 
-		Damage& operator +=(const Damage& d)
+		Damage& operator +=(Damage const& d)
 		{
 			_slash += d._slash;
 			_pierce += d._pierce;
@@ -80,7 +80,7 @@ namespace questless
 			_blight += d._blight;
 			return *this;
 		}
-		Damage& operator -=(const Damage& d)
+		Damage& operator -=(Damage const& d)
 		{
 			_slash -= d._slash;
 			_pierce -= d._pierce;
@@ -102,7 +102,7 @@ namespace questless
 		}
 
 		/// @return Damage adjusted by the given resistance and vulnerability.
-		constexpr Damage with(const Resistance& resistance, const Vulnerability& vulnerability) const
+		constexpr Damage with(Resistance const& resistance, Vulnerability const& vulnerability) const
 		{
 			return Damage
 				{ Slash{std::max(0.0, _slash * (1.0 + (vulnerability.slash() - resistance.slash()) / 100.0))}

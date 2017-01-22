@@ -34,8 +34,8 @@ namespace questless
 	{
 	public:
 		using ptr = std::unique_ptr<Entity>;
-		using ref_less_t = bool(*)(const Entity&, const Entity&);
-		using ptr_less_t = bool(*)(const ptr&, const ptr&);
+		using ref_less_t = bool(*)(Entity const&, Entity const&);
+		using ptr_less_t = bool(*)(ptr const&, ptr const&);
 
 		virtual ~Entity() = default;
 

@@ -45,6 +45,6 @@ namespace questless
 
 		/// Causes the armor to wear according to its maximum possible reduction from resistance to the given damage.
 		/// @note It is the caller's responsibility to ensure the armor's resistance is actually applied to this damage. This function does not reduce the damage itself because actual damage reduction from resistance can only be computed given total resistance and vulnerability and only after all protection has been applied.
-		void take_resistance_wear(const Damage& damage);
+		void take_resistance_wear(Damage const& damage);
 	};
 }

@@ -77,7 +77,7 @@ namespace questless
 		/// @param origin The origin game point of the animation on the screen.
 		/// @param camera A camera object.
 		/// @param color An additional color multiplier, applied on top of the camera's and texture's color members.
-		void draw(units::GamePoint origin, const Camera& camera, sdl::Color color = sdl::Color::white()) const;
+		void draw(units::GamePoint origin, Camera const& camera, sdl::Color color = sdl::Color::white()) const;
 	private:
 		sdl::Handle<sdl::Texture> _sprite_sheet_handle;
 		int _cel_width;

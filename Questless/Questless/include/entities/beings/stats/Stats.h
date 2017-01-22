@@ -40,7 +40,7 @@ namespace questless
 	class Stats
 	{
 	private:
-		static void nonnegative_mutator(double& value, const double& new_value)
+		static void nonnegative_mutator(double& value, double const& new_value)
 		{
 			value = std::max(new_value, 0.0);
 		}
@@ -120,7 +120,7 @@ namespace questless
 			, antimagic{std::move(antimagic)}
 		{}
 
-		friend std::ostream& operator <<(std::ostream& out, const Stats& a)
+		friend std::ostream& operator <<(std::ostream& out, Stats const& a)
 		{
 			out << a.vitality << ' ' << a.spirit << ' ' << a.health_regen << ' ' << a.mana_regen << ' ' << a.strength << ' ' << a.endurance << ' '
 				<< a.stamina << ' ' << a.agility << ' ' << a.dexterity << ' ' << a.stealth << ' ' << a.vision << ' ' << a.hearing << ' '

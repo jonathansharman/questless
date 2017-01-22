@@ -51,17 +51,17 @@ namespace units
 			}
 		}
 
-		friend std::ostream& operator <<(std::ostream& out, const Rect& r)
+		friend std::ostream& operator <<(std::ostream& out, Rect const& r)
 		{
 			out << '(' << r.x << ", " << r.y << ", " << r.w << ", " << r.h << ')';
 			return out;
 		}
 
-		constexpr friend bool operator ==(const Rect& left, const Rect& right)
+		constexpr friend bool operator ==(Rect const& left, Rect const& right)
 		{
 			return left.x == right.x && left.y == right.y && left.w == right.w && left.h == right.h;
 		}
-		constexpr friend bool operator !=(const Rect& left, const Rect& right)
+		constexpr friend bool operator !=(Rect const& left, Rect const& right)
 		{
 			return left.x != right.x || left.y != right.y || left.w != right.w || left.h != right.h;
 		}
@@ -86,7 +86,7 @@ namespace units
 		constexpr Rect translated(Vector<space_t> offset) const { return Rect{x + offset.x, y + offset.y, w, h}; }
 
 		/// Extends the given bounding rectangle by the given point.
-		void extend(const Point<space_t>& point)
+		void extend(Point<space_t> const& point)
 		{
 			if (point.x < x) {
 				w += x - point.x;

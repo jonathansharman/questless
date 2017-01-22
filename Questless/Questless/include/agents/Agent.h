@@ -34,53 +34,53 @@ namespace questless
 
 		virtual ~Agent() = default;
 
-		Agent& operator =(const Agent& other) = delete;
+		Agent& operator =(Agent const& other) = delete;
 
 		Being& being() { return _being; }
-		const Being& being() const { return _being; }
+		Being const& being() const { return _being; }
 
 		/// Chooses and executes an action for the agent's being to perform.
 		virtual void act() = 0;
 
 		/// Causes the agent to perceive the given effect, possibly updating its state accordingly.
 		/// @param effect The effect to perceive.
-		virtual void perceive(const Effect::ptr& effect) = 0;
+		virtual void perceive(Effect::ptr const& effect) = 0;
 
 		// Queries and messages
 
 		/// @todo Update documentation here after refactoring to decouple these methods from dialogs.
 
 		virtual Action::Complete message
-			( const std::string& title
-			, const std::string& prompt
+			( std::string const& title
+			, std::string const& prompt
 			, std::function<Action::Complete()> cont
 			) const = 0;
 
 		virtual Action::Complete query_count
-			( const std::string& title
-			, const std::string& prompt
+			( std::string const& title
+			, std::string const& prompt
 			, int default
 			, boost::optional<int> min
 			, boost::optional<int> max
 			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const = 0;
 		virtual Action::Complete query_count
-			( const std::string& title
-			, const std::string& prompt
+			( std::string const& title
+			, std::string const& prompt
 			, int default
 			, std::function<bool(int)> predicate
 			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const = 0;
 
 		virtual Action::Complete query_duration
-			( const std::string& title
-			, const std::string& prompt
+			( std::string const& title
+			, std::string const& prompt
 			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const = 0;
 
 		virtual Action::Complete query_magnitude
-			( const std::string& title
-			, const std::string& prompt
+			( std::string const& title
+			, std::string const& prompt
 			, double default
 			, std::function<bool(double)> predicate
 			, std::function<Action::Complete(boost::optional<double>)> cont
@@ -89,29 +89,29 @@ namespace questless
 		/// @todo Add overload with min/max.
 
 		virtual Action::Complete query_tile
-			( const std::string& title
-			, const std::string& prompt
+			( std::string const& title
+			, std::string const& prompt
 			, boost::optional<RegionTileCoords> origin
 			, std::function<bool(RegionTileCoords)> predicate
 			, std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont
 			) const = 0;
 
 		virtual Action::Complete query_being
-			( const std::string& title
-			, const std::string& prompt
+			( std::string const& title
+			, std::string const& prompt
 			, std::function<bool(Being&)> predicate
 			, std::function<Action::Complete(boost::optional<Being*>)> cont
 			) const = 0;
 
 		virtual Action::Complete query_range
-			( const std::string& title
-			, const std::string& prompt
+			( std::string const& title
+			, std::string const& prompt
 			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const = 0;
 
 		virtual Action::Complete query_item
-			( const std::string& title
-			, const std::string& prompt
+			( std::string const& title
+			, std::string const& prompt
 			, Being& source
 			, std::function<bool(Being&)> predicate
 			, std::function<Action::Complete(boost::optional<Item*>)> cont

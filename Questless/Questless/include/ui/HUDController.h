@@ -18,12 +18,12 @@ namespace questless
 	class HUDController
 	{
 	public:
-		HUDController(Game& game, const sdl::Window& window);
+		HUDController(Game& game, sdl::Window const& window);
 
 		/// @return A constant reference to the hotbar.
-		const auto& hotbar() { return _hud.hotbar; }
+		auto const& hotbar() { return _hud.hotbar; }
 
-		void update(const sdl::Input& input);
+		void update(sdl::Input const& input);
 
 		void HUDController::draw() { _view.draw(_hud); }
 

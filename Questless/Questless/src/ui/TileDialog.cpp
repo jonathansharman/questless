@@ -45,7 +45,7 @@ namespace questless
 		return false;
 	}
 
-	void TileDialog::draw(const Window& window)
+	void TileDialog::draw(Window const& window)
 	{
 		int x_center = window.center().x;
 

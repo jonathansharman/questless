@@ -20,7 +20,7 @@ namespace questless
 		_angle = _velocity.step().angle();
 	}
 
-	const Texture& YellowMagicParticle::texture() const
+	Texture const& YellowMagicParticle::texture() const
 	{
 		static bool first_call = true;
 		static Handle<Texture> handle;

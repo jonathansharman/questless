@@ -48,7 +48,7 @@ namespace sdl
 
 		/// @param handle The handle of the desired resource, obtained from the initial call to add().
 		/// @return The resource at the given index.
-		ResourceType& operator [](const Handle<ResourceType>& handle) const
+		ResourceType& operator [](Handle<ResourceType> const& handle) const
 		{
 			auto& entry = *handle.it;
 			if (entry.resource == nullptr) {
@@ -59,16 +59,16 @@ namespace sdl
 
 		/// Removes the given resource and its generator from the registry.
 		/// @param handle The handle of the resource to be removed, obtained from the initial call to add().
-		void erase(const Handle<ResourceType>& handle)
+		void erase(Handle<ResourceType> const& handle)
 		{
 			_registry.erase(handle._it);
 		}
 
 		/// Removes the given resources and their generators from the registry.
 		/// @param names The names of the resources to be removed.
-		void erase(const std::vector<Handle<ResourceType>>& handles)
+		void erase(std::vector<Handle<ResourceType>> const& handles)
 		{
-			for (const Handle& handle : handles) {
+			for (Handle const& handle : handles) {
 				erase(handle);
 			}
 		}

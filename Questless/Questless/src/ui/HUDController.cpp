@@ -13,10 +13,10 @@
 
 namespace questless
 {
-	HUDController::HUDController(Game& game, const sdl::Window& window) : _game{game}, _hud {}, _view{game, window}
+	HUDController::HUDController(Game& game, sdl::Window const& window) : _game{game}, _hud {}, _view{game, window}
 	{}
 	
-	void HUDController::update(const sdl::Input& input)
+	void HUDController::update(sdl::Input const& input)
 	{
 		if (!_hud.player_id) {
 			return;

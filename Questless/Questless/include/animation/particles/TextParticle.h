@@ -51,7 +51,7 @@ namespace questless
 
 		void subupdate() override {}
 
-		const sdl::Texture& texture() const override { return _texture; }
+		sdl::Texture const& texture() const override { return _texture; }
 
 		void refresh() override { _texture = make_texture(); }
 

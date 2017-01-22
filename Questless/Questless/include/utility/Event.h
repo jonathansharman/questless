@@ -25,19 +25,19 @@ namespace questless
 
 		/// Adds a new event handler at the end of the handlers list.
 		/// @param f The new event handler.
-		void add(const handler_t& f) { _handlers.push_back(f); }
+		void add(handler_t const& f) { _handlers.push_back(f); }
 
 		/// Removes any instances of a given event handler.
 		/// @param f The event handler to be removed.
-		void remove(const handler_t& f)
+		void remove(handler_t const& f)
 		{
-			_handlers.erase(remove_if(_handlers.begin(), _handlers.end(), [&f](const handler_t& x) {
+			_handlers.erase(remove_if(_handlers.begin(), _handlers.end(), [&f](handler_t const& x) {
 				return x == f;
 			}), _handlers.end());
 		}
 
-		Event& operator +=(const handler_t& f) { add(f); }
-		Event& operator -=(const handler_t& f)
+		Event& operator +=(handler_t const& f) { add(f); }
+		Event& operator -=(handler_t const& f)
 		{
 			remove(f);
 			return *this;

@@ -45,7 +45,7 @@ namespace questless
 		{
 			return boost::make_transform_iterator
 				( _parts.begin()
-				, (transform_t)[](BodyPart::ref bp) -> const BodyPart::ref { return bp; }
+				, (transform_t)[](BodyPart::ref bp) -> BodyPart::ref const { return bp; }
 				);
 		}
 		/// @return Const iterator to end of body parts.
@@ -53,18 +53,18 @@ namespace questless
 		{
 			return boost::make_transform_iterator
 				( _parts.end()
-				, (transform_t)[](BodyPart::ref bp) -> const BodyPart::ref { return bp; }
+				, (transform_t)[](BodyPart::ref bp) -> BodyPart::ref const { return bp; }
 				);
 		}
 		
-		const std::vector<std::reference_wrapper<Torso>>& torsos() { return _torsos; }
-		const std::vector<Head::ref>& heads() { return _heads; }
-		const std::vector<Arm::ref>& arms() { return _arms; }
-		const std::vector<Hand::ref>& hands() { return _hands; }
-		const std::vector<Leg::ref>& legs() { return _legs; }
-		const std::vector<Foot::ref>& feet() { return _feet; }
-		const std::vector<Wing::ref>& wings() { return _wings; }
-		const std::vector<Tail::ref>& tails() { return _tails; }
+		std::vector<std::reference_wrapper<Torso>> const& torsos() { return _torsos; }
+		std::vector<Head::ref> const& heads() { return _heads; }
+		std::vector<Arm::ref> const& arms() { return _arms; }
+		std::vector<Hand::ref> const& hands() { return _hands; }
+		std::vector<Leg::ref> const& legs() { return _legs; }
+		std::vector<Foot::ref> const& feet() { return _feet; }
+		std::vector<Wing::ref> const& wings() { return _wings; }
+		std::vector<Tail::ref> const& tails() { return _tails; }
 
 		/// @return The bounding box around the body's parts.
 		units::ScreenRect bounds() const { return _bounds; }
@@ -72,7 +72,7 @@ namespace questless
 		/// @return The offset from the upper left corner of the bounds to the body's center.
 		units::ScreenVector offset_to_center() const { return _offset_to_center; }
 	private:
-		using transform_t = const BodyPart::ref (*)(BodyPart::ref);
+		using transform_t = BodyPart::ref const (*)(BodyPart::ref);
 
 		class PartAttacher : public BodyPartVisitor
 		{

@@ -36,33 +36,33 @@ namespace units
 			, y{static_cast<scalar_t>(r * sin(theta.count()))}
 		{}
 
-		constexpr Vector(const Vector& v) : x{v.x}, y{v.y} {}
+		constexpr Vector(Vector const& v) : x{v.x}, y{v.y} {}
 
-		friend std::ostream& operator <<(std::ostream& out, const Vector& v)
+		friend std::ostream& operator <<(std::ostream& out, Vector const& v)
 		{
 			out << '(' << v.x << ", " << v.y << ')';
 			return out;
 		}
 
-		bool operator ==(const Vector& right) const { return x == right.x && y == right.y; }
-		bool operator !=(const Vector& right) const { return x != right.x || y != right.y; }
+		bool operator ==(Vector const& right) const { return x == right.x && y == right.y; }
+		bool operator !=(Vector const& right) const { return x != right.x || y != right.y; }
 
-		friend Vector operator +(const Vector& v1, const Vector& v2) { return Vector{v1.x + v2.x, v1.y + v2.y}; }
-		friend Vector operator -(const Vector& v1, const Vector& v2) { return Vector{v1.x - v2.x, v1.y - v2.y}; }
-		friend Vector operator -(const Vector& v) { return Vector{-v.x, -v.y}; }
-		friend Vector operator *(const Vector& v, scalar_t k) { return Vector{k * v.x, k * v.y}; }
-		friend Vector operator *(scalar_t k, const Vector& v) { return Vector{k * v.x, k * v.y}; }
-		friend Vector operator /(const Vector& v, scalar_t k) { return Vector{v.x / k, v.y / k}; }
+		friend Vector operator +(Vector const& v1, Vector const& v2) { return Vector{v1.x + v2.x, v1.y + v2.y}; }
+		friend Vector operator -(Vector const& v1, Vector const& v2) { return Vector{v1.x - v2.x, v1.y - v2.y}; }
+		friend Vector operator -(Vector const& v) { return Vector{-v.x, -v.y}; }
+		friend Vector operator *(Vector const& v, scalar_t k) { return Vector{k * v.x, k * v.y}; }
+		friend Vector operator *(scalar_t k, Vector const& v) { return Vector{k * v.x, k * v.y}; }
+		friend Vector operator /(Vector const& v, scalar_t k) { return Vector{v.x / k, v.y / k}; }
 
-		Vector& operator =(const Vector& v) & = default;
+		Vector& operator =(Vector const& v) & = default;
 
-		Vector& operator +=(const Vector& v) &
+		Vector& operator +=(Vector const& v) &
 		{
 			x += v.x;
 			y += v.y;
 			return *this;
 		}
-		Vector& operator -=(const Vector& v) &
+		Vector& operator -=(Vector const& v) &
 		{
 			x -= v.x;
 			y -= v.y;
@@ -84,11 +84,11 @@ namespace units
 		/// Rotates the vector, overwriting the original value.
 		/// @param dtheta The counter-clockwise rotation to apply, in radians.
 		template <typename UnitsPerCircle, typename = std::enable_if_t<std::is_floating_point<scalar_t>::value>>
-		void rotate(const Angle<space_t, UnitsPerCircle>& dtheta) &
+		void rotate(Angle<space_t, UnitsPerCircle> const& dtheta) &
 		{
-			const scalar_t dtheta_radians = angle_cast<Radians<space_t>>(dtheta).count();
-			const auto cos_dtheta = static_cast<scalar_t>(cos(dtheta_radians));
-			const auto sin_dtheta = static_cast<scalar_t>(sin(dtheta_radians));
+			scalar_t const dtheta_radians = angle_cast<Radians<space_t>>(dtheta).count();
+			auto const cos_dtheta = static_cast<scalar_t>(cos(dtheta_radians));
+			auto const sin_dtheta = static_cast<scalar_t>(sin(dtheta_radians));
 			*this = Vector
 				{ static_cast<scalar_t>(x * cos_dtheta - y * sin_dtheta)
 				, static_cast<scalar_t>(x * sin_dtheta + y * cos_dtheta)
@@ -98,11 +98,11 @@ namespace units
 		/// Creates a rotated copy of the vector.
 		/// @param dtheta The counter-clockwise rotation to apply, in radians.
 		template <typename UnitsPerCircle, typename = std::enable_if_t<std::is_floating_point<scalar_t>::value>>
-		Vector rotated(const Angle<space_t, UnitsPerCircle>& dtheta) const /// @todo Cannot be constexpr because of cos() and sin().
+		Vector rotated(Angle<space_t, UnitsPerCircle> const& dtheta) const /// @todo Cannot be constexpr because of cos() and sin().
 		{
-			const scalar_t dtheta_radians = angle_cast<Radians<space_t>>(dtheta).count();
-			const auto cos_dtheta = static_cast<scalar_t>(cos(dtheta_radians));
-			const auto sin_dtheta = static_cast<scalar_t>(sin(dtheta_radians));
+			scalar_t const dtheta_radians = angle_cast<Radians<space_t>>(dtheta).count();
+			auto const cos_dtheta = static_cast<scalar_t>(cos(dtheta_radians));
+			auto const sin_dtheta = static_cast<scalar_t>(sin(dtheta_radians));
 			return Vector
 				{ static_cast<scalar_t>(x * cos_dtheta - y * sin_dtheta)
 				, static_cast<scalar_t>(x * sin_dtheta + y * cos_dtheta)

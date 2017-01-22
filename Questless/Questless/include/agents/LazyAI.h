@@ -20,13 +20,13 @@ namespace questless
 
 		void act() override { being().busy_time += uniform(1.0, 2.0); }
 
-		void perceive(const Effect::ptr&) override {}
+		void perceive(Effect::ptr const&) override {}
 
 		// Queries and messages
 
 		Action::Complete message
-			( const std::string&
-			, const std::string&
+			( std::string const&
+			, std::string const&
 			, std::function<Action::Complete()> cont
 			) const override
 		{
@@ -34,8 +34,8 @@ namespace questless
 		}
 
 		Action::Complete query_count
-			( const std::string&
-			, const std::string&
+			( std::string const&
+			, std::string const&
 			, int
 			, boost::optional<int>
 			, boost::optional<int>
@@ -45,8 +45,8 @@ namespace questless
 			return cont(boost::none);
 		}
 		Action::Complete query_count
-			( const std::string&
-			, const std::string&
+			( std::string const&
+			, std::string const&
 			, int
 			, std::function<bool(int)>
 			, std::function<Action::Complete(boost::optional<int>)> cont
@@ -56,8 +56,8 @@ namespace questless
 		}
 
 		Action::Complete query_duration
-			( const std::string&
-			, const std::string&
+			( std::string const&
+			, std::string const&
 			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override
 		{
@@ -65,8 +65,8 @@ namespace questless
 		}
 
 		Action::Complete query_magnitude
-			( const std::string&
-			, const std::string&
+			( std::string const&
+			, std::string const&
 			, double
 			, std::function<bool(double)>
 			, std::function<Action::Complete(boost::optional<double>)> cont
@@ -76,8 +76,8 @@ namespace questless
 		}
 
 		Action::Complete query_tile
-			( const std::string&
-			, const std::string&
+			( std::string const&
+			, std::string const&
 			, boost::optional<RegionTileCoords>
 			, std::function<bool(RegionTileCoords)>
 			, std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont
@@ -87,8 +87,8 @@ namespace questless
 		}
 
 		Action::Complete query_being
-			( const std::string&
-			, const std::string&
+			( std::string const&
+			, std::string const&
 			, std::function<bool(Being&)>
 			, std::function<Action::Complete(boost::optional<Being*>)> cont
 			) const override
@@ -97,8 +97,8 @@ namespace questless
 		}
 
 		Action::Complete query_range
-			( const std::string&
-			, const std::string&
+			( std::string const&
+			, std::string const&
 			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override
 		{
@@ -106,8 +106,8 @@ namespace questless
 		}
 
 		Action::Complete query_item
-			( const std::string&
-			, const std::string&
+			( std::string const&
+			, std::string const&
 			, Being&
 			, std::function<bool(Being&)>
 			, std::function<Action::Complete(boost::optional<Item*>)> cont

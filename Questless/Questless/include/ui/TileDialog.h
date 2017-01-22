@@ -24,7 +24,7 @@ namespace questless
 		TileDialog
 			( std::string title
 			, std::string prompt
-			, const Camera& camera
+			, Camera const& camera
 			, boost::optional<RegionTileCoords> origin
 			, std::function<bool(RegionTileCoords)> predicate
 			, std::function<void(boost::optional<RegionTileCoords>)> cont
@@ -41,11 +41,11 @@ namespace questless
 
 		bool update(sdl::Input& input) override;
 
-		void draw(const sdl::Window& window) override;
+		void draw(sdl::Window const& window) override;
 	private:
 		std::string _title;
 		std::string _prompt;
-		const Camera& _camera;
+		Camera const& _camera;
 		boost::optional<RegionTileCoords> _origin;
 		std::function<bool(RegionTileCoords)> _predicate;
 		Continuation<boost::optional<RegionTileCoords>> _cont;

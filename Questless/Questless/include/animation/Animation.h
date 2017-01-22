@@ -54,7 +54,7 @@ namespace questless
 		int loops() const { return _loops; }
 
 		/// @return The current frame of the animation.
-		const Frame& current_frame() const { return _frames[_frame_index]; }
+		Frame const& current_frame() const { return _frames[_frame_index]; }
 
 		/// @return The time scale.
 		double time_scale() const { return _time_scale; }

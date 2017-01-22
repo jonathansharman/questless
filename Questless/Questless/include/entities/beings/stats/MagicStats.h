@@ -26,7 +26,7 @@ namespace questless
 	class MagicStat
 	{
 	private:
-		static void nonnegative_mutator(double& value, const double& new_value)
+		static void nonnegative_mutator(double& value, double const& new_value)
 		{
 			value = std::max(new_value, 0.0);
 		}

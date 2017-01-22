@@ -18,12 +18,12 @@ using sdl::renderer;
 
 namespace questless
 {
-	void ItemTexturer::visit(const Scroll& scroll)
+	void ItemTexturer::visit(Scroll const& scroll)
 	{
 		if (scroll.blank()) {
 			_texture = make_unique<Texture>("resources/textures/items/blank-scroll.png", renderer());
 		} else {
-			const spell::Spell& spell = scroll.spell();
+			spell::Spell const& spell = scroll.spell();
 			if (spell.max_charges() && spell.charges() > 0) {
 				_texture = make_unique<Texture>("resources/textures/items/charged-scroll.png", renderer());
 			} else {
@@ -32,7 +32,7 @@ namespace questless
 		}
 	}
 
-	void ItemTexturer::visit(const Quarterstaff&)
+	void ItemTexturer::visit(Quarterstaff const&)
 	{
 		_texture = make_unique<Texture>("resources/textures/items/quarterstaff.png", renderer());
 	}

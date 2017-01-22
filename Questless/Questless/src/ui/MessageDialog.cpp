@@ -22,7 +22,7 @@ namespace questless
 		return false;
 	}
 
-	void MessageDialog::draw(const Window& window)
+	void MessageDialog::draw(Window const& window)
 	{
 		int x_center = window.center().x;
 

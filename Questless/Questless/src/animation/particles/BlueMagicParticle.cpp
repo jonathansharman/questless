@@ -14,7 +14,7 @@ using namespace sdl;
 
 namespace questless
 {
-	const Texture& BlueMagicParticle::texture() const
+	Texture const& BlueMagicParticle::texture() const
 	{
 		static bool first_call = true;
 		static Handle<Texture> handle;

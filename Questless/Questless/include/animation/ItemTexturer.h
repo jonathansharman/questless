@@ -17,8 +17,8 @@ namespace questless
 	class ItemTexturer : public ItemVisitor
 	{
 	public:
-		void visit(const Scroll&) override;
-		void visit(const Quarterstaff&) override;
+		void visit(Scroll const&) override;
+		void visit(Quarterstaff const&) override;
 
 		sdl::Texture::ptr texture() { return std::move(_texture); }
 	private:

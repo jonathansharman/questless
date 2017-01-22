@@ -22,8 +22,8 @@ namespace questless
 	public:
 		virtual ~ItemVisitor() = default;
 
-		virtual void visit(const Scroll&) = 0;
-		virtual void visit(const Quarterstaff&) = 0;
+		virtual void visit(Scroll const&) = 0;
+		virtual void visit(Quarterstaff const&) = 0;
 	};
 
 	class BadItemVisit : public std::runtime_error
@@ -39,8 +39,8 @@ namespace questless
 
 		virtual ~TrivialItemVisitor() = default;
 
-		virtual void visit(const Scroll&) override { throw BadItemVisit{_message}; }
-		virtual void visit(const Quarterstaff&) override { throw BadItemVisit{_message}; }
+		virtual void visit(Scroll const&) override { throw BadItemVisit{_message}; }
+		virtual void visit(Quarterstaff const&) override { throw BadItemVisit{_message}; }
 	private:
 		std::string _message;
 	};

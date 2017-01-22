@@ -24,7 +24,7 @@ namespace questless
 
 		virtual Type type() const { return Type::debuff; }
 
-		const Stats::modifiers_t& modifiers() const override { return _modifiers; }
+		Stats::modifiers_t const& modifiers() const override { return _modifiers; }
 	private:
 		Stats::modifiers_t _modifiers;
 	};

@@ -20,70 +20,70 @@ namespace questless
 
 		void act() override;
 
-		void perceive(const Effect::ptr&) override {}
+		void perceive(Effect::ptr const&) override {}
 
 		// Queries and messages
 
 		Action::Complete message
-			( const std::string& title
-			, const std::string& prompt
+			( std::string const& title
+			, std::string const& prompt
 			, std::function<Action::Complete()> cont
 			) const override;
 
 		Action::Complete query_count
-			( const std::string& title
-			, const std::string& prompt
+			( std::string const& title
+			, std::string const& prompt
 			, int default
 			, boost::optional<int> min
 			, boost::optional<int> max
 			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override;
 		Action::Complete query_count
-			( const std::string& title
-			, const std::string& prompt
+			( std::string const& title
+			, std::string const& prompt
 			, int default
 			, std::function<bool(int)> predicate
 			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override;
 
 		Action::Complete query_duration
-			( const std::string& title
-			, const std::string& prompt
+			( std::string const& title
+			, std::string const& prompt
 			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override;
 
 		Action::Complete query_magnitude
-			( const std::string& title
-			, const std::string& prompt
+			( std::string const& title
+			, std::string const& prompt
 			, double default
 			, std::function<bool(double)> predicate
 			, std::function<Action::Complete(boost::optional<double>)> cont
 			) const override;
 
 		Action::Complete query_tile
-			( const std::string& title
-			, const std::string& prompt
+			( std::string const& title
+			, std::string const& prompt
 			, boost::optional<RegionTileCoords> origin
 			, std::function<bool(RegionTileCoords)> predicate
 			, std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont
 			) const override;
 
 		Action::Complete query_being
-			( const std::string& title
-			, const std::string& prompt
+			( std::string const& title
+			, std::string const& prompt
 			, std::function<bool(Being&)> predicate
 			, std::function<Action::Complete(boost::optional<Being*>)> cont
 			) const override;
 
 		Action::Complete query_range
-			( const std::string& title
-			, const std::string& prompt
+			( std::string const& title
+			, std::string const& prompt
 			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override;
 
 		Action::Complete query_item
-			( const std::string& title
-			, const std::string& prompt
+			( std::string const& title
+			, std::string const& prompt
 			, Being& source
 			, std::function<bool(Being&)> predicate
 			, std::function<Action::Complete(boost::optional<Item*>)> cont

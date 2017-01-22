@@ -27,7 +27,7 @@ namespace questless
 	{
 	public:
 		using value_t = ValueType;
-		using mutator_t = std::function<void(value_t&, const value_t&)>;
+		using mutator_t = std::function<void(value_t&, value_t const&)>;
 
 		// Constructors
 
@@ -35,7 +35,7 @@ namespace questless
 		/// @note Calling a property mutator without first setting the mutator results in a run-time error.
 		constexpr DynamicProperty() = default;
 
-		constexpr DynamicProperty(const DynamicProperty& property) = default;
+		constexpr DynamicProperty(DynamicProperty const& property) = default;
 		constexpr DynamicProperty(DynamicProperty&& property) = default;
 
 		/// Constructs a property using the given value and an empty mutator.
@@ -74,13 +74,13 @@ namespace questless
 
 		/// Sets the property's underlying value to the given value and calls the mutator on it.
 		/// @param value The property's new value.
-		void set(const value_t& value) { _mutator(_value, value); }
+		void set(value_t const& value) { _mutator(_value, value); }
 
 		/// @return The property's underlying value.
-		constexpr operator const value_t&() const { return _value; }
+		constexpr operator value_t const&() const { return _value; }
 
 		/// @return The property's underlying value.
-		constexpr const value_t& get() const { return _value; }
+		constexpr value_t const& get() const { return _value; }
 
 		/// @return The property's underlying value, dereferenced. Requires an underlying type that supports dereference.
 		constexpr decltype(auto) operator *() const { return *_value; }
@@ -90,7 +90,7 @@ namespace questless
 
 		// Asignment
 
-		DynamicProperty& operator =(const DynamicProperty& property)
+		DynamicProperty& operator =(DynamicProperty const& property)
 		{
 			set(property._value);
 			return *this;
@@ -104,31 +104,31 @@ namespace questless
 		// Arithmetic Assignment Operators
 
 		template <typename T>
-		DynamicProperty& operator +=(const T& right)
+		DynamicProperty& operator +=(T const& right)
 		{
 			set(_value + right);
 			return *this;
 		}
 		template <typename T>
-		DynamicProperty& operator -=(const T& right)
+		DynamicProperty& operator -=(T const& right)
 		{
 			set(_value - right);
 			return *this;
 		}
 		template <typename T>
-		DynamicProperty& operator *=(const T& right)
+		DynamicProperty& operator *=(T const& right)
 		{
 			set(_value * right);
 			return *this;
 		}
 		template <typename T>
-		DynamicProperty& operator /=(const T& right)
+		DynamicProperty& operator /=(T const& right)
 		{
 			set(_value / right);
 			return *this;
 		}
 		template <typename T>
-		DynamicProperty& operator %=(const T& right)
+		DynamicProperty& operator %=(T const& right)
 		{
 			set(_value % right);
 			return *this;
@@ -137,31 +137,31 @@ namespace questless
 		// Bitwise Assignment Operators
 
 		template <typename T>
-		DynamicProperty& operator &=(const T& right)
+		DynamicProperty& operator &=(T const& right)
 		{
 			set(_value & right);
 			return *this;
 		}
 		template <typename T>
-		DynamicProperty& operator |=(const T& right)
+		DynamicProperty& operator |=(T const& right)
 		{
 			set(_value | right);
 			return *this;
 		}
 		template <typename T>
-		DynamicProperty& operator ^=(const T& right)
+		DynamicProperty& operator ^=(T const& right)
 		{
 			set(_value | right);
 			return *this;
 		}
 		template <typename T>
-		DynamicProperty& operator <<=(const T& right)
+		DynamicProperty& operator <<=(T const& right)
 		{
 			set(_value << right);
 			return *this;
 		}
 		template <typename T>
-		DynamicProperty& operator >>=(const T& right)
+		DynamicProperty& operator >>=(T const& right)
 		{
 			set(_value >> right);
 			return *this;

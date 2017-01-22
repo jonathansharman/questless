@@ -27,7 +27,7 @@ namespace questless
 		virtual EntityClass entity_class() const { return EntityClass::ItemBoxClass; }
 
 		std::vector<Item::ptr>& items() { return _items; }
-		const std::vector<Item::ptr>& items() const { return _items; }
+		std::vector<Item::ptr> const& items() const { return _items; }
 	private:
 		std::vector<Item::ptr> _items;
 	};

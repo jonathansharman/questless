@@ -31,7 +31,7 @@ using namespace sdl;
 namespace questless
 {
 	/// @todo Remove. Wait, why?
-	bool turn_order_function(const Being& first, const Being& second)
+	bool turn_order_function(Being const& first, Being const& second)
 	{
 		// Sort beings in the turn queue by lower busy-time first, then lower entity ID.
 		double f_b = first.busy_time;
@@ -42,8 +42,8 @@ namespace questless
 	Region::Region(Game& game, string region_name)
 		: _game{game}, _name{std::move(region_name)}, _turn_queue{turn_order_function}
 	{
-		const int r_radius = 1;
-		const int q_radius = 1;
+		int const r_radius = 1;
+		int const q_radius = 1;
 
 		for (int section_r = -r_radius; section_r <= r_radius; ++section_r) {
 			for (int section_q = -q_radius; section_q <= q_radius; ++section_q) {
@@ -75,7 +75,7 @@ namespace questless
 		}
 	}
 
-	Region::Region(Game& game, const string& save_name, const string& region_name)
+	Region::Region(Game& game, string const& save_name, string const& region_name)
 		: _game{game}, _name{std::move(region_name)}, _turn_queue{turn_order_function}
 	{
 		fs::path saves_dir{"saves"};
@@ -132,7 +132,7 @@ namespace questless
 		}
 	}
 
-	void Region::save(const string& save_name)
+	void Region::save(string const& save_name)
 	{
 		/// @todo Reenable someday. Use SQLite or something to save games.
 
@@ -145,7 +145,7 @@ namespace questless
 		fs::path region_filename{_name};
 		fs::path region_path{saves_dir / save_filename / regions_dir / region_filename};
 
-		for (const auto& coords_and_section : _section_map) {
+		for (auto const& coords_and_section : _section_map) {
 			HexCoords coords = coords_and_section.first;
 
 			std::ostringstream section_filename_sstream;
@@ -161,13 +161,13 @@ namespace questless
 			if (fout.fail()) {
 				throw std::logic_error("Could not open region's entities file.");
 			}
-			for (const auto& coords_and_section : _section_map) {
-				const auto& section = coords_and_section.second;
+			for (auto const& coords_and_section : _section_map) {
+				auto const& section = coords_and_section.second;
 
-				for (const auto& being : section->beings()) {
+				for (auto const& being : section->beings()) {
 					being->serialize(fout);
 				}
-				for (const auto& object : section->objects()) {
+				for (auto const& object : section->objects()) {
 					object->serialize(fout);
 				}
 			}
@@ -223,7 +223,7 @@ namespace questless
 		Section& src_section = being.section();
 		RegionSectionCoords dst_section_coords = containing_section_coords(coords);
 		if (dst_section_coords != src_section.coords()) {
-			const unique_ptr<Section>& dst_section = _section_map[dst_section_coords];
+			unique_ptr<Section> const& dst_section = _section_map[dst_section_coords];
 			if (dst_section != nullptr) {
 				if (dst_section->being(coords)) {
 					// Collision. Prevent movement.
@@ -254,7 +254,7 @@ namespace questless
 		Section& src_section = object.section();
 		RegionSectionCoords dst_section_coords = containing_section_coords(coords);
 		if (dst_section_coords != src_section.coords()) {
-			const unique_ptr<Section>& dst_section = _section_map[dst_section_coords];
+			unique_ptr<Section> const& dst_section = _section_map[dst_section_coords];
 			if (dst_section != nullptr) {
 				if (dst_section->being(coords)) {
 					// Collision. Prevent movement.
@@ -314,7 +314,7 @@ namespace questless
 		auto it = _section_map.find(section_coords);
 		return it == _section_map.end() ? nullptr : it->second.get();
 	}
-	const Section* Region::section(RegionSectionCoords section_coords) const
+	Section const* Region::section(RegionSectionCoords section_coords) const
 	{
 		auto it = _section_map.find(section_coords);
 		return it == _section_map.end() ? nullptr : it->second.get();

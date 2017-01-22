@@ -36,12 +36,12 @@ namespace questless
 		_hit_sound_handle = sound_manager().add([] { return make_unique<Sound>("resources/sounds/weapons/hit.wav"); });
 	}
 
-	void WorldRenderer::update_view(const WorldView& world_view, std::vector<Effect::ptr> effects)
+	void WorldRenderer::update_view(WorldView const& world_view, std::vector<Effect::ptr> effects)
 	{
 		_world_view = &world_view;
 		_terrain_render_is_current = false;
 
-		for (const auto& effect : effects) {
+		for (auto const& effect : effects) {
 			effect->accept(*this);
 		}
 
@@ -52,12 +52,12 @@ namespace questless
 	{
 		// Update cached being and object animations.
 
-		for (const auto& id_and_animation : _being_animation_sets) {
+		for (auto const& id_and_animation : _being_animation_sets) {
 			if (id_and_animation.second != nullptr) {
 				id_and_animation.second->update();
 			}
 		}
-		for (const auto& id_and_animation : _object_animations) {
+		for (auto const& id_and_animation : _object_animations) {
 			if (id_and_animation.second != nullptr) {
 				id_and_animation.second->update();
 			}
@@ -75,7 +75,7 @@ namespace questless
 		}
 	}
 
-	void WorldRenderer::draw_terrain(const Camera& camera)
+	void WorldRenderer::draw_terrain(Camera const& camera)
 	{
 		if (!_terrain_render_is_current) {
 			render_terrain();
@@ -86,11 +86,11 @@ namespace questless
 		}
 	}
 
-	void WorldRenderer::draw_beings(const Game& game, const Camera& camera)
+	void WorldRenderer::draw_beings(Game const& game, Camera const& camera)
 	{
-		for (const auto& being_view : _world_view->being_views()) {
+		for (auto const& being_view : _world_view->being_views()) {
 			// Attempt to load the being.
-			if (const Being* being = game.being(being_view.id)) {
+			if (Being const* being = game.being(being_view.id)) {
 				// Search for the being's animation in the cache.
 				auto it = _being_animation_sets.find(being_view.id);
 				// If it's there, use it. Otherwise, create the animation and cache it.
@@ -126,11 +126,11 @@ namespace questless
 		}
 	}
 
-	void WorldRenderer::draw_objects(const Game& game, const Camera& camera)
+	void WorldRenderer::draw_objects(Game const& game, Camera const& camera)
 	{
-		for (const auto& object_view : _world_view->object_views()) {
+		for (auto const& object_view : _world_view->object_views()) {
 			// Attempt to load the object.
-			if (const Object* object = game.object(object_view.id)) {
+			if (Object const* object = game.object(object_view.id)) {
 				// Search for the object's animation in the cache.
 				auto it = _object_animations.find(object_view.id);
 				// If it's there, use it. Otherwise, create the animation and cache it.
@@ -161,7 +161,7 @@ namespace questless
 		}
 	}
 
-	void WorldRenderer::draw_effects(const Game&, const Camera& camera)
+	void WorldRenderer::draw_effects(Game const&, Camera const& camera)
 	{
 		for (auto& particle : _particles) {
 			particle->draw(camera);
@@ -174,7 +174,7 @@ namespace questless
 		_terrain_render_is_current = false;
 	}
 
-	Texture& WorldRenderer::cache_tile_texture(const Tile& tile)
+	Texture& WorldRenderer::cache_tile_texture(Tile const& tile)
 	{
 		TileTexturer tile_texturer;
 		tile.accept(tile_texturer);
@@ -182,7 +182,7 @@ namespace questless
 		return *_tile_textures[tile.tile_class()];
 	};
 
-	AnimationSet& WorldRenderer::cache_being_animation(const Being& being)
+	AnimationSet& WorldRenderer::cache_being_animation(Being const& being)
 	{
 		EntityAnimator entity_animator;
 		being.accept(entity_animator);
@@ -190,7 +190,7 @@ namespace questless
 		return *_being_animation_sets[being.id()];
 	};
 
-	AnimationSet& WorldRenderer::cache_object_animation(const Object& object)
+	AnimationSet& WorldRenderer::cache_object_animation(Object const& object)
 	{
 		EntityAnimator entity_animator;
 		object.accept(entity_animator);
@@ -216,28 +216,28 @@ namespace questless
 			);
 		_terrain_texture->as_target([&] {
 			renderer().clear(Color::clear());
-			for (const auto& section_view : _world_view->section_views()) {
+			for (auto const& section_view : _world_view->section_views()) {
 				auto opt_section = _world_view->region().section(section_view.coords);
 				if (opt_section) {
-					const Section& section = *opt_section;
+					Section const& section = *opt_section;
 					for (int r = -Section::radius; r <= Section::radius; ++r) {
 						for (int q = -Section::radius; q <= Section::radius; ++q) {
 							SectionTileCoords section_tile_coords{q, r};
 							SectionTileIndex tile_index = Section::tile_index(section_tile_coords);
 							double tile_visibility = section_view.tile_visibilities[tile_index.i][tile_index.j];
 							if (tile_visibility > 0) {
-								const RegionTileCoords region_tile_coords = section.region_tile_coords(section_tile_coords);
-								const GamePoint tile_game_point = Layout::dflt().to_world(region_tile_coords);
-								const GamePoint terrain_game_point = _terrain_bounds.position();
-								const ScreenPoint tile_screen_point
+								RegionTileCoords const region_tile_coords = section.region_tile_coords(section_tile_coords);
+								GamePoint const tile_game_point = Layout::dflt().to_world(region_tile_coords);
+								GamePoint const terrain_game_point = _terrain_bounds.position();
+								ScreenPoint const tile_screen_point
 									{ lround(tile_game_point.x - terrain_game_point.x)
 									, lround(terrain_game_point.y - tile_game_point.y + _terrain_bounds.h - 1)
 									};
 
-								const uint8_t luminance = static_cast<uint8_t>(255 * std::min(tile_visibility / 100.0, 1.0));
+								uint8_t const luminance = static_cast<uint8_t>(255 * std::min(tile_visibility / 100.0, 1.0));
 
 								// Get the current tile.
-								const Tile& tile = section.tile(section_tile_coords);
+								Tile const& tile = section.tile(section_tile_coords);
 								// Search for its texture in the cache.
 								auto it = _tile_textures.find(tile.tile_class());
 								// If it's there, use it. Otherwise, create the texture and cache it.
@@ -258,7 +258,7 @@ namespace questless
 
 	// Effect Visitor Functions
 
-	void WorldRenderer::visit(const LightningBoltEffect& e)
+	void WorldRenderer::visit(LightningBoltEffect const& e)
 	{
 		GamePoint position = Layout::dflt().to_world(e.origin());
 		for (int i = 0; i < 15; ++i) {
@@ -267,11 +267,11 @@ namespace questless
 		sound_manager()[_lightning_bolt_sound_handle].play();
 	}
 
-	void WorldRenderer::visit(const InjuryEffect& e)
+	void WorldRenderer::visit(InjuryEffect const& e)
 	{
 		GamePoint position = Layout::dflt().to_world(e.origin());
 
-		const Damage& d = e.damage();
+		Damage const& d = e.damage();
 		if (d.slash() > 0.0 || d.pierce() > 0.0 || d.bludgeon() > 0.0) {
 			for (int i = 0; i < 20; ++i) {
 				_particles.emplace_back(make_unique<BloodParticle>(position));

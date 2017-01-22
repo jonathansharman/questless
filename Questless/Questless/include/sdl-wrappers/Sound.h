@@ -24,10 +24,10 @@ namespace sdl
 		using ptr = std::unique_ptr<Sound>;
 
 		/// @param filename The WAV file from which to load the sound.
-		Sound(const std::string& filename);
+		Sound(std::string const& filename);
 
 		/// Disable copy constructor.
-		Sound(const Sound& sound) = delete;
+		Sound(Sound const& sound) = delete;
 
 		/// Move constructor.
 		Sound(Sound&& sound);

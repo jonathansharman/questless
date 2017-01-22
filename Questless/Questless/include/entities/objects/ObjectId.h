@@ -38,7 +38,7 @@ namespace std
 	template <>
 	struct hash<questless::ObjectId>
 	{
-		size_t operator()(const questless::ObjectId& id) const
+		size_t operator()(questless::ObjectId const& id) const
 		{
 			return hash<questless::ObjectId::key_t>{}(id.key);
 		}

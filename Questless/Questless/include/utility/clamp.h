@@ -12,14 +12,14 @@
 /// @todo Remove and replace with std::clamp once implemented.
 
 template<class T, class Compare>
-constexpr const T& clamp(const T& v, const T& lo, const T& hi, Compare comp)
+constexpr T const& clamp(T const& v, T const& lo, T const& hi, Compare comp)
 {
 	return assert(!comp(hi, lo)),
 		comp(v, lo) ? lo : comp(hi, v) ? hi : v;
 }
 
 template<class T>
-constexpr const T& clamp(const T& v, const T& lo, const T& hi)
+constexpr T const& clamp(T const& v, T const& lo, T const& hi)
 {
 	return ::clamp(v, lo, hi, std::less<>());
 }

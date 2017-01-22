@@ -44,7 +44,7 @@ namespace sdl
 		}
 
 		Input();
-		Input(const Input& input);
+		Input(Input const& input);
 		Input(Input&& input);
 
 		~Input();
@@ -116,7 +116,7 @@ namespace sdl
 		/// Sets the position of the mouse cursor in the window.
 		/// @param window The window relative to which to the cursor is moved.
 		/// @param position The position to which the cursor is moved.
-		void move_mouse(const Window& window, const units::ScreenPoint& position);
+		void move_mouse(Window const& window, units::ScreenPoint const& position);
 
 		/// Hides the mouse cursor.
 		void hide_mouse() const { SDL_ShowCursor(0); }
@@ -135,7 +135,7 @@ namespace sdl
 
 		int _key_count;
 		uint8_t* _prev_keyboard_state;
-		const uint8_t* _curr_keyboard_state;
+		uint8_t const* _curr_keyboard_state;
 
 		std::vector<SDL_Keycode> _press_buffer;
 		std::vector<SDL_Keycode> _release_buffer;

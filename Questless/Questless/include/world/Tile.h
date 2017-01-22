@@ -26,12 +26,12 @@ namespace questless
 	public:
 		virtual ~TileVisitor() = default;
 
-		virtual void visit(const EdgeTile&) = 0;
-		virtual void visit(const StoneTile&) = 0;
-		virtual void visit(const DirtTile&) = 0;
-		virtual void visit(const GrassTile&) = 0;
-		virtual void visit(const WaterTile&) = 0;
-		virtual void visit(const SnowTile&) = 0;
+		virtual void visit(EdgeTile const&) = 0;
+		virtual void visit(StoneTile const&) = 0;
+		virtual void visit(DirtTile const&) = 0;
+		virtual void visit(GrassTile const&) = 0;
+		virtual void visit(WaterTile const&) = 0;
+		virtual void visit(SnowTile const&) = 0;
 	};
 
 	class BadTileVisit : public std::runtime_error
@@ -47,12 +47,12 @@ namespace questless
 
 		virtual ~TrivialTileVisitor() = default;
 
-		virtual void visit(const EdgeTile&) override { throw BadTileVisit{_message}; }
-		virtual void visit(const StoneTile&) override { throw BadTileVisit{_message}; }
-		virtual void visit(const DirtTile&) override { throw BadTileVisit{_message}; }
-		virtual void visit(const GrassTile&) override { throw BadTileVisit{_message}; }
-		virtual void visit(const WaterTile&) override { throw BadTileVisit{_message}; }
-		virtual void visit(const SnowTile&) override { throw BadTileVisit{_message}; }
+		virtual void visit(EdgeTile const&) override { throw BadTileVisit{_message}; }
+		virtual void visit(StoneTile const&) override { throw BadTileVisit{_message}; }
+		virtual void visit(DirtTile const&) override { throw BadTileVisit{_message}; }
+		virtual void visit(GrassTile const&) override { throw BadTileVisit{_message}; }
+		virtual void visit(WaterTile const&) override { throw BadTileVisit{_message}; }
+		virtual void visit(SnowTile const&) override { throw BadTileVisit{_message}; }
 	private:
 		std::string _message;
 	};

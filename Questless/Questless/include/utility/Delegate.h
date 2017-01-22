@@ -24,19 +24,19 @@ namespace questless
 
 		/// Adds a new callback function at the end of the callbacks list.
 		/// @param f The new callback.
-		void add(const callback_t& f) { _callbacks.push_back(f); }
+		void add(callback_t const& f) { _callbacks.push_back(f); }
 
 		/// Removes any instances of a given callback function.
 		/// @param f The callback to be removed.
-		void remove(const callback_t& f)
+		void remove(callback_t const& f)
 		{
-			_callbacks.erase(remove_if(_callbacks.begin(), _callbacks.end(), [&f](const callback_t& x) {
+			_callbacks.erase(remove_if(_callbacks.begin(), _callbacks.end(), [&f](callback_t const& x) {
 				return x == f;
 			}), _callbacks.end());
 		}
 
-		Delegate& operator +=(const callback_t& f) { add(f); }
-		Delegate& operator -=(const callback_t& f)
+		Delegate& operator +=(callback_t const& f) { add(f); }
+		Delegate& operator -=(callback_t const& f)
 		{
 			remove(f);
 			return *this;

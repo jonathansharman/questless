@@ -31,7 +31,7 @@ namespace questless
 
 		/// Draws the dialog to the screen.
 		/// @param window The window.
-		virtual void draw(const sdl::Window& window) = 0;
+		virtual void draw(sdl::Window const& window) = 0;
 	protected:
 		template <typename... Args>
 		class Continuation

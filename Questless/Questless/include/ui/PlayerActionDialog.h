@@ -38,7 +38,7 @@ namespace questless
 
 		/// Draws the dialog to the screen.
 		/// @param window The window.
-		void draw(const sdl::Window&) override
+		void draw(sdl::Window const&) override
 		{}
 	private:
 		HUDController& _hud;

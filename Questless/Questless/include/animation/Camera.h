@@ -43,24 +43,24 @@ namespace questless
 			, _color{sdl::Color::white()}
 		{}
 
-		Camera& operator =(const Camera&) = delete;
+		Camera& operator =(Camera const&) = delete;
 
 		/// @return The camera's reference to the window.
 		sdl::Window& window() { return _window; }
 
 		/// @return The camera's reference to the window.
-		const sdl::Window& window() const { return _window; }
+		sdl::Window const& window() const { return _window; }
 
 		/// @return The camera's position.
 		units::GamePoint position() const { return _position; }
 
 		/// Sets the camera's position.
 		/// @param position The new camera position.
-		void position(const units::GamePoint& position) { _position = position; }
+		void position(units::GamePoint const& position) { _position = position; }
 
 		/// Pans the camera the specified amount.
 		/// @param offset The offset which is added to the camera's position.
-		void pan(const units::GameVector& offset) { _position += offset; }
+		void pan(units::GameVector const& offset) { _position += offset; }
 
 		/// @return The camera's zoom.
 		inline double zoom() const { return _zoom; }
@@ -100,7 +100,7 @@ namespace questless
 		/// @return The hex coordinates of the tile the mouse is hovering over.
 		RegionTileCoords tile_hovered() const { return _tile_hovered; }
 
-		void update(const sdl::Input& input);
+		void update(sdl::Input const& input);
 
 		/// Draws all or part of the provided texture with respect to the camera.
 		/// @param texture The texture to be drawn.
@@ -114,7 +114,7 @@ namespace questless
 		/// @param flip_horizontally Whether to flip the texture vertically.
 		/// @param src_rect An optional Rect specifying the portion of the texture to be copied. If nullopt, the entire texture is used.
 		void draw
-			( const sdl::Texture& texture
+			( sdl::Texture const& texture
 			, units::GamePoint position
 			, Origin origin = Origin{boost::none}
 			, sdl::Color color = sdl::Color::white()
@@ -123,7 +123,7 @@ namespace questless
 			, units::GameRadians angle = units::GameRadians{0.0}
 			, HFlip flip_horizontally = HFlip{false}
 			, VFlip flip_vertically = VFlip{false}
-			, const SrcRect& src_rect = SrcRect{boost::none}
+			, SrcRect const& src_rect = SrcRect{boost::none}
 			) const;
 
 		/// Draws lines relative to the camera connecting the series of points contained in the vector.

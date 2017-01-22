@@ -20,7 +20,7 @@
 
 namespace questless
 {
-	template <typename ValueType, void (*mutator)(ValueType&, const ValueType&)>
+	template <typename ValueType, void (*mutator)(ValueType&, ValueType const&)>
 	class Property
 	{
 	public:
@@ -30,7 +30,7 @@ namespace questless
 
 		constexpr Property() = default;
 
-		constexpr Property(const Property& property) = default;
+		constexpr Property(Property const& property) = default;
 		constexpr Property(Property&& property) = default;
 
 		constexpr Property(value_t value) : _value{std::move(value)} { mutator(_value, _value); }
@@ -39,13 +39,13 @@ namespace questless
 
 		/// Sets the property's underlying value to the given value and calls the mutator on it.
 		/// @param value The property's new value.
-		void set(const value_t& value) { mutator(_value, value); }
+		void set(value_t const& value) { mutator(_value, value); }
 
 		/// @return The property's underlying value.
-		constexpr operator const value_t&() const { return _value; }
+		constexpr operator value_t const&() const { return _value; }
 
 		/// @return The property's underlying value.
-		constexpr const value_t& get() const { return _value; }
+		constexpr value_t const& get() const { return _value; }
 
 		/// @return The property's underlying value, dereferenced. Requires an underlying type that supports dereference.
 		constexpr decltype(auto) operator *() const { return *_value; }
@@ -55,7 +55,7 @@ namespace questless
 
 		// Asignment
 
-		Property& operator =(const Property& property)
+		Property& operator =(Property const& property)
 		{
 			set(property._value);
 			return *this;
@@ -69,31 +69,31 @@ namespace questless
 		// Arithmetic Assignment Operators
 
 		template <typename T>
-		Property& operator +=(const T& right)
+		Property& operator +=(T const& right)
 		{
 			set(_value + right);
 			return *this;
 		}
 		template <typename T>
-		Property& operator -=(const T& right)
+		Property& operator -=(T const& right)
 		{
 			set(_value - right);
 			return *this;
 		}
 		template <typename T>
-		Property& operator *=(const T& right)
+		Property& operator *=(T const& right)
 		{
 			set(_value * right);
 			return *this;
 		}
 		template <typename T>
-		Property& operator /=(const T& right)
+		Property& operator /=(T const& right)
 		{
 			set(_value / right);
 			return *this;
 		}
 		template <typename T>
-		Property& operator %=(const T& right)
+		Property& operator %=(T const& right)
 		{
 			set(_value % right);
 			return *this;
@@ -102,31 +102,31 @@ namespace questless
 		// Bitwise Assignment Operators
 
 		template <typename T>
-		Property& operator &=(const T& right)
+		Property& operator &=(T const& right)
 		{
 			set(_value & right);
 			return *this;
 		}
 		template <typename T>
-		Property& operator |=(const T& right)
+		Property& operator |=(T const& right)
 		{
 			set(_value | right);
 			return *this;
 		}
 		template <typename T>
-		Property& operator ^=(const T& right)
+		Property& operator ^=(T const& right)
 		{
 			set(_value | right);
 			return *this;
 		}
 		template <typename T>
-		Property& operator <<=(const T& right)
+		Property& operator <<=(T const& right)
 		{
 			set(_value << right);
 			return *this;
 		}
 		template <typename T>
-		Property& operator >>=(const T& right)
+		Property& operator >>=(T const& right)
 		{
 			set(_value >> right);
 			return *this;

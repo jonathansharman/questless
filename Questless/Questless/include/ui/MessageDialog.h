@@ -26,7 +26,7 @@ namespace questless
 		
 		bool update(sdl::Input& input) override;
 
-		void draw(const sdl::Window& window) override;
+		void draw(sdl::Window const& window) override;
 	private:
 		std::string _title;
 		std::string _prompt;

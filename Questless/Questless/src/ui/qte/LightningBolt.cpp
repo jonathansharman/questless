@@ -26,7 +26,7 @@ namespace questless::qte
 		});
 	}
 
-	LightningBolt::LightningBolt(const Camera& camera, GamePoint target, std::function<void(double)> cont)
+	LightningBolt::LightningBolt(Camera const& camera, GamePoint target, std::function<void(double)> cont)
 		: _camera{camera}
 		, _target{target}
 		, _cont{std::move(cont)}
@@ -104,12 +104,12 @@ namespace questless::qte
 		return false;
 	}
 
-	void LightningBolt::draw(const Window& window)
+	void LightningBolt::draw(Window const& window)
 	{
 		int x_center = window.center().x;
 
 		// Draw point charges.
-		for (const auto& point_charge : _charges) {
+		for (auto const& point_charge : _charges) {
 			double intensity = uniform(0.0, 1.0);
 			_camera.draw
 				( texture_manager()[_point_charge_texture_handle]

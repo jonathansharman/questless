@@ -35,7 +35,7 @@ namespace questless
 			PartAttacher attacher{*this};
 			part.accept(attacher);
 
-			for (const ScreenRect& region : part.regions()) {
+			for (ScreenRect const& region : part.regions()) {
 				x_min = std::min(x_min, region.x);
 				x_max = std::max(x_max, region.right());
 				y_min = std::min(y_min, region.y);
@@ -44,7 +44,7 @@ namespace questless
 
 			// Remove current part from work list and add its children.
 			work_list.pop_front();
-			for (const BodyPart::ptr& child : part.children()) {
+			for (BodyPart::ptr const& child : part.children()) {
 				work_list.push_back(*child);
 			}
 		}

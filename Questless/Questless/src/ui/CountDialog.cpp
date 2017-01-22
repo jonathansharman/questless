@@ -33,7 +33,7 @@ namespace questless
 		return false;
 	}
 
-	void CountDialog::draw(const Window& window)
+	void CountDialog::draw(Window const& window)
 	{
 		int x_center = window.center().x;
 

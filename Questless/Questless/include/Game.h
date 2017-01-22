@@ -69,14 +69,14 @@ namespace questless
 		void query_player_choice(std::function<void(PlayerActionDialog::Choice)> cont);
 
 		sdl::Input& input() { return _input; }
-		const sdl::Input& input() const { return _input; }
+		sdl::Input const& input() const { return _input; }
 
 		Region& region() { return *_region; }
-		const Region& region() const { return *_region; }
+		Region const& region() const { return *_region; }
 
 		/// Adds an effect to the world, notifying beings within range of its occurrence.
 		/// @param effect The effect to add.
-		void add_effect(const Effect::ptr& effect);
+		void add_effect(Effect::ptr const& effect);
 
 		/// Adds the given being to the graveyard.
 		void add_to_graveyard(Being::ptr being) { _graveyard.push_back(std::move(being)); }
@@ -90,7 +90,7 @@ namespace questless
 		/// If the being exists but isn't in memory, it will be loaded.
 		/// @param id The ID of the being to retrieve.
 		/// @return The being with the given ID, or nullptr if nonexistent.
-		const Being* being(BeingId id) const { return _being(id); }
+		Being const* being(BeingId id) const { return _being(id); }
 		/// Adds the given being and its global coordinates to the global being directory.
 		/// @param being The being to add.
 		/// @param coords The being's global coordinates.
@@ -112,7 +112,7 @@ namespace questless
 		/// If the object exists but isn't in memory, it will be loaded.
 		/// @param id The ID of the object to retrieve.
 		/// @return The object with the given ID, or nullptr if nonexistent.
-		const Object* object(ObjectId id) const { return _object(id); }
+		Object const* object(ObjectId id) const { return _object(id); }
 		/// Adds the given object and its global coordinates to the global object directory.
 		/// @param object The object to add.
 		/// @param coords The object's global coordinates.
@@ -126,9 +126,9 @@ namespace questless
 		void remove_object_id(ObjectId id) { _objects.erase(id); }
 
 		HUDController& hud() { return *_hud; }
-		const HUDController& hud() const { return *_hud; }
+		HUDController const& hud() const { return *_hud; }
 
-		const Camera& camera() const { return *_camera; }
+		Camera const& camera() const { return *_camera; }
 	private:
 		///////////////
 		// Constants //
@@ -142,7 +142,7 @@ namespace questless
 
 		// Debug
 
-		const size_t _max_fps_buffer_size = 25;
+		size_t const _max_fps_buffer_size = 25;
 
 		// Display
 

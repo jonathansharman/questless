@@ -56,7 +56,7 @@ namespace questless
 			Action::Complete perform(Being& actor, cont_t cont) override;
 		private:
 			Weapon& _weapon;
-			const std::string _name;
+			std::string const _name;
 		};
 
 		class Block : public Action
@@ -68,7 +68,7 @@ namespace questless
 			Action::Complete perform(Being& actor, cont_t cont) override;
 		private:
 			Weapon& _weapon;
-			const std::string _name;
+			std::string const _name;
 		};
 	private:
 		class CompleteMeleeAttack : public Action

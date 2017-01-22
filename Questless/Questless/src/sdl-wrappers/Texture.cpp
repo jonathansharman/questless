@@ -36,7 +36,7 @@ namespace sdl
 		}
 	}
 
-	Texture::Texture(const std::string& filename, Renderer& renderer, SDL_BlendMode blend_mode, bool targetable)
+	Texture::Texture(std::string const& filename, Renderer& renderer, SDL_BlendMode blend_mode, bool targetable)
 		: _texture{nullptr }
 		, _renderer{renderer}
 		, _blend_mode{blend_mode}
@@ -94,20 +94,20 @@ namespace sdl
 		std::swap(first._color, second._color);
 	}
 
-	void Texture::draw(const ScreenRect& dst_rect, const boost::optional<TextureRect>& src_rect) const
+	void Texture::draw(ScreenRect const& dst_rect, boost::optional<TextureRect> const& src_rect) const
 	{
 		// This reinterpret_cast is safe because SDL_Rect and TextureRect have the same data structure.
-		const SDL_Rect* sdl_dst_rect = reinterpret_cast<const SDL_Rect*>(&dst_rect);
+		SDL_Rect const* sdl_dst_rect = reinterpret_cast<const SDL_Rect*>(&dst_rect);
 
 		// This reinterpret_cast is safe because SDL_Rect and ScreenRect have the same data structure.
-		const SDL_Rect* sdl_src_rect = src_rect ? reinterpret_cast<const SDL_Rect*>(&src_rect.value()) : nullptr;
+		SDL_Rect const* sdl_src_rect = src_rect ? reinterpret_cast<const SDL_Rect*>(&src_rect.value()) : nullptr;
 
 		SDL_SetTextureColorMod(_texture, _color.r, _color.g, _color.b);
 		SDL_SetTextureAlphaMod(_texture, _color.a);
 		SDL_RenderCopy(_renderer.sdl_ptr(), _texture, sdl_src_rect, sdl_dst_rect);
 	}
 
-	void Texture::draw(ScreenPoint position, HAlign horizontal_alignment, VAlign vertical_alignment, const boost::optional<TextureRect>& src_rect) const
+	void Texture::draw(ScreenPoint position, HAlign horizontal_alignment, VAlign vertical_alignment, boost::optional<TextureRect> const& src_rect) const
 	{
 		switch (horizontal_alignment) {
 		case HAlign::left:
@@ -129,10 +129,10 @@ namespace sdl
 			position.y -= _h - 1;
 			break;
 		}
-		const SDL_Rect sdl_dst_rect{position.x, position.y, _w, _h};
+		SDL_Rect const sdl_dst_rect{position.x, position.y, _w, _h};
 		
 		// This reinterpret_cast is safe because SDL_Rect and ScreenRect have the same data structure.
-		const SDL_Rect* sdl_src_rect = src_rect ? reinterpret_cast<const SDL_Rect*>(&src_rect.value()) : nullptr;
+		SDL_Rect const* sdl_src_rect = src_rect ? reinterpret_cast<const SDL_Rect*>(&src_rect.value()) : nullptr;
 
 		SDL_SetTextureColorMod(_texture, _color.r, _color.g, _color.b);
 		SDL_SetTextureAlphaMod(_texture, _color.a);
@@ -148,7 +148,7 @@ namespace sdl
 		, units::GameRadians angle
 		, bool flip_horizontally
 		, bool flip_vertically
-		, const boost::optional<TextureRect>& src_rect
+		, boost::optional<TextureRect> const& src_rect
 		) const
 	{
 		if (origin) {
@@ -160,7 +160,7 @@ namespace sdl
 		SDL_Rect sdl_dst_rect = { static_cast<int>(position.x - w / 2), static_cast<int>(position.y - h / 2), w, h };
 
 		// This reinterpret_cast is safe because SDL_Rect and ScreenRect have the same data structure.
-		const SDL_Rect* sdl_src_rect = src_rect ? reinterpret_cast<const SDL_Rect*>(&src_rect.value()) : nullptr;
+		SDL_Rect const* sdl_src_rect = src_rect ? reinterpret_cast<const SDL_Rect*>(&src_rect.value()) : nullptr;
 
 		SDL_SetTextureColorMod
 			( _texture

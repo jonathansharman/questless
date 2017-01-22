@@ -27,7 +27,7 @@ namespace questless
 		}
 	}
 
-	const DigraphMenuModel::Page& DigraphMenuModel::current_page() const
+	DigraphMenuModel::Page const& DigraphMenuModel::current_page() const
 	{
 		if (pages.size() == 0) {
 			throw logic_error("Attempted to access current page of an empty menu.");
@@ -42,7 +42,7 @@ namespace questless
 	{
 		return pages[page_index].options[pages[page_index].option_index];
 	}
-	const DigraphMenuModel::Page::Option& DigraphMenuModel::current_option() const
+	DigraphMenuModel::Page::Option const& DigraphMenuModel::current_option() const
 	{
 		return pages[page_index].options[pages[page_index].option_index];
 	}

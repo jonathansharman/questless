@@ -30,7 +30,7 @@ namespace questless
 		_scale += _scale_velocity * Game::frame_duration;
 	}
 
-	void Particle::draw(const Camera& camera)
+	void Particle::draw(Camera const& camera)
 	{
 		camera.draw
 			( texture()

@@ -25,7 +25,7 @@ namespace questless
 
 		constexpr explicit TaggedType(raw_t value) : value{std::move(value)} {}
 
-		constexpr operator const raw_t&() const & noexcept { return value; }
+		constexpr operator raw_t const&() const& noexcept { return value; }
 		operator raw_t&() & noexcept { return value; }
 
 		constexpr const raw_t* operator ->() const { return &value; }

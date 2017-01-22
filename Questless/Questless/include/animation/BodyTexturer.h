@@ -17,7 +17,7 @@ namespace questless
 	class BodyTexturer
 	{
 	public:
-		void visit(const Body&);
+		void visit(Body const&);
 
 		sdl::Texture::ptr texture() { return std::move(_texture); }
 	private:

@@ -31,39 +31,39 @@ namespace questless
 	{
 	public:
 		/// @param world_view The initial world view to render.
-		WorldRenderer(const WorldView& world_view) : _world_view{&world_view}, _terrain_render_is_current{false} {}
+		WorldRenderer(WorldView const& world_view) : _world_view{&world_view}, _terrain_render_is_current{false} {}
 
 		/// Updates the world renderer's world view.
 		/// @param world_view The new world view to render.
 		/// @param effects Any newly perceived effects to render.
-		void update_view(const WorldView& world_view, std::vector<Effect::ptr> effects);
+		void update_view(WorldView const& world_view, std::vector<Effect::ptr> effects);
 
 		/// Updates animations. To be called once per frame.
 		void update();
 
 		/// Draws the visible terrain.
 		/// @param camera The camera with which to draw the terrain.
-		void draw_terrain(const Camera& camera);
+		void draw_terrain(Camera const& camera);
 
 		/// Draws the visible beings in the world.
 		/// @param game The game object.
 		/// @param camera The camera with which to draw the beings.
-		void draw_beings(const Game& game, const Camera& camera);
+		void draw_beings(Game const& game, Camera const& camera);
 
 		/// Draws the visible objects in the world.
 		/// @param game The game object.
 		/// @param camera The camera with which to draw the objects.
-		void draw_objects(const Game& game, const Camera& camera);
+		void draw_objects(Game const& game, Camera const& camera);
 
 		/// Draws visualizations of any active effects in the world.
 		/// @param game The game object.
 		/// @param camera The camera with which to draw the objects.
-		void draw_effects(const Game& game, const Camera& camera);
+		void draw_effects(Game const& game, Camera const& camera);
 
 		// Effect visitor methods.
 
-		void visit(const LightningBoltEffect&) override;
-		void visit(const InjuryEffect&) override;
+		void visit(LightningBoltEffect const&) override;
+		void visit(InjuryEffect const&) override;
 	private:
 		friend class Initializer<WorldRenderer>;
 		static Initializer<WorldRenderer> _initializer;
@@ -72,7 +72,7 @@ namespace questless
 		static sdl::Handle<sdl::Sound> _lightning_bolt_sound_handle;
 		static sdl::Handle<sdl::Sound> _hit_sound_handle;
 
-		const WorldView* _world_view;
+		WorldView const* _world_view;
 
 		std::unordered_map<Tile::TileClass, sdl::Texture::ptr> _tile_textures;
 		std::unordered_map<BeingId, std::unique_ptr<AnimationSet>> _being_animation_sets;
@@ -85,9 +85,9 @@ namespace questless
 
 		void refresh() override;
 
-		sdl::Texture& cache_tile_texture(const Tile& tile);
-		AnimationSet& cache_being_animation(const Being& being);
-		AnimationSet& cache_object_animation(const Object& object);
+		sdl::Texture& cache_tile_texture(Tile const& tile);
+		AnimationSet& cache_being_animation(Being const& being);
+		AnimationSet& cache_object_animation(Object const& object);
 		void render_terrain();
 	};
 }

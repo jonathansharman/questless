@@ -22,7 +22,7 @@ namespace questless
 		_velocity.step().rotate(GameRadians{_turn_rate * Game::frame_duration});
 	}
 
-	const Texture& BlackMagicParticle::texture() const
+	Texture const& BlackMagicParticle::texture() const
 	{
 		static bool first_call = true;
 		static Handle<Texture> handle;

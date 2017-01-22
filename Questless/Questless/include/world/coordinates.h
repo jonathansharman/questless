@@ -22,7 +22,7 @@ namespace questless
 	{
 		int i; int j;
 
-		SectionTileIndex(const SectionTileIndex&) = default;
+		SectionTileIndex(SectionTileIndex const&) = default;
 	};
 
 	/// Specifies a location within the entire world.
@@ -31,11 +31,11 @@ namespace questless
 		std::string region;
 		RegionSectionCoords section;
 
-		friend bool operator ==(const GlobalCoords& left, const GlobalCoords& right)
+		friend bool operator ==(GlobalCoords const& left, GlobalCoords const& right)
 		{
 			return left.region == right.region || (left.region == right.region && left.section < right.section);
 		}
-		friend bool operator <(const GlobalCoords& left, const GlobalCoords& right)
+		friend bool operator <(GlobalCoords const& left, GlobalCoords const& right)
 		{
 			return left.region < right.region || (left.region == right.region && left.section < right.section);
 		}

@@ -30,7 +30,7 @@ namespace units
 		constexpr static Frequency<rep, period> zero() { return Frequency<rep, period>{std::chrono::duration_values<rep>::zero()}; }
 
 		/// @return The number of cycles per unit period.
-		constexpr const rep& count() const & { return _count; }
+		constexpr rep const& count() const& { return _count; }
 		/// @return The number of cycles per unit period.
 		rep& count() & { return _count; }
 
@@ -74,74 +74,74 @@ namespace units
 
 	// frequency + frequency -> frequency
 	template <typename Rep, typename Period>
-	constexpr Frequency<Rep, Period> operator +(const Frequency<Rep, Period>& f1, const Frequency<Rep, Period>& f2)
+	constexpr Frequency<Rep, Period> operator +(Frequency<Rep, Period> const& f1, Frequency<Rep, Period> const& f2)
 	{
 		return Frequency<Rep, Period>{f1.count() + f2.count()};
 	}
 
 	// frequency - frequency -> frequency
 	template <typename Rep, typename Period>
-	constexpr Frequency<Rep, Period> operator -(const Frequency<Rep, Period>& f1, const Frequency<Rep, Period>& f2)
+	constexpr Frequency<Rep, Period> operator -(Frequency<Rep, Period> const& f1, Frequency<Rep, Period> const& f2)
 	{
 		return Frequency<Rep, Period>{f1.count() - f2.count()};
 	}
 
 	// -frequency -> frequency
 	template <typename Rep, typename Period>
-	constexpr Frequency<Rep, Period> operator -(const Frequency<Rep, Period>& f)
+	constexpr Frequency<Rep, Period> operator -(Frequency<Rep, Period> const& f)
 	{
 		return Frequency<Rep, Period>{-f.count()};
 	}
 
 	// k * frequency -> frequency
 	template <typename Rep, typename Period>
-	constexpr Frequency<Rep, Period> operator *(Rep k, const Frequency<Rep, Period>& f)
+	constexpr Frequency<Rep, Period> operator *(Rep k, Frequency<Rep, Period> const& f)
 	{
 		return Frequency<Rep, Period>{k * f.count()};
 	}
 	// frequency * k -> frequency
 	template <typename Rep, typename Period>
-	constexpr Frequency<Rep, Period> operator *(const Frequency<Rep, Period>& f, Rep k)
+	constexpr Frequency<Rep, Period> operator *(Frequency<Rep, Period> const& f, Rep k)
 	{
 		return Frequency<Rep, Period>{k * f.count()};
 	}
 
 	// frequency * duration -> k
 	template <typename Rep, typename Period>
-	constexpr Rep operator *(const Frequency<Rep, Period>& f, std::chrono::duration<Rep, Period> duration)
+	constexpr Rep operator *(Frequency<Rep, Period> const& f, std::chrono::duration<Rep, Period> duration)
 	{
 		return f.count() * duration.count();
 	}
 	// duration * frequency -> k
 	template <typename Rep, typename Period>
-	constexpr Rep operator *(std::chrono::duration<Rep, Period> duration, const Frequency<Rep, Period>& f)
+	constexpr Rep operator *(std::chrono::duration<Rep, Period> duration, Frequency<Rep, Period> const& f)
 	{
 		return f.count() * duration.count();
 	}
 
 	// frequency / k -> frequency
 	template <typename Rep, typename Period>
-	constexpr Rep operator /(const Frequency<Rep, Period>& f, Rep k)
+	constexpr Rep operator /(Frequency<Rep, Period> const& f, Rep k)
 	{
 		return Frequency<Rep, Period>{f.count() / k};
 	}
 
 	// k / duration -> frequency
 	template <typename Rep, typename Period>
-	constexpr Frequency<Rep, Period> operator /(Rep dividend, const std::chrono::duration<Rep, Period> duration)
+	constexpr Frequency<Rep, Period> operator /(Rep dividend, std::chrono::duration<Rep, Period> const& duration)
 	{
 		return Frequency<Rep, Period>{dividend / duration.count()};
 	}
 
 	// k / frequency -> duration
 	template <typename Rep, typename Period>
-	constexpr std::chrono::duration<Rep, Period> operator /(Rep dividend, const Frequency<Rep, Period>& f)
+	constexpr std::chrono::duration<Rep, Period> operator /(Rep dividend, Frequency<Rep, Period> const& f)
 	{
 		return std::chrono::duration<Rep, Period>{dividend / f.count()};
 	}
 
 	template<typename ToFrequency, typename Rep, typename Period>
-	constexpr ToFrequency frequency_cast(const Frequency<Rep, Period>& f)
+	constexpr ToFrequency frequency_cast(Frequency<Rep, Period> const& f)
 	{
 		using ratio = std::ratio_divide<ToFrequency::period, Period>;
 		return ToFrequency{static_cast<ToFrequency::rep>(f.count() * ratio::den / ratio::num)};
