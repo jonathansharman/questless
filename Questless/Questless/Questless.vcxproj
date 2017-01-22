@@ -280,10 +280,6 @@
     <ClInclude Include="include\effects\EffectVisitor.h" />
     <ClInclude Include="include\entities\AllEntities.h" />
     <ClInclude Include="include\entities\beings\Action.h" />
-    <ClInclude Include="include\entities\beings\attributes\Attributes.h" />
-    <ClInclude Include="include\entities\beings\attributes\MagicAttribute.h" />
-    <ClInclude Include="include\entities\beings\attributes\Modifier.h" />
-    <ClInclude Include="include\entities\beings\attributes\Vision.h" />
     <ClInclude Include="include\entities\beings\Being.h" />
     <ClInclude Include="include\entities\beings\BeingId.h" />
     <ClInclude Include="include\entities\beings\Body.h" />
@@ -296,6 +292,10 @@
     <ClInclude Include="include\entities\beings\Human.h" />
     <ClInclude Include="include\entities\beings\IncorporealBeing.h" />
     <ClInclude Include="include\entities\beings\Protection.h" />
+    <ClInclude Include="include\entities\beings\stats\MagicStats.h" />
+    <ClInclude Include="include\entities\beings\stats\Modifier.h" />
+    <ClInclude Include="include\entities\beings\stats\Stats.h" />
+    <ClInclude Include="include\entities\beings\stats\Vision.h" />
     <ClInclude Include="include\entities\beings\statuses\Blind.h" />
     <ClInclude Include="include\entities\beings\statuses\Confused.h" />
     <ClInclude Include="include\entities\beings\statuses\Deaf.h" />
@@ -385,9 +385,12 @@
     <ClInclude Include="include\units\TextureSpace.h" />
     <ClInclude Include="include\units\Vector.h" />
     <ClInclude Include="include\units\Velocity.h" />
+    <ClInclude Include="include\utility\clamp.h" />
     <ClInclude Include="include\utility\Delegate.h" />
+    <ClInclude Include="include\utility\DynamicProperty.h" />
     <ClInclude Include="include\utility\Event.h" />
     <ClInclude Include="include\utility\Initializer.h" />
+    <ClInclude Include="include\utility\Property.h" />
     <ClInclude Include="include\utility\Stream.h" />
     <ClInclude Include="include\utility\TaggedType.h" />
     <ClInclude Include="include\utility\utility.h" />

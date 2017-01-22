@@ -12,8 +12,8 @@
 
 namespace questless
 {
-	CorporealBeing::CorporealBeing(Game& game, const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, BeingId id, Body body, const std::function<Attributes()>& make_base_attributes)
-		: Being{game, make_agent, id, std::move(body), make_base_attributes}
+	CorporealBeing::CorporealBeing(Game& game, const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, BeingId id, Body body, const std::function<Stats()>& make_base_stats)
+		: Being{game, make_agent, id, std::move(body), make_base_stats}
 	{}
 
 	CorporealBeing::CorporealBeing(Game& game, std::istream& in, Body body)

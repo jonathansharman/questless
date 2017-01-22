@@ -23,15 +23,15 @@ namespace questless
 		Blind(double magnitude, unsigned duration, boost::optional<BeingId> source_id = boost::none)
 			: Status("Blind", duration, source_id)
 			, _magnitude{magnitude}
-			, _modifiers{std::make_unique<Attributes::VisionModifier>(-magnitude)}
+			, _modifiers{std::make_unique<Stats::VisionModifier>(-magnitude)}
 		{}
 
 		virtual Type type() const { return Type::debuff; }
 
-		const Attributes::modifiers_t& modifiers() const override { return _modifiers; }
+		const Stats::modifiers_t& modifiers() const override { return _modifiers; }
 	private:
 		double _magnitude;
-		Attributes::modifiers_t _modifiers;
+		Stats::modifiers_t _modifiers;
 	};
 }
 

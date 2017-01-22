@@ -7,8 +7,7 @@
 * @section DESCRIPTION A sentient entity. Includes the player and all NPCs.
 */
 
-#ifndef BEING_H
-#define BEING_H
+#pragma once
 
 #include <vector>
 #include <deque>
@@ -20,13 +19,16 @@
 #include "entities/beings/BeingId.h"
 #include "entities/beings/Body.h"
 #include "entities/beings/statuses/Status.h"
-#include "attributes/Attributes.h"
+#include "stats/Stats.h"
 #include "items/Inventory.h"
 #include "items/Item.h"
 #include "items/weapons/Weapon.h"
 #include "items/armor/Armor.h"
 #include "spell/Spell.h"
+#include "utility/utility.h"
 #include "utility/Event.h"
+#include "utility/Property.h"
+#include "utility/DynamicProperty.h"
 
 namespace questless
 {
@@ -51,38 +53,6 @@ namespace questless
 		using ref = std::reference_wrapper<Being>;
 		using ptr_less_t = std::function<bool(const Being::ptr&, const Being::ptr&)>;
 		using ref_less_t = std::function<bool(const Being&, const Being&)>;
-
-		struct Conditions
-		{
-			double health = 0.0;
-			double mana = 0.0;
-			double energy = 0.0;
-			double satiety = 0.0;
-			double alertness = 0.0;
-			double busy_time = 0.0;
-			bool dead = false;
-			RegionTileCoords::Direction direction = RegionTileCoords::Direction::one;
-
-			constexpr Conditions() = default;
-
-			constexpr Conditions(Health health, Mana mana, Energy energy, Satiety satiety, Alertness alertness, BusyTime busy_time, Dead dead, RegionTileCoords::Direction direction)
-				: health{std::move(health)}, mana{std::move(mana)}, energy{std::move(energy)}, satiety{std::move(satiety)}, alertness{std::move(alertness)}, busy_time{std::move(busy_time)}, dead{std::move(dead)}, direction{std::move(direction)}
-			{}
-
-			friend std::ostream& operator <<(std::ostream& out, const Conditions& c)
-			{
-				out << c.health << ' ' << c.mana << ' ' << c.energy << ' ' << c.satiety << ' ' << c.alertness << ' ' << c.busy_time << ' ' << c.dead << ' ' << static_cast<int>(c.direction);
-				return out;
-			}
-
-			friend std::istream& operator >>(std::istream& in, Conditions& c)
-			{
-				int direction;
-				in >> c.health >> c.mana >> c.energy >> c.satiety >> c.alertness >> c.busy_time >> c.dead >> direction;
-				c.direction = static_cast<RegionTileCoords::Direction>(direction);
-				return in;
-			}
-		};
 
 		///////////////
 		// Constants //
@@ -128,6 +98,45 @@ namespace questless
 		/////////////////
 		// Public Data //
 		/////////////////
+
+		Body body;
+
+		// Stats
+
+		Stats base_stats; ///< Base stats, prior to application of status modifiers.
+		Stats stats; ///< Effective stats, accounting for all modifiers from base.
+
+		// Conditions
+
+		DynamicProperty<double> health;
+		DynamicProperty<double> mana;
+		DynamicProperty<double> energy;
+
+		static void satiety_mutator(double& satiety, const double& new_satiety)
+		{
+			satiety = new_satiety < 0.0
+				? 0.0
+				: new_satiety > max_satiety
+					? max_satiety
+					: new_satiety
+				;
+		}
+		Property<double, satiety_mutator> satiety;
+
+		static void alertness_mutator(double& alertness, const double& new_alertness)
+		{
+			alertness = new_alertness < 0.0
+				? 0.0
+				: new_alertness > max_alertness
+					? max_alertness
+					: new_alertness
+				;
+		}
+		Property<double, alertness_mutator> alertness;
+
+		DynamicProperty<double> busy_time;
+		bool dead;
+		RegionTileCoords::Direction direction;
 
 		// Event Handlers
 
@@ -193,121 +202,6 @@ namespace questless
 		/// @return The item taken.
 		Item::ptr take_item(const Item& item) { return _inventory.remove(item); }
 
-		/// @return The being's body.
-		const Body& body() const { return _body; }
-		/// @return The being's body.
-		Body& body() { return _body; }
-
-		// Condition accessors
-
-		double health() const { return _conditions.health; }
-		double mana() const { return _conditions.mana; }
-		double energy() const { return _conditions.energy; }
-		double satiety() const { return _conditions.satiety; }
-		double alertness() const { return _conditions.alertness; }
-		double busy_time() const { return _conditions.busy_time; }
-		bool dead() const { return _conditions.dead; }
-		RegionTileCoords::Direction direction() const { return _conditions.direction; }
-
-		// Attribute accessors
-
-		double vitality() const { return _attributes.vitality; }
-		double spirit() const { return _attributes.spirit; }
-		double health_regen() const { return _attributes.health_regen; }
-		double mana_regen() const { return _attributes.mana_regen; }
-		double strength() const { return _attributes.strength; }
-		double endurance() const { return _attributes.endurance; }
-		double stamina() const { return _attributes.stamina; }
-		double agility() const { return _attributes.agility; }
-		double dexterity() const { return _attributes.dexterity; }
-		double stealth() const { return _attributes.stealth; }
-		Vision vision() const { return _attributes.vision; }
-		double visual_acuity() const { return _attributes.vision.acuity(); }
-		double ideal_light() const { return _attributes.vision.ideal_light(); }
-		double light_tolerance() const { return _attributes.vision.light_tolerance(); }
-		double hearing() const { return _attributes.hearing; }
-		double intellect() const { return _attributes.intellect; }
-		double min_temp() const { return _attributes.min_temp; }
-		double max_temp() const { return _attributes.max_temp; }
-		bool mute() const { return _attributes.mute; }
-
-		const Protection& protection() const { return _attributes.protection; }
-		const Resistance& resistance() const { return _attributes.resistance; }
-		const Vulnerability& vulnerability() const { return _attributes.vulnerability; }
-
-		const MagicPower& magic_power() const { return _attributes.magic_power; }
-		template <spell::Color color> double magic_power() const { return _attributes.magic_power.get<color>(); }
-		double magic_power(spell::Color color) const;
-
-		const MagicResistance& magic_resistance() const { return _attributes.magic_resistance; }
-		template <spell::Color color> double magic_resistance() const { return _attributes.magic_resistance.get<color>(); }
-		double magic_resistance(spell::Color color) const;
-
-		// Condition mutators
-
-		void health(double value) { _conditions.health = value; }
-		void gain_health(double amount);
-		void lose_health(double amount);
-
-		void mana(double value) { _conditions.mana = value; }
-		void gain_mana(double amount);
-		void lose_mana(double amount);
-
-		void energy(double value) { _conditions.energy = value; }
-		void gain_energy(double amount);
-		void lose_energy(double amount);
-
-		void satiety(double value) { _conditions.satiety = value; }
-		void gain_satiety(double amount);
-		void lose_satiety(double amount);
-
-		void alertness(double value) { _conditions.alertness = value; }
-		void gain_alertness(double amount);
-		void lose_alertness(double amount);
-
-		void busy_time(double value);
-		void gain_busy_time(double amount);
-		void lose_busy_time(double amount);
-
-		void die() { _conditions.dead = true; }
-		void resurrect() { _conditions.dead = false; }
-
-		void direction(RegionTileCoords::Direction direction) { _conditions.direction = direction; }
-
-		// Attribute mutators
-
-		void vitality(double value) { _attributes.vitality = value; }
-		void spirit(double value) { _attributes.spirit = value; }
-		void health_regen(double value) { _attributes.health_regen = value; }
-		void mana_regen(double value) { _attributes.mana_regen = value; }
-		void strength(double value) { _attributes.strength = value; }
-		void endurance(double value) { _attributes.endurance = value; }
-		void stamina(double value) { _attributes.stamina = value; }
-		void agility(double value) { _attributes.agility = value; }
-		void dexterity(double value) { _attributes.dexterity = value; }
-		void stealth(double value) { _attributes.stealth = value; }
-		void vision(Vision value) { _attributes.vision = value; }
-		void visual_acuity(double value) { _attributes.vision.acuity(value); }
-		void ideal_light(double value) { _attributes.vision.ideal_light(value); }
-		void light_tolerance(double value) { _attributes.vision.light_tolerance(value); }
-		void hearing(double value) { _attributes.hearing = value; }
-		void intellect(double value) { _attributes.intellect = value; }
-		void min_temp(double value) { _attributes.min_temp = value; }
-		void max_temp(double value) { _attributes.max_temp = value; }
-		void mute(bool value) { _attributes.mute = value; }
-
-		void protection(const Protection& value) { _attributes.protection = value; }
-		void resistance(const Resistance& value) { _attributes.resistance = value; }
-		void vulnerability(const Vulnerability& value) { _attributes.vulnerability = value; }
-
-		void magic_power(MagicPower value) { _attributes.magic_power = value; }
-		template <spell::Color color> void magic_power(double value) { _attributes.magic_power.get<color> = value; }
-		void magic_power(spell::Color color, double value);
-
-		void magic_resistance(MagicResistance value) { _attributes.magic_resistance = value; }
-		template <spell::Color color> void magic_resistance(double value) { _attributes.magic_resistance.get<color> = value; }
-		void magic_resistance(spell::Color color, double value);
-
 		/// Advances the being one time unit.
 		void update() override;
 
@@ -325,7 +219,7 @@ namespace questless
 
 		void add_status(std::unique_ptr<Status> status);
 	protected:
-		Being(Game& game, const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, BeingId id, Body body, const std::function<Attributes()>& make_base_attributes);
+		Being(Game& game, const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, BeingId id, Body body, const std::function<Stats()>& make_base_stats);
 		Being(Game& game, std::istream& in, Body body);
 
 		virtual Body make_body() = 0;
@@ -339,23 +233,10 @@ namespace questless
 		std::deque<Action::ptr> _delayed_actions; ///< The queue of delayed actions to occur when this being is not busy.
 		std::deque<Action::cont_t> _delayed_action_conts; ///< The queue of delayed action continuations.
 
-		// Body
-
-		Body _body;
-
-		// Attributes
-
-		Attributes _base_attributes; ///< Base attributes, prior to application of status modifiers.
-		Attributes _attributes; ///< Effective attributes, accounting for status modifiers.
-
-		// Conditions
-
-		Conditions _conditions;
-
 		// Statuses
 
 		std::vector<std::unique_ptr<Status>> _statuses;
-		bool _need_to_calculate_attributes; /// @todo Is there a way to avoid this?
+		bool _need_to_calculate_stats; /// @todo Is there a way to avoid this?
 
 		// Items
 
@@ -365,8 +246,12 @@ namespace questless
 
 		// Methods
 
-		void calculate_attributes();
+		Stats base_stats_plus_body_stats();
+		Stats effective_stats();
+
+		std::function<void(double&, const double&)> health_mutator();
+		std::function<void(double&, const double&)> mana_mutator();
+		std::function<void(double&, const double&)> energy_mutator();
+		std::function<void(double&, const double&)> busy_time_mutator();
 	};
 }
-
-#endif

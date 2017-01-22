@@ -30,13 +30,13 @@ namespace questless::spell
 						}
 						double magnitude = *opt_magnitude;
 						double cost = _cost_factor * magnitude * log2(magnitude + _cost_log);
-						if (caster.mana() < cost) {
-							return caster.agent().message("Not enough mana!", "You need " + std::to_string(cost - caster.mana()) + " more mana to cast this.", [cont] { return cont(Action::Result::aborted); });
+						if (caster.mana < cost) {
+							return caster.agent().message("Not enough mana!", "You need " + std::to_string(cost - caster.mana) + " more mana to cast this.", [cont] { return cont(Action::Result::aborted); });
 						}
 						active_cooldown(cooldown());
 						discharge();
-						caster.lose_mana(cost);
-						double healing = magnitude * caster.magic_power<Color::white>();
+						caster.mana -= cost;
+						double healing = magnitude * caster.stats.magic.white;
 						target->heal(healing, nullptr, caster.id());
 						return cont(Action::Result::success);
 					}

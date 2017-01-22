@@ -36,11 +36,11 @@ namespace questless
 				int left = 0;
 				renderer().draw_rect(ScreenRect{left, _screen_bottom, _condition_bar_width * _conditions_count, _condition_bar_height, ScreenRect::Origin::lower_left}, Color::black(), true);
 				// Health
-				int health_bar_height = static_cast<int>(_condition_bar_height * player_being->health() / player_being->vitality());
+				int health_bar_height = static_cast<int>(_condition_bar_height * player_being->health / player_being->stats.vitality);
 				renderer().draw_rect(ScreenRect{left + 1, _screen_bottom, _condition_bar_width - 2, health_bar_height - 1, ScreenRect::Origin::lower_left}, Color::red(), true);
 				left += _condition_bar_width;
 				// Mana
-				int mana_bar_height = static_cast<int>(_condition_bar_height * player_being->mana() / player_being->spirit());
+				int mana_bar_height = static_cast<int>(_condition_bar_height * player_being->mana / player_being->stats.spirit);
 				renderer().draw_rect(ScreenRect{left + 1, _screen_bottom, _condition_bar_width - 2, mana_bar_height - 1, ScreenRect::Origin::lower_left}, Color::blue(), true);
 				left += _condition_bar_width;
 			}
@@ -48,7 +48,7 @@ namespace questless
 			// Draw the body.
 			{
 				BodyTexturer texturer;
-				texturer.visit(player_being->body());
+				texturer.visit(player_being->body);
 				Texture::ptr texture = texturer.texture();
 				texture->draw(ScreenPoint{0, _screen_bottom - _condition_bar_height}, HAlign::left, VAlign::bottom);
 			}

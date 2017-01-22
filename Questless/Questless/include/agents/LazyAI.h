@@ -19,7 +19,7 @@ namespace questless
 	public:
 		LazyAI(Being& being) : Agent{being} {}
 
-		void act() override { being().gain_busy_time(uniform(1.0, 2.0)); }
+		void act() override { being().busy_time += uniform(1.0, 2.0); }
 
 		void perceive(const Effect::ptr&) override {}
 

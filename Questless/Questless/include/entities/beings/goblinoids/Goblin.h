@@ -17,9 +17,9 @@ namespace questless
 	class Goblin : public CorporealBeing
 	{
 	public:
-		static constexpr Attributes base_attributes
+		static constexpr Stats dflt_base_stats
 			{ Vitality{100.0}
-			, Spirit{20.0}
+			, Spirit{0.0}
 			, HealthRegen{0.1}
 			, ManaRegen{1.0}
 			, Strength{0.0}
@@ -35,14 +35,14 @@ namespace questless
 				}
 			, Hearing{180.0}
 			, Intellect{0.0}
-			, Lift{0.0}
+			, Weight{0.0}
 			, MinTemp{-100.0}
 			, MaxTemp{100.0}
-			, Mute{false}
+			, Mute{true}
 			, Protection::zero()
 			, Resistance::zero()
 			, Vulnerability::zero()
-			, MagicPower
+			, Magic
 				{ WhiteMagic{100.0}
 				, BlackMagic{100.0}
 				, GreenMagic{100.0}
@@ -50,7 +50,7 @@ namespace questless
 				, BlueMagic{100.0}
 				, YellowMagic{100.0}
 				}
-			, MagicResistance
+			, Antimagic
 				{ WhiteMagic{100.0}
 				, BlackMagic{100.0}
 				, GreenMagic{100.0}
@@ -60,24 +60,32 @@ namespace questless
 				}
 			};
 
-		static constexpr double head_vitality = 25.0;
-		static constexpr double head_intellect = 60.0;
+		static constexpr Vitality head_vitality{25.0};
+		static constexpr Weight head_weight{5.0};
+		static constexpr Intellect head_intellect{60.0};
+		static constexpr Spirit head_spirit{20.0};
+		static constexpr Mute head_mute{false};
 
-		static constexpr double torso_vitality = 50.0;
-		static constexpr double torso_strength = 20.0;
+		static constexpr Vitality torso_vitality{50.0};
+		static constexpr Weight torso_weight{35.0};
+		static constexpr Strength torso_strength{20.0};
 
-		static constexpr double arm_vitality = 25.0;
-		static constexpr double arm_strength = 20.0;
+		static constexpr Vitality arm_vitality{25.0};
+		static constexpr Weight arm_weight{10.0};
+		static constexpr Strength arm_strength{20.0};
 
-		static constexpr double hand_vitality = 15.0;
-		static constexpr double hand_dexterity = 100.0;
+		static constexpr Vitality hand_vitality{15.0};
+		static constexpr Weight hand_weight{5.0};
+		static constexpr Dexterity hand_dexterity{100.0};
 
-		static constexpr double leg_vitality = 25.0;
-		static constexpr double leg_agility = 40.0;
-		static constexpr double leg_strength = 20.0;
+		static constexpr Vitality leg_vitality{25.0};
+		static constexpr Weight leg_weight{10.0};
+		static constexpr Agility leg_agility{40.0};
+		static constexpr Strength leg_strength{20.0};
 
-		static constexpr double foot_vitality = 15.0;
-		static constexpr double foot_agility = 20.0;
+		static constexpr Vitality foot_vitality{15.0};
+		static constexpr Weight foot_weight{5.0};
+		static constexpr Agility foot_agility{20.0};
 
 		Goblin(Game& game, const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, BeingId id);
 		Goblin(Game& game, std::istream& in);

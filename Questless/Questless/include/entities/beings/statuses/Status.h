@@ -14,8 +14,8 @@
 #include <vector>
 #include <memory>
 
-#include "entities/beings/attributes/Attributes.h"
-#include "entities/beings/attributes/Modifier.h"
+#include "entities/beings/stats/Stats.h"
+#include "entities/beings/stats/Modifier.h"
 #include "entities/beings/BeingId.h"
 
 namespace questless
@@ -39,7 +39,7 @@ namespace questless
 		/// @return The type of the status: debuff, netural, or buff.
 		virtual Type type() const = 0;
 
-		/// @return The list of attribute modifiers associated with this status.
+		/// @return The list of stat modifiers associated with this status.
 		virtual const std::vector<Modifier::ptr>& modifiers() const
 		{
 			// No modifiers by default.

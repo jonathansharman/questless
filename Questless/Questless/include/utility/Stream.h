@@ -88,9 +88,9 @@ public:
 			if (_itr.empty()) {
 				throw std::out_of_range{"Stream iterator out of range."};
 			}
-			ForwardIterator ret = *this;
+			ForwardIterator result = *this;
 			_itr = _itr.tail();
-			return ret;
+			return result;
 		}
 
 		template <typename OtherType>

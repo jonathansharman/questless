@@ -24,17 +24,17 @@ namespace questless
 			: Status("Nauseated", duration, source_id)
 			, _magnitude{magnitude}
 			, _modifiers
-				{ std::make_unique<Attributes::StrengthModifier>(-_magnitude)
-				, std::make_unique<Attributes::EnduranceModifier>(-_magnitude)
+				{ std::make_unique<Stats::StrengthModifier>(-_magnitude)
+				, std::make_unique<Stats::EnduranceModifier>(-_magnitude)
 				}
 		{}
 
 		virtual Type type() const { return Type::debuff; }
 
-		const Attributes::modifiers_t& modifiers() const override { return _modifiers; }
+		const Stats::modifiers_t& modifiers() const override { return _modifiers; }
 	private:
 		double _magnitude;
-		Attributes::modifiers_t _modifiers;
+		Stats::modifiers_t _modifiers;
 	};
 }
 

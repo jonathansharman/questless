@@ -20,23 +20,21 @@ namespace questless
 	BodyPart::BodyPart
 		( Being& owner
 		, std::string name
-		, std::vector<Modifier::ptr> modifiers
-		, double vitality
+		, Vitality vitality
+		, Weight weight
 		, Protection protection
 		, Resistance resistance
 		, Vulnerability vulnerability
-		, bool vital
 		, std::vector<ScreenRect> regions
 		)
 		: _owner{owner}
 		, _name{std::move(name)}
-		, _modifiers{std::move(modifiers)}
 		, _health{vitality}
 		, _vitality{vitality}
+		, _weight{weight}
 		, _protection{protection}
 		, _resistance{resistance}
 		, _vulnerability{vulnerability}
-		, _vital{vital}
 		, _regions{std::move(regions)}
 	{
 		for (auto& region : _regions) {
@@ -55,7 +53,7 @@ namespace questless
 
 	void BodyPart::update()
 	{
-		gain_health(_owner.health_regen() * _vitality / _owner.vitality());
+		gain_health(_owner.stats.health_regen * _vitality / _owner.stats.vitality);
 	}
 
 	void BodyPart::gain_health(double amount)

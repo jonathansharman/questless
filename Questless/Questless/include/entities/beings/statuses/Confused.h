@@ -23,15 +23,15 @@ namespace questless
 		Confused(double magnitude, unsigned duration, boost::optional<BeingId> source_id = boost::none)
 			: Status("Confused", duration, source_id)
 			, _magnitude{magnitude}
-			, _modifiers{std::make_unique<Attributes::IntellectModifier>(-magnitude)}
+			, _modifiers{std::make_unique<Stats::IntellectModifier>(-magnitude)}
 		{}
 
 		virtual Type type() const { return Type::debuff; }
 
-		const Attributes::modifiers_t& modifiers() const override { return _modifiers; }
+		const Stats::modifiers_t& modifiers() const override { return _modifiers; }
 	private:
 		double _magnitude;
-		Attributes::modifiers_t _modifiers;
+		Stats::modifiers_t _modifiers;
 	};
 }
 

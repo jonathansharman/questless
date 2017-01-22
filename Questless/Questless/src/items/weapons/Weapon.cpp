@@ -31,7 +31,7 @@ namespace questless
 
 	Action::Complete Weapon::CompleteMeleeAttack::perform(Being& actor, cont_t cont)
 	{
-		actor.gain_busy_time(_weapon.follow_through());
+		actor.busy_time += _weapon.follow_through();
 		_weapon.active_cooldown(_weapon.cooldown());
 		if (Being* target = actor.region().being(_coords)) {
 			Damage damage = _weapon.damage();

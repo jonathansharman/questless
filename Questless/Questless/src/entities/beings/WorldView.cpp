@@ -29,7 +29,7 @@ namespace questless
 	{
 		const Region& region = _region;
 		RegionTileCoords coords = being.coords();
-		Vision vision = being.vision();
+		Vision vision = being.stats.vision;
 		double acuity = vision.acuity();
 		double ideal_light = vision.ideal_light();
 		double light_tolerance = vision.light_tolerance();
@@ -61,7 +61,7 @@ namespace questless
 
 					bool in_front;
 					auto offset = region_tile_coords - being.coords();
-					switch (being.direction()) {
+					switch (being.direction) {
 						case RegionTileCoords::Direction::one:
 							in_front = offset.q >= 0 && offset.q + offset.r >= 0;
 							break;

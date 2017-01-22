@@ -14,40 +14,59 @@
 #include "agents/Agent.h"
 #include "world/Section.h"
 #include "world/Region.h"
+#include "utility/clamp.h"
 
 using std::unique_ptr;
 using std::function;
 
 namespace questless
 {
-	Being::Being(Game& game, const function<unique_ptr<Agent>(Being&)>& make_agent, BeingId id, Body body, const function<Attributes()>& make_base_attributes)
+	Being::Being(Game& game, const function<unique_ptr<Agent>(Being&)>& make_agent, BeingId id, Body body, const function<Stats()>& make_base_stats)
 		: Entity(game)
+		, body{std::move(body)}
+		, base_stats{make_base_stats()}
+		, stats{base_stats_plus_body_stats()}
+		, health{stats.vitality, health_mutator()}
+		, mana{stats.spirit, mana_mutator()}
+		, energy{stats.stamina, energy_mutator()}
+		, satiety{max_satiety}
+		, alertness{max_alertness}
+		, busy_time{0.0}
+		, dead{false}
+		, direction{static_cast<RegionTileCoords::Direction>(uniform(1, 6))}
 		, _id{id}
 		, _agent{make_agent(*this)}
-		, _body{std::move(body)}
-		, _need_to_calculate_attributes{false}
-		, _base_attributes{make_base_attributes()}
-		, _attributes{_base_attributes}
-		, _conditions
-			{ Health{_base_attributes.vitality}
-			, Mana{_base_attributes.spirit}
-			, Energy{0.0}
-			, Satiety{0.0}
-			, Alertness{0.0}
-			, BusyTime{0.0}
-			, Dead{false}
-			, static_cast<RegionTileCoords::Direction>(uniform(1, 6))
-			}
-	{}
+		, _need_to_calculate_stats{false}
+		
+	{
+		stats = effective_stats();
+
+		// Only set busy time mutator after initialization so that it won't try to access the being's region before it's placed in one.
+		busy_time.set_mutator(busy_time_mutator(), false);
+	}
 
 	Being::Being(Game& game, std::istream& in, Body body)
 		: Entity(game, in)
-		, _body{std::move(body)}
-		, _need_to_calculate_attributes{true}
+		, body{std::move(body)}
+		, health{health_mutator()}
+		, mana{mana_mutator()}
+		, energy{energy_mutator()}
+		, busy_time{busy_time_mutator()}
+		, _need_to_calculate_stats{true}
 	{
 		in >> _id.key;
-		in >> _attributes;
-		in >> _conditions;
+
+		/// @todo Read body.
+
+		in >> base_stats;
+		in >> stats;
+
+		in >> health >> mana >> energy >> satiety >> alertness >> busy_time >> dead;
+
+		/// @todo Is there a better way to extract into an enum class?
+		int direction_int;
+		in >> direction_int;
+		direction = static_cast<RegionTileCoords::Direction>(direction_int);
 	}
 
 	Being::~Being() = default;
@@ -57,8 +76,14 @@ namespace questless
 		Entity::serialize(out);
 
 		out << id().key << ' ';
-		out << _attributes << ' ';
-		out << _conditions << ' ';
+
+		/// @todo Write body.
+
+		out << health << ' ' << mana << ' ' << energy << ' ' << satiety << ' ' << alertness << ' '
+			<< busy_time << ' ' << dead << ' ' << static_cast<int>(direction);
+
+		out << base_stats << ' ';
+		out << stats << ' ';
 	}
 
 	void Being::act()
@@ -75,7 +100,7 @@ namespace questless
 			action->perform(*this, std::move(cont));
 			// If there are additional delayed actions, pop and execute the next delay.
 			if (!_action_delays.empty()) {
-				gain_busy_time(_action_delays.front());
+				busy_time += _action_delays.front();
 				_action_delays.pop_front();
 			}
 		}
@@ -85,7 +110,7 @@ namespace questless
 	{
 		// If there are no enqueued delayed actions, just incur the delay immediately instead of enqueueing it.
 		if (_delayed_actions.empty()) {
-			gain_busy_time(delay);
+			busy_time += delay;
 		} else {
 			_action_delays.push_back(delay);
 		}
@@ -100,62 +125,11 @@ namespace questless
 		_delayed_action_conts.clear();
 	}
 
-	double Being::magic_power(spell::Color color) const
-	{
-		switch (color) {
-			case spell::Color::white:  return _attributes.magic_power.white();
-			case spell::Color::black:  return _attributes.magic_power.black();
-			case spell::Color::green:  return _attributes.magic_power.green();
-			case spell::Color::red:    return _attributes.magic_power.red();
-			case spell::Color::blue:   return _attributes.magic_power.blue();
-			case spell::Color::yellow: return _attributes.magic_power.yellow();
-			default: throw std::logic_error{"Unrecognized spell color."};
-		}
-	}
-
-	double Being::magic_resistance(spell::Color color) const
-	{
-		switch (color) {
-			case spell::Color::white:  return _attributes.magic_resistance.white();
-			case spell::Color::black:  return _attributes.magic_resistance.black();
-			case spell::Color::green:  return _attributes.magic_resistance.green();
-			case spell::Color::red:    return _attributes.magic_resistance.red();
-			case spell::Color::blue:   return _attributes.magic_resistance.blue();
-			case spell::Color::yellow: return _attributes.magic_resistance.yellow();
-			default: throw std::logic_error{"Unrecognized spell color."};
-		}
-	}
-
-	void Being::magic_power(spell::Color color, double value)
-	{
-		switch (color) {
-			case spell::Color::white:  _attributes.magic_power.white(value);
-			case spell::Color::black:  _attributes.magic_power.black(value);
-			case spell::Color::green:  _attributes.magic_power.green(value);
-			case spell::Color::red:    _attributes.magic_power.red(value);
-			case spell::Color::blue:   _attributes.magic_power.blue(value);
-			case spell::Color::yellow: _attributes.magic_power.yellow(value);
-			default: throw std::logic_error{"Unrecognized spell color."};
-		}
-	}
-
-	void Being::magic_resistance(spell::Color color, double value)
-	{
-		switch (color) {
-			case spell::Color::white:  _attributes.magic_resistance.white(value);
-			case spell::Color::black:  _attributes.magic_resistance.black(value);
-			case spell::Color::green:  _attributes.magic_resistance.green(value);
-			case spell::Color::red:    _attributes.magic_resistance.red(value);
-			case spell::Color::blue:   _attributes.magic_resistance.blue(value);
-			case spell::Color::yellow: _attributes.magic_resistance.yellow(value);
-			default: throw std::logic_error{"Unrecognized spell color."};
-		}
-	}
-
 	void Being::update()
 	{
-		if (_need_to_calculate_attributes) {
-			calculate_attributes();
+		if (_need_to_calculate_stats) {
+			stats = effective_stats();
+			_need_to_calculate_stats = false;
 		}
 
 		// Update status modifiers.
@@ -166,7 +140,7 @@ namespace questless
 				if ((*i)->duration() == 0) {
 					(*i)->expire(*this);
 					_statuses.erase(i);
-					_need_to_calculate_attributes = true;
+					_need_to_calculate_stats = true;
 				} else {
 					++i;
 				}
@@ -175,32 +149,27 @@ namespace questless
 
 		// Update conditions.
 
-		_conditions.health += _attributes.health_regen;
-		_conditions.mana += _attributes.mana_regen;
-		_conditions.satiety += satiety_rate;
-		_conditions.energy += energy_rate;
-		_conditions.alertness += alertness_rate;
-		lose_busy_time(1.0);
+		health += stats.health_regen;
+		mana += stats.mana_regen;
+		satiety += satiety_rate;
+		energy += energy_rate;
+		alertness += alertness_rate;
+		busy_time -= 1.0;
 
 		// Update body parts.
 
-		for (BodyPart& part : _body) {
+		for (BodyPart& part : body) {
 			part.update();
 		}
-
-		// Clamp conditions.
-
-		if (_conditions.health > _attributes.vitality) { _conditions.health = _attributes.vitality; }
-		if (_conditions.mana > _attributes.spirit) { _conditions.mana = _attributes.spirit; }
 
 		// Handle temperature damage.
 
 		double temp = region().temperature(coords());
-		if (temp > max_temp()) {
-			Damage burn{Burn{(temp - max_temp()) / (max_temp() - min_temp()) * temperature_damage_factor}};
+		if (temp > stats.max_temp) {
+			Damage burn{Burn{(temp - stats.max_temp) / (stats.max_temp - stats.min_temp) * temperature_damage_factor}};
 			take_damage(burn, nullptr, boost::none);
-		} else if (temp < min_temp()) {
-			Damage freeze{Freeze{(min_temp() - temp) / (max_temp() - min_temp()) * temperature_damage_factor}};
+		} else if (temp < stats.min_temp) {
+			Damage freeze{Freeze{(stats.min_temp - temp) / (stats.max_temp - stats.min_temp) * temperature_damage_factor}};
 			take_damage(freeze, nullptr, boost::none);
 		}
 
@@ -214,7 +183,7 @@ namespace questless
 	void Being::take_damage(Damage& damage, BodyPart* part, boost::optional<BeingId> opt_source_id)
 	{
 		// Store whether the being was already dead upon taking this damage.
-		bool was_already_dead = dead();
+		bool was_already_dead = dead;
 
 		// Get source.
 		Being* source = opt_source_id ? game().being(*opt_source_id) : nullptr;
@@ -223,9 +192,9 @@ namespace questless
 		if (before_take_damage(damage, part, opt_source_id)) {
 			// Source, if present, will deal damage.
 			if (!source || source->before_deal_damage(damage, part, id())) {
-				// Initialize total resistance and vulnerability to the being's resistance/vulnerability attributes.
-				auto total_resistance = resistance();
-				auto total_vulnerability = vulnerability();
+				// Initialize total resistance and vulnerability to the being's resistance/vulnerability stats.
+				auto total_resistance = stats.resistance;
+				auto total_vulnerability = stats.vulnerability;
 
 				// First, apply shields' protection, in reverse order so that more recently equipped shields wear sooner.
 				for (auto shields_it = _shields.rbegin(); shields_it != _shields.rend(); ++shields_it) {
@@ -249,39 +218,39 @@ namespace questless
 						total_resistance += armor.resistance();
 					}
 
-					// Apply part's and being's protection attributes.
-					damage -= part->protection().reduction() + protection().reduction();
+					// Apply part's and being's protection stats.
+					damage -= part->protection().reduction() + stats.protection.reduction();
 
 					// Part's armor takes resistance wear based on the final damage to the part before multipliers.
 					for (Armor& armor : part->armor()) {
 						armor.take_resistance_wear(damage);
 					}
 
-					// Add part's resistance and vulnerability attributes to totals.
+					// Add part's resistance and vulnerability stats to totals.
 					total_resistance += part->resistance();
 					total_vulnerability += part->vulnerability();
 
 					// Part and being lose health.
-					double health_lost = damage.with(total_resistance, total_vulnerability).total() / (1.0 + endurance_factor * endurance());
+					double health_lost = damage.with(total_resistance, total_vulnerability).total() / (1.0 + endurance_factor * stats.endurance);
 					part->lose_health(health_lost);
-					lose_health(health_lost);
+					health -= health_lost;
 
 					// Check for part disability.
 					if (part->health() <= 0) {
 						/// @todo Disable part.
 						if (part->vital()) {
-							die();
+							dead = true;
 						}
 					}
 				} else {
 					// Damage is non-part-targeted.
 
-					// Apply being's protection attribute.
-					damage -= protection().reduction();
+					// Apply being's protection stat.
+					damage -= stats.protection.reduction();
 
 					// Being loses health.
-					double health_lost = damage.with(total_resistance, total_vulnerability).total() / (1.0 + endurance_factor * endurance());
-					lose_health(health_lost);
+					double health_lost = damage.with(total_resistance, total_vulnerability).total() / (1.0 + endurance_factor * stats.endurance);
+					health -= health_lost;
 				}
 
 				// Add injury effect.
@@ -292,11 +261,11 @@ namespace questless
 					// Source, if present, has dealt damage.
 					if (!source || source->after_deal_damage(damage, part, id())) {
 						// If target has taken fatal damage, mark it dead.
-						if (health() <= 0) {
-							die();
+						if (health <= 0) {
+							dead = true;
 						}
 						// Handle death, if this damage killed the target.
-						if (!was_already_dead && dead()) {
+						if (!was_already_dead && dead) {
 							// Target will die.
 							if (before_die(opt_source_id)) {
 								// Source, if present, will have killed target.
@@ -344,7 +313,7 @@ namespace questless
 		// Target will receive healing.
 		before_receive_heal(amount, part, opt_source_id);
 		// Target gains health.
-		gain_health(amount);
+		health += amount;
 		// Target has received healing.
 		after_receive_heal(amount, part, opt_source_id);
 		// Source has given healing.
@@ -359,136 +328,79 @@ namespace questless
 		_statuses.push_back(std::move(status));
 	}
 
-	void Being::gain_health(double amount)
-	{
-		_conditions.health += amount;
-		if (health() > vitality()) {
-			health(vitality());
-		}
-	}
-	void Being::lose_health(double amount)
-	{
-		_conditions.health -= amount;
-		if (health() < 0) {
-			health(0);
-		}
-	}
-
-	void Being::gain_mana(double amount)
-	{
-		_conditions.mana += amount;
-		if (mana() > spirit()) {
-			mana(spirit());
-		}
-	}
-	void Being::lose_mana(double amount)
-	{
-		_conditions.mana -= amount;
-		if (mana() < 0) {
-			mana(0);
-		}
-	}
-
-	void Being::gain_energy(double amount)
-	{
-		_conditions.energy += amount;
-		if (energy() > stamina()) {
-			energy(stamina());
-		}
-	}
-	void Being::lose_energy(double amount)
-	{
-		_conditions.energy -= amount;
-		if (energy() < 0) {
-			energy(0);
-		}
-	}
-
-	void Being::gain_satiety(double amount)
-	{
-		_conditions.satiety += amount;
-		if (satiety() > max_satiety) {
-			satiety(max_satiety);
-		}
-	}
-	void Being::lose_satiety(double amount)
-	{
-		_conditions.satiety -= amount;
-		if (satiety() < 0) {
-			satiety(0);
-		}
-	}
-
-	void Being::gain_alertness(double amount)
-	{
-		_conditions.alertness += amount;
-		if (alertness() > max_alertness) {
-			alertness(max_alertness);
-		}
-	}
-	void Being::lose_alertness(double amount)
-	{
-		_conditions.alertness -= amount;
-		if (alertness() < 0) {
-			alertness(0);
-		}
-	}
-
-	void Being::busy_time(double value)
-	{
-		region().remove_from_turn_queue(*this);
-		_conditions.busy_time = value;
-		region().add_to_turn_queue(*this);
-	}
-	void Being::gain_busy_time(double amount)
-	{
-		region().remove_from_turn_queue(*this);
-		_conditions.busy_time += amount;
-		region().add_to_turn_queue(*this);
-	}
-	void Being::lose_busy_time(double amount)
-	{
-		region().remove_from_turn_queue(*this);
-		_conditions.busy_time -= amount;
-		region().add_to_turn_queue(*this);
-	}
-
 	/////////////////////////////////////
-	// Attributes and Status Modifiers //
+	// Stats and Status Modifiers //
 	/////////////////////////////////////
 
-	void Being::calculate_attributes()
+
+	Stats Being::base_stats_plus_body_stats()
 	{
-		_need_to_calculate_attributes = false;
+		Stats result = base_stats;
 
-		_attributes = _base_attributes;
+		// Apply body part stat modifiers, and sum weight.
+		for (const BodyPart& part : body) {
+			Modifier::apply_all(part.modifiers(), result);
 
-		// Add body part attribute modifiers first.
-		for (const BodyPart& part : _body) {
-			Modifier::apply_all(part.modifiers(), _attributes);
+			result.weight += part.weight();
 		}
 
-		// Apply status attribute modifiers second (may override body part modifiers).
+		return result;
+	}
+
+	Stats Being::effective_stats()
+	{
+		Stats result = base_stats_plus_body_stats();
+
+		// Apply status stat modifiers (may override body part modifiers).
 		for (const auto& status : _statuses) {
-			Modifier::apply_all(status->modifiers(), _attributes);
+			Modifier::apply_all(status->modifiers(), result);
 		}
 
 		// Apply condition effects.
 
-		double percent_weary = 1 - energy() / stamina();
-		_attributes.strength -= percent_weary * energy_strength_penalty * _base_attributes.strength;
-		_attributes.endurance -= percent_weary * energy_endurance_penalty * _base_attributes.endurance;
+		double percent_weary = 1.0 - energy / result.stamina;
+		result.strength -= percent_weary * energy_strength_penalty * base_stats.strength;
+		result.endurance -= percent_weary * energy_endurance_penalty * base_stats.endurance;
 
-		double percent_sleepy = 1 - alertness() / max_alertness;
-		_attributes.agility -= percent_sleepy * alertness_agility_penalty * _base_attributes.agility;
-		_attributes.dexterity -= percent_sleepy * alertness_dexterity_penalty * _base_attributes.dexterity;
-		_attributes.intellect -= percent_sleepy * alertness_intellect_penalty * _base_attributes.intellect;
+		double percent_sleepy = 1.0 - alertness / max_alertness;
+		result.agility -= percent_sleepy * alertness_agility_penalty * base_stats.agility;
+		result.dexterity -= percent_sleepy * alertness_dexterity_penalty * base_stats.dexterity;
+		result.intellect -= percent_sleepy * alertness_intellect_penalty * base_stats.intellect;
 
-		double percent_hungry = 1 - satiety() / max_satiety;
-		_attributes.health_regen -= percent_hungry * satiety_health_regen_penalty * _base_attributes.health_regen;
-		_attributes.mana_regen -= percent_hungry * satiety_mana_regen_penalty * _base_attributes.mana_regen;
+		double percent_hungry = 1.0 - satiety / max_satiety;
+		result.health_regen -= percent_hungry * satiety_health_regen_penalty * base_stats.health_regen;
+		result.mana_regen -= percent_hungry * satiety_mana_regen_penalty * base_stats.mana_regen;
 
-		// Clamp negative values to zero.
-		_attributes.clamp();
+		return result;
+	}
+
+	std::function<void(double&, const double&)> Being::health_mutator()
+	{
+		return [this](double& health, const double& new_health)
+		{
+			health = clamp(new_health, 0.0, stats.vitality.get());
+		};
+	}
+	std::function<void(double&, double const&)> Being::mana_mutator()
+	{
+		return [this](double& mana, const double& new_mana)
+		{
+			mana = clamp(new_mana, 0.0, stats.spirit.get());
+		};
+	}
+	std::function<void(double&, const double&)> Being::energy_mutator()
+	{
+		return [this](double& energy, const double& new_energy)
+		{
+			energy = clamp(new_energy, 0.0, stats.stamina.get());
+		};
+	}
+	std::function<void(double&, const double&)> Being::busy_time_mutator()
+	{
+		return [this](double& busy_time, const double& new_busy_time) {
+			region().remove_from_turn_queue(*this);
+			busy_time = new_busy_time;
+			region().add_to_turn_queue(*this);
+		};
 	}
 }

@@ -11,6 +11,7 @@
 #define ILLUMINATED_H
 
 #include "entities/beings/statuses/Status.h"
+#include "entities/beings/stats/Modifier.h"
 
 namespace questless
 {
@@ -24,17 +25,17 @@ namespace questless
 			: Status("Illuminated", duration, source_id)
 			, _magnitude{magnitude}
 			, _modifiers
-				{ std::make_unique<Attributes::StealthModifier>(-_magnitude)
-				, std::make_unique<Attributes::BlackPowerModifier>(-_magnitude)
+				{ std::make_unique<StealthModifier>(-_magnitude)
+				, std::make_unique<BlackMagicModifier>(-_magnitude)
 				}
 		{}
 
 		virtual Type type() const { return Type::debuff; }
 
-		const Attributes::modifiers_t& modifiers() const override { return _modifiers; }
+		const std::vector<Modifier::ptr>& modifiers() const override { return _modifiers; }
 	private:
 		double _magnitude;
-		Attributes::modifiers_t _modifiers;
+		std::vector<Modifier::ptr> _modifiers;
 	};
 }
 

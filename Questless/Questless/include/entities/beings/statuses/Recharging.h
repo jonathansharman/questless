@@ -4,11 +4,10 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION The interface for the Recharging status class.
+* @section DESCRIPTION Status of recharging mana over time.
 */
 
-#ifndef RECHARGING_H
-#define RECHARGING_H
+#pragma once
 
 #include "entities/beings/statuses/Status.h"
 
@@ -31,5 +30,3 @@ namespace questless
 		double _magnitude;
 	};
 }
-
-#endif

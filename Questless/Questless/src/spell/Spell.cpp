@@ -32,23 +32,23 @@ namespace questless::spell
 		if (_spell.charges() <= 0) {
 			return actor.agent().message("Out of charges!", "You need to incant this spell first.", [cont] { return cont(Action::Result::aborted); });
 		}
-		actor.add_delayed_action(_spell.cast_time() / (1.0 + Being::intellect_factor * actor.intellect()), cont, CompleteCast::make(_spell));
+		actor.add_delayed_action(_spell.cast_time() / (1.0 + Being::intellect_factor * actor.stats.intellect), cont, CompleteCast::make(_spell));
 		return Action::Complete{};
 	}
 
 	Action::Complete Spell::Incant::perform(Being& actor, cont_t cont)
 	{
-		if (actor.mute()) {
+		if (actor.stats.mute) {
 			return actor.agent().message("You are mute!", "You can't incant a spell if you are mute.", [cont] { return cont(Action::Result::aborted); });
 		}
-		actor.gain_busy_time(_spell.incant_time() / (1.0 + Being::intellect_factor * actor.intellect()));
+		actor.busy_time += _spell.incant_time() / (1.0 + Being::intellect_factor * actor.stats.intellect);
 		_spell.gain_charge(1);
 		return cont(Result::success);
 	}
 
 	Action::Complete Spell::Discharge::perform(Being& actor, cont_t cont)
 	{
-		actor.gain_busy_time(_spell.discharge_time() / (1.0 + Being::intellect_factor * actor.intellect()));
+		actor.busy_time += _spell.discharge_time() / (1.0 + Being::intellect_factor * actor.stats.intellect);
 		_spell.lose_charge(1);
 		return cont(Result::success);
 	}

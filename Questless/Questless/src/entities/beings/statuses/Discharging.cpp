@@ -14,6 +14,6 @@ namespace questless
 {
 	void Discharging::subupdate(Being& target)
 	{
-		target.lose_mana(_magnitude);
+		target.mana -= _magnitude;
 	}
 }

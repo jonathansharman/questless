@@ -100,13 +100,13 @@ namespace units
 			const auto cos_dtheta = static_cast<scalar_t>(cos(dtheta_radians));
 			const auto sin_dtheta = static_cast<scalar_t>(sin(dtheta_radians));
 			auto offset = Vector<space_t>{origin.x, origin.y};
-			Point ret = *this - offset;
-			ret = Point
-				{ static_cast<scalar_t>(ret.x * cos_dtheta - ret.y * sin_dtheta)
-				, static_cast<scalar_t>(ret.x * sin_dtheta + ret.y * cos_dtheta)
+			Point result = *this - offset;
+			result = Point
+				{ static_cast<scalar_t>(result.x * cos_dtheta - result.y * sin_dtheta)
+				, static_cast<scalar_t>(result.x * sin_dtheta + result.y * cos_dtheta)
 				};
-			ret += offset;
-			return ret;
+			result += offset;
+			return result;
 		}
 	};
 }

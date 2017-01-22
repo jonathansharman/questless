@@ -100,7 +100,7 @@ namespace questless
 
 				// Draw heading.
 				GamePoint start = Layout::dflt().to_world(being->coords());
-				GamePoint end = Layout::dflt().to_world(being->coords().neighbor(being->direction()));
+				GamePoint end = Layout::dflt().to_world(being->coords().neighbor(being->direction));
 				camera.draw_lines({start, end}, Color::magenta());
 
 				uint8_t luminance;

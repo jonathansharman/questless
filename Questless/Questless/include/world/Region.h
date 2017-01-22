@@ -47,11 +47,11 @@ namespace questless
 
 		/// Removes the given being from the turn queue if it's there.
 		/// @param being A being.
-		void remove_from_turn_queue(Being& being) { if (being.busy_time() <= 0.0) _turn_queue.erase(being); }
+		void remove_from_turn_queue(Being& being) { if (being.busy_time <= 0.0) _turn_queue.erase(being); }
 
 		/// Adds the given being to the turn queue if it's not busy.
 		/// @param being A being.
-		void add_to_turn_queue(Being& being) { if (being.busy_time() <= 0.0) _turn_queue.insert(being); }
+		void add_to_turn_queue(Being& being) { if (being.busy_time <= 0.0) _turn_queue.insert(being); }
 
 		/// @return The being whose turn it is to act or null if none are ready.
 		Being* next_ready_being();

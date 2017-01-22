@@ -4,7 +4,7 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION The implementation for the Recharging status class.
+* @section DESCRIPTION Recharging implementation.
 */
 
 #include "entities/beings/statuses/Recharging.h"
@@ -14,7 +14,6 @@ namespace questless
 {
 	void Recharging::subupdate(Being& target)
 	{
-		target.gain_mana(_magnitude);
-		Status::update(target);
+		target.mana += _magnitude;
 	}
 }

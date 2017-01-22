@@ -20,14 +20,14 @@ namespace questless
 		/// @param duration The number of turns remaining before the status modifier expires.
 		/// @param source_id The ID of the being that caused the status modifier, if any.
 		Mute(unsigned duration, boost::optional<BeingId> source_id = boost::none)
-			: Status("Mute", duration, source_id), _modifiers{std::make_unique<Attributes::MuteModifier>(true)}
+			: Status("Mute", duration, source_id), _modifiers{std::make_unique<Stats::MuteModifier>(true)}
 		{}
 
 		virtual Type type() const { return Type::debuff; }
 
-		const Attributes::modifiers_t& modifiers() const override { return _modifiers; }
+		const Stats::modifiers_t& modifiers() const override { return _modifiers; }
 	private:
-		Attributes::modifiers_t _modifiers;
+		Stats::modifiers_t _modifiers;
 	};
 }
 

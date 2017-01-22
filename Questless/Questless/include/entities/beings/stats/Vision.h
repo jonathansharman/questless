@@ -4,7 +4,7 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION The Vision class, which encapsulates attributes of a being's vision.
+* @section DESCRIPTION The Vision class, which encapsulates stats of a being's vision.
 */
 
 #ifndef VISION_H

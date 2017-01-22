@@ -17,18 +17,18 @@ namespace questless
 	void BasicAI::act()
 	{
 		// Move to or turn towards a random neighbor hex, favoring movement.
-		auto direction = uniform(0, 1) ? being().direction() : static_cast<RegionTileCoords::Direction>(uniform(1, 6));
-		if (direction == being().direction()) {
-			being().gain_busy_time(1.0); /// @todo Calculate move time from attributes and terrain.
+		auto direction = uniform(0, 1) ? being().direction : static_cast<RegionTileCoords::Direction>(uniform(1, 6));
+		if (direction == being().direction) {
+			being().busy_time += 1.0; /// @todo Calculate move time from stats and terrain.
 			being().region().move(being(), being().coords().neighbor(direction));
 		} else {
-			/// @todo Calculate turn time from attributes and terrain.
-			being().gain_busy_time(0.05 + 0.05 * RegionTileCoords::distance(being().direction(), direction));
-			being().direction(direction);
+			/// @todo Calculate turn time from stats and terrain.
+			being().busy_time += 0.05 + 0.05 * RegionTileCoords::distance(being().direction, direction);
+			being().direction = direction;
 		}
 
 		// Wait for a random additional idle time, up to 10 time units.
-		being().gain_busy_time(uniform(0.0, 10.0));
+		being().busy_time += uniform(0.0, 10.0);
 	}
 
 	Action::Complete BasicAI::message

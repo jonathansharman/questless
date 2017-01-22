@@ -7,8 +7,7 @@
 * @section DESCRIPTION Interface for utility functions.
 */
 
-#ifndef UTILITY_H
-#define UTILITY_H
+#pragma once
 
 #include <string>
 #include <random>
@@ -98,26 +97,6 @@ namespace questless
 	template <typename T>
 	constexpr T cube(T value) { return value * value * value; }
 
-	namespace detail
-	{
-		template <typename Floating, typename = std::enable_if_t<std::is_floating_point<Floating>::value>>
-		constexpr Floating constexpr_sqrt_iterative(Floating x, Floating current, Floating previous) {
-			return current == previous
-				? current
-				: constexpr_sqrt_iterative(x, 0.5 * (current + x / current), current);
-		}
-	}
-	/// constexpr version of sqrt function.
-	/// @return The square root of the given floating-point number.
-	template <typename Floating, typename = std::enable_if_t<std::is_floating_point<Floating>::value>>
-	constexpr Floating csqrt(Floating x)
-	{
-		/// @todo Replace detail::constexpr_sqrt_iterative with constexpr lambda when better supported.
-		return detail::constexpr_sqrt_iterative(x, 0.5 * x, 0.0);
-	}
-
-	constexpr double root_three = csqrt(3.0);
-
 	///////////////////
 	// Miscellaneous //
 	///////////////////
@@ -137,5 +116,3 @@ namespace questless
 		}
 	};
 }
-
-#endif

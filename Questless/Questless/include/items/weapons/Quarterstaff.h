@@ -106,7 +106,7 @@ namespace questless
 			Action::Complete perform(Being& actor, cont_t cont) override
 			{
 				_weapon._form = std::make_unique<TargetForm>(_weapon);
-				actor.gain_busy_time(_weapon.switch_time());
+				actor.busy_time += _weapon.switch_time();
 				return cont(Result::success);
 			}
 		private:

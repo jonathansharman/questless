@@ -24,17 +24,17 @@ namespace questless
 			: Status("Numb", duration, source_id)
 			, _magnitude{magnitude}
 			, _modifiers
-				{ std::make_unique<Attributes::AgilityModifier>(-_magnitude)
-				, std::make_unique<Attributes::DexterityModifier>(-_magnitude)
+				{ std::make_unique<Stats::AgilityModifier>(-_magnitude)
+				, std::make_unique<Stats::DexterityModifier>(-_magnitude)
 				}
 		{}
 
 		virtual Type type() const { return Type::debuff; }
 
-		const Attributes::modifiers_t& modifiers() const override { return _modifiers; }
+		const Stats::modifiers_t& modifiers() const override { return _modifiers; }
 	private:
 		double _magnitude;
-		Attributes::modifiers_t _modifiers;
+		Stats::modifiers_t _modifiers;
 	};
 }
 

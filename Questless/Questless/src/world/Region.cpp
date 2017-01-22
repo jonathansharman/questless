@@ -34,8 +34,8 @@ namespace questless
 	bool turn_order_function(const Being& first, const Being& second)
 	{
 		// Sort beings in the turn queue by lower busy-time first, then lower entity ID.
-		double f_b = first.busy_time();
-		double s_b = second.busy_time();
+		double f_b = first.busy_time;
+		double s_b = second.busy_time;
 		return f_b < s_b || (f_b == s_b && first.id() < second.id());
 	}
 

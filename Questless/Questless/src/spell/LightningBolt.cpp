@@ -34,21 +34,21 @@ namespace questless::spell
 						}
 						double magnitude = *opt_magnitude;
 						double cost = _cost_factor * magnitude * log2(magnitude + _cost_log);
-						if (caster.mana() < cost) {
-							return caster.agent().message("Not enough mana!", "You need " + std::to_string(cost - caster.mana()) + " more mana to cast this.", [cont] { return cont(Action::Result::aborted); });
+						if (caster.mana < cost) {
+							return caster.agent().message("Not enough mana!", "You need " + std::to_string(cost - caster.mana) + " more mana to cast this.", [cont] { return cont(Action::Result::aborted); });
 						}
 						return caster.agent().get_lightning_bolt_quality(units::Layout::dflt().to_world(tile_coords), [this, &caster, cont, tile_coords, magnitude, cost](double quality) {
 							active_cooldown(cooldown());
 							discharge();
-							caster.lose_mana(cost);
+							caster.mana -= cost;
 							caster.game().add_effect(LightningBoltEffect::make(tile_coords));
 							if (Being* target = caster.region().being(tile_coords)) {
-								double burn_magnitude = magnitude * quality * caster.magic_power<Color::yellow>() / target->magic_resistance<Color::yellow>();
+								double burn_magnitude = magnitude * quality * caster.stats.magic.yellow / target->stats.antimagic.yellow;
 
 								/// @todo Experimental body part stuff here... Delete or fix.
 
 								// Pick a random strike path from the root to a leaf part.
-								BodyPart* part = &target->body().root();
+								BodyPart* part = &target->body.root();
 								std::vector<BodyPart*> struck_parts{part};
 								while (!part->children().empty()) {
 									part = part->children()[uniform(0u, part->children().size() - 1)].get();

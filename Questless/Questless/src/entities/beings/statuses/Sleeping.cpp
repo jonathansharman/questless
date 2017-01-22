@@ -14,10 +14,10 @@ namespace questless
 {
 	void Sleeping::subupdate(Being& target)
 	{
-		target.gain_health(target.health_regen() * Being::health_regen_asleep_factor);
-		target.gain_mana(target.mana_regen() * Being::mana_regen_asleep_factor);
-		target.gain_alertness(Being::alertness_rate_asleep);
-		target.gain_satiety(Being::satiety_rate_asleep);
-		target.gain_energy(Being::energy_rate_asleep);
+		target.health += target.stats.health_regen * Being::health_regen_asleep_factor;
+		target.mana += target.stats.mana_regen * Being::mana_regen_asleep_factor;
+		target.alertness += Being::alertness_rate_asleep;
+		target.satiety += Being::satiety_rate_asleep;
+		target.energy += Being::energy_rate_asleep;
 	}
 }

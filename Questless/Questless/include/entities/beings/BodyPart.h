@@ -14,7 +14,7 @@
 #include <vector>
 #include <memory>
 
-#include "attributes/Modifier.h"
+#include "stats/Modifier.h"
 #include "BodyPartVisitor.h"
 #include "Damage.h"
 #include "items/weapons/Weapon.h"
@@ -34,28 +34,35 @@ namespace questless
 
 		/// @param owner The being that owns this body.
 		/// @param name The name of the body part.
-		/// @param modifiers Attribute modifiers to apply to the part's owner.
 		/// @param vitality The body part's vitality, which determines its maximum health.
-		/// @param protection The body part's protection attribute.
-		/// @param resistance The body part's resistance attribute.
-		/// @param vulnerability The body part's vulnerability attribute.
-		/// @param vital Whether the body part is vital to its being. If true, the being dies when this body part is disabled.
+		/// @param weight The body part's contribution to its owner's weight.
+		/// @param protection The body part's protection stat.
+		/// @param resistance The body part's resistance stat.
+		/// @param vulnerability The body part's vulnerability stat.
 		/// @param regions The set of rectangular regions that this body part occupies. Used for display and hit detection.
 		BodyPart
 			( Being& owner
 			, std::string name
-			, std::vector<Modifier::ptr> modifiers
-			, double vitality
+			, Vitality vitality
+			, Weight weight
 			, Protection protection
 			, Resistance resistance
 			, Vulnerability vulnerability
-			, bool vital
 			, std::vector<units::ScreenRect> regions
 			);
 
 		virtual ~BodyPart() = default;
 
 		virtual void accept(BodyPartVisitor& visitor) = 0;
+
+		/// @return Whether the body part is vital to its being. If true, the being dies when this body part is disabled.
+		virtual bool vital() const = 0;
+
+		/// @return Stat modifiers to apply to the part's owner.
+		virtual std::vector<Modifier::ptr> modifiers() const = 0;
+
+		/// @return A list of actions that this body part enables its owner to perform.
+		virtual std::vector<Action::ptr> abilities() const = 0;
 
 		/// Advances the body part one time unit.
 		void update();
@@ -72,9 +79,6 @@ namespace questless
 		/// @return The set of regions that this body part occupies.
 		const std::vector<units::ScreenRect>& regions() const { return _regions; }
 
-		/// @return Attribute modifiers to apply to the part's owner.
-		const std::vector<Modifier::ptr>& modifiers() const { return _modifiers; }
-
 		/// @return The body part's current health.
 		double health() const { return _health; }
 
@@ -84,17 +88,17 @@ namespace questless
 		/// @return The body part's vitality, which determines maximum health.
 		double vitality() const { return _vitality; }
 
-		/// @return The body part's protection attribute.
+		/// @return The body part's contribution to its owner's weight.
+		double weight() const { return _weight; }
+
+		/// @return The body part's protection stat.
 		const Protection& protection() const { return _protection; }
 
-		/// @return The body part's resistance attribute.
+		/// @return The body part's resistance stat.
 		const Resistance& resistance() const { return _resistance; }
 
-		/// @return The body part's vulnerability attribute.
+		/// @return The body part's vulnerability stat.
 		const Vulnerability& vulnerability() const { return _vulnerability; }
-
-		/// @return Whether the body part is vital to its being. If true, the being dies when this body part is disabled.
-		bool vital() const { return _vital; }
 
 		/// @return The part's equipped weapons.
 		const std::vector<Weapon::ref>& weapons() { return _weapons; }
@@ -113,16 +117,14 @@ namespace questless
 		std::vector<BodyPart::ptr> _children;
 		std::vector<units::ScreenRect> _regions;
 
-		std::vector<Modifier::ptr> _modifiers;
-
-		/// @todo Group these into a BodyPartAttributes struct or something.
+		/// @todo Group the following into a BodyPartStats struct?
 
 		double _health;
 		double _vitality;
+		double _weight;
 		Protection _protection;
 		Resistance _resistance;
 		Vulnerability _vulnerability;
-		const bool _vital;
 
 		std::vector<Weapon::ref> _weapons;
 		std::vector<Armor::ref> _armor;
@@ -139,31 +141,47 @@ namespace questless
 		Head
 			( Being& owner
 			, std::string name
-			, double intellect
-			, double vitality
+			, Vitality vitality
+			, Weight weight
+			, Intellect intellect
+			, Spirit spirit
 			, Protection protection
 			, Resistance resistance
 			, Vulnerability vulnerability
-			, bool vital
 			, std::vector<units::ScreenRect> regions
 			)
 			: BodyPart
 				{ owner
 				, std::move(name)
-				, Modifier::make_vector(std::make_unique<IntellectModifier>(intellect))
 				, vitality
+				, weight
 				, protection
 				, resistance
 				, vulnerability
-				, vital
 				, std::move(regions)
 				}
 			, _intellect{intellect}
+			, _spirit{spirit}
 		{}
 
 		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
+
+		bool vital() const override { return true; }
+
+		std::vector<Modifier::ptr> modifiers() const override
+		{
+			return Modifier::make_vector
+				( std::make_unique<IntellectModifier>(_intellect)
+				, std::make_unique<SpiritModifier>(_spirit)
+				, std::make_unique<MuteModifier>(false)
+				, std::make_unique<WeightModifier>(weight())
+				);
+		}
+
+		virtual std::vector<Action::ptr> abilities() const { return {}; }
 	private:
 		double _intellect;
+		double _spirit;
 	};
 
 	class Torso : public virtual BodyPart
@@ -175,29 +193,40 @@ namespace questless
 		Torso
 			( Being& owner
 			, std::string name
-			, double strength
-			, double vitality
+			, Vitality vitality
+			, Weight weight
+			, Strength strength
 			, Protection protection
 			, Resistance resistance
 			, Vulnerability vulnerability
-			, bool vital
 			, std::vector<units::ScreenRect> regions
 			)
 			: BodyPart
 				{ owner
 				, std::move(name)
-				, Modifier::make_vector(std::make_unique<StrengthModifier>(strength))
 				, vitality
+				, weight
 				, protection
 				, resistance
 				, vulnerability
-				, vital
 				, std::move(regions)
 				}
 			, _strength{strength}
 		{}
 
 		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
+
+		bool vital() const override { return true; }
+
+		std::vector<Modifier::ptr> modifiers() const override
+		{
+			return Modifier::make_vector
+				( std::make_unique<StrengthModifier>(_strength)
+				, std::make_unique<WeightModifier>(weight())
+				);
+		}
+
+		virtual std::vector<Action::ptr> abilities() const { return{}; }
 
 		double strength() const { return _strength; }
 	private:
@@ -213,29 +242,40 @@ namespace questless
 		Arm
 			( Being& owner
 			, std::string name
-			, double strength
-			, double vitality
+			, Vitality vitality
+			, Weight weight
+			, Strength strength
 			, Protection protection
 			, Resistance resistance
 			, Vulnerability vulnerability
-			, bool vital
 			, std::vector<units::ScreenRect> regions
 			)
 			: BodyPart
 				{ owner
 				, std::move(name)
-				, Modifier::make_vector(std::make_unique<StrengthModifier>(strength))
 				, vitality
+				, weight
 				, protection
 				, resistance
 				, vulnerability
-				, vital
 				, std::move(regions)
 				}
 			, _strength{strength}
 		{}
 
 		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
+
+		bool vital() const override { return false; }
+
+		std::vector<Modifier::ptr> modifiers() const override
+		{
+			return Modifier::make_vector
+				( std::make_unique<StrengthModifier>(_strength)
+				, std::make_unique<WeightModifier>(weight())
+				);
+		}
+
+		virtual std::vector<Action::ptr> abilities() const { return{}; }
 
 		double strength() const { return _strength; }
 	private:
@@ -251,29 +291,42 @@ namespace questless
 		Hand
 			( Being& owner
 			, std::string name
-			, double dexterity
-			, double vitality
+			, Vitality vitality
+			, Weight weight
+			, Dexterity dexterity
 			, Protection protection
 			, Resistance resistance
 			, Vulnerability vulnerability
-			, bool vital
 			, std::vector<units::ScreenRect> regions
 			)
 			: BodyPart
 				{ owner
 				, std::move(name)
-				, Modifier::make_vector(std::make_unique<DexterityModifier>(dexterity))
 				, vitality
+				, weight
 				, protection
 				, resistance
 				, vulnerability
-				, vital
 				, std::move(regions)
 				}
 			, _dexterity{dexterity}
 		{}
 
 		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
+
+		bool vital() const override { return false; }
+
+		std::vector<Modifier::ptr> modifiers() const override
+		{
+			return Modifier::make_vector
+				( std::make_unique<DexterityModifier>(_dexterity)
+				, std::make_unique<WeightModifier>(weight())
+			);
+		}
+
+		virtual std::vector<Action::ptr> abilities() const { return{}; }
+
+		double dexterity() const { return _dexterity; }
 	private:
 		double _dexterity;
 	};
@@ -287,24 +340,23 @@ namespace questless
 		Leg
 			( Being& owner
 			, std::string name
-			, double agility
-			, double strength
-			, double vitality
+			, Vitality vitality
+			, Weight weight
+			, Agility agility
+			, Strength strength
 			, Protection protection
 			, Resistance resistance
 			, Vulnerability vulnerability
-			, bool vital
 			, std::vector<units::ScreenRect> regions
 			)
 			: BodyPart
 				{ owner
 				, std::move(name)
-				, Modifier::make_vector(std::make_unique<AgilityModifier>(agility), std::make_unique<StrengthModifier>(strength))
 				, vitality
+				, weight
 				, protection
 				, resistance
 				, vulnerability
-				, vital
 				, std::move(regions)
 				}
 			, _agility{agility}
@@ -312,6 +364,19 @@ namespace questless
 		{}
 
 		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
+
+		bool vital() const override { return false; }
+
+		std::vector<Modifier::ptr> modifiers() const override
+		{
+			return Modifier::make_vector
+				( std::make_unique<AgilityModifier>(_agility)
+				, std::make_unique<StrengthModifier>(_strength)
+				, std::make_unique<WeightModifier>(weight())
+				);
+		}
+
+		virtual std::vector<Action::ptr> abilities() const { return{}; }
 
 		double agility() const { return _agility; }
 		double strength() const { return _strength; }
@@ -329,29 +394,40 @@ namespace questless
 		Foot
 			( Being& owner
 			, std::string name
-			, double agility
-			, double vitality
+			, Vitality vitality
+			, Weight weight
+			, Agility agility
 			, Protection protection
 			, Resistance resistance
 			, Vulnerability vulnerability
-			, bool vital
 			, std::vector<units::ScreenRect> regions
 			)
 			: BodyPart
 				{ owner
 				, std::move(name)
-				, Modifier::make_vector(std::make_unique<AgilityModifier>(agility))
 				, vitality
+				, weight
 				, protection
 				, resistance
 				, vulnerability
-				, vital
 				, std::move(regions)
 				}
 			, _agility{agility}
 		{}
 
 		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
+
+		bool vital() const override { return false; }
+
+		std::vector<Modifier::ptr> modifiers() const override
+		{
+			return Modifier::make_vector
+				( std::make_unique<AgilityModifier>(_agility)
+				, std::make_unique<WeightModifier>(weight())
+				);
+		}
+
+		virtual std::vector<Action::ptr> abilities() const { return{}; }
 
 		double agility() const { return _agility; }
 	private:
@@ -367,33 +443,40 @@ namespace questless
 		Wing
 			( Being& owner
 			, std::string name
-			, double lift
-			, double vitality
+			, Vitality vitality
+			, Weight weight
 			, Protection protection
 			, Resistance resistance
 			, Vulnerability vulnerability
-			, bool vital
 			, std::vector<units::ScreenRect> regions
 			)
 			: BodyPart
 				{ owner
 				, std::move(name)
-				, Modifier::make_vector(std::make_unique<LiftModifier>(lift))
 				, vitality
+				, weight
 				, protection
 				, resistance
 				, vulnerability
-				, vital
 				, std::move(regions)
 				}
-			, _lift{lift}
+			, _weight{weight}
 		{}
 
 		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
 
-		double lift() const { return _lift; }
+		bool vital() const override { return false; }
+
+		std::vector<Modifier::ptr> modifiers() const override
+		{
+			return Modifier::make_vector(std::make_unique<WeightModifier>(weight()));
+		}
+
+		virtual std::vector<Action::ptr> abilities() const { return{}; }
+
+		double weight() const { return _weight; }
 	private:
-		double _lift;
+		double _weight;
 	};
 
 	class Tail : public virtual BodyPart
@@ -405,6 +488,15 @@ namespace questless
 		using BodyPart::BodyPart;
 
 		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
+
+		bool vital() const override { return false; }
+
+		std::vector<Modifier::ptr> modifiers() const override
+		{
+			return Modifier::make_vector(std::make_unique<WeightModifier>(weight()));
+		}
+
+		virtual std::vector<Action::ptr> abilities() const { return{}; }
 	};
 }
 
