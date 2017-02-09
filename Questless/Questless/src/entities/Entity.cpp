@@ -13,15 +13,15 @@
 
 namespace questless
 {
-	Entity::Entity(Game& game, std::istream& in) : _game{game}
+	Entity::Entity(Game& game, std::istream& in) : game{game}, region {}, section{}
 	{
-		in >> _coords.q;
-		in >> _coords.r;
-		in >> _coords.s;
+		in >> coords.q;
+		in >> coords.r;
+		in >> coords.s;
 	}
 
 	void Entity::serialize(std::ostream& out) const
 	{
-		out << static_cast<unsigned>(entity_class()) << ' ' << _coords.q << ' ' << _coords.r << ' ' << _coords.s << ' ';
+		out << static_cast<unsigned>(entity_class()) << ' ' << coords.q << ' ' << coords.r << ' ' << coords.s << ' ';
 	}
 }

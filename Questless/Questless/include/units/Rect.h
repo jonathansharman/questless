@@ -32,22 +32,22 @@ namespace units
 		explicit Rect(scalar_t x, scalar_t y, scalar_t w, scalar_t h, Origin origin) : w{w}, h{h}
 		{
 			switch (origin) {
-			case Origin::upper_left:
-				this->x = x;
-				this->y = y;
-				break;
-			case Origin::upper_right:
-				this->x = x - w + 1;
-				this->y = y;
-				break;
-			case Origin::lower_left:
-				this->x = x;
-				this->y = y - h + 1;
-				break;
-			case Origin::lower_right:
-				this->x = x - w + 1;
-				this->y = y - h + 1;
-				break;
+				case Origin::upper_left:
+					this->x = x;
+					this->y = y;
+					break;
+				case Origin::upper_right:
+					this->x = x - w + 1;
+					this->y = y;
+					break;
+				case Origin::lower_left:
+					this->x = x;
+					this->y = y - h + 1;
+					break;
+				case Origin::lower_right:
+					this->x = x - w + 1;
+					this->y = y - h + 1;
+					break;
 			}
 		}
 

@@ -24,11 +24,11 @@ using namespace units;
 namespace questless
 {
 	WorldView::WorldView(Being const& being, bool find_bounds)
-		: _region{being.region()}
+		: _region{*being.region}
 		, _bounds{boost::none}
 	{
 		Region const& region = _region;
-		RegionTileCoords coords = being.coords();
+		RegionTileCoords coords = being.coords;
 		Vision vision = being.stats.vision;
 		double acuity = vision.acuity();
 		double ideal_light = vision.ideal_light();
@@ -60,7 +60,7 @@ namespace questless
 					auto region_tile_coords = Section::region_tile_coords(section_coords, SectionTileCoords{q, r});
 
 					bool in_front;
-					auto offset = region_tile_coords - being.coords();
+					auto offset = region_tile_coords - being.coords;
 					switch (being.direction) {
 						case RegionTileCoords::Direction::one:
 							in_front = offset.q >= 0 && offset.q + offset.r >= 0;
@@ -110,7 +110,7 @@ namespace questless
 
 			// Calculate being visibilities.
 			for (Being const& other_being : region.beings(section_coords)) {
-				RegionTileCoords other_coords = other_being.coords();
+				RegionTileCoords other_coords = other_being.coords;
 				if (other_coords.distance_to(coords) < visual_range) {
 					SectionTileIndex other_tile_index = Section::tile_index(other_coords);
 					double tile_visibility = section_view.tile_visibilities[other_tile_index.i][other_tile_index.j];
@@ -134,7 +134,7 @@ namespace questless
 
 			// Calculate object visibilities.
 			for (Object const& object : region.objects(section_coords)) {
-				RegionTileCoords other_coords = object.coords();
+				RegionTileCoords other_coords = object.coords;
 				if (other_coords.distance_to(coords) < visual_range) {
 					SectionTileIndex other_tile_index = Section::tile_index(other_coords);
 					double tile_visibility = section_view.tile_visibilities[other_tile_index.i][other_tile_index.j];

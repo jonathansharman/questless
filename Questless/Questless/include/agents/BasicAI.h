@@ -38,25 +38,13 @@ namespace questless
 			, boost::optional<int> max
 			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override;
-		Action::Complete query_count
-			( std::string const& title
-			, std::string const& prompt
-			, int default
-			, std::function<bool(int)> predicate
-			, std::function<Action::Complete(boost::optional<int>)> cont
-			) const override;
-
-		Action::Complete query_duration
-			( std::string const& title
-			, std::string const& prompt
-			, std::function<Action::Complete(boost::optional<int>)> cont
-			) const override;
 
 		Action::Complete query_magnitude
 			( std::string const& title
 			, std::string const& prompt
 			, double default
-			, std::function<bool(double)> predicate
+			, boost::optional<double> min
+			, boost::optional<double> max
 			, std::function<Action::Complete(boost::optional<double>)> cont
 			) const override;
 
@@ -95,5 +83,8 @@ namespace questless
 			, std::vector<std::string>
 			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override;
+	private:
+		enum class State { move, idle };
+		State _state = State::idle;
 	};
 }

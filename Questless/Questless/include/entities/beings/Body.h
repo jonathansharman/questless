@@ -45,7 +45,7 @@ namespace questless
 		{
 			return boost::make_transform_iterator
 				( _parts.begin()
-				, (transform_t)[](BodyPart::ref bp) -> BodyPart::ref const { return bp; }
+				, (body_part_transform_t)[](BodyPart::ref bp) -> BodyPart::cref { return static_cast<BodyPart::cref>(bp); }
 				);
 		}
 		/// @return Const iterator to end of body parts.
@@ -53,7 +53,7 @@ namespace questless
 		{
 			return boost::make_transform_iterator
 				( _parts.end()
-				, (transform_t)[](BodyPart::ref bp) -> BodyPart::ref const { return bp; }
+				, (body_part_transform_t)[](BodyPart::ref bp) -> BodyPart::cref { return static_cast<BodyPart::cref>(bp); }
 				);
 		}
 		
@@ -72,7 +72,7 @@ namespace questless
 		/// @return The offset from the upper left corner of the bounds to the body's center.
 		units::ScreenVector offset_to_center() const { return _offset_to_center; }
 	private:
-		using transform_t = BodyPart::ref const (*)(BodyPart::ref);
+		using body_part_transform_t = BodyPart::cref (*)(BodyPart::ref);
 
 		class PartAttacher : public BodyPartVisitor
 		{

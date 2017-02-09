@@ -21,7 +21,7 @@ namespace questless::spell
 					return cont(Action::Result::aborted);
 				}
 				RegionTileCoords tile_coords = *opt_tile_coords;
-				int distance = caster.coords().distance_to(tile_coords);
+				int distance = caster.coords.distance_to(tile_coords);
 				double cost = _cost_factor * distance; /// @todo Reduce cost based on yellow power?
 				if (caster.mana < cost) {
 					return caster.agent().message("Not enough mana!", "You need " + std::to_string(cost - caster.mana) + " more mana to cast this.", [cont] { return cont(Action::Result::aborted); });
@@ -29,9 +29,9 @@ namespace questless::spell
 				active_cooldown(cooldown());
 				discharge();
 				caster.mana -= cost;
-				caster.game().add_effect(LightningBoltEffect::make(caster.coords()));
-				caster.game().add_effect(LightningBoltEffect::make(tile_coords));
-				caster.region().move(caster, tile_coords);
+				caster.game.add_effect(LightningBoltEffect::make(caster.coords));
+				caster.game.add_effect(LightningBoltEffect::make(tile_coords));
+				caster.region->move(caster, tile_coords);
 				return cont(Action::Result::success);
 			}
 		);

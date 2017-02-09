@@ -22,7 +22,7 @@ namespace questless
 	public:
 		struct Choice
 		{
-			enum class Type { idle, move, use };
+			enum class Type { idle, walk, use };
 
 			Type type;
 			int data;

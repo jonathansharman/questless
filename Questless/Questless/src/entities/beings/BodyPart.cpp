@@ -9,6 +9,7 @@
 
 #include "entities/beings/BodyPart.h"
 #include "entities/beings/Being.h"
+#include "utility/clamp.h"
 
 using std::string;
 using std::vector;
@@ -27,9 +28,10 @@ namespace questless
 		, Vulnerability vulnerability
 		, std::vector<ScreenRect> regions
 		)
-		: _owner{owner}
+		: health{vitality}
+		, _owner{owner}
 		, _name{std::move(name)}
-		, _health{vitality}
+		, _enabled{true}
 		, _vitality{vitality}
 		, _weight{weight}
 		, _protection{protection}
@@ -37,6 +39,7 @@ namespace questless
 		, _vulnerability{vulnerability}
 		, _regions{std::move(regions)}
 	{
+		health.set_mutator(health_mutator(), false);
 		for (auto& region : _regions) {
 			region.x *= 5;
 			region.y *= 5;
@@ -53,23 +56,19 @@ namespace questless
 
 	void BodyPart::update()
 	{
-		gain_health(_owner.stats.health_regen * _vitality / _owner.stats.vitality);
-	}
-
-	void BodyPart::gain_health(double amount)
-	{
-		_health += amount;
-		if (_health > _vitality) { _health = _vitality; }
-	}
-
-	void BodyPart::lose_health(double amount)
-	{
-		_health -= amount;
-		if (_health < 0) { _health = 0; }
+		health += _owner.stats.health_regen * _vitality / _owner.stats.vitality;
 	}
 
 	void BodyPart::take_damage(Damage& damage, boost::optional<BeingId> source_id)
 	{
 		_owner.take_damage(damage, this, source_id);
+	}
+	
+	std::function<void(double&, double const&)> BodyPart::health_mutator()
+	{
+		return [this](double& health, double const& new_health)
+		{
+			health = clamp(new_health, 0.0, _vitality);
+		};
 	}
 }

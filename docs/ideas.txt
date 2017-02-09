@@ -329,7 +329,7 @@ Armor
 Magic
 ================================================================================
 NPCs can have explicit specializations. Spells will all fit roughly into the specializations. But players need not choose an explicit specialization.
-White - good - light - heaven
+White - good - light - heaven - revelation
 	Specializations
 		Celestial mage
 		Healer
@@ -339,6 +339,7 @@ White - good - light - heaven
 		Immortalize - Make a target being temporarily immortal.
 		Divine - Temporarily gain complete perception of a target being.
 		Raise Ladder - Can only cast while in the natural realm. Create a ladder to heaven, allowing travel between the realms.
+		Astral Project - Temporarily project the caster's soul from its body.
 		Summon hosts
 	Restoration Runes
 		Cleanse - Remove a negative status from a target. The status power must be lower than the invocation power.
@@ -353,7 +354,7 @@ White - good - light - heaven
 		Illuminate - Increase the light level in an area around the caster for a certain duration.
 		Lumiphile - Temporarily become a lumiphile. Lumiphiles have increased agility and health regen while in bright light.
 		Dawnlight - Increase a being's alertness and prevent it from sleeping for a certain duration.
-Black - evil - darkness - hell
+Black - evil - darkness - hell - illusion
 	Specializations
 		Demon master
 		Necromancer

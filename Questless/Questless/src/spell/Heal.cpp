@@ -23,7 +23,7 @@ namespace questless::spell
 					return cont(Action::Result::aborted);
 				}
 				Being* target = *opt_target;
-				return caster.agent().query_magnitude("Heal Amount", "Choose how much health to restore.", 100.0, [](double amount) { return amount >= 0.0; },
+				return caster.agent().query_magnitude("Heal Amount", "Choose how much health to restore.", 100.0, 0.0, boost::none,
 					[this, &caster, &cont, target](boost::optional<double> opt_magnitude) {
 						if (!opt_magnitude) {
 							return cont(Action::Result::aborted);

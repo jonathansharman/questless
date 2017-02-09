@@ -21,13 +21,13 @@ namespace questless::spell
 {
 	Action::Complete LightningBolt::perform_cast(Being& caster, Action::cont_t cont)
 	{
-		return caster.agent().query_tile("Lightning Bolt Target", "Select a tile to be zapped with a lightning bolt.", caster.coords(), Action::tile_in_range_predicate(caster, _range),
+		return caster.agent().query_tile("Lightning Bolt Target", "Select a tile to be zapped with a lightning bolt.", caster.coords, Action::tile_in_range_predicate(caster, _range),
 			[this, &caster, cont](boost::optional<RegionTileCoords> opt_tile_coords) {
 				if (!opt_tile_coords) {
 					return cont(Action::Result::aborted);
 				}
 				RegionTileCoords tile_coords = *opt_tile_coords;
-				return caster.agent().query_magnitude("Lightning Bolt Strength", "Choose how strong to make the lightning bolt.", 20.0, [](double amount) { return amount >= 0.0; },
+				return caster.agent().query_magnitude("Lightning Bolt Strength", "Choose how strong to make the lightning bolt.", 20.0, 0.0, boost::none,
 					[this, &caster, cont, tile_coords](boost::optional<double> opt_magnitude) {
 						if (!opt_magnitude) {
 							return cont(Action::Result::aborted);
@@ -41,8 +41,8 @@ namespace questless::spell
 							active_cooldown(cooldown());
 							discharge();
 							caster.mana -= cost;
-							caster.game().add_effect(LightningBoltEffect::make(tile_coords));
-							if (Being* target = caster.region().being(tile_coords)) {
+							caster.game.add_effect(LightningBoltEffect::make(tile_coords));
+							if (Being* target = caster.region->being(tile_coords)) {
 								double burn_magnitude = magnitude * quality * caster.stats.magic.yellow / target->stats.antimagic.yellow;
 
 								/// @todo Experimental body part stuff here... Delete or fix.

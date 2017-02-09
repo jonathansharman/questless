@@ -220,7 +220,7 @@ namespace questless
 
 	bool Region::move(Being& being, RegionTileCoords coords)
 	{
-		Section& src_section = being.section();
+		Section& src_section = *being.section;
 		RegionSectionCoords dst_section_coords = containing_section_coords(coords);
 		if (dst_section_coords != src_section.coords()) {
 			unique_ptr<Section> const& dst_section = _section_map[dst_section_coords];
@@ -230,7 +230,7 @@ namespace questless
 					return false;
 				}
 				Being::ptr moving_being = src_section.remove(being);
-				moving_being->coords(coords);
+				moving_being->coords = coords;
 				dst_section->add<Being>(std::move(moving_being));
 			} else {
 				/// @todo Need to deal with null destination case.
@@ -242,7 +242,7 @@ namespace questless
 				return false;
 			}
 			Being::ptr moving_being = src_section.remove(being);
-			being.coords(coords);
+			being.coords = coords;
 			src_section.add<Being>(std::move(moving_being));
 			_game.update_being_coords(being.id(), GlobalCoords{_name, src_section.coords()});
 		}
@@ -251,7 +251,7 @@ namespace questless
 
 	bool Region::move(Object& object, RegionTileCoords coords)
 	{
-		Section& src_section = object.section();
+		Section& src_section = *object.section;
 		RegionSectionCoords dst_section_coords = containing_section_coords(coords);
 		if (dst_section_coords != src_section.coords()) {
 			unique_ptr<Section> const& dst_section = _section_map[dst_section_coords];
@@ -261,7 +261,7 @@ namespace questless
 					return false;
 				}
 				Object::ptr moving_object = src_section.remove(object);
-				moving_object->coords(coords);
+				moving_object->coords = coords;
 				dst_section->add<Object>(std::move(moving_object));
 			} else {
 				/// @todo Need to deal with null destination case.
@@ -273,7 +273,7 @@ namespace questless
 				return false;
 			}
 			Object::ptr moving_being = src_section.remove(object);
-			object.coords(coords);
+			object.coords = coords;
 			src_section.add<Object>(std::move(moving_being));
 			_game.update_object_coords(object.id(), GlobalCoords{_name, src_section.coords()});
 		}
@@ -282,10 +282,10 @@ namespace questless
 	
 	Being::ptr Region::remove(Being& being)
 	{
-		Section& section = being.section();
+		Section& section = *being.section;
 
-		being.region(nullptr);
-		being.section(nullptr);
+		being.region = nullptr;
+		being.section = nullptr;
 
 		_game.remove_being_id(being.id());
 		remove_from_turn_queue(being);
@@ -294,10 +294,10 @@ namespace questless
 
 	Object::ptr Region::remove(Object& object)
 	{
-		Section& section = object.section();
+		Section& section = *object.section;
 
-		object.region(nullptr);
-		object.section(nullptr);
+		object.region = nullptr;
+		object.section = nullptr;
 
 		_game.remove_object_id(object.id());
 		return section.remove<Object>(object);

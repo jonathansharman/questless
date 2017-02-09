@@ -19,6 +19,7 @@
 #include "entities/beings/BeingId.h"
 #include "entities/beings/Body.h"
 #include "entities/beings/statuses/Status.h"
+#include "entities/beings/Abilities.h"
 #include "stats/Stats.h"
 #include "items/Inventory.h"
 #include "items/Item.h"
@@ -112,6 +113,8 @@ namespace questless
 		DynamicProperty<double> mana;
 		DynamicProperty<double> energy;
 
+		/// @todo Find a reasonable way to organize these mutator functions so that they aren't public.
+
 		static void satiety_mutator(double& satiety, double const& new_satiety)
 		{
 			satiety = new_satiety < 0.0
@@ -137,6 +140,10 @@ namespace questless
 		DynamicProperty<double> busy_time;
 		bool dead;
 		RegionTileCoords::Direction direction;
+
+		// Abilities
+
+		Abilities abilities;
 
 		// Event Handlers
 

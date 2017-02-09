@@ -18,7 +18,7 @@ namespace questless
 	public:
 		LazyAI(Being& being) : Agent{being} {}
 
-		void act() override { being().busy_time += uniform(1.0, 2.0); }
+		void act() override { being.busy_time += uniform(1.0, 2.0); }
 
 		void perceive(Effect::ptr const&) override {}
 
@@ -44,31 +44,13 @@ namespace questless
 		{
 			return cont(boost::none);
 		}
-		Action::Complete query_count
-			( std::string const&
-			, std::string const&
-			, int
-			, std::function<bool(int)>
-			, std::function<Action::Complete(boost::optional<int>)> cont
-			) const override
-		{
-			return cont(boost::none);
-		}
-
-		Action::Complete query_duration
-			( std::string const&
-			, std::string const&
-			, std::function<Action::Complete(boost::optional<int>)> cont
-			) const override
-		{
-			return cont(boost::none);
-		}
 
 		Action::Complete query_magnitude
 			( std::string const&
 			, std::string const&
 			, double
-			, std::function<bool(double)>
+			, boost::optional<double>
+			, boost::optional<double>
 			, std::function<Action::Complete(boost::optional<double>)> cont
 			) const override
 		{

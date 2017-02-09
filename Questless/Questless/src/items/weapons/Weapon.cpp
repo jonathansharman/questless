@@ -16,7 +16,7 @@ namespace questless
 	Action::Complete Weapon::BeginMeleeAttack::perform(Being& actor, cont_t cont)
 	{
 		Weapon& weapon = _weapon;
-		return actor.agent().query_tile("Melee Attack", "Choose attack target.", actor.coords(), tile_in_range_predicate(actor, 1),
+		return actor.agent().query_tile("Melee Attack", "Choose attack target.", actor.coords, tile_in_range_predicate(actor, 1),
 			[&actor, cont, &weapon](boost::optional<RegionTileCoords> opt_coords) { /// @todo Capturing actor and weapon by reference here is unsafe.
 				if (opt_coords) {
 					double delay = weapon.active_cooldown() + weapon.wind_up();
@@ -33,13 +33,13 @@ namespace questless
 	{
 		actor.busy_time += _weapon.follow_through();
 		_weapon.active_cooldown(_weapon.cooldown());
-		if (Being* target = actor.region().being(_coords)) {
+		if (Being* target = actor.region->being(_coords)) {
 			Damage damage = _weapon.damage();
 			_weapon.wear(_weapon.wear_ratio() * damage.total());
 			target->take_damage(damage, nullptr, actor.id()); /// @todo Part targeting
 			return cont(Result::success);
 		} else {
-			return actor.agent().message("Melee Attack", "Miss!", [cont] { return cont(Result::aborted); });
+			return actor.agent().message("Melee Attack", "Miss!", [cont] { return cont(Result::success); });
 		}
 	}
 

@@ -41,7 +41,7 @@ namespace questless
 				for (ScreenRect const& region : part.regions()) {
 					constexpr double threshold = 1.0 / 2.0;
 
-					double health_percentage = part.health() / part.vitality();
+					double health_percentage = part.health / part.vitality();
 					uint8_t red;
 					uint8_t green;
 					if (health_percentage < threshold) {

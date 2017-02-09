@@ -37,7 +37,7 @@ namespace units
 			return std::min((diff + 6) % 6, (-diff + 6) % 6);
 		}
 
-		constexpr explicit HexCoords() : q{0}, r{0}, s{0} {}
+		constexpr explicit HexCoords() = default;
 		constexpr explicit HexCoords(int q, int r) : q{q}, r{r}, s{-q - r} {}
 		constexpr explicit HexCoords(int q, int r, int s) : q{q}, r{r}, s{s} {}
 		explicit HexCoords(double q, double r)

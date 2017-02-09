@@ -46,30 +46,30 @@ namespace questless::qte
 		{
 			GameVector v = _camera.point_hovered() - _target;
 			switch (_quadrant) {
-			case 0:
-				if (v.x < v.y && v.x > -v.y) {
-					_quadrant = 1;
-					accelerate = true;
-				}
-				break;
-			case 1:
-				if (v.x > v.y && v.x > -v.y) {
-					_quadrant = 2;
-					accelerate = true;
-				}
-				break;
-			case 2:
-				if (v.x > v.y && v.x < -v.y) {
-					_quadrant = 3;
-					accelerate = true;
-				}
-				break;
-			case 3:
-				if (v.x < v.y && v.x < -v.y) {
-					_quadrant = 0;
-					accelerate = true;
-				}
-				break;
+				case 0:
+					if (v.x < v.y && v.x > -v.y) {
+						_quadrant = 1;
+						accelerate = true;
+					}
+					break;
+				case 1:
+					if (v.x > v.y && v.x > -v.y) {
+						_quadrant = 2;
+						accelerate = true;
+					}
+					break;
+				case 2:
+					if (v.x > v.y && v.x < -v.y) {
+						_quadrant = 3;
+						accelerate = true;
+					}
+					break;
+				case 3:
+					if (v.x < v.y && v.x < -v.y) {
+						_quadrant = 0;
+						accelerate = true;
+					}
+					break;
 			}
 		}
 		if (accelerate) {

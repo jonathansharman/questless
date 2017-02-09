@@ -92,9 +92,9 @@ namespace questless
 			auto it = _section_map.find(section_coords);
 			if (it != _section_map.end()) {
 				Section* section = it->second.get();
-				entity->region(this);
-				entity->section(section);
-				entity->coords(coords);
+				entity->region = this;
+				entity->section = section;
+				entity->coords = coords;
 
 				/// @todo Find a more permanent solution to this switch on type. (Probably need to write different add methods for beings and objects unless I change how the turn queue works and add generic accessors for game.beings() and game.objects().)
 				if (Being* being = dynamic_cast<Being*>(entity.get())) {
@@ -115,7 +115,7 @@ namespace questless
 		/// @param entity An entity to be added.
 		/// @tparam EntityType The type of entity to add. Possible values are Being and Object.
 		template <typename EntityType>
-		void add(typename EntityType::ptr entity) { add<EntityType>(std::move(entity), entity->coords()); }
+		void add(typename EntityType::ptr entity) { add<EntityType>(std::move(entity), entity->coords); }
 
 		/// Moves the given being to the given coordinates.
 		/// @param being The being to move.

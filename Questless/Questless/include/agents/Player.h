@@ -24,7 +24,7 @@ namespace questless
 		/// @return The player's current view of the world.
 		WorldView const& world_view() const { return *_world_view; }
 
-		void update_world_view() { _world_view = std::make_unique<WorldView>(being(), true); }
+		void update_world_view() { _world_view = std::make_unique<WorldView>(being, true); }
 
 		void act() override;
 
@@ -50,25 +50,13 @@ namespace questless
 			, boost::optional<int> max
 			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override;
-		Action::Complete query_count
-			( std::string const& title
-			, std::string const& prompt
-			, int default
-			, std::function<bool(int)> predicate
-			, std::function<Action::Complete(boost::optional<int>)> cont
-			) const override;
-
-		Action::Complete query_duration
-			( std::string const& title
-			, std::string const& prompt
-			, std::function<Action::Complete(boost::optional<int>)> cont
-			) const override;
 
 		Action::Complete query_magnitude
 			( std::string const& title
 			, std::string const& prompt
 			, double default
-			, std::function<bool(double)> predicate
+			, boost::optional<double> min
+			, boost::optional<double> max
 			, std::function<Action::Complete(boost::optional<double>)> cont
 			) const override;
 

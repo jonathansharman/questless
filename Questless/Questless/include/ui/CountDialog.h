@@ -25,7 +25,6 @@ namespace questless
 			, int default
 			, boost::optional<int> min
 			, boost::optional<int> max
-			, std::function<bool(int)> predicate
 			, std::function<void(boost::optional<int>)> cont
 			)
 			: _title{std::move(title)}
@@ -33,7 +32,6 @@ namespace questless
 			, _count{default}
 			, _min{min}
 			, _max{max}
-			, _predicate{std::move(predicate)}
 			, _cont{std::move(cont)}
 		{}
 
@@ -46,7 +44,6 @@ namespace questless
 		int _count;
 		boost::optional<int> _min;
 		boost::optional<int> _max;
-		std::function<bool(int)> _predicate;
 		Continuation<boost::optional<int>> _cont;
 
 		sdl::Texture::ptr _txt_title;

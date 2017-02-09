@@ -74,8 +74,8 @@ namespace questless
 		template <typename EntityType>
 		void add(typename EntityType::ptr entity)
 		{
-			entity->section(this);
-			RegionTileCoords coords = entity->coords();
+			entity->section = this;
+			RegionTileCoords coords = entity->coords;
 			entities<EntityType>()[coords] = std::move(entity);
 		}
 
@@ -90,7 +90,7 @@ namespace questless
 			if (it != entities<EntityType>().end()) {
 				EntityType::ptr removed_entity = std::move(it->second);
 				entities<EntityType>().erase(it);
-				removed_entity->section(nullptr);
+				removed_entity->section = nullptr;
 				return removed_entity;
 			} else {
 				return nullptr;
@@ -104,7 +104,7 @@ namespace questless
 		template <typename EntityType>
 		typename EntityType::ptr remove(typename EntityType const& entity)
 		{
-			return remove<EntityType>(entity.coords());
+			return remove<EntityType>(entity.coords);
 		}
 
 		/// @param section_coords Hex coordinates of a section relative to the region.

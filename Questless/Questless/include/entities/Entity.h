@@ -37,6 +37,11 @@ namespace questless
 		using ref_less_t = bool(*)(Entity const&, Entity const&);
 		using ptr_less_t = bool(*)(ptr const&, ptr const&);
 
+		Game& game;
+		Region* region;
+		Section* section;
+		RegionTileCoords coords;
+
 		virtual ~Entity() = default;
 
 		/// Accepts an entity visitor. Used to implement the visitor pattern for entities.
@@ -54,31 +59,8 @@ namespace questless
 
 		/// Advances the entity one turn.
 		virtual void update() = 0;
-
-		/// @return The game in which the entity is taking part.
-		Game& game() const { return _game; }
-
-		/// @return The entity's region.
-		Region& region() const { return *_region; }
-		/// @param value The entity's new region.
-		void region(Region* value) { _region = value; }
-
-		/// @return The entity's section.
-		Section& section() const { return *_section; }
-		/// @param value The entity's new section.
-		void section(Section* value) { _section = value; }
-
-		/// @return The entity's coordinates within its region.
-		RegionTileCoords coords() const { return _coords; }
-		/// @param value The entity's new coordinates within its region.
-		void coords(RegionTileCoords value) { _coords = value; }
 	protected:
-		Entity(Game& game) : _game{game}, _region{}, _section{}, _coords{} {}
+		Entity(Game& game) : game{game}, region{}, section{}, coords{} {}
 		Entity(Game& game, std::istream& in);
-	private:
-		Game& _game;
-		Region* _region;
-		Section* _section;
-		RegionTileCoords _coords;
 	};
 }

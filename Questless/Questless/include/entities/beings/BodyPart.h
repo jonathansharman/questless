@@ -20,6 +20,8 @@
 #include "items/armor/Armor.h"
 #include "BeingId.h"
 #include "units/ScreenRect.h"
+#include "utility/Property.h"
+#include "utility/DynamicProperty.h"
 
 namespace questless
 {
@@ -30,6 +32,9 @@ namespace questless
 	public:
 		using ptr = std::unique_ptr<BodyPart>;
 		using ref = std::reference_wrapper<BodyPart>;
+		using cref = std::reference_wrapper<BodyPart const>;
+
+		DynamicProperty<double> health;
 
 		/// @param owner The being that owns this body.
 		/// @param name The name of the body part.
@@ -78,12 +83,6 @@ namespace questless
 		/// @return The set of regions that this body part occupies.
 		std::vector<units::ScreenRect> const& regions() const { return _regions; }
 
-		/// @return The body part's current health.
-		double health() const { return _health; }
-
-		void gain_health(double amount);
-		void lose_health(double amount);
-
 		/// @return The body part's vitality, which determines maximum health.
 		double vitality() const { return _vitality; }
 
@@ -116,9 +115,7 @@ namespace questless
 		std::vector<BodyPart::ptr> _children;
 		std::vector<units::ScreenRect> _regions;
 
-		/// @todo Group the following into a BodyPartStats struct?
-
-		double _health;
+		bool _enabled;
 		double _vitality;
 		double _weight;
 		Protection _protection;
@@ -127,6 +124,8 @@ namespace questless
 
 		std::vector<Weapon::ref> _weapons;
 		std::vector<Armor::ref> _armor;
+
+		std::function<void(double&, double const&)> health_mutator();
 	};
 
 	// Body part subtypes

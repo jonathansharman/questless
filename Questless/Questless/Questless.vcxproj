@@ -279,6 +279,7 @@
     <ClInclude Include="include\effects\Effect.h" />
     <ClInclude Include="include\effects\EffectVisitor.h" />
     <ClInclude Include="include\entities\AllEntities.h" />
+    <ClInclude Include="include\entities\beings\Abilities.h" />
     <ClInclude Include="include\entities\beings\Action.h" />
     <ClInclude Include="include\entities\beings\Being.h" />
     <ClInclude Include="include\entities\beings\BeingId.h" />
@@ -288,6 +289,7 @@
     <ClInclude Include="include\entities\beings\CorporealBeing.h" />
     <ClInclude Include="include\entities\beings\Damage.h" />
     <ClInclude Include="include\entities\beings\DamageMultiplier.h" />
+    <ClInclude Include="include\entities\beings\Enabler.h" />
     <ClInclude Include="include\entities\beings\goblinoids\Goblin.h" />
     <ClInclude Include="include\entities\beings\Human.h" />
     <ClInclude Include="include\entities\beings\IncorporealBeing.h" />
@@ -400,6 +402,7 @@
     <ClInclude Include="include\world\Tile.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\agents\Agent.cpp" />
     <ClCompile Include="src\agents\BasicAI.cpp" />
     <ClCompile Include="src\agents\Player.cpp" />
     <ClCompile Include="src\animation\Animation.cpp" />
@@ -418,6 +421,7 @@
     <ClCompile Include="src\animation\particles\YellowMagicParticle.cpp" />
     <ClCompile Include="src\animation\TileTexturer.cpp" />
     <ClCompile Include="src\animation\WorldRenderer.cpp" />
+    <ClCompile Include="src\entities\beings\Abilities.cpp" />
     <ClCompile Include="src\entities\beings\Action.cpp" />
     <ClCompile Include="src\entities\beings\Being.cpp" />
     <ClCompile Include="src\entities\beings\Body.cpp" />

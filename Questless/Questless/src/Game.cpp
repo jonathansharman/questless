@@ -217,17 +217,17 @@ namespace questless
 			}
 
 			switch (_state) {
-			case State::splash:
-				update_splash();
-				break;
-			case State::menu:
-				update_menu();
-				break;
-			case State::playing:
-				update_playing();
-				break;
-			default:
-				break;
+				case State::splash:
+					update_splash();
+					break;
+				case State::menu:
+					update_menu();
+					break;
+				case State::playing:
+					update_playing();
+					break;
+				default:
+					break;
 			}
 
 			if (_game_over) {
@@ -382,7 +382,7 @@ namespace questless
 					// Initialize the world renderer.
 					_world_renderer = make_unique<WorldRenderer>(_player->world_view());
 					// Set the camera position relative to the player's being.
-					_camera->position(GamePoint{Layout::dflt().to_world(being(_player_being_id)->coords())});
+					_camera->position(GamePoint{Layout::dflt().to_world(being(_player_being_id)->coords)});
 
 					_time_last_state_change = clock::now();
 					_state = State::playing;
@@ -549,7 +549,7 @@ namespace questless
 			if (Being* player = being(_player_being_id)) {
 				constexpr double acceleration = 0.2;
 
-				GameVector to_player = Layout::dflt().to_world(player->coords()) - _camera->position();
+				GameVector to_player = Layout::dflt().to_world(player->coords) - _camera->position();
 				_camera->position(_camera->position() + acceleration * to_player);
 
 				double to_zoom_1 = 1.0 - _camera->zoom();

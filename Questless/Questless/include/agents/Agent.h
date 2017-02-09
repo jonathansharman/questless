@@ -27,7 +27,7 @@ namespace questless
 	public:
 		using ptr = std::unique_ptr<Agent>;
 
-		Agent(Being& being) : _being{being} {}
+		Agent(Being& being) : being{being} {}
 
 		template <typename Derived>
 		static ptr make(Being& being) { return std::make_unique<Derived>(being); }
@@ -36,8 +36,7 @@ namespace questless
 
 		Agent& operator =(Agent const& other) = delete;
 
-		Being& being() { return _being; }
-		Being const& being() const { return _being; }
+		Being& being;
 
 		/// Chooses and executes an action for the agent's being to perform.
 		virtual void act() = 0;
@@ -64,29 +63,15 @@ namespace questless
 			, boost::optional<int> max
 			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const = 0;
-		virtual Action::Complete query_count
-			( std::string const& title
-			, std::string const& prompt
-			, int default
-			, std::function<bool(int)> predicate
-			, std::function<Action::Complete(boost::optional<int>)> cont
-			) const = 0;
-
-		virtual Action::Complete query_duration
-			( std::string const& title
-			, std::string const& prompt
-			, std::function<Action::Complete(boost::optional<int>)> cont
-			) const = 0;
 
 		virtual Action::Complete query_magnitude
 			( std::string const& title
 			, std::string const& prompt
 			, double default
-			, std::function<bool(double)> predicate
+			, boost::optional<double> min
+			, boost::optional<double> max
 			, std::function<Action::Complete(boost::optional<double>)> cont
 			) const = 0;
-
-		/// @todo Add overload with min/max.
 
 		virtual Action::Complete query_tile
 			( std::string const& title
@@ -128,7 +113,10 @@ namespace questless
 
 		/// @todo Documentation, implementation file.
 		virtual Action::Complete get_lightning_bolt_quality(units::GamePoint, std::function<Action::Complete(double)> cont) { return cont(1.0); } /// @todo This should not be passed a GamePoint. Maybe the target's location?
-	private:
-		Being& _being;
+	protected:
+		Action::Complete idle(Action::cont_t cont);
+		Action::Complete idle(double duration);
+		Action::Complete walk(RegionTileCoords::Direction direction, Action::cont_t cont);
+		Action::Complete fly();
 	};
 }

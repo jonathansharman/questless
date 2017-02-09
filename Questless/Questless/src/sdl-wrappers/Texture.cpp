@@ -110,24 +110,24 @@ namespace sdl
 	void Texture::draw(ScreenPoint position, HAlign horizontal_alignment, VAlign vertical_alignment, boost::optional<TextureRect> const& src_rect) const
 	{
 		switch (horizontal_alignment) {
-		case HAlign::left:
-			break;
-		case HAlign::center:
-			position.x -= (_w - 1) / 2;
-			break;
-		case HAlign::right:
-			position.x -= _w - 1;
-			break;
+			case HAlign::left:
+				break;
+			case HAlign::center:
+				position.x -= (_w - 1) / 2;
+				break;
+			case HAlign::right:
+				position.x -= _w - 1;
+				break;
 		}
 		switch (vertical_alignment) {
-		case VAlign::top:
-			break;
-		case VAlign::middle:
-			position.y -= (_h - 1) / 2;
-			break;
-		case VAlign::bottom:
-			position.y -= _h - 1;
-			break;
+			case VAlign::top:
+				break;
+			case VAlign::middle:
+				position.y -= (_h - 1) / 2;
+				break;
+			case VAlign::bottom:
+				position.y -= _h - 1;
+				break;
 		}
 		SDL_Rect const sdl_dst_rect{position.x, position.y, _w, _h};
 		

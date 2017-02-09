@@ -94,41 +94,41 @@ namespace sdl
 
 		while (SDL_PollEvent(&_event)) {
 			switch (_event.type) {
-			case SDL_QUIT:
-				_quit = true;
-				return;
-			case SDL_KEYDOWN:
-				if (!_event.key.repeat) {
-					_press_buffer.push_back(_event.key.keysym.sym);
-					++_presses[_event.key.keysym.sym];
-				}
-				break;
-			case SDL_KEYUP:
-				if (!_event.key.repeat) {
-					_release_buffer.push_back(_event.key.keysym.sym);
-					++_releases[_event.key.keysym.sym];
-				}
-				break;
-			case SDL_MOUSEWHEEL:
-				_scroll += _event.wheel.y;
-				break;
-			case SDL_WINDOWEVENT:
-				switch (_event.window.event) {
-					case SDL_WINDOWEVENT_RESIZED:
-						_window_resized = true;
-						_resized_window_width = _event.window.data1;
-						_resized_window_height = _event.window.data2;
-						break;
-					case SDL_WINDOWEVENT_MAXIMIZED:
-						_window_maximized = true;
-						break;
-					case SDL_WINDOWEVENT_RESTORED:
-						_window_restored = true;
-						break;
-					default:
-						break;
-				}
-				break;
+				case SDL_QUIT:
+					_quit = true;
+					return;
+				case SDL_KEYDOWN:
+					if (!_event.key.repeat) {
+						_press_buffer.push_back(_event.key.keysym.sym);
+						++_presses[_event.key.keysym.sym];
+					}
+					break;
+				case SDL_KEYUP:
+					if (!_event.key.repeat) {
+						_release_buffer.push_back(_event.key.keysym.sym);
+						++_releases[_event.key.keysym.sym];
+					}
+					break;
+				case SDL_MOUSEWHEEL:
+					_scroll += _event.wheel.y;
+					break;
+				case SDL_WINDOWEVENT:
+					switch (_event.window.event) {
+						case SDL_WINDOWEVENT_RESIZED:
+							_window_resized = true;
+							_resized_window_width = _event.window.data1;
+							_resized_window_height = _event.window.data2;
+							break;
+						case SDL_WINDOWEVENT_MAXIMIZED:
+							_window_maximized = true;
+							break;
+						case SDL_WINDOWEVENT_RESTORED:
+							_window_restored = true;
+							break;
+						default:
+							break;
+					}
+					break;
 			}
 		}
 	}
@@ -222,56 +222,56 @@ namespace sdl
 	bool Input::pressed(MouseButton button) const
 	{
 		switch(button) {
-		case MouseButton::left:
-			return (_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT)) && !(_prev_mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT));
-		case MouseButton::right:
-			return (_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_RIGHT)) && !(_prev_mouse_state & SDL_BUTTON(SDL_BUTTON_RIGHT));
-		case MouseButton::middle:
-			return (_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_MIDDLE)) && !(_prev_mouse_state & SDL_BUTTON(SDL_BUTTON_MIDDLE));
-		default:
-			return false;
+			case MouseButton::left:
+				return (_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT)) && !(_prev_mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT));
+			case MouseButton::right:
+				return (_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_RIGHT)) && !(_prev_mouse_state & SDL_BUTTON(SDL_BUTTON_RIGHT));
+			case MouseButton::middle:
+				return (_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_MIDDLE)) && !(_prev_mouse_state & SDL_BUTTON(SDL_BUTTON_MIDDLE));
+			default:
+				return false;
 		}
 	}
 
 	bool Input::released(MouseButton button) const
 	{
 		switch(button) {
-		case MouseButton::left:
-			return !(_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT)) && (_prev_mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT));
-		case MouseButton::right:
-			return !(_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_RIGHT)) && (_prev_mouse_state & SDL_BUTTON(SDL_BUTTON_RIGHT));
-		case MouseButton::middle:
-			return !(_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_MIDDLE)) && (_prev_mouse_state & SDL_BUTTON(SDL_BUTTON_MIDDLE));
-		default:
-			return false;
+			case MouseButton::left:
+				return !(_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT)) && (_prev_mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT));
+			case MouseButton::right:
+				return !(_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_RIGHT)) && (_prev_mouse_state & SDL_BUTTON(SDL_BUTTON_RIGHT));
+			case MouseButton::middle:
+				return !(_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_MIDDLE)) && (_prev_mouse_state & SDL_BUTTON(SDL_BUTTON_MIDDLE));
+			default:
+				return false;
 		}
 	}
 
 	bool Input::down(MouseButton button) const
 	{
 		switch(button) {
-		case MouseButton::left:
-			return (_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0;
-		case MouseButton::right:
-			return (_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_RIGHT)) != 0;
-		case MouseButton::middle:
-			return (_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_MIDDLE)) != 0;
-		default:
-			return false;
+			case MouseButton::left:
+				return (_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0;
+			case MouseButton::right:
+				return (_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_RIGHT)) != 0;
+			case MouseButton::middle:
+				return (_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_MIDDLE)) != 0;
+			default:
+				return false;
 		}
 	}
 
 	bool Input::up(MouseButton button) const
 	{
 		switch(button) {
-		case MouseButton::left:
-			return !(_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT));
-		case MouseButton::right:
-			return !(_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_RIGHT));
-		case MouseButton::middle:
-			return !(_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_MIDDLE));
-		default:
-			return false;
+			case MouseButton::left:
+				return !(_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT));
+			case MouseButton::right:
+				return !(_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_RIGHT));
+			case MouseButton::middle:
+				return !(_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_MIDDLE));
+			default:
+				return false;
 		}
 	}
 

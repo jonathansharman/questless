@@ -25,7 +25,6 @@ namespace questless
 			, double default
 			, boost::optional<double> min
 			, boost::optional<double> max
-			, std::function<bool(double)> predicate
 			, std::function<void(boost::optional<double>)> cont
 			)
 			: _title{std::move(title)}
@@ -33,7 +32,6 @@ namespace questless
 			, _magnitude{default}
 			, _min{min}
 			, _max{max}
-			, _predicate{std::move(predicate)}
 			, _cont{std::move(cont)}
 		{
 			load_textures();
@@ -48,7 +46,6 @@ namespace questless
 		double _magnitude;
 		boost::optional<double> _min;
 		boost::optional<double> _max;
-		std::function<bool(double)> _predicate;
 		Continuation<boost::optional<double>> _cont;
 
 		sdl::Texture::ptr _txt_title;

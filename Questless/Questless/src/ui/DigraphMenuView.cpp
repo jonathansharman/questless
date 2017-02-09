@@ -148,24 +148,24 @@ namespace questless
 	{
 		_content_position = origin;
 		switch (horizontal_alignment) {
-		case HAlign::left:
-			break;
-		case HAlign::center:
-			_content_position.x -= _content_width / 2;
-			break;
-		case HAlign::right:
-			_content_position.x -= _content_width;
-			break;
+			case HAlign::left:
+				break;
+			case HAlign::center:
+				_content_position.x -= _content_width / 2;
+				break;
+			case HAlign::right:
+				_content_position.x -= _content_width;
+				break;
 		}
 		switch (vertical_alignment) {
-		case VAlign::top:
-			break;
-		case VAlign::middle:
-			_content_position.y -= _content_height / 2;
-			break;
-		case VAlign::bottom:
-			_content_position.y -= _content_height;
-			break;
+			case VAlign::top:
+				break;
+			case VAlign::middle:
+				_content_position.y -= _content_height / 2;
+				break;
+			case VAlign::bottom:
+				_content_position.y -= _content_height;
+				break;
 		}
 	}
 

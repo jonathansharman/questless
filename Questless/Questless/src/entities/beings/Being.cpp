@@ -148,7 +148,6 @@ namespace questless
 		}
 
 		// Update conditions.
-
 		health += stats.health_regen;
 		mana += stats.mana_regen;
 		satiety += satiety_rate;
@@ -157,14 +156,15 @@ namespace questless
 		busy_time -= 1.0;
 
 		// Update body parts.
-
 		for (BodyPart& part : body) {
 			part.update();
 		}
 
-		// Handle temperature damage.
+		// Update abilities.
+		abilities.update(*this);
 
-		double temp = region().temperature(coords());
+		// Handle temperature damage.
+		double temp = region->temperature(coords);
 		if (temp > stats.max_temp) {
 			Damage burn{Burn{(temp - stats.max_temp) / (stats.max_temp - stats.min_temp) * temperature_damage_factor}};
 			take_damage(burn, nullptr, boost::none);
@@ -174,7 +174,6 @@ namespace questless
 		}
 
 		// Update items.
-
 		for (Item* item : inventory().items()) {
 			item->update();
 		}
@@ -186,7 +185,7 @@ namespace questless
 		bool was_already_dead = dead;
 
 		// Get source.
-		Being* source = opt_source_id ? game().being(*opt_source_id) : nullptr;
+		Being* source = opt_source_id ? game.being(*opt_source_id) : nullptr;
 
 		// Target will take damage.
 		if (before_take_damage(damage, part, opt_source_id)) {
@@ -232,11 +231,11 @@ namespace questless
 
 					// Part and being lose health.
 					double health_lost = damage.with(total_resistance, total_vulnerability).total() / (1.0 + endurance_factor * stats.endurance);
-					part->lose_health(health_lost);
+					part->health -= health_lost;
 					health -= health_lost;
 
 					// Check for part disability.
-					if (part->health() <= 0) {
+					if (part->health <= 0) {
 						/// @todo Disable part.
 						if (part->vital()) {
 							dead = true;
@@ -254,7 +253,7 @@ namespace questless
 				}
 
 				// Add injury effect.
-				game().add_effect(InjuryEffect::make(coords(), damage));
+				game.add_effect(InjuryEffect::make(coords, damage));
 
 				// Target has taken damage.
 				if (after_take_damage(damage, part, opt_source_id)) {
@@ -274,13 +273,13 @@ namespace questless
 
 									if (corporeal()) {
 										// Spawn corpse.
-										Region& corpse_region = region(); // Save region since the being's region pointer will be nulled when it's removed.
-										auto corpse = std::make_unique<Corpse>(game(), ObjectId::next(), corpse_region.remove(*this));
-										corpse_region.add<Object>(std::move(corpse), coords());
+										Region& corpse_region = *region; // Save region since the being's region pointer will be nulled when it's removed.
+										auto corpse = std::make_unique<Corpse>(game, ObjectId::next(), corpse_region.remove(*this));
+										corpse_region.add<Object>(std::move(corpse), coords);
 									} else {
 										/// @todo Eliminate graveyard. It is a crutch to deal with references to annihilated beings when dealing fatal damage to a body part.
 										// Move target to the graveyard.
-										game().add_to_graveyard(region().remove(*this));
+										game.add_to_graveyard(region->remove(*this));
 									}
 
 									// Source, if present, has killed target.
@@ -304,7 +303,7 @@ namespace questless
 		/// @todo Heal the part, if present.
 
 		// Get source.
-		Being* source = opt_source_id ? game().being(*opt_source_id) : nullptr;
+		Being* source = opt_source_id ? game.being(*opt_source_id) : nullptr;
 
 		// Source will give healing.
 		if (source != nullptr) {
@@ -329,9 +328,8 @@ namespace questless
 	}
 
 	/////////////////////////////////////
-	// Stats and Status Modifiers //
+	//    Stats and Status Modifiers   //
 	/////////////////////////////////////
-
 
 	Stats Being::base_stats_plus_body_stats()
 	{
@@ -398,9 +396,9 @@ namespace questless
 	std::function<void(double&, double const&)> Being::busy_time_mutator()
 	{
 		return [this](double& busy_time, double const& new_busy_time) {
-			region().remove_from_turn_queue(*this);
+			region->remove_from_turn_queue(*this);
 			busy_time = new_busy_time;
-			region().add_to_turn_queue(*this);
+			region->add_to_turn_queue(*this);
 		};
 	}
 }
