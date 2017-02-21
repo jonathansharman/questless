@@ -20,7 +20,7 @@ namespace questless
 			return _cont(boost::none);
 		}
 
-		_magnitude += (input.presses(SDLK_UP) - input.presses(SDLK_DOWN) + input.scroll());
+		_magnitude += (input.shift() ? 10.0 : 1.0) * (input.presses(SDLK_UP) - input.presses(SDLK_DOWN) + input.scroll());
 		_magnitude = (_min && _magnitude < _min.value()) ? _min.value() : _magnitude;
 		_magnitude = (_max && _magnitude > _max.value()) ? _max.value() : _magnitude;
 

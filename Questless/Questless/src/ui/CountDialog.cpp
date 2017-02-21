@@ -20,7 +20,7 @@ namespace questless
 			return _cont(boost::none);
 		}
 
-		_count += (input.presses(SDLK_UP) - input.presses(SDLK_DOWN) + input.scroll());
+		_count += (input.shift() ? 10 : 1) * (input.presses(SDLK_UP) - input.presses(SDLK_DOWN) + input.scroll());
 		_count = (_min && _count < *_min) ? *_min : _count;
 		_count = (_max && _count > *_max) ? *_max : _count;
 
