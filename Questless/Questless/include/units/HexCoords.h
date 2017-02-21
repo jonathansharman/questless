@@ -84,10 +84,27 @@ namespace units
 
 		constexpr int distance_to(HexCoords other) const { return (*this - other).length(); }
 
+		Direction direction_towards(HexCoords dest) const
+		{
+			int n = distance_to(dest);
+			double step = 1.0 / std::max(n, 1);
+			HexCoords offset = lerp(dest, step) - *this;
+			int hash = 3 * offset.q + offset.r; // Simple hash to allow switching on the offset.
+			switch (hash) {
+				case 3 /*(1, 0)*/:   return Direction::one;
+				case 1 /*(0, 1)*/:   return Direction::two;
+				case -2 /*(-1, 1)*/: return Direction::three;
+				case -3 /*(-1, 0)*/: return Direction::four;
+				case -1 /*(0, -1)*/: return Direction::five;
+				case 2 /*(1, -1)*/:  return Direction::six;
+			}
+			throw std::domain_error{"Direction towards destination is undefined."};
+		}
+
 		std::vector<HexCoords> line_to(HexCoords dest) const
 		{
 			int n = distance_to(dest);
-			std::vector<HexCoords> results = {};
+			std::vector<HexCoords> results;
 			double step = 1.0 / std::max(n, 1);
 			for (int i = 0; i <= n; i++) {
 				results.push_back(lerp(dest, step * i));
@@ -110,8 +127,9 @@ namespace units
 				case Direction::three: return HexCoords{-1, 1};
 				case Direction::four:  return HexCoords{-1, 0};
 				case Direction::five:  return HexCoords{0, -1};
-				default:               return HexCoords{1, -1};
+				case Direction::six:   return HexCoords{1, -1};
 			};
+			throw std::logic_error{"Invalid direction."};
 		}
 
 		constexpr HexCoords neighbor(Direction direction) const { return *this + offset(direction); }

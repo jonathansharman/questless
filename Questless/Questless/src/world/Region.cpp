@@ -20,6 +20,8 @@ namespace fs = std::tr2::sys; /// @todo Replace this with proper using statement
 #include "agents/BasicAI.h"
 #include "utility/utility.h"
 
+#include "items/weapons/Quarterstaff.h"
+
 using std::string;
 using std::vector;
 using std::function;
@@ -67,6 +69,7 @@ namespace questless
 						if ((section_r != 0 || section_q != 0) && uniform(0, 10) == 0) {
 							auto entity_coords = Section::region_tile_coords(section_coords, SectionTileCoords{q, r});
 							auto new_being = make_unique<Goblin>(_game, Agent::make<BasicAI>, BeingId::next());
+							new_being->give_item(make_unique<Quarterstaff>());
 							add<Being>(std::move(new_being), entity_coords);
 						}
 					}

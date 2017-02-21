@@ -257,8 +257,14 @@
   <ItemGroup>
     <ClInclude Include="include\agents\Agent.h" />
     <ClInclude Include="include\agents\BasicAI.h" />
+    <ClInclude Include="include\agents\BeingQuery.h" />
+    <ClInclude Include="include\agents\CountQuery.h" />
+    <ClInclude Include="include\agents\ItemQuery.h" />
     <ClInclude Include="include\agents\LazyAI.h" />
+    <ClInclude Include="include\agents\MagnitudeQuery.h" />
+    <ClInclude Include="include\agents\Message.h" />
     <ClInclude Include="include\agents\Player.h" />
+    <ClInclude Include="include\agents\TileQuery.h" />
     <ClInclude Include="include\animation\Animation.h" />
     <ClInclude Include="include\animation\AnimationSet.h" />
     <ClInclude Include="include\animation\BodyTexturer.h" />

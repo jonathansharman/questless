@@ -60,21 +60,22 @@ namespace questless
 
 		/// @param origin The coordinates of the effect's origin.
 		/// @param damage The damage dealt.
-		InjuryEffect(RegionTileCoords origin, Damage damage)
-			: Effect{origin}
-			, _damage{damage}
+		/// @param target_id The id of the injured being.
+		/// @param opt_source_id The id of the being who caused the injury or nullopt if there is none.
+		InjuryEffect(RegionTileCoords origin, Damage damage, BeingId target_id, boost::optional<BeingId> opt_source_id)
+			: Effect{origin}, _damage{damage}, _target_id{target_id}, _opt_source_id{opt_source_id}
 		{}
-
-		/// @param origin The coordinates of the effect's origin.
-		/// @param damage The damage dealt.
-		static ptr make(RegionTileCoords origin, Damage damage) { return std::make_shared<InjuryEffect>(origin, damage); }
 
 		virtual void accept(EffectVisitor& visitor) const override { visitor.visit(*this); }
 
 		int range() const override { return 7; }
 
 		Damage const& damage() const { return _damage; }
+		BeingId target_id() const { return _target_id; }
+		boost::optional<BeingId> opt_source_id() const { return _opt_source_id; }
 	private:
 		Damage _damage;
+		BeingId _target_id;
+		boost::optional<BeingId> _opt_source_id;
 	};
 }

@@ -79,7 +79,7 @@ namespace questless
 		int _frame_index;
 		units::GameSeconds _accrued_time;
 		bool _looping;
-		unsigned _loops;
+		int _loops;
 		bool _in_reverse;
 		double _time_scale;
 		bool _over;

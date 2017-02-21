@@ -159,7 +159,7 @@ namespace questless
 
 		// Splash screen
 
-		static constexpr unsigned _splash_flames_count = 20;
+		static constexpr int _splash_flames_count = 20;
 		static constexpr units::Rate<double, double> _splash_flames_vy{-2800.0};
 		static constexpr int _splash_logo_jiggle = 3;
 

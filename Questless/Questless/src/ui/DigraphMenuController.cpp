@@ -67,7 +67,7 @@ namespace questless
 
 	void DigraphMenuController::set_page(string const& title)
 	{
-		for (unsigned index = 0; index < _menu.pages.size(); ++index) {
+		for (size_t index = 0; index < _menu.pages.size(); ++index) {
 			if (_menu.pages[index].title == title) {
 				_menu.page_index = index;
 				return;
@@ -76,13 +76,13 @@ namespace questless
 		throw invalid_argument("Attempted to navigate to a nonexistent menu page.");
 	}
 	
-	void DigraphMenuController::set_option(string const& page_title, unsigned option_index)
+	void DigraphMenuController::set_option(string const& page_title, int option_index)
 	{
 		boost::optional<int> page_index = find(page_title);
 		if (!page_index) {
 			throw invalid_argument("Attempted to set the option of a nonexistent menu page.");
 		} else {
-			if (option_index < 0 || option_index >= _menu.pages[page_index.value()].options.size()) {
+			if (option_index < 0 || option_index >= static_cast<int>(_menu.pages[page_index.value()].options.size())) {
 				throw std::out_of_range("Option index out of bounds.");
 			}
 			_menu.pages[page_index.value()].option_index = option_index;
@@ -136,7 +136,7 @@ namespace questless
 			}
 			if (_menu.current_option_index() < 0) {
 				_menu.current_option_index() = _menu.current_options().size() - 1;
-			} else if (static_cast<unsigned>(_menu.current_option_index()) >= _menu.current_options().size()) {
+			} else if (static_cast<size_t>(_menu.current_option_index()) >= _menu.current_options().size()) {
 				_menu.current_option_index() = 0;
 			}
 		}
@@ -174,7 +174,7 @@ namespace questless
 
 	boost::optional<int> DigraphMenuController::find(string const& page_title)
 	{
-		for (unsigned i = 0; i < _menu.pages.size(); ++i) {
+		for (size_t i = 0; i < _menu.pages.size(); ++i) {
 			if (_menu.pages[i].title == page_title) {
 				return i;
 			}

@@ -16,32 +16,63 @@ namespace questless
 {
 	void BasicAI::act()
 	{
-		switch (_state) {
-			case State::move:
-			{
-				// Move to or turn towards a random neighbor hex, favoring movement.
-				auto direction = uniform(0, 1) ? being.direction : static_cast<RegionTileCoords::Direction>(uniform(1, 6));
-				walk(direction, [this](Action::Result result) {
-					_state = State::idle;
+		_state->act(*this);
+	}
+	void BasicAI::IdleState::act(BasicAI& ai)
+	{
+		// Wait for up to 10 time units.
+		ai.idle(uniform(0.0, 10.0));
+		// Walk next time.
+		ai._state = std::make_unique<WalkState>();
+	}
+	void BasicAI::WalkState::act(BasicAI& ai)
+	{
+		// Move to or turn towards a random neighbor hex, favoring movement.
+		auto direction = uniform(0, 1) ? ai.being.direction : static_cast<RegionTileCoords::Direction>(uniform(1, 6));
+		ai.walk(direction, [&ai](Action::Result result) {
+			// Idle next time.
+			ai._state = std::make_unique<IdleState>();
+			if (result == Action::Result::aborted) {
+				// Walk failed. Wait for up to 10 time units instead.
+				ai.idle(uniform(0.0, 10.0));
+			}
+			return Action::Complete{};
+		});
+	}
+	void BasicAI::AttackState::act(BasicAI& ai)
+	{
+		if (Being* target = ai.being.game.being(target_id)) {
+			if (ai.being.coords.distance_to(target->coords) == 1) {
+				// Within striking distance of target.
+				/// @todo This is a hack that assumes the first item in the inventory is a melee weapon.
+				Item* item = ai.being.inventory().items().head();
+				item->actions().front()->perform(ai.being, [&ai](Action::Result result) {
 					if (result == Action::Result::aborted) {
-						// Walk failed. Wait for up to 10 time units instead.
-						idle(uniform(0.0, 10.0));
+						// Attack failed. Wait for up to 10 time units instead.
+						ai.idle(uniform(0.0, 10.0));
 					}
 					return Action::Complete{};
 				});
-				break;
+			} else {
+				// Out of range. Move towards target.
+				auto direction = ai.being.coords.direction_towards(target->coords);
+				ai.walk(direction, [&ai](Action::Result result) {
+					if (result == Action::Result::aborted) {
+						// Walk failed. Wait for up to 10 time units instead.
+						ai.idle(uniform(0.0, 10.0));
+					}
+					return Action::Complete{};
+				});
 			}
-			case State::idle:
-				// Wait for up to 10 time units.
-				idle(uniform(0.0, 10.0));
-				_state = State::move;
-				break;
+		} else {
+			// Target not found. Switch to idle state.
+			ai._state = std::make_unique<IdleState>();
+			ai.act();
 		}
 	}
 
-	Action::Complete BasicAI::message
-		( std::string const& //title
-		, std::string const& //prompt
+	Action::Complete BasicAI::send_message
+		( Message::ptr //message
 		, std::function<Action::Complete()> cont
 		) const
 	{
@@ -49,43 +80,129 @@ namespace questless
 	}
 
 	Action::Complete BasicAI::query_count
-		( std::string const& //title
-		, std::string const& //prompt
-		, int //default
-		, boost::optional<int> //min
-		, boost::optional<int> //max
+		( CountQuery::ptr query
+		, int default
+		, boost::optional<int> min
+		, boost::optional<int> max
 		, std::function<Action::Complete(boost::optional<int>)> cont
 		) const
 	{
-		return cont(boost::none);
+		struct CountQueryHandler : CountQueryVisitor
+		{
+			int default;
+			boost::optional<int> min;
+			boost::optional<int> max;
+			std::function<Action::Complete(boost::optional<int>)> cont;
+
+			CountQueryHandler
+				( int default
+				, boost::optional<int> min
+				, boost::optional<int> max
+				, std::function<Action::Complete(boost::optional<int>)> cont
+				)
+				: default{default}, min{min}, max{max}, cont{std::move(cont)}
+			{}
+		};
+
+		CountQueryHandler handler{std::move(default), min, max, std::move(cont)};
+		query->accept(handler);
+		return Action::Complete{};
 	}
 
 	Action::Complete BasicAI::query_magnitude
-		( std::string const& //title
-		, std::string const& //prompt
-		, double //default
-		, boost::optional<double> //min
-		, boost::optional<double> //max
+		( MagnitudeQuery::ptr query
+		, double default
+		, boost::optional<double> min
+		, boost::optional<double> max
 		, std::function<Action::Complete(boost::optional<double>)> cont
 		) const
 	{
-		return cont(boost::none);
+		struct MagnitudeQueryHandler : MagnitudeQueryVisitor
+		{
+			double default;
+			boost::optional<double> min;
+			boost::optional<double> max;
+			std::function<Action::Complete(boost::optional<double>)> cont;
+
+			MagnitudeQueryHandler
+				( double default
+				, boost::optional<double> min
+				, boost::optional<double> max
+				, std::function<Action::Complete(boost::optional<double>)> cont
+				)
+				: default{default}, min{min}, max{max}, cont{std::move(cont)}
+			{}
+
+			void visit(MagnitudeQueryWaitTime const&) override
+			{
+				cont(default);
+			}
+			void visit(MagnitudeQueryLightningBolt const&) override
+			{
+				cont(default);
+			}
+			void visit(MagnitudeQueryHeal const&) override
+			{
+				cont(default);
+			}
+		};
+
+		MagnitudeQueryHandler handler{std::move(default), min, max, std::move(cont)};
+		query->accept(handler);
+		return Action::Complete{};
 	}
 
 	Action::Complete BasicAI::query_tile
-		( std::string const& //title
-		, std::string const& //prompt
-		, boost::optional<RegionTileCoords> //origin
-		, std::function<bool(RegionTileCoords)> //predicate
+		( TileQuery::ptr query
+		, boost::optional<RegionTileCoords> origin
+		, std::function<bool(RegionTileCoords)> predicate
 		, std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont
 		) const
 	{
-		return cont(boost::none);
+		struct TileQueryHandler : TileQueryVisitor
+		{
+			BasicAI const& ai;
+			boost::optional<RegionTileCoords> origin;
+			std::function<bool(RegionTileCoords)> predicate;
+			std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont;
+
+			TileQueryHandler
+				( BasicAI const& ai
+				, boost::optional<RegionTileCoords> origin
+				, std::function<bool(RegionTileCoords)> predicate
+				, std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont
+				)
+				: ai{ai}
+				, origin{std::move(origin)}
+				, predicate{std::move(predicate)}
+				, cont{std::move(cont)}
+			{}
+
+			void visit(TileQueryMeleeTarget const&) override
+			{
+				auto target_id = dynamic_cast<AttackState*>(ai._state.get())->target_id;
+				if (Being* target = ai.being.game.being(target_id)) {
+					auto direction = ai.being.coords.direction_towards(target->coords);
+					cont(origin->neighbor(direction));
+				}
+			}
+			void visit(TileQueryLightningBoltTarget const&) override
+			{
+				cont(boost::none);
+			}
+			void visit(TileQueryTeleportTarget const&) override
+			{
+				cont(boost::none);
+			}
+		};
+
+		TileQueryHandler handler{*this, std::move(origin), std::move(predicate), std::move(cont)};
+		query->accept(handler);
+		return Action::Complete{};
 	}
 
 	Action::Complete BasicAI::query_being
-		( std::string const& //title
-		, std::string const& //prompt
+		( BeingQuery::ptr //query
 		, std::function<bool(Being&)> //predicate
 		, std::function<Action::Complete(boost::optional<Being*>)> cont
 		) const
@@ -93,31 +210,11 @@ namespace questless
 		return cont(boost::none);
 	}
 
-	Action::Complete BasicAI::query_range
-		( std::string const& //title
-		, std::string const& //prompt
-		, std::function<Action::Complete(boost::optional<int>)> cont
-		) const
-	{
-		return cont(boost::none);
-	}
-
 	Action::Complete BasicAI::query_item
-		( std::string const& //title
-		, std::string const& //prompt
+		( ItemQuery::ptr //query
 		, Being& //source
 		, std::function<bool(Being&)> //predicate
 		, std::function<Action::Complete(boost::optional<Item*>)> cont
-		) const
-	{
-		return cont(boost::none);
-	}
-
-	Action::Complete BasicAI::query_list
-		( units::ScreenPoint //origin
-		, std::string //title
-		, std::vector<std::string> //options
-		, std::function<Action::Complete(boost::optional<int>)> cont
 		) const
 	{
 		return cont(boost::none);

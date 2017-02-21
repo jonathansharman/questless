@@ -52,7 +52,7 @@ namespace questless
 		/// Selects the specified option on the specified page.
 		/// @param page_title The title of the page whose option index is to be set.
 		/// @param option_index The index of the option to be selected.
-		void set_option(std::string const& page_title, unsigned option_index);
+		void set_option(std::string const& page_title, int option_index);
 
 		/// Removes all pages from the menu.
 		void clear();
@@ -61,7 +61,7 @@ namespace questless
 		std::vector<DigraphMenuModel::Page::Option> const& current_options() const { return _menu.current_options(); }
 
 		/// @return The index of the selected option on the current menu page.
-		unsigned current_option_index() const { return _menu.current_option_index(); }
+		int current_option_index() const { return _menu.current_option_index(); }
 
 		/// Updates the menu state based on input.
 		/// @param input User input used to update the menu.

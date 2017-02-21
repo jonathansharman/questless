@@ -253,7 +253,7 @@ namespace questless
 				}
 
 				// Add injury effect.
-				game.add_effect(InjuryEffect::make(coords, damage));
+				game.add_effect(std::make_shared<InjuryEffect>(coords, damage, _id, opt_source_id));
 
 				// Target has taken damage.
 				if (after_take_damage(damage, part, opt_source_id)) {

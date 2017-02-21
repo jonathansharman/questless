@@ -25,9 +25,9 @@ namespace questless::qte
 	{
 	public:
 		/// @param camera The game camera.
-		/// @param target The target strike game point.
+		/// @param target_coords The target strike coordinates.
 		/// @param cont The dialog continuation function.
-		LightningBolt(Camera const& camera, units::GamePoint target, std::function<void(double)> cont);
+		LightningBolt(Camera const& camera, RegionTileCoords target_coords, std::function<void(double)> cont);
 
 		bool update(sdl::Input& input) override;
 
@@ -50,7 +50,7 @@ namespace questless::qte
 		static sdl::Handle<sdl::Texture> LightningBolt::_point_charge_texture_handle;
 
 		Camera const& _camera;
-		units::GamePoint _target;
+		units::GamePoint _target_point;
 		Continuation<double> _cont;
 
 		units::GameSeconds _elapsed_time = 0.0s;

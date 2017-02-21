@@ -27,10 +27,10 @@ namespace questless::spell
 		};
 
 		if (_spell.active_cooldown() > 0.0) {
-			return actor.agent().message("This spell is on cooldown.", "This spell will be ready in " + std::to_string(_spell.active_cooldown()) + ".", [cont] { return cont(Action::Result::aborted); });
+			return actor.agent().send_message(std::make_unique<MessageSpellOnCooldown>(_spell.active_cooldown()), [cont] { return cont(Action::Result::aborted); });
 		}
 		if (_spell.charges() <= 0) {
-			return actor.agent().message("Out of charges!", "You need to incant this spell first.", [cont] { return cont(Action::Result::aborted); });
+			return actor.agent().send_message(std::make_unique<MessageSpellOutOfCharges>(), [cont] { return cont(Action::Result::aborted); });
 		}
 		actor.add_delayed_action(_spell.cast_time() / (1.0 + Being::intellect_factor * actor.stats.intellect), cont, CompleteCast::make(_spell));
 		return Action::Complete{};
@@ -39,7 +39,7 @@ namespace questless::spell
 	Action::Complete Spell::Incant::perform(Being& actor, cont_t cont)
 	{
 		if (actor.stats.mute) {
-			return actor.agent().message("You are mute!", "You can't incant a spell if you are mute.", [cont] { return cont(Action::Result::aborted); });
+			return actor.agent().send_message(std::make_unique<MessageIncantFailedMute>(), [cont] { return cont(Action::Result::aborted); });
 		}
 		actor.busy_time += _spell.incant_time() / (1.0 + Being::intellect_factor * actor.stats.intellect);
 		_spell.gain_charge(1);
@@ -53,7 +53,7 @@ namespace questless::spell
 		return cont(Result::success);
 	}
 
-	/// @todo I don't like these optional things... There has to be a better way.
+	/// @todo I don't like these optional things... There has to be a better way. Also, make these properties.
 
 	void Spell::gain_charge(int amount)
 	{

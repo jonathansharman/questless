@@ -21,13 +21,13 @@ namespace questless::spell
 {
 	Action::Complete LightningBolt::perform_cast(Being& caster, Action::cont_t cont)
 	{
-		return caster.agent().query_tile("Lightning Bolt Target", "Select a tile to be zapped with a lightning bolt.", caster.coords, Action::tile_in_range_predicate(caster, _range),
+		return caster.agent().query_tile(std::make_unique<TileQueryLightningBoltTarget>(), caster.coords, Action::tile_in_range_predicate(caster, _range),
 			[this, &caster, cont](boost::optional<RegionTileCoords> opt_tile_coords) {
 				if (!opt_tile_coords) {
 					return cont(Action::Result::aborted);
 				}
 				RegionTileCoords tile_coords = *opt_tile_coords;
-				return caster.agent().query_magnitude("Lightning Bolt Strength", "Choose how strong to make the lightning bolt.", 20.0, 0.0, boost::none,
+				return caster.agent().query_magnitude(std::make_unique<MagnitudeQueryLightningBolt>(), 20.0, 0.0, boost::none,
 					[this, &caster, cont, tile_coords](boost::optional<double> opt_magnitude) {
 						if (!opt_magnitude) {
 							return cont(Action::Result::aborted);
@@ -35,9 +35,9 @@ namespace questless::spell
 						double magnitude = *opt_magnitude;
 						double cost = _cost_factor * magnitude * log2(magnitude + _cost_log);
 						if (caster.mana < cost) {
-							return caster.agent().message("Not enough mana!", "You need " + std::to_string(cost - caster.mana) + " more mana to cast this.", [cont] { return cont(Action::Result::aborted); });
+							return caster.agent().send_message(std::make_unique<MessageNotEnoughMana>(cost - caster.mana), [cont] { return cont(Action::Result::aborted); });
 						}
-						return caster.agent().get_lightning_bolt_quality(units::Layout::dflt().to_world(tile_coords), [this, &caster, cont, tile_coords, magnitude, cost](double quality) {
+						return caster.agent().get_lightning_bolt_quality(tile_coords, [this, &caster, cont, tile_coords, magnitude, cost](double quality) {
 							active_cooldown(cooldown());
 							discharge();
 							caster.mana -= cost;

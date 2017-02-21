@@ -13,13 +13,13 @@
 
 namespace questless
 {
-	Action::Complete ModalWeapon::SwitchForm::perform(Being& /*actor*/, cont_t cont)
+	Action::Complete ModalWeapon::SwitchForm::perform(Being& actor, cont_t cont)
 	{
 		/// @todo This.
 
-		/// @todo Add list querying to agent queries.
+		/// @todo How to query for the desired form in a general manner?
 		//actor.agent().query_list();
-		//actor.gain_busy_time(_weapon.switch_time());
+		actor.busy_time += _weapon.switch_time();
 		return cont(Result::success);
 	}
 }

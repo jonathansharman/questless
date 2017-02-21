@@ -26,9 +26,9 @@ namespace questless::qte
 		});
 	}
 
-	LightningBolt::LightningBolt(Camera const& camera, GamePoint target, std::function<void(double)> cont)
+	LightningBolt::LightningBolt(Camera const& camera, RegionTileCoords target_coords, std::function<void(double)> cont)
 		: _camera{camera}
-		, _target{target}
+		, _target_point{units::Layout::dflt().to_world(target_coords)}
 		, _cont{std::move(cont)}
 	{
 		load_textures();
@@ -44,7 +44,7 @@ namespace questless::qte
 		// Acclerate only when the mouse moves to the next quadrant over.
 		bool accelerate = false;
 		{
-			GameVector v = _camera.point_hovered() - _target;
+			GameVector v = _camera.point_hovered() - _target_point;
 			switch (_quadrant) {
 				case 0:
 					if (v.x < v.y && v.x > -v.y) {
@@ -75,14 +75,14 @@ namespace questless::qte
 		if (accelerate) {
 			for (int i = 0; i < _charges_per_quadrant; ++i) {
 				_charges.push_back(Charge
-					{ _target + random_displacement(100.0)
+					{ _target_point + random_displacement(100.0)
 					, GameVelocity{GameVector{random_angle(), 100.0}}
 					});
 			}
 		}
 
 		for (auto& point_charge : _charges) {
-			GameVector r = _target - point_charge.position; // displacement to target
+			GameVector r = _target_point - point_charge.position; // displacement to target
 			double d = r.length(); // distance to target
 
 			if (accelerate) {

@@ -18,7 +18,7 @@ namespace questless
 	public:
 		/// @param duration The number of turns remaining before the status modifier expires.
 		/// @param source_id The ID of the being that caused the status modifier, if any.
-		Mute(unsigned duration, boost::optional<BeingId> source_id = boost::none)
+		Mute(int duration, boost::optional<BeingId> source_id = boost::none)
 			: Status("Mute", duration, source_id), _modifiers{std::make_unique<Stats::MuteModifier>(true)}
 		{}
 

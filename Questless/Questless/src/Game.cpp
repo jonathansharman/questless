@@ -97,7 +97,7 @@ namespace questless
 
 		// Initialize game state.
 
-		for (unsigned i = 0; i < _splash_flames_count; ++i) {
+		for (int i = 0; i < _splash_flames_count; ++i) {
 			_splash_flame_positions.emplace_back(uniform(0, _window->width() - 1), (i + 1) * _window->height() / _splash_flames_count);
 		}
 
@@ -372,7 +372,7 @@ namespace questless
 						player_being->give_item(make_unique<Scroll>(make_unique<spell::LightningBolt>()));
 						player_being->give_item(make_unique<Scroll>(make_unique<spell::Heal>()));
 						player_being->give_item(make_unique<Scroll>(make_unique<spell::Teleport>()));
-						player_being->give_item((make_unique<Quarterstaff>()));
+						player_being->give_item(make_unique<Quarterstaff>());
 						_region->spawn_player(move(player_being));
 					}
 					// Pass the player's being ID to the HUD.

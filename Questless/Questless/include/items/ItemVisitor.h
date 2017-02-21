@@ -25,23 +25,4 @@ namespace questless
 		virtual void visit(Scroll const&) = 0;
 		virtual void visit(Quarterstaff const&) = 0;
 	};
-
-	class BadItemVisit : public std::runtime_error
-	{
-	public:
-		BadItemVisit(std::string message) : std::runtime_error{std::move(message)} {}
-	};
-
-	class TrivialItemVisitor : public ItemVisitor
-	{
-	public:
-		TrivialItemVisitor(std::string message) : _message{std::move(message)} {}
-
-		virtual ~TrivialItemVisitor() = default;
-
-		virtual void visit(Scroll const&) override { throw BadItemVisit{_message}; }
-		virtual void visit(Quarterstaff const&) override { throw BadItemVisit{_message}; }
-	private:
-		std::string _message;
-	};
 }

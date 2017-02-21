@@ -13,9 +13,18 @@
 
 namespace questless
 {
+	// Quick Time Events
+
+	Action::Complete Agent::get_lightning_bolt_quality(RegionTileCoords /*target_coords*/, std::function<Action::Complete(double)> cont) const
+	{
+		return cont(1.0);
+	}
+
+	// Actions
+
 	Action::Complete Agent::idle(Action::cont_t cont)
 	{
-		return query_magnitude("Wait", "Enter wait time.", 10.0, 0.0, boost::none,
+		return query_magnitude(std::make_unique<MagnitudeQueryWaitTime>(), 10.0, 0.0, boost::none,
 			[this, cont](boost::optional<double> duration) {
 				if (duration) {
 					being.busy_time += *duration;

@@ -14,6 +14,12 @@
 
 #include <boost/optional.hpp>
 
+#include "Message.h"
+#include "CountQuery.h"
+#include "MagnitudeQuery.h"
+#include "TileQuery.h"
+#include "BeingQuery.h"
+#include "ItemQuery.h"
 #include "entities/beings/Being.h"
 #include "entities/beings/WorldView.h"
 #include "items/Item.h"
@@ -46,18 +52,16 @@ namespace questless
 		virtual void perceive(Effect::ptr const& effect) = 0;
 
 		// Queries and messages
+		
+		/// @todo Update documentation here.
 
-		/// @todo Update documentation here after refactoring to decouple these methods from dialogs.
-
-		virtual Action::Complete message
-			( std::string const& title
-			, std::string const& prompt
+		virtual Action::Complete send_message
+			( Message::ptr message
 			, std::function<Action::Complete()> cont
 			) const = 0;
 
 		virtual Action::Complete query_count
-			( std::string const& title
-			, std::string const& prompt
+			( CountQuery::ptr query
 			, int default
 			, boost::optional<int> min
 			, boost::optional<int> max
@@ -65,8 +69,7 @@ namespace questless
 			) const = 0;
 
 		virtual Action::Complete query_magnitude
-			( std::string const& title
-			, std::string const& prompt
+			( MagnitudeQuery::ptr
 			, double default
 			, boost::optional<double> min
 			, boost::optional<double> max
@@ -74,45 +77,28 @@ namespace questless
 			) const = 0;
 
 		virtual Action::Complete query_tile
-			( std::string const& title
-			, std::string const& prompt
+			( TileQuery::ptr query
 			, boost::optional<RegionTileCoords> origin
 			, std::function<bool(RegionTileCoords)> predicate
 			, std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont
 			) const = 0;
 
 		virtual Action::Complete query_being
-			( std::string const& title
-			, std::string const& prompt
+			( BeingQuery::ptr query
 			, std::function<bool(Being&)> predicate
 			, std::function<Action::Complete(boost::optional<Being*>)> cont
 			) const = 0;
 
-		virtual Action::Complete query_range
-			( std::string const& title
-			, std::string const& prompt
-			, std::function<Action::Complete(boost::optional<int>)> cont
-			) const = 0;
-
 		virtual Action::Complete query_item
-			( std::string const& title
-			, std::string const& prompt
+			( ItemQuery::ptr query
 			, Being& source
 			, std::function<bool(Being&)> predicate
 			, std::function<Action::Complete(boost::optional<Item*>)> cont
 			) const = 0;
 
-		virtual Action::Complete query_list
-			( units::ScreenPoint origin /// @todo This should not be information required for all agents' query_list methods
-			, std::string title
-			, std::vector<std::string> options
-			, std::function<Action::Complete(boost::optional<int>)> cont
-			) const = 0;
-
 		// Quick Time Events
 
-		/// @todo Documentation, implementation file.
-		virtual Action::Complete get_lightning_bolt_quality(units::GamePoint, std::function<Action::Complete(double)> cont) { return cont(1.0); } /// @todo This should not be passed a GamePoint. Maybe the target's location?
+		virtual Action::Complete get_lightning_bolt_quality(RegionTileCoords target_coords, std::function<Action::Complete(double)> cont) const;
 	protected:
 		Action::Complete idle(Action::cont_t cont);
 		Action::Complete idle(double duration);

@@ -24,9 +24,8 @@ namespace questless
 
 		// Queries and messages
 
-		Action::Complete message
-			( std::string const&
-			, std::string const&
+		Action::Complete send_message
+			( Message::ptr
 			, std::function<Action::Complete()> cont
 			) const override
 		{
@@ -34,8 +33,7 @@ namespace questless
 		}
 
 		Action::Complete query_count
-			( std::string const&
-			, std::string const&
+			( CountQuery::ptr
 			, int
 			, boost::optional<int>
 			, boost::optional<int>
@@ -46,8 +44,7 @@ namespace questless
 		}
 
 		Action::Complete query_magnitude
-			( std::string const&
-			, std::string const&
+			( MagnitudeQuery::ptr
 			, double
 			, boost::optional<double>
 			, boost::optional<double>
@@ -58,8 +55,7 @@ namespace questless
 		}
 
 		Action::Complete query_tile
-			( std::string const&
-			, std::string const&
+			( TileQuery::ptr
 			, boost::optional<RegionTileCoords>
 			, std::function<bool(RegionTileCoords)>
 			, std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont
@@ -69,8 +65,7 @@ namespace questless
 		}
 
 		Action::Complete query_being
-			( std::string const&
-			, std::string const&
+			( BeingQuery::ptr
 			, std::function<bool(Being&)>
 			, std::function<Action::Complete(boost::optional<Being*>)> cont
 			) const override
@@ -78,31 +73,11 @@ namespace questless
 			return cont(boost::none);
 		}
 
-		Action::Complete query_range
-			( std::string const&
-			, std::string const&
-			, std::function<Action::Complete(boost::optional<int>)> cont
-			) const override
-		{
-			return cont(boost::none);
-		}
-
 		Action::Complete query_item
-			( std::string const&
-			, std::string const&
+			( ItemQuery::ptr
 			, Being&
 			, std::function<bool(Being&)>
 			, std::function<Action::Complete(boost::optional<Item*>)> cont
-			) const override
-		{
-			return cont(boost::none);
-		}
-
-		Action::Complete query_list
-			( units::ScreenPoint
-			, std::string
-			, std::vector<std::string>
-			, std::function<Action::Complete(boost::optional<int>)> cont
 			) const override
 		{
 			return cont(boost::none);

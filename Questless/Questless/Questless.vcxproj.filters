@@ -656,6 +656,24 @@
     <ClInclude Include="include\entities\beings\Abilities.h">
       <Filter>include\entities\beings</Filter>
     </ClInclude>
+    <ClInclude Include="include\agents\Message.h">
+      <Filter>include\agents</Filter>
+    </ClInclude>
+    <ClInclude Include="include\agents\TileQuery.h">
+      <Filter>include\agents</Filter>
+    </ClInclude>
+    <ClInclude Include="include\agents\MagnitudeQuery.h">
+      <Filter>include\agents</Filter>
+    </ClInclude>
+    <ClInclude Include="include\agents\CountQuery.h">
+      <Filter>include\agents</Filter>
+    </ClInclude>
+    <ClInclude Include="include\agents\BeingQuery.h">
+      <Filter>include\agents</Filter>
+    </ClInclude>
+    <ClInclude Include="include\agents\ItemQuery.h">
+      <Filter>include\agents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\world\Region.cpp">
