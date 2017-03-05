@@ -7,7 +7,7 @@
 * @section DESCRIPTION The implementation for Sound, a simple wrapper class around Mix_Chunk.
 */
 
-#include "sdl-wrappers/Sound.h"
+#include "sdl/Sound.h"
 
 namespace sdl
 {

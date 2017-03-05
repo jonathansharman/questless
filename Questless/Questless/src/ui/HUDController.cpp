@@ -11,12 +11,14 @@
 #include "Game.h"
 #include "entities/beings/Being.h"
 
+using namespace sdl;
+
 namespace questless
 {
-	HUDController::HUDController(Game& game, sdl::Window const& window) : _game{game}, _hud {}, _view{game, window}
+	HUDController::HUDController(Game& game) : _game{game}, _hud {}, _view{game}
 	{}
 	
-	void HUDController::update(sdl::Input const& input)
+	void HUDController::update()
 	{
 		if (!_hud.player_id) {
 			return;
@@ -24,44 +26,44 @@ namespace questless
 		if (Being* player_being = _game.being(*_hud.player_id)) {
 			_hud.update_being_info();
 
-			if (input.presses(SDLK_TAB)) {
+			if (input().presses(SDLK_TAB)) {
 				_hud.inv_open = !_hud.inv_open;
 			}
 
 			if (_hud.inv_open) {
-				int row = (input.y_mouse() - _view.inv_top()) / HUDView::item_icon_height;
-				int column = (input.x_mouse() - _view.inv_left()) / HUDView::item_icon_width;
+				int row = (input().y_mouse() - _view.inv_top()) / HUDView::item_icon_height;
+				int column = (input().x_mouse() - _view.inv_left()) / HUDView::item_icon_width;
 				if (0 <= row && row < Inventory::Page::rows && 0 <= column && column < Inventory::Page::columns) {
-					Inventory::Coords coords{_hud.inv_page, static_cast<size_t>(row), static_cast<size_t>(column)};
+					Inventory::Coords coords{_hud.inv_page, row, column};
 					if (player_being->inventory()[coords] != nullptr) {
-						if (input.presses(SDLK_1)) {
+						if (input().presses(SDLK_1)) {
 							_hud.hotbar[0] = coords;
 						}
-						if (input.presses(SDLK_2)) {
+						if (input().presses(SDLK_2)) {
 							_hud.hotbar[1] = coords;
 						}
-						if (input.presses(SDLK_3)) {
+						if (input().presses(SDLK_3)) {
 							_hud.hotbar[2] = coords;
 						}
-						if (input.presses(SDLK_4)) {
+						if (input().presses(SDLK_4)) {
 							_hud.hotbar[3] = coords;
 						}
-						if (input.presses(SDLK_5)) {
+						if (input().presses(SDLK_5)) {
 							_hud.hotbar[4] = coords;
 						}
-						if (input.presses(SDLK_6)) {
+						if (input().presses(SDLK_6)) {
 							_hud.hotbar[5] = coords;
 						}
-						if (input.presses(SDLK_7)) {
+						if (input().presses(SDLK_7)) {
 							_hud.hotbar[6] = coords;
 						}
-						if (input.presses(SDLK_8)) {
+						if (input().presses(SDLK_8)) {
 							_hud.hotbar[7] = coords;
 						}
-						if (input.presses(SDLK_9)) {
+						if (input().presses(SDLK_9)) {
 							_hud.hotbar[8] = coords;
 						}
-						if (input.presses(SDLK_0)) {
+						if (input().presses(SDLK_0)) {
 							_hud.hotbar[9] = coords;
 						}
 					}
@@ -77,9 +79,9 @@ namespace questless
 
 		if (Being* player_being = _game.being(player_id)) {
 			size_t count = 0;
-			for (size_t page = 0; page < player_being->inventory().pages(); ++page) {
-				for (size_t row = 0; row < Inventory::Page::rows; ++row) {
-					for (size_t column = 0; column < Inventory::Page::columns; ++column) {
+			for (int page = 0; page < player_being->inventory().pages(); ++page) {
+				for (int row = 0; row < Inventory::Page::rows; ++row) {
+					for (int column = 0; column < Inventory::Page::columns; ++column) {
 						if (player_being->inventory().page(page).items[row][column] != nullptr) {
 							_hud.hotbar[count++] = Inventory::Coords{page, row, column};
 							if (count == HUDModel::hotbar_size) {

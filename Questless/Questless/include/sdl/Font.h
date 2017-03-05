@@ -47,27 +47,21 @@ namespace sdl
 		int size() const { return _size; }
 
 		/// Renders the provided string of text as a texture with a transparent background.
-		/// @param text The text to be rendered.
-		/// @param renderer The renderer object to create and render the font.
+		/// @param text The text to be rendered. Must be at least one character in length.
 		/// @param text_color The text color.
-		/// @note The text must be at least one character in length, or an exception is thrown.
-		Texture render(std::string const& text, Renderer& renderer, Color text_color) const;
+		Texture render(std::string const& text, Color text_color) const;
 	
 		/// Renders the provided string of text as a texture with a solid background.
-		/// @param text The text to be rendered.
-		/// @param renderer The renderer object to create and render the font.
+		/// @param text The text to be rendered. Must be at least one character in length.
 		/// @param text_color The text color.
 		/// @param background_color The background color.
-		/// @note The text must be at least one character in length, or an exception is thrown.
-		Texture render(std::string const& text, Renderer& renderer, Color text_color, Color background_color) const;
+		Texture render(std::string const& text, Color text_color, Color background_color) const;
 
 		/// Quickly renders the provided string of text as a texture with a transparent background.
-		/// @param text The text to be rendered.
-		/// @param renderer The renderer object to create and render the font.
+		/// @param text The text to be rendered. Must be at least one character in length.
 		/// @param text_color The text color.
-		/// @note The text must be at least one character in length, or an exception is thrown.
 		/// @note Render quality is inferior to that produced by render, but the resulting texture is produced and drawn much faster.
-		Texture quick_render(std::string const& text, Renderer& renderer, Color text_color) const;
+		Texture fast_render(std::string const& text, Color text_color) const;
 	private:
 		TTF_Font* _font;
 		int _size;

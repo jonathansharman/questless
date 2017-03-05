@@ -132,7 +132,7 @@ namespace units
 	}
 
 	template <typename SpaceType>
-	using Radians = Angle<SpaceType, std::ratio<6'283'185/*'307'179'586ull*/, 1'000'000/*'000'000'000ull*/>>;
+	using Radians = Angle<SpaceType, std::ratio<6'283'185, 1'000'000>>;
 
 	template <typename SpaceType>
 	using Degrees = Angle<SpaceType, std::ratio<360>>;

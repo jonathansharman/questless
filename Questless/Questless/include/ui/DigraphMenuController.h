@@ -16,8 +16,8 @@
 #include "utility/utility.h"
 #include "DigraphMenuModel.h"
 #include "DigraphMenuView.h"
-#include "sdl-wrappers/Input.h"
-#include "sdl-wrappers/resources.h" /// @todo This is used only for sound. Is there a way to move sound into the view? Does it even belong there?
+#include "sdl/Input.h"
+#include "sdl/resources.h" /// @todo This is used only for sound. Is there a way to move sound into the view? Does it even belong there?
 #include "utility/Initializer.h"
 
 namespace questless
@@ -63,9 +63,8 @@ namespace questless
 		/// @return The index of the selected option on the current menu page.
 		int current_option_index() const { return _menu.current_option_index(); }
 
-		/// Updates the menu state based on input.
-		/// @param input User input used to update the menu.
-		void update(sdl::Input const& input);
+		/// Updates the menu state. To be called once per frame.
+		void update();
 
 		/// Gets all the terminal menu selections since the last call to poll_selections().
 		/// @return A vector of pairs of strings, each representing a page name and option name. The pairs are ordered from least to most recently selected.
@@ -75,6 +74,7 @@ namespace questless
 		/// @param origin The origin point of the menu on the screen.
 		/// @param horizontal_alignment The horizontal alignment of the menu relative to the origin point.
 		/// @param vertical_alignment The vertical alignment of the menu relative to the origin point.
+		////
 		void draw(units::ScreenPoint origin, sdl::HAlign horizontal_alignment = sdl::HAlign::left, sdl::VAlign vertical_alignment = sdl::VAlign::top);
 	private:
 		friend class Initializer<DigraphMenuController>;

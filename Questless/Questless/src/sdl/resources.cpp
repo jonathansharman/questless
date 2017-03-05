@@ -7,18 +7,18 @@
 * @section DESCRIPTION The implementation for the shared resource functions.
 */
 
-#include "sdl-wrappers/resources.h"
-#include "sdl-wrappers/Renderable.h"
+#include "sdl/resources.h"
+#include "sdl/Renderable.h"
 
 namespace sdl
 {
 	namespace
 	{
+		std::unique_ptr<Window> _window = nullptr;
 		std::unique_ptr<Renderer> _renderer = nullptr;
 	}
 
 	Renderer& renderer() { return *_renderer; }
-
 	void renderer(std::unique_ptr<Renderer> renderer)
 	{
 		bool initializing = _renderer == nullptr;
@@ -28,6 +28,18 @@ namespace sdl
 			texture_manager().clear_cache();
 			Renderable::refresh_all();
 		}
+	}
+
+	Window& window() { return *_window; }
+	void window(std::unique_ptr<Window> window)
+	{
+		_window = std::move(window);
+	}
+
+	Input& input() 
+	{
+		static Input _input;
+		return _input;
 	}
 
 	ResourceManager<Texture>& texture_manager()

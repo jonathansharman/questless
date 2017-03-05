@@ -11,19 +11,19 @@
 
 #include "HUDModel.h"
 #include "HUDView.h"
-#include "sdl-wrappers/Input.h"
+#include "sdl/Input.h"
 
 namespace questless
 {
 	class HUDController
 	{
 	public:
-		HUDController(Game& game, sdl::Window const& window);
+		HUDController(Game& game);
 
 		/// @return A constant reference to the hotbar.
 		auto const& hotbar() { return _hud.hotbar; }
 
-		void update(sdl::Input const& input);
+		void update();
 
 		void HUDController::draw() { _view.draw(_hud); }
 

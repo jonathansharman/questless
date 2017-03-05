@@ -13,6 +13,8 @@
 #include <vector>
 
 #include "Dialog.h"
+#include "units/ScreenRect.h"
+#include "sdl/resources.h"
 
 namespace questless
 {
@@ -34,23 +36,23 @@ namespace questless
 			load_textures();
 		}
 
-		bool update(sdl::Input& input) override
+		State update() override
 		{
-			if (input.presses(SDLK_BACKSPACE) || input.presses(SDLK_ESCAPE)) {
+			if (sdl::input().presses(SDLK_BACKSPACE) || sdl::input().presses(SDLK_ESCAPE)) {
 				return _cont(boost::none);
 			}
 
-			int const option_count = _options.size();
+			int const option_count = static_cast<int>(_options.size());
 
 			if (!_options.empty()) {
-				_selection -= input.presses(SDLK_UP);
-				_selection += input.presses(SDLK_DOWN);
+				_selection -= sdl::input().presses(SDLK_UP);
+				_selection += sdl::input().presses(SDLK_DOWN);
 				_selection = _selection % option_count;
 				_selection = _selection < 0 ? _selection + option_count : _selection;
 
-				int end = option_count <= 10 ? option_count : 10;
+				int const end = option_count <= 10 ? option_count : 10;
 				for (int i = 0; i < end; ++i) {
-					if (input.presses(sdl::Input::index_to_num_key(i))) {
+					if (sdl::input().presses(sdl::Input::index_to_num_key(i))) {
 						if (_selection == i) {
 							return _cont(_selection);
 						} else {
@@ -60,26 +62,16 @@ namespace questless
 					}
 				}
 
-				if (input.pressed(sdl::MouseButton::left) || input.presses(SDLK_RETURN) || input.presses(SDLK_SPACE)) {
+				if (sdl::input().pressed(sdl::MouseButton::left) || sdl::input().presses(SDLK_RETURN) || sdl::input().presses(SDLK_SPACE)) {
 					return _cont(_selection);
 				}
 			}
 
-			return false;
+			return State::open;
 		}
 
-		void draw(sdl::Window const& window) override
+		void draw() const override
 		{
-			/// @todo Confine to game window in the refresh function (need access to the window, will probably need to store the window dimensions :( ).
-
-			// Confine to game window.
-			if (_bounds.x + _bounds.w > window.width()) {
-				_bounds.x -= _bounds.w;
-			}
-			if (_bounds.y + _bounds.h > window.height()) {
-				_bounds.y -= _bounds.h;
-			}
-
 			// Draw background.
 			sdl::renderer().draw_rect(_bounds, sdl::Color::black(), sdl::Color{255, 200, 150});
 
@@ -115,15 +107,25 @@ namespace questless
 
 		void load_textures()
 		{
-			_txt_title = std::make_unique<sdl::Texture>(sdl::font_manager()[title_font_handle()].render(_title, sdl::renderer(), sdl::Color::black()));
+			static auto list_option_font_handle = sdl::font_manager().add("resources/fonts/dumbledor1.ttf", 20);
+
+			_txt_title = make_title(_title);
 			_bounds.w = _txt_title->width();
 			_txt_options.clear();
 			for (auto const& option : _options) {
-				_txt_options.push_back(std::make_unique<sdl::Texture>(sdl::font_manager()[list_option_font_handle()].render(option, sdl::renderer(), sdl::Color::black())));
+				_txt_options.push_back(std::make_unique<sdl::Texture>(sdl::font_manager()[list_option_font_handle].render(option, sdl::Color::black())));
 				_bounds.w = std::max(_bounds.w, _txt_options.back()->width());
 			}
 			_bounds.w += 2 * _x_padding;
 			_bounds.h = _title_height + static_cast<int>(_options.size() * _option_height) + 2 * _y_padding;
+
+			// Confine bounds to window.
+			if (_bounds.x + _bounds.w > sdl::window().width()) {
+				_bounds.x -= _bounds.w;
+			}
+			if (_bounds.y + _bounds.h > sdl::window().height()) {
+				_bounds.y -= _bounds.h;
+			}
 		}
 	};
 }

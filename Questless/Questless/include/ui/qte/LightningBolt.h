@@ -14,7 +14,6 @@
 #include <functional>
 
 #include "../Dialog.h"
-#include "utility/Initializer.h"
 #include "animation/Camera.h"
 #include "units/Point.h"
 #include "units/GameVelocity.h"
@@ -24,14 +23,13 @@ namespace questless::qte
 	class LightningBolt : public Dialog
 	{
 	public:
-		/// @param camera The game camera.
 		/// @param target_coords The target strike coordinates.
 		/// @param cont The dialog continuation function.
 		LightningBolt(Camera const& camera, RegionTileCoords target_coords, std::function<void(double)> cont);
 
-		bool update(sdl::Input& input) override;
+		State update() override;
 
-		void draw(sdl::Window const& window) override;
+		void draw() const override;
 	private:
 		static constexpr units::GameSeconds _time_limit = 5.0s;
 		static constexpr int _charges_per_quadrant = 4;
@@ -42,10 +40,6 @@ namespace questless::qte
 			units::GamePoint position;
 			units::GameVelocity velocity;
 		};
-
-		friend class Initializer<LightningBolt>;
-		static Initializer<LightningBolt> _initializer;
-		static void initialize();
 
 		static sdl::Handle<sdl::Texture> LightningBolt::_point_charge_texture_handle;
 

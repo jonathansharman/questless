@@ -7,7 +7,8 @@
 * @section DESCRIPTION Implementation for input class.
 */
 
-#include "sdl-wrappers/Input.h"
+#include "sdl/Input.h"
+#include "sdl/resources.h"
 
 namespace sdl
 {
@@ -135,12 +136,12 @@ namespace sdl
 
 	int Input::presses(SDL_Keycode key) const
 	{
-		return _presses.count(key);
+		return static_cast<int>(_presses.count(key));
 	}
 
 	int Input::releases(SDL_Keycode key) const
 	{
-		return _releases.count(key);
+		return static_cast<int>(_releases.count(key));
 	}
 
 	bool Input::up(SDL_Keycode key) const
@@ -275,9 +276,9 @@ namespace sdl
 		}
 	}
 
-	void Input::move_mouse(Window const& window, units::ScreenPoint const& position)
+	void Input::move_mouse(units::ScreenPoint const& position)
 	{
-		SDL_WarpMouseInWindow(window.sdl_ptr(), position.x, position.y);
+		SDL_WarpMouseInWindow(window().sdl_ptr(), position.x, position.y);
 		_mouse_position = position;
 	}
 }

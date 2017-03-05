@@ -30,7 +30,7 @@ namespace questless
 		std::array<boost::optional<Inventory::Coords>, hotbar_size> hotbar;
 
 		bool inv_open = false;
-		size_t inv_page = 0;
+		int inv_page = 0;
 
 		// Methods
 

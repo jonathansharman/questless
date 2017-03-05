@@ -9,6 +9,7 @@
 
 #include "agents/Player.h"
 #include "Game.h"
+#include "sdl/resources.h"
 #include "ui/MessageDialog.h"
 #include "ui/CountDialog.h"
 #include "ui/MagnitudeDialog.h"
@@ -61,7 +62,7 @@ namespace questless
 							std::vector<std::string> action_names;
 							std::transform(actions->begin(), actions->end(), std::back_inserter(action_names), [](Action::ptr const& action) { return action->name(); });
 							// Open list dialog for the player to choose an action.
-							auto dialog = std::make_unique<ListDialog>(being.game.input().mouse_position(), item->name(), std::move(action_names),
+							auto dialog = std::make_unique<ListDialog>(sdl::input().mouse_position(), item->name(), std::move(action_names),
 								[this, &game, actions](boost::optional<int> opt_action_idx) {
 									if (!opt_action_idx) {
 										// No action selected. Player must try to act again.

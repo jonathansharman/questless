@@ -9,9 +9,7 @@
 
 #include "animation/particles/WhiteMagicParticle.h"
 #include "Game.h"
-#include "sdl-wrappers/resources.h"
-
-using namespace sdl;
+#include "sdl/resources.h"
 
 namespace questless
 {
@@ -20,16 +18,9 @@ namespace questless
 		_velocity.step().x *= 1.0 - _vx_percent_drag_rate * Game::frame_duration;
 	}
 
-	Texture const& WhiteMagicParticle::texture() const
+	sdl::Texture const& WhiteMagicParticle::texture() const
 	{
-		static bool first_call = true;
-		static Handle<Texture> handle;
-		if (first_call) {
-			handle = texture_manager().add([] {
-				return std::make_unique<Texture>("resources/textures/particles/magic/white.png", renderer(), SDL_BLENDMODE_BLEND);
-			});
-			first_call = false;
-		}
-		return texture_manager()[handle];
+		static auto texture_handle = sdl::texture_manager().add("resources/textures/particles/magic/white.png");
+		return sdl::texture_manager()[texture_handle];
 	}
 }

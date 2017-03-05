@@ -10,10 +10,8 @@
 #include "animation/EntityAnimator.h"
 
 #include "units/Point.h"
+
 using namespace units;
-
-using std::make_unique;
-
 using namespace sdl;
 
 namespace questless
@@ -22,16 +20,8 @@ namespace questless
 
 	void EntityAnimator::visit(Human const&)
 	{
-		static bool first_call = true;
-		static Handle<Texture> ss_handle;
-		if (first_call) {
-			ss_handle = sdl::texture_manager().add([] {
-				return make_unique<Texture>("resources/textures/human-animation.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
-			});
-			first_call = false;
-		}
-
-		_animation_set = make_unique<AnimationSet>(ss_handle, 3, 1);
+		static Handle<Texture> ss_handle = texture_manager().add("resources/textures/human-animation.png");
+		_animation_set = std::make_unique<AnimationSet>(ss_handle, 3, 1);
 
 		auto animation = _animation_set->add(Animation
 			{ { {GameSeconds{0.2}, SpriteSheetPoint{0, 0}, TexturePoint{0, 10}}
@@ -45,16 +35,8 @@ namespace questless
 	}
 	void EntityAnimator::visit(Goblin const&)
 	{
-		static bool first_call = true;
-		static Handle<Texture> ss_handle;
-		if (first_call) {
-			ss_handle = sdl::texture_manager().add([] {
-				return make_unique<Texture>("resources/textures/test-animation.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
-			});
-			first_call = false;
-		}
-
-		_animation_set = make_unique<AnimationSet>(ss_handle, 3, 1);
+		static Handle<Texture> ss_handle = texture_manager().add("resources/textures/test-animation.png");
+		_animation_set = std::make_unique<AnimationSet>(ss_handle, 3, 1);
 
 		auto animation = _animation_set->add(Animation
 			{ { {GameSeconds{0.2}, SpriteSheetPoint{0, 0}, TexturePoint{0, 10}}
@@ -71,16 +53,8 @@ namespace questless
 
 	void EntityAnimator::visit(Corpse const&)
 	{
-		static bool first_call = true;
-		static Handle<Texture> ss_handle;
-		if (first_call) {
-			ss_handle = sdl::texture_manager().add([] {
-				return make_unique<Texture>("resources/textures/entities/objects/grave.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
-			});
-			first_call = false;
-		}
-
-		_animation_set = make_unique<AnimationSet>(ss_handle, 1, 1);
+		static Handle<Texture> ss_handle = texture_manager().add("resources/textures/entities/objects/grave.png");
+		_animation_set = std::make_unique<AnimationSet>(ss_handle, 1, 1);
 
 		auto animation = _animation_set->add(Animation
 			{ {{GameSeconds{1.0}, SpriteSheetPoint{0, 0}, TexturePoint{0, 10}}}
@@ -90,16 +64,8 @@ namespace questless
 	}
 	void EntityAnimator::visit(ItemBox const&)
 	{
-		static bool first_call = true;
-		static Handle<Texture> ss_handle;
-		if (first_call) {
-			ss_handle = sdl::texture_manager().add([] {
-				return make_unique<Texture>("resources/textures/entities/objects/item-box.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
-			});
-			first_call = false;
-		}
-
-		_animation_set = make_unique<AnimationSet>(ss_handle, 1, 1);
+		static Handle<Texture> ss_handle = texture_manager().add("resources/textures/entities/objects/item-box.png");
+		_animation_set = std::make_unique<AnimationSet>(ss_handle, 1, 1);
 
 		auto animation = _animation_set->add(Animation
 			{ {{GameSeconds{1.0}, SpriteSheetPoint{0, 0}, TexturePoint{0, 4}}}

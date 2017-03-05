@@ -9,14 +9,15 @@
 
 #pragma once
 
-#include "sdl-wrappers/Renderer.h"
-#include "sdl-wrappers/Texture.h"
+#include "sdl/Renderer.h"
+#include "sdl/Texture.h"
 #include "animation/Camera.h"
 #include "units/GameSeconds.h"
 #include "units/GameVelocity.h"
 #include "units/GameAcceleration.h"
 #include "units/GameRadiansPerSec.h"
 #include "units/GameScaleVelocity.h"
+#include "utility/TaggedType.h"
 
 namespace questless
 {
@@ -37,6 +38,8 @@ namespace questless
 		/// @param scale Initial size scale.
 		/// @param scale_velocity Initial rate of change in size scale per second.
 		/// @param lifetime The duration of the particle's life, after which it is considered expired and should be removed.
+		/// @param max_displacement Maximum random displacement from the given position.
+		////
 		Particle
 			( units::GamePoint position
 			, units::GameVelocity velocity
@@ -61,14 +64,17 @@ namespace questless
 
 		virtual ~Particle() = default;
 
-		/// @return Whether the particle is dead.
-		bool dead() const { return _time_left < units::GameSeconds::zero(); }
+		/// @return Whether the particle is expired.
+		////
+		bool expired() const { return _time_left < units::GameSeconds::zero(); }
 
 		/// Updates the particle.
+		////
 		void update();
 
 		/// Draws the particle.
 		/// @param camera The camera with respect to which the particle will be drawn.
+		////
 		void draw(Camera const& camera);
 	protected:
 		/// @todo Are these protected variables the right way to do this?

@@ -10,7 +10,7 @@
 #pragma once
 
 #include "animation/particles/Particle.h"
-#include "sdl-wrappers/Renderable.h"
+#include "sdl/Renderable.h"
 #include "utility/utility.h"
 #include "utility/Initializer.h"
 
@@ -22,6 +22,7 @@ namespace questless
 		/// @param position The particle's starting position.
 		/// @param text The text for the particle to show.
 		/// @param color The color of the particle's text.
+		////
 		TextParticle(units::GamePoint position, std::string text, sdl::Color color)
 			: Particle
 				{ position

@@ -9,9 +9,7 @@
 
 #include "animation/particles/BlackMagicParticle.h"
 #include "Game.h"
-#include "sdl-wrappers/resources.h"
-
-using namespace sdl;
+#include "sdl/resources.h"
 using namespace units;
 
 namespace questless
@@ -22,16 +20,9 @@ namespace questless
 		_velocity.step().rotate(GameRadians{_turn_rate * Game::frame_duration});
 	}
 
-	Texture const& BlackMagicParticle::texture() const
+	sdl::Texture const& BlackMagicParticle::texture() const
 	{
-		static bool first_call = true;
-		static Handle<Texture> handle;
-		if (first_call) {
-			handle = texture_manager().add([] {
-				return std::make_unique<Texture>("resources/textures/particles/magic/black.png", renderer(), SDL_BLENDMODE_BLEND);
-			});
-			first_call = false;
-		}
-		return texture_manager()[handle];
+		static auto texture_handle = sdl::texture_manager().add("resources/textures/particles/magic/black.png");
+		return sdl::texture_manager()[texture_handle];
 	}
 }

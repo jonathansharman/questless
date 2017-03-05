@@ -18,7 +18,7 @@ using namespace units;
 
 namespace questless
 {
-	HUDView::HUDView(Game& game, Window const& window) : _game{game}, _window{window}
+	HUDView::HUDView(Game& game) : _game{game}
 	{
 		_fnt_item_count = std::make_unique<Font>("resources/fonts/dumbledor1.ttf", _item_count_font_size, SDL_BLENDMODE_BLEND);
 
@@ -36,11 +36,11 @@ namespace questless
 				int left = 0;
 				renderer().draw_rect(ScreenRect{left, _screen_bottom, _condition_bar_width * _conditions_count, _condition_bar_height, ScreenRect::Origin::lower_left}, Color::black(), true);
 				// Health
-				int health_bar_height = static_cast<int>(_condition_bar_height * player_being->health / player_being->stats.vitality);
+				int health_bar_height = lround(_condition_bar_height * player_being->health / player_being->stats.vitality);
 				renderer().draw_rect(ScreenRect{left + 1, _screen_bottom, _condition_bar_width - 2, health_bar_height - 1, ScreenRect::Origin::lower_left}, Color::red(), true);
 				left += _condition_bar_width;
 				// Mana
-				int mana_bar_height = static_cast<int>(_condition_bar_height * player_being->mana / player_being->stats.spirit);
+				int mana_bar_height = lround(_condition_bar_height * player_being->mana / player_being->stats.spirit);
 				renderer().draw_rect(ScreenRect{left + 1, _screen_bottom, _condition_bar_width - 2, mana_bar_height - 1, ScreenRect::Origin::lower_left}, Color::blue(), true);
 				left += _condition_bar_width;
 			}
@@ -94,20 +94,18 @@ namespace questless
 
 	void HUDView::load_textures_and_layout()
 	{
-		_hotbar_slot_texture = std::make_unique<Texture>("resources/textures/ui/hud/hotbar-slot.png", renderer());
+		_hotbar_slot_texture = std::make_unique<Texture>("resources/textures/ui/hud/hotbar-slot.png");
 
-		int window_width = _window.width();
-		int window_height = _window.height();
-		_screen_bottom = window_height - 1;
+		_screen_bottom = window().height() - 1;
 
 		_hotbar_width = _hotbar_slot_texture->width() * HUDModel::hotbar_size + _hotbar_interslot_gap * (HUDModel::hotbar_size - 1);
-		_hotbar_x_start = (window_width - _hotbar_width) / 2;
+		_hotbar_x_start = (window().width() - _hotbar_width) / 2;
 
-		_inv_width = static_cast<int>(HUDView::inv_width_percent * window_width);
-		_inv_height = static_cast<int>(HUDView::inv_height_percent * window_height);
+		_inv_width = static_cast<int>(HUDView::inv_width_percent * window().width());
+		_inv_height = static_cast<int>(HUDView::inv_height_percent * window().height());
 
-		_inv_left = (window_width - _inv_width) / 2;
-		_inv_top = (window_height - _inv_height) / 2;
+		_inv_left = (window().width() - _inv_width) / 2;
+		_inv_top = (window().height() - _inv_height) / 2;
 
 		_inv_column_count = _inv_width / HUDView::item_icon_width;
 	}

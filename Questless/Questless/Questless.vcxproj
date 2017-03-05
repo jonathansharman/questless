@@ -168,7 +168,10 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4268;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -338,15 +341,16 @@
     <ClInclude Include="include\items\weapons\Quarterstaff.h" />
     <ClInclude Include="include\items\weapons\Weapon.h" />
     <ClInclude Include="include\sdl-wrappers\Color.h" />
-    <ClInclude Include="include\sdl-wrappers\Font.h" />
-    <ClInclude Include="include\sdl-wrappers\Input.h" />
-    <ClInclude Include="include\sdl-wrappers\Renderable.h" />
-    <ClInclude Include="include\sdl-wrappers\Renderer.h" />
-    <ClInclude Include="include\sdl-wrappers\ResourceManager.h" />
-    <ClInclude Include="include\sdl-wrappers\resources.h" />
-    <ClInclude Include="include\sdl-wrappers\Sound.h" />
-    <ClInclude Include="include\sdl-wrappers\Texture.h" />
-    <ClInclude Include="include\sdl-wrappers\Window.h" />
+    <ClInclude Include="include\sdl\Color.h" />
+    <ClInclude Include="include\sdl\Font.h" />
+    <ClInclude Include="include\sdl\Input.h" />
+    <ClInclude Include="include\sdl\Renderable.h" />
+    <ClInclude Include="include\sdl\Renderer.h" />
+    <ClInclude Include="include\sdl\ResourceManager.h" />
+    <ClInclude Include="include\sdl\resources.h" />
+    <ClInclude Include="include\sdl\Sound.h" />
+    <ClInclude Include="include\sdl\Texture.h" />
+    <ClInclude Include="include\sdl\Window.h" />
     <ClInclude Include="include\spell\Heal.h" />
     <ClInclude Include="include\spell\LightningBolt.h" />
     <ClInclude Include="include\spell\Spell.h" />
@@ -369,6 +373,7 @@
     <ClInclude Include="include\units\constexpr-math.h" />
     <ClInclude Include="include\units\Frequency.h" />
     <ClInclude Include="include\units\GameAcceleration.h" />
+    <ClInclude Include="include\units\GameDegrees.h" />
     <ClInclude Include="include\units\GamePoint.h" />
     <ClInclude Include="include\units\GameRadians.h" />
     <ClInclude Include="include\units\GameRadiansPerSec.h" />
@@ -414,6 +419,7 @@
     <ClCompile Include="src\animation\Animation.cpp" />
     <ClCompile Include="src\animation\AnimationSet.cpp" />
     <ClCompile Include="src\animation\BodyTexturer.cpp" />
+    <ClCompile Include="src\animation\Camera.cpp" />
     <ClCompile Include="src\animation\EntityAnimator.cpp" />
     <ClCompile Include="src\animation\ItemTexturer.cpp" />
     <ClCompile Include="src\animation\particles\BlackMagicParticle.cpp" />
@@ -453,14 +459,14 @@
     <ClCompile Include="src\items\weapons\ModalWeapon.cpp" />
     <ClCompile Include="src\items\weapons\Weapon.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\sdl-wrappers\Font.cpp" />
-    <ClCompile Include="src\sdl-wrappers\Input.cpp" />
-    <ClCompile Include="src\sdl-wrappers\Renderable.cpp" />
-    <ClCompile Include="src\sdl-wrappers\Renderer.cpp" />
-    <ClCompile Include="src\sdl-wrappers\resources.cpp" />
-    <ClCompile Include="src\sdl-wrappers\Sound.cpp" />
-    <ClCompile Include="src\sdl-wrappers\Texture.cpp" />
-    <ClCompile Include="src\sdl-wrappers\Window.cpp" />
+    <ClCompile Include="src\sdl\Font.cpp" />
+    <ClCompile Include="src\sdl\Input.cpp" />
+    <ClCompile Include="src\sdl\Renderable.cpp" />
+    <ClCompile Include="src\sdl\Renderer.cpp" />
+    <ClCompile Include="src\sdl\resources.cpp" />
+    <ClCompile Include="src\sdl\Sound.cpp" />
+    <ClCompile Include="src\sdl\Texture.cpp" />
+    <ClCompile Include="src\sdl\Window.cpp" />
     <ClCompile Include="src\spell\Heal.cpp" />
     <ClCompile Include="src\spell\LightningBolt.cpp" />
     <ClCompile Include="src\spell\Spell.cpp" />
@@ -478,7 +484,6 @@
     <ClCompile Include="src\ui\PlayerActionDialog.cpp" />
     <ClCompile Include="src\ui\qte\LightningBolt.cpp" />
     <ClCompile Include="src\ui\TileDialog.cpp" />
-    <ClCompile Include="src\utility\Camera.cpp" />
     <ClCompile Include="src\utility\utility.cpp" />
     <ClCompile Include="src\world\Region.cpp" />
     <ClCompile Include="src\world\Section.cpp" />

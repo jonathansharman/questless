@@ -7,7 +7,7 @@
 * @section DESCRIPTION The implementation for Window, a simple wrapper class around SDL_Window.
 */
 
-#include "sdl-wrappers/Window.h"
+#include "sdl/Window.h"
 
 #include "SDL_image.h"
 

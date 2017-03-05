@@ -31,9 +31,9 @@ namespace questless
 
 	Item::ptr Inventory::remove(Item const& item)
 	{
-		for (size_t page = 0; page < _pages.size(); ++page) {
-			for (size_t row = 0; row < Page::rows; ++row) {
-				for (size_t column = 0; column < Page::columns; ++column) {
+		for (int page = 0; page < static_cast<int>(_pages.size()); ++page) {
+			for (int row = 0; row < Page::rows; ++row) {
+				for (int column = 0; column < Page::columns; ++column) {
 					if (_pages[page].items[row][column].get() == &item) {
 						return remove(Coords{page, row, column});
 					}

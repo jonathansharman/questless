@@ -9,6 +9,9 @@
 
 #include "animation/AnimationSet.h"
 
+#include "units/ScreenRect.h"
+#include "units/GameVector.h"
+
 using namespace sdl;
 using namespace units;
 

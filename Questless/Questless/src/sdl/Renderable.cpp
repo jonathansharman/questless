@@ -7,7 +7,7 @@
 * @section DESCRIPTION The implementation for the Renderable abstract base class.
 */
 
-#include "sdl-wrappers/Renderable.h"
+#include "sdl/Renderable.h"
 
 namespace sdl
 {

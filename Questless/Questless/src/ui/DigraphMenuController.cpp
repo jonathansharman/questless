@@ -7,23 +7,27 @@
 
 #include "ui/DigraphMenuController.h"
 
+#include "units/ScreenVector.h"
+#include "units/ScreenRect.h"
+
 using std::string;
 using std::vector;
 using std::pair;
 using std::invalid_argument;
 
-using namespace sdl;
 using namespace units;
+using namespace sdl;
 
 namespace questless
 {
-	sdl::Handle<sdl::Sound> DigraphMenuController::_hover_sound_handle, DigraphMenuController::_select_sound_handle;
+	sdl::Handle<sdl::Sound> DigraphMenuController::_hover_sound_handle;
+	sdl::Handle<sdl::Sound> DigraphMenuController::_select_sound_handle;
 
 	Initializer<DigraphMenuController> DigraphMenuController::_initializer;
 	void DigraphMenuController::initialize()
 	{
-		_hover_sound_handle = sound_manager().add([] { return std::make_unique<Sound>("resources/sounds/menu/hover.wav"); });
-		_select_sound_handle = sound_manager().add([] { return std::make_unique<Sound>("resources/sounds/menu/select.wav"); });
+		_hover_sound_handle = sound_manager().add("resources/sounds/menu/hover.wav");
+		_select_sound_handle = sound_manager().add("resources/sounds/menu/select.wav");
 	}
 
 	DigraphMenuController::DigraphMenuController(int min_width, int min_height) : _view{min_width, min_height} {}
@@ -69,7 +73,7 @@ namespace questless
 	{
 		for (size_t index = 0; index < _menu.pages.size(); ++index) {
 			if (_menu.pages[index].title == title) {
-				_menu.page_index = index;
+				_menu.page_index = static_cast<int>(index);
 				return;
 			}
 		}
@@ -96,7 +100,7 @@ namespace questless
 		_view.invalidate_render();
 	}
 
-	void DigraphMenuController::update(Input const& input)
+	void DigraphMenuController::update()
 	{
 		if (_menu.pages.size() == 0 || !_view.render_is_current()) {
 			return;
@@ -110,7 +114,7 @@ namespace questless
 		for (size_t i = 0; i < current_options().size(); ++i) {
 			ScreenVector dimensions = _view.page(_menu.page_index).option_textures[i].dimensions();
 			ScreenRect rect = ScreenRect{position.x, position.y, dimensions.x, dimensions.y};
-			ScreenPoint point = input.mouse_position();
+			ScreenPoint point = input().mouse_position();
 			if (rect.contains(point)) {
 				hovered_option_index = static_cast<int>(i);
 				break;
@@ -120,22 +124,22 @@ namespace questless
 
 		// Change option index, if necessary.
 
-		if (input.mouse_moved() && hovered_option_index) {
+		if (input().mouse_moved() && hovered_option_index) {
 			if (_menu.current_option_index() != hovered_option_index.value()) {
 				sound_manager()[_hover_sound_handle].play();
 				_menu.current_option_index() = hovered_option_index.value();
 			}
 		} else {
-			if (input.presses(SDLK_DOWN)) {
+			if (input().presses(SDLK_DOWN)) {
 				sound_manager()[_hover_sound_handle].play();
 				++_menu.current_option_index();
 			}
-			if (input.presses(SDLK_UP)) {
+			if (input().presses(SDLK_UP)) {
 				sound_manager()[_hover_sound_handle].play();
 				--_menu.current_option_index();
 			}
 			if (_menu.current_option_index() < 0) {
-				_menu.current_option_index() = _menu.current_options().size() - 1;
+				_menu.current_option_index() = static_cast<int>(_menu.current_options().size() - 1);
 			} else if (static_cast<size_t>(_menu.current_option_index()) >= _menu.current_options().size()) {
 				_menu.current_option_index() = 0;
 			}
@@ -143,7 +147,7 @@ namespace questless
 
 		// Check for selection.
 
-		if (input.presses(SDLK_RETURN) || input.presses(SDLK_SPACE) || hovered_option_index && input.pressed(MouseButton::left)) {
+		if (input().presses(SDLK_RETURN) || input().presses(SDLK_SPACE) || hovered_option_index && input().pressed(MouseButton::left)) {
 			sound_manager()[_select_sound_handle].play();
 			DigraphMenuModel::Page::Option selection = _menu.current_option();
 			if (selection.target) {
@@ -176,7 +180,7 @@ namespace questless
 	{
 		for (size_t i = 0; i < _menu.pages.size(); ++i) {
 			if (_menu.pages[i].title == page_title) {
-				return i;
+				return static_cast<int>(i);
 			}
 		}
 		return boost::none;

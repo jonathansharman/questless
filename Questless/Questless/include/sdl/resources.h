@@ -11,16 +11,23 @@
 
 #include <memory>
 
-#include "sdl-wrappers/Renderer.h"
-#include "sdl-wrappers/ResourceManager.h"
-#include "sdl-wrappers/Texture.h"
-#include "sdl-wrappers/Font.h"
-#include "sdl-wrappers/Sound.h"
+#include "ResourceManager.h"
+#include "Renderer.h"
+#include "Window.h"
+#include "Input.h"
+#include "Texture.h"
+#include "Font.h"
+#include "Sound.h"
 
 namespace sdl
 {
 	Renderer& renderer();
 	void renderer(std::unique_ptr<Renderer> renderer);
+
+	Window& window();
+	void window(std::unique_ptr<Window> window);
+
+	Input& input();
 
 	ResourceManager<Texture>& texture_manager();
 	ResourceManager<Font>& font_manager();

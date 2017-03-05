@@ -7,10 +7,16 @@
 * @section DESCRIPTION The implemention for the Questless Game class.
 */
 
+#include "Game.h"
+
 #include <sstream>
 using std::ostringstream;
 
-#include "Game.h"
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
+#include <SDL_mixer.h>
+
 #include "animation/EntityAnimator.h"
 #include "world/coordinates.h"
 
@@ -34,8 +40,8 @@ using std::function;
 
 using namespace std::chrono;
 
-using namespace sdl;
 using namespace units;
+using namespace sdl;
 
 namespace questless
 {
@@ -52,14 +58,14 @@ namespace questless
 			throw std::runtime_error("Failed to initialize SDL. SDL Error: " + string{SDL_GetError()});
 		}
 		if (fullscreen) {
-			_window = make_unique<Window>("Questless", "resources/textures/icon.png", true);
+			window(make_unique<Window>("Questless", "resources/textures/icon.png", true));
 		} else {
-			_window = make_unique<Window>("Questless", "resources/textures/icon.png", false, _dflt_window_width, _dflt_window_height, true, true, true, false);
+			window(make_unique<Window>("Questless", "resources/textures/icon.png", false, _dflt_window_width, _dflt_window_height, true, true, true, false));
 		}
 
-		renderer(make_unique<Renderer>(*_window, _window->width(), _window->height()));
+		renderer(make_unique<Renderer>(window(), window().width(), window().height()));
 
-		_camera = make_unique<Camera>(*_window, GamePoint{0, 0});
+		_camera = make_unique<Camera>(GamePoint{0, 0});
 
 		/// @todo Make render quality a game setting.
 		//SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
@@ -85,7 +91,7 @@ namespace questless
 
 		// Initialize and load menu resources.
 
-		_hud = make_unique<HUDController>(*this, *_window);
+		_hud = make_unique<HUDController>(*this);
 
 		// Load textures and graphics.
 
@@ -98,7 +104,7 @@ namespace questless
 		// Initialize game state.
 
 		for (int i = 0; i < _splash_flames_count; ++i) {
-			_splash_flame_positions.emplace_back(uniform(0, _window->width() - 1), (i + 1) * _window->height() / _splash_flames_count);
+			_splash_flame_positions.emplace_back(uniform(0, window().width() - 1), (i + 1) * window().height() / _splash_flames_count);
 		}
 
 		_time_last_state_change = clock::now();
@@ -123,7 +129,7 @@ namespace questless
 
 		// Delete window.
 
-		_window = nullptr;
+		window(nullptr);
 
 		// Quit SDL components.
 
@@ -135,17 +141,17 @@ namespace questless
 
 	void Game::load_textures()
 	{
-		_txt_test = make_unique<Texture>("resources/textures/test.png", renderer(), SDL_BLENDMODE_BLEND);
-		_txt_test2 = make_unique<Texture>("resources/textures/test2.png", renderer(), SDL_BLENDMODE_BLEND);
-		_txt_test3 = make_unique<Texture>("resources/textures/test3.png", renderer(), SDL_BLENDMODE_BLEND);
+		_txt_test = make_unique<Texture>("resources/textures/test.png");
+		_txt_test2 = make_unique<Texture>("resources/textures/test2.png");
+		_txt_test3 = make_unique<Texture>("resources/textures/test3.png");
 
-		_txt_splash_logo = make_unique<Texture>("resources/textures/splash/logo.png", renderer(), SDL_BLENDMODE_BLEND);
+		_txt_splash_logo = make_unique<Texture>("resources/textures/splash/logo.png");
 
-		_txt_splash_flame = make_unique<Texture>("resources/textures/splash/flame.png", renderer(), SDL_BLENDMODE_BLEND);
+		_txt_splash_flame = make_unique<Texture>("resources/textures/splash/flame.png");
 
-		_txt_hex_highlight = make_unique<Texture>("resources/textures/terrain/tile.png", renderer(), SDL_BLENDMODE_BLEND);
+		_txt_hex_highlight = make_unique<Texture>("resources/textures/terrain/tile.png");
 
-		_txt_hex_circle = make_unique<Texture>("resources/textures/ui/hex_circle.png", renderer(), SDL_BLENDMODE_BLEND);
+		_txt_hex_circle = make_unique<Texture>("resources/textures/ui/hex_circle.png");
 	}
 
 	Action::Complete Game::add_dialog(Dialog::ptr dialog)
@@ -200,20 +206,20 @@ namespace questless
 		for (;;) {
 			// Update
 
-			_input.update();
+			input().update();
 
-			if (_input.quit() || _input.alt() && _input.presses(SDLK_F4)) {
+			if (input().quit() || input().alt() && input().presses(SDLK_F4)) {
 				_game_over = true;
 				return;
 			}
 
 			/// @todo Sometimes resizing the window causes a crash.
-			if (_input.window_restored()) {
+			if (input().window_restored()) {
 				/// @todo Save previous window size and restore it here.
 			}
-			if (_input.window_resized()) {
-				_window->recreate();
-				renderer(make_unique<Renderer>(*_window, _window->width(), _window->height()));
+			if (input().window_resized()) {
+				window().recreate();
+				renderer(make_unique<Renderer>(window(), window().width(), window().height()));
 			}
 
 			switch (_state) {
@@ -284,8 +290,8 @@ namespace questless
 			oss_fps.setf(std::ios::fixed);
 			oss_fps.precision(2);
 			oss_fps << fps_buffer_sum / _fps_buffer.size();
-			Texture txt_fps = _fnt_20pt->render(oss_fps.str(), renderer(), Color::white());
-			txt_fps.draw(ScreenPoint(_window->width() - 1, _window->height() - 1), HAlign::right, VAlign::bottom);
+			Texture txt_fps = _fnt_20pt->render(oss_fps.str(), Color::white());
+			txt_fps.draw(ScreenPoint(window().width() - 1, window().height() - 1), HAlign::right, VAlign::bottom);
 
 			// Present rendering.
 
@@ -303,12 +309,12 @@ namespace questless
 		for (ScreenPoint& position : _splash_flame_positions) {
 			position.y += lround(_splash_flames_vy * frame_duration);
 			if (position.y < 0) {
-				position.y += _window->height() + _txt_splash_flame->height();
-				position.x = uniform(0, _window->width() - 1);
+				position.y += window().height() + _txt_splash_flame->height();
+				position.x = uniform(0, window().width() - 1);
 			}
 		}
 
-		if (_input.any_presses() || clock::now() - _time_last_state_change >= _splash_duration) {
+		if (input().any_presses() || clock::now() - _time_last_state_change >= _splash_duration) {
 			// End splash.
 
 			_splash_flame_positions.clear();
@@ -348,7 +354,7 @@ namespace questless
 			_txt_splash_flame->color(Color{intensity, intensity, intensity});
 		}
 
-		ScreenPoint logo_position = _window->center() + ScreenVector{uniform(-_splash_logo_jiggle, _splash_logo_jiggle), uniform(-_splash_logo_jiggle, _splash_logo_jiggle)};
+		ScreenPoint logo_position = window().center() + ScreenVector{uniform(-_splash_logo_jiggle, _splash_logo_jiggle), uniform(-_splash_logo_jiggle, _splash_logo_jiggle)};
 		_txt_splash_logo->draw(logo_position, HAlign::center, VAlign::middle);
 
 		for (ScreenPoint position : _splash_flame_positions) {
@@ -358,7 +364,7 @@ namespace questless
 
 	void Game::update_menu()
 	{
-		_mnu_main.update(_input);
+		_mnu_main.update();
 		for (auto const& option : _mnu_main.poll_selections()) {
 			if (option.first == "Questless") {
 				if (option.second == "Continue" || option.second == "Begin Anew") {
@@ -396,7 +402,7 @@ namespace questless
 
 	void Game::render_menu()
 	{
-		_mnu_main.draw(_window->center(), HAlign::center, VAlign::middle);
+		_mnu_main.draw(window().center(), HAlign::center, VAlign::middle);
 	}
 
 	void Game::render_playing()
@@ -411,7 +417,7 @@ namespace questless
 
 		_world_renderer->draw_terrain(*_camera);
 
-		if (_input.pressed(MouseButton::right)) {
+		if (input().pressed(MouseButton::right)) {
 			_point_clicked_rounded = Layout::dflt().to_world(_camera->tile_hovered());
 		}
 		_camera->draw(*_txt_hex_highlight, Layout::dflt().to_world(_camera->tile_hovered()), Origin{boost::none}, Color::white(128));
@@ -426,7 +432,7 @@ namespace questless
 
 		// Draw dialogs.
 		for (auto const& dialog : _dialogs) {
-			dialog->draw(*_window);
+			dialog->draw();
 		}
 
 		{
@@ -435,20 +441,20 @@ namespace questless
 			ss_cam_coords.precision(2);
 			ss_cam_coords << "Cam: ((" << _camera->position().x << ", " << _camera->position().y << "), ";
 			ss_cam_coords << _camera->angle().count() << ", " << _camera->zoom() << ")";
-			Texture txt_cam_coords = _fnt_20pt->render(ss_cam_coords.str(), renderer(), Color::white());
+			Texture txt_cam_coords = _fnt_20pt->render(ss_cam_coords.str(), Color::white());
 			txt_cam_coords.draw(ScreenPoint{0, 0});
 		}
 		{
 			auto cam_hex_coords = Layout::dflt().to_hex_coords<RegionTileCoords>(_camera->position());
 			ostringstream ss_cam_hex_coords;
 			ss_cam_hex_coords << "Cam hex: (" << cam_hex_coords.q << ", " << cam_hex_coords.r << ")";
-			Texture txt_cam_hex_coords = _fnt_20pt->render(ss_cam_hex_coords.str(), renderer(), Color::white());
+			Texture txt_cam_hex_coords = _fnt_20pt->render(ss_cam_hex_coords.str(), Color::white());
 			txt_cam_hex_coords.draw(ScreenPoint{0, 25});
 		}
 		{
 			ostringstream ss_time;
 			ss_time << "Time: " << _time;
-			Texture txt_turn = _fnt_20pt->render(ss_time.str(), renderer(), Color::white());
+			Texture txt_turn = _fnt_20pt->render(ss_time.str(), Color::white());
 			txt_turn.draw(ScreenPoint{0, 50});
 		}
 
@@ -463,14 +469,14 @@ namespace questless
 	void Game::update_playing()
 	{
 		// Update camera.
-		_camera->update(_input);
+		_camera->update();
 
 		// Update HUD.
-		_hud->update(_input);
+		_hud->update();
 
 		// Update dialogs.
 		if (!_dialogs.empty()) {
-			if (_dialogs.front()->update(_input)) {
+			if (_dialogs.front()->update() == Dialog::State::closed) {
 				_dialogs.pop_front();
 
 				if (_dialogs.empty()) {
@@ -478,7 +484,7 @@ namespace questless
 				}
 			}
 		} else if (_player_action_dialog) {
-			if (_player_action_dialog->update(_input)) {
+			if (_player_action_dialog->update() == Dialog::State::closed) {
 				_player_action_dialog = nullptr;
 			}
 		} else {
@@ -508,59 +514,59 @@ namespace questless
 		// Disable camera controls during dialogs (except player action dialog).
 		if (_dialogs.empty()) {
 			// Pan camera.
-			if (_input.down(MouseButton::middle)) {
-				ScreenVector mouse_shift = _input.last_mouse_position() - _input.mouse_position();
+			if (input().down(MouseButton::middle)) {
+				ScreenVector mouse_shift = input().last_mouse_position() - input().mouse_position();
 				auto pan = GameVector{static_cast<double>(mouse_shift.x), static_cast<double>(-mouse_shift.y)} / _camera->zoom();
 				pan.rotate(_camera->angle());
 				_camera->pan(pan);
 			}
 			double const pan_amount = 10.0;
-			if (_input.down(SDLK_KP_8)) {
+			if (input().down(SDLK_KP_8)) {
 				_camera->pan(GameVector{0.0, pan_amount} / _camera->zoom());
 			}
-			if (_input.down(SDLK_KP_4)) {
+			if (input().down(SDLK_KP_4)) {
 				_camera->pan(GameVector{-pan_amount, 0.0} / _camera->zoom());
 			}
-			if (_input.down(SDLK_KP_2)) {
+			if (input().down(SDLK_KP_2)) {
 				_camera->pan(GameVector{0.0, -pan_amount} / _camera->zoom());
 			}
-			if (_input.down(SDLK_KP_6)) {
+			if (input().down(SDLK_KP_6)) {
 				_camera->pan(GameVector{pan_amount, 0.0} / _camera->zoom());
 			}
 
 			// Scale camera.
-			_camera->zoom_factor(1 + _input.scroll() / 10.0f);
+			_camera->zoom_factor(1 + input().scroll() / 10.0f);
 
 			// Rotate camera.
 			GameRadians angle = _camera->angle();
-			if (_input.down(SDLK_KP_9)) {
+			if (input().down(SDLK_KP_9)) {
 				_camera->rotate((-GameRadians::circle() / 6.0 - angle) / 20.0);
-			} else if (_input.down(SDLK_KP_7)) {
+			} else if (input().down(SDLK_KP_7)) {
 				_camera->rotate((GameRadians::circle() / 6.0 - angle) / 20.0);
 			}
 		}
 
 		// Camera follow.
 		static bool follow = true;
-		if (_input.presses(SDLK_BACKSPACE) & 1) { // Odd number of presses
+		if (input().presses(SDLK_BACKSPACE) & 1) { // Odd number of presses
 			follow = !follow;
 		}
 		if (follow) {
 			if (Being* player = being(_player_being_id)) {
-				constexpr double acceleration = 0.2;
+				constexpr double recoil = 0.2;
 
 				GameVector to_player = Layout::dflt().to_world(player->coords) - _camera->position();
-				_camera->position(_camera->position() + acceleration * to_player);
+				_camera->position(_camera->position() + recoil * to_player);
 
 				double to_zoom_1 = 1.0 - _camera->zoom();
-				_camera->zoom(_camera->zoom() + acceleration * to_zoom_1);
+				_camera->zoom(_camera->zoom() + recoil * to_zoom_1);
 				if (abs(_camera->zoom() - 1.0) < 0.001) {
 					_camera->zoom(1.0);
 				}
 
 				// Only snap camera angle back if the player isn't actively rotating it.
-				if (!_input.down(SDLK_KP_9) && !_input.down(SDLK_KP_7)) {
-					_camera->angle(_camera->angle() * (1 - acceleration));
+				if (!input().down(SDLK_KP_9) && !input().down(SDLK_KP_7)) {
+					_camera->angle(_camera->angle() * (1 - recoil));
 				}
 			}
 		}

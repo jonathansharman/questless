@@ -12,6 +12,8 @@
 #include <string>
 #include <functional>
 
+#include <boost/optional.hpp>
+
 #include "Dialog.h"
 #include "animation/Camera.h"
 #include "world/coordinates.h"
@@ -39,9 +41,9 @@ namespace questless
 			load_textures();
 		}
 
-		bool update(sdl::Input& input) override;
+		State update() override;
 
-		void draw(sdl::Window const& window) override;
+		void draw() const override;
 	private:
 		std::string _title;
 		std::string _prompt;

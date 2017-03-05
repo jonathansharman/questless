@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "sdl-wrappers/Texture.h"
+#include "sdl/Texture.h"
 #include "entities/beings/Body.h"
 
 namespace questless
@@ -17,7 +17,7 @@ namespace questless
 	class BodyTexturer
 	{
 	public:
-		void visit(Body const&);
+		void visit(Body const& body);
 
 		sdl::Texture::ptr texture() { return std::move(_texture); }
 	private:

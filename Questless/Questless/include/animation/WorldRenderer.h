@@ -16,12 +16,11 @@
 #include "AnimationSet.h"
 #include "entities/Entity.h"
 #include "entities/beings/WorldView.h"
-#include "sdl-wrappers/Renderer.h"
+#include "sdl/Renderer.h"
 #include "world/Tile.h"
-#include "sdl-wrappers/Renderable.h"
+#include "sdl/Renderable.h"
 #include "effects/Effect.h"
 #include "animation/particles/Particle.h"
-#include "utility/Initializer.h"
 
 namespace questless
 {
@@ -48,16 +47,19 @@ namespace questless
 		/// Draws the visible beings in the world.
 		/// @param game The game object.
 		/// @param camera The camera with which to draw the beings.
+		////
 		void draw_beings(Game const& game, Camera const& camera);
 
 		/// Draws the visible objects in the world.
 		/// @param game The game object.
 		/// @param camera The camera with which to draw the objects.
+		////
 		void draw_objects(Game const& game, Camera const& camera);
 
 		/// Draws visualizations of any active effects in the world.
 		/// @param game The game object.
 		/// @param camera The camera with which to draw the objects.
+		////
 		void draw_effects(Game const& game, Camera const& camera);
 
 		// Effect visitor methods.
@@ -65,13 +67,6 @@ namespace questless
 		void visit(LightningBoltEffect const&) override;
 		void visit(InjuryEffect const&) override;
 	private:
-		friend class Initializer<WorldRenderer>;
-		static Initializer<WorldRenderer> _initializer;
-		static void initialize();
-
-		static sdl::Handle<sdl::Sound> _lightning_bolt_sound_handle;
-		static sdl::Handle<sdl::Sound> _hit_sound_handle;
-
 		WorldView const* _world_view;
 
 		std::unordered_map<Tile::TileClass, sdl::Texture::ptr> _tile_textures;

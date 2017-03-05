@@ -10,7 +10,7 @@
 #pragma once
 
 #include "world/Tile.h"
-#include "sdl-wrappers/Texture.h"
+#include "sdl/Texture.h"
 
 namespace questless
 {

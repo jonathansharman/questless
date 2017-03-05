@@ -13,9 +13,10 @@
 #include <vector>
 #include <memory>
 
-#include "sdl-wrappers/resources.h"
+#include "sdl/resources.h"
 #include "animation/Animation.h"
 #include "animation/Camera.h"
+#include "units/GamePoint.h"
 
 namespace questless
 {

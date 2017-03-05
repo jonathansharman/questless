@@ -7,8 +7,8 @@
 * @section DESCRIPTION The implementation for Font, a simple wrapper class around TTF_Font.
 */
 
-#include "sdl-wrappers/Font.h"
-#include "sdl-wrappers/Renderable.h" /// @todo Remove after done debugging.
+#include "sdl/Font.h"
+#include "sdl/Renderable.h" /// @todo Remove after done debugging.
 
 namespace sdl
 {
@@ -49,43 +49,43 @@ namespace sdl
 		std::swap(first._blend_mode, second._blend_mode);
 	}
 
-	Texture Font::render(std::string const& text, Renderer& renderer, Color text_color) const
+	Texture Font::render(std::string const& text, Color text_color) const
 	{
 		SDL_Surface* surface = TTF_RenderText_Blended(_font, text.c_str(), static_cast<SDL_Color>(text_color));
 		if (surface == nullptr) {
 			throw std::runtime_error{TTF_GetError()};
 		}
-		SDL_Texture* sdl_texture = SDL_CreateTextureFromSurface(renderer.sdl_ptr(), surface);
+		SDL_Texture* sdl_texture = SDL_CreateTextureFromSurface(renderer().sdl_ptr(), surface);
 		if (sdl_texture == nullptr) {
 			throw std::runtime_error{"SDL texture created from surface is null."};
 		}
-		Texture texture{sdl_texture, renderer};
+		Texture texture{sdl_texture};
 		SDL_FreeSurface(surface);
 		return texture;
 	}
 
-	Texture Font::render(std::string const& text, Renderer& renderer, Color text_color, Color background_color) const
+	Texture Font::render(std::string const& text, Color text_color, Color background_color) const
 	{
 		SDL_Surface* surface = TTF_RenderText_Shaded(_font, text.c_str(), static_cast<SDL_Color>(text_color), static_cast<SDL_Color>(background_color));
 		if (surface == nullptr) {
 			throw std::runtime_error(TTF_GetError());
 		}
-		SDL_Texture* sdl_texture = SDL_CreateTextureFromSurface(renderer.sdl_ptr(), surface);
+		SDL_Texture* sdl_texture = SDL_CreateTextureFromSurface(renderer().sdl_ptr(), surface);
 		if (sdl_texture == nullptr) {
 			throw std::runtime_error{"SDL texture created from surface is null."};
 		}
-		Texture texture{sdl_texture, renderer};
+		Texture texture{sdl_texture};
 		SDL_FreeSurface(surface);
 		return texture;
 	}
 
-	Texture Font::quick_render(std::string const& text, Renderer& renderer, Color text_color) const
+	Texture Font::fast_render(std::string const& text, Color text_color) const
 	{
 		SDL_Surface* surface = TTF_RenderText_Solid(_font, text.c_str(), static_cast<SDL_Color>(text_color));
 		if (surface == nullptr) {
 			throw std::runtime_error(TTF_GetError());
 		}
-		Texture texture{SDL_CreateTextureFromSurface(renderer.sdl_ptr(), surface), renderer};
+		Texture texture{SDL_CreateTextureFromSurface(renderer().sdl_ptr(), surface)};
 		SDL_FreeSurface(surface);
 		return texture;
 	}

@@ -16,16 +16,6 @@ using namespace units;
 
 namespace questless::qte
 {
-	sdl::Handle<sdl::Texture> LightningBolt::_point_charge_texture_handle;
-
-	Initializer<LightningBolt> LightningBolt::_initializer;
-	void LightningBolt::initialize()
-	{
-		_point_charge_texture_handle = sdl::texture_manager().add([] {
-			return std::make_unique<Texture>("resources/textures/glow.png", renderer(), SDL_BLENDMODE_BLEND);
-		});
-	}
-
 	LightningBolt::LightningBolt(Camera const& camera, RegionTileCoords target_coords, std::function<void(double)> cont)
 		: _camera{camera}
 		, _target_point{units::Layout::dflt().to_world(target_coords)}
@@ -34,7 +24,7 @@ namespace questless::qte
 		load_textures();
 	}
 
-	bool LightningBolt::update(Input&)
+	Dialog::State LightningBolt::update()
 	{
 		_elapsed_time += Game::frame_duration;
 		if (_elapsed_time > _time_limit) {
@@ -101,18 +91,18 @@ namespace questless::qte
 			point_charge.position += point_charge.velocity * Game::frame_duration;
 		}
 
-		return false;
+		return State::open;
 	}
 
-	void LightningBolt::draw(Window const& window)
+	void LightningBolt::draw() const
 	{
-		int x_center = window.center().x;
+		static auto point_charge_texture_handle = texture_manager().add("resources/textures/glow.png");
 
 		// Draw point charges.
 		for (auto const& point_charge : _charges) {
 			double intensity = uniform(0.0, 1.0);
 			_camera.draw
-				( texture_manager()[_point_charge_texture_handle]
+				( texture_manager()[point_charge_texture_handle]
 				, point_charge.position
 				, Origin{boost::none}
 				, Color{255, 255, percentage_to_byte(intensity)}
@@ -122,17 +112,13 @@ namespace questless::qte
 				);
 		}
 
-		// Draw the title and prompt.
-		renderer().draw_rect(ScreenRect{x_center - _txt_title->width() / 2, 0, _txt_title->width(), _txt_title->height()}, Color::black(128), true);
-		_txt_title->draw(ScreenPoint{x_center, 0}, HAlign::center);
-		renderer().draw_rect(ScreenRect{x_center - _txt_prompt->width() / 2, _prompt_top, _txt_prompt->width(), _txt_prompt->height()}, Color::black(128), true);
-		_txt_prompt->draw(ScreenPoint{x_center, _prompt_top}, HAlign::center);
+		draw_title(*_txt_title);
+		draw_prompt(*_txt_prompt);
 	}
 
 	void LightningBolt::load_textures()
 	{
-		_txt_title = std::make_unique<Texture>(font_manager()[title_font_handle()].render("Build up a charge!", renderer(), Color::white()));
-
-		_txt_prompt = std::make_unique<Texture>(font_manager()[prompt_font_handle()].render("Circle the target counter-clockwise as fast as you can!", renderer(), Color::white()));
+		_txt_title = make_title("Build up a charge!");
+		_txt_prompt = make_prompt("Circle the target counter-clockwise as fast as you can!");
 	}
 }

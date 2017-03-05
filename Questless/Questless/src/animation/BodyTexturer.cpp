@@ -8,19 +8,13 @@
 */
 
 #include <deque>
-using std::deque;
 #include <type_traits>
-using std::reference_wrapper;
 #include <algorithm>
-using std::min;
-using std::max;
 #include <utility>
-using std::pair;
-using std::make_pair;
 
 #include "animation/BodyTexturer.h"
 #include "entities/beings/BodyPart.h"
-#include "sdl-wrappers/resources.h"
+#include "sdl/resources.h"
 #include "utility/utility.h"
 
 using namespace sdl;
@@ -32,7 +26,7 @@ namespace questless
 	{
 		ScreenRect bounds = body.bounds();
 
-		_texture = std::make_unique<Texture>(renderer(), SDL_BLENDMODE_BLEND, bounds.w, bounds.h, true);
+		_texture = std::make_unique<Texture>(bounds.w, bounds.h);
 		_texture->as_target([this, &body] {
 			renderer().clear(Color::clear());
 			renderer().draw_rect(ScreenRect{0, 0, _texture->width(), _texture->height()}, Color::red(), false);

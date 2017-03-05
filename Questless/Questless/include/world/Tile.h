@@ -9,8 +9,8 @@
 
 #pragma once
 
-#include "sdl-wrappers/Renderer.h"
-#include "sdl-wrappers/Texture.h"
+#include "sdl/Renderer.h"
+#include "sdl/Texture.h"
 
 namespace questless
 {

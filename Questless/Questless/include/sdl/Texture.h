@@ -21,14 +21,15 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-#include "Renderer.h"
-#include "Color.h"
 #include "units/ScreenVector.h"
 #include "units/ScreenPoint.h"
 #include "units/ScreenRect.h"
 #include "units/TexturePoint.h"
 #include "units/TextureRect.h"
 #include "units/GameRadians.h"
+
+#include "Renderer.h"
+#include "Color.h"
 
 namespace sdl
 {
@@ -40,26 +41,21 @@ namespace sdl
 	public:
 		using ptr = std::unique_ptr<Texture>;
 
-		/// Constructs a blank texture with the specified dimensions.
-		/// @param renderer The renderer object to create and render the texture.
+		/// Constructs a targetable, blank texture with the specified dimensions. Useful for building textures at run time.
+		/// @param width The width of the texture.
+		/// @param height The height of the texture.
 		/// @param blend_mode The SDL blend mode to use for this texture. Determines the way the alpha channel is used.
-		/// @param width The initial width of the blank texture.
-		/// @param height The initial height of the blank texture.
-		/// @param targetable Whether the texture can be used as a render target.
-		Texture(Renderer& renderer, SDL_BlendMode blend_mode = SDL_BLENDMODE_BLEND, int width = 0, int height = 0, bool targetable = false);
+		Texture(int width = 0, int height = 0, SDL_BlendMode blend_mode = SDL_BLENDMODE_BLEND);
 
 		/// Constructs a texture object from the specified image file.
 		/// @param filename The name of the image file.
-		/// @param renderer The renderer object to create and render the texture.
-		/// @param blend_mode The SDL blend mode to use for this texture. Determines the way the alpha channel is used.
-		/// @param width The initial width of the blank texture.
-		/// @param height The initial height of the blank texture.
 		/// @param targetable Whether the texture can be used as a render target.
-		Texture(std::string const& filename, Renderer& renderer, SDL_BlendMode blend_mode = SDL_BLENDMODE_BLEND, bool targetable = false);
+		/// @param blend_mode The SDL blend mode to use for this texture. Determines the way the alpha channel is used.
+		Texture(std::string const& filename, bool targetable = false, SDL_BlendMode blend_mode = SDL_BLENDMODE_BLEND);
 
 		/// Constructs a texture object from an SDL texture.
 		/// @param texture An SDL texture pointer.
-		Texture(SDL_Texture* texture, Renderer& renderer);
+		Texture(SDL_Texture* texture);
 
 		/// Copy constructor disabled.
 		Texture(Texture const& texture) = delete;

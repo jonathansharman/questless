@@ -51,7 +51,7 @@ namespace questless::spell
 								BodyPart* part = &target->body.root();
 								std::vector<BodyPart*> struck_parts{part};
 								while (!part->children().empty()) {
-									part = part->children()[uniform(0u, part->children().size() - 1)].get();
+									part = part->children()[uniform(size_t{0}, part->children().size() - 1)].get();
 									struck_parts.push_back(part);
 								}
 								for (auto struck_part : struck_parts) {

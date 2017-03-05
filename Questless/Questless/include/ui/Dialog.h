@@ -9,10 +9,10 @@
 
 #pragma once
 
-#include "sdl-wrappers/Renderable.h"
-#include "sdl-wrappers/resources.h"
-#include "sdl-wrappers/Window.h"
-#include "sdl-wrappers/Input.h"
+#include "sdl/Renderable.h"
+#include "sdl/resources.h"
+#include "sdl/Window.h"
+#include "sdl/Input.h"
 #include "utility/Initializer.h"
 
 namespace questless
@@ -24,14 +24,14 @@ namespace questless
 
 		using ptr = std::unique_ptr<Dialog>;
 
-		/// Updates the dialog state based on input.
-		/// @param input User input used to update the dialog.
-		/// @return True if the dialog is resolved after this update or false if it's still active.
-		virtual bool update(sdl::Input& input) = 0; /// @todo Take input by ref or const-ref?
+		/// Updates the dialog state based on input. To be called once per frame as long as it's open.
+		/// @return The state of the dialog after this update: either open or closed.
+		////
+		virtual State update() = 0; /// @todo Take input by ref or const-ref?
 
 		/// Draws the dialog to the screen.
-		/// @param window The window.
-		virtual void draw(sdl::Window const& window) = 0;
+		////
+		virtual void draw() const = 0;
 	protected:
 		template <typename... Args>
 		class Continuation
@@ -39,44 +39,28 @@ namespace questless
 		public:
 			Continuation(std::function<void(Args...)> cont) : _cont{ std::move(cont) } {}
 
-			bool operator ()(Args&&... args)
+			State operator ()(Args&&... args)
 			{
 				_cont(std::forward<Args>(args)...);
-				return true;
+				return State::closed;
 			}
 		private:
 			std::function<void(Args...)> _cont;
 		};
 
-		//template <>
-		//class Continuation<void>
-		//{
-		//public:
-		//	Continuation(std::function<void()> cont) : _cont{ std::move(cont) } {}
-
-		//	bool operator ()()
-		//	{
-		//		_cont();
-		//		return true;
-		//	}
-		//private:
-		//	std::function<void()> _cont;
-		//};
+		static constexpr int _title_font_size = 32;
+		static constexpr int _prompt_font_size = 20;
+		static constexpr int _selector_font_size = 20;
 
 		static constexpr int _prompt_top = 40;
+		static constexpr int _selector_top = 100;
 
-		static sdl::Handle<sdl::Font> title_font_handle() { return _title_font_handle; }
-		static sdl::Handle<sdl::Font> prompt_font_handle() { return _prompt_font_handle; }
-		static sdl::Handle<sdl::Font> io_font_handle() { return _io_font_handle; }
-		static sdl::Handle<sdl::Font> list_option_font_handle() { return _list_option_font_handle; }
-	private:
-		friend class Initializer<Dialog>;
-		static Initializer<Dialog> _initializer;
-		static void initialize();
+		static sdl::Texture::ptr make_title(std::string const& title);
+		static sdl::Texture::ptr make_prompt(std::string const& prompt);
+		static sdl::Texture::ptr make_selector(std::string const& selector);
 
-		static sdl::Handle<sdl::Font> _title_font_handle;
-		static sdl::Handle<sdl::Font> _prompt_font_handle;
-		static sdl::Handle<sdl::Font> _io_font_handle;
-		static sdl::Handle<sdl::Font> _list_option_font_handle;
+		static void draw_title(sdl::Texture const& title);
+		static void draw_prompt(sdl::Texture const& prompt);
+		static void draw_selector(sdl::Texture const& selector);
 	};
 }

@@ -10,10 +10,10 @@
 #pragma once
 
 #include "units/Rate.h"
-#include "units/Vector.h"
+#include "units/GameVector.h"
 #include "units/GameSeconds.h"
 
 namespace units
 {
-	using GameVelocity = units::Rate<units::GameVector, double>;
+	using GameVelocity = Rate<units::GameVector, double>;
 }

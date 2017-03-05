@@ -7,18 +7,19 @@
 * @section DESCRIPTION The implementation for Texture, a simple wrapper class around SDL_Texture.
 */
 
-#include "sdl-wrappers/Texture.h"
+#include "sdl/Texture.h"
+#include "sdl/resources.h"
 
 using namespace units;
 
 namespace sdl
 {
-	Texture::Texture(Renderer& renderer, SDL_BlendMode blend_mode, int width, int height, bool targetable)
+	Texture::Texture(int width, int height, SDL_BlendMode blend_mode)
 		: _texture{nullptr}
-		, _renderer{renderer}
+		, _renderer{renderer()}
 		, _blend_mode{blend_mode}
 		, _format{SDL_PIXELFORMAT_UNKNOWN}
-		, _access{targetable ? SDL_TEXTUREACCESS_TARGET : SDL_TEXTUREACCESS_STATIC}
+		, _access{SDL_TEXTUREACCESS_TARGET}
 		, _w{width}
 		, _h{height}
 		, _color{255, 255, 255}
@@ -36,9 +37,9 @@ namespace sdl
 		}
 	}
 
-	Texture::Texture(std::string const& filename, Renderer& renderer, SDL_BlendMode blend_mode, bool targetable)
+	Texture::Texture(std::string const& filename, bool targetable, SDL_BlendMode blend_mode)
 		: _texture{nullptr }
-		, _renderer{renderer}
+		, _renderer{renderer()}
 		, _blend_mode{blend_mode}
 		, _format{SDL_PIXELFORMAT_UNKNOWN}
 		, _access{targetable ? SDL_TEXTUREACCESS_TARGET : SDL_TEXTUREACCESS_STATIC}
@@ -54,9 +55,9 @@ namespace sdl
 		}
 	}
 	
-	Texture::Texture(SDL_Texture* texture, Renderer& renderer)
+	Texture::Texture(SDL_Texture* texture)
 		: _texture{texture}
-		, _renderer{renderer}
+		, _renderer{renderer()}
 	{
 		if (_texture) {
 			SDL_GetTextureBlendMode(_texture, &_blend_mode);

@@ -17,7 +17,7 @@ namespace questless
 		subupdate();
 
 		_time_left -= Game::frame_duration;
-		if (dead()) {
+		if (expired()) {
 			return;
 		}
 		_position += _velocity * Game::frame_duration;

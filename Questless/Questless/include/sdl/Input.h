@@ -15,8 +15,8 @@
 
 #include <SDL.h>
 
-#include "sdl-wrappers/Window.h"
-#include "units/Point.h"
+#include "sdl/Window.h"
+#include "units/ScreenPoint.h"
 
 namespace sdl
 {
@@ -114,9 +114,8 @@ namespace sdl
 		// Mouse state mutators
 
 		/// Sets the position of the mouse cursor in the window.
-		/// @param window The window relative to which to the cursor is moved.
 		/// @param position The position to which the cursor is moved.
-		void move_mouse(Window const& window, units::ScreenPoint const& position);
+		void move_mouse(units::ScreenPoint const& position);
 
 		/// Hides the mouse cursor.
 		void hide_mouse() const { SDL_ShowCursor(0); }

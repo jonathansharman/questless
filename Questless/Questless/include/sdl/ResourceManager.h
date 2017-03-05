@@ -10,6 +10,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <list>
 #include <functional>
 #include <memory>
@@ -37,9 +38,24 @@ namespace sdl
 	class ResourceManager
 	{
 	public:
-		/// Registers the given resource name and generator with the manager.
+		/// Registers with the manager a resource constructed from the given arguments.
+		/// @param args Arguments with which to construct the resource in the generator.
+		/// @return The handle with which the resource can be accessed.
+		template <typename... Args>
+		Handle<ResourceType> add(Args... args)
+		{
+			_registry.emplace_front(nullptr, [args...] {
+				return std::make_unique<ResourceType>(args...);
+			});
+			return Handle<ResourceType>{_registry.begin()};
+		}
+
+		/// @todo Enable the use of the following specialization without the need for explicit parameterization.
+
+		/// Registers with the manager a resource with the given generator.
 		/// @param generator A function that loads or creates the resource when it is needed.
 		/// @return The handle with which the resource can be accessed.
+		template <>
 		Handle<ResourceType> add(std::function<std::unique_ptr<ResourceType>()> generator)
 		{
 			_registry.emplace_front(nullptr, std::move(generator));

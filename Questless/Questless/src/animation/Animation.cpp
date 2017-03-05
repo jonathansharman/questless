@@ -62,13 +62,13 @@ namespace questless
 
 			if (_frame_index < 0) {
 				if (_looping) {
-					_frame_index = _frames.size() - 1;
+					_frame_index = static_cast<int>(_frames.size() - 1);
 					++_loops;
 				} else {
 					_over = true;
 					break;
 				}
-			} else if (static_cast<size_t>(_frame_index) >= _frames.size()) {
+			} else if (_frame_index >= static_cast<int>(_frames.size())) {
 				if (_looping) {
 					_frame_index = 0;
 					++_loops;

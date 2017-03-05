@@ -20,20 +20,15 @@
 #include <stdexcept>
 #include <memory>
 
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_ttf.h>
-#include <SDL_mixer.h>
-
 #include "ui/DigraphMenuController.h"
 #include "ui/PlayerActionDialog.h"
 #include "ui/ListDialog.h"
-#include "sdl-wrappers/Window.h"
-#include "sdl-wrappers/Renderer.h"
-#include "sdl-wrappers/Texture.h"
-#include "sdl-wrappers/Font.h"
-#include "sdl-wrappers/Sound.h"
-#include "sdl-wrappers/Input.h"
+#include "sdl/Window.h"
+#include "sdl/Renderer.h"
+#include "sdl/Texture.h"
+#include "sdl/Font.h"
+#include "sdl/Sound.h"
+#include "sdl/Input.h"
 #include "animation/Camera.h"
 #include "animation/WorldRenderer.h"
 #include "world/Region.h"
@@ -55,74 +50,87 @@ namespace questless
 
 		/// Creates a game object, initializes the environment, and loads game resources.
 		/// @param fullscreen Whether to run the game in fullscreen mode.
+		////
 		Game(bool fullscreen);
 
 		/// Releases game resources and breaks down the environment.
+		////
 		~Game();
 
 		/// Runs a new game of Questless.
+		////
 		void run();
 
 		/// Adds the given dialog to the dialogs stack.
+		////
 		Action::Complete add_dialog(Dialog::ptr dialog);
 
 		void query_player_choice(std::function<void(PlayerActionDialog::Choice)> cont);
-
-		sdl::Input& input() { return _input; }
-		sdl::Input const& input() const { return _input; }
 
 		Region& region() { return *_region; }
 		Region const& region() const { return *_region; }
 
 		/// Adds an effect to the world, notifying beings within range of its occurrence.
 		/// @param effect The effect to add.
+		////
 		void add_effect(Effect::ptr const& effect);
 
 		/// Adds the given being to the graveyard.
+		////
 		void add_to_graveyard(Being::ptr being) { _graveyard.push_back(std::move(being)); }
 
 		/// Retrieves a pointer to the specified being from the global being directory, or nullptr if it doeesn't exist.
 		/// If the being exists but isn't in memory, it will be loaded.
 		/// @param id The ID of the being to retrieve.
 		/// @return The being with the given ID, or nullptr if nonexistent.
+		////
 		Being* being(BeingId id) { return _being(id); }
 		/// Retrieves a pointer to the specified being from the global being directory, or nullptr if it doeesn't exist.
 		/// If the being exists but isn't in memory, it will be loaded.
 		/// @param id The ID of the being to retrieve.
 		/// @return The being with the given ID, or nullptr if nonexistent.
+		////
 		Being const* being(BeingId id) const { return _being(id); }
 		/// Adds the given being and its global coordinates to the global being directory.
 		/// @param being The being to add.
 		/// @param coords The being's global coordinates.
+		////
 		void add_being(Being* being, GlobalCoords coords) { _beings[being->id()] = std::make_tuple(coords, being); }
 		/// Updates the global coordinates in the global being directory of the being with the given ID.
 		/// @param id The ID of the being to update.
 		/// @param coords The being's new global coordinates.
+		////
 		void update_being_coords(BeingId id, GlobalCoords coords) { std::get<GlobalCoords>(_beings[id]) = coords; }
 		/// Removes the specified being ID from the global being directory.
 		/// @param id The ID of the being to delete.
+		////
 		void remove_being_id(BeingId id) { _beings.erase(id); }
 
 		/// Retrieves a pointer to the specified object from the global object directory, or nullptr if it doeesn't exist.
 		/// If the object exists but isn't in memory, it will be loaded.
 		/// @param id The ID of the object to retrieve.
 		/// @return The object with the given ID, or nullptr if nonexistent.
+		////
 		Object* object(ObjectId id) { return _object(id); }
 		/// Retrieves a pointer to the specified object from the global object directory, or nullptr if it doeesn't exist.
 		/// If the object exists but isn't in memory, it will be loaded.
 		/// @param id The ID of the object to retrieve.
 		/// @return The object with the given ID, or nullptr if nonexistent.
+		////
 		Object const* object(ObjectId id) const { return _object(id); }
 		/// Adds the given object and its global coordinates to the global object directory.
 		/// @param object The object to add.
 		/// @param coords The object's global coordinates.
+		////
 		void add_object(Object* object, GlobalCoords coords) { _objects[object->id()] = std::make_tuple(coords, object); }
 		/// Updates the global coordinates in the global object directory of the object with the given ID.
 		/// @param id The ID of the object to update.
 		/// @param coords The object's new global coordinates.
+		////
 		void update_object_coords(ObjectId id, GlobalCoords coords) { std::get<GlobalCoords>(_objects[id]) = coords; }
 		/// Removes the specified being ID from the global object directory.
 		/// @param id The ID of the object to delete.
+		////
 		void remove_object_id(ObjectId id) { _objects.erase(id); }
 
 		HUDController& hud() { return *_hud; }
@@ -167,15 +175,13 @@ namespace questless
 		// Data //
 		//////////
 
-		sdl::Window::ptr _window;
-
 		Camera::ptr _camera;
 
 		// Debug
 
 		std::deque<double> _fps_buffer;
 
-		// sdl::Textures
+		// Textures
 
 		sdl::Texture::ptr _txt_test; ///< A placeholder texture used for testing.
 		sdl::Texture::ptr _txt_test2;
@@ -211,8 +217,6 @@ namespace questless
 		Player* _player;
 
 		double _time;
-
-		sdl::Input _input;
 
 		bool _game_over;
 

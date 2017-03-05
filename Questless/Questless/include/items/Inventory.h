@@ -23,8 +23,8 @@ namespace questless
 	public:
 		struct Page
 		{
-			static constexpr size_t rows = 8;
-			static constexpr size_t columns = 12;
+			static constexpr int rows = 8;
+			static constexpr int columns = 12;
 
 			std::string label = "";
 
@@ -33,12 +33,12 @@ namespace questless
 
 		struct Coords
 		{
-			size_t page;
-			size_t row;
-			size_t column;
+			int page;
+			int row;
+			int column;
 
 			Coords() : page{0}, row{0}, column{0} {}
-			Coords(size_t page, size_t row, size_t column) : page{page}, row{row}, column{column} {}
+			Coords(int page, int row, int column) : page{page}, row{row}, column{column} {}
 		};
 
 		/// Adds the given item to the inventory in the first empty item slot.
@@ -59,7 +59,7 @@ namespace questless
 		Stream<Item*> items() { return items(0); }
 
 		/// @return The number of item pages in the inventory.
-		size_t pages() const { return _pages.size(); }
+		int pages() const { return _pages.size(); }
 
 		/// @return The inventory page at the given index.
 		Page& page(int page_idx) { return _pages[page_idx]; }

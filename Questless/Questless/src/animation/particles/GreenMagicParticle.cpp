@@ -9,10 +9,7 @@
 
 #include "animation/particles/GreenMagicParticle.h"
 #include "Game.h"
-#include "sdl-wrappers/resources.h"
-
-using namespace sdl;
-using namespace units;
+#include "sdl/resources.h"
 
 namespace questless
 {
@@ -23,22 +20,15 @@ namespace questless
 		}
 
 		if (_turning_right) {
-			_velocity.step().rotate(GameRadians{-1.0 * _turn_rate * Game::frame_duration});
+			_velocity.step().rotate(units::GameRadians{-1.0 * _turn_rate * Game::frame_duration});
 		} else {
-			_velocity.step().rotate(GameRadians{_turn_rate * Game::frame_duration});
+			_velocity.step().rotate(units::GameRadians{_turn_rate * Game::frame_duration});
 		}
 	}
 
-	Texture const& GreenMagicParticle::texture() const
+	sdl::Texture const& GreenMagicParticle::texture() const
 	{
-		static bool first_call = true;
-		static Handle<Texture> handle;
-		if (first_call) {
-			handle = texture_manager().add([] {
-				return std::make_unique<Texture>("resources/textures/particles/magic/green.png", renderer(), SDL_BLENDMODE_BLEND);
-			});
-			first_call = false;
-		}
-		return texture_manager()[handle];
+		static auto texture_handle = sdl::texture_manager().add("resources/textures/particles/magic/green.png");
+		return sdl::texture_manager()[texture_handle];
 	}
 }

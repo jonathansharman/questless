@@ -11,7 +11,7 @@
 
 #include "entities/EntityVisitor.h"
 #include "AnimationSet.h"
-#include "sdl-wrappers/resources.h"
+#include "sdl/resources.h"
 
 namespace questless
 {

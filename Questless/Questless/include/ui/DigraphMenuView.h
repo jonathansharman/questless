@@ -12,12 +12,13 @@
 #include <future>
 #include <memory>
 
-#include "sdl-wrappers/Texture.h"
-#include "sdl-wrappers/Font.h"
-#include "sdl-wrappers/Renderable.h"
+#include "sdl/Texture.h"
+#include "sdl/Font.h"
+#include "sdl/Renderable.h"
 #include "DigraphMenuModel.h"
 #include "utility/Initializer.h"
-#include "units/Point.h"
+#include "sdl/resources.h"
+#include "units/ScreenPoint.h"
 
 namespace questless
 {

@@ -8,6 +8,7 @@
 */
 
 #include "animation/WorldRenderer.h"
+
 #include "Game.h"
 #include "animation/EntityAnimator.h"
 #include "animation/TileTexturer.h"
@@ -15,8 +16,6 @@
 #include "animation/particles/BloodParticle.h"
 #include "animation/particles/TextParticle.h"
 #include "world/Region.h"
-#include "sdl-wrappers/Renderable.h"
-#include "sdl-wrappers/Sound.h"
 #include "utility/utility.h"
 
 using std::make_unique;
@@ -26,16 +25,6 @@ using namespace units;
 
 namespace questless
 {
-	sdl::Handle<sdl::Sound> WorldRenderer::_lightning_bolt_sound_handle;
-	sdl::Handle<sdl::Sound> WorldRenderer::_hit_sound_handle;
-
-	Initializer<WorldRenderer> WorldRenderer::_initializer;
-	void WorldRenderer::initialize()
-	{
-		_lightning_bolt_sound_handle = sound_manager().add([] { return make_unique<Sound>("resources/sounds/spells/lightning-bolt.wav"); });
-		_hit_sound_handle = sound_manager().add([] { return make_unique<Sound>("resources/sounds/weapons/hit.wav"); });
-	}
-
 	void WorldRenderer::update_view(WorldView const& world_view, std::vector<Effect::ptr> effects)
 	{
 		_world_view = &world_view;
@@ -67,7 +56,7 @@ namespace questless
 
 		for (size_t i = 0; i < _particles.size();) {
 			_particles[i]->update();
-			if (_particles[i]->dead()) {
+			if (_particles[i]->expired()) {
 				_particles.erase(_particles.begin() + i);
 			} else {
 				++i;
@@ -207,13 +196,7 @@ namespace questless
 		}
 		_terrain_bounds = *opt_bounds;
 
-		_terrain_texture = make_unique<Texture>
-			( sdl::renderer()
-			, SDL_BLENDMODE_BLEND
-			, lround(_terrain_bounds.w)
-			, lround(_terrain_bounds.h)
-			, true
-			);
+		_terrain_texture = make_unique<Texture>(lround(_terrain_bounds.w), lround(_terrain_bounds.h));
 		_terrain_texture->as_target([&] {
 			renderer().clear(Color::clear());
 			for (auto const& section_view : _world_view->section_views()) {
@@ -260,15 +243,19 @@ namespace questless
 
 	void WorldRenderer::visit(LightningBoltEffect const& e)
 	{
+		static auto lightning_bolt_sound_handle = sound_manager().add("resources/sounds/spells/lightning-bolt.wav");
+
 		GamePoint position = Layout::dflt().to_world(e.origin());
 		for (int i = 0; i < 15; ++i) {
 			_particles.emplace_back(make_unique<YellowMagicParticle>(position));
 		}
-		sound_manager()[_lightning_bolt_sound_handle].play();
+		sound_manager()[lightning_bolt_sound_handle].play();
 	}
 
 	void WorldRenderer::visit(InjuryEffect const& e)
 	{
+		static auto hit_sound_handle = sound_manager().add("resources/sounds/weapons/hit.wav");
+
 		GamePoint position = Layout::dflt().to_world(e.origin());
 
 		Damage const& d = e.damage();
@@ -286,7 +273,7 @@ namespace questless
 		}
 		if (d.bludgeon() > 0.0) {
 			_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(e.damage().bludgeon())), Color::white()));
-			sound_manager()[_hit_sound_handle].play();
+			sound_manager()[hit_sound_handle].play();
 		}
 		if (d.burn() > 0.0) {
 			_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(e.damage().burn())), Color::orange()));

@@ -11,7 +11,7 @@
 
 #include <unordered_set>
 
-#include "sdl-wrappers/resources.h" // Included for convenience since virtually all Renderables need access to shared resources.
+#include "sdl/resources.h" // Included for convenience since virtually all Renderables need access to shared resources.
 
 namespace sdl
 {

@@ -8,7 +8,7 @@
 */
 
 #include "animation/TileTexturer.h"
-#include "sdl-wrappers/resources.h"
+#include "sdl/resources.h"
 
 using std::make_unique;
 
@@ -18,32 +18,32 @@ namespace questless
 {
 	void TileTexturer::visit(EdgeTile const&)
 	{
-		_texture = make_unique<Texture>("resources/textures/terrain/tile.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+		_texture = make_unique<Texture>("resources/textures/terrain/tile.png");
 		_texture->color(Color::black());
 	}
 	void TileTexturer::visit(StoneTile const&)
 	{
-		_texture = make_unique<Texture>("resources/textures/terrain/tile.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+		_texture = make_unique<Texture>("resources/textures/terrain/tile.png");
 		_texture->color(Color::gray());
 	}
 	void TileTexturer::visit(DirtTile const&)
 	{
-		_texture = make_unique<Texture>("resources/textures/terrain/tile.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+		_texture = make_unique<Texture>("resources/textures/terrain/tile.png");
 		_texture->color(Color::brown());
 	}
 	void TileTexturer::visit(GrassTile const&)
 	{
-		_texture = make_unique<Texture>("resources/textures/terrain/tile.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+		_texture = make_unique<Texture>("resources/textures/terrain/tile.png");
 		_texture->color(Color::green());
 	}
 	void TileTexturer::visit(WaterTile const&)
 	{
-		_texture = make_unique<Texture>("resources/textures/terrain/tile.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+		_texture = make_unique<Texture>("resources/textures/terrain/tile.png");
 		_texture->color(Color::blue());
 	}
 	void TileTexturer::visit(SnowTile const&)
 	{
-		_texture = make_unique<Texture>("resources/textures/terrain/tile.png", sdl::renderer(), SDL_BLENDMODE_BLEND);
+		_texture = make_unique<Texture>("resources/textures/terrain/tile.png");
 		_texture->color(Color::white());
 	}
 }

@@ -13,5 +13,5 @@
 
 namespace units
 {
-	using GameRadiansPerSec = units::Rate<units::GameRadians, double>;
+	using GameRadiansPerSec = Rate<GameRadians, double>;
 }

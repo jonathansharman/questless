@@ -12,9 +12,6 @@
 #include <algorithm>
 using std::max;
 
-using std::async;
-using std::shared_future;
-
 using namespace sdl;
 using namespace units;
 
@@ -33,35 +30,35 @@ namespace questless
 	Handle<Texture> DigraphMenuView::_r_handle;
 	Handle<Texture> DigraphMenuView::_tile_handle;
 
-	shared_future<int> DigraphMenuView::_top_margin;
-	shared_future<int> DigraphMenuView::_bottom_margin;
-	shared_future<int> DigraphMenuView::_left_margin;
-	shared_future<int> DigraphMenuView::_right_margin;
-	shared_future<int> DigraphMenuView::_tile_width;
-	shared_future<int> DigraphMenuView::_tile_height;
+	std::shared_future<int> DigraphMenuView::_top_margin;
+	std::shared_future<int> DigraphMenuView::_bottom_margin;
+	std::shared_future<int> DigraphMenuView::_left_margin;
+	std::shared_future<int> DigraphMenuView::_right_margin;
+	std::shared_future<int> DigraphMenuView::_tile_width;
+	std::shared_future<int> DigraphMenuView::_tile_height;
 
 	Initializer<DigraphMenuView> DigraphMenuView::_initializer;
 	void DigraphMenuView::initialize()
 	{
-		_title_font_handle = font_manager().add([] { return std::make_unique<Font>("resources/fonts/dumbledor1.ttf", title_font_size, SDL_BLENDMODE_BLEND); });
-		_option_font_handle = font_manager().add([] { return std::make_unique<Font>("resources/fonts/dumbledor1.ttf", option_font_size, SDL_BLENDMODE_BLEND); });
+		_title_font_handle = font_manager().add("resources/fonts/dumbledor1.ttf", title_font_size);
+		_option_font_handle = font_manager().add("resources/fonts/dumbledor1.ttf", option_font_size);
 
-		_ul_handle = texture_manager().add([] { return std::make_unique<Texture>("resources/textures/menu/ul.png", renderer(), SDL_BLENDMODE_BLEND); });
-		_ur_handle = texture_manager().add([] { return std::make_unique<Texture>("resources/textures/menu/ur.png", renderer(), SDL_BLENDMODE_BLEND); });
-		_dl_handle = texture_manager().add([] { return std::make_unique<Texture>("resources/textures/menu/dl.png", renderer(), SDL_BLENDMODE_BLEND); });
-		_dr_handle = texture_manager().add([] { return std::make_unique<Texture>("resources/textures/menu/dr.png", renderer(), SDL_BLENDMODE_BLEND); });
-		_u_handle = texture_manager().add([] { return std::make_unique<Texture>("resources/textures/menu/u.png", renderer(), SDL_BLENDMODE_BLEND); });
-		_d_handle = texture_manager().add([] { return std::make_unique<Texture>("resources/textures/menu/d.png", renderer(), SDL_BLENDMODE_BLEND); });
-		_l_handle = texture_manager().add([] { return std::make_unique<Texture>("resources/textures/menu/l.png", renderer(), SDL_BLENDMODE_BLEND); });
-		_r_handle = texture_manager().add([] { return std::make_unique<Texture>("resources/textures/menu/r.png", renderer(), SDL_BLENDMODE_BLEND); });
-		_tile_handle = texture_manager().add([] { return std::make_unique<Texture>("resources/textures/menu/tile.png", renderer(), SDL_BLENDMODE_BLEND); });
+		_ul_handle = texture_manager().add("resources/textures/menu/ul.png");
+		_ur_handle = texture_manager().add("resources/textures/menu/ur.png");
+		_dl_handle = texture_manager().add("resources/textures/menu/dl.png");
+		_dr_handle = texture_manager().add("resources/textures/menu/dr.png");
+		_u_handle = texture_manager().add("resources/textures/menu/u.png");
+		_d_handle = texture_manager().add("resources/textures/menu/d.png");
+		_l_handle = texture_manager().add("resources/textures/menu/l.png");
+		_r_handle = texture_manager().add("resources/textures/menu/r.png");
+		_tile_handle = texture_manager().add("resources/textures/menu/tile.png");
 
-		_top_margin = async(std::launch::deferred, [&] { return texture_manager()[_u_handle].height(); });
-		_bottom_margin = async(std::launch::deferred, [&] { return texture_manager()[_d_handle].height(); });
-		_left_margin = async(std::launch::deferred, [&] { return texture_manager()[_l_handle].width(); });
-		_right_margin = async(std::launch::deferred, [&] { return texture_manager()[_r_handle].width(); });
-		_tile_width = async(std::launch::deferred, [&] { return texture_manager()[_tile_handle].width(); });
-		_tile_height = async(std::launch::deferred, [&] { return texture_manager()[_tile_handle].height(); });
+		_top_margin = std::async(std::launch::deferred, []() { return texture_manager()[_u_handle].height(); });
+		_bottom_margin = std::async(std::launch::deferred, []() { return texture_manager()[_d_handle].height(); });
+		_left_margin = std::async(std::launch::deferred, []() { return texture_manager()[_l_handle].width(); });
+		_right_margin = std::async(std::launch::deferred, []() { return texture_manager()[_r_handle].width(); });
+		_tile_width = std::async(std::launch::deferred, []() { return texture_manager()[_tile_handle].width(); });
+		_tile_height = std::async(std::launch::deferred, []() { return texture_manager()[_tile_handle].height(); });
 	}
 
 	void DigraphMenuView::render(DigraphMenuModel const& menu)
@@ -83,10 +80,10 @@ namespace questless
 			_content_height = max(_content_height, static_cast<int>(title_height + menu.current_options().size() * option_height));
 			std::vector<Texture> option_textures;
 			for (size_t j = 0; j < menu.pages[i].options.size(); ++j) {
-				option_textures.push_back(font_manager()[_option_font_handle].render(menu.pages[i].options[j].name, renderer(), Color::white()));
+				option_textures.push_back(font_manager()[_option_font_handle].render(menu.pages[i].options[j].name, Color::white()));
 				_content_width = max(_content_width, option_textures[j].width());
 			}
-			_page_views.emplace_back(font_manager()[_title_font_handle].render(menu.pages[i].title, renderer(), title_color()), std::move(option_textures));
+			_page_views.emplace_back(font_manager()[_title_font_handle].render(menu.pages[i].title, title_color()), std::move(option_textures));
 		}
 
 		int width_remainder = _content_width % tile_width;
@@ -102,11 +99,8 @@ namespace questless
 		// Render background.
 
 		_background = std::make_unique<Texture>
-			( renderer()
-			, SDL_BLENDMODE_BLEND
-			, _content_width + left_margin + right_margin
+			( _content_width + left_margin + right_margin
 			, _content_height + top_margin + bottom_margin
-			, true
 			);
 		_background->as_target([&] {
 			// Clear background texture with transparent color.

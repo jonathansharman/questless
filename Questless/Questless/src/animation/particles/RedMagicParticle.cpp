@@ -8,22 +8,13 @@
 */
 
 #include "animation/particles/RedMagicParticle.h"
-#include "sdl-wrappers/resources.h"
-
-using namespace sdl;
+#include "sdl/resources.h"
 
 namespace questless
 {
-	Texture const& RedMagicParticle::texture() const
+	sdl::Texture const& RedMagicParticle::texture() const
 	{
-		static bool first_call = true;
-		static Handle<Texture> handle;
-		if (first_call) {
-			handle = texture_manager().add([] {
-				return std::make_unique<Texture>("resources/textures/particles/magic/red.png", renderer(), SDL_BLENDMODE_BLEND);
-			});
-			first_call = false;
-		}
-		return texture_manager()[handle];
+		static auto texture_handle = sdl::texture_manager().add("resources/textures/particles/magic/red.png");
+		return sdl::texture_manager()[texture_handle];
 	}
 }

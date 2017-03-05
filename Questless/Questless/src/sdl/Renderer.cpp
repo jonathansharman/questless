@@ -7,7 +7,7 @@
 * @section DESCRIPTION The implementation for Renderer, a simple wrapper class around SDL_Renderer.
 */
 
-#include "sdl-wrappers/Renderer.h"
+#include "sdl/Renderer.h"
 
 using std::vector;
 using std::runtime_error;

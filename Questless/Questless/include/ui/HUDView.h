@@ -4,14 +4,14 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION The interface for the HUDView class, which is responsible for drawing the HUD.
+* @section DESCRIPTION The HUDView class, which is responsible for drawing the HUD.
 */
 
 #pragma once
 
-#include "sdl-wrappers/Renderable.h"
-#include "sdl-wrappers/Font.h"
-#include "sdl-wrappers/Window.h"
+#include "sdl/Renderable.h"
+#include "sdl/Font.h"
+#include "sdl/Window.h"
 #include "ui/HUDModel.h"
 
 namespace questless
@@ -25,7 +25,7 @@ namespace questless
 		static constexpr int item_icon_width = 55;
 		static constexpr int item_icon_height = 55;
 
-		HUDView(Game& game, sdl::Window const& window);
+		HUDView(Game& game);
 
 		/// @return The inventory's width.
 		int inv_width() const { return _inv_width; }
@@ -72,8 +72,6 @@ namespace questless
 		int _inv_column_count;
 
 		Game& _game;
-
-		sdl::Window const& _window;
 
 		sdl::Texture::ptr _hotbar_slot_texture;
 

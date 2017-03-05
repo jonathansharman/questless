@@ -8,22 +8,13 @@
 */
 
 #include "animation/particles/BloodParticle.h"
-#include "sdl-wrappers/resources.h"
-
-using namespace sdl;
+#include "sdl/resources.h"
 
 namespace questless
 {
-	Texture const& BloodParticle::texture() const
+	sdl::Texture const& BloodParticle::texture() const
 	{
-		static bool first_call = true;
-		static Handle<Texture> handle;
-		if (first_call) {
-			handle = texture_manager().add([] {
-				return std::make_unique<Texture>("resources/textures/particles/blood.png", renderer(), SDL_BLENDMODE_BLEND);
-			});
-			first_call = false;
-		}
-		return texture_manager()[handle];
+		static sdl::Handle<sdl::Texture> handle = sdl::texture_manager().add("resources/textures/particles/blood.png");
+		return sdl::texture_manager()[handle];
 	}
 }

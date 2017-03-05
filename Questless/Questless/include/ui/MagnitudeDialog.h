@@ -12,6 +12,8 @@
 #include <string>
 #include <functional>
 
+#include <boost/optional.hpp>
+
 #include "Dialog.h"
 
 namespace questless
@@ -37,9 +39,9 @@ namespace questless
 			load_textures();
 		}
 
-		bool update(sdl::Input& input) override;
+		State update() override;
 
-		void draw(sdl::Window const& window) override;
+		void draw() const override;
 	private:
 		std::string _title;
 		std::string _prompt;
@@ -50,7 +52,7 @@ namespace questless
 
 		sdl::Texture::ptr _txt_title;
 		sdl::Texture::ptr _txt_prompt;
-		sdl::Texture::ptr _txt_current;
+		sdl::Texture::ptr _txt_selector;
 
 		void refresh() override { load_textures(); }
 
