@@ -24,8 +24,8 @@ namespace questless
 
 	void MessageDialog::draw() const
 	{
-		draw_title(_title);
-		draw_prompt(_prompt);
+		draw_title(*_txt_title);
+		draw_prompt(*_txt_prompt);
 	}
 
 	void MessageDialog::load_textures()
