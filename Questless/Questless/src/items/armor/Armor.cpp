@@ -21,13 +21,13 @@ namespace questless
 
 			// Set damage to its reduced value and cause the armor to wear in proportion to its effective damage reduction.
 			damage = reduced_damage;
-			wear(wear_ratio() * effective_reduction.total());
+			integrity -= wear_ratio() * effective_reduction.total();
 		}
 	}
 
 	void Armor::take_resistance_wear(Damage const& damage)
 	{
 		Damage max_reduction = damage - damage.with(resistance(), Vulnerability::zero());
-		wear(wear_ratio() * max_reduction.total());
+		integrity -= wear_ratio() * max_reduction.total();
 	}
 }

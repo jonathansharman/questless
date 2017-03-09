@@ -111,6 +111,7 @@ namespace questless
 		{
 			std::string title;
 			void visit(MessageMeleeMiss const&) override { title = "Melee Attack"; }
+			void visit(MessageArrowMiss const&) override { title = "Ranged Attack"; }
 			void visit(MessageNotEnoughMana const&) override { title = "Spell Cast"; }
 			void visit(MessageSpellOutOfCharges const&) override { title = "Spell Cast"; }
 			void visit(MessageSpellOnCooldown const&) override { title = "Spell Cast"; }
@@ -120,6 +121,7 @@ namespace questless
 		{
 			std::string prompt;
 			void visit(MessageMeleeMiss const&) override { prompt = "Miss!"; }
+			void visit(MessageArrowMiss const&) override { prompt = "Miss!"; }
 			void visit(MessageNotEnoughMana const& m) override
 			{
 				prompt = "Not enough mana! You need " + std::to_string(m.mana_deficit) + " more mana to cast this.";
@@ -208,6 +210,7 @@ namespace questless
 		{
 			std::string title;
 			void visit(TileQueryMeleeTarget const&) override { title = "Melee Attack"; }
+			void visit(TileQueryRangedTarget const&) override { title = "Ranged Attack"; }
 			void visit(TileQueryLightningBoltTarget const&) override { title = "Lightning Bolt Target"; }
 			void visit(TileQueryTeleportTarget const&) override { title = "Teleport Target"; }
 		};
@@ -215,6 +218,7 @@ namespace questless
 		{
 			std::string prompt;
 			void visit(TileQueryMeleeTarget const&) override { prompt = "Choose attack target."; }
+			void visit(TileQueryRangedTarget const&) override { prompt = "Choose attack target."; }
 			void visit(TileQueryLightningBoltTarget const&) override { prompt = "Select a tile to be zapped with a lightning bolt."; }
 			void visit(TileQueryTeleportTarget const&) override { prompt = "Select a tile to teleport to."; }
 		};

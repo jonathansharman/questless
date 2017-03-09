@@ -3,6 +3,8 @@
 * @author  Jonathan Sharman
 *
 * @section LICENSE See LICENSE.txt.
+*
+* @section DESCRIPTION The interface for the Quarterstaff class.
 */
 
 #pragma once
@@ -78,12 +80,13 @@ namespace questless
 		double weight() const override { return 10.0; }
 
 		double equip_time() const override { return 4.0; }
+
 		double unequip_time() const override { return 4.0; }
 
-		/// @todo Not general enough! Equipables could be equipped on anything.
+		/// @todo Not general enough! Weapons could be equipped on anything.
 		int hands() const override { return 2; }
 
-		double durability() const override { return 500.0; }
+		double durability() const override { return 500; }
 
 		Form& form() const override { return *_form; }
 

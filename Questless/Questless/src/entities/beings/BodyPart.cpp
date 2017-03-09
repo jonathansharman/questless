@@ -9,7 +9,6 @@
 
 #include "entities/beings/BodyPart.h"
 #include "entities/beings/Being.h"
-#include "utility/clamp.h"
 
 using std::string;
 using std::vector;
@@ -68,7 +67,7 @@ namespace questless
 	{
 		return [this](double& health, double const& new_health)
 		{
-			health = clamp(new_health, 0.0, _vitality);
+			health = std::clamp(new_health, 0.0, _vitality);
 		};
 	}
 }

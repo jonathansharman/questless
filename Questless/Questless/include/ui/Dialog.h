@@ -55,9 +55,9 @@ namespace questless
 		static constexpr int _prompt_top = 40;
 		static constexpr int _selector_top = 100;
 
-		static sdl::Texture::ptr make_title(std::string const& title);
-		static sdl::Texture::ptr make_prompt(std::string const& prompt);
-		static sdl::Texture::ptr make_selector(std::string const& selector);
+		static sdl::Texture::ptr make_title(std::string const& title, sdl::Color color = sdl::Color::white());
+		static sdl::Texture::ptr make_prompt(std::string const& prompt, sdl::Color color = sdl::Color::white());
+		static sdl::Texture::ptr make_selector(std::string const& selector, sdl::Color color = sdl::Color::white());
 
 		static void draw_title(sdl::Texture const& title);
 		static void draw_prompt(sdl::Texture const& prompt);

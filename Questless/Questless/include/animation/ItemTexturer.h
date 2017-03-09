@@ -19,6 +19,7 @@ namespace questless
 	public:
 		void visit(Scroll const&) override;
 		void visit(Quarterstaff const&) override;
+		void visit(Bow const&) override;
 
 		sdl::Texture::ptr texture() { return std::move(_texture); }
 	private:

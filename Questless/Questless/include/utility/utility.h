@@ -29,7 +29,7 @@ namespace questless
 	// Random number generation //
 	//////////////////////////////
 
-	extern std::mt19937 rng;
+	extern std::mt19937_64 rng;
 
 	/// @return True or false with equal probability.
 	inline bool random_bool()

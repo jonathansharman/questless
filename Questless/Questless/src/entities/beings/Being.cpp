@@ -14,7 +14,6 @@
 #include "agents/Agent.h"
 #include "world/Section.h"
 #include "world/Region.h"
-#include "utility/clamp.h"
 
 using std::unique_ptr;
 using std::function;
@@ -376,21 +375,21 @@ namespace questless
 	{
 		return [this](double& health, double const& new_health)
 		{
-			health = clamp(new_health, 0.0, stats.vitality.get());
+			health = std::clamp(new_health, 0.0, stats.vitality.get());
 		};
 	}
 	std::function<void(double&, double const&)> Being::mana_mutator()
 	{
 		return [this](double& mana, double const& new_mana)
 		{
-			mana = clamp(new_mana, 0.0, stats.spirit.get());
+			mana = std::clamp(new_mana, 0.0, stats.spirit.get());
 		};
 	}
 	std::function<void(double&, double const&)> Being::energy_mutator()
 	{
 		return [this](double& energy, double const& new_energy)
 		{
-			energy = clamp(new_energy, 0.0, stats.stamina.get());
+			energy = std::clamp(new_energy, 0.0, stats.stamina.get());
 		};
 	}
 	std::function<void(double&, double const&)> Being::busy_time_mutator()

@@ -1,5 +1,5 @@
 /**
-* @file    Equipable.h
+* @file    Equipment.h
 * @author  Jonathan Sharman
 *
 * @section LICENSE See LICENSE.txt.
@@ -13,10 +13,10 @@
 
 namespace questless
 {
-	class Equipable : public virtual Item
+	class Equipment : public virtual Item
 	{
 	public:
-		virtual ~Equipable() = default;
+		virtual ~Equipment() = default;
 
 		/// @return The amount of time required to equip the item.
 		virtual double equip_time() const = 0;

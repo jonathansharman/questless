@@ -9,11 +9,13 @@
 
 #pragma once
 
+#include <cstdint>
+
 namespace questless
 {
 	struct ObjectId
 	{
-		using key_t = unsigned long long;
+		using key_t = uint64_t;
 
 		static ObjectId next()
 		{

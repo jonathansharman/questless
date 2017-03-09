@@ -34,15 +34,19 @@ namespace questless
 		virtual void accept(ItemVisitor& visitor) const = 0;
 
 		/// @return The item's name.
+		////
 		virtual std::string name() const = 0;
 
 		/// @return The item's weight.
+		////
 		virtual double weight() const = 0;
 
 		/// @return The list of actions that can be performed with the item.
+		////
 		virtual std::vector<Action::ptr> actions() = 0;
 
 		/// Advances the item one time unit.
+		////
 		virtual void update() {}
 	protected:
 		class Drop : public Action

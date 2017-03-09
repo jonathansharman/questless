@@ -9,11 +9,13 @@
 
 #pragma once
 
+#include <cstdint>
+
 namespace questless
 {
 	struct BeingId
 	{
-		using key_t = unsigned long long;
+		using key_t = uint64_t;
 
 		static BeingId next()
 		{

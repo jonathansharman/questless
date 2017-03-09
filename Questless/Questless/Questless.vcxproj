@@ -298,7 +298,6 @@
     <ClInclude Include="include\entities\beings\CorporealBeing.h" />
     <ClInclude Include="include\entities\beings\Damage.h" />
     <ClInclude Include="include\entities\beings\DamageMultiplier.h" />
-    <ClInclude Include="include\entities\beings\Enabler.h" />
     <ClInclude Include="include\entities\beings\goblinoids\Goblin.h" />
     <ClInclude Include="include\entities\beings\Human.h" />
     <ClInclude Include="include\entities\beings\IncorporealBeing.h" />
@@ -331,16 +330,17 @@
     <ClInclude Include="include\items\armor\Armor.h" />
     <ClInclude Include="include\items\Craftable.h" />
     <ClInclude Include="include\items\Breakable.h" />
-    <ClInclude Include="include\items\Equipable.h" />
+    <ClInclude Include="include\items\Equipment.h" />
     <ClInclude Include="include\items\Inventory.h" />
     <ClInclude Include="include\items\Item.h" />
     <ClInclude Include="include\items\ItemVisitor.h" />
     <ClInclude Include="include\items\potions\Potion.h" />
     <ClInclude Include="include\items\Scroll.h" />
+    <ClInclude Include="include\items\weapons\Arrow.h" />
+    <ClInclude Include="include\items\weapons\Bow.h" />
     <ClInclude Include="include\items\weapons\ModalWeapon.h" />
     <ClInclude Include="include\items\weapons\Quarterstaff.h" />
     <ClInclude Include="include\items\weapons\Weapon.h" />
-    <ClInclude Include="include\sdl-wrappers\Color.h" />
     <ClInclude Include="include\sdl\Color.h" />
     <ClInclude Include="include\sdl\Font.h" />
     <ClInclude Include="include\sdl\Input.h" />
@@ -398,7 +398,6 @@
     <ClInclude Include="include\units\TextureSpace.h" />
     <ClInclude Include="include\units\Vector.h" />
     <ClInclude Include="include\units\Velocity.h" />
-    <ClInclude Include="include\utility\clamp.h" />
     <ClInclude Include="include\utility\Delegate.h" />
     <ClInclude Include="include\utility\DynamicProperty.h" />
     <ClInclude Include="include\utility\Event.h" />
@@ -453,9 +452,11 @@
     <ClCompile Include="src\entities\objects\Object.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\items\armor\Armor.cpp" />
+    <ClCompile Include="src\items\Breakable.cpp" />
     <ClCompile Include="src\items\Inventory.cpp" />
     <ClCompile Include="src\items\Item.cpp" />
     <ClCompile Include="src\items\Scroll.cpp" />
+    <ClCompile Include="src\items\weapons\Bow.cpp" />
     <ClCompile Include="src\items\weapons\ModalWeapon.cpp" />
     <ClCompile Include="src\items\weapons\Weapon.cpp" />
     <ClCompile Include="src\main.cpp" />

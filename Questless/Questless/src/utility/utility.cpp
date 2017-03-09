@@ -29,7 +29,7 @@ namespace questless
 	// Random number generation //
 	//////////////////////////////
 
-	std::mt19937 rng(static_cast<unsigned long>(Game::clock::now().time_since_epoch().count()));
+	std::mt19937_64 rng(Game::clock::now().time_since_epoch().count());
 
 	//////////
 	// Math //

@@ -254,6 +254,7 @@ namespace questless
 
 	void WorldRenderer::visit(InjuryEffect const& e)
 	{
+		static auto pierce_sound_handle = sound_manager().add("resources/sounds/weapons/pierce.wav");
 		static auto hit_sound_handle = sound_manager().add("resources/sounds/weapons/hit.wav");
 
 		GamePoint position = Layout::dflt().to_world(e.origin());
@@ -270,6 +271,7 @@ namespace questless
 		}
 		if (d.pierce() > 0.0) {
 			_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(e.damage().pierce())), Color::white()));
+			sound_manager()[pierce_sound_handle].play();
 		}
 		if (d.bludgeon() > 0.0) {
 			_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(e.damage().bludgeon())), Color::white()));

@@ -14,6 +14,7 @@
 namespace questless
 {
 	struct TileQueryMeleeTarget;
+	struct TileQueryRangedTarget;
 	struct TileQueryLightningBoltTarget;
 	struct TileQueryTeleportTarget;
 
@@ -22,6 +23,7 @@ namespace questless
 		virtual ~TileQueryVisitor() = default;
 
 		virtual void visit(TileQueryMeleeTarget const&) = 0;
+		virtual void visit(TileQueryRangedTarget const&) = 0;
 		virtual void visit(TileQueryLightningBoltTarget const&) = 0;
 		virtual void visit(TileQueryTeleportTarget const&) = 0;
 	};
@@ -34,6 +36,12 @@ namespace questless
 	};
 	struct TileQueryMeleeTarget : TileQuery
 	{
+		void accept(TileQueryVisitor& visitor) override { visitor.visit(*this); }
+	};
+	struct TileQueryRangedTarget : TileQuery
+	{
+		int range;
+		TileQueryRangedTarget(int range) : range{range} {}
 		void accept(TileQueryVisitor& visitor) override { visitor.visit(*this); }
 	};
 	struct TileQueryLightningBoltTarget : TileQuery

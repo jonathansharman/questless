@@ -29,7 +29,7 @@ namespace questless
 			virtual std::string name() const = 0;
 
 			/// @return The weapon's effective damage per hit, accounting for wear.
-			Damage damage() const { return base_damage() * (1.0 + _weapon.integrity() / _weapon.durability() / 2.0); }
+			Damage damage() const { return base_damage() * (1.0 + _weapon.integrity / _weapon.durability() / 2.0); }
 
 			/// @return The weapon's base damage per hit.
 			virtual Damage base_damage() const = 0;

@@ -36,4 +36,9 @@ namespace questless
 	{
 		_texture = make_unique<Texture>("resources/textures/items/quarterstaff.png");
 	}
+
+	void ItemTexturer::visit(Bow const&)
+	{
+		_texture = make_unique<Texture>("resources/textures/items/bow.png");
+	}
 }

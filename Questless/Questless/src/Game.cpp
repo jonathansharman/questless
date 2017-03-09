@@ -30,6 +30,7 @@ using std::ostringstream;
 #include "spell/Heal.h"
 #include "spell/Teleport.h"
 #include "items/weapons/Quarterstaff.h"
+#include "items/weapons/Bow.h"
 
 using std::move;
 using std::unique_ptr;
@@ -379,6 +380,7 @@ namespace questless
 						player_being->give_item(make_unique<Scroll>(make_unique<spell::Heal>()));
 						player_being->give_item(make_unique<Scroll>(make_unique<spell::Teleport>()));
 						player_being->give_item(make_unique<Quarterstaff>());
+						player_being->give_item(make_unique<Bow>());
 						_region->spawn_player(move(player_being));
 					}
 					// Pass the player's being ID to the HUD.

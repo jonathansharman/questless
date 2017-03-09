@@ -9,14 +9,14 @@
 
 #pragma once
 
-#include "items/Equipable.h"
+#include "items/Equipment.h"
 #include "items/Breakable.h"
 #include "entities/beings/Protection.h"
 #include "entities/beings/DamageMultiplier.h"
 
 namespace questless
 {
-	class Armor : public virtual Equipable, public virtual Breakable
+	class Armor : public virtual Equipment, public virtual Breakable
 	{
 	public:
 		using ptr = std::unique_ptr<Armor>;
@@ -25,13 +25,13 @@ namespace questless
 		virtual ~Armor() = default;
 
 		/// @return The armor's effective protection per hit, accounting for wear.
-		Protection protection() { return base_protection() * (1.0 + integrity() / durability() / 2.0); }
+		Protection protection() { return base_protection() * (1.0 + integrity / durability() / 2.0); }
 
 		/// @return The base amount of protection the armor provides.
 		virtual Protection base_protection() const = 0;
 
 		/// @return The armor's effective damage resistance, accounting for wear.
-		Resistance resistance() { return base_resistance() * (1.0 + integrity() / durability() / 2.0); }
+		Resistance resistance() { return base_resistance() * (1.0 + integrity / durability() / 2.0); }
 
 		/// @return The base amount of damage resistance the armor provides.
 		virtual Resistance base_resistance() const = 0;

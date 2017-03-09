@@ -109,7 +109,7 @@ namespace questless
 		{
 			static auto list_option_font_handle = sdl::font_manager().add("resources/fonts/dumbledor1.ttf", 20);
 
-			_txt_title = make_title(_title);
+			_txt_title = make_title(_title, sdl::Color::black());
 			_bounds.w = _txt_title->width();
 			_txt_options.clear();
 			for (auto const& option : _options) {

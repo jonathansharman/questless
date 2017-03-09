@@ -182,9 +182,24 @@ namespace questless
 			{
 				auto target_id = dynamic_cast<AttackState*>(ai._state.get())->target_id;
 				if (Being* target = ai.being.game.being(target_id)) {
+					// Attack towards the target.
 					auto direction = ai.being.coords.direction_towards(target->coords);
 					cont(origin->neighbor(direction));
+					return;
 				}
+				cont(boost::none);
+			}
+			void visit(TileQueryRangedTarget const& query) override
+			{
+				auto target_id = dynamic_cast<AttackState*>(ai._state.get())->target_id;
+				if (Being* target = ai.being.game.being(target_id)) {
+					if (ai.being.coords.distance_to(target->coords) <= query.range) {
+						// If in range, shoot the target.
+						cont(target->coords);
+						return;
+					}
+				}
+				cont(boost::none);
 			}
 			void visit(TileQueryLightningBoltTarget const&) override
 			{

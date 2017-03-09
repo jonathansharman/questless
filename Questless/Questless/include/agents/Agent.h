@@ -24,7 +24,6 @@
 #include "entities/beings/WorldView.h"
 #include "items/Item.h"
 #include "effects/Effect.h"
-#include "units/Point.h" /// @todo This shouldn't be needed in the base class.
 
 namespace questless
 {
