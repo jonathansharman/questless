@@ -15,7 +15,7 @@ using namespace sdl;
 
 namespace questless
 {
-	HUDController::HUDController(Game& game) : _game{game}, _hud {}, _view{game}
+	HUDController::HUDController(Game& game) : _game{game}, _hud{}, _view{game}
 	{}
 	
 	void HUDController::update()
@@ -72,7 +72,7 @@ namespace questless
 		}
 	}
 
-	void HUDController::player_id(BeingId player_id)
+	void HUDController::player_id(Id<Being> player_id)
 	{
 		_hud.player_id = player_id;
 		_hud.inv_page = 0;

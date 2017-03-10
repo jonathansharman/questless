@@ -12,18 +12,13 @@
 
 namespace questless
 {
-	Object::Object(Game& game, std::istream& in) : Entity(game, in)
-	{
-		ObjectId::key_t id_key;
-		in >> id_key;
-		_id = id_key;
-	}
+	Object::Object(Game& game, std::istream& in) : Entity(game, in), id{in} {}
 
 	void Object::serialize(std::ostream& out) const
 	{
 		Entity::serialize(out);
 
-		out << id().key << ' ';
+		out << id << ' ';
 
 		/// @todo Object-specific serialization.
 	}

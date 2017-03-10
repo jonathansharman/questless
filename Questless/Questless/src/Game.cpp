@@ -47,7 +47,8 @@ using namespace sdl;
 namespace questless
 {
 	Game::Game(bool fullscreen)
-		: _game_over{false}
+		: _player_being_id{boost::none}
+		, _game_over{false}
 		, _splash_sound_played{false}
 		, _state{State::splash}
 		, _time{0.0}
@@ -373,9 +374,9 @@ namespace questless
 					//_region = make_unique<Region>(*this, "Slot1", "Region1");
 
 					{ // Spawn the player's being.
-						Being::ptr player_being = make_unique<Human>(*this, Agent::make<Player>, BeingId::next());
+						Being::ptr player_being = make_unique<Human>(*this, Agent::make<Player>, Id<Being>::make());
 						_player = dynamic_cast<Player*>(&player_being->agent());
-						_player_being_id = player_being->id();
+						_player_being_id = player_being->id;
 						player_being->give_item(make_unique<Scroll>(make_unique<spell::LightningBolt>()));
 						player_being->give_item(make_unique<Scroll>(make_unique<spell::Heal>()));
 						player_being->give_item(make_unique<Scroll>(make_unique<spell::Teleport>()));
@@ -384,13 +385,13 @@ namespace questless
 						_region->spawn_player(move(player_being));
 					}
 					// Pass the player's being ID to the HUD.
-					_hud->player_id(_player_being_id);
+					_hud->player_id(*_player_being_id);
 					// Update the player's initial world view.
 					_player->update_world_view();
 					// Initialize the world renderer.
 					_world_renderer = make_unique<WorldRenderer>(_player->world_view());
 					// Set the camera position relative to the player's being.
-					_camera->position(GamePoint{Layout::dflt().to_world(being(_player_being_id)->coords)});
+					_camera->position(GamePoint{Layout::dflt().to_world(being(*_player_being_id)->coords)});
 
 					_time_last_state_change = clock::now();
 					_state = State::playing;
@@ -554,7 +555,7 @@ namespace questless
 			follow = !follow;
 		}
 		if (follow) {
-			if (Being* player = being(_player_being_id)) {
+			if (Being* player = being(*_player_being_id)) {
 				constexpr double recoil = 0.2;
 
 				GameVector to_player = Layout::dflt().to_world(player->coords) - _camera->position();
@@ -574,7 +575,7 @@ namespace questless
 		}
 	}
 
-	Being* Game::_being(BeingId id) const
+	Being* Game::_being(Id<Being> id) const
 	{
 		auto it = _beings.find(id);
 		if (it == _beings.end()) {
@@ -589,7 +590,7 @@ namespace questless
 			GlobalCoords coords = std::get<GlobalCoords>(it->second);
 			Region& region = *_region; /// @todo Load region based on the region name in the coords (coords.region).
 			for (Being& being : region.section(coords.section)->beings()) {
-				if (being.id() == id) {
+				if (being.id == id) {
 					return &being;
 				}
 			}
@@ -597,7 +598,7 @@ namespace questless
 		}
 	}
 
-	Object* Game::_object(ObjectId id) const
+	Object* Game::_object(Id<Object> id) const
 	{
 		auto it = _objects.find(id);
 		if (it == _objects.end()) {
@@ -612,7 +613,7 @@ namespace questless
 			GlobalCoords coords = std::get<GlobalCoords>(it->second);
 			Region& region = *_region; /// @todo Load region based on the region name in the coords (coords.region).
 			for (Object& object : region.section(coords.section)->objects()) {
-				if (object.id() == id) {
+				if (object.id == id) {
 					return &object;
 				}
 			}
@@ -623,7 +624,7 @@ namespace questless
 	void Game::update_player_view()
 	{
 		/// @todo Do something nice when the player dies.
-		if (Being* player_being = being(_player_being_id)) {
+		if (Being* player_being = being(*_player_being_id)) {
 			// Update the player's world view.
 			_player->update_world_view();
 			// Update the world renderer's world view.

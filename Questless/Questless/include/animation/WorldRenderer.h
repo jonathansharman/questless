@@ -70,8 +70,8 @@ namespace questless
 		WorldView const* _world_view;
 
 		std::unordered_map<Tile::TileClass, sdl::Texture::ptr> _tile_textures;
-		std::unordered_map<BeingId, std::unique_ptr<AnimationSet>> _being_animation_sets;
-		std::unordered_map<ObjectId, std::unique_ptr<AnimationSet>> _object_animations;
+		std::unordered_map<Id<Being>, std::unique_ptr<AnimationSet>> _being_animation_sets;
+		std::unordered_map<Id<Object>, std::unique_ptr<AnimationSet>> _object_animations;
 		sdl::Texture::ptr _terrain_texture;
 		units::GameRect _terrain_bounds;
 		bool _terrain_render_is_current;

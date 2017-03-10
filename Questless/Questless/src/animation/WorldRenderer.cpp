@@ -175,16 +175,16 @@ namespace questless
 	{
 		EntityAnimator entity_animator;
 		being.accept(entity_animator);
-		_being_animation_sets[being.id()] = entity_animator.animation_set();
-		return *_being_animation_sets[being.id()];
+		_being_animation_sets[being.id] = entity_animator.animation_set();
+		return *_being_animation_sets[being.id];
 	};
 
 	AnimationSet& WorldRenderer::cache_object_animation(Object const& object)
 	{
 		EntityAnimator entity_animator;
 		object.accept(entity_animator);
-		_object_animations[object.id()] = entity_animator.animation_set();
-		return *_object_animations[object.id()];
+		_object_animations[object.id] = entity_animator.animation_set();
+		return *_object_animations[object.id];
 	};
 
 	void WorldRenderer::render_terrain()
@@ -195,7 +195,7 @@ namespace questless
 			return;
 		}
 		_terrain_bounds = *opt_bounds;
-
+		
 		_terrain_texture = make_unique<Texture>(lround(_terrain_bounds.w), lround(_terrain_bounds.h));
 		_terrain_texture->as_target([&] {
 			renderer().clear(Color::clear());

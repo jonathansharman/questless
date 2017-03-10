@@ -116,18 +116,17 @@ namespace questless
 					double tile_visibility = section_view.tile_visibilities[other_tile_index.i][other_tile_index.j];
 					
 					if (tile_visibility >= _low_perception_threshold) {
-						BeingView being_view;
+						BeingView::Perception perception;
 						if (tile_visibility < _medium_perception_threshold) {
-							being_view.perception = BeingView::Perception::low;
+							perception = BeingView::Perception::low;
 						} else if (tile_visibility < _high_perception_threshold) {
-							being_view.perception = BeingView::Perception::medium;
+							perception = BeingView::Perception::medium;
 						} else if (tile_visibility < _full_perception_threshold) {
-							being_view.perception = BeingView::Perception::high;
+							perception = BeingView::Perception::high;
 						} else {
-							being_view.perception = BeingView::Perception::full;
+							perception = BeingView::Perception::full;
 						}
-						being_view.id = other_being.id();
-						_being_views.push_back(being_view);
+						_being_views.emplace_back(other_being.id, perception);
 					}
 				}
 			}
@@ -140,18 +139,17 @@ namespace questless
 					double tile_visibility = section_view.tile_visibilities[other_tile_index.i][other_tile_index.j];
 
 					if (tile_visibility >= _low_perception_threshold) {
-						ObjectView object_view;
+						ObjectView::Perception perception;
 						if (tile_visibility < _medium_perception_threshold) {
-							object_view.perception = ObjectView::Perception::low;
+							perception = ObjectView::Perception::low;
 						} else if (tile_visibility < _high_perception_threshold) {
-							object_view.perception = ObjectView::Perception::medium;
+							perception = ObjectView::Perception::medium;
 						} else if (tile_visibility < _full_perception_threshold) {
-							object_view.perception = ObjectView::Perception::high;
+							perception = ObjectView::Perception::high;
 						} else {
-							object_view.perception = ObjectView::Perception::full;
+							perception = ObjectView::Perception::full;
 						}
-						object_view.id = object.id();
-						_object_views.push_back(object_view);
+						_object_views.emplace_back(object.id, perception);
 					}
 				}
 			}

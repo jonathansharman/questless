@@ -56,7 +56,7 @@ namespace questless::spell
 								}
 								for (auto struck_part : struck_parts) {
 									auto burn = Damage{Burn{burn_magnitude * uniform(0.5, 1.5) * part->vitality() / (6.0 * struck_parts.size())}};
-									struck_part->take_damage(burn, caster.id());
+									struck_part->take_damage(burn, caster.id);
 								}
 							}
 							return cont(Action::Result::success);

@@ -27,7 +27,7 @@ namespace questless
 
 		void HUDController::draw() { _view.draw(_hud); }
 
-		void player_id(BeingId player_id);
+		void player_id(Id<Being> player_id);
 	private:
 		Game& _game;
 		HUDModel _hud;

@@ -18,7 +18,7 @@ namespace questless
 	public:
 		bool corporeal() const override { return true; }
 	protected:
-		IncorporealBeing(Game& game, const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, BeingId id, Body body, const std::function<Stats()>& make_base_stats);
+		IncorporealBeing(Game& game, const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, Id<Being> id, Body body, const std::function<Stats()>& make_base_stats);
 		IncorporealBeing(Game& game, std::istream& in, Body body);
 	};
 }

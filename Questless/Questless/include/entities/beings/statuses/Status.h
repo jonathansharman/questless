@@ -15,7 +15,7 @@
 
 #include "entities/beings/stats/Stats.h"
 #include "entities/beings/stats/Modifier.h"
-#include "entities/beings/BeingId.h"
+#include "utility/Id.h"
 
 namespace questless
 {
@@ -33,7 +33,7 @@ namespace questless
 		int duration() const { return _duration; }
 
 		/// @return The ID of the being that caused the status or nullopt if none did.
-		boost::optional<BeingId> source() const { return _source_id; }
+		boost::optional<Id<Being>> source() const { return _source_id; }
 
 		/// @return The type of the status: debuff, netural, or buff.
 		virtual Type type() const = 0;
@@ -61,11 +61,11 @@ namespace questless
 		/// @param name The name of the status modifier displayed to the player.
 		/// @param duration The number of turns remaining before the status modifier expires.
 		/// @param source The ID of the being that caused the status modifier, if any.
-		Status(std::string name, int duration, boost::optional<BeingId> source_id = boost::none);
+		Status(std::string name, int duration, boost::optional<Id<Being>> source_id = boost::none);
 	private:
 		std::string _name;
 		int _duration;
-		boost::optional<BeingId> _source_id;
+		boost::optional<Id<Being>> _source_id;
 
 		virtual void subupdate(Being& target);
 	};

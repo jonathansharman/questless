@@ -84,54 +84,54 @@ namespace questless
 		/// @param id The ID of the being to retrieve.
 		/// @return The being with the given ID, or nullptr if nonexistent.
 		////
-		Being* being(BeingId id) { return _being(id); }
+		Being* being(Id<Being> id) { return _being(id); }
 		/// Retrieves a pointer to the specified being from the global being directory, or nullptr if it doeesn't exist.
 		/// If the being exists but isn't in memory, it will be loaded.
 		/// @param id The ID of the being to retrieve.
 		/// @return The being with the given ID, or nullptr if nonexistent.
 		////
-		Being const* being(BeingId id) const { return _being(id); }
+		Being const* being(Id<Being> id) const { return _being(id); }
 		/// Adds the given being and its global coordinates to the global being directory.
 		/// @param being The being to add.
 		/// @param coords The being's global coordinates.
 		////
-		void add_being(Being* being, GlobalCoords coords) { _beings[being->id()] = std::make_tuple(coords, being); }
+		void add_being(Being* being, GlobalCoords coords) { _beings[being->id] = std::make_tuple(coords, being); }
 		/// Updates the global coordinates in the global being directory of the being with the given ID.
 		/// @param id The ID of the being to update.
 		/// @param coords The being's new global coordinates.
 		////
-		void update_being_coords(BeingId id, GlobalCoords coords) { std::get<GlobalCoords>(_beings[id]) = coords; }
+		void update_being_coords(Id<Being> id, GlobalCoords coords) { std::get<GlobalCoords>(_beings[id]) = coords; }
 		/// Removes the specified being ID from the global being directory.
 		/// @param id The ID of the being to delete.
 		////
-		void remove_being_id(BeingId id) { _beings.erase(id); }
+		void remove_being_id(Id<Being> id) { _beings.erase(id); }
 
 		/// Retrieves a pointer to the specified object from the global object directory, or nullptr if it doeesn't exist.
 		/// If the object exists but isn't in memory, it will be loaded.
 		/// @param id The ID of the object to retrieve.
 		/// @return The object with the given ID, or nullptr if nonexistent.
 		////
-		Object* object(ObjectId id) { return _object(id); }
+		Object* object(Id<Object> id) { return _object(id); }
 		/// Retrieves a pointer to the specified object from the global object directory, or nullptr if it doeesn't exist.
 		/// If the object exists but isn't in memory, it will be loaded.
 		/// @param id The ID of the object to retrieve.
 		/// @return The object with the given ID, or nullptr if nonexistent.
 		////
-		Object const* object(ObjectId id) const { return _object(id); }
+		Object const* object(Id<Object> id) const { return _object(id); }
 		/// Adds the given object and its global coordinates to the global object directory.
 		/// @param object The object to add.
 		/// @param coords The object's global coordinates.
 		////
-		void add_object(Object* object, GlobalCoords coords) { _objects[object->id()] = std::make_tuple(coords, object); }
+		void add_object(Object* object, GlobalCoords coords) { _objects[object->id] = std::make_tuple(coords, object); }
 		/// Updates the global coordinates in the global object directory of the object with the given ID.
 		/// @param id The ID of the object to update.
 		/// @param coords The object's new global coordinates.
 		////
-		void update_object_coords(ObjectId id, GlobalCoords coords) { std::get<GlobalCoords>(_objects[id]) = coords; }
+		void update_object_coords(Id<Object> id, GlobalCoords coords) { std::get<GlobalCoords>(_objects[id]) = coords; }
 		/// Removes the specified being ID from the global object directory.
 		/// @param id The ID of the object to delete.
 		////
-		void remove_object_id(ObjectId id) { _objects.erase(id); }
+		void remove_object_id(Id<Object> id) { _objects.erase(id); }
 
 		HUDController& hud() { return *_hud; }
 		HUDController const& hud() const { return *_hud; }
@@ -210,10 +210,10 @@ namespace questless
 		enum class State { splash, menu, playing };
 		State _state;
 
-		std::unordered_map<BeingId, std::tuple<GlobalCoords, Being*>> _beings;
-		std::unordered_map<ObjectId, std::tuple<GlobalCoords, Object*>> _objects;
+		std::unordered_map<Id<Being>, std::tuple<GlobalCoords, Being*>> _beings;
+		std::unordered_map<Id<Object>, std::tuple<GlobalCoords, Object*>> _objects;
 
-		BeingId _player_being_id;
+		boost::optional<Id<Being>> _player_being_id;
 		Player* _player;
 
 		double _time;
@@ -266,7 +266,7 @@ namespace questless
 
 		// Accessor helpers
 
-		Being* _being(BeingId id) const;
-		Object* _object(ObjectId id) const;
+		Being* _being(Id<Being> id) const;
+		Object* _object(Id<Object> id) const;
 	};
 }

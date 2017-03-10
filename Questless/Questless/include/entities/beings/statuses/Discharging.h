@@ -19,7 +19,7 @@ namespace questless
 		/// @param magnitude How powerful the status modifier is.
 		/// @param duration The number of turns remaining before the status modifier expires.
 		/// @param source_id The ID of the being that caused the status modifier, if any.
-		Discharging(double magnitude, int duration, boost::optional<BeingId> source_id = boost::none)
+		Discharging(double magnitude, int duration, boost::optional<Id<Being>> source_id = boost::none)
 			: Status("Discharging", duration, source_id), _magnitude{magnitude}
 		{}
 

@@ -16,7 +16,6 @@
 #include <memory>
 
 #include "entities/Entity.h"
-#include "entities/beings/BeingId.h"
 #include "entities/beings/Body.h"
 #include "entities/beings/statuses/Status.h"
 #include "entities/beings/Abilities.h"
@@ -27,6 +26,7 @@
 #include "items/armor/Armor.h"
 #include "spell/Spell.h"
 #include "utility/utility.h"
+#include "utility/Id.h"
 #include "utility/Event.h"
 #include "utility/Property.h"
 #include "utility/DynamicProperty.h"
@@ -100,6 +100,8 @@ namespace questless
 		// Public Data //
 		/////////////////
 
+		Id<Being> const id;
+
 		Body body;
 
 		// Stats
@@ -147,23 +149,23 @@ namespace questless
 
 		// Event Handlers
 
-		Event<Damage&, BodyPart*, boost::optional<BeingId>> before_take_damage;
-		Event<Damage&, BodyPart*, boost::optional<BeingId>> after_take_damage;
+		Event<Damage&, BodyPart*, boost::optional<Id<Being>>> before_take_damage;
+		Event<Damage&, BodyPart*, boost::optional<Id<Being>>> after_take_damage;
 
-		Event<Damage&, BodyPart*, BeingId> before_deal_damage;
-		Event<Damage&, BodyPart*, BeingId> after_deal_damage;
+		Event<Damage&, BodyPart*, Id<Being>> before_deal_damage;
+		Event<Damage&, BodyPart*, Id<Being>> after_deal_damage;
 
-		Event<double&, BodyPart*, boost::optional<BeingId>> before_receive_heal;
-		Event<double&, BodyPart*, boost::optional<BeingId>> after_receive_heal;
+		Event<double&, BodyPart*, boost::optional<Id<Being>>> before_receive_heal;
+		Event<double&, BodyPart*, boost::optional<Id<Being>>> after_receive_heal;
 
-		Event<double&, BodyPart*, BeingId> after_give_heal;
-		Event<double&, BodyPart*, BeingId> before_give_heal;
+		Event<double&, BodyPart*, Id<Being>> after_give_heal;
+		Event<double&, BodyPart*, Id<Being>> before_give_heal;
 
-		Event<boost::optional<BeingId>> before_die;
-		Event<boost::optional<BeingId>> after_die;
+		Event<boost::optional<Id<Being>>> before_die;
+		Event<boost::optional<Id<Being>>> after_die;
 
-		Event<BeingId> before_kill;
-		Event<BeingId> after_kill;
+		Event<Id<Being>> before_kill;
+		Event<Id<Being>> after_kill;
 
 		////////////////////
 		// Public Methods //
@@ -173,8 +175,6 @@ namespace questless
 
 		/// @param out A stream object into which the serialized being is inserted.
 		void serialize(std::ostream& out) const override;
-
-		BeingId id() const { return _id; }
 
 		/// @return The agent responsible for this being.
 		Agent& agent() { return *_agent; }
@@ -216,23 +216,21 @@ namespace questless
 		/// @param damage Damage to be applied to this being.
 		/// @param part The body part to damage, or nullptr if the damage should be applied directly to the being.
 		/// @param opt_source_id The ID of the being which caused the damage, if any.
-		void take_damage(Damage& damage, BodyPart* part, boost::optional<BeingId> opt_source_id);
+		void take_damage(Damage& damage, BodyPart* part, boost::optional<Id<Being>> opt_source_id);
 
 		/// Causes the being to be healed by the specified source being.
 		/// @param amount Health to be restored to this being.
 		/// @param part The body part to heal, or nullopt if the damage should be applied directly to the being.
 		/// @param opt_source_id The ID of the being which caused the healing, if any.
-		void heal(double amount, BodyPart* part, boost::optional<BeingId> opt_source_id);
+		void heal(double amount, BodyPart* part, boost::optional<Id<Being>> opt_source_id);
 
 		void add_status(std::unique_ptr<Status> status);
 	protected:
-		Being(Game& game, const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, BeingId id, Body body, const std::function<Stats()>& make_base_stats);
+		Being(Game& game, const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, Id<Being> id, Body body, const std::function<Stats()>& make_base_stats);
 		Being(Game& game, std::istream& in, Body body);
 
 		virtual Body make_body() = 0;
 	private:
-		BeingId _id;
-
 		std::unique_ptr<Agent> _agent; ///< The agent responsible for this being.
 
 		/// @todo Maybe use a std::pair of actions and conts, and then use the auto [action, cont] = ... syntax in act() once supported?

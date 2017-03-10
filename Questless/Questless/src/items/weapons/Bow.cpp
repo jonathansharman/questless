@@ -38,7 +38,7 @@ namespace questless
 		if (Being* target = actor.region->being(_coords)) {
 			Damage damage = _bow.damage();
 			_bow.integrity -= _bow.wear_ratio() * damage.total();
-			target->take_damage(damage, nullptr, actor.id()); /// @todo Part targeting
+			target->take_damage(damage, nullptr, actor.id); /// @todo Part targeting
 			return cont(Result::success);
 		} else {
 			return actor.agent().send_message(std::make_unique<MessageArrowMiss>(), [cont] { return cont(Result::success); });

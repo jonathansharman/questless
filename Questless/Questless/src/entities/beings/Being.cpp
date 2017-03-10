@@ -20,8 +20,9 @@ using std::function;
 
 namespace questless
 {
-	Being::Being(Game& game, const function<unique_ptr<Agent>(Being&)>& make_agent, BeingId id, Body body, const function<Stats()>& make_base_stats)
+	Being::Being(Game& game, const function<unique_ptr<Agent>(Being&)>& make_agent, Id<Being> id, Body body, const function<Stats()>& make_base_stats)
 		: Entity(game)
+		, id{id}
 		, body{std::move(body)}
 		, base_stats{make_base_stats()}
 		, stats{base_stats_plus_body_stats()}
@@ -33,7 +34,6 @@ namespace questless
 		, busy_time{0.0}
 		, dead{false}
 		, direction{static_cast<RegionTileCoords::Direction>(uniform(1, 6))}
-		, _id{id}
 		, _agent{make_agent(*this)}
 		, _need_to_calculate_stats{false}
 		
@@ -46,6 +46,7 @@ namespace questless
 
 	Being::Being(Game& game, std::istream& in, Body body)
 		: Entity(game, in)
+		, id{in}
 		, body{std::move(body)}
 		, health{health_mutator()}
 		, mana{mana_mutator()}
@@ -53,8 +54,6 @@ namespace questless
 		, busy_time{busy_time_mutator()}
 		, _need_to_calculate_stats{true}
 	{
-		in >> _id.key;
-
 		/// @todo Read body.
 
 		in >> base_stats;
@@ -74,7 +73,7 @@ namespace questless
 	{
 		Entity::serialize(out);
 
-		out << id().key << ' ';
+		out << id << ' ';
 
 		/// @todo Write body.
 
@@ -178,7 +177,7 @@ namespace questless
 		}
 	}
 
-	void Being::take_damage(Damage& damage, BodyPart* part, boost::optional<BeingId> opt_source_id)
+	void Being::take_damage(Damage& damage, BodyPart* part, boost::optional<Id<Being>> opt_source_id)
 	{
 		// Store whether the being was already dead upon taking this damage.
 		bool was_already_dead = dead;
@@ -189,7 +188,7 @@ namespace questless
 		// Target will take damage.
 		if (before_take_damage(damage, part, opt_source_id)) {
 			// Source, if present, will deal damage.
-			if (!source || source->before_deal_damage(damage, part, id())) {
+			if (!source || source->before_deal_damage(damage, part, id)) {
 				// Initialize total resistance and vulnerability to the being's resistance/vulnerability stats.
 				auto total_resistance = stats.resistance;
 				auto total_vulnerability = stats.vulnerability;
@@ -252,12 +251,12 @@ namespace questless
 				}
 
 				// Add injury effect.
-				game.add_effect(std::make_shared<InjuryEffect>(coords, damage, _id, opt_source_id));
+				game.add_effect(std::make_shared<InjuryEffect>(coords, damage, id, opt_source_id));
 
 				// Target has taken damage.
 				if (after_take_damage(damage, part, opt_source_id)) {
 					// Source, if present, has dealt damage.
-					if (!source || source->after_deal_damage(damage, part, id())) {
+					if (!source || source->after_deal_damage(damage, part, id)) {
 						// If target has taken fatal damage, mark it dead.
 						if (health <= 0) {
 							dead = true;
@@ -267,13 +266,13 @@ namespace questless
 							// Target will die.
 							if (before_die(opt_source_id)) {
 								// Source, if present, will have killed target.
-								if (!source || source->before_kill(id())) {
+								if (!source || source->before_kill(id)) {
 									// Target's death succeeded.
 
 									if (corporeal()) {
 										// Spawn corpse.
 										Region& corpse_region = *region; // Save region since the being's region pointer will be nulled when it's removed.
-										auto corpse = std::make_unique<Corpse>(game, ObjectId::next(), corpse_region.remove(*this));
+										auto corpse = std::make_unique<Corpse>(game, Id<Object>::make(), corpse_region.remove(*this));
 										corpse_region.add<Object>(std::move(corpse), coords);
 									} else {
 										/// @todo Eliminate graveyard. It is a crutch to deal with references to annihilated beings when dealing fatal damage to a body part.
@@ -282,7 +281,7 @@ namespace questless
 									}
 
 									// Source, if present, has killed target.
-									if (!source || source->after_kill(id())) {
+									if (!source || source->after_kill(id)) {
 										// Target has died.
 										if (after_die(opt_source_id)) {
 											return;
@@ -297,7 +296,7 @@ namespace questless
 		}
 	}
 
-	void Being::heal(double amount, BodyPart* part, boost::optional<BeingId> opt_source_id)
+	void Being::heal(double amount, BodyPart* part, boost::optional<Id<Being>> opt_source_id)
 	{
 		/// @todo Heal the part, if present.
 
@@ -306,7 +305,7 @@ namespace questless
 
 		// Source will give healing.
 		if (source != nullptr) {
-			source->before_give_heal(amount, part, id());
+			source->before_give_heal(amount, part, id);
 		}
 		// Target will receive healing.
 		before_receive_heal(amount, part, opt_source_id);
@@ -316,7 +315,7 @@ namespace questless
 		after_receive_heal(amount, part, opt_source_id);
 		// Source has given healing.
 		if (source != nullptr) {
-			source->after_give_heal(amount, part, id());
+			source->after_give_heal(amount, part, id);
 		}
 	}
 

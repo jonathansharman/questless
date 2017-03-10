@@ -15,7 +15,7 @@ using namespace units;
 
 namespace questless
 {
-	Human::Human(Game& game, const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, BeingId id)
+	Human::Human(Game& game, const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, Id<Being> id)
 		: CorporealBeing{game, make_agent, id, make_body(), []() { return dflt_base_stats; }}
 	{}
 

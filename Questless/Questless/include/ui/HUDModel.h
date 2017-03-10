@@ -13,26 +13,19 @@
 
 #include <boost/optional.hpp>
 
-#include "entities/beings/BeingId.h"
 #include "items/Inventory.h"
+#include "utility/Id.h"
 
 namespace questless
 {
 	struct HUDModel
 	{
-		// Constants
-
 		static constexpr size_t hotbar_size = 10;
 
-		// Data
-
-		boost::optional<BeingId> player_id = boost::none;
+		boost::optional<Id<Being>> player_id = boost::none;
 		std::array<boost::optional<Inventory::Coords>, hotbar_size> hotbar;
-
 		bool inv_open = false;
 		int inv_page = 0;
-
-		// Methods
 
 		void update_being_info();
 	};

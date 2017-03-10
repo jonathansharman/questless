@@ -17,7 +17,7 @@ namespace questless
 	class Corpse : public Object
 	{
 	public:
-		Corpse(Game& game, ObjectId id, Being::ptr being)
+		Corpse(Game& game, Id<Object> id, Being::ptr being)
 			: Object(game, id)
 			, _being{std::move(being)}
 		{}

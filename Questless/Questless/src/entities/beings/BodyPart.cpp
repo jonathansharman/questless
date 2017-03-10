@@ -58,7 +58,7 @@ namespace questless
 		health += _owner.stats.health_regen * _vitality / _owner.stats.vitality;
 	}
 
-	void BodyPart::take_damage(Damage& damage, boost::optional<BeingId> source_id)
+	void BodyPart::take_damage(Damage& damage, boost::optional<Id<Being>> source_id)
 	{
 		_owner.take_damage(damage, this, source_id);
 	}

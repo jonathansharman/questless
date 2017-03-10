@@ -14,11 +14,10 @@
 
 #include <boost/optional.hpp>
 
-#include "entities/beings/BeingId.h"
-#include "entities/objects/ObjectId.h"
 #include "world/coordinates.h"
 #include "world/Section.h"
 #include "units/GameRect.h"
+#include "utility/Id.h"
 
 namespace questless
 {
@@ -44,8 +43,10 @@ namespace questless
 				, full   // Knows everything about the being.
 				};
 
-			BeingId id;
+			Id<Being> id;
 			Perception perception;
+
+			BeingView(Id<Being> id, Perception perception) : id{id}, perception{perception} {}
 		};
 
 		struct ObjectView
@@ -57,8 +58,10 @@ namespace questless
 				, full   // Knows everything about the being.
 				};
 
-			ObjectId id;
+			Id<Object> id;
 			Perception perception;
+
+			ObjectView(Id<Object> id, Perception perception) : id{id}, perception{perception} {}
 		};
 		
 		/// Copy constructor.

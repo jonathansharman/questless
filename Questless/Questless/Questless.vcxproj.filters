@@ -430,12 +430,6 @@
     <ClInclude Include="include\world\coordinates.h">
       <Filter>include\world</Filter>
     </ClInclude>
-    <ClInclude Include="include\entities\beings\BeingId.h">
-      <Filter>include\entities\beings</Filter>
-    </ClInclude>
-    <ClInclude Include="include\entities\objects\ObjectId.h">
-      <Filter>include\entities\objects</Filter>
-    </ClInclude>
     <ClInclude Include="include\agents\BasicAI.h">
       <Filter>include\agents</Filter>
     </ClInclude>
@@ -678,6 +672,9 @@
     </ClInclude>
     <ClInclude Include="include\items\weapons\Arrow.h">
       <Filter>include\items</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utility\Id.h">
+      <Filter>include\utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

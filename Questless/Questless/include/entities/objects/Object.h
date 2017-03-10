@@ -13,7 +13,7 @@
 #include <memory>
 
 #include "entities/Entity.h"
-#include "entities/objects/ObjectId.h"
+#include "utility/Id.h"
 
 namespace questless
 {
@@ -33,6 +33,8 @@ namespace questless
 		// Public Data //
 		/////////////////
 
+		Id<Object> id;
+
 		////////////////////
 		// Public Methods //
 		////////////////////
@@ -42,14 +44,10 @@ namespace questless
 		/// @param out A stream object into which the serialized object is inserted.
 		void serialize(std::ostream& out) const override;
 
-		ObjectId id() const { return _id; }
-
 		/// Advances the object one time unit.
 		void update() override;
 	protected:
-		Object(Game& game, ObjectId id) : Entity(game), _id{id} {}
+		Object(Game& game, Id<Object> id) : Entity(game), id{id} {}
 		Object(Game& game, std::istream& in);
-	private:
-		ObjectId _id;
 	};
 }

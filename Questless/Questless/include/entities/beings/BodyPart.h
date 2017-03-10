@@ -18,10 +18,10 @@
 #include "Damage.h"
 #include "items/weapons/Weapon.h"
 #include "items/armor/Armor.h"
-#include "BeingId.h"
 #include "units/ScreenRect.h"
 #include "utility/Property.h"
 #include "utility/DynamicProperty.h"
+#include "utility/Id.h"
 
 namespace questless
 {
@@ -107,7 +107,7 @@ namespace questless
 		/// Causes the body part to take damage from the specified source being.
 		/// @param damage Damage to be applied to this being.
 		/// @param source_id The ID of the being which caused the damage, if any.
-		void take_damage(Damage& damage, boost::optional<BeingId> source_id);
+		void take_damage(Damage& damage, boost::optional<Id<Being>> source_id);
 	private:
 		Being& _owner;
 

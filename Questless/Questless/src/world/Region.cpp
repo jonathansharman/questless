@@ -38,7 +38,7 @@ namespace questless
 		// Sort beings in the turn queue by lower busy-time first, then lower entity ID.
 		double f_b = first.busy_time;
 		double s_b = second.busy_time;
-		return f_b < s_b || (f_b == s_b && first.id() < second.id());
+		return f_b < s_b || (f_b == s_b && first.id < second.id);
 	}
 
 	Region::Region(Game& game, string region_name)
@@ -68,7 +68,7 @@ namespace questless
 					for (int q = -Section::radius; q <= Section::radius; ++q) {
 						if ((section_r != 0 || section_q != 0) && uniform(0, 10) == 0) {
 							auto entity_coords = Section::region_tile_coords(section_coords, SectionTileCoords{q, r});
-							auto new_being = make_unique<Goblin>(_game, Agent::make<BasicAI>, BeingId::next());
+							auto new_being = make_unique<Goblin>(_game, Agent::make<BasicAI>, Id<Being>::make());
 							new_being->give_item(make_unique<Quarterstaff>());
 							add<Being>(std::move(new_being), entity_coords);
 						}
@@ -247,7 +247,7 @@ namespace questless
 			Being::ptr moving_being = src_section.remove(being);
 			being.coords = coords;
 			src_section.add<Being>(std::move(moving_being));
-			_game.update_being_coords(being.id(), GlobalCoords{_name, src_section.coords()});
+			_game.update_being_coords(being.id, GlobalCoords{_name, src_section.coords()});
 		}
 		return true;
 	}
@@ -278,7 +278,7 @@ namespace questless
 			Object::ptr moving_being = src_section.remove(object);
 			object.coords = coords;
 			src_section.add<Object>(std::move(moving_being));
-			_game.update_object_coords(object.id(), GlobalCoords{_name, src_section.coords()});
+			_game.update_object_coords(object.id, GlobalCoords{_name, src_section.coords()});
 		}
 		return true;
 	}
@@ -290,7 +290,7 @@ namespace questless
 		being.region = nullptr;
 		being.section = nullptr;
 
-		_game.remove_being_id(being.id());
+		_game.remove_being_id(being.id);
 		remove_from_turn_queue(being);
 		return section.remove<Being>(being);
 	}
@@ -302,7 +302,7 @@ namespace questless
 		object.region = nullptr;
 		object.section = nullptr;
 
-		_game.remove_object_id(object.id());
+		_game.remove_object_id(object.id);
 		return section.remove<Object>(object);
 	}
 
@@ -325,22 +325,22 @@ namespace questless
 
 	void Region::update()
 	{
-		std::vector<BeingId> beings_to_update;
-		std::vector<ObjectId> objects_to_update;
+		std::vector<Id<Being>> beings_to_update;
+		std::vector<Id<Object>> objects_to_update;
 		for_each_loaded_section([&](Section& section) {
 			for (Being& being : section.beings()) {
-				beings_to_update.push_back(being.id());
+				beings_to_update.push_back(being.id);
 			}
 			for (Object& object : section.objects()) {
-				objects_to_update.push_back(object.id());
+				objects_to_update.push_back(object.id);
 			}
 		});
-		for (BeingId being_id : beings_to_update) {
+		for (Id<Being> being_id : beings_to_update) {
 			if (Being* being = _game.being(being_id)) {
 				being->update();
 			}
 		}
-		for (ObjectId object_id : objects_to_update) {
+		for (Id<Object> object_id : objects_to_update) {
 			if (Object* object = _game.object(object_id)) {
 				object->update();
 			}

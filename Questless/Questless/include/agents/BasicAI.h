@@ -71,7 +71,7 @@ namespace questless
 		virtual void visit(InjuryEffect const& effect) override
 		{
 			// Retaliate against injuries.
-			if (effect.opt_source_id() && effect.target_id() == being.id()) {
+			if (effect.opt_source_id() && effect.target_id() == being.id) {
 				_state = std::make_unique<AttackState>(*effect.opt_source_id());
 			}
 		}
@@ -86,8 +86,8 @@ namespace questless
 		struct WalkState : public State { void act(BasicAI& ai) override; };
 		struct AttackState : public State
 		{
-			BeingId target_id;
-			AttackState(BeingId target_id) : target_id{target_id} {}
+			Id<Being> target_id;
+			AttackState(Id<Being> target_id) : target_id{target_id} {}
 			void act(BasicAI& ai) override;
 		};
 
