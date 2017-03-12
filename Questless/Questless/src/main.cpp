@@ -4,7 +4,7 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION Creates and runs an instance of the game Questless.
+* @section DESCRIPTION Runs an instance of the game Questless.
 */
 
 #ifndef _DEBUG
@@ -28,8 +28,7 @@ int main(int argc, char* argv[])
 #endif
 
 	//try {
-		questless::Game game(false);
-		game.run();
+		questless::game().run();
 	//} catch (std::exception& ex) {
 	//	string message = ex.what();
 	//	/// @todo Try-catch for exception for last-resort error reporting. (Should log the message or something.)

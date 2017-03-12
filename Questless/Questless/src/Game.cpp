@@ -93,7 +93,7 @@ namespace questless
 
 		// Initialize and load menu resources.
 
-		_hud = make_unique<HUDController>(*this);
+		_hud = make_unique<HUDController>();
 
 		// Load textures and graphics.
 
@@ -370,18 +370,18 @@ namespace questless
 		for (auto const& option : _mnu_main.poll_selections()) {
 			if (option.first == "Questless") {
 				if (option.second == "Continue" || option.second == "Begin Anew") {
-					_region = make_unique<Region>(*this, "Region1");
-					//_region = make_unique<Region>(*this, "Slot1", "Region1");
+					_region = make_unique<Region>("Region1");
+					//_region = make_unique<Region>("Slot1", "Region1");
 
 					{ // Spawn the player's being.
-						Being::ptr player_being = make_unique<Human>(*this, Agent::make<Player>, Id<Being>::make());
+						Being::ptr player_being = make_unique<Human>(Agent::make<Player>);
 						_player = dynamic_cast<Player*>(&player_being->agent());
 						_player_being_id = player_being->id;
-						player_being->give_item(make_unique<Scroll>(make_unique<spell::LightningBolt>()));
-						player_being->give_item(make_unique<Scroll>(make_unique<spell::Heal>()));
-						player_being->give_item(make_unique<Scroll>(make_unique<spell::Teleport>()));
-						player_being->give_item(make_unique<Quarterstaff>());
-						player_being->give_item(make_unique<Bow>());
+						player_being->give_item(items.add(make_unique<Scroll>(make_unique<spell::LightningBolt>())));
+						player_being->give_item(items.add(make_unique<Scroll>(make_unique<spell::Heal>())));
+						player_being->give_item(items.add(make_unique<Scroll>(make_unique<spell::Teleport>())));
+						player_being->give_item(items.add(make_unique<Quarterstaff>()));
+						player_being->give_item(items.add(make_unique<Bow>()));
 						_region->spawn_player(move(player_being));
 					}
 					// Pass the player's being ID to the HUD.
@@ -410,14 +410,6 @@ namespace questless
 
 	void Game::render_playing()
 	{
-		//{
-		//	constexpr int width = 20;
-		//	constexpr int count = 18;
-		//	for (int i = 0; i < count; ++i) {
-		//		renderer().draw_rect(ScreenRect{_window->center().x - width * i, _window->center().y - width * i, 2 * width * i, 2 * width * i}, Color::white(), false);
-		//	}
-		//}
-
 		_world_renderer->draw_terrain(*_camera);
 
 		if (input().pressed(MouseButton::right)) {

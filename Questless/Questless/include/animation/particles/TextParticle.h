@@ -43,7 +43,7 @@ namespace questless
 		static Initializer<TextParticle> _initializer;
 		static void initialize();
 
-		static sdl::Handle<sdl::Font> _font_handle;
+		static sdl::FontHandle _font_handle;
 
 		std::string _text;
 		sdl::Color _color;

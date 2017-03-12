@@ -13,6 +13,8 @@
 #include <array>
 #include <string>
 
+#include <boost/optional.hpp>
+
 #include "Item.h"
 #include "utility/Stream.h"
 
@@ -28,7 +30,7 @@ namespace questless
 
 			std::string label = "";
 
-			std::array<std::array<Item::ptr, columns>, rows> items;
+			std::array<std::array<boost::optional<Id<Item>>, columns>, rows> item_ids;
 		};
 
 		struct Coords
@@ -41,19 +43,18 @@ namespace questless
 			Coords(int page, int row, int column) : page{page}, row{row}, column{column} {}
 		};
 
-		/// Adds the given item to the inventory in the first empty item slot.
-		/// @param item An item to add to the inventory.
-		void add(Item::ptr item);
+		/// Adds the item with the given ID to the inventory in the first empty item slot.
+		/// @param item_id The ID of the item to add to the inventory.
+		////
+		void add(Id<Item> item_id);
 
-		/// Finds and removes the given item from the inventory.
-		/// @param item An item to remove from the inventory.
-		/// @return The removed item or nullptr if not found.
-		Item::ptr remove(Item const& item);
+		/// Finds and removes the item with the given ID from the inventory.
+		/// @param item_id The ID of an item to remove from the inventory.
+		void remove(Id<Item> item_id);
 
 		/// Removes the item at the given coordinates from the inventory.
 		/// @param coords The inventory coordinates of the item to remove.
-		/// @return The removed item or nullptr if not found.
-		Item::ptr remove(Coords coords);
+		void remove(Coords coords);
 
 		/// @return A stream of items in the inventory, ordered by page and then coordinates.
 		Stream<Item*> items() { return items(0); }
@@ -66,7 +67,7 @@ namespace questless
 
 		/// @return The item at the given inventory coordinates or nullptr if none present.
 		/// @param coords Inventory coordinates (page, row, and column) of the requested item.
-		Item* get(Coords coords) { return _pages[coords.page].items[coords.row][coords.column].get(); }
+		Item* get(Coords coords);
 
 		/// @return The item at the given inventory coordinates or nullptr if none present.
 		/// @param coords Inventory coordinates (page, row, and column) of the requested item.

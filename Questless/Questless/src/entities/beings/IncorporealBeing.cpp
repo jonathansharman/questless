@@ -12,11 +12,11 @@
 
 namespace questless
 {
-	IncorporealBeing::IncorporealBeing(Game& game, const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, Id<Being> id, Body body, const std::function<Stats()>& make_base_stats)
-		: Being{game, make_agent, id, std::move(body), make_base_stats}
+	IncorporealBeing::IncorporealBeing(const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, Id<Being> id, Body body, const std::function<Stats()>& make_base_stats)
+		: Being{make_agent, id, std::move(body), make_base_stats}
 	{}
 
-	IncorporealBeing::IncorporealBeing(Game& game, std::istream& in, Body body)
-		: Being{game, in, std::move(body)}
+	IncorporealBeing::IncorporealBeing(std::istream& in, Body body)
+		: Being{in, std::move(body)}
 	{}
 }

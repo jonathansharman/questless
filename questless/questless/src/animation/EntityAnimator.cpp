@@ -20,7 +20,7 @@ namespace questless
 
 	void EntityAnimator::visit(Human const&)
 	{
-		static Handle<Texture> ss_handle = texture_manager().add("resources/textures/human-animation.png");
+		static auto ss_handle = texture_manager().add("resources/textures/human-animation.png");
 		_animation_set = std::make_unique<AnimationSet>(ss_handle, 3, 1);
 
 		auto animation = _animation_set->add(Animation
@@ -35,7 +35,7 @@ namespace questless
 	}
 	void EntityAnimator::visit(Goblin const&)
 	{
-		static Handle<Texture> ss_handle = texture_manager().add("resources/textures/test-animation.png");
+		static auto ss_handle = texture_manager().add("resources/textures/test-animation.png");
 		_animation_set = std::make_unique<AnimationSet>(ss_handle, 3, 1);
 
 		auto animation = _animation_set->add(Animation
@@ -53,7 +53,7 @@ namespace questless
 
 	void EntityAnimator::visit(Corpse const&)
 	{
-		static Handle<Texture> ss_handle = texture_manager().add("resources/textures/entities/objects/grave.png");
+		static auto ss_handle = texture_manager().add("resources/textures/entities/objects/grave.png");
 		_animation_set = std::make_unique<AnimationSet>(ss_handle, 1, 1);
 
 		auto animation = _animation_set->add(Animation
@@ -64,7 +64,7 @@ namespace questless
 	}
 	void EntityAnimator::visit(ItemBox const&)
 	{
-		static Handle<Texture> ss_handle = texture_manager().add("resources/textures/entities/objects/item-box.png");
+		static auto ss_handle = texture_manager().add("resources/textures/entities/objects/item-box.png");
 		_animation_set = std::make_unique<AnimationSet>(ss_handle, 1, 1);
 
 		auto animation = _animation_set->add(Animation

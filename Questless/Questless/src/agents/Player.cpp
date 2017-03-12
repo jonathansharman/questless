@@ -23,8 +23,7 @@ namespace questless
 {
 	void Player::act()
 	{
-		Game& game = being.game;
-		game.query_player_choice([this, &game](PlayerActionDialog::Choice player_choice) {
+		game().query_player_choice([this](PlayerActionDialog::Choice player_choice) {
 			switch (player_choice.type) {
 				case PlayerActionDialog::Choice::Type::idle:
 					if (player_choice.data == 1) {
@@ -53,7 +52,7 @@ namespace questless
 				}
 				case PlayerActionDialog::Choice::Type::use:
 				{
-					if (auto item_coords = game.hud().hotbar()[player_choice.data]) {
+					if (auto item_coords = game().hud().hotbar()[player_choice.data]) {
 						Item* item = being.inventory()[*item_coords];
 						if (item != nullptr) { /// @todo Sync the hotbar with changes to the inventory so this is unnecessary.
 							// Get a list of the item's actions. It's shared so the lambda that captures it is copyable, so the lambda can be passed as a std::function.
@@ -63,7 +62,7 @@ namespace questless
 							std::transform(actions->begin(), actions->end(), std::back_inserter(action_names), [](Action::ptr const& action) { return action->name(); });
 							// Open list dialog for the player to choose an action.
 							auto dialog = std::make_unique<ListDialog>(sdl::input().mouse_position(), item->name(), std::move(action_names),
-								[this, &game, actions](boost::optional<int> opt_action_idx) {
+								[this, actions](boost::optional<int> opt_action_idx) {
 									if (!opt_action_idx) {
 										// No action selected. Player must try to act again.
 										act();
@@ -71,7 +70,7 @@ namespace questless
 									} else {
 										// Perform the chosen action.
 										int action_idx = *opt_action_idx;
-										return (*actions)[action_idx]->perform(being, [this, &game](Action::Result result) {
+										return (*actions)[action_idx]->perform(being, [this](Action::Result result) {
 											if (result == Action::Result::aborted) {
 												// Chosen action aborted. Player must try to act again.
 												act();
@@ -81,7 +80,7 @@ namespace questless
 									}
 								}
 							);
-							being.game.add_dialog(std::move(dialog));
+							game().add_dialog(std::move(dialog));
 						}
 					}
 					break;
@@ -139,7 +138,7 @@ namespace questless
 		MessagePrompter prompter;
 		message->accept(prompter);
 		auto dialog = std::make_unique<MessageDialog>(std::move(titler.title), std::move(prompter.prompt), std::move(cont));
-		return being.game.add_dialog(std::move(dialog));
+		return game().add_dialog(std::move(dialog));
 	}
 
 	Action::Complete Player::query_count
@@ -165,7 +164,7 @@ namespace questless
 		CountQueryPrompter prompter;
 		query->accept(prompter);
 		auto dialog = std::make_unique<CountDialog>(std::move(titler.title), std::move(prompter.prompt), default, min, max, std::move(cont));
-		return being.game.add_dialog(std::move(dialog));
+		return game().add_dialog(std::move(dialog));
 	}
 
 	Action::Complete Player::query_magnitude
@@ -196,7 +195,7 @@ namespace questless
 		MagnitudeQueryPrompter prompter;
 		query->accept(prompter);
 		auto dialog = std::make_unique<MagnitudeDialog>(std::move(titler.title), std::move(prompter.prompt), default, min, max, std::move(cont));
-		return being.game.add_dialog(std::move(dialog));
+		return game().add_dialog(std::move(dialog));
 	}
 
 	Action::Complete Player::query_tile
@@ -227,9 +226,8 @@ namespace questless
 		query->accept(titler);
 		TileQueryPrompter prompter;
 		query->accept(prompter);
-		Game& game = being.game;
-		auto dialog = std::make_unique<TileDialog>(std::move(titler.title), std::move(prompter.prompt), game.camera(), std::move(origin), std::move(predicate), std::move(cont));
-		return game.add_dialog(std::move(dialog));
+		auto dialog = std::make_unique<TileDialog>(std::move(titler.title), std::move(prompter.prompt), game().camera(), std::move(origin), std::move(predicate), std::move(cont));
+		return game().add_dialog(std::move(dialog));
 	}
 
 	Action::Complete Player::query_being
@@ -258,7 +256,7 @@ namespace questless
 
 	Action::Complete Player::get_lightning_bolt_quality(RegionTileCoords target_coords, std::function<Action::Complete(double)> cont) const
 	{
-		auto dialog = std::make_unique<qte::LightningBolt>(being.game.camera(), target_coords, std::move(cont));
-		return being.game.add_dialog(std::move(dialog));
+		auto dialog = std::make_unique<qte::LightningBolt>(target_coords, std::move(cont));
+		return game().add_dialog(std::move(dialog));
 	}
 }

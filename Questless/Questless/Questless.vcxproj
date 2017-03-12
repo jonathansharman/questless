@@ -396,6 +396,7 @@
     <ClInclude Include="include\units\TextureSpace.h" />
     <ClInclude Include="include\units\Vector.h" />
     <ClInclude Include="include\units\Velocity.h" />
+    <ClInclude Include="include\utility\Cache.h" />
     <ClInclude Include="include\utility\Delegate.h" />
     <ClInclude Include="include\utility\DynamicProperty.h" />
     <ClInclude Include="include\utility\Event.h" />

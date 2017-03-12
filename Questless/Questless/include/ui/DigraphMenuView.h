@@ -83,8 +83,8 @@ namespace questless
 		static Initializer<DigraphMenuView> _initializer;
 		static void initialize();
 
-		static sdl::Handle<sdl::Font> _title_font_handle, _option_font_handle;
-		static sdl::Handle<sdl::Texture> _ul_handle, _ur_handle, _dl_handle, _dr_handle, _u_handle, _d_handle, _l_handle, _r_handle, _tile_handle;
+		static sdl::FontHandle _title_font_handle, _option_font_handle;
+		static sdl::TextureHandle _ul_handle, _ur_handle, _dl_handle, _dr_handle, _u_handle, _d_handle, _l_handle, _r_handle, _tile_handle;
 
 		static std::shared_future<int> _top_margin, _bottom_margin, _left_margin, _right_margin, _tile_width, _tile_height;
 

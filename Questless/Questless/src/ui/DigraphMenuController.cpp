@@ -20,8 +20,8 @@ using namespace sdl;
 
 namespace questless
 {
-	sdl::Handle<sdl::Sound> DigraphMenuController::_hover_sound_handle;
-	sdl::Handle<sdl::Sound> DigraphMenuController::_select_sound_handle;
+	sdl::SoundHandle DigraphMenuController::_hover_sound_handle;
+	sdl::SoundHandle DigraphMenuController::_select_sound_handle;
 
 	Initializer<DigraphMenuController> DigraphMenuController::_initializer;
 	void DigraphMenuController::initialize()

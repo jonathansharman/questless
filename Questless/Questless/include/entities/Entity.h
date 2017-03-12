@@ -37,7 +37,6 @@ namespace questless
 		using ref_less_t = bool(*)(Entity const&, Entity const&);
 		using ptr_less_t = bool(*)(ptr const&, ptr const&);
 
-		Game& game;
 		Region* region;
 		Section* section;
 		RegionTileCoords coords;
@@ -60,7 +59,7 @@ namespace questless
 		/// Advances the entity one turn.
 		virtual void update() = 0;
 	protected:
-		Entity(Game& game) : game{game}, region{}, section{}, coords{} {}
-		Entity(Game& game, std::istream& in);
+		Entity() : region{}, section{}, coords{} {}
+		Entity(std::istream& in);
 	};
 }

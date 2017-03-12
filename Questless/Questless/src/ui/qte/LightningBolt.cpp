@@ -16,9 +16,8 @@ using namespace units;
 
 namespace questless::qte
 {
-	LightningBolt::LightningBolt(Camera const& camera, RegionTileCoords target_coords, std::function<void(double)> cont)
-		: _camera{camera}
-		, _target_point{units::Layout::dflt().to_world(target_coords)}
+	LightningBolt::LightningBolt(RegionTileCoords target_coords, std::function<void(double)> cont)
+		: _target_point{units::Layout::dflt().to_world(target_coords)}
 		, _cont{std::move(cont)}
 	{
 		load_textures();
@@ -34,7 +33,7 @@ namespace questless::qte
 		// Acclerate only when the mouse moves to the next quadrant over.
 		bool accelerate = false;
 		{
-			GameVector v = _camera.point_hovered() - _target_point;
+			GameVector v = game().camera().point_hovered() - _target_point;
 			switch (_quadrant) {
 				case 0:
 					if (v.x < v.y && v.x > -v.y) {
@@ -101,7 +100,7 @@ namespace questless::qte
 		// Draw point charges.
 		for (auto const& point_charge : _charges) {
 			double intensity = uniform(0.0, 1.0);
-			_camera.draw
+			game().camera().draw
 				( texture_manager()[point_charge_texture_handle]
 				, point_charge.position
 				, Origin{boost::none}

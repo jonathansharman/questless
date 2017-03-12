@@ -676,6 +676,9 @@
     <ClInclude Include="include\utility\Id.h">
       <Filter>include\utility</Filter>
     </ClInclude>
+    <ClInclude Include="include\utility\Cache.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\world\Region.cpp">

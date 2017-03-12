@@ -28,15 +28,13 @@ namespace questless
 	{
 	public:
 		/// Pseudo-randomly generates a new region.
-		/// @param game The game object.
 		/// @param name The name of the new region.
-		Region(Game& game, std::string region_name);
+		Region(std::string region_name);
 
 		/// Loads a region from disk.
-		/// @param game The game object.
 		/// @param save_name The name of the region's save file.
 		/// @param region_name The name of the region.
-		Region(Game& game, std::string const& save_name, std::string const& region_name);
+		Region(std::string const& save_name, std::string const& region_name);
 
 		/// @return The region's name, as it appears in game and on disk.
 		std::string name() const { return _name; }
@@ -100,10 +98,10 @@ namespace questless
 				/// @todo Find a more permanent solution to this switch on type. (Probably need to write different add methods for beings and objects unless I change how the turn queue works and add generic accessors for game.beings() and game.objects().)
 				if (Being* being = dynamic_cast<Being*>(entity.get())) {
 					add_to_turn_queue(dynamic_cast<Being&>(*entity));
-					_game.add_being(being, GlobalCoords{_name, section->coords()});
+					game().add_being(being, GlobalCoords{_name, section->coords()});
 				} else {
 					Object* object = dynamic_cast<Object*>(entity.get());
-					_game.add_object(object, GlobalCoords{_name, section->coords()});
+					game().add_object(object, GlobalCoords{_name, section->coords()});
 				}
 
 				section->add<EntityType>(std::move(entity));
@@ -185,7 +183,6 @@ namespace questless
 		static const int _loaded_sections_q_radius = 1;
 		static const int _loaded_sections_r_radius = 1;
 
-		Game& _game;
 		std::string _name;
 		std::map<RegionSectionCoords, std::unique_ptr<Section>> _section_map; /// @todo Replace unique_ptr with reference_wrapper (disallow null sections).
 		RegionSectionCoords center_section_coords = RegionSectionCoords{0, 0};

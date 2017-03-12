@@ -47,7 +47,7 @@ namespace questless
 		/// Advances the object one time unit.
 		void update() override;
 	protected:
-		Object(Game& game, Id<Object> id) : Entity(game), id{id} {}
-		Object(Game& game, std::istream& in);
+		Object(Id<Object> id) : Entity{}, id{id} {}
+		Object(std::istream& in);
 	};
 }

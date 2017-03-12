@@ -69,7 +69,7 @@ namespace questless
 			}
 		};
 
-		Quarterstaff() : Breakable{durability()}, _form{std::make_unique<StandardForm>(*this)} {}
+		Quarterstaff(Id<Item> id = Id<Item>::make()) : Item{id}, Breakable{durability()}, _form{std::make_unique<StandardForm>(*this)} {}
 
 		void accept(ItemVisitor& visitor) const override { visitor.visit(*this); }
 

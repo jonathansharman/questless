@@ -18,19 +18,18 @@ namespace questless
 {
 	Action::Complete Item::Drop::perform(Being& actor, cont_t cont)
 	{
-		Item::ptr item = actor.take_item(_item);
+		actor.take_item(_item.id);
 
-		// See if there's already an item box on the ground at the drop location.
-		if (Object* object = actor.region->object(actor.coords)) {
-			if (ItemBox* item_box = dynamic_cast<ItemBox*>(object)) {
-				item_box->items().push_back(std::move(item));
-				return cont(Result::success);
-			}
+		if (ItemBox* old_box = dynamic_cast<ItemBox*>(actor.region->object(actor.coords))) {
+			// If there's already an item box on the ground at the drop location, put the item in it.
+			old_box->items().push_back(_item.id);
+			return cont(Result::success);
+		} else {
+			// Otherwise make a new box to put it in.
+			auto new_box = std::make_unique<ItemBox>();
+			new_box->items().push_back(_item.id);
+			actor.region->add<Object>(std::move(new_box), actor.coords);
+			return cont(Result::success);
 		}
-		// Otherwise make a new box and add to it.
-		auto item_box = std::make_unique<ItemBox>(actor.game, Id<Object>::make());
-		item_box->items().push_back(std::move(item));
-		actor.region->add<Object>(std::move(item_box), actor.coords);
-		return cont(Result::success);
 	}
 }

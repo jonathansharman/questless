@@ -14,7 +14,7 @@ namespace questless
 {
 	sdl::Texture const& BloodParticle::texture() const
 	{
-		static sdl::Handle<sdl::Texture> handle = sdl::texture_manager().add("resources/textures/particles/blood.png");
+		static sdl::TextureHandle handle = sdl::texture_manager().add("resources/textures/particles/blood.png");
 		return sdl::texture_manager()[handle];
 	}
 }

@@ -17,10 +17,10 @@
 #include "ItemVisitor.h"
 #include "entities/beings/Action.h"
 #include "units/HexCoords.h"
+#include "utility/Id.h"
 
 namespace questless
 {
-	class Game;
 	class Being;
 
 	class Item
@@ -28,6 +28,10 @@ namespace questless
 	public:
 		using ptr = std::unique_ptr<Item>;
 		using ref = std::reference_wrapper<Item>;
+
+		Id<Item> const id;
+
+		Item(Id<Item> id) : id{id} {}
 
 		virtual ~Item() = default;
 

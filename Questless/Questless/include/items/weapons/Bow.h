@@ -16,7 +16,7 @@ namespace questless
 	class Bow : public Weapon
 	{
 	public:
-		Bow() : Breakable{durability()} {}
+		Bow(Id<Item> id = Id<Item>::make()) : Item{id}, Breakable{durability()} {}
 
 		void accept(ItemVisitor& visitor) const override { visitor.visit(*this); }
 
@@ -64,12 +64,12 @@ namespace questless
 		class CompleteFireArrow : public Action
 		{
 		public:
-			CompleteFireArrow(Bow& bow, RegionTileCoords coords) : _bow{bow}, _coords(coords) {}
-			static ptr make(Bow& bow, RegionTileCoords coords) { return std::make_unique<CompleteFireArrow>(bow, coords); }
+			CompleteFireArrow(Id<Item> bow_id, RegionTileCoords coords) : _bow_id{bow_id}, _coords(coords) {}
+			static ptr make(Id<Item> bow_id, RegionTileCoords coords) { return std::make_unique<CompleteFireArrow>(bow_id, coords); }
 			std::string name() const override { return ""; }
 			Action::Complete perform(Being& actor, cont_t cont) override;
 		private:
-			Bow& _bow;
+			Id<Item> _bow_id;
 			RegionTileCoords _coords;
 		};
 	};

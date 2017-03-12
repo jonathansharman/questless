@@ -17,18 +17,18 @@ using namespace units;
 
 namespace questless
 {
-	Handle<Font> DigraphMenuView::_title_font_handle;
-	Handle<Font> DigraphMenuView::_option_font_handle;
+	FontHandle DigraphMenuView::_title_font_handle;
+	FontHandle DigraphMenuView::_option_font_handle;
 
-	Handle<Texture> DigraphMenuView::_ul_handle;
-	Handle<Texture> DigraphMenuView::_ur_handle;
-	Handle<Texture> DigraphMenuView::_dl_handle;
-	Handle<Texture> DigraphMenuView::_dr_handle;
-	Handle<Texture> DigraphMenuView::_u_handle;
-	Handle<Texture> DigraphMenuView::_d_handle;
-	Handle<Texture> DigraphMenuView::_l_handle;
-	Handle<Texture> DigraphMenuView::_r_handle;
-	Handle<Texture> DigraphMenuView::_tile_handle;
+	TextureHandle DigraphMenuView::_ul_handle;
+	TextureHandle DigraphMenuView::_ur_handle;
+	TextureHandle DigraphMenuView::_dl_handle;
+	TextureHandle DigraphMenuView::_dr_handle;
+	TextureHandle DigraphMenuView::_u_handle;
+	TextureHandle DigraphMenuView::_d_handle;
+	TextureHandle DigraphMenuView::_l_handle;
+	TextureHandle DigraphMenuView::_r_handle;
+	TextureHandle DigraphMenuView::_tile_handle;
 
 	std::shared_future<int> DigraphMenuView::_top_margin;
 	std::shared_future<int> DigraphMenuView::_bottom_margin;

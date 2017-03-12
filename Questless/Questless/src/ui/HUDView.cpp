@@ -18,7 +18,7 @@ using namespace units;
 
 namespace questless
 {
-	HUDView::HUDView(Game& game) : _game{game}
+	HUDView::HUDView()
 	{
 		_fnt_item_count = std::make_unique<Font>("resources/fonts/dumbledor1.ttf", _item_count_font_size, SDL_BLENDMODE_BLEND);
 
@@ -30,7 +30,7 @@ namespace questless
 		if (!hud.player_id) {
 			return;
 		}
-		if (Being* player_being = _game.being(*hud.player_id)) {
+		if (Being* player_being = game().being(*hud.player_id)) {
 			// Draw the condition bars.
 			{
 				int left = 0;
@@ -76,16 +76,18 @@ namespace questless
 			if (hud.inv_open) {
 				renderer().draw_rect(ScreenRect{_inv_left, _inv_top, _inv_width, _inv_height}, Color::black(), Color::gray());
 				ItemTexturer texturer;
-				auto const& items = player_being->inventory().page(hud.inv_page).items;
+				auto const& item_ids = player_being->inventory().page(hud.inv_page).item_ids;
 				for (int row = 0; row < Inventory::Page::rows; ++row) {
 					for (int column = 0; column < Inventory::Page::columns; ++column) {
-						if (auto const& item = items[row][column]) {
-							item->accept(texturer);
-							Texture::ptr texture = texturer.texture();
-							texture->draw(ScreenPoint{_inv_left + column * HUDView::item_icon_width, _inv_top + row * HUDView::item_icon_height});
-						} else {
-							renderer().draw_rect(ScreenRect{_inv_left + column * HUDView::item_icon_width, _inv_top + row * HUDView::item_icon_height, HUDView::item_icon_width, HUDView::item_icon_height}, Color::black(), Color::gray());
+						if (auto const& item_id = item_ids[row][column]) {
+							if (Item* item = game().items[*item_id]) {
+								item->accept(texturer);
+								Texture::ptr texture = texturer.texture();
+								texture->draw(ScreenPoint{_inv_left + column * HUDView::item_icon_width, _inv_top + row * HUDView::item_icon_height});
+								continue;
+							}
 						}
+						renderer().draw_rect(ScreenRect{_inv_left + column * HUDView::item_icon_width, _inv_top + row * HUDView::item_icon_height, HUDView::item_icon_width, HUDView::item_icon_height}, Color::black(), Color::gray());
 					}
 				}
 			}

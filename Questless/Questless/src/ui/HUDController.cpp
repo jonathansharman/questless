@@ -15,15 +15,14 @@ using namespace sdl;
 
 namespace questless
 {
-	HUDController::HUDController(Game& game) : _game{game}, _hud{}, _view{game}
-	{}
+	HUDController::HUDController() : _hud{}, _view{} {}
 	
 	void HUDController::update()
 	{
 		if (!_hud.player_id) {
 			return;
 		}
-		if (Being* player_being = _game.being(*_hud.player_id)) {
+		if (Being* player_being = game().being(*_hud.player_id)) {
 			_hud.update_being_info();
 
 			if (input().presses(SDLK_TAB)) {
@@ -77,12 +76,12 @@ namespace questless
 		_hud.player_id = player_id;
 		_hud.inv_page = 0;
 
-		if (Being* player_being = _game.being(player_id)) {
+		if (Being* player_being = game().being(player_id)) {
 			size_t count = 0;
 			for (int page = 0; page < player_being->inventory().pages(); ++page) {
 				for (int row = 0; row < Inventory::Page::rows; ++row) {
 					for (int column = 0; column < Inventory::Page::columns; ++column) {
-						if (player_being->inventory().page(page).items[row][column] != nullptr) {
+						if (player_being->inventory().page(page).item_ids[row][column] != boost::none) {
 							_hud.hotbar[count++] = Inventory::Coords{page, row, column};
 							if (count == HUDModel::hotbar_size) {
 								return;

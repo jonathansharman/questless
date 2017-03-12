@@ -25,7 +25,7 @@ namespace questless
 		static constexpr int item_icon_width = 55;
 		static constexpr int item_icon_height = 55;
 
-		HUDView(Game& game);
+		HUDView();
 
 		/// @return The inventory's width.
 		int inv_width() const { return _inv_width; }
@@ -70,8 +70,6 @@ namespace questless
 		int _inv_height;
 
 		int _inv_column_count;
-
-		Game& _game;
 
 		sdl::Texture::ptr _hotbar_slot_texture;
 

@@ -17,7 +17,7 @@ using namespace units;
 
 namespace questless
 {
-	AnimationSet::AnimationSet(sdl::Handle<Texture> sprite_sheet_handle, int cel_columns, int cel_rows)
+	AnimationSet::AnimationSet(sdl::TextureHandle sprite_sheet_handle, int cel_columns, int cel_rows)
 		: _sprite_sheet_handle{std::move(sprite_sheet_handle)}, _current_animation{nullptr}, _paused{false}
 	{
 		_cel_width = texture_manager()[_sprite_sheet_handle].width() / cel_columns;

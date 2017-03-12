@@ -17,12 +17,12 @@ namespace questless
 	class Corpse : public Object
 	{
 	public:
-		Corpse(Game& game, Id<Object> id, Being::ptr being)
-			: Object(game, id)
+		Corpse(Being::ptr being, Id<Object> id = Id<Object>::make())
+			: Object{id}
 			, _being{std::move(being)}
 		{}
-		Corpse(Game& game, std::istream& in, Being::ptr being)
-			: Object(game, in)
+		Corpse(std::istream& in, Being::ptr being)
+			: Object{in}
 			, _being{std::move(being)}
 		{}
 

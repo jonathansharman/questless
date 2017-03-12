@@ -9,16 +9,18 @@
 
 #include "items/Inventory.h"
 
+#include "Game.h"
+
 namespace questless
 {
-	void Inventory::add(Item::ptr item)
+	void Inventory::add(Id<Item> item_id)
 	{
 		// Search existing pages for an empty slot.
 		for (size_t page = 0; page < _pages.size(); ++page) {
 			for (size_t row = 0; row < Page::rows; ++row) {
 				for (size_t column = 0; column < Page::columns; ++column) {
-					if (_pages[page].items[row][column] == nullptr) {
-						_pages[page].items[row][column] = std::move(item);
+					if (_pages[page].item_ids[row][column] == boost::none) {
+						_pages[page].item_ids[row][column] = item_id;
 						return;
 					}
 				}
@@ -26,27 +28,35 @@ namespace questless
 		}
 		// If full, add to new page.
 		_pages.push_back(Page{});
-		_pages.back().items[0][0] = std::move(item);
+		_pages.back().item_ids[0][0] = item_id;
 	}
 
-	Item::ptr Inventory::remove(Item const& item)
+	void Inventory::remove(Id<Item> item_id)
 	{
 		for (int page = 0; page < static_cast<int>(_pages.size()); ++page) {
 			for (int row = 0; row < Page::rows; ++row) {
 				for (int column = 0; column < Page::columns; ++column) {
-					if (_pages[page].items[row][column].get() == &item) {
-						return remove(Coords{page, row, column});
+					if (_pages[page].item_ids[row][column].get() == item_id) {
+						remove(Coords{page, row, column});
+						return;
 					}
 				}
 			}
 		}
-		return nullptr;
 	}
 
-	Item::ptr Inventory::remove(Coords coords)
+	void Inventory::remove(Coords coords)
 	{
-		Item::ptr removed_item = std::move(_pages[coords.page].items[coords.row][coords.column]);
-		return removed_item;
+		_pages[coords.page].item_ids[coords.row][coords.column] = boost::none;
+	}
+
+	Item* Inventory::get(Coords coords)
+	{
+		auto opt_item_id = _pages[coords.page].item_ids[coords.row][coords.column];
+		return opt_item_id
+			? game().items[*opt_item_id]
+			: nullptr
+			;
 	}
 
 	Stream<Item*> Inventory::items(size_t page_start)
@@ -68,9 +78,9 @@ namespace questless
 		return column_start == Page::columns
 			? Stream<Item*>{}
 			: sconcat
-				( _pages[page].items[row_start][column_start] == nullptr
+				( _pages[page].item_ids[row_start][column_start] == boost::none
 					? Stream<Item*>{}
-					: singleton<Item*>(_pages[page].items[row_start][column_start].get())
+					: singleton<Item*>(game().items[*_pages[page].item_ids[row_start][column_start]])
 				, items(page, row_start, column_start + 1)
 				);
 	}

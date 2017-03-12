@@ -3,8 +3,6 @@
 * @author  Jonathan Sharman
 *
 * @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the Questless Game class.
 */
 
 #pragma once
@@ -36,9 +34,11 @@
 #include "agents/Player.h"
 #include "items/Item.h"
 #include "effects/Effect.h"
+#include "utility/Cache.h"
 
 namespace questless
 {
+	/// Represents an instance of the game Questless.
 	class Game : public sdl::Renderable
 	{
 	public:
@@ -48,10 +48,11 @@ namespace questless
 		static constexpr units::Hertz frame_rate = 60.0_Hz;
 		static constexpr units::GameSeconds frame_duration = 1.0 / frame_rate;
 
-		/// Creates a game object, initializes the environment, and loads game resources.
-		/// @param fullscreen Whether to run the game in fullscreen mode.
-		////
-		Game(bool fullscreen);
+		Cache<Being> beings;
+		Cache<Object> objects;
+		Cache<Item> items;
+
+		friend Game& game();
 
 		/// Releases game resources and breaks down the environment.
 		////
@@ -244,6 +245,11 @@ namespace questless
 		// Methods //
 		/////////////
 
+		/// Creates a game object, initializes the environment, and loads game resources.
+		/// @param fullscreen Whether to run the game in fullscreen mode.
+		////
+		Game(bool fullscreen);
+
 		void refresh() override { load_textures(); }
 
 		void load_textures();
@@ -269,4 +275,12 @@ namespace questless
 		Being* _being(Id<Being> id) const;
 		Object* _object(Id<Object> id) const;
 	};
+
+	/// @return The game instance.
+	////
+	inline Game& game()
+	{
+		static Game instance{false};
+		return instance;
+	}
 }

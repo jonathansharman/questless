@@ -42,7 +42,7 @@ namespace questless
 		////
 		Id(std::istream& in) : _key{read_key(in)} {}
 
-		Id& operator =(Id const& other) = default;
+		Id& operator =(Id const& other) & = default;
 
 		/// @return A new unique ID.
 		////

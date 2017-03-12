@@ -41,7 +41,7 @@ namespace questless::spell
 							active_cooldown(cooldown());
 							discharge();
 							caster.mana -= cost;
-							caster.game.add_effect(LightningBoltEffect::make(tile_coords));
+							game().add_effect(LightningBoltEffect::make(tile_coords));
 							if (Being* target = caster.region->being(tile_coords)) {
 								double burn_magnitude = magnitude * quality * caster.stats.magic.yellow / target->stats.antimagic.yellow;
 

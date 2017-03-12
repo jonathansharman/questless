@@ -13,7 +13,7 @@
 
 namespace questless
 {
-	sdl::Handle<sdl::Font> TextParticle::_font_handle;
+	sdl::FontHandle TextParticle::_font_handle;
 
 	Initializer<TextParticle> TextParticle::_initializer;
 	void TextParticle::initialize()

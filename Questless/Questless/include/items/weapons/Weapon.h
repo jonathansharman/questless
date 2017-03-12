@@ -79,12 +79,12 @@ namespace questless
 		class CompleteMeleeAttack : public Action
 		{
 		public:
-			CompleteMeleeAttack(Weapon& weapon, RegionTileCoords coords) : _weapon{weapon}, _coords(coords) {}
-			static ptr make(Weapon& weapon, RegionTileCoords coords) { return std::make_unique<CompleteMeleeAttack>(weapon, coords); }
+			CompleteMeleeAttack(Id<Item> weapon_id, RegionTileCoords coords) : _weapon_id{weapon_id}, _coords(coords) {}
+			static ptr make(Id<Item> weapon_id, RegionTileCoords coords) { return std::make_unique<CompleteMeleeAttack>(weapon_id, coords); }
 			std::string name() const override { return ""; }
 			Action::Complete perform(Being& actor, cont_t cont) override;
 		private:
-			Weapon& _weapon;
+			Id<Item> _weapon_id;
 			RegionTileCoords _coords;
 		};
 	};

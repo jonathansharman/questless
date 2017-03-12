@@ -200,14 +200,13 @@ namespace questless
 		/// @return The being's equipped shields.
 		std::vector<std::unique_ptr<Armor>> const& shields() { return _shields; }
 
-		/// Adds the given item to the being's inventory.
-		/// @param item An item to be added to the inventory.
-		void give_item(Item::ptr item) { _inventory.add(std::move(item)); }
+		/// Adds the item with the given ID to the being's inventory.
+		/// @param item_id The ID of an item to be added to the inventory.
+		void give_item(Id<Item> item_id) { _inventory.add(item_id); }
 
-		/// Takes the given item from the being's inventory.
-		/// @param item An item to be taken from the inventory.
-		/// @return The item taken.
-		Item::ptr take_item(Item const& item) { return _inventory.remove(item); }
+		/// Takes the item with the given ID from the being's inventory.
+		/// @param item_id The ID of an item to be taken from the inventory.
+		void take_item(Id<Item> item_id) { _inventory.remove(item_id); }
 
 		/// Advances the being one time unit.
 		void update() override;
@@ -226,8 +225,8 @@ namespace questless
 
 		void add_status(std::unique_ptr<Status> status);
 	protected:
-		Being(Game& game, const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, Id<Being> id, Body body, const std::function<Stats()>& make_base_stats);
-		Being(Game& game, std::istream& in, Body body);
+		Being(const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, Id<Being> id, Body body, const std::function<Stats()>& make_base_stats);
+		Being(std::istream& in, Body body);
 
 		virtual Body make_body() = 0;
 	private:

@@ -13,7 +13,7 @@
 
 namespace questless
 {
-	Entity::Entity(Game& game, std::istream& in) : game{game}, region {}, section{}
+	Entity::Entity(std::istream& in) : region {}, section{}
 	{
 		in >> coords.q;
 		in >> coords.r;

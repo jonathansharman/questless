@@ -13,12 +13,12 @@ namespace questless
 {
 	Action::Complete Weapon::BeginMeleeAttack::perform(Being& actor, cont_t cont)
 	{
-		Weapon& weapon = _weapon;
+		Weapon& weapon = _weapon; // Safe to capture weapon here because callback is immediate.
 		return actor.agent().query_tile(std::make_unique<TileQueryMeleeTarget>(), actor.coords, tile_in_range_predicate(actor, 1),
-			[&actor, cont, &weapon](boost::optional<RegionTileCoords> opt_coords) { /// @todo Capturing weapon by reference here is unsafe due to the subsequent delay (actor may have been disarmed, etc.).
+			[&actor, cont, &weapon](boost::optional<RegionTileCoords> opt_coords) {
 				if (opt_coords) {
 					double delay = weapon.active_cooldown + weapon.wind_up();
-					actor.add_delayed_action(delay, std::move(cont), CompleteMeleeAttack::make(weapon, *opt_coords));
+					actor.add_delayed_action(delay, std::move(cont), CompleteMeleeAttack::make(weapon.id, *opt_coords));
 					return cont(Result::success);
 				} else {
 					return cont(Result::aborted);
@@ -29,16 +29,24 @@ namespace questless
 
 	Action::Complete Weapon::CompleteMeleeAttack::perform(Being& actor, cont_t cont)
 	{
-		actor.busy_time += _weapon.follow_through();
-		_weapon.active_cooldown = _weapon.cooldown();
-		if (Being* target = actor.region->being(_coords)) {
-			Damage damage = _weapon.damage();
-			_weapon.integrity -= _weapon.wear_ratio() * damage.total();
-			target->take_damage(damage, nullptr, actor.id); /// @todo Part targeting
-			return cont(Result::success);
-		} else {
-			return actor.agent().send_message(std::make_unique<MessageMeleeMiss>(), [cont] { return cont(Result::success); });
+		if (Weapon* weapon = dynamic_cast<Weapon*>(game().items[_weapon_id])) {
+			/// @todo Ensure bow is still equipped.
+			bool equipped = true;
+			if (equipped) {
+				actor.busy_time += weapon->follow_through();
+				weapon->active_cooldown = weapon->cooldown();
+				if (Being* target = actor.region->being(_coords)) {
+					Damage damage = weapon->damage();
+					weapon->integrity -= weapon->wear_ratio() * damage.total();
+					target->take_damage(damage, nullptr, actor.id); /// @todo Part targeting
+					return cont(Result::success);
+				} else {
+					return actor.agent().send_message(std::make_unique<MessageMeleeMiss>(), [cont] { return cont(Result::success); });
+				}
+			}
 		}
+		// Weapon has been removed.
+		return cont(Action::Result::aborted);
 	}
 
 	Action::Complete Weapon::Block::perform(Being& /*actor*/, cont_t cont)

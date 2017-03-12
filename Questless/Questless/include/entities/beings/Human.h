@@ -86,8 +86,8 @@ namespace questless
 		static constexpr Weight foot_weight{5.0};
 		static constexpr Agility foot_agility{15.0};
 
-		Human(Game& game, const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, Id<Being> id);
-		Human(Game& game, std::istream& in);
+		Human(const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, Id<Being> id = Id<Being>::make());
+		Human(std::istream& in);
 
 		void accept(EntityVisitor& visitor) override { return visitor.visit(*this); }
 		void accept(EntityVisitor& visitor) const override { return visitor.visit(*this); }

@@ -34,7 +34,7 @@ namespace questless
 		/// @param sprite_sheet_handle The handle of the sprite sheet texture in the texture manager.
 		/// @param cel_columns The number of cels in one row of the sprite sheet texture.
 		/// @param cel_rows The number of cels in one column of the sprite sheet texture.
-		static ptr make(sdl::Handle<sdl::Texture> sprite_sheet_handle, int cel_columns, int cel_rows)
+		static ptr make(sdl::TextureHandle sprite_sheet_handle, int cel_columns, int cel_rows)
 		{
 			return std::make_unique<AnimationSet>(sprite_sheet_handle, cel_columns, cel_rows);
 		}
@@ -43,7 +43,7 @@ namespace questless
 		/// @param sprite_sheet_handle The handle of the sprite sheet texture in the texture manager.
 		/// @param cel_columns The number of cels in one row of the sprite sheet texture.
 		/// @param cel_rows The number of cels in one column of the sprite sheet texture.
-		AnimationSet(sdl::Handle<sdl::Texture> sprite_sheet_handle, int cel_columns, int cel_rows);
+		AnimationSet(sdl::TextureHandle sprite_sheet_handle, int cel_columns, int cel_rows);
 
 		/// Adds an animation to the collection.
 		/// @param animation The animation to be added.
@@ -80,7 +80,7 @@ namespace questless
 		/// @param color An additional color multiplier, applied on top of the camera's and texture's color members.
 		void draw(units::GamePoint origin, Camera const& camera, sdl::Color color = sdl::Color::white()) const;
 	private:
-		sdl::Handle<sdl::Texture> _sprite_sheet_handle;
+		sdl::TextureHandle _sprite_sheet_handle;
 		int _cel_width;
 		int _cel_height;
 

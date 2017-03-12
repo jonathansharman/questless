@@ -20,8 +20,8 @@ using std::function;
 
 namespace questless
 {
-	Being::Being(Game& game, const function<unique_ptr<Agent>(Being&)>& make_agent, Id<Being> id, Body body, const function<Stats()>& make_base_stats)
-		: Entity(game)
+	Being::Being(const function<unique_ptr<Agent>(Being&)>& make_agent, Id<Being> id, Body body, const function<Stats()>& make_base_stats)
+		: Entity{}
 		, id{id}
 		, body{std::move(body)}
 		, base_stats{make_base_stats()}
@@ -44,8 +44,8 @@ namespace questless
 		busy_time.set_mutator(busy_time_mutator(), false);
 	}
 
-	Being::Being(Game& game, std::istream& in, Body body)
-		: Entity(game, in)
+	Being::Being(std::istream& in, Body body) /// @todo Load agent.
+		: Entity{in}
 		, id{in}
 		, body{std::move(body)}
 		, health{health_mutator()}
@@ -183,7 +183,7 @@ namespace questless
 		bool was_already_dead = dead;
 
 		// Get source.
-		Being* source = opt_source_id ? game.being(*opt_source_id) : nullptr;
+		Being* source = opt_source_id ? game().being(*opt_source_id) : nullptr;
 
 		// Target will take damage.
 		if (before_take_damage(damage, part, opt_source_id)) {
@@ -251,7 +251,7 @@ namespace questless
 				}
 
 				// Add injury effect.
-				game.add_effect(std::make_shared<InjuryEffect>(coords, damage, id, opt_source_id));
+				game().add_effect(std::make_shared<InjuryEffect>(coords, damage, id, opt_source_id));
 
 				// Target has taken damage.
 				if (after_take_damage(damage, part, opt_source_id)) {
@@ -272,12 +272,12 @@ namespace questless
 									if (corporeal()) {
 										// Spawn corpse.
 										Region& corpse_region = *region; // Save region since the being's region pointer will be nulled when it's removed.
-										auto corpse = std::make_unique<Corpse>(game, Id<Object>::make(), corpse_region.remove(*this));
+										auto corpse = std::make_unique<Corpse>(corpse_region.remove(*this));
 										corpse_region.add<Object>(std::move(corpse), coords);
 									} else {
 										/// @todo Eliminate graveyard. It is a crutch to deal with references to annihilated beings when dealing fatal damage to a body part.
 										// Move target to the graveyard.
-										game.add_to_graveyard(region->remove(*this));
+										game().add_to_graveyard(region->remove(*this));
 									}
 
 									// Source, if present, has killed target.
@@ -301,7 +301,7 @@ namespace questless
 		/// @todo Heal the part, if present.
 
 		// Get source.
-		Being* source = opt_source_id ? game.being(*opt_source_id) : nullptr;
+		Being* source = opt_source_id ? game().being(*opt_source_id) : nullptr;
 
 		// Source will give healing.
 		if (source != nullptr) {

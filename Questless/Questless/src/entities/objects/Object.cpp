@@ -12,7 +12,7 @@
 
 namespace questless
 {
-	Object::Object(Game& game, std::istream& in) : Entity(game, in), id{in} {}
+	Object::Object(std::istream& in) : Entity{in}, id{in} {}
 
 	void Object::serialize(std::ostream& out) const
 	{

@@ -301,6 +301,10 @@ Weapons
 				Damage rate: below average
 				Weight: high
 		Polearms
+			Halberd
+				Two-phased attack
+					First it pierces
+					Then on the withdrawal it slashes (only if first phase misses?)
 		Staves
 			Quarterstaff
 				Hands: 2

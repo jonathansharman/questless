@@ -25,7 +25,7 @@ namespace questless::qte
 	public:
 		/// @param target_coords The target strike coordinates.
 		/// @param cont The dialog continuation function.
-		LightningBolt(Camera const& camera, RegionTileCoords target_coords, std::function<void(double)> cont);
+		LightningBolt(RegionTileCoords target_coords, std::function<void(double)> cont);
 
 		State update() override;
 
@@ -41,9 +41,8 @@ namespace questless::qte
 			units::GameVelocity velocity;
 		};
 
-		static sdl::Handle<sdl::Texture> LightningBolt::_point_charge_texture_handle;
+		static sdl::TextureHandle LightningBolt::_point_charge_texture_handle;
 
-		Camera const& _camera;
 		units::GamePoint _target_point;
 		Continuation<double> _cont;
 
