@@ -64,13 +64,12 @@ namespace questless
 		class CompleteFireArrow : public Action
 		{
 		public:
-			CompleteFireArrow(Id<Item> bow_id, RegionTileCoords coords) : _bow_id{bow_id}, _coords(coords) {}
-			static ptr make(Id<Item> bow_id, RegionTileCoords coords) { return std::make_unique<CompleteFireArrow>(bow_id, coords); }
+			CompleteFireArrow(Id<Item> bow_id) : _bow_id{bow_id} {}
+			static ptr make(Id<Item> bow_id) { return std::make_unique<CompleteFireArrow>(bow_id); }
 			std::string name() const override { return ""; }
 			Action::Complete perform(Being& actor, cont_t cont) override;
 		private:
 			Id<Item> _bow_id;
-			RegionTileCoords _coords;
 		};
 	};
 }

@@ -43,10 +43,14 @@ namespace questless
 				} else {
 					return actor.agent().send_message(std::make_unique<MessageMeleeMiss>(), [cont] { return cont(Result::success); });
 				}
+			} else {
+				// Weapon has been unequipped.
+				return cont(Action::Result::aborted);
 			}
+		} else {
+			// Weapon has been destroyed.
+			return cont(Action::Result::aborted);
 		}
-		// Weapon has been removed.
-		return cont(Action::Result::aborted);
 	}
 
 	Action::Complete Weapon::Block::perform(Being& /*actor*/, cont_t cont)

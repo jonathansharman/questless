@@ -111,6 +111,7 @@ namespace questless
 			std::string title;
 			void visit(MessageMeleeMiss const&) override { title = "Melee Attack"; }
 			void visit(MessageArrowMiss const&) override { title = "Ranged Attack"; }
+			void visit(MessageOutOfAmmo const&) override { title = "Attack"; }
 			void visit(MessageNotEnoughMana const&) override { title = "Spell Cast"; }
 			void visit(MessageSpellOutOfCharges const&) override { title = "Spell Cast"; }
 			void visit(MessageSpellOnCooldown const&) override { title = "Spell Cast"; }
@@ -121,6 +122,7 @@ namespace questless
 			std::string prompt;
 			void visit(MessageMeleeMiss const&) override { prompt = "Miss!"; }
 			void visit(MessageArrowMiss const&) override { prompt = "Miss!"; }
+			void visit(MessageOutOfAmmo const&) override { prompt = "Out of ammo!"; }
 			void visit(MessageNotEnoughMana const& m) override
 			{
 				prompt = "Not enough mana! You need " + std::to_string(m.mana_deficit) + " more mana to cast this.";
