@@ -41,7 +41,7 @@ namespace questless
 	}
 	void BasicAI::AttackState::act(BasicAI& ai)
 	{
-		if (Being* target = game().being(target_id)) {
+		if (Being* target = game().beings[target_id]) {
 			if (ai.being.coords.distance_to(target->coords) == 1) {
 				// Within striking distance of target.
 				/// @todo This is a hack that assumes the first item in the inventory is a melee weapon.
@@ -181,7 +181,7 @@ namespace questless
 			void visit(TileQueryMeleeTarget const&) override
 			{
 				auto target_id = dynamic_cast<AttackState*>(ai._state.get())->target_id;
-				if (Being* target = game().being(target_id)) {
+				if (Being* target = game().beings[target_id]) {
 					// Attack towards the target.
 					auto direction = ai.being.coords.direction_towards(target->coords);
 					cont(origin->neighbor(direction));
@@ -192,7 +192,7 @@ namespace questless
 			void visit(TileQueryRangedTarget const& query) override
 			{
 				auto target_id = dynamic_cast<AttackState*>(ai._state.get())->target_id;
-				if (Being* target = game().being(target_id)) {
+				if (Being* target = game().beings[target_id]) {
 					if (ai.being.coords.distance_to(target->coords) <= query.range) {
 						// If in range, shoot the target.
 						cont(target->coords);

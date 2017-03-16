@@ -18,6 +18,7 @@ namespace questless
 		if (has_arrow) {
 			double delay = _bow.active_cooldown + _bow.wind_up();
 			actor.add_delayed_action(delay, std::move(cont), CompleteFireArrow::make(_bow.id));
+			return Action::Complete{};
 		} else {
 			return actor.agent().send_message(std::make_unique<MessageOutOfAmmo>(), [cont] { return cont(Result::aborted); });
 		}

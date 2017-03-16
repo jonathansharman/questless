@@ -54,57 +54,59 @@ namespace questless
 		/// @return The hex coordinates of the section within the region's sections.
 		RegionSectionCoords coords() const { return _coords; }
 
-		/// @return The list of beings in this section.
+		/// @return A list of beings in this section.
 		std::vector<Being::ref> beings() const;
 
-		/// @return The list of objects in this section.
+		/// @return A list objects in this section.
 		std::vector<Object::ref> objects() const;
 
 		/// @param tile_coords Tile coordinates within the region.
-		/// @return The being at the given tile coordinates or nullptr if none.
-		Being* being(RegionTileCoords tile_coords) const;
+		/// @return The ID of the being at the given tile coordinates or nullopt if there is none.
+		boost::optional<Id<Being>> being_id(RegionTileCoords tile_coords) const;
 
 		/// @param tile_coords Tile coordinates within the region.
-		/// @return The object at the given tile coordinates or nullptr if none.
-		Object* object(RegionTileCoords tile_coords) const;
+		/// @return The ID of the object at the given tile coordinates or nullptr if there is none.
+		boost::optional<Id<Object>> object_id(RegionTileCoords tile_coords) const;
 
-		/// Adds the given entity to the section.
-		/// @param being An entity to add.
-		/// @tparam EntityType The type of entity to add. Possible values are Being and Object.
-		template <typename EntityType>
-		void add(typename EntityType::ptr entity)
+		/// Adds the given being to the section. Throws a logic_error if there is already a being at its coordinates.
+		////
+		void add(Being& being)
 		{
-			entity->section = this;
-			RegionTileCoords coords = entity->coords;
-			entities<EntityType>()[coords] = std::move(entity);
-		}
-
-		/// Removes the entity of the given type at the given region tile coordinates.
-		/// @param coords Coordinates in the region of the entity to be removed.
-		/// @return The unique pointer to the removed entity or nullptr if none found.
-		/// @tparam EntityType The type of entity to remove. Possible values are Being and Object.
-		template <typename EntityType>
-		typename EntityType::ptr remove(RegionTileCoords coords)
-		{
-			auto it = entities<EntityType>().find(coords);
-			if (it != entities<EntityType>().end()) {
-				EntityType::ptr removed_entity = std::move(it->second);
-				entities<EntityType>().erase(it);
-				removed_entity->section = nullptr;
-				return removed_entity;
-			} else {
-				return nullptr;
+			being.section = this;
+			auto result = _being_ids.insert({being.coords, being.id});
+			if (!result.second) {
+				throw std::logic_error{"Attempted to place a being on top of another in a section."};
 			}
 		}
 
-		/// Removes the given entity from the section.
-		/// @param entity A reference to the entity to remove.
-		/// @return The unique pointer to the removed entity or nullptr if not present.
-		/// @tparam EntityType The type of entity to remove. Possible values are Being and Object.
-		template <typename EntityType>
-		typename EntityType::ptr remove(typename EntityType const& entity)
+		/// Adds the given object to the section. Throws a logic_error if there is already an object at its coordinates.
+		////
+		void add(Object& object)
 		{
-			return remove<EntityType>(entity.coords);
+			object.section = this;
+			auto result = _object_ids.insert({object.coords, object.id});
+			if (!result.second) {
+				throw std::logic_error{"Attempted to place an object on top of another in a section."};
+			}
+		}
+
+		/// Removes the being at the given region tile coordinates, if present.
+		////
+		void remove_being(RegionTileCoords coords);
+
+		/// Removes the object at the given region tile coordinates, if present.
+		void remove_object(RegionTileCoords coords);
+
+		/// Removes the given being from the section.
+		typename void remove(Being& being)
+		{
+			remove_being(being.coords);
+		}
+
+		/// Removes the given object from the section.
+		typename void remove(Object& object)
+		{
+			remove_object(object.coords);
 		}
 
 		/// @param section_coords Hex coordinates of a section relative to the region.
@@ -155,14 +157,14 @@ namespace questless
 		std::array<std::array<std::unique_ptr<Tile>, diameter>, diameter> _tiles; ///< An r-major array of tiles, representing a rhomboid section of world data centered around the section's hex coordinates.
 		RegionSectionCoords _coords; ///< The hex coordinates of the section within the region. The section's center's region tile coordinates are _coords * section_diameter.
 
-		std::unordered_map<RegionTileCoords, Being::ptr> _beings;
-		std::unordered_map<RegionTileCoords, Object::ptr> _objects;
+		std::unordered_map<RegionTileCoords, Id<Being>> _being_ids;
+		std::unordered_map<RegionTileCoords, Id<Object>> _object_ids;
 
 		template <typename EntityType, typename = typename std::enable_if_t<std::is_same<EntityType, Being>::value>>
 		std::unordered_map<RegionTileCoords, Being::ptr>& entities() { return _beings; }
 
 		template <typename EntityType, typename = typename std::enable_if_t<std::is_same<EntityType, Object>::value>>
-		std::unordered_map<RegionTileCoords, Object::ptr>& entities() { return _objects; }
+		std::unordered_map<RegionTileCoords, Id<Object>>& entities() { return _objects; }
 
 		/// Reads section data from a stream.
 		/// @param in The stream from which to read the data.

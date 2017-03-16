@@ -17,13 +17,13 @@ namespace questless
 	class Corpse : public Object
 	{
 	public:
-		Corpse(Being::ptr being, Id<Object> id = Id<Object>::make())
+		Corpse(Id<Being> being_id, Id<Object> id = Id<Object>::make())
 			: Object{id}
-			, _being{std::move(being)}
+			, _being_id{being_id}
 		{}
-		Corpse(std::istream& in, Being::ptr being)
+		Corpse(std::istream& in)
 			: Object{in}
-			, _being{std::move(being)}
+			, _being_id{in}
 		{}
 
 		void accept(EntityVisitor& visitor) override { visitor.visit(*this); }
@@ -31,9 +31,8 @@ namespace questless
 
 		virtual EntityClass entity_class() const { return EntityClass::CorpseClass; }
 
-		Being const& being() const { return *_being; }
-		Being& being() { return *_being; }
+		Id<Being> being_id() const { return _being_id; }
 	private:
-		Being::ptr _being;
+		Id<Being> const _being_id;
 	};
 }

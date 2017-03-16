@@ -374,14 +374,14 @@ namespace questless
 					//_region = make_unique<Region>("Slot1", "Region1");
 
 					{ // Spawn the player's being.
-						Being::ptr player_being = make_unique<Human>(Agent::make<Player>);
+						auto player_being = make_unique<Human>(Agent::make<Player>);
 						_player = dynamic_cast<Player*>(&player_being->agent());
 						_player_being_id = player_being->id;
-						player_being->give_item(items.add(make_unique<Scroll>(make_unique<spell::LightningBolt>())));
-						player_being->give_item(items.add(make_unique<Scroll>(make_unique<spell::Heal>())));
-						player_being->give_item(items.add(make_unique<Scroll>(make_unique<spell::Teleport>())));
-						player_being->give_item(items.add(make_unique<Quarterstaff>()));
-						player_being->give_item(items.add(make_unique<Bow>()));
+						player_being->give_item(items.add(make_unique<Scroll>(make_unique<spell::LightningBolt>())).id);
+						player_being->give_item(items.add(make_unique<Scroll>(make_unique<spell::Heal>())).id);
+						player_being->give_item(items.add(make_unique<Scroll>(make_unique<spell::Teleport>())).id);
+						player_being->give_item(items.add(make_unique<Quarterstaff>()).id);
+						player_being->give_item(items.add(make_unique<Bow>()).id);
 						_region->spawn_player(move(player_being));
 					}
 					// Pass the player's being ID to the HUD.
@@ -391,7 +391,7 @@ namespace questless
 					// Initialize the world renderer.
 					_world_renderer = make_unique<WorldRenderer>(_player->world_view());
 					// Set the camera position relative to the player's being.
-					_camera->position(GamePoint{Layout::dflt().to_world(being(*_player_being_id)->coords)});
+					_camera->position(GamePoint{Layout::dflt().to_world(beings[*_player_being_id]->coords)});
 
 					_time_last_state_change = clock::now();
 					_state = State::playing;
@@ -410,7 +410,7 @@ namespace questless
 
 	void Game::render_playing()
 	{
-		_world_renderer->draw_terrain(*_camera);
+		_world_renderer->draw_terrain();
 
 		if (input().pressed(MouseButton::right)) {
 			_point_clicked_rounded = Layout::dflt().to_world(_camera->tile_hovered());
@@ -418,9 +418,9 @@ namespace questless
 		_camera->draw(*_txt_hex_highlight, Layout::dflt().to_world(_camera->tile_hovered()), Origin{boost::none}, Color::white(128));
 		_camera->draw(*_txt_hex_circle, _point_clicked_rounded);
 
-		_world_renderer->draw_objects(*this, *_camera);
-		_world_renderer->draw_beings(*this, *_camera);
-		_world_renderer->draw_effects(*this, *_camera);
+		_world_renderer->draw_objects();
+		_world_renderer->draw_beings();
+		_world_renderer->draw_effects();
 
 		// Draw HUD.
 		_hud->draw();
@@ -547,7 +547,7 @@ namespace questless
 			follow = !follow;
 		}
 		if (follow) {
-			if (Being* player = being(*_player_being_id)) {
+			if (Being* player = beings[*_player_being_id]) {
 				constexpr double recoil = 0.2;
 
 				GameVector to_player = Layout::dflt().to_world(player->coords) - _camera->position();
@@ -567,56 +567,10 @@ namespace questless
 		}
 	}
 
-	Being* Game::_being(Id<Being> id) const
-	{
-		auto it = _beings.find(id);
-		if (it == _beings.end()) {
-			// Being no longer exists.
-			return nullptr;
-		} else {
-			if (Being* being = std::get<Being*>(it->second)) {
-				// Being is already loaded.
-				return being;
-			}
-			// Load being from its coordinates.
-			GlobalCoords coords = std::get<GlobalCoords>(it->second);
-			Region& region = *_region; /// @todo Load region based on the region name in the coords (coords.region).
-			for (Being& being : region.section(coords.section)->beings()) {
-				if (being.id == id) {
-					return &being;
-				}
-			}
-			throw std::logic_error{"Being lookup failed."};
-		}
-	}
-
-	Object* Game::_object(Id<Object> id) const
-	{
-		auto it = _objects.find(id);
-		if (it == _objects.end()) {
-			// Object no longer exists.
-			return nullptr;
-		} else {
-			if (Object* object = std::get<Object*>(it->second)) {
-				// Object is already loaded.
-				return object;
-			}
-			// Load object from its coordinates.
-			GlobalCoords coords = std::get<GlobalCoords>(it->second);
-			Region& region = *_region; /// @todo Load region based on the region name in the coords (coords.region).
-			for (Object& object : region.section(coords.section)->objects()) {
-				if (object.id == id) {
-					return &object;
-				}
-			}
-			throw std::logic_error{"Object lookup failed."};
-		}
-	}
-
 	void Game::update_player_view()
 	{
 		/// @todo Do something nice when the player dies.
-		if (Being* player_being = being(*_player_being_id)) {
+		if (Being* player_being = beings[*_player_being_id]) {
 			// Update the player's world view.
 			_player->update_world_view();
 			// Update the world renderer's world view.

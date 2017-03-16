@@ -13,7 +13,6 @@ namespace questless
 	{
 		return [this](double& integrity, double const& new_integrity)
 		{
-			auto d = durability();
 			integrity = std::clamp(new_integrity, 0.0, durability());
 		};
 	}

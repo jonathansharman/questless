@@ -54,67 +54,55 @@ namespace questless
 		/// @return The being whose turn it is to act or null if none are ready.
 		Being* next_ready_being();
 
-		/// @param section_coords Section coordinates within the region.
 		/// @return The list of beings in the section at the given section coordinates.
+		////
 		std::vector<Being::ref> beings(RegionSectionCoords section_coords) const
 		{
 			return _section_map.find(section_coords)->second->beings();
 		}
 
-		/// @param section_coords Section coordinates within the region.
-		/// @return The list of objects at the given section coordinates.
+		/// @return The list of objects in the section at the given section coordinates.
+		////
 		std::vector<Object::ref> objects(RegionSectionCoords section_coords) const
 		{
 			return _section_map.find(section_coords)->second->objects();
 		}
 
-		/// @param tile_coords Tile coordinates within the region.
+		/// @return The ID of the being at the given tile coordinates or nullopt if none.
+		////
+		boost::optional<Id<Being>> being_id(RegionTileCoords tile_coords) const;
+
+		/// @return The ID of the object at the given tile coordinates or nullopt if none.
+		////
+		boost::optional<Id<Object>> object_id(RegionTileCoords tile_coords) const;
+
 		/// @return The being at the given tile coordinates or nullptr if none.
+		////
 		Being* being(RegionTileCoords tile_coords) const;
 
-		/// @param tile_coords Tile coordinates within the region.
 		/// @return The object at the given tile coordinates or nullptr if none.
+		////
 		Object* object(RegionTileCoords tile_coords) const;
 
-		/// Inserts the given player being into the region at an arbitrary location, as its spawn point at the start of the game.
-		/// @param player_being The being to insert into the region.
+		/// Spawns the given player-controlled being in the region at an arbitrary location and adds it to the being cache.
+		////
 		void spawn_player(Being::ptr player_being);
 
-		/// Adds an entity of the given type to the appropriate section of the region, based on the given coordinates, and set its internal coordinates to those given.
-		/// @param entity An entity to be added.
-		/// @param coords The entity's coordinates in the region.
-		/// @tparam EntityType The type of entity to add. Legal values are Being and Object.
-		template <typename EntityType>
-		void add(typename EntityType::ptr entity, RegionTileCoords coords)
-		{
-			RegionSectionCoords section_coords = containing_section_coords(coords);
-			auto it = _section_map.find(section_coords);
-			if (it != _section_map.end()) {
-				Section* section = it->second.get();
-				entity->region = this;
-				entity->section = section;
-				entity->coords = coords;
+		/// Adds the given existing being to the region, setting its coordinates to those given.
+		////
+		void add(Being& being, RegionTileCoords coords);
 
-				/// @todo Find a more permanent solution to this switch on type. (Probably need to write different add methods for beings and objects unless I change how the turn queue works and add generic accessors for game.beings() and game.objects().)
-				if (Being* being = dynamic_cast<Being*>(entity.get())) {
-					add_to_turn_queue(dynamic_cast<Being&>(*entity));
-					game().add_being(being, GlobalCoords{_name, section->coords()});
-				} else {
-					Object* object = dynamic_cast<Object*>(entity.get());
-					game().add_object(object, GlobalCoords{_name, section->coords()});
-				}
+		/// Adds the given existing object to the region, setting its coordinates to those given.
+		////
+		void add(Object& object, RegionTileCoords coords);
 
-				section->add<EntityType>(std::move(entity));
-			} else {
-				throw std::out_of_range("No section at given coordinates in region.");
-			}
-		}
+		/// Spawns the given being in the region, setting its coordinates to those given and adding it to the being cache.
+		////
+		void spawn(Being::ptr being, RegionTileCoords coords);
 
-		/// Adds an entity to the appropriate section of the region, based on its internal coordinates.
-		/// @param entity An entity to be added.
-		/// @tparam EntityType The type of entity to add. Possible values are Being and Object.
-		template <typename EntityType>
-		void add(typename EntityType::ptr entity) { add<EntityType>(std::move(entity), entity->coords); }
+		/// Spawns the given object in the region, setting its coordinates to those given and adding it to the object cache.
+		////
+		void spawn(Object::ptr object, RegionTileCoords coords);
 
 		/// Moves the given being to the given coordinates.
 		/// @param being The being to move.
@@ -128,15 +116,13 @@ namespace questless
 		/// @return Whether the object successfully moved.
 		bool move(Object& object, RegionTileCoords coords);
 
-		/// Removes a being from the region and the game.
-		/// @param being A being to be removed.
-		/// @return The removed being.
-		Being::ptr remove(Being& being);
+		/// Removes the given being from the region, if present.
+		////
+		void remove(Being& being);
 
-		/// Removes an object from the region and the game.
-		/// @param object An object to be removed.
-		/// @return The removed object.
-		Object::ptr remove(Object& object);
+		/// Removes the given object from the region, if present.
+		////
+		void remove(Object& object);
 
 		/// @todo I think section_exists() may be unnecessary. Can probably just use section() everywhere.
 

@@ -64,22 +64,22 @@ namespace questless
 		}
 	}
 
-	void WorldRenderer::draw_terrain(Camera const& camera)
+	void WorldRenderer::draw_terrain()
 	{
 		if (!_terrain_render_is_current) {
 			render_terrain();
 			_terrain_render_is_current = true;
 		}
 		if (_terrain_texture) {
-			camera.draw(*_terrain_texture, GamePoint{_terrain_bounds.position()}, Origin{GamePoint{0, 0}});
+			game().camera().draw(*_terrain_texture, GamePoint{_terrain_bounds.position()}, Origin{GamePoint{0, 0}});
 		}
 	}
 
-	void WorldRenderer::draw_beings(Game const& game, Camera const& camera)
+	void WorldRenderer::draw_beings()
 	{
 		for (auto const& being_view : _world_view->being_views()) {
 			// Attempt to load the being.
-			if (Being const* being = game.being(being_view.id)) {
+			if (Being const* being = game().beings[being_view.id]) {
 				// Search for the being's animation in the cache.
 				auto it = _being_animation_sets.find(being_view.id);
 				// If it's there, use it. Otherwise, create the animation and cache it.
@@ -90,7 +90,7 @@ namespace questless
 				// Draw heading.
 				GamePoint start = Layout::dflt().to_world(being->coords);
 				GamePoint end = Layout::dflt().to_world(being->coords.neighbor(being->direction));
-				camera.draw_lines({start, end}, Color::magenta());
+				game().camera().draw_lines({start, end}, Color::magenta());
 
 				uint8_t luminance;
 				switch (being_view.perception) {
@@ -107,7 +107,7 @@ namespace questless
 					default:
 						throw std::logic_error{"Invalid perception level."};
 				}
-				being_animation.draw(Layout::dflt().to_world(being->coords), camera, Color{luminance, luminance, luminance});
+				being_animation.draw(Layout::dflt().to_world(being->coords), game().camera(), Color{luminance, luminance, luminance});
 			} else {
 				// Remove the being from the animation cache if it doesn't exist anymore.
 				_being_animation_sets.erase(being_view.id);
@@ -115,11 +115,11 @@ namespace questless
 		}
 	}
 
-	void WorldRenderer::draw_objects(Game const& game, Camera const& camera)
+	void WorldRenderer::draw_objects()
 	{
 		for (auto const& object_view : _world_view->object_views()) {
 			// Attempt to load the object.
-			if (Object const* object = game.object(object_view.id)) {
+			if (Object const* object = game().objects[object_view.id]) {
 				// Search for the object's animation in the cache.
 				auto it = _object_animations.find(object_view.id);
 				// If it's there, use it. Otherwise, create the animation and cache it.
@@ -142,7 +142,7 @@ namespace questless
 					default:
 						throw std::logic_error{"Invalid perception level."};
 				}
-				object_animation.draw(Layout::dflt().to_world(object->coords), camera, Color{luminance, luminance, luminance});
+				object_animation.draw(Layout::dflt().to_world(object->coords), game().camera(), Color{luminance, luminance, luminance});
 			} else {
 				// Remove the object from the animation cache if it doesn't exist anymore.
 				_object_animations.erase(object_view.id);
@@ -150,10 +150,10 @@ namespace questless
 		}
 	}
 
-	void WorldRenderer::draw_effects(Game const&, Camera const& camera)
+	void WorldRenderer::draw_effects()
 	{
 		for (auto& particle : _particles) {
-			particle->draw(camera);
+			particle->draw(game().camera());
 		}
 	}
 

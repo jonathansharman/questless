@@ -28,7 +28,7 @@ namespace questless
 			// Otherwise make a new box to put it in.
 			auto new_box = std::make_unique<ItemBox>();
 			new_box->items().push_back(_item.id);
-			actor.region->add<Object>(std::move(new_box), actor.coords);
+			actor.region->spawn(std::move(new_box), actor.coords);
 			return cont(Result::success);
 		}
 	}

@@ -41,26 +41,20 @@ namespace questless
 		void update();
 
 		/// Draws the visible terrain.
-		/// @param camera The camera with which to draw the terrain.
-		void draw_terrain(Camera const& camera);
+		////
+		void draw_terrain();
 
 		/// Draws the visible beings in the world.
-		/// @param game The game object.
-		/// @param camera The camera with which to draw the beings.
 		////
-		void draw_beings(Game const& game, Camera const& camera);
+		void draw_beings();
 
 		/// Draws the visible objects in the world.
-		/// @param game The game object.
-		/// @param camera The camera with which to draw the objects.
 		////
-		void draw_objects(Game const& game, Camera const& camera);
+		void draw_objects();
 
 		/// Draws visualizations of any active effects in the world.
-		/// @param game The game object.
-		/// @param camera The camera with which to draw the objects.
 		////
-		void draw_effects(Game const& game, Camera const& camera);
+		void draw_effects();
 
 		// Effect visitor methods.
 

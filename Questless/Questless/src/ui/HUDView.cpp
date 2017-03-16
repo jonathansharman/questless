@@ -30,7 +30,7 @@ namespace questless
 		if (!hud.player_id) {
 			return;
 		}
-		if (Being* player_being = game().being(*hud.player_id)) {
+		if (Being* player_being = game().beings[*hud.player_id]) {
 			// Draw the condition bars.
 			{
 				int left = 0;

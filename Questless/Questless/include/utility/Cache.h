@@ -24,13 +24,13 @@ namespace questless
 
 		/// Adds the given object to the cache. If the object's ID is not unique, may overwrite an existing object.
 		/// @param object The object to be added.
-		/// @return The object's ID.
+		/// @return A reference to the added object.
 		////
-		Id<element_t> add(std::unique_ptr<element_t> object)
+		element_t& add(std::unique_ptr<element_t> object)
 		{
-			Id<element_t> id = object->id;
-			_cache[id] = std::move(object);
-			return id;
+			element_t& object_ref = *object;
+			_cache[object->id] = std::move(object);
+			return object_ref;
 		}
 
 		/// Retrieves an object from the cache, loading it from disk if necessary.

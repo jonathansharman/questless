@@ -183,7 +183,7 @@ namespace questless
 		bool was_already_dead = dead;
 
 		// Get source.
-		Being* source = opt_source_id ? game().being(*opt_source_id) : nullptr;
+		Being* source = opt_source_id ? game().beings[*opt_source_id] : nullptr;
 
 		// Target will take damage.
 		if (before_take_damage(damage, part, opt_source_id)) {
@@ -272,12 +272,12 @@ namespace questless
 									if (corporeal()) {
 										// Spawn corpse.
 										Region& corpse_region = *region; // Save region since the being's region pointer will be nulled when it's removed.
-										auto corpse = std::make_unique<Corpse>(corpse_region.remove(*this));
-										corpse_region.add<Object>(std::move(corpse), coords);
+										region->remove(*this);
+										auto corpse = std::make_unique<Corpse>(id);
+										corpse_region.add(*corpse, coords);
+										game().objects.add(std::move(corpse));
 									} else {
-										/// @todo Eliminate graveyard. It is a crutch to deal with references to annihilated beings when dealing fatal damage to a body part.
-										// Move target to the graveyard.
-										game().add_to_graveyard(region->remove(*this));
+										region->remove(*this);
 									}
 
 									// Source, if present, has killed target.
@@ -301,7 +301,7 @@ namespace questless
 		/// @todo Heal the part, if present.
 
 		// Get source.
-		Being* source = opt_source_id ? game().being(*opt_source_id) : nullptr;
+		Being* source = opt_source_id ? game().beings[*opt_source_id] : nullptr;
 
 		// Source will give healing.
 		if (source != nullptr) {
