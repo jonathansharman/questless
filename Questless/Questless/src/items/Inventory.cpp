@@ -36,9 +36,11 @@ namespace questless
 		for (int page = 0; page < static_cast<int>(_pages.size()); ++page) {
 			for (int row = 0; row < Page::rows; ++row) {
 				for (int column = 0; column < Page::columns; ++column) {
-					if (_pages[page].item_ids[row][column].get() == item_id) {
-						remove(Coords{page, row, column});
-						return;
+					if (auto opt_id = _pages[page].item_ids[row][column]) {
+						if (*opt_id == item_id) {
+							remove(Coords{page, row, column});
+							return;
+						}
 					}
 				}
 			}

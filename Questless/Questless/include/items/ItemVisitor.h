@@ -17,6 +17,7 @@ namespace questless
 	class Scroll;
 	class Quarterstaff;
 	class Bow;
+	class Arrow;
 
 	class ItemVisitor
 	{
@@ -26,5 +27,6 @@ namespace questless
 		virtual void visit(Scroll const&) = 0;
 		virtual void visit(Quarterstaff const&) = 0;
 		virtual void visit(Bow const&) = 0;
+		virtual void visit(Arrow const&) = 0;
 	};
 }

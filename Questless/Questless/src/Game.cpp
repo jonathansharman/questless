@@ -31,6 +31,7 @@ using std::ostringstream;
 #include "spell/Teleport.h"
 #include "items/weapons/Quarterstaff.h"
 #include "items/weapons/Bow.h"
+#include "items/weapons/Arrow.h"
 
 using std::move;
 using std::unique_ptr;
@@ -382,6 +383,9 @@ namespace questless
 						player_being->give_item(items.add(make_unique<Scroll>(make_unique<spell::Teleport>())).id);
 						player_being->give_item(items.add(make_unique<Quarterstaff>()).id);
 						player_being->give_item(items.add(make_unique<Bow>()).id);
+						for (int i = 0; i < 20; ++i) {
+							player_being->give_item(items.add(make_unique<Arrow>()).id);
+						}
 						_region->spawn_player(move(player_being));
 					}
 					// Pass the player's being ID to the HUD.

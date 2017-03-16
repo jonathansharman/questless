@@ -13,6 +13,21 @@ namespace questless
 {
 	class Arrow : public Item
 	{
-		/// @todo This.
+	public:
+		Arrow(Id<Item> id = Id<Item>::make()) : Item{id} {}
+
+		void accept(ItemVisitor& visitor) const override { visitor.visit(*this); }
+
+		std::string name() const override { return "Arrow"; }
+
+		double weight() const override { return 0.1; }
+
+		std::vector<Action::ptr> actions() override
+		{
+			std::vector<Action::ptr> actions;
+			actions.push_back(Drop::make(*this));
+			actions.push_back(Throw::make(*this));
+			return actions;
+		}
 	};
 }
