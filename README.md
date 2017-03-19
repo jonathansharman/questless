@@ -9,5 +9,5 @@ Dependences
   * [SDL Image](https://www.libsdl.org/projects/SDL_image/)
   * [SDL TTF](https://www.libsdl.org/projects/SDL_ttf/)
   * [SDL Mixer](https://www.libsdl.org/projects/SDL_mixer/)
-  * [Boost 1.61.0](http://www.boost.org/)
+  * [Boost 1.63.0](http://www.boost.org/)
   * [doctest](https://github.com/onqtam/doctest)
