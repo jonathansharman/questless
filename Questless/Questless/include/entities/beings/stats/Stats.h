@@ -40,7 +40,7 @@ namespace questless
 	class Stats
 	{
 	private:
-		static void nonnegative_mutator(double& value, double const& new_value)
+		constexpr static void nonnegative_mutator(double& value, double const& new_value)
 		{
 			value = std::max(new_value, 0.0);
 		}
