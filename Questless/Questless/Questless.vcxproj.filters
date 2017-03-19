@@ -810,9 +810,6 @@
     <ClCompile Include="src\agents\BasicAI.cpp">
       <Filter>src\agents</Filter>
     </ClCompile>
-    <ClCompile Include="src\items\weapons\ModalWeapon.cpp">
-      <Filter>src\items\weapons</Filter>
-    </ClCompile>
     <ClCompile Include="src\ui\qte\LightningBolt.cpp">
       <Filter>src\ui\qte</Filter>
     </ClCompile>
@@ -910,6 +907,9 @@
       <Filter>src\items\weapons</Filter>
     </ClCompile>
     <ClCompile Include="src\items\Breakable.cpp">
+      <Filter>src\items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\items\Equipment.cpp">
       <Filter>src\items</Filter>
     </ClCompile>
   </ItemGroup>

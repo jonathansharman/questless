@@ -305,6 +305,8 @@ Weapons
 				Two-phased attack
 					First it pierces
 					Then on the withdrawal it slashes (only if first phase misses?)
+			War scythe
+				Slash or stab
 		Staves
 			Quarterstaff
 				Hands: 2
@@ -314,14 +316,15 @@ Weapons
 				Burst damage: low
 				Damage rate: average
 				Weight: medium
-		Flails?
+		Flails
 	Ranged
 		Bows
 			Longbow
 				Hands: 2
 				Damage type: piercing
 			Crossbow
-		Atlatl (spear-thrower)
+		Atlatl (spear-thrower) and darts
+		Javelin
 Armor
 	Helmets
 	Breastplates

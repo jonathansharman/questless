@@ -13,6 +13,7 @@
 
 namespace questless
 {
+	struct MessageEntityInTheWay;
 	struct MessageMeleeMiss;
 	struct MessageArrowMiss;
 	struct MessageOutOfAmmo;
@@ -25,6 +26,7 @@ namespace questless
 	{
 		virtual ~MessageVisitor() = default;
 
+		virtual void visit(MessageEntityInTheWay const&) = 0;
 		virtual void visit(MessageMeleeMiss const&) = 0;
 		virtual void visit(MessageArrowMiss const&) = 0;
 		virtual void visit(MessageOutOfAmmo const&) = 0;
@@ -39,6 +41,10 @@ namespace questless
 		using ptr = std::unique_ptr<Message>;
 		virtual ~Message() = default;
 		virtual void accept(MessageVisitor& visitor) = 0;
+	};
+	struct MessageEntityInTheWay : Message
+	{
+		void accept(MessageVisitor& visitor) override { visitor.visit(*this); }
 	};
 	struct MessageMeleeMiss : Message
 	{

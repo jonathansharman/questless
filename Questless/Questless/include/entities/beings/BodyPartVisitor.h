@@ -15,8 +15,8 @@
 
 namespace questless
 {
-	class Torso;
 	class Head;
+	class Torso;
 	class Arm;
 	class Hand;
 	class Leg;
@@ -29,8 +29,8 @@ namespace questless
 	public:
 		virtual ~BodyPartVisitor() = default;
 
-		virtual void visit(Torso&) = 0;
 		virtual void visit(Head&) = 0;
+		virtual void visit(Torso&) = 0;
 		virtual void visit(Arm&) = 0;
 		virtual void visit(Hand&) = 0;
 		virtual void visit(Leg&) = 0;

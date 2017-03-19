@@ -109,6 +109,7 @@ namespace questless
 		struct MessageTitler : MessageVisitor
 		{
 			std::string title;
+			void visit(MessageEntityInTheWay const&) override { title = "Obstruction"; }
 			void visit(MessageMeleeMiss const&) override { title = "Melee Attack"; }
 			void visit(MessageArrowMiss const&) override { title = "Ranged Attack"; }
 			void visit(MessageOutOfAmmo const&) override { title = "Attack"; }
@@ -120,6 +121,7 @@ namespace questless
 		struct MessagePrompter : MessageVisitor
 		{
 			std::string prompt;
+			void visit(MessageEntityInTheWay const&) override { prompt = "There's something in the way!"; }
 			void visit(MessageMeleeMiss const&) override { prompt = "Miss!"; }
 			void visit(MessageArrowMiss const&) override { prompt = "Miss!"; }
 			void visit(MessageOutOfAmmo const&) override { prompt = "Out of ammo!"; }

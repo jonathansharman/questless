@@ -208,19 +208,22 @@ namespace questless
 				if (part) {
 					// Damage is part-targeted.
 
-					// Apply part's armor's protection, also in reverse order.
-					for (auto armor_it = part->armor().rbegin(); armor_it != part->armor().rend(); ++armor_it) {
-						Armor& armor = *armor_it;
-						armor.apply_protection(damage);
-						total_resistance += armor.resistance();
+					// Apply part's armor's protection and resistance.
+					if (part->equipped_item_id) {
+						if (Armor* armor = game().items.get_as<Armor>(*part->equipped_item_id)) {
+							armor->apply_protection(damage);
+							total_resistance += armor->resistance();
+						}
 					}
 
 					// Apply part's and being's protection stats.
 					damage -= part->protection().reduction() + stats.protection.reduction();
 
 					// Part's armor takes resistance wear based on the final damage to the part before multipliers.
-					for (Armor& armor : part->armor()) {
-						armor.take_resistance_wear(damage);
+					if (part->equipped_item_id) {
+						if (Armor* armor = game().items.get_as<Armor>(*part->equipped_item_id)) {
+							armor->take_resistance_wear(damage);
+						}
 					}
 
 					// Add part's resistance and vulnerability stats to totals.

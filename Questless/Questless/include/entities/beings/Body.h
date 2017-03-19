@@ -57,14 +57,50 @@ namespace questless
 				);
 		}
 		
-		std::vector<std::reference_wrapper<Torso>> const& torsos() { return _torsos; }
 		std::vector<Head::ref> const& heads() { return _heads; }
+		std::vector<Torso::ref> const& torsos() { return _torsos; }
 		std::vector<Arm::ref> const& arms() { return _arms; }
 		std::vector<Hand::ref> const& hands() { return _hands; }
 		std::vector<Leg::ref> const& legs() { return _legs; }
 		std::vector<Foot::ref> const& feet() { return _feet; }
 		std::vector<Wing::ref> const& wings() { return _wings; }
 		std::vector<Tail::ref> const& tails() { return _tails; }
+
+		/// @return The body part on this body with the given ID or nullptr if none exists.
+		////
+		BodyPart* find_part(Id<BodyPart> id);
+
+		/// @return The head on this body with the given ID or nullptr if none exists.
+		////
+		Head* find_head(Id<BodyPart> id);
+
+		/// @return The torso on this body with the given ID or nullptr if none exists.
+		////
+		Torso* find_torso(Id<BodyPart> id);
+
+		/// @return The arm on this body with the given ID or nullptr if none exists.
+		////
+		Arm* find_arm(Id<BodyPart> id);
+
+		/// @return The hand on this body with the given ID or nullptr if none exists.
+		////
+		Hand* find_hand(Id<BodyPart> id);
+
+		/// @return The leg on this body with the given ID or nullptr if none exists.
+		////
+		Leg* find_leg(Id<BodyPart> id);
+
+		/// @return The foot on this body with the given ID or nullptr if none exists.
+		////
+		Foot* find_foot(Id<BodyPart> id);
+
+		/// @return The wing on this body with the given ID or nullptr if none exists.
+		////
+		Wing* find_wing(Id<BodyPart> id);
+
+		/// @return The tail on this body with the given ID or nullptr if none exists.
+		////
+		Tail* find_tail(Id<BodyPart> id);
 
 		/// @return The bounding box around the body's parts.
 		units::ScreenRect bounds() const { return _bounds; }
@@ -79,8 +115,8 @@ namespace questless
 		public:
 			PartAttacher(Body& body) : _body{body} {}
 
-			void visit(Torso&) override;
 			void visit(Head&) override;
+			void visit(Torso&) override;
 			void visit(Arm&) override;
 			void visit(Hand&) override;
 			void visit(Leg&) override;
@@ -101,8 +137,8 @@ namespace questless
 
 		std::vector<BodyPart::ref> _parts;
 
-		std::vector<Torso::ref> _torsos;
 		std::vector<Head::ref> _heads;
+		std::vector<Torso::ref> _torsos;
 		std::vector<Arm::ref> _arms;
 		std::vector<Hand::ref> _hands;
 		std::vector<Leg::ref> _legs;

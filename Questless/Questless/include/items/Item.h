@@ -76,11 +76,7 @@ namespace questless
 
 			std::string name() const override { return "Throw"; }
 
-			Action::Complete perform(Being& /*actor*/, cont_t cont) override
-			{
-				/// @todo This.
-				return cont(Result::success);
-			}
+			Action::Complete perform(Being& actor, cont_t cont) override;
 		private:
 			Item& _item;
 		};

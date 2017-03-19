@@ -26,8 +26,10 @@ namespace questless
 		, Resistance resistance
 		, Vulnerability vulnerability
 		, std::vector<ScreenRect> regions
+		, Id<BodyPart> id
 		)
-		: health{vitality}
+		: id{id}
+		, health{vitality}
 		, _owner{owner}
 		, _name{std::move(name)}
 		, _enabled{true}

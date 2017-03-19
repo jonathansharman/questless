@@ -21,8 +21,8 @@ namespace questless
 	public:
 		constexpr Damage() = default;
 
-		constexpr Damage(double slash, double pierce, double bludgeon, double burn, double freeze, double blight)
-			: _slash{slash}, _pierce{pierce}, _bludgeon{bludgeon}, _burn{burn}, _freeze{freeze}, _blight{blight}
+		constexpr Damage(Slash slash, Pierce pierce, Bludgeon bludgeon, Burn burn, Freeze freeze, Blight blight)
+			: _slash{std::move(slash)}, _pierce{std::move(pierce)}, _bludgeon{std::move(bludgeon)}, _burn{std::move(burn)}, _freeze{std::move(freeze)}, _blight{std::move(blight)}
 		{}
 
 		constexpr Damage(Slash slash) : _slash{std::move(slash)}, _pierce{0.0}, _bludgeon{0.0}, _burn{0.0}, _freeze{0.0}, _blight{0.0} {}

@@ -50,6 +50,21 @@ namespace questless
 			}
 		}
 
+		/// Retrieves an object from the cache, loading it from disk if necessary, and dynamically casts it to a pointer of the given type.
+		/// @param id The ID of the desired object.
+		/// @tparam TargetType The desired type of the returned element. Must be a base class or derived class of the cache element type.
+		/// @return A pointer to the requested object as the desired type or nullptr if the object does not exist.
+		////
+		template <typename TargetType>
+		TargetType* get_as(Id<element_t> id) const
+		{
+			constexpr bool valid_cast = std::is_base_of<element_t, TargetType>::value || std::is_base_of<TargetType, element_t>::value;
+			static_assert(valid_cast, "Cache::get_as requires \"is-a\" relationship between the cache element type and the target type.");
+
+			return dynamic_cast<TargetType*>((*this)[id]);
+		}
+
+
 		/// Removes the object with the given ID from the cache, if present.
 		/// @param id The ID of the object to be removed.
 		////

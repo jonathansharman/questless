@@ -28,12 +28,9 @@ namespace questless
 
 		double unequip_time() const override { return 15.0; }
 
-		/// @todo Not general enough! Equipables could be equipped on anything.
-		int hands() const override { return 2; }
-
 		double durability() const override { return 400.0; }
 
-		virtual Damage base_damage() const override { return Damage{Pierce{40.0}}; }
+		virtual Damage base_damage() const override { return Pierce{40.0}; }
 		virtual double wind_up() const override { return 5.0; }
 		virtual double follow_through() const override { return 0.5; }
 		virtual double cooldown() const override { return 1.0; }
@@ -42,9 +39,14 @@ namespace questless
 		virtual std::vector<Action::ptr> actions() override
 		{
 			std::vector<Action::ptr> actions;
-			actions.push_back(BeginFireArrow::make(*this));
-			actions.push_back(Drop::make(*this));
-			actions.push_back(Throw::make(*this));
+			if (equipped()) {
+				actions.push_back(BeginFireArrow::make(*this));
+				actions.push_back(Unequip::make(*this));
+			} else {
+				actions.push_back(Equip::make(*this));
+				actions.push_back(Drop::make(*this));
+				actions.push_back(Throw::make(*this));
+			}
 			return actions;
 		}
 	private:
@@ -71,5 +73,7 @@ namespace questless
 		private:
 			Id<Item> _bow_id;
 		};
+
+		Requirements requirements() const override { return Hands{2}; }
 	};
 }
