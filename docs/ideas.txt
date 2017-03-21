@@ -289,6 +289,7 @@ Weapons
 				Very low weight
 				Costs mana over time while equipped
 				Cannot parry
+			Push-daggers
 		Hacking weapons
 			Battle axe
 				Hands: 2
@@ -301,6 +302,7 @@ Weapons
 				Damage rate: below average
 				Weight: high
 		Polearms
+			Polearms should have range 1-2 and be weaker at range 1 than at 2
 			Halberd
 				Two-phased attack
 					First it pierces
@@ -316,7 +318,10 @@ Weapons
 				Burst damage: low
 				Damage rate: average
 				Weight: medium
+		Clubs?
 		Flails
+			Morning star flail
+				Chance to bypass active shields (due to wrapping around the shield)?
 	Ranged
 		Bows
 			Longbow

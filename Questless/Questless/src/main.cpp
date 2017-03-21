@@ -11,7 +11,7 @@
 #define DOCTEST_CONFIG_DISABLE
 #endif
 #define DOCTEST_CONFIG_IMPLEMENT
-#include <doctest/doctest.h>
+#include <doctest.h>
 
 #include "Game.h"
 

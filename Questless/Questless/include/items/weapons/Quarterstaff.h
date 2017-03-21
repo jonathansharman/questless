@@ -83,8 +83,8 @@ namespace questless
 
 		double weight() const override { return 10.0; }
 
-		double equip_time() const override { return 4.0; }
-		double unequip_time() const override { return 4.0; }
+		double equip_time() const override { return 1.5; }
+		double unequip_time() const override { return 1.0; }
 
 		double durability() const override { return 500.0; }
 

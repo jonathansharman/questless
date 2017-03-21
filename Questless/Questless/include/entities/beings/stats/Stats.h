@@ -3,8 +3,6 @@
 * @author  Jonathan Sharman
 *
 * @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the Stats type, which holds a Being's stats.
 */
 
 #pragma once
@@ -37,6 +35,8 @@ namespace questless
 	struct MaxTemp : TaggedType<double> { using TaggedType::TaggedType; };
 	struct Mute : TaggedType<bool> { using TaggedType::TaggedType; };
 
+	/// Represents the stats of a being.
+	////
 	class Stats
 	{
 	private:

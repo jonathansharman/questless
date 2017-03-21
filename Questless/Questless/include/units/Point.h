@@ -113,7 +113,7 @@ namespace units
 #ifndef _DEBUG
 #define DOCTEST_CONFIG_DISABLE
 #endif
-#include <doctest/doctest.h>
+#include <doctest.h>
 
 TEST_CASE("[Point] operations")
 {
