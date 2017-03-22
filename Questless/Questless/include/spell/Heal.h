@@ -18,6 +18,8 @@ namespace questless::spell
 	public:
 		Heal() : Spell{10} {}
 
+		std::string name() const override { return "Heal"; }
+
 		Color color() const override { return Color::white; }
 
 		boost::optional<int> max_charges() const override { return 10; }

@@ -38,8 +38,32 @@ namespace questless
 						idle(1.0);
 					}
 					break;
-				case PlayerActionDialog::Choice::Type::walk:
+				case PlayerActionDialog::Choice::Type::move:
 				{
+					// Turn towards the chosen direction or move in that direction if already facing that way.
+					auto direction = static_cast<RegionTileCoords::Direction>(player_choice.data);
+					if (being.direction == direction) {
+						walk(direction, [this](Action::Result result) {
+							if (result == Action::Result::aborted) {
+								// Chosen action aborted. Player must try to act again.
+								act();
+							}
+							return Action::Complete{};
+						});
+					} else {
+						turn(direction, [this](Action::Result result) {
+							if (result == Action::Result::aborted) {
+								// Chosen action aborted. Player must try to act again.
+								act();
+							}
+							return Action::Complete{};
+						});
+					}
+					break;
+				}
+				case PlayerActionDialog::Choice::Type::shift_move:
+				{
+					// Strafe.
 					auto direction = static_cast<RegionTileCoords::Direction>(player_choice.data);
 					walk(direction, [this](Action::Result result) {
 						if (result == Action::Result::aborted) {

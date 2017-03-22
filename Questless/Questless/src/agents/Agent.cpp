@@ -42,26 +42,45 @@ namespace questless
 		return Action::Complete{};
 	}
 
-	Action::Complete Agent::walk(RegionTileCoords::Direction direction, Action::cont_t cont)
+	Action::Complete Agent::turn(RegionTileCoords::Direction direction, Action::cont_t cont)
 	{
 		if (being.stats.agility > 0.0) {
-			double agility_factor = 100.0 / being.stats.agility;
-			if (being.direction == direction) {
-				if (being.region->move(being, being.coords.neighbor(direction))) {
-					being.busy_time += agility_factor; /// @todo Account for terrain.
-					cont(Action::Result::success);
-				} else {
-					cont(Action::Result::aborted);
-				}
-			} else {
-				/// @todo Account for terrain.
-				being.busy_time += agility_factor * (0.05 + 0.05 * RegionTileCoords::distance(being.direction, direction));
-				being.direction = direction;
-			}
+			// Base cost of turning any amount, as a percentage of the agility factor.
+			constexpr double base_cost_factor = 0.1;
+			
+			// Cost per turning distance from current direction to new direction, as a percentage of the agility factor.
+			constexpr double cost_factor_per_turn = 0.1;
+
+			double const agility_factor = 100.0 / being.stats.agility;
+			/// @todo Account for terrain.
+			double const turn_cost_factor = cost_factor_per_turn * RegionTileCoords::distance(being.direction, direction);
+			being.busy_time += agility_factor * (base_cost_factor + turn_cost_factor);
+			being.direction = direction;
+
 			return cont(Action::Result::success);
 		} else {
 			return cont(Action::Result::aborted);
 		}
+	}
+
+	Action::Complete Agent::walk(RegionTileCoords::Direction direction, Action::cont_t cont)
+	{
+		if (being.stats.agility > 0.0) {
+			// Base cost of moving, as a percentage of the agility factor.
+			constexpr double base_cost_factor = 1.0;
+
+			// Cost per turning distance from direction faced to direction moved, as a percentage of the agility factor.
+			constexpr double cost_factor_per_turn = 0.1;
+
+			double const agility_factor = 100.0 / being.stats.agility;
+			if (being.region->move(being, being.coords.neighbor(direction))) {
+				double const strafe_cost_factor = cost_factor_per_turn * RegionTileCoords::distance(being.direction, direction);
+				being.busy_time += agility_factor * (base_cost_factor + strafe_cost_factor); /// @todo Account for terrain.
+				
+				return cont(Action::Result::success);
+			}
+		}
+		return cont(Action::Result::aborted);
 	}
 
 	Action::Complete Agent::fly()

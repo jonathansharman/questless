@@ -58,56 +58,76 @@ namespace questless::spell
 			Spell& _spell;
 		};
 
+		virtual ~Spell() = default;
+
 		/// @return An action that casts the spell.
+		////
 		Action::ptr cast() { return Cast::make(*this); }
 
 		/// @return An action that charges the spell for one charge.
+		////
 		Action::ptr incant() { return Incant::make(*this); }
 
 		/// @return An action that discharges the spell for one charge.
+		////
 		Action::ptr discharge() { return Discharge::make(*this); }
 
-		virtual ~Spell() = default;
+		/// @return The spell's name.
+		////
+		virtual std::string name() const = 0;
 
 		/// @return The spell's color.
+		////
 		virtual Color color() const = 0;
 
 		/// @return The maximum number of charges the spell can hold or nullopt if the spell has infinite charges.
+		////
 		virtual boost::optional<int> max_charges() const = 0;
 
 		/// @return The current number of spell charges.
+		////
 		int charges() const{ return _charges; }
 
 		/// Sets the number of spell charges to the given value.
+		////
 		void charges(int value) { _charges = value; }
 
 		/// Increases the number of charges by the given amount.
 		/// @param amount The number of charges to add, 1 by default.
+		////
 		void gain_charge(int amount);
 
 		/// Decreases the number of charges by the given amount.
 		/// @param amount The number of charges to subtract, 1 by default.
+		////
 		void lose_charge(int amount);
 
 		/// @return The amount of time between starting to cast the spell and the completion of the cast.
+		////
 		virtual double cast_time() const = 0;
 
 		/// @return The amount of time required to incant the spell.
+		////
 		virtual double incant_time() const = 0;
 
 		/// @return The amount of time required to incant the spell.
+		////
 		virtual double discharge_time() const = 0;
 
 		/// @return Time after casting the spell before it can be used again.
+		////
 		virtual double cooldown() const = 0;
 
 		/// @return Time left before the spell can be cast again.
+		////
 		double active_cooldown() const { return _active_cooldown; }
 
 		/// Sets the time left before the spell can be cast again to the given value.
+		////
 		void active_cooldown(double value) { _active_cooldown = value; }
 
 		/// Advances the spell one time unit.
+		////
 		virtual void update();
 	protected:
 		Spell(int charges = 0) : _charges{charges}, _active_cooldown{0} {}

@@ -18,6 +18,8 @@ namespace questless::spell
 	public:
 		Teleport() : Spell{10} {}
 
+		std::string name() const override { return "Teleport"; }
+
 		Color color() const override { return Color::yellow; }
 
 		boost::optional<int> max_charges() const override { return 10; }

@@ -18,17 +18,17 @@ namespace questless
 		if (input().presses(SDLK_z) || input().presses(SDLK_RETURN)) {
 			return _cont({Choice::Type::idle, input().shift() ? 1 : 0});
 		} else if (input().presses(SDLK_e)) {
-			return _cont({Choice::Type::walk, 1});
+			return _cont({input().shift() ? Choice::Type::shift_move : Choice::Type::move, 1});
 		} else if (input().presses(SDLK_w)) {
-			return _cont({Choice::Type::walk, 2});
+			return _cont({input().shift() ? Choice::Type::shift_move : Choice::Type::move, 2});
 		} else if (input().presses(SDLK_q)) {
-			return _cont({Choice::Type::walk, 3});
+			return _cont({input().shift() ? Choice::Type::shift_move : Choice::Type::move, 3});
 		} else if (input().presses(SDLK_a)) {
-			return _cont({Choice::Type::walk, 4});
+			return _cont({input().shift() ? Choice::Type::shift_move : Choice::Type::move, 4});
 		} else if (input().presses(SDLK_s)) {
-			return _cont({Choice::Type::walk, 5});
+			return _cont({input().shift() ? Choice::Type::shift_move : Choice::Type::move, 5});
 		} else if (input().presses(SDLK_d)) {
-			return _cont({Choice::Type::walk, 6});
+			return _cont({input().shift() ? Choice::Type::shift_move : Choice::Type::move, 6});
 		} else if (input().presses(SDLK_1)) {
 			return _cont({Choice::Type::use, 0});
 		} else if (input().presses(SDLK_2)) {

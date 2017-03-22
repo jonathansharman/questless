@@ -29,7 +29,7 @@ namespace questless
 
 		double durability() const override { return 400.0; }
 
-		virtual Damage base_damage() const override { return Pierce{40.0}; }
+		virtual Damage base_damage() const override { return Pierce{30.0}; }
 		virtual double wind_up() const override { return 5.0; }
 		virtual double follow_through() const override { return 0.5; }
 		virtual double cooldown() const override { return 1.0; }

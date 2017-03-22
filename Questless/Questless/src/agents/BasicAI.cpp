@@ -27,17 +27,29 @@ namespace questless
 	}
 	void BasicAI::WalkState::act(BasicAI& ai)
 	{
-		// Move to or turn towards a random neighbor hex, favoring movement.
-		auto direction = uniform(0, 1) ? ai.being.direction : static_cast<RegionTileCoords::Direction>(uniform(1, 6));
-		ai.walk(direction, [&ai](Action::Result result) {
-			// Idle next time.
-			ai._state = std::make_unique<IdleState>();
-			if (result == Action::Result::aborted) {
-				// Walk failed. Wait for up to 10 time units instead.
-				ai.idle(uniform(0.0, 10.0));
-			}
-			return Action::Complete{};
-		});
+		// Move or turn at random.
+		if (uniform(0, 1)) {
+			ai.walk(ai.being.direction, [&ai](Action::Result result) {
+				// Idle next time.
+				ai._state = std::make_unique<IdleState>();
+				if (result == Action::Result::aborted) {
+					// Walk failed. Wait for up to 10 time units instead.
+					ai.idle(uniform(0.0, 10.0));
+				}
+				return Action::Complete{};
+			});
+		} else {
+			auto direction = static_cast<RegionTileCoords::Direction>(uniform(1, 6));
+			ai.turn(direction, [&ai](Action::Result result) {
+				// Idle next time.
+				ai._state = std::make_unique<IdleState>();
+				if (result == Action::Result::aborted) {
+					// Walk failed. Wait for up to 10 time units instead.
+					ai.idle(uniform(0.0, 10.0));
+				}
+				return Action::Complete{};
+			});
+		}
 	}
 	void BasicAI::AttackState::act(BasicAI& ai)
 	{

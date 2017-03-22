@@ -101,6 +101,7 @@ namespace questless
 	protected:
 		Action::Complete idle(Action::cont_t cont);
 		Action::Complete idle(double duration);
+		Action::Complete turn(RegionTileCoords::Direction direction, Action::cont_t cont);
 		Action::Complete walk(RegionTileCoords::Direction direction, Action::cont_t cont);
 		Action::Complete fly();
 	};

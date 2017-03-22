@@ -23,7 +23,7 @@ namespace questless
 
 		void accept(ItemVisitor& visitor) const override { return visitor.visit(*this); }
 
-		std::string name() const override { return blank() ? "Blank Scroll" : "Scroll"; }
+		std::string name() const override { return blank() ? "Blank Scroll" : "Scroll: " + _spell->name(); }
 
 		double weight() const override { return 0.1; }
 
