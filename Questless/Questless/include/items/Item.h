@@ -15,7 +15,7 @@
 #include <memory>
 
 #include "ItemVisitor.h"
-#include "entities/beings/Action.h"
+#include "agents/Action.h"
 #include "units/HexCoords.h"
 #include "utility/Id.h"
 

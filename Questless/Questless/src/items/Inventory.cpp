@@ -19,7 +19,7 @@ namespace questless
 		for (size_t page = 0; page < _pages.size(); ++page) {
 			for (size_t row = 0; row < Page::rows; ++row) {
 				for (size_t column = 0; column < Page::columns; ++column) {
-					if (_pages[page].item_ids[row][column] == boost::none) {
+					if (_pages[page].item_ids[row][column] == std::nullopt) {
 						_pages[page].item_ids[row][column] = item_id;
 						return;
 					}
@@ -49,14 +49,14 @@ namespace questless
 
 	void Inventory::remove(Coords coords)
 	{
-		_pages[coords.page].item_ids[coords.row][coords.column] = boost::none;
+		_pages[coords.page].item_ids[coords.row][coords.column] = std::nullopt;
 	}
 
 	Item* Inventory::get(Coords coords)
 	{
 		auto opt_item_id = _pages[coords.page].item_ids[coords.row][coords.column];
 		return opt_item_id
-			? game().items[*opt_item_id]
+			? game().items.get(*opt_item_id)
 			: nullptr
 			;
 	}
@@ -80,9 +80,9 @@ namespace questless
 		return column_start == Page::columns
 			? Stream<Item*>{}
 			: sconcat
-				( _pages[page].item_ids[row_start][column_start] == boost::none
+				( _pages[page].item_ids[row_start][column_start] == std::nullopt
 					? Stream<Item*>{}
-					: singleton<Item*>(game().items[*_pages[page].item_ids[row_start][column_start]])
+					: singleton<Item*>(game().items.get(*_pages[page].item_ids[row_start][column_start]))
 				, items(page, row_start, column_start + 1)
 				);
 	}

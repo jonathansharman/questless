@@ -79,7 +79,7 @@ namespace questless
 	{
 		for (auto const& being_view : _world_view->being_views()) {
 			// Attempt to load the being.
-			if (Being const* being = game().beings[being_view.id]) {
+			if (Being const* being = game().beings.get(being_view.id)) {
 				// Search for the being's animation in the cache.
 				auto it = _being_animation_sets.find(being_view.id);
 				// If it's there, use it. Otherwise, create the animation and cache it.
@@ -119,7 +119,7 @@ namespace questless
 	{
 		for (auto const& object_view : _world_view->object_views()) {
 			// Attempt to load the object.
-			if (Object const* object = game().objects[object_view.id]) {
+			if (Object const* object = game().objects.get(object_view.id)) {
 				// Search for the object's animation in the cache.
 				auto it = _object_animations.find(object_view.id);
 				// If it's there, use it. Otherwise, create the animation and cache it.
@@ -189,7 +189,7 @@ namespace questless
 
 	void WorldRenderer::render_terrain()
 	{
-		boost::optional<GameRect> opt_bounds = _world_view->bounds();
+		std::optional<GameRect> opt_bounds = _world_view->bounds();
 		if (!opt_bounds) {
 			_terrain_texture = nullptr;
 			return;
@@ -228,7 +228,7 @@ namespace questless
 
 								tile_texture.draw_transformed
 									( tile_screen_point
-									, boost::none // origin
+									, std::nullopt // origin
 									, Color{luminance, luminance, luminance}
 									);
 							}

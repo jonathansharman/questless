@@ -30,7 +30,7 @@ namespace questless
 		if (!hud.player_id) {
 			return;
 		}
-		if (Being* player_being = game().beings[*hud.player_id]) {
+		if (Being* player_being = game().beings.get(*hud.player_id)) {
 			// Draw the condition bars.
 			{
 				int left = 0;
@@ -80,7 +80,7 @@ namespace questless
 				for (int row = 0; row < Inventory::Page::rows; ++row) {
 					for (int column = 0; column < Inventory::Page::columns; ++column) {
 						if (auto const& item_id = item_ids[row][column]) {
-							if (Item* item = game().items[*item_id]) {
+							if (Item* item = game().items.get(*item_id)) {
 								item->accept(texturer);
 								Texture::ptr texture = texturer.texture();
 								texture->draw(ScreenPoint{_inv_left + column * HUDView::item_icon_width, _inv_top + row * HUDView::item_icon_height});

@@ -11,8 +11,7 @@
 
 #include <string>
 #include <vector>
-
-#include <boost/optional.hpp>
+#include <optional>
 
 namespace questless
 {
@@ -23,11 +22,11 @@ namespace questless
 			struct Option
 			{
 				std::string name;
-				boost::optional<int> target;
+				std::optional<int> target;
 
 				/// @param name The name of the option.
 				/// @param target The index of page to which this option links, or nullopt if the option is terminal.
-				Option(std::string name, boost::optional<int> target) : name(name), target(target) {}
+				Option(std::string name, std::optional<int> target) : name(name), target(target) {}
 			};
 
 			std::string title;

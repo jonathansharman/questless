@@ -11,8 +11,7 @@
 
 #include <string>
 #include <memory>
-
-#include <boost/optional.hpp>
+#include <optional>
 
 #include <SDL.h>
 
@@ -109,7 +108,7 @@ namespace sdl
 		std::string _title;
 		std::string _icon_filename;
 
-		mutable boost::optional<int> _width, _height;
+		mutable std::optional<int> _width, _height;
 
 		/// @return The SDL window flags.
 		Uint32 flags() const { return SDL_GetWindowFlags(_sdl_window); }

@@ -86,7 +86,7 @@ namespace questless
 							std::transform(actions->begin(), actions->end(), std::back_inserter(action_names), [](Action::ptr const& action) { return action->name(); });
 							// Open list dialog for the player to choose an action.
 							auto dialog = std::make_unique<ListDialog>(sdl::input().mouse_position(), item->name(), std::move(action_names),
-								[this, actions](boost::optional<int> opt_action_idx) {
+								[this, actions](std::optional<int> opt_action_idx) {
 									if (!opt_action_idx) {
 										// No action selected. Player must try to act again.
 										act();
@@ -172,9 +172,9 @@ namespace questless
 	Action::Complete Player::query_count
 		( CountQuery::ptr query
 		, int default
-		, boost::optional<int> min
-		, boost::optional<int> max
-		, function<Action::Complete(boost::optional<int>)> cont
+		, std::optional<int> min
+		, std::optional<int> max
+		, function<Action::Complete(std::optional<int>)> cont
 		) const
 	{
 
@@ -198,9 +198,9 @@ namespace questless
 	Action::Complete Player::query_magnitude
 		( MagnitudeQuery::ptr query
 		, double default
-		, boost::optional<double> min
-		, boost::optional<double> max
-		, function<Action::Complete(boost::optional<double>)> cont
+		, std::optional<double> min
+		, std::optional<double> max
+		, function<Action::Complete(std::optional<double>)> cont
 		) const
 	{
 		struct MagnitudeQueryTitler : MagnitudeQueryVisitor
@@ -228,9 +228,9 @@ namespace questless
 
 	Action::Complete Player::query_tile
 		( TileQuery::ptr query
-		, boost::optional<RegionTileCoords> origin
+		, std::optional<RegionTileCoords> origin
 		, function<bool(RegionTileCoords)> predicate
-		, function<Action::Complete(boost::optional<RegionTileCoords>)> cont
+		, function<Action::Complete(std::optional<RegionTileCoords>)> cont
 		) const
 	{
 		struct TileQueryTitler : TileQueryVisitor
@@ -261,23 +261,23 @@ namespace questless
 	Action::Complete Player::query_being
 		( BeingQuery::ptr //query
 		, function<bool(Being&)> //predicate
-		, function<Action::Complete(boost::optional<Being*>)> cont
+		, function<Action::Complete(std::optional<Being*>)> cont
 		) const
 	{
 		// spell::Heal: "Heal Target", "Select a being to be healed."
 		/// @todo This.
-		return cont(boost::none);
+		return cont(std::nullopt);
 	}
 
 	Action::Complete Player::query_item
 		( ItemQuery::ptr //query
 		, Being& //source
 		, function<bool(Being&)> //predicate
-		, function<Action::Complete(boost::optional<Item*>)> cont
+		, function<Action::Complete(std::optional<Item*>)> cont
 		) const
 	{
 		/// @todo This.
-		return cont(boost::none);
+		return cont(std::nullopt);
 	}
 
 	// Quick Time Events

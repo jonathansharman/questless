@@ -165,10 +165,10 @@ namespace questless
 		double temp = region->temperature(coords);
 		if (temp > stats.max_temp) {
 			Damage burn{Burn{(temp - stats.max_temp) / (stats.max_temp - stats.min_temp) * temperature_damage_factor}};
-			take_damage(burn, nullptr, boost::none);
+			take_damage(burn, nullptr, std::nullopt);
 		} else if (temp < stats.min_temp) {
 			Damage freeze{Freeze{(stats.min_temp - temp) / (stats.max_temp - stats.min_temp) * temperature_damage_factor}};
-			take_damage(freeze, nullptr, boost::none);
+			take_damage(freeze, nullptr, std::nullopt);
 		}
 
 		// Update items.
@@ -177,13 +177,13 @@ namespace questless
 		}
 	}
 
-	void Being::take_damage(Damage& damage, BodyPart* part, boost::optional<Id<Being>> opt_source_id)
+	void Being::take_damage(Damage& damage, BodyPart* part, std::optional<Id<Being>> opt_source_id)
 	{
 		// Store whether the being was already dead upon taking this damage.
 		bool was_already_dead = dead;
 
 		// Get source.
-		Being* source = opt_source_id ? game().beings[*opt_source_id] : nullptr;
+		Being* source = opt_source_id ? game().beings.get(*opt_source_id) : nullptr;
 
 		// Target will take damage.
 		if (before_take_damage(damage, part, opt_source_id)) {
@@ -299,12 +299,12 @@ namespace questless
 		}
 	}
 
-	void Being::heal(double amount, BodyPart* part, boost::optional<Id<Being>> opt_source_id)
+	void Being::heal(double amount, BodyPart* part, std::optional<Id<Being>> opt_source_id)
 	{
 		/// @todo Heal the part, if present.
 
 		// Get source.
-		Being* source = opt_source_id ? game().beings[*opt_source_id] : nullptr;
+		Being* source = opt_source_id ? game().beings.get(*opt_source_id) : nullptr;
 
 		// Source will give healing.
 		if (source != nullptr) {

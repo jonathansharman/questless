@@ -15,8 +15,8 @@ namespace questless::spell
 {
 	Action::Complete Teleport::perform_cast(Being& caster, Action::cont_t cont)
 	{
-		return caster.agent().query_tile(std::make_unique<TileQueryTeleportTarget>(), boost::none, Action::tile_in_range_predicate(caster, _range),
-			[this, &caster, cont](boost::optional<RegionTileCoords> opt_tile_coords) {
+		return caster.agent().query_tile(std::make_unique<TileQueryTeleportTarget>(), std::nullopt, Action::tile_in_range_predicate(caster, _range),
+			[this, &caster, cont](std::optional<RegionTileCoords> opt_tile_coords) {
 				if (!opt_tile_coords) {
 					return cont(Action::Result::aborted);
 				}

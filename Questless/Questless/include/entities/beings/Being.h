@@ -149,20 +149,20 @@ namespace questless
 
 		// Event Handlers
 
-		Event<Damage&, BodyPart*, boost::optional<Id<Being>>> before_take_damage;
-		Event<Damage&, BodyPart*, boost::optional<Id<Being>>> after_take_damage;
+		Event<Damage&, BodyPart*, std::optional<Id<Being>>> before_take_damage;
+		Event<Damage&, BodyPart*, std::optional<Id<Being>>> after_take_damage;
 
 		Event<Damage&, BodyPart*, Id<Being>> before_deal_damage;
 		Event<Damage&, BodyPart*, Id<Being>> after_deal_damage;
 
-		Event<double&, BodyPart*, boost::optional<Id<Being>>> before_receive_heal;
-		Event<double&, BodyPart*, boost::optional<Id<Being>>> after_receive_heal;
+		Event<double&, BodyPart*, std::optional<Id<Being>>> before_receive_heal;
+		Event<double&, BodyPart*, std::optional<Id<Being>>> after_receive_heal;
 
 		Event<double&, BodyPart*, Id<Being>> after_give_heal;
 		Event<double&, BodyPart*, Id<Being>> before_give_heal;
 
-		Event<boost::optional<Id<Being>>> before_die;
-		Event<boost::optional<Id<Being>>> after_die;
+		Event<std::optional<Id<Being>>> before_die;
+		Event<std::optional<Id<Being>>> after_die;
 
 		Event<Id<Being>> before_kill;
 		Event<Id<Being>> after_kill;
@@ -215,13 +215,13 @@ namespace questless
 		/// @param damage Damage to be applied to this being.
 		/// @param part The body part to damage, or nullptr if the damage should be applied directly to the being.
 		/// @param opt_source_id The ID of the being which caused the damage, if any.
-		void take_damage(Damage& damage, BodyPart* part, boost::optional<Id<Being>> opt_source_id);
+		void take_damage(Damage& damage, BodyPart* part, std::optional<Id<Being>> opt_source_id);
 
 		/// Causes the being to be healed by the specified source being.
 		/// @param amount Health to be restored to this being.
 		/// @param part The body part to heal, or nullopt if the damage should be applied directly to the being.
 		/// @param opt_source_id The ID of the being which caused the healing, if any.
-		void heal(double amount, BodyPart* part, boost::optional<Id<Being>> opt_source_id);
+		void heal(double amount, BodyPart* part, std::optional<Id<Being>> opt_source_id);
 
 		void add_status(std::unique_ptr<Status> status);
 	protected:

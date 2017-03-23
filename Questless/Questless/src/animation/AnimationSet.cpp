@@ -60,7 +60,7 @@ namespace questless
 			camera.draw
 				( texture_manager()[_sprite_sheet_handle]
 				, GamePoint{origin - GameVector{static_cast<double>(frame.origin.x), static_cast<double>(-frame.origin.y)}} /// @todo Uncouth point casting here.
-				, Origin{boost::none}
+				, Origin{std::nullopt}
 				, color
 				, HScale{1.0}
 				, VScale{1.0}

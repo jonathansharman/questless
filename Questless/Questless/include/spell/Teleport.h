@@ -3,8 +3,6 @@
 * @author  Jonathan Sharman
 *
 * @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the TeleportSpell class.
 */
 
 #pragma once
@@ -13,6 +11,8 @@
 
 namespace questless::spell
 {
+	/// A spell that teleports the caster some distance from its current location.
+	////
 	class Teleport : public Spell
 	{
 	public:
@@ -22,7 +22,7 @@ namespace questless::spell
 
 		Color color() const override { return Color::yellow; }
 
-		boost::optional<int> max_charges() const override { return 10; }
+		std::optional<int> max_charges() const override { return 10; }
 
 		double cast_time() const override { return 0.2; }
 

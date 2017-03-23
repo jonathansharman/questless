@@ -22,7 +22,7 @@ namespace questless::spell
 
 		Color color() const override { return Color::yellow; }
 
-		boost::optional<int> max_charges() const override { return 10; }
+		std::optional<int> max_charges() const override { return 10; }
 
 		double cast_time() const override { return 0.2; }
 

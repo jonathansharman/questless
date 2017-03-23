@@ -10,8 +10,7 @@
 #pragma once
 
 #include <array>
-
-#include <boost/optional.hpp>
+#include <optional>
 
 #include "items/Inventory.h"
 #include "utility/Id.h"
@@ -22,8 +21,8 @@ namespace questless
 	{
 		static constexpr size_t hotbar_size = 10;
 
-		boost::optional<Id<Being>> player_id = boost::none;
-		std::array<boost::optional<Inventory::Coords>, hotbar_size> hotbar;
+		std::optional<Id<Being>> player_id = std::nullopt;
+		std::array<std::optional<Inventory::Coords>, hotbar_size> hotbar;
 		bool inv_open = false;
 		int inv_page = 0;
 

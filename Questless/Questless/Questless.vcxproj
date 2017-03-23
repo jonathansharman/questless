@@ -255,6 +255,7 @@
     <Font Include="resources\fonts\firamono.ttf" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\agents\Action.h" />
     <ClInclude Include="include\agents\Agent.h" />
     <ClInclude Include="include\agents\BasicAI.h" />
     <ClInclude Include="include\agents\BeingQuery.h" />
@@ -286,7 +287,6 @@
     <ClInclude Include="include\effects\EffectVisitor.h" />
     <ClInclude Include="include\entities\AllEntities.h" />
     <ClInclude Include="include\entities\beings\Abilities.h" />
-    <ClInclude Include="include\entities\beings\Action.h" />
     <ClInclude Include="include\entities\beings\Being.h" />
     <ClInclude Include="include\entities\beings\Body.h" />
     <ClInclude Include="include\entities\beings\BodyPart.h" />
@@ -332,6 +332,7 @@
     <ClInclude Include="include\items\potions\Potion.h" />
     <ClInclude Include="include\items\Scroll.h" />
     <ClInclude Include="include\items\weapons\Arrow.h" />
+    <ClInclude Include="include\items\weapons\Attack.h" />
     <ClInclude Include="include\items\weapons\Bow.h" />
     <ClInclude Include="include\items\weapons\ModalWeapon.h" />
     <ClInclude Include="include\items\weapons\Quarterstaff.h" />
@@ -409,6 +410,7 @@
     <ClInclude Include="include\world\Tile.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\agents\Action.cpp" />
     <ClCompile Include="src\agents\Agent.cpp" />
     <ClCompile Include="src\agents\BasicAI.cpp" />
     <ClCompile Include="src\agents\Player.cpp" />
@@ -430,7 +432,6 @@
     <ClCompile Include="src\animation\TileTexturer.cpp" />
     <ClCompile Include="src\animation\WorldRenderer.cpp" />
     <ClCompile Include="src\entities\beings\Abilities.cpp" />
-    <ClCompile Include="src\entities\beings\Action.cpp" />
     <ClCompile Include="src\entities\beings\Being.cpp" />
     <ClCompile Include="src\entities\beings\Body.cpp" />
     <ClCompile Include="src\entities\beings\BodyPart.cpp" />
@@ -454,6 +455,7 @@
     <ClCompile Include="src\items\Inventory.cpp" />
     <ClCompile Include="src\items\Item.cpp" />
     <ClCompile Include="src\items\Scroll.cpp" />
+    <ClCompile Include="src\items\weapons\Attack.cpp" />
     <ClCompile Include="src\items\weapons\Bow.cpp" />
     <ClCompile Include="src\items\weapons\Weapon.cpp" />
     <ClCompile Include="src\main.cpp" />

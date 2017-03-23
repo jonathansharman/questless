@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 
 #include "Dialog.h"
 #include "HUDController.h"

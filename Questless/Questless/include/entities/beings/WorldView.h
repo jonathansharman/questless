@@ -11,8 +11,7 @@
 
 #include <vector>
 #include <array>
-
-#include <boost/optional.hpp>
+#include <optional>
 
 #include "world/coordinates.h"
 #include "world/Section.h"
@@ -87,7 +86,7 @@ namespace questless
 		Region const& region() const { return _region; }
 
 		/// @return A bounding rectangle around the visible tiles or nullopt if initialized with find_bounds set to false or if no tiles are visible.
-		boost::optional<units::GameRect> bounds() const { return _bounds; }
+		std::optional<units::GameRect> bounds() const { return _bounds; }
 	private:
 		static constexpr double _low_perception_threshold = 20.0;
 		static constexpr double _medium_perception_threshold = 40.0;
@@ -99,6 +98,6 @@ namespace questless
 		std::vector<ObjectView> _object_views;
 		std::reference_wrapper<const Region> _region;
 
-		boost::optional<units::GameRect> _bounds;
+		std::optional<units::GameRect> _bounds;
 	};
 }

@@ -22,13 +22,13 @@ namespace questless::spell
 	Action::Complete LightningBolt::perform_cast(Being& caster, Action::cont_t cont)
 	{
 		return caster.agent().query_tile(std::make_unique<TileQueryLightningBoltTarget>(), caster.coords, Action::tile_in_range_predicate(caster, _range),
-			[this, &caster, cont](boost::optional<RegionTileCoords> opt_tile_coords) {
+			[this, &caster, cont](std::optional<RegionTileCoords> opt_tile_coords) {
 				if (!opt_tile_coords) {
 					return cont(Action::Result::aborted);
 				}
 				RegionTileCoords tile_coords = *opt_tile_coords;
-				return caster.agent().query_magnitude(std::make_unique<MagnitudeQueryLightningBolt>(), 20.0, 0.0, boost::none,
-					[this, &caster, cont, tile_coords](boost::optional<double> opt_magnitude) {
+				return caster.agent().query_magnitude(std::make_unique<MagnitudeQueryLightningBolt>(), 20.0, 0.0, std::nullopt,
+					[this, &caster, cont, tile_coords](std::optional<double> opt_magnitude) {
 						if (!opt_magnitude) {
 							return cont(Action::Result::aborted);
 						}

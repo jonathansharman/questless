@@ -193,25 +193,25 @@ namespace questless
 		}
 	}
 
-	boost::optional<Id<Being>> Region::being_id(RegionTileCoords tile_coords) const
+	std::optional<Id<Being>> Region::being_id(RegionTileCoords tile_coords) const
 	{
 		RegionSectionCoords section_coords = containing_section_coords(tile_coords);
 		auto it = _section_map.find(section_coords);
-		return it != _section_map.end() ? it->second->being_id(tile_coords) : boost::none;
+		return it != _section_map.end() ? it->second->being_id(tile_coords) : std::nullopt;
 	}
 
-	boost::optional<Id<Object>> Region::object_id(RegionTileCoords tile_coords) const
+	std::optional<Id<Object>> Region::object_id(RegionTileCoords tile_coords) const
 	{
 		RegionSectionCoords section_coords = containing_section_coords(tile_coords);
 		auto it = _section_map.find(section_coords);
-		return it != _section_map.end() ? it->second->object_id(tile_coords) : boost::none;
+		return it != _section_map.end() ? it->second->object_id(tile_coords) : std::nullopt;
 	}
 
 
 	Being* Region::being(RegionTileCoords tile_coords) const
 	{
 		if (auto opt_id = being_id(tile_coords)) {
-			return game().beings[*opt_id];
+			return game().beings.get(*opt_id);
 		} else {
 			return nullptr;
 		}
@@ -220,7 +220,7 @@ namespace questless
 	Object* Region::object(RegionTileCoords tile_coords) const
 	{
 		if (auto opt_id = object_id(tile_coords)) {
-			return game().objects[*opt_id];
+			return game().objects.get(*opt_id);
 		} else {
 			return nullptr;
 		}
@@ -393,12 +393,12 @@ namespace questless
 			}
 		});
 		for (Id<Being> being_id : beings_to_update) {
-			if (Being* being = game().beings[being_id]) {
+			if (Being* being = game().beings.get(being_id)) {
 				being->update();
 			}
 		}
 		for (Id<Object> object_id : objects_to_update) {
-			if (Object* object = game().objects[object_id]) {
+			if (Object* object = game().objects.get(object_id)) {
 				object->update();
 			}
 		}

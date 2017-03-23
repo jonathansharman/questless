@@ -8,6 +8,9 @@
 */
 
 #include "sdl/Texture.h"
+
+#include <string>
+
 #include "sdl/resources.h"
 
 using namespace units;
@@ -37,7 +40,7 @@ namespace sdl
 		}
 	}
 
-	Texture::Texture(std::string const& filename, bool targetable, SDL_BlendMode blend_mode)
+	Texture::Texture(char const* filename, bool targetable, SDL_BlendMode blend_mode)
 		: _texture{nullptr }
 		, _renderer{renderer()}
 		, _blend_mode{blend_mode}
@@ -45,9 +48,9 @@ namespace sdl
 		, _access{targetable ? SDL_TEXTUREACCESS_TARGET : SDL_TEXTUREACCESS_STATIC}
 		, _color{255, 255, 255}
 	{
-		_texture = IMG_LoadTexture(_renderer.sdl_ptr(), filename.c_str());
+		_texture = IMG_LoadTexture(_renderer.sdl_ptr(), filename);
 		if (!_texture) {
-			throw std::runtime_error(("Failed to load texture \"" + filename + "\".").c_str());
+			throw std::runtime_error(("Failed to load texture \"" + std::string{filename} +"\".").c_str());
 		}
 		SDL_QueryTexture(_texture, nullptr, nullptr, &_w, &_h);
 		if (SDL_SetTextureBlendMode(_texture, _blend_mode)) {
@@ -95,7 +98,7 @@ namespace sdl
 		std::swap(first._color, second._color);
 	}
 
-	void Texture::draw(ScreenRect const& dst_rect, boost::optional<TextureRect> const& src_rect) const
+	void Texture::draw(ScreenRect const& dst_rect, std::optional<TextureRect> const& src_rect) const
 	{
 		// This reinterpret_cast is safe because SDL_Rect and TextureRect have the same data structure.
 		SDL_Rect const* sdl_dst_rect = reinterpret_cast<const SDL_Rect*>(&dst_rect);
@@ -108,7 +111,7 @@ namespace sdl
 		SDL_RenderCopy(_renderer.sdl_ptr(), _texture, sdl_src_rect, sdl_dst_rect);
 	}
 
-	void Texture::draw(ScreenPoint position, HAlign horizontal_alignment, VAlign vertical_alignment, boost::optional<TextureRect> const& src_rect) const
+	void Texture::draw(ScreenPoint position, HAlign horizontal_alignment, VAlign vertical_alignment, std::optional<TextureRect> const& src_rect) const
 	{
 		switch (horizontal_alignment) {
 			case HAlign::left:
@@ -142,14 +145,14 @@ namespace sdl
 
 	void Texture::draw_transformed
 		( ScreenPoint position
-		, boost::optional<TexturePoint> origin
+		, std::optional<TexturePoint> origin
 		, Color color
 		, double horizontal_scale
 		, double vertical_scale
 		, units::GameRadians angle
 		, bool flip_horizontally
 		, bool flip_vertically
-		, boost::optional<TextureRect> const& src_rect
+		, std::optional<TextureRect> const& src_rect
 		) const
 	{
 		if (origin) {

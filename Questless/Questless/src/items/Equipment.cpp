@@ -177,50 +177,50 @@ namespace questless
 	void Equipment::unequip()
 	{
 		if (_bearer_id) {
-			if (Being* bearer = game().beings[*_bearer_id]) {
+			if (Being* bearer = game().beings.get(*_bearer_id)) {
 				for (auto head_id : _head_ids) {
 					if (Head* head = bearer->body.find_head(head_id)) {
-						head->equipped_item_id = boost::none;
+						head->equipped_item_id = std::nullopt;
 					}
 				}
 				for (auto torso_id : _torso_ids) {
 					if (Torso* torso = bearer->body.find_torso(torso_id)) {
-						torso->equipped_item_id = boost::none;
+						torso->equipped_item_id = std::nullopt;
 					}
 				}
 				for (auto arm_id : _arm_ids) {
 					if (Arm* arm = bearer->body.find_arm(arm_id)) {
-						arm->equipped_item_id = boost::none;
+						arm->equipped_item_id = std::nullopt;
 					}
 				}
 				for (auto hand_id : _hand_ids) {
 					if (Hand* hand = bearer->body.find_hand(hand_id)) {
-						hand->equipped_item_id = boost::none;
+						hand->equipped_item_id = std::nullopt;
 					}
 				}
 				for (auto leg_id : _leg_ids) {
 					if (Leg* leg = bearer->body.find_leg(leg_id)) {
-						leg->equipped_item_id = boost::none;
+						leg->equipped_item_id = std::nullopt;
 					}
 				}
 				for (auto foot_id : _foot_ids) {
 					if (Foot* foot = bearer->body.find_foot(foot_id)) {
-						foot->equipped_item_id = boost::none;
+						foot->equipped_item_id = std::nullopt;
 					}
 				}
 				for (auto wing_id : _wing_ids) {
 					if (Wing* wing = bearer->body.find_wing(wing_id)) {
-						wing->equipped_item_id = boost::none;
+						wing->equipped_item_id = std::nullopt;
 					}
 				}
 				for (auto tail_id : _tail_ids) {
 					if (Tail* tail = bearer->body.find_tail(tail_id)) {
-						tail->equipped_item_id = boost::none;
+						tail->equipped_item_id = std::nullopt;
 					}
 				}
 			}
 
-			_bearer_id = boost::none;
+			_bearer_id = std::nullopt;
 			_head_ids.clear();
 			_torso_ids.clear();
 			_arm_ids.clear();

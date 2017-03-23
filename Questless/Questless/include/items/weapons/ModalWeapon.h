@@ -28,30 +28,6 @@ namespace questless
 
 			virtual std::string name() const = 0;
 
-			/// @return The weapon's effective damage per hit, accounting for wear.
-			////
-			Damage damage() const { return base_damage() * (1.0 + _weapon.integrity / _weapon.durability() / 2.0); }
-
-			/// @return The weapon's base damage per hit.
-			////
-			virtual Damage base_damage() const = 0;
-
-			/// @return Busy time incurred making the weapon ready.
-			////
-			virtual double wind_up() const = 0;
-
-			/// @return Busy time incurred after using the weapon.
-			////
-			virtual double follow_through() const = 0;
-
-			/// @return Time after using the weapon before it can be used again.
-			////
-			virtual double cooldown() const = 0;
-
-			/// @return The proportion of dealt damage to be applied as wear.
-			////
-			virtual double wear_ratio() const = 0;
-
 			/// @return The list of actions that can be performed with the weapon.
 			////
 			virtual std::vector<Action::ptr> actions() = 0;
@@ -62,12 +38,6 @@ namespace questless
 		virtual ~ModalWeapon() = default;
 
 		virtual double switch_time() const = 0;
-
-		Damage base_damage() const override { return _form->base_damage(); }
-		double wind_up() const override { return _form->wind_up(); }
-		double follow_through() const override { return _form->follow_through(); }
-		double cooldown() const override { return _form->cooldown(); }
-		double wear_ratio() const override { return _form->wear_ratio(); }
 
 		std::vector<Action::ptr> actions() override { return _form->actions(); }
 	protected:
@@ -98,7 +68,7 @@ namespace questless
 			std::string const _name;
 		};
 
-		ModalWeapon(Form::ptr initial_form) : _form{std::move(initial_form)} {}
+		ModalWeapon(double integrity, Form::ptr initial_form) : Weapon{integrity}, _form{std::move(initial_form)} {}
 
 		/// @return The weapon's current form.
 		////

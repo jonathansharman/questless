@@ -30,7 +30,11 @@ namespace questless
 
 		/// @return Whether the item is currently equipped to a being.
 		////
-		bool equipped() const { return static_cast<bool>(_bearer_id); } /// @todo Replace with .has_value() after replacing boost::optional with std::optional.
+		bool equipped() const { return _bearer_id.has_value(); }
+
+		/// @return The ID of the being bearing this equipment or nullopt if it's currently unequipped.
+		////
+		std::optional<Id<Being>> bearer_id() const { return _bearer_id; }
 	protected:
 		struct Heads : TaggedType<int> { using TaggedType::TaggedType; };
 		struct Torsos : TaggedType<int> { using TaggedType::TaggedType; };
@@ -47,7 +51,7 @@ namespace questless
 			constexpr Requirements() : _heads{0}, _torsos{0}, _arms{0}, _hands{0}, _legs{0}, _feet{0}, _wings{0}, _tails{0} {}
 
 			constexpr Requirements
-			(Heads heads
+				( Heads heads
 				, Torsos torsos
 				, Arms arms
 				, Hands hands
@@ -55,7 +59,7 @@ namespace questless
 				, Feet feet
 				, Wings wings
 				, Tails tails
-			)
+				)
 				: _heads{std::move(heads)}
 				, _torsos{std::move(torsos)}
 				, _arms{std::move(arms)}
@@ -118,7 +122,7 @@ namespace questless
 		};
 		friend class Unequip;
 	private:
-		boost::optional<Id<Being>> _bearer_id;
+		std::optional<Id<Being>> _bearer_id;
 		std::vector<Id<BodyPart>> _part_ids;
 
 		std::vector<Id<BodyPart>> _head_ids;

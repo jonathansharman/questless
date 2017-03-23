@@ -39,7 +39,7 @@ namespace questless
 
 		/// The ID of the item equipped to this body or nullopt if none.
 		////
-		boost::optional<Id<Item>> equipped_item_id;
+		std::optional<Id<Item>> equipped_item_id;
 
 		/// @param owner The being that owns this body.
 		/// @param name The name of the body part.
@@ -123,7 +123,7 @@ namespace questless
 		/// @param damage Damage to be applied to this being.
 		/// @param source_id The ID of the being which caused the damage, if any.
 		////
-		void take_damage(Damage& damage, boost::optional<Id<Being>> source_id);
+		void take_damage(Damage& damage, std::optional<Id<Being>> source_id);
 	private:
 		Being& _owner;
 

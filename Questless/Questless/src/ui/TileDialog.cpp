@@ -17,7 +17,7 @@ namespace questless
 	Dialog::State TileDialog::update()
 	{
 		if (input().presses(SDLK_BACKSPACE) || input().presses(SDLK_ESCAPE)) {
-			return _cont(boost::none);
+			return _cont(std::nullopt);
 		}
 
 		if (_origin) {

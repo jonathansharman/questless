@@ -11,8 +11,7 @@
 
 #include <string>
 #include <functional>
-
-#include <boost/optional.hpp>
+#include <optional>
 
 #include "Dialog.h"
 
@@ -25,9 +24,9 @@ namespace questless
 			( std::string title
 			, std::string prompt
 			, int default
-			, boost::optional<int> min
-			, boost::optional<int> max
-			, std::function<void(boost::optional<int>)> cont
+			, std::optional<int> min
+			, std::optional<int> max
+			, std::function<void(std::optional<int>)> cont
 			)
 			: _title{std::move(title)}
 			, _prompt{std::move(prompt)}
@@ -46,9 +45,9 @@ namespace questless
 		std::string _title;
 		std::string _prompt;
 		int _count;
-		boost::optional<int> _min;
-		boost::optional<int> _max;
-		Continuation<boost::optional<int>> _cont;
+		std::optional<int> _min;
+		std::optional<int> _max;
+		Continuation<std::optional<int>> _cont;
 
 		sdl::Texture::ptr _txt_title;
 		sdl::Texture::ptr _txt_prompt;

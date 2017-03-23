@@ -103,7 +103,7 @@ namespace questless::qte
 			game().camera().draw
 				( texture_manager()[point_charge_texture_handle]
 				, point_charge.position
-				, Origin{boost::none}
+				, Origin{std::nullopt}
 				, Color{255, 255, percentage_to_byte(intensity)}
 				, HScale{(1.0 + intensity) / 2.0}
 				, VScale{(1.0 + intensity) / 2.0}

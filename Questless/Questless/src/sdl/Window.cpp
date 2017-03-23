@@ -75,8 +75,8 @@ namespace sdl
 	void Window::recreate()
 	{
 		// Cached width and height no longer valid.
-		_width = boost::none;
-		_height = boost::none;
+		_width = std::nullopt;
+		_height = std::nullopt;
 
 		SDL_Window* old_sdl_window = _sdl_window;
 		int x_init = x();

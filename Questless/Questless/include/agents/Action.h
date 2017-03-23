@@ -1,10 +1,8 @@
 /**
-* @file    Item.h
+* @file    Action.h
 * @author  Jonathan Sharman
 *
 * @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION An action that a being can perform.
 */
 
 #pragma once
@@ -20,6 +18,7 @@ namespace questless
 {
 	class Being;
 
+	/// An action that a being can perform via its controlling agent.
 	class Action
 	{
 	public:

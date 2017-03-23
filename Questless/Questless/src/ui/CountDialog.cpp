@@ -17,7 +17,7 @@ namespace questless
 	Dialog::State CountDialog::update()
 	{
 		if (input().presses(SDLK_BACKSPACE) || input().presses(SDLK_ESCAPE)) {
-			return _cont(boost::none);
+			return _cont(std::nullopt);
 		}
 
 		int old_count = _count;

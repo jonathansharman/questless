@@ -12,8 +12,7 @@
 #include <vector>
 #include <string>
 #include <chrono>
-
-#include <boost/optional.hpp>
+#include <optional>
 
 #include "units/SpriteSheetPoint.h"
 #include "units/TexturePoint.h"

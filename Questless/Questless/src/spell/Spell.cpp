@@ -57,7 +57,7 @@ namespace questless::spell
 
 	void Spell::gain_charge(int amount)
 	{
-		if (boost::optional<int> max = max_charges()) {
+		if (std::optional<int> max = max_charges()) {
 			_charges += amount;
 			if (_charges > *max) {
 				_charges = *max;

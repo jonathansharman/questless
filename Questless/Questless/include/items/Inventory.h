@@ -12,8 +12,7 @@
 #include <vector>
 #include <array>
 #include <string>
-
-#include <boost/optional.hpp>
+#include <optional>
 
 #include "Item.h"
 #include "utility/Stream.h"
@@ -30,7 +29,7 @@ namespace questless
 
 			std::string label = "";
 
-			std::array<std::array<boost::optional<Id<Item>>, columns>, rows> item_ids;
+			std::array<std::array<std::optional<Id<Item>>, columns>, rows> item_ids;
 		};
 
 		struct Coords

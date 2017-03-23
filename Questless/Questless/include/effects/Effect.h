@@ -62,7 +62,7 @@ namespace questless
 		/// @param damage The damage dealt.
 		/// @param target_id The id of the injured being.
 		/// @param opt_source_id The id of the being who caused the injury or nullopt if there is none.
-		InjuryEffect(RegionTileCoords origin, Damage damage, Id<Being> target_id, boost::optional<Id<Being>> opt_source_id)
+		InjuryEffect(RegionTileCoords origin, Damage damage, Id<Being> target_id, std::optional<Id<Being>> opt_source_id)
 			: Effect{origin}, _damage{damage}, _target_id{target_id}, _opt_source_id{opt_source_id}
 		{}
 
@@ -72,10 +72,10 @@ namespace questless
 
 		Damage const& damage() const { return _damage; }
 		Id<Being> target_id() const { return _target_id; }
-		boost::optional<Id<Being>> opt_source_id() const { return _opt_source_id; }
+		std::optional<Id<Being>> opt_source_id() const { return _opt_source_id; }
 	private:
 		Damage _damage;
 		Id<Being> _target_id;
-		boost::optional<Id<Being>> _opt_source_id;
+		std::optional<Id<Being>> _opt_source_id;
 	};
 }

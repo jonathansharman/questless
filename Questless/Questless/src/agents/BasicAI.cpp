@@ -53,7 +53,7 @@ namespace questless
 	}
 	void BasicAI::AttackState::act(BasicAI& ai)
 	{
-		if (Being* target = game().beings[target_id]) {
+		if (Being* target = game().beings.get(target_id)) {
 			if (ai.being.coords.distance_to(target->coords) == 1) {
 				// Within striking distance of target.
 				/// @todo This is a hack that assumes the first item in the inventory is a melee weapon.
@@ -94,23 +94,23 @@ namespace questless
 	Action::Complete BasicAI::query_count
 		( CountQuery::ptr query
 		, int default
-		, boost::optional<int> min
-		, boost::optional<int> max
-		, std::function<Action::Complete(boost::optional<int>)> cont
+		, std::optional<int> min
+		, std::optional<int> max
+		, std::function<Action::Complete(std::optional<int>)> cont
 		) const
 	{
 		struct CountQueryHandler : CountQueryVisitor
 		{
 			int default;
-			boost::optional<int> min;
-			boost::optional<int> max;
-			std::function<Action::Complete(boost::optional<int>)> cont;
+			std::optional<int> min;
+			std::optional<int> max;
+			std::function<Action::Complete(std::optional<int>)> cont;
 
 			CountQueryHandler
 				( int default
-				, boost::optional<int> min
-				, boost::optional<int> max
-				, std::function<Action::Complete(boost::optional<int>)> cont
+				, std::optional<int> min
+				, std::optional<int> max
+				, std::function<Action::Complete(std::optional<int>)> cont
 				)
 				: default{default}, min{min}, max{max}, cont{std::move(cont)}
 			{}
@@ -124,23 +124,23 @@ namespace questless
 	Action::Complete BasicAI::query_magnitude
 		( MagnitudeQuery::ptr query
 		, double default
-		, boost::optional<double> min
-		, boost::optional<double> max
-		, std::function<Action::Complete(boost::optional<double>)> cont
+		, std::optional<double> min
+		, std::optional<double> max
+		, std::function<Action::Complete(std::optional<double>)> cont
 		) const
 	{
 		struct MagnitudeQueryHandler : MagnitudeQueryVisitor
 		{
 			double default;
-			boost::optional<double> min;
-			boost::optional<double> max;
-			std::function<Action::Complete(boost::optional<double>)> cont;
+			std::optional<double> min;
+			std::optional<double> max;
+			std::function<Action::Complete(std::optional<double>)> cont;
 
 			MagnitudeQueryHandler
 				( double default
-				, boost::optional<double> min
-				, boost::optional<double> max
-				, std::function<Action::Complete(boost::optional<double>)> cont
+				, std::optional<double> min
+				, std::optional<double> max
+				, std::function<Action::Complete(std::optional<double>)> cont
 				)
 				: default{default}, min{min}, max{max}, cont{std::move(cont)}
 			{}
@@ -166,23 +166,23 @@ namespace questless
 
 	Action::Complete BasicAI::query_tile
 		( TileQuery::ptr query
-		, boost::optional<RegionTileCoords> origin
+		, std::optional<RegionTileCoords> origin
 		, std::function<bool(RegionTileCoords)> predicate
-		, std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont
+		, std::function<Action::Complete(std::optional<RegionTileCoords>)> cont
 		) const
 	{
 		struct TileQueryHandler : TileQueryVisitor
 		{
 			BasicAI const& ai;
-			boost::optional<RegionTileCoords> origin;
+			std::optional<RegionTileCoords> origin;
 			std::function<bool(RegionTileCoords)> predicate;
-			std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont;
+			std::function<Action::Complete(std::optional<RegionTileCoords>)> cont;
 
 			TileQueryHandler
 				( BasicAI const& ai
-				, boost::optional<RegionTileCoords> origin
+				, std::optional<RegionTileCoords> origin
 				, std::function<bool(RegionTileCoords)> predicate
-				, std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont
+				, std::function<Action::Complete(std::optional<RegionTileCoords>)> cont
 				)
 				: ai{ai}
 				, origin{std::move(origin)}
@@ -193,33 +193,33 @@ namespace questless
 			void visit(TileQueryMeleeTarget const&) override
 			{
 				auto target_id = dynamic_cast<AttackState*>(ai._state.get())->target_id;
-				if (Being* target = game().beings[target_id]) {
+				if (Being* target = game().beings.get(target_id)) {
 					// Attack towards the target.
 					auto direction = ai.being.coords.direction_towards(target->coords);
 					cont(origin->neighbor(direction));
 					return;
 				}
-				cont(boost::none);
+				cont(std::nullopt);
 			}
 			void visit(TileQueryRangedTarget const& query) override
 			{
 				auto target_id = dynamic_cast<AttackState*>(ai._state.get())->target_id;
-				if (Being* target = game().beings[target_id]) {
+				if (Being* target = game().beings.get(target_id)) {
 					if (ai.being.coords.distance_to(target->coords) <= query.range) {
 						// If in range, shoot the target.
 						cont(target->coords);
 						return;
 					}
 				}
-				cont(boost::none);
+				cont(std::nullopt);
 			}
 			void visit(TileQueryLightningBoltTarget const&) override
 			{
-				cont(boost::none);
+				cont(std::nullopt);
 			}
 			void visit(TileQueryTeleportTarget const&) override
 			{
-				cont(boost::none);
+				cont(std::nullopt);
 			}
 		};
 
@@ -231,19 +231,19 @@ namespace questless
 	Action::Complete BasicAI::query_being
 		( BeingQuery::ptr //query
 		, std::function<bool(Being&)> //predicate
-		, std::function<Action::Complete(boost::optional<Being*>)> cont
+		, std::function<Action::Complete(std::optional<Being*>)> cont
 		) const
 	{
-		return cont(boost::none);
+		return cont(std::nullopt);
 	}
 
 	Action::Complete BasicAI::query_item
 		( ItemQuery::ptr //query
 		, Being& //source
 		, std::function<bool(Being&)> //predicate
-		, std::function<Action::Complete(boost::optional<Item*>)> cont
+		, std::function<Action::Complete(std::optional<Item*>)> cont
 		) const
 	{
-		return cont(boost::none);
+		return cont(std::nullopt);
 	}
 }

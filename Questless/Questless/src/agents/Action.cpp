@@ -3,11 +3,9 @@
 * @author  Jonathan Sharman
 *
 * @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implementation for the Action abstract base class.
 */
 
-#include "entities/beings/Action.h"
+#include "agents/Action.h"
 #include "entities/beings/Being.h"
 #include "agents/Agent.h"
 

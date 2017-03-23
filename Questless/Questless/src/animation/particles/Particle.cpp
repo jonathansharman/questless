@@ -35,7 +35,7 @@ namespace questless
 		camera.draw
 			( texture()
 			, _position
-			, Origin{boost::none}
+			, Origin{std::nullopt}
 			, sdl::Color::white(fade_out() ? percentage_to_byte(_time_left.count() / _lifetime.count()) : 255)
 			, HScale{_scale}
 			, VScale{_scale}

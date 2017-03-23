@@ -9,14 +9,13 @@
 
 #pragma once
 
-#include <string>
 #include <stdexcept>
 #include <memory>
 #include <algorithm>
 #include <functional>
 #include <memory>
 
-#include <boost/optional.hpp>
+#include <optional>
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -51,7 +50,7 @@ namespace sdl
 		/// @param filename The name of the image file.
 		/// @param targetable Whether the texture can be used as a render target.
 		/// @param blend_mode The SDL blend mode to use for this texture. Determines the way the alpha channel is used.
-		Texture(std::string const& filename, bool targetable = false, SDL_BlendMode blend_mode = SDL_BLENDMODE_BLEND);
+		Texture(char const* filename, bool targetable = false, SDL_BlendMode blend_mode = SDL_BLENDMODE_BLEND);
 
 		/// Constructs a texture object from an SDL texture.
 		/// @param texture An SDL texture pointer.
@@ -89,7 +88,7 @@ namespace sdl
 		/// @param dst_rect The portion of the screen to which the texture should be copied.
 		/// @param src_rect The portion of the texture which should be copied.
 		/// @param src_rect An optional Rect specifying the portion of the texture to be copied. If nullopt, the entire texture is used.
-		void draw(units::ScreenRect const& dst_rect, boost::optional<units::TextureRect> const& src_rect = boost::none) const;
+		void draw(units::ScreenRect const& dst_rect, std::optional<units::TextureRect> const& src_rect = std::nullopt) const;
 	
 		/// Copies all or part of the texture to the current render target.
 		/// @param position The coordinates of the texture on the screen.
@@ -100,7 +99,7 @@ namespace sdl
 			( units::ScreenPoint position
 			, HAlign horizontal_alignment = HAlign::left
 			, VAlign vertical_alignment = VAlign::top
-			, boost::optional<units::TextureRect> const& src_rect = boost::none
+			, std::optional<units::TextureRect> const& src_rect = std::nullopt
 			) const;
 
 		/// Copies all or part the texture to the current render target, applying the provided transformations.
@@ -115,14 +114,14 @@ namespace sdl
 		/// @param src_rect An optional Rect specifying the portion of the texture to be copied. If nullopt, the entire texture is used.
 		void draw_transformed
 			(units::ScreenPoint position
-			, boost::optional<units::TexturePoint> origin = boost::none
+			, std::optional<units::TexturePoint> origin = std::nullopt
 			, Color color = Color::white()
 			, double horizontal_scale = 1.0
 			, double vertical_scale = 1.0
 			, units::GameRadians angle = units::GameRadians{0.0} /// @todo This should probably use "ScreenRadians" or something.
 			, bool flip_horizontally = false
 			, bool flip_vertically = false
-			, boost::optional<units::TextureRect> const& src_rect = boost::none
+			, std::optional<units::TextureRect> const& src_rect = std::nullopt
 			) const;
 
 		/// Executes the given code with this texture as the render target so that draw operations will affect this texture instead of the screen buffer.

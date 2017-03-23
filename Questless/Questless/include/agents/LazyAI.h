@@ -35,52 +35,52 @@ namespace questless
 		Action::Complete query_count
 			( CountQuery::ptr
 			, int
-			, boost::optional<int>
-			, boost::optional<int>
-			, std::function<Action::Complete(boost::optional<int>)> cont
+			, std::optional<int>
+			, std::optional<int>
+			, std::function<Action::Complete(std::optional<int>)> cont
 			) const override
 		{
-			return cont(boost::none);
+			return cont(std::nullopt);
 		}
 
 		Action::Complete query_magnitude
 			( MagnitudeQuery::ptr
 			, double
-			, boost::optional<double>
-			, boost::optional<double>
-			, std::function<Action::Complete(boost::optional<double>)> cont
+			, std::optional<double>
+			, std::optional<double>
+			, std::function<Action::Complete(std::optional<double>)> cont
 			) const override
 		{
-			return cont(boost::none);
+			return cont(std::nullopt);
 		}
 
 		Action::Complete query_tile
 			( TileQuery::ptr
-			, boost::optional<RegionTileCoords>
+			, std::optional<RegionTileCoords>
 			, std::function<bool(RegionTileCoords)>
-			, std::function<Action::Complete(boost::optional<RegionTileCoords>)> cont
+			, std::function<Action::Complete(std::optional<RegionTileCoords>)> cont
 			) const override
 		{
-			return cont(boost::none);
+			return cont(std::nullopt);
 		}
 
 		Action::Complete query_being
 			( BeingQuery::ptr
 			, std::function<bool(Being&)>
-			, std::function<Action::Complete(boost::optional<Being*>)> cont
+			, std::function<Action::Complete(std::optional<Being*>)> cont
 			) const override
 		{
-			return cont(boost::none);
+			return cont(std::nullopt);
 		}
 
 		Action::Complete query_item
 			( ItemQuery::ptr
 			, Being&
 			, std::function<bool(Being&)>
-			, std::function<Action::Complete(boost::optional<Item*>)> cont
+			, std::function<Action::Complete(std::optional<Item*>)> cont
 			) const override
 		{
-			return cont(boost::none);
+			return cont(std::nullopt);
 		}
 	};
 }

@@ -10,11 +10,10 @@
 #pragma once
 
 #include <string>
+#include <optional>
 #include <memory>
 
-#include <boost/optional.hpp>
-
-#include "entities/beings/Action.h"
+#include "agents/Action.h"
 
 namespace questless::spell
 {
@@ -82,7 +81,7 @@ namespace questless::spell
 
 		/// @return The maximum number of charges the spell can hold or nullopt if the spell has infinite charges.
 		////
-		virtual boost::optional<int> max_charges() const = 0;
+		virtual std::optional<int> max_charges() const = 0;
 
 		/// @return The current number of spell charges.
 		////

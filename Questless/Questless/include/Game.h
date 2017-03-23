@@ -153,7 +153,7 @@ namespace questless
 		enum class State { splash, menu, playing };
 		State _state;
 
-		boost::optional<Id<Being>> _player_being_id;
+		std::optional<Id<Being>> _player_being_id;
 		Player* _player;
 
 		double _time;

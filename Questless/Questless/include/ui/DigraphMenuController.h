@@ -90,6 +90,6 @@ namespace questless
 		/// Finds the first page with the given page title, if it exists.
 		/// @param page_title The title of the page to be found.
 		/// @return The index of the page or nullopt if no matching page was found.
-		boost::optional<int> find(std::string const& page_title);
+		std::optional<int> find(std::string const& page_title);
 	};
 }

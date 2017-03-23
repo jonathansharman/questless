@@ -62,11 +62,11 @@ namespace questless
 
 		/// @param tile_coords Tile coordinates within the region.
 		/// @return The ID of the being at the given tile coordinates or nullopt if there is none.
-		boost::optional<Id<Being>> being_id(RegionTileCoords tile_coords) const;
+		std::optional<Id<Being>> being_id(RegionTileCoords tile_coords) const;
 
 		/// @param tile_coords Tile coordinates within the region.
-		/// @return The ID of the object at the given tile coordinates or nullptr if there is none.
-		boost::optional<Id<Object>> object_id(RegionTileCoords tile_coords) const;
+		/// @return The ID of the object at the given tile coordinates or nullopt if there is none.
+		std::optional<Id<Object>> object_id(RegionTileCoords tile_coords) const;
 
 		/// Adds the given being to the section. Throws a logic_error if there is already a being at its coordinates.
 		////

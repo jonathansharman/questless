@@ -11,8 +11,7 @@
 
 #include <string>
 #include <functional>
-
-#include <boost/optional.hpp>
+#include <optional>
 
 #include "Dialog.h"
 #include "animation/Camera.h"
@@ -27,9 +26,9 @@ namespace questless
 			( std::string title
 			, std::string prompt
 			, Camera const& camera
-			, boost::optional<RegionTileCoords> origin
+			, std::optional<RegionTileCoords> origin
 			, std::function<bool(RegionTileCoords)> predicate
-			, std::function<void(boost::optional<RegionTileCoords>)> cont
+			, std::function<void(std::optional<RegionTileCoords>)> cont
 			)
 			: _title{std::move(title)}
 			, _prompt{std::move(prompt)}
@@ -48,9 +47,9 @@ namespace questless
 		std::string _title;
 		std::string _prompt;
 		Camera const& _camera;
-		boost::optional<RegionTileCoords> _origin;
+		std::optional<RegionTileCoords> _origin;
 		std::function<bool(RegionTileCoords)> _predicate;
-		Continuation<boost::optional<RegionTileCoords>> _cont;
+		Continuation<std::optional<RegionTileCoords>> _cont;
 
 		sdl::Texture::ptr _txt_title;
 		sdl::Texture::ptr _txt_prompt;

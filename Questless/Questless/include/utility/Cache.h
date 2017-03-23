@@ -37,7 +37,7 @@ namespace questless
 		/// @param id The ID of the desired object.
 		/// @return A pointer to the requested object or nullptr if the object does not exist.
 		////
-		element_t* operator [](Id<element_t> id) const
+		element_t* get(Id<element_t> id) const
 		{
 			auto it = _cache.find(id);
 			if (it != _cache.end()) {
@@ -61,7 +61,7 @@ namespace questless
 			constexpr bool valid_cast = std::is_base_of<element_t, TargetType>::value || std::is_base_of<TargetType, element_t>::value;
 			static_assert(valid_cast, "Cache::get_as requires \"is-a\" relationship between the cache element type and the target type.");
 
-			return dynamic_cast<TargetType*>((*this)[id]);
+			return dynamic_cast<TargetType*>(get(id));
 		}
 
 

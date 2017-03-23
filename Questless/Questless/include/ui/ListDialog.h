@@ -25,7 +25,7 @@ namespace questless
 			( units::ScreenPoint origin
 			, std::string title
 			, std::vector<std::string> options
-			, std::function<void(boost::optional<int>)> cont
+			, std::function<void(std::optional<int>)> cont
 			)
 			: _bounds{origin.x, origin.y, 0, 0}
 			, _title{std::move(title)}
@@ -39,7 +39,7 @@ namespace questless
 		State update() override
 		{
 			if (sdl::input().presses(SDLK_BACKSPACE) || sdl::input().presses(SDLK_ESCAPE)) {
-				return _cont(boost::none);
+				return _cont(std::nullopt);
 			}
 
 			int const option_count = static_cast<int>(_options.size());
@@ -96,7 +96,7 @@ namespace questless
 		units::ScreenRect _bounds;
 		std::string _title;
 		std::vector<std::string> _options;
-		Continuation<boost::optional<int>> _cont;
+		Continuation<std::optional<int>> _cont;
 
 		sdl::Texture::ptr _txt_title;
 		std::vector<sdl::Texture::ptr> _txt_options;

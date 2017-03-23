@@ -24,8 +24,8 @@ namespace questless
 
 	Action::Complete Agent::idle(Action::cont_t cont)
 	{
-		return query_magnitude(std::make_unique<MagnitudeQueryWaitTime>(), 10.0, 0.0, boost::none,
-			[this, cont](boost::optional<double> duration) {
+		return query_magnitude(std::make_unique<MagnitudeQueryWaitTime>(), 10.0, 0.0, std::nullopt,
+			[this, cont](std::optional<double> duration) {
 				if (duration) {
 					being.busy_time += *duration;
 					return cont(Action::Result::success);

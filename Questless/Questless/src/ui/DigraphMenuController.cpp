@@ -44,9 +44,9 @@ namespace questless
 
 	void DigraphMenuController::add_option(string const& page_title, string const& option_name)
 	{
-		boost::optional<int> page_index = find(page_title);
+		std::optional<int> page_index = find(page_title);
 		if (page_index) {
-			_menu.pages[page_index.value()].options.push_back(DigraphMenuModel::Page::Option(option_name, boost::none));
+			_menu.pages[page_index.value()].options.push_back(DigraphMenuModel::Page::Option(option_name, std::nullopt));
 			_view.invalidate_render();
 		} else {
 			throw invalid_argument("Attempted to add an option to a nonexistent menu page.");
@@ -55,9 +55,9 @@ namespace questless
 
 	void DigraphMenuController::add_option(string const& location_page_title, string const& option_name, string const& target_page_title)
 	{
-		boost::optional<int> location_page_index = find(location_page_title);
+		std::optional<int> location_page_index = find(location_page_title);
 		if (location_page_index) {
-			boost::optional<int> target_index = find(target_page_title);
+			std::optional<int> target_index = find(target_page_title);
 			if (target_index) {
 				_menu.pages[location_page_index.value()].options.push_back(DigraphMenuModel::Page::Option(option_name, target_index.value()));
 				_view.invalidate_render();
@@ -82,7 +82,7 @@ namespace questless
 	
 	void DigraphMenuController::set_option(string const& page_title, int option_index)
 	{
-		boost::optional<int> page_index = find(page_title);
+		std::optional<int> page_index = find(page_title);
 		if (!page_index) {
 			throw invalid_argument("Attempted to set the option of a nonexistent menu page.");
 		} else {
@@ -108,7 +108,7 @@ namespace questless
 
 		// Get index of option over which the mouse is hovering, if any.
 
-		boost::optional<int> hovered_option_index = boost::none;
+		std::optional<int> hovered_option_index = std::nullopt;
 		ScreenPoint position = _view.content_position();
 		position.y += DigraphMenuView::title_height;
 		for (size_t i = 0; i < current_options().size(); ++i) {
@@ -176,13 +176,13 @@ namespace questless
 		_view.draw();
 	}
 
-	boost::optional<int> DigraphMenuController::find(string const& page_title)
+	std::optional<int> DigraphMenuController::find(string const& page_title)
 	{
 		for (size_t i = 0; i < _menu.pages.size(); ++i) {
 			if (_menu.pages[i].title == page_title) {
 				return static_cast<int>(i);
 			}
 		}
-		return boost::none;
+		return std::nullopt;
 	}
 }

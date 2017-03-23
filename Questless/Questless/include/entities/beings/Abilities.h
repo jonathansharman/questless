@@ -3,8 +3,6 @@
 * @author  Jonathan Sharman
 *
 * @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The list of actions a being is able to perform.
 */
 
 #pragma once
@@ -12,12 +10,13 @@
 #include <vector>
 #include <memory>
 
-#include "Action.h"
+#include "agents/Action.h"
 
 namespace questless
 {
 	class Being;
 
+	/// The list of actions a being is able to perform.
 	class Abilities
 	{
 	public:

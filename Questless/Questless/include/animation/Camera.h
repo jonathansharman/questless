@@ -20,12 +20,12 @@
 
 namespace questless
 {
-	struct Origin : TaggedType<boost::optional<units::GamePoint>> { using TaggedType::TaggedType; };
+	struct Origin : TaggedType<std::optional<units::GamePoint>> { using TaggedType::TaggedType; };
 	struct HScale : TaggedType<double> { using TaggedType::TaggedType; };
 	struct VScale : TaggedType<double> { using TaggedType::TaggedType; };
 	struct HFlip : TaggedType<bool> { using TaggedType::TaggedType; };
 	struct VFlip : TaggedType<bool> { using TaggedType::TaggedType; };
-	struct SrcRect : TaggedType<boost::optional<units::TextureRect>> { using TaggedType::TaggedType; };
+	struct SrcRect : TaggedType<std::optional<units::TextureRect>> { using TaggedType::TaggedType; };
 
 	class Camera
 	{
@@ -126,14 +126,14 @@ namespace questless
 		void draw
 			( sdl::Texture const& texture
 			, units::GamePoint position
-			, Origin origin = Origin{boost::none}
+			, Origin origin = Origin{std::nullopt}
 			, sdl::Color color = sdl::Color::white()
 			, HScale horizontal_scale = HScale{1.0}
 			, VScale vertical_scale = VScale{1.0}
 			, units::GameRadians angle = units::GameRadians{0.0}
 			, HFlip flip_horizontally = HFlip{false}
 			, VFlip flip_vertically = VFlip{false}
-			, SrcRect const& src_rect = SrcRect{boost::none}
+			, SrcRect const& src_rect = SrcRect{std::nullopt}
 			) const;
 
 		/// Draws lines relative to the camera connecting the series of points contained in the vector.

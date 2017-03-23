@@ -73,7 +73,7 @@ namespace questless
 			};
 		texture.draw_transformed
 			( screen_point(position)
-			, boost::none
+			, std::nullopt
 			, mixed_color
 			, _zoom * horizontal_scale
 			, _zoom * vertical_scale

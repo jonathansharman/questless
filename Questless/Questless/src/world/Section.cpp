@@ -83,7 +83,7 @@ namespace questless
 		std::vector<Being::ref> beings;
 		for (auto const& pair : _being_ids) {
 			auto id = pair.second;
-			beings.push_back(*game().beings[id]); // It is safe to assume anything referenced in the section still exists.
+			beings.push_back(*game().beings.get(id)); // It is safe to assume anything referenced in the section still exists.
 		}
 		return beings;
 	}
@@ -93,28 +93,28 @@ namespace questless
 		std::vector<Object::ref> objects;
 		for (auto const& pair : _object_ids) {
 			auto id = pair.second;
-			objects.push_back(*game().objects[id]); // It is safe to assume anything referenced in the section still exists.
+			objects.push_back(*game().objects.get(id)); // It is safe to assume anything referenced in the section still exists.
 		}
 		return objects;
 	}
 
-	boost::optional<Id<Being>> Section::being_id(RegionTileCoords tile_coords) const
+	std::optional<Id<Being>> Section::being_id(RegionTileCoords tile_coords) const
 	{
 		auto it = _being_ids.find(tile_coords);
-		return it != _being_ids.end() ? boost::make_optional(it->second) : boost::none;
+		return it != _being_ids.end() ? std::make_optional(it->second) : std::nullopt;
 	}
 
-	boost::optional<Id<Object>> Section::object_id(RegionTileCoords tile_coords) const
+	std::optional<Id<Object>> Section::object_id(RegionTileCoords tile_coords) const
 	{
 		auto it = _object_ids.find(tile_coords);
-		return it != _object_ids.end() ? boost::make_optional(it->second) : boost::none;
+		return it != _object_ids.end() ? std::make_optional(it->second) : std::nullopt;
 	}
 
 	typename void Section::remove_being(RegionTileCoords coords)
 	{
 		auto it = _being_ids.find(coords);
 		if (it != _being_ids.end()) {
-			if (Being* removed_being = game().beings[it->second]) {
+			if (Being* removed_being = game().beings.get(it->second)) {
 				removed_being->section = nullptr;
 			}
 			_being_ids.erase(it);
@@ -125,7 +125,7 @@ namespace questless
 	{
 		auto it = _object_ids.find(coords);
 		if (it != _object_ids.end()) {
-			if (Object* removed_object = game().objects[it->second]) {
+			if (Object* removed_object = game().objects.get(it->second)) {
 				removed_object->section = nullptr;
 			}
 			_object_ids.erase(it);

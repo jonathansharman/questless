@@ -20,7 +20,7 @@ namespace questless
 		/// @param magnitude How powerful the status modifier is.
 		/// @param duration The number of turns remaining before the status modifier expires.
 		/// @param source_id The ID of the being that caused the status modifier, if any.
-		Illuminated(double magnitude, int duration, boost::optional<Id<Being>> source_id = boost::none)
+		Illuminated(double magnitude, int duration, std::optional<Id<Being>> source_id = nullopt)
 			: Status("Illuminated", duration, source_id)
 			, _magnitude{magnitude}
 			, _modifiers

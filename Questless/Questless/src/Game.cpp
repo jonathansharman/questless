@@ -48,7 +48,7 @@ using namespace sdl;
 namespace questless
 {
 	Game::Game(bool fullscreen)
-		: _player_being_id{boost::none}
+		: _player_being_id{std::nullopt}
 		, _game_over{false}
 		, _splash_sound_played{false}
 		, _state{State::splash}
@@ -395,7 +395,7 @@ namespace questless
 					// Initialize the world renderer.
 					_world_renderer = make_unique<WorldRenderer>(_player->world_view());
 					// Set the camera position relative to the player's being.
-					_camera->position(GamePoint{Layout::dflt().to_world(beings[*_player_being_id]->coords)});
+					_camera->position(GamePoint{Layout::dflt().to_world(beings.get(*_player_being_id)->coords)});
 
 					_time_last_state_change = clock::now();
 					_state = State::playing;
@@ -419,7 +419,7 @@ namespace questless
 		if (input().pressed(MouseButton::right)) {
 			_point_clicked_rounded = Layout::dflt().to_world(_camera->tile_hovered());
 		}
-		_camera->draw(*_txt_hex_highlight, Layout::dflt().to_world(_camera->tile_hovered()), Origin{boost::none}, Color::white(128));
+		_camera->draw(*_txt_hex_highlight, Layout::dflt().to_world(_camera->tile_hovered()), Origin{std::nullopt}, Color::white(128));
 		_camera->draw(*_txt_hex_circle, _point_clicked_rounded);
 
 		_world_renderer->draw_objects();
@@ -551,7 +551,7 @@ namespace questless
 			follow = !follow;
 		}
 		if (follow) {
-			if (Being* player = beings[*_player_being_id]) {
+			if (Being* player = beings.get(*_player_being_id)) {
 				constexpr double recoil = 0.2;
 
 				GameVector to_player = Layout::dflt().to_world(player->coords) - _camera->position();
@@ -574,7 +574,7 @@ namespace questless
 	void Game::update_player_view()
 	{
 		/// @todo Do something nice when the player dies.
-		if (Being* player_being = beings[*_player_being_id]) {
+		if (Being* player_being = beings.get(*_player_being_id)) {
 			// Update the player's world view.
 			_player->update_world_view();
 			// Update the world renderer's world view.
