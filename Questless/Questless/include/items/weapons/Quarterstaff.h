@@ -32,7 +32,7 @@ namespace questless
 
 		double durability() const override { return 500.0; }
 
-		double switch_time() const override { return 1.0; }
+		double switch_time() const override { return 0.25; }
 	private:
 		class StandardForm : public Form
 		{

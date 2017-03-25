@@ -47,28 +47,6 @@ namespace questless
 			return actions;
 		}
 	private:
-		//class BeginFireArrow : public Action
-		//{
-		//public:
-		//	BeginFireArrow(Bow& bow) : _bow{bow} {}
-		//	static ptr make(Bow& bow) { return std::make_unique<BeginFireArrow>(bow); }
-		//	std::string name() const override { return "Fire"; }
-		//	Action::Complete perform(Being& actor, cont_t cont) override;
-		//private:
-		//	Bow& _bow;
-		//};
-
-		//class CompleteFireArrow : public Action
-		//{
-		//public:
-		//	CompleteFireArrow(Id<Item> bow_id) : _bow_id{bow_id} {}
-		//	static ptr make(Id<Item> bow_id) { return std::make_unique<CompleteFireArrow>(bow_id); }
-		//	std::string name() const override { return "Fire"; }
-		//	Action::Complete perform(Being& actor, cont_t cont) override;
-		//private:
-		//	Id<Item> _bow_id;
-		//};
-
 		class Fire : public RangedAttack
 		{
 		public:

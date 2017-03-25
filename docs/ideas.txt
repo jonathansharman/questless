@@ -269,6 +269,7 @@ Weapons
 	Melee
 		Blades
 			(Look up types of swords)
+				Include half-swording form for appropriate swords
 			Broadsword
 				Hands: 1
 				Damage: slash
@@ -307,6 +308,8 @@ Weapons
 				Two-phased attack
 					First it pierces
 					Then on the withdrawal it slashes (only if first phase misses?)
+			Pollaxe
+				Include both axe and hammer variants
 			War scythe
 				Slash or stab
 		Staves

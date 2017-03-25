@@ -24,10 +24,12 @@ namespace questless
 	public:
 		static constexpr double percent_pad_to_slash = 0.50;
 		static constexpr double percent_pad_to_pierce = 0.25;
+		static constexpr double percent_pad_to_cleave = 0.75;
 		static constexpr double percent_pad_to_bludgeon = 1.00;
 
 		static constexpr double percent_deflect_to_slash = 1.00;
-		static constexpr double percent_deflect_to_pierce = 0.50;
+		static constexpr double percent_deflect_to_pierce = 0.75;
+		static constexpr double percent_deflect_to_cleave = 0.50;
 		static constexpr double percent_deflect_to_bludgeon = 0.25;
 
 		static constexpr double percent_fireproof_to_burn = 1.00;
@@ -133,6 +135,7 @@ namespace questless
 			return Damage
 				{ Slash{_pad * percent_pad_to_slash + _deflect * percent_deflect_to_slash}
 				, Pierce{_pad * percent_pad_to_pierce + _deflect * percent_deflect_to_pierce}
+				, Cleave{_pad * percent_pad_to_cleave + _deflect * percent_deflect_to_cleave}
 				, Bludgeon{_pad * percent_pad_to_bludgeon + _deflect * percent_deflect_to_bludgeon}
 				, Burn{_fireproof * percent_fireproof_to_burn}
 				, Freeze{_frostproof * percent_frostproof_to_freeze}
