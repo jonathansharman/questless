@@ -11,7 +11,7 @@
 
 #include "spell/Spell.h"
 #include "utility/TaggedType.h"
-#include "utility/Property.h"
+#include "utility/Bounded.h"
 
 namespace questless
 {
@@ -23,20 +23,16 @@ namespace questless
 	struct YellowMagic : TaggedType<double> { using TaggedType::TaggedType; };
 
 	template <typename Derived>
-	class MagicStat
+	struct MagicStat
 	{
-	private:
-		constexpr static void nonnegative_mutator(double& value, double const& new_value)
-		{
-			value = std::max(new_value, 0.0);
-		}
-	public:
-		Property<double, nonnegative_mutator> white = 0.0;
-		Property<double, nonnegative_mutator> black = 0.0;
-		Property<double, nonnegative_mutator> green = 0.0;
-		Property<double, nonnegative_mutator> red = 0.0;
-		Property<double, nonnegative_mutator> blue = 0.0;
-		Property<double, nonnegative_mutator> yellow = 0.0;
+		static constexpr double minimum_value = 0.0;
+
+		Bounded<double, minimum_value> white = 0.0;
+		Bounded<double, minimum_value> black = 0.0;
+		Bounded<double, minimum_value> green = 0.0;
+		Bounded<double, minimum_value> red = 0.0;
+		Bounded<double, minimum_value> blue = 0.0;
+		Bounded<double, minimum_value> yellow = 0.0;
 
 		constexpr MagicStat() = default;
 
@@ -44,7 +40,7 @@ namespace questless
 			: white{std::max(0.0, white.value)}, black{std::max(0.0, black.value)}, green{std::max(0.0, green.value)}, red{std::max(0.0, red.value)}, blue{std::max(0.0, blue.value)}, yellow{std::max(0.0, yellow.value)}
 		{}
 
-		constexpr static Derived zero() { return Derived{}; }
+		static constexpr Derived zero() { return Derived{}; }
 
 		friend std::ostream& operator <<(std::ostream& out, MagicStat ma)
 		{
@@ -52,7 +48,7 @@ namespace questless
 			return out;
 		}
 
-		friend std::istream& operator >> (std::istream& in, MagicStat ma)
+		friend std::istream& operator >>(std::istream& in, MagicStat ma)
 		{
 			in >> ma.white >> ma.black >> ma.green >> ma.red >> ma.blue >> ma.yellow;
 			return in;

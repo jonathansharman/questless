@@ -44,8 +44,8 @@ namespace units
 			return out;
 		}
 
-		bool operator ==(Vector const& right) const { return x == right.x && y == right.y; }
-		bool operator !=(Vector const& right) const { return x != right.x || y != right.y; }
+		bool operator ==(Vector const& that) const { return x == that.x && y == that.y; }
+		bool operator !=(Vector const& that) const { return x != that.x || y != that.y; }
 
 		friend Vector operator +(Vector const& v1, Vector const& v2) { return Vector{v1.x + v2.x, v1.y + v2.y}; }
 		friend Vector operator -(Vector const& v1, Vector const& v2) { return Vector{v1.x - v2.x, v1.y - v2.y}; }

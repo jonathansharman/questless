@@ -14,7 +14,7 @@
 #include "MagicStats.h"
 #include "entities/beings/Protection.h"
 #include "entities/beings/DamageMultiplier.h"
-#include "utility/Property.h"
+#include "utility/Bounded.h"
 
 namespace questless
 {
@@ -37,30 +37,26 @@ namespace questless
 
 	/// Represents the stats of a being.
 	////
-	class Stats
+	struct Stats
 	{
-	private:
-		constexpr static void nonnegative_mutator(double& value, double const& new_value)
-		{
-			value = std::max(new_value, 0.0);
-		}
-	public:
-		Property<double, nonnegative_mutator> vitality = 0.0;
-		Property<double, nonnegative_mutator> spirit = 0.0;
-		Property<double, nonnegative_mutator> health_regen = 0.0;
-		Property<double, nonnegative_mutator> mana_regen = 0.0;
-		Property<double, nonnegative_mutator> strength = 0.0;
-		Property<double, nonnegative_mutator> endurance = 0.0;
-		Property<double, nonnegative_mutator> stamina = 0.0;
-		Property<double, nonnegative_mutator> agility = 0.0;
-		Property<double, nonnegative_mutator> dexterity = 0.0;
-		Property<double, nonnegative_mutator> stealth = 0.0;
+		static constexpr double minimum_value = 0.0;
+
+		Bounded<double, minimum_value> vitality = 0.0;
+		Bounded<double, minimum_value> spirit = 0.0;
+		Bounded<double, minimum_value> health_regen = 0.0;
+		Bounded<double, minimum_value> mana_regen = 0.0;
+		Bounded<double, minimum_value> strength = 0.0;
+		Bounded<double, minimum_value> endurance = 0.0;
+		Bounded<double, minimum_value> stamina = 0.0;
+		Bounded<double, minimum_value> agility = 0.0;
+		Bounded<double, minimum_value> dexterity = 0.0;
+		Bounded<double, minimum_value> stealth = 0.0;
 		Vision vision;
-		Property<double, nonnegative_mutator> hearing = 0.0;
-		Property<double, nonnegative_mutator> intellect = 0.0;
+		Bounded<double, minimum_value> hearing = 0.0;
+		Bounded<double, minimum_value> intellect = 0.0;
 		double weight = 0.0;
-		Property<double, nonnegative_mutator> min_temp = 0.0;
-		Property<double, nonnegative_mutator> max_temp = 0.0;
+		Bounded<double, minimum_value> min_temp = 0.0;
+		Bounded<double, minimum_value> max_temp = 0.0;
 		bool mute = false;
 
 		Protection protection = Protection::zero();

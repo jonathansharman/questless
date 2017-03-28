@@ -32,7 +32,7 @@ namespace units
 		constexpr explicit Angle(scalar_t count) : _count{std::move(count)} {}
 
 		/// @return The zero angle for the specified space and unit size, constructed using the default constructor of the scalar type.
-		constexpr static Angle<SpaceType, UnitsPerCircle> zero() { return Angle<SpaceType, UnitsPerCircle>{scalar_t{}}; }
+		static constexpr Angle<SpaceType, UnitsPerCircle> zero() { return Angle<SpaceType, UnitsPerCircle>{scalar_t{}}; }
 
 		constexpr scalar_t const& count() const& { return _count; }
 		scalar_t&& count() && { return std::move(_count); }
@@ -44,12 +44,12 @@ namespace units
 			return out;
 		}
 
-		constexpr bool operator <(Angle<space_t, units_per_circle> const& right) const { return _count < right._count; }
-		constexpr bool operator <=(Angle<space_t, units_per_circle> const& right) const { return _count <= right._count; }
-		constexpr bool operator ==(Angle<space_t, units_per_circle> const& right) const { return _count == right._count; }
-		constexpr bool operator !=(Angle<space_t, units_per_circle> const& right) const { return _count != right._count; }
-		constexpr bool operator >=(Angle<space_t, units_per_circle> const& right) const { return _count >= right._count; }
-		constexpr bool operator >(Angle<space_t, units_per_circle> const& right) const { return _count > right._count; }
+		constexpr bool operator <(Angle<space_t, units_per_circle> const& that) const { return _count < that._count; }
+		constexpr bool operator <=(Angle<space_t, units_per_circle> const& that) const { return _count <= that._count; }
+		constexpr bool operator ==(Angle<space_t, units_per_circle> const& that) const { return _count == that._count; }
+		constexpr bool operator !=(Angle<space_t, units_per_circle> const& that) const { return _count != that._count; }
+		constexpr bool operator >=(Angle<space_t, units_per_circle> const& that) const { return _count >= that._count; }
+		constexpr bool operator >(Angle<space_t, units_per_circle> const& that) const { return _count > that._count; }
 
 		// Closed under addition.
 		Angle<space_t, units_per_circle>& operator +=(Angle<space_t, units_per_circle> const& theta) &

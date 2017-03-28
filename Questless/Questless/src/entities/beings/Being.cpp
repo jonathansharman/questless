@@ -217,7 +217,7 @@ namespace questless
 					}
 
 					// Apply part's and being's protection stats.
-					damage -= part->protection().reduction() + stats.protection.reduction();
+					damage = damage.with(part->protection() + stats.protection);
 
 					// Part's armor takes resistance wear based on the final damage to the part before multipliers.
 					if (part->equipped_item_id) {
@@ -246,7 +246,7 @@ namespace questless
 					// Damage is non-part-targeted.
 
 					// Apply being's protection stat.
-					damage -= stats.protection.reduction();
+					damage = damage.with(stats.protection);
 
 					// Being loses health.
 					double health_lost = damage.with(total_resistance, total_vulnerability).total() / (1.0 + endurance_factor * stats.endurance);

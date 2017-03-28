@@ -257,34 +257,46 @@ namespace questless
 		static auto pierce_sound_handle = sound_manager().add("resources/sounds/weapons/pierce.wav");
 		static auto hit_sound_handle = sound_manager().add("resources/sounds/weapons/hit.wav");
 
+		Being const* target = game().beings.get(e.target_id());
+		double const target_vitality = target ? target->stats.vitality.get() : 100.0; // Assume vitality = 100 if being no longer exists to check.
+		/// @todo Pass along the vitality in the event object if it's needed here.
+
 		GamePoint position = Layout::dflt().to_world(e.origin());
 
-		Damage const& d = e.damage();
-		if (d.slash() > 0.0 || d.pierce() > 0.0 || d.bludgeon() > 0.0) {
-			for (int i = 0; i < 20; ++i) {
+		Damage const& damage = e.damage();
+
+		auto spawn_blood = [&](double const lost_health) {
+			int const n = static_cast<int>(lost_health / target_vitality * 100.0); // 100 is an arbitrary scaling factor.
+			for (int i = 0; i < n; ++i) {
 				_particles.emplace_back(make_unique<BloodParticle>(position));
 			}
-		}
-
-		if (d.slash() > 0.0) {
-			_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(e.damage().slash())), Color::white()));
-		}
-		if (d.pierce() > 0.0) {
-			_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(e.damage().pierce())), Color::white()));
-			sound_manager()[pierce_sound_handle].play();
-		}
-		if (d.bludgeon() > 0.0) {
-			_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(e.damage().bludgeon())), Color::white()));
-			sound_manager()[hit_sound_handle].play();
-		}
-		if (d.burn() > 0.0) {
-			_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(e.damage().burn())), Color::orange()));
-		}
-		if (d.freeze() > 0.0) {
-			_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(e.damage().freeze())), Color::cyan()));
-		}
-		if (d.blight() > 0.0) {
-			_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(e.damage().blight())), Color::black()));
+		};
+		for (Damage::Part const& part : damage.parts()) {
+			switch (part.type) {
+				case Damage::Part::Type::slash:
+					[[fallthrough]];
+				case Damage::Part::Type::pierce:
+					spawn_blood(part.amount);
+					_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(part.amount)), Color::white()));
+					sound_manager()[pierce_sound_handle].play();
+					break;
+				case Damage::Part::Type::cleave:
+					[[fallthrough]];
+				case Damage::Part::Type::bludgeon:
+					spawn_blood(part.amount);
+					_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(part.amount)), Color::white()));
+					sound_manager()[hit_sound_handle].play();
+					break;
+				case Damage::Part::Type::burn:
+					_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(part.amount)), Color::orange()));
+					break;
+				case Damage::Part::Type::freeze:
+					_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(part.amount)), Color::cyan()));
+					break;
+				case Damage::Part::Type::blight:
+					_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(part.amount)), Color::black()));
+					break;
+			}
 		}
 	}
 }

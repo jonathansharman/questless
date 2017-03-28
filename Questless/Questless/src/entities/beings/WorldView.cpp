@@ -30,12 +30,9 @@ namespace questless
 		Region const& region = _region;
 		RegionTileCoords coords = being.coords;
 		Vision vision = being.stats.vision;
-		double acuity = vision.acuity();
-		double ideal_light = vision.ideal_light();
-		double light_tolerance = vision.light_tolerance();
 
 		// Calculate the maximum distance the being can see.
-		int visual_range = static_cast<int>(sqrt(acuity / Vision::distance_factor));
+		int visual_range = static_cast<int>(sqrt(vision.acuity / Vision::distance_factor));
 
 		// Find the set of coordinates of sections plausibly visible to the being.
 		set<RegionSectionCoords> section_coords_set;
@@ -85,10 +82,10 @@ namespace questless
 					}
 					if (in_front) {
 						double light_level = region.light_level(region_tile_coords);
-						double vision_divisor = 1.0 + (light_level - ideal_light) * (light_level - ideal_light) / light_tolerance * Vision::light_factor;
+						double vision_divisor = 1.0 + (light_level - vision.ideal_light) * (light_level - vision.ideal_light) / vision.light_tolerance * Vision::light_factor;
 						int distance = coords.distance_to(region_tile_coords);
 
-						double tile_visibility = in_front ? (acuity - distance * distance * Vision::distance_factor) / vision_divisor : 0.0;
+						double tile_visibility = in_front ? (vision.acuity - distance * distance * Vision::distance_factor) / vision_divisor : 0.0;
 
 						// Update bounding rectangle.
 						if (find_bounds && tile_visibility > 0.0) {

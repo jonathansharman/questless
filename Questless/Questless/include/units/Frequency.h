@@ -27,19 +27,19 @@ namespace units
 		constexpr explicit Frequency(rep count) : _count{std::move(count)} {}
 
 		/// @return The zero f for the specified representation and period.
-		constexpr static Frequency<rep, period> zero() { return Frequency<rep, period>{std::chrono::duration_values<rep>::zero()}; }
+		static constexpr Frequency<rep, period> zero() { return Frequency<rep, period>{std::chrono::duration_values<rep>::zero()}; }
 
 		/// @return The number of cycles per unit period.
 		constexpr rep const& count() const& { return _count; }
 		/// @return The number of cycles per unit period.
 		rep& count() & { return _count; }
 
-		constexpr bool operator <(Frequency<rep, period> right) const { return _count < right._count; }
-		constexpr bool operator <=(Frequency<rep, period> right) const { return _count <= right._count; }
-		constexpr bool operator ==(Frequency<rep, period> right) const { return _count == right._count; }
-		constexpr bool operator !=(Frequency<rep, period> right) const { return _count != right._count; }
-		constexpr bool operator >=(Frequency<rep, period> right) const { return _count >= right._count; }
-		constexpr bool operator >(Frequency<rep, period> right) const { return _count > right._count; }
+		constexpr bool operator <(Frequency<rep, period> that) const { return _count < that._count; }
+		constexpr bool operator <=(Frequency<rep, period> that) const { return _count <= that._count; }
+		constexpr bool operator ==(Frequency<rep, period> that) const { return _count == that._count; }
+		constexpr bool operator !=(Frequency<rep, period> that) const { return _count != that._count; }
+		constexpr bool operator >=(Frequency<rep, period> that) const { return _count >= that._count; }
+		constexpr bool operator >(Frequency<rep, period> that) const { return _count > that._count; }
 
 		// Closed under addition.
 		Frequency<rep, period>& operator +=(Frequency<rep, period> f) &

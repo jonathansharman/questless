@@ -32,8 +32,8 @@ namespace units
 			return out;
 		}
 
-		constexpr bool operator ==(Point const& right) const { return x == right.x && y == right.y; }
-		constexpr bool operator !=(Point const& right) const { return x != right.x || y != right.y; }
+		constexpr bool operator ==(Point const& that) const { return x == that.x && y == that.y; }
+		constexpr bool operator !=(Point const& that) const { return x != that.x || y != that.y; }
 		
 		constexpr friend Point operator +(Point const& p, Vector<space_t> const& v) { return Point{p.x + v.x, p.y + v.y}; }
 		constexpr friend Point operator +(Vector<space_t> const& v, Point p) { return Point{v.x + p.x, v.y + p.y}; }

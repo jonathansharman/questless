@@ -682,6 +682,9 @@
     <ClInclude Include="include\agents\Action.h">
       <Filter>include\agents</Filter>
     </ClInclude>
+    <ClInclude Include="include\utility\Bounded.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\world\Region.cpp">

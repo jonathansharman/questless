@@ -69,66 +69,66 @@ namespace questless
 		// Arithmetic Assignment Operators
 
 		template <typename T>
-		Property& operator +=(T const& right)
+		Property& operator +=(T const& that)
 		{
-			set(_value + right);
+			set(_value + that);
 			return *this;
 		}
 		template <typename T>
-		Property& operator -=(T const& right)
+		Property& operator -=(T const& that)
 		{
-			set(_value - right);
+			set(_value - that);
 			return *this;
 		}
 		template <typename T>
-		Property& operator *=(T const& right)
+		Property& operator *=(T const& that)
 		{
-			set(_value * right);
+			set(_value * that);
 			return *this;
 		}
 		template <typename T>
-		Property& operator /=(T const& right)
+		Property& operator /=(T const& that)
 		{
-			set(_value / right);
+			set(_value / that);
 			return *this;
 		}
 		template <typename T>
-		Property& operator %=(T const& right)
+		Property& operator %=(T const& that)
 		{
-			set(_value % right);
+			set(_value % that);
 			return *this;
 		}
 
 		// Bitwise Assignment Operators
 
 		template <typename T>
-		Property& operator &=(T const& right)
+		Property& operator &=(T const& that)
 		{
-			set(_value & right);
+			set(_value & that);
 			return *this;
 		}
 		template <typename T>
-		Property& operator |=(T const& right)
+		Property& operator |=(T const& that)
 		{
-			set(_value | right);
+			set(_value | that);
 			return *this;
 		}
 		template <typename T>
-		Property& operator ^=(T const& right)
+		Property& operator ^=(T const& that)
 		{
-			set(_value | right);
+			set(_value | that);
 			return *this;
 		}
 		template <typename T>
-		Property& operator <<=(T const& right)
+		Property& operator <<=(T const& that)
 		{
-			set(_value << right);
+			set(_value << that);
 			return *this;
 		}
 		template <typename T>
-		Property& operator >>=(T const& right)
+		Property& operator >>=(T const& that)
 		{
-			set(_value >> right);
+			set(_value >> that);
 			return *this;
 		}
 

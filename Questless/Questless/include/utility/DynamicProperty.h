@@ -104,66 +104,66 @@ namespace questless
 		// Arithmetic Assignment Operators
 
 		template <typename T>
-		DynamicProperty& operator +=(T const& right)
+		DynamicProperty& operator +=(T const& that)
 		{
-			set(_value + right);
+			set(_value + that);
 			return *this;
 		}
 		template <typename T>
-		DynamicProperty& operator -=(T const& right)
+		DynamicProperty& operator -=(T const& that)
 		{
-			set(_value - right);
+			set(_value - that);
 			return *this;
 		}
 		template <typename T>
-		DynamicProperty& operator *=(T const& right)
+		DynamicProperty& operator *=(T const& that)
 		{
-			set(_value * right);
+			set(_value * that);
 			return *this;
 		}
 		template <typename T>
-		DynamicProperty& operator /=(T const& right)
+		DynamicProperty& operator /=(T const& that)
 		{
-			set(_value / right);
+			set(_value / that);
 			return *this;
 		}
 		template <typename T>
-		DynamicProperty& operator %=(T const& right)
+		DynamicProperty& operator %=(T const& that)
 		{
-			set(_value % right);
+			set(_value % that);
 			return *this;
 		}
 
 		// Bitwise Assignment Operators
 
 		template <typename T>
-		DynamicProperty& operator &=(T const& right)
+		DynamicProperty& operator &=(T const& that)
 		{
-			set(_value & right);
+			set(_value & that);
 			return *this;
 		}
 		template <typename T>
-		DynamicProperty& operator |=(T const& right)
+		DynamicProperty& operator |=(T const& that)
 		{
-			set(_value | right);
+			set(_value | that);
 			return *this;
 		}
 		template <typename T>
-		DynamicProperty& operator ^=(T const& right)
+		DynamicProperty& operator ^=(T const& that)
 		{
-			set(_value | right);
+			set(_value | that);
 			return *this;
 		}
 		template <typename T>
-		DynamicProperty& operator <<=(T const& right)
+		DynamicProperty& operator <<=(T const& that)
 		{
-			set(_value << right);
+			set(_value << that);
 			return *this;
 		}
 		template <typename T>
-		DynamicProperty& operator >>=(T const& right)
+		DynamicProperty& operator >>=(T const& that)
 		{
-			set(_value >> right);
+			set(_value >> that);
 			return *this;
 		}
 

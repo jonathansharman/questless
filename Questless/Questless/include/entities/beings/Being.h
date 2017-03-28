@@ -28,7 +28,7 @@
 #include "utility/utility.h"
 #include "utility/Id.h"
 #include "utility/Event.h"
-#include "utility/Property.h"
+#include "utility/Bounded.h"
 #include "utility/DynamicProperty.h"
 
 namespace questless
@@ -68,6 +68,7 @@ namespace questless
 		static constexpr double energy_endurance_penalty = 0.5; ///< Proportion of base endurance removed at zero energy.
 
 		// Satiety
+		static constexpr double min_satiety = 0.0;
 		static constexpr double max_satiety = 100.0;
 		static constexpr double satiety_rate = -1.0; ///< Satiety gained per turn (awake or asleep).
 		static constexpr double satiety_rate_asleep = 0.5; ///< Additional satiety gained per turn asleep.
@@ -75,6 +76,7 @@ namespace questless
 		static constexpr double satiety_mana_regen_penalty = 1.0; ///< Proportion of base mana regeneration removed at zero satiety.
 
 		// Alertness
+		static constexpr double min_alertness = 0.0;
 		static constexpr double max_alertness = 100.0;
 		static constexpr double alertness_rate = -1.0; ///< Alertness gained per turn (awake or asleep).
 		static constexpr double alertness_rate_asleep = 3.0; ///< Additional alertness gained per turn asleep.
@@ -114,30 +116,8 @@ namespace questless
 		DynamicProperty<double> health;
 		DynamicProperty<double> mana;
 		DynamicProperty<double> energy;
-
-		/// @todo Find a reasonable way to organize these mutator functions so that they aren't public.
-
-		static void satiety_mutator(double& satiety, double const& new_satiety)
-		{
-			satiety = new_satiety < 0.0
-				? 0.0
-				: new_satiety > max_satiety
-					? max_satiety
-					: new_satiety
-				;
-		}
-		Property<double, satiety_mutator> satiety;
-
-		static void alertness_mutator(double& alertness, double const& new_alertness)
-		{
-			alertness = new_alertness < 0.0
-				? 0.0
-				: new_alertness > max_alertness
-					? max_alertness
-					: new_alertness
-				;
-		}
-		Property<double, alertness_mutator> alertness;
+		Bounded<double, min_satiety, max_satiety> satiety;
+		Bounded<double, min_alertness, max_alertness> alertness;
 
 		DynamicProperty<double> busy_time;
 		bool dead;

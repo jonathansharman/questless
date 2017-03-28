@@ -13,160 +13,156 @@
 #include <cmath>
 
 #include "DamageMultiplier.h"
+#include "Protection.h"
+#include "utility/Bounded.h"
 
 namespace questless
 {
 	class Damage
 	{
 	public:
-		constexpr Damage() = default;
+		struct Part
+		{
+			enum class Type { slash, pierce, cleave, bludgeon, burn, freeze, blight };
 
-		constexpr Damage(Slash slash, Pierce pierce, Cleave cleave, Bludgeon bludgeon, Burn burn, Freeze freeze, Blight blight)
-			: _slash{std::move(slash)}
-			, _pierce{std::move(pierce)}
-			, _cleave{std::move(cleave)}
-			, _bludgeon{std::move(bludgeon)}
-			, _burn{std::move(burn)}
-			, _freeze{std::move(freeze)}
-			, _blight{std::move(blight)}
-		{}
+			static constexpr double minimum_value = 0.0;
 
-		constexpr Damage(Slash slash) : _slash{std::move(slash)}, _pierce{0.0}, _cleave{0.0}, _bludgeon{0.0}, _burn{0.0}, _freeze{0.0}, _blight{0.0} {}
-		constexpr Damage(Pierce pierce) : _slash{0.0}, _pierce{std::move(pierce)}, _cleave{0.0}, _bludgeon{0.0}, _burn{0.0}, _freeze{0.0}, _blight{0.0} {}
-		constexpr Damage(Cleave cleave) : _slash{0.0}, _pierce{0.0}, _cleave{std::move(cleave)}, _bludgeon{0.0}, _burn{0.0}, _freeze{0.0}, _blight{0.0} {}
-		constexpr Damage(Bludgeon bludgeon) : _slash{0.0}, _pierce{0.0}, _cleave{0.0}, _bludgeon{std::move(bludgeon)}, _burn{0.0}, _freeze{0.0}, _blight{0.0} {}
-		constexpr Damage(Burn burn) : _slash{0.0}, _pierce{0.0}, _cleave{0.0}, _bludgeon{0.0}, _burn{std::move(burn)}, _freeze{0.0}, _blight{0.0} {}
-		constexpr Damage(Freeze freeze) : _slash{0.0}, _pierce{0.0}, _cleave{0.0}, _bludgeon{0.0}, _burn{0.0}, _freeze{std::move(freeze)}, _blight{0.0} {}
-		constexpr Damage(Blight blight) : _slash{0.0}, _pierce{0.0}, _cleave{0.0}, _bludgeon{0.0}, _burn{0.0}, _freeze{0.0}, _blight{std::move(blight)} {}
+			Type type;
+			Bounded<double, minimum_value> amount;
+		};
 
-		static constexpr Damage zero() { return Damage{}; }
+		Damage() = default;
 
-		friend constexpr Damage operator +(Damage const& d1, Damage const& d2)
+		Damage(std::vector<Part> parts) : _parts{std::move(parts)} {}
+
+		Damage(Slash slash) : _parts{{Part{Part::Type::slash, slash}}} {}
+		Damage(Pierce pierce) : _parts{{Part{Part::Type::pierce, pierce}}} {}
+		Damage(Cleave cleave) : _parts{{Part{Part::Type::cleave, cleave}}} {}
+		Damage(Bludgeon bludgeon) : _parts{{Part{Part::Type::bludgeon, bludgeon}}} {}
+		Damage(Burn burn) : _parts{{Part{Part::Type::burn, burn}}} {}
+		Damage(Freeze freeze) : _parts{{Part{Part::Type::freeze, freeze}}} {}
+		Damage(Blight blight) : _parts{{Part{Part::Type::blight, blight}}} {}
+
+		static Damage zero() { return Damage{}; }
+
+		friend Damage operator +(Damage const& d1, Damage const& d2)
 		{
-			return Damage
-				{ Slash{d1._slash + d2._slash}
-				, Pierce{d1._pierce + d2._pierce}
-				, Cleave{d1._cleave + d2._cleave}
-				, Bludgeon{d1._bludgeon + d2._bludgeon}
-				, Burn{d1._burn + d2._burn}
-				, Freeze{d1._freeze + d2._freeze}
-				, Blight{d1._blight + d2._blight}
-				};
+			Damage sum = d1;
+			sum += d2;
+			return sum;
 		}
-		friend constexpr Damage operator -(Damage const& d1, Damage const& d2)
+		friend Damage operator *(Damage const& d, double k)
 		{
-			using std::max;
-			return Damage
-				{ Slash{max(0.0, d1._slash - d2._slash)}
-				, Pierce{max(0.0, d1._pierce - d2._pierce)}
-				, Cleave{max(0.0, d1._cleave - d2._cleave)}
-				, Bludgeon{max(0.0, d1._bludgeon - d2._bludgeon)}
-				, Burn{max(0.0, d1._burn - d2._burn)}
-				, Freeze{max(0.0, d1._freeze - d2._freeze)}
-				, Blight{max(0.0, d1._blight - d2._blight)}
-				};
+			Damage product = d;
+			product *= k;
+			return product;
 		}
-		friend constexpr Damage operator *(Damage const& d, double k)
+		friend Damage operator *(double k, Damage const& d)
 		{
-			return Damage
-				{ Slash{k * d._slash}
-				, Pierce{k * d._pierce}
-				, Cleave{k * d._cleave}
-				, Bludgeon{k * d._bludgeon}
-				, Burn{k * d._burn}
-				, Freeze{k * d._freeze}
-				, Blight{k * d._blight}
-				};
+			Damage product = d;
+			product *= k;
+			return product;
 		}
-		friend constexpr Damage operator *(double k, Damage const& d)
+		friend Damage operator /(Damage const& d, double k)
 		{
-			return Damage
-				{ Slash{k * d._slash}
-				, Pierce{k * d._pierce}
-				, Cleave{k * d._cleave}
-				, Bludgeon{k * d._bludgeon}
-				, Burn{k * d._burn}
-				, Freeze{k * d._freeze}
-				, Blight{k * d._blight}};
-		}
-		friend constexpr Damage operator /(Damage const& d, double k)
-		{
-			return Damage
-				{ Slash{d._slash / k}
-				, Pierce{d._pierce / k}
-				, Cleave{d._cleave / k}
-				, Bludgeon{d._bludgeon / k}
-				, Burn{d._burn / k}
-				, Freeze{d._freeze / k}
-				, Blight{d._blight / k}
-				};
+			Damage quotient = d;
+			for (auto& part : quotient._parts) {
+				part.amount /= k;
+			}
+			return quotient;
 		}
 
 		Damage& operator +=(Damage const& d)
 		{
-			_slash += d._slash;
-			_pierce += d._pierce;
-			_cleave += d._cleave;
-			_bludgeon += d._bludgeon;
-			_burn += d._burn;
-			_freeze += d._freeze;
-			_blight += d._blight;
-			return *this;
-		}
-		Damage& operator -=(Damage const& d)
-		{
-			_slash -= d._slash;
-			_pierce -= d._pierce;
-			_cleave -= d._cleave;
-			_bludgeon -= d._bludgeon;
-			_burn -= d._burn;
-			_freeze -= d._freeze;
-			_blight -= d._blight;
+			_parts.insert(_parts.end(), d._parts.begin(), d._parts.end());
 			return *this;
 		}
 		Damage& operator *=(double k)
 		{
-			_slash *= k;
-			_pierce *= k;
-			_cleave *= k;
-			_bludgeon *= k;
-			_burn *= k;
-			_freeze *= k;
-			_blight *= k;
+			for (Part& part : _parts) {
+				part.amount *= k;
+			}
 			return *this;
 		}
 
-		/// @return Damage adjusted by the given resistance and vulnerability.
-		constexpr Damage with(Resistance const& resistance, Vulnerability const& vulnerability) const
+		/// @return Damage adjusted by the given protection.
+		Damage with(Protection const& protection) const
 		{
-			return Damage
-				{ Slash{std::max(0.0, _slash * (1.0 + (vulnerability.slash() - resistance.slash()) / 100.0))}
-				, Pierce{std::max(0.0, _pierce * (1.0 + (vulnerability.pierce() - resistance.pierce()) / 100.0))}
-				, Cleave{std::max(0.0, _cleave * (1.0 + (vulnerability.cleave() - resistance.cleave()) / 100.0))}
-				, Bludgeon{std::max(0.0, _bludgeon * (1.0 + (vulnerability.bludgeon() - resistance.bludgeon()) / 100.0))}
-				, Burn{std::max(0.0, _burn * (1.0 + (vulnerability.burn() - resistance.burn()) / 100.0))}
-				, Freeze{std::max(0.0, _freeze * (1.0 + (vulnerability.freeze() - resistance.freeze()) / 100.0))}
-				, Blight{std::max(0.0, _blight * (1.0 + (vulnerability.blight() - resistance.blight()) / 100.0))}
-				};
+			Damage result = *this;
+			for (Part& part : result._parts) {
+				switch (part.type) {
+					case Part::Type::slash:
+						part.amount -= protection.pad() * Protection::percent_pad_to_slash + protection.deflect() * Protection::percent_deflect_to_slash;
+						break;
+					case Part::Type::pierce:
+						part.amount -= protection.pad() * Protection::percent_pad_to_pierce + protection.deflect() * Protection::percent_deflect_to_pierce;
+						break;
+					case Part::Type::cleave:
+						part.amount -= protection.pad() * Protection::percent_pad_to_cleave + protection.deflect() * Protection::percent_deflect_to_cleave;
+						break;
+					case Part::Type::bludgeon:
+						part.amount -= protection.pad() * Protection::percent_pad_to_bludgeon + protection.deflect() * Protection::percent_deflect_to_bludgeon;
+						break;
+					case Part::Type::burn:
+						part.amount -= protection.fireproof() * Protection::percent_fireproof_to_burn;
+						break;
+					case Part::Type::freeze:
+						part.amount -= protection.frostproof() * Protection::percent_frostproof_to_freeze;
+						break;
+					case Part::Type::blight:
+						part.amount -= protection.cleanse() * Protection::percent_cleanse_to_blight;
+						break;
+				}
+			}
+			return result;
 		}
 
-		constexpr double slash() const { return _slash; }
-		constexpr double pierce() const { return _pierce; }
-		constexpr double cleave() const { return _cleave; }
-		constexpr double bludgeon() const { return _bludgeon; }
-		constexpr double burn() const { return _burn; }
-		constexpr double freeze() const { return _freeze; }
-		constexpr double blight() const { return _blight; }
+		/// @return Damage adjusted by the given resistance and vulnerability.
+		Damage with(Resistance const& resistance, Vulnerability const& vulnerability) const
+		{
+			Damage result = *this;
+			for (Part& part : result._parts) {
+				switch (part.type) {
+					case Part::Type::slash:
+						part.amount = std::max(0.0, part.amount * (1.0 + (vulnerability.slash() - resistance.slash()) / 100.0));
+						break;
+					case Part::Type::pierce:
+						part.amount = std::max(0.0, part.amount * (1.0 + (vulnerability.pierce() - resistance.pierce()) / 100.0));
+						break;
+					case Part::Type::cleave:
+						part.amount = std::max(0.0, part.amount * (1.0 + (vulnerability.cleave() - resistance.cleave()) / 100.0));
+						break;
+					case Part::Type::bludgeon:
+						part.amount = std::max(0.0, part.amount * (1.0 + (vulnerability.bludgeon() - resistance.bludgeon()) / 100.0));
+						break;
+					case Part::Type::burn:
+						part.amount = std::max(0.0, part.amount * (1.0 + (vulnerability.burn() - resistance.burn()) / 100.0));
+						break;
+					case Part::Type::freeze:
+						part.amount = std::max(0.0, part.amount * (1.0 + (vulnerability.freeze() - resistance.freeze()) / 100.0));
+						break;
+					case Part::Type::blight:
+						part.amount = std::max(0.0, part.amount * (1.0 + (vulnerability.blight() - resistance.blight()) / 100.0));
+						break;
+				}
+			}
+			return result;
+		}
+
+		/// @return The different parts/components of the damage instance.
+		////
+		std::vector<Part> const& parts() const { return _parts; }
 
 		/// @return The sum of the damage components.
-		constexpr double total() const { return _slash + _pierce + _cleave + _bludgeon + _burn + _freeze + _blight; }
+		double total() const
+		{
+			double result = 0;
+			for (Part const& part : _parts) {
+				result += part.amount;
+			}
+			return result;
+		}
 	private:
-		double _slash = 0.0;
-		double _pierce = 0.0;
-		double _cleave = 0.0;
-		double _bludgeon = 0.0;
-		double _burn = 0.0;
-		double _freeze = 0.0;
-		double _blight = 0.0;
+		std::vector<Part> _parts;
 	};
 }

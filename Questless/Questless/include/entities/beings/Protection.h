@@ -9,7 +9,8 @@
 
 #pragma once
 
-#include "Damage.h"
+#include "utility/TaggedType.h"
+#include "utility/Bounded.h"
 
 namespace questless
 {
@@ -128,25 +129,13 @@ namespace questless
 		constexpr double fireproof() const { return _fireproof; }
 		constexpr double frostproof() const { return _frostproof; }
 		constexpr double cleanse() const { return _cleanse; }
-
-		/// @return The amount of damage by which this protection reduces incoming damage.
-		Damage reduction() const
-		{
-			return Damage
-				{ Slash{_pad * percent_pad_to_slash + _deflect * percent_deflect_to_slash}
-				, Pierce{_pad * percent_pad_to_pierce + _deflect * percent_deflect_to_pierce}
-				, Cleave{_pad * percent_pad_to_cleave + _deflect * percent_deflect_to_cleave}
-				, Bludgeon{_pad * percent_pad_to_bludgeon + _deflect * percent_deflect_to_bludgeon}
-				, Burn{_fireproof * percent_fireproof_to_burn}
-				, Freeze{_frostproof * percent_frostproof_to_freeze}
-				, Blight{_cleanse * percent_cleanse_to_blight}
-				};
-		}
 	private:
-		double _pad = 0.0;
-		double _deflect = 0.0;
-		double _fireproof = 0.0;
-		double _frostproof = 0.0;
-		double _cleanse = 0.0;
+		static constexpr double minimum_value = 0.0;
+
+		Bounded<double, minimum_value> _pad = 0.0;
+		Bounded<double, minimum_value> _deflect = 0.0;
+		Bounded<double, minimum_value> _fireproof = 0.0;
+		Bounded<double, minimum_value> _frostproof = 0.0;
+		Bounded<double, minimum_value> _cleanse = 0.0;
 	};
 }

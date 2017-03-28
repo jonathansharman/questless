@@ -27,7 +27,7 @@ namespace units
 		constexpr explicit Rate(quantity_t step) : _step{std::move(step)} {}
 
 		/// @return The zero rate for the specified representation and period, constructed using the default constructor of the quantity type.
-		constexpr static Rate<quantity_t, time_rep, period> zero() { return Rate<quantity_t, time_rep, period>{quantity_t{}}; }
+		static constexpr Rate<quantity_t, time_rep, period> zero() { return Rate<quantity_t, time_rep, period>{quantity_t{}}; }
 
 		/// @return The amount of the quantity type per unit period.
 		constexpr quantity_t const& step() const& { return _step; }
@@ -36,12 +36,12 @@ namespace units
 		/// @return The amount of the quantity type per unit period.
 		quantity_t& step() & { return _step; }
 
-		constexpr bool operator <(Rate<quantity_t, time_rep, period> const& right) const { return _step < right._step; }
-		constexpr bool operator <=(Rate<quantity_t, time_rep, period> const& right) const { return _step <= right._step; }
-		constexpr bool operator ==(Rate<quantity_t, time_rep, period> const& right) const { return _step == right._step; }
-		constexpr bool operator !=(Rate<quantity_t, time_rep, period> const& right) const { return _step != right._step; }
-		constexpr bool operator >=(Rate<quantity_t, time_rep, period> const& right) const { return _step >= right._step; }
-		constexpr bool operator >(Rate<quantity_t, time_rep, period> const& right) const { return _step > right._step; }
+		constexpr bool operator <(Rate<quantity_t, time_rep, period> const& that) const { return _step < that._step; }
+		constexpr bool operator <=(Rate<quantity_t, time_rep, period> const& that) const { return _step <= that._step; }
+		constexpr bool operator ==(Rate<quantity_t, time_rep, period> const& that) const { return _step == that._step; }
+		constexpr bool operator !=(Rate<quantity_t, time_rep, period> const& that) const { return _step != that._step; }
+		constexpr bool operator >=(Rate<quantity_t, time_rep, period> const& that) const { return _step >= that._step; }
+		constexpr bool operator >(Rate<quantity_t, time_rep, period> const& that) const { return _step > that._step; }
 
 		// Closed under addition.
 		Rate<quantity_t, time_rep, period>& operator +=(Rate<quantity_t, time_rep, period> const& rate) &

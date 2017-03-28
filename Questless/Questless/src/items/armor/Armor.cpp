@@ -15,19 +15,18 @@ namespace questless
 	{
 		if (!broken()) { // Broken armor has no effect.
 			// Compute the armor's effective damage reduction.
-			Damage max_reduction = protection().reduction();
-			Damage reduced_damage = damage - max_reduction;
-			Damage effective_reduction = damage - reduced_damage;
+			Damage const reduced_damage = damage.with(protection());
+			double const effective_reduction = damage.total() - reduced_damage.total();
 
 			// Set damage to its reduced value and cause the armor to wear in proportion to its effective damage reduction.
 			damage = reduced_damage;
-			integrity -= wear_ratio() * effective_reduction.total();
+			integrity -= wear_ratio() * effective_reduction;
 		}
 	}
 
 	void Armor::take_resistance_wear(Damage const& damage)
 	{
-		Damage max_reduction = damage - damage.with(resistance(), Vulnerability::zero());
-		integrity -= wear_ratio() * max_reduction.total();
+		double max_reduction = damage.total() - damage.with(resistance(), Vulnerability::zero()).total();
+		integrity -= wear_ratio() * max_reduction;
 	}
 }

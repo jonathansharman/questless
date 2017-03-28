@@ -18,7 +18,6 @@
 #include "Damage.h"
 #include "items/Item.h"
 #include "units/ScreenRect.h"
-#include "utility/Property.h"
 #include "utility/DynamicProperty.h"
 #include "utility/Id.h"
 
