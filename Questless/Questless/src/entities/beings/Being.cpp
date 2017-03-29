@@ -189,20 +189,10 @@ namespace questless
 		if (before_take_damage(damage, part, opt_source_id)) {
 			// Source, if present, will deal damage.
 			if (!source || source->before_deal_damage(damage, part, id)) {
-				// Initialize total resistance and vulnerability to the being's resistance/vulnerability stats.
-				auto total_resistance = stats.resistance;
-				auto total_vulnerability = stats.vulnerability;
-
-				// First, apply shields' protection, in reverse order so that more recently equipped shields wear sooner.
+				// First, apply shields' protection, in reverse order so that more recently equipped shields are the first defense.
 				for (auto shields_it = _shields.rbegin(); shields_it != _shields.rend(); ++shields_it) {
 					Armor& shield = **shields_it;
-					shield.apply_protection(damage);
-					total_resistance += shield.resistance();
-				}
-
-				// Shields take resistance wear based on damage after shield protection is applied.
-				for (auto const& shield : shields()) {
-					shield->take_resistance_wear(damage);
+					shield.apply(damage);
 				}
 
 				if (part) {
@@ -211,24 +201,16 @@ namespace questless
 					// Apply part's armor's protection and resistance.
 					if (part->equipped_item_id) {
 						if (Armor* armor = game().items.get_as<Armor>(*part->equipped_item_id)) {
-							armor->apply_protection(damage);
-							total_resistance += armor->resistance();
+							armor->apply(damage);
 						}
 					}
 
 					// Apply part's and being's protection stats.
 					damage = damage.with(part->protection() + stats.protection);
 
-					// Part's armor takes resistance wear based on the final damage to the part before multipliers.
-					if (part->equipped_item_id) {
-						if (Armor* armor = game().items.get_as<Armor>(*part->equipped_item_id)) {
-							armor->take_resistance_wear(damage);
-						}
-					}
-
-					// Add part's resistance and vulnerability stats to totals.
-					total_resistance += part->resistance();
-					total_vulnerability += part->vulnerability();
+					// Resistance and vulnerability are the sum of the being's overall values and those of the target part.
+					Resistance total_resistance = stats.resistance + part->resistance();
+					Vulnerability total_vulnerability = stats.vulnerability + part->vulnerability();
 
 					// Part and being lose health.
 					double health_lost = damage.with(total_resistance, total_vulnerability).total() / (1.0 + endurance_factor * stats.endurance);
@@ -249,7 +231,7 @@ namespace questless
 					damage = damage.with(stats.protection);
 
 					// Being loses health.
-					double health_lost = damage.with(total_resistance, total_vulnerability).total() / (1.0 + endurance_factor * stats.endurance);
+					double health_lost = damage.with(stats.resistance, stats.vulnerability).total() / (1.0 + endurance_factor * stats.endurance);
 					health -= health_lost;
 				}
 

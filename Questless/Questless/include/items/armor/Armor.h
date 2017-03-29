@@ -44,14 +44,8 @@ namespace questless
 		////
 		virtual double wear_ratio() const = 0;
 
-		/// Applies the armor's protection to the given damage, possibly reducing the damage and causing the armor to wear.
-		/// @param damage The damage to be reduced according to the armor's protection.
+		/// Applies the armor's protection and resistance to the given damage, possibly reducing the damage and causing the armor to wear.
 		////
-		void apply_protection(Damage& damage);
-
-		/// Causes the armor to wear according to its maximum possible reduction from resistance to the given damage.
-		/// @note It is the caller's responsibility to ensure the armor's resistance is actually applied to this damage. This function does not reduce the damage itself because actual damage reduction from resistance can only be computed given total resistance and vulnerability and only after all protection has been applied.
-		////
-		void take_resistance_wear(Damage const& damage);
+		void apply(Damage& damage);
 	};
 }

@@ -10,6 +10,7 @@
 #pragma once
 
 #include "utility/TaggedType.h"
+#include "utility/Bounded.h"
 
 namespace questless
 {
@@ -32,37 +33,37 @@ namespace questless
 		{}
 
 		constexpr DamageMultiplier(Slash slash) : _slash{slash}, _pierce{0.0}, _cleave{0.0}, _bludgeon{0.0}, _burn{0.0}, _freeze{0.0}, _blight{0.0} {}
-		constexpr DamageMultiplier(Pierce pierce) : slash{0.0}, pierce{pierce}, _cleave{0.0}, bludgeon{0.0}, burn{0.0}, freeze{0.0}, blight{0.0} {}
-		constexpr DamageMultiplier(Cleave cleave) : slash{0.0}, pierce{0.0}, _cleave{cleave}, bludgeon{0.0}, burn{0.0}, freeze{0.0}, blight{0.0} {}
-		constexpr DamageMultiplier(Bludgeon bludgeon) : slash{0.0}, pierce{0.0}, _cleave{0.0}, bludgeon{bludgeon}, burn{0.0}, freeze{0.0}, blight{0.0} {}
-		constexpr DamageMultiplier(Burn burn) : slash{0.0}, pierce{0.0}, _cleave{0.0}, bludgeon{0.0}, burn{burn}, freeze{0.0}, blight{0.0} {}
-		constexpr DamageMultiplier(Freeze freeze) : slash{0.0}, pierce{0.0}, _cleave{0.0}, bludgeon{0.0}, burn{0.0}, freeze{freeze}, blight{0.0} {}
-		constexpr DamageMultiplier(Blight blight) : slash{0.0}, pierce{0.0}, _cleave{0.0}, bludgeon{0.0}, burn{0.0}, freeze{0.0}, blight{blight} {}
+		constexpr DamageMultiplier(Pierce pierce) : _slash{0.0}, _pierce{pierce}, _cleave{0.0}, _bludgeon{0.0}, _burn{0.0}, _freeze{0.0}, _blight{0.0} {}
+		constexpr DamageMultiplier(Cleave cleave) : _slash{0.0}, _pierce{0.0}, _cleave{cleave}, _bludgeon{0.0}, _burn{0.0}, _freeze{0.0}, _blight{0.0} {}
+		constexpr DamageMultiplier(Bludgeon bludgeon) : _slash{0.0}, _pierce{0.0}, _cleave{0.0}, _bludgeon{bludgeon}, _burn{0.0}, _freeze{0.0}, _blight{0.0} {}
+		constexpr DamageMultiplier(Burn burn) : _slash{0.0}, _pierce{0.0}, _cleave{0.0}, _bludgeon{0.0}, _burn{burn}, _freeze{0.0}, _blight{0.0} {}
+		constexpr DamageMultiplier(Freeze freeze) : _slash{0.0}, _pierce{0.0}, _cleave{0.0}, _bludgeon{0.0}, _burn{0.0}, _freeze{freeze}, _blight{0.0} {}
+		constexpr DamageMultiplier(Blight blight) : _slash{0.0}, _pierce{0.0}, _cleave{0.0}, _bludgeon{0.0}, _burn{0.0}, _freeze{0.0}, _blight{blight} {}
 
 		static constexpr Derived zero() { return Derived{}; }
 
 		constexpr friend Derived operator +(Derived const& d1, Derived const& d2)
 		{
 			return Derived
-				{ d1.slash + d2.slash
-				, d1.pierce + d2.pierce
-				, d1.cleave + d2.cleave
-				, d1.bludgeon + d2.bludgeon
-				, d1.burn + d2.burn
-				, d1.freeze + d2.freeze
-				, d1.blight + d2.blight
+				{ Slash{d1._slash + d2._slash}
+				, Pierce{d1._pierce + d2._pierce}
+				, Cleave{d1._cleave + d2._cleave}
+				, Bludgeon{d1._bludgeon + d2._bludgeon}
+				, Burn{d1._burn + d2._burn}
+				, Freeze{d1._freeze + d2._freeze}
+				, Blight{d1._blight + d2._blight}
 				};
 		}
 		friend constexpr Derived operator -(Derived const& d1, Derived const& d2)
 		{
 			Derived difference;
-			difference.slash = max(0.0, d1.slash - d2.slash);
-			difference.pierce = max(0.0, d1.pierce - d2.pierce);
-			difference.cleave = max(0.0, d1.cleave - d2.cleave);
-			difference.bludgeon = max(0.0, d1.bludgeon - d2.bludgeon);
-			difference.burn = max(0.0, d1.burn - d2.burn);
-			difference.freeze = max(0.0, d1.freeze - d2.freeze);
-			difference.blight = max(0.0, d1.blight - d2.blight);
+			difference.slash = d1._slash - d2._slash;
+			difference.pierce = d1._pierce - d2._pierce;
+			difference.cleave = d1._cleave - d2._cleave;
+			difference.bludgeon = d1._bludgeon - d2._bludgeon;
+			difference.burn = d1._burn - d2._burn;
+			difference.freeze = d1._freeze - d2._freeze;
+			difference.blight = d1._blight - d2._blight;
 			return difference;
 		}
 		friend constexpr Derived operator *(Derived const& d, double k)
@@ -136,13 +137,14 @@ namespace questless
 		constexpr double freeze() const { return _freeze; }
 		constexpr double blight() const { return _blight; }
 	private:
-		double _slash = 0.0;
-		double _pierce = 0.0;
-		double _cleave = 0.0;
-		double _bludgeon = 0.0;
-		double _burn = 0.0;
-		double _freeze = 0.0;
-		double _blight = 0.0;
+		static constexpr double minimum_value = 0.0;
+		Bounded<double, minimum_value> _slash = 0.0;
+		Bounded<double, minimum_value> _pierce = 0.0;
+		Bounded<double, minimum_value> _cleave = 0.0;
+		Bounded<double, minimum_value> _bludgeon = 0.0;
+		Bounded<double, minimum_value> _burn = 0.0;
+		Bounded<double, minimum_value> _freeze = 0.0;
+		Bounded<double, minimum_value> _blight = 0.0;
 	};
 
 	class Resistance : public DamageMultiplier<Resistance>
