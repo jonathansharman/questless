@@ -921,5 +921,8 @@
     <ClCompile Include="src\agents\Action.cpp">
       <Filter>src\agents</Filter>
     </ClCompile>
+    <ClCompile Include="src\entities\beings\Damage.cpp">
+      <Filter>src\entities\beings</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

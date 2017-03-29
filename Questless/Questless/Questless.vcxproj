@@ -437,6 +437,7 @@
     <ClCompile Include="src\entities\beings\Body.cpp" />
     <ClCompile Include="src\entities\beings\BodyPart.cpp" />
     <ClCompile Include="src\entities\beings\CorporealBeing.cpp" />
+    <ClCompile Include="src\entities\beings\Damage.cpp" />
     <ClCompile Include="src\entities\beings\Human.cpp" />
     <ClCompile Include="src\entities\beings\IncorporealBeing.cpp" />
     <ClCompile Include="src\entities\beings\statuses\Discharging.cpp" />

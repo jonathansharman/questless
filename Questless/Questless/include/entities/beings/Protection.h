@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include <iostream>
+
 #include "utility/TaggedType.h"
 #include "utility/Bounded.h"
 
@@ -39,7 +41,7 @@ namespace questless
 
 		friend std::ostream& operator <<(std::ostream& out, Protection const& p)
 		{
-			out << p._pad << ' ' << p._deflect << ' ' << p._fireproof << ' ' << p._frostproof << ' ' << p._cleanse;
+			out << p._pad.get() << ' ' << p._deflect.get() << ' ' << p._fireproof.get() << ' ' << p._frostproof.get() << ' ' << p._cleanse.get();
 			return out;
 		}
 
