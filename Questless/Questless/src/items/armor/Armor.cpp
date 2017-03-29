@@ -13,7 +13,8 @@ namespace questless
 {
 	void Armor::apply_protection(Damage& damage)
 	{
-		if (!broken()) { // Broken armor has no effect.
+		// Broken armor has no effect.
+		if (!broken()) {
 			// Compute the armor's effective damage reduction.
 			Damage const reduced_damage = damage.with(protection());
 			double const effective_reduction = damage.total() - reduced_damage.total();

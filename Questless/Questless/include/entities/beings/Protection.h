@@ -23,21 +23,6 @@ namespace questless
 	class Protection
 	{
 	public:
-		static constexpr double percent_pad_to_slash = 0.50;
-		static constexpr double percent_pad_to_pierce = 0.25;
-		static constexpr double percent_pad_to_cleave = 0.75;
-		static constexpr double percent_pad_to_bludgeon = 1.00;
-
-		static constexpr double percent_deflect_to_slash = 1.00;
-		static constexpr double percent_deflect_to_pierce = 0.75;
-		static constexpr double percent_deflect_to_cleave = 0.50;
-		static constexpr double percent_deflect_to_bludgeon = 0.25;
-
-		static constexpr double percent_fireproof_to_burn = 1.00;
-		static constexpr double percent_frostproof_to_freeze = 1.00;
-
-		static constexpr double percent_cleanse_to_blight = 1.00;
-
 		constexpr Protection() = default;
 
 		constexpr Protection(Pad pad, Deflect deflect, Fireproof fireproof, Frostproof frostproof, Cleanse cleanse)
@@ -63,7 +48,7 @@ namespace questless
 			in >> p._pad >> p._deflect >> p._fireproof >> p._frostproof >> p._cleanse;
 			return in;
 		}
-
+		
 		friend Protection operator +(Protection const& p1, Protection const& p2)
 		{
 			return Protection
@@ -72,6 +57,16 @@ namespace questless
 				, Fireproof{p1._fireproof + p2._fireproof}
 				, Frostproof{p1._frostproof + p2._frostproof}
 				, Cleanse{p1._cleanse + p2._cleanse}
+				};
+		}
+		friend Protection operator -(Protection const& p1, Protection const& p2)
+		{
+			return Protection
+				{ Pad{p1._pad - p2._pad}
+				, Deflect{p1._deflect - p2._deflect}
+				, Fireproof{p1._fireproof - p2._fireproof}
+				, Frostproof{p1._frostproof - p2._frostproof}
+				, Cleanse{p1._cleanse - p2._cleanse}
 				};
 		}
 		friend Protection operator *(Protection const& p, double k)
@@ -112,6 +107,15 @@ namespace questless
 			_fireproof += p._fireproof;
 			_frostproof += p._frostproof;
 			_cleanse += p._cleanse;
+			return *this;
+		}
+		Protection& operator -=(Protection const& p)
+		{
+			_pad -= p._pad;
+			_deflect -= p._deflect;
+			_fireproof -= p._fireproof;
+			_frostproof -= p._frostproof;
+			_cleanse -= p._cleanse;
 			return *this;
 		}
 		Protection& operator *=(double k)
