@@ -685,6 +685,12 @@
     <ClInclude Include="include\utility\Bounded.h">
       <Filter>include\utility</Filter>
     </ClInclude>
+    <ClInclude Include="include\ui\DirectionDialog.h">
+      <Filter>include\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\agents\DirectionQuery.h">
+      <Filter>include\agents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\world\Region.cpp">
@@ -923,6 +929,9 @@
     </ClCompile>
     <ClCompile Include="src\entities\beings\Damage.cpp">
       <Filter>src\entities\beings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\DirectionDialog.cpp">
+      <Filter>src\ui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

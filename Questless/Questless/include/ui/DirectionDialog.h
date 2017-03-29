@@ -1,5 +1,5 @@
 /**
-* @file    TileDialog.h
+* @file    DirectionDialog.h
 * @author  Jonathan Sharman
 *
 * @section LICENSE See LICENSE.txt.
@@ -7,32 +7,25 @@
 
 #pragma once
 
-#include <string>
-#include <functional>
 #include <optional>
 
 #include "Dialog.h"
-#include "animation/Camera.h"
 #include "world/coordinates.h"
 
 namespace questless
 {
-	/// Retrieves region tile coordinates from the player.
+	/// Retrieves a direction from the player.
 	////
-	class TileDialog : public Dialog
+	class DirectionDialog : public Dialog
 	{
 	public:
-		TileDialog
+		DirectionDialog
 			( std::string title
 			, std::string prompt
-			, std::optional<RegionTileCoords> origin
-			, std::function<bool(RegionTileCoords)> predicate
-			, std::function<void(std::optional<RegionTileCoords>)> cont
+			, std::function<void(std::optional<RegionTileCoords::Direction>)> cont
 			)
 			: _title{std::move(title)}
 			, _prompt{std::move(prompt)}
-			, _origin{std::move(origin)}
-			, _predicate{std::move(predicate)}
 			, _cont{std::move(cont)}
 		{
 			load_textures();
@@ -44,9 +37,7 @@ namespace questless
 	private:
 		std::string _title;
 		std::string _prompt;
-		std::optional<RegionTileCoords> _origin;
-		std::function<bool(RegionTileCoords)> _predicate;
-		Continuation<std::optional<RegionTileCoords>> _cont;
+		Continuation<std::optional<RegionTileCoords::Direction>> _cont;
 
 		sdl::Texture::ptr _txt_title;
 		sdl::Texture::ptr _txt_prompt;

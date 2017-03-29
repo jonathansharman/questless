@@ -86,8 +86,8 @@ namespace questless
 		class Finish : public Action
 		{
 		public:
-			Finish(Attack const& attack, RegionTileCoords coords);
-			static ptr make(Attack const& attack, RegionTileCoords coords) { return std::make_unique<Finish>(attack, coords); }
+			Finish(Attack const& attack, RegionTileCoords::Direction direction);
+			static ptr make(Attack const& attack, RegionTileCoords::Direction direction) { return std::make_unique<Finish>(attack, direction); }
 			std::string name() const override { return _name; }
 			Action::Complete perform(Being& actor, cont_t cont) override;
 		private:
@@ -97,7 +97,7 @@ namespace questless
 			double _follow_through;
 			double _cooldown;
 			double _wear_ratio;
-			RegionTileCoords _coords;
+			RegionTileCoords::Direction _direction;
 		};
 	};
 

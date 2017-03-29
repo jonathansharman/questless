@@ -190,18 +190,7 @@ namespace questless
 				, cont{std::move(cont)}
 			{}
 
-			void visit(TileQueryMeleeTarget const&) override
-			{
-				auto target_id = dynamic_cast<AttackState*>(ai._state.get())->target_id;
-				if (Being* target = game().beings.get(target_id)) {
-					// Attack towards the target.
-					auto direction = ai.being.coords.direction_towards(target->coords);
-					cont(origin->neighbor(direction));
-					return;
-				}
-				cont(std::nullopt);
-			}
-			void visit(TileQueryRangedTarget const& query) override
+			void visit(TileQueryRangedAttackTarget const& query) override
 			{
 				auto target_id = dynamic_cast<AttackState*>(ai._state.get())->target_id;
 				if (Being* target = game().beings.get(target_id)) {
@@ -224,6 +213,42 @@ namespace questless
 		};
 
 		TileQueryHandler handler{*this, std::move(origin), std::move(predicate), std::move(cont)};
+		query->accept(handler);
+		return Action::Complete{};
+	}
+
+	Action::Complete BasicAI::query_direction
+		( DirectionQuery::ptr query
+		, std::function<Action::Complete(std::optional<RegionTileCoords::Direction>)> cont
+		) const
+	{
+		struct DirectionQueryHandler : DirectionQueryVisitor
+		{
+			BasicAI const& ai;
+			std::function<Action::Complete(std::optional<RegionTileCoords::Direction>)> cont;
+
+			DirectionQueryHandler
+				( BasicAI const& ai
+				, std::function<Action::Complete(std::optional<RegionTileCoords::Direction>)> cont
+				)
+				: ai{ai}
+				, cont{std::move(cont)}
+			{}
+
+			void visit(DirectionQueryMeleeAttack const&) override
+			{
+				auto target_id = dynamic_cast<AttackState*>(ai._state.get())->target_id;
+				if (Being* target = game().beings.get(target_id)) {
+					// Attack towards the target direction.
+					auto direction = ai.being.coords.direction_towards(target->coords);
+					cont(direction);
+					return;
+				}
+				cont(std::nullopt);
+			}
+		};
+
+		DirectionQueryHandler handler{*this, std::move(cont)};
 		query->accept(handler);
 		return Action::Complete{};
 	}

@@ -18,6 +18,7 @@
 #include "CountQuery.h"
 #include "MagnitudeQuery.h"
 #include "TileQuery.h"
+#include "DirectionQuery.h"
 #include "BeingQuery.h"
 #include "ItemQuery.h"
 #include "entities/beings/Being.h"
@@ -80,6 +81,11 @@ namespace questless
 			, std::optional<RegionTileCoords> origin
 			, std::function<bool(RegionTileCoords)> predicate
 			, std::function<Action::Complete(std::optional<RegionTileCoords>)> cont
+			) const = 0;
+
+		virtual Action::Complete query_direction
+			( DirectionQuery::ptr query
+			, std::function<Action::Complete(std::optional<RegionTileCoords::Direction>)> cont
 			) const = 0;
 
 		virtual Action::Complete query_being

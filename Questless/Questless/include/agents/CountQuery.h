@@ -4,7 +4,7 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION Types of count queries, i.e. requests to an agent for a count.
+* @section DESCRIPTION Requests to an agent for a count.
 */
 
 #pragma once

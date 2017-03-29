@@ -4,7 +4,7 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION Types of magnitude queries, i.e. requests to an agent for a magnitude.
+* @section DESCRIPTION Requests to an agent for a magnitude.
 */
 
 #pragma once

@@ -64,6 +64,11 @@ namespace questless
 			, std::function<Action::Complete(std::optional<RegionTileCoords>)> cont
 			) const override;
 
+		Action::Complete query_direction
+			( DirectionQuery::ptr query
+			, std::function<Action::Complete(std::optional<RegionTileCoords::Direction>)> cont
+			) const override;
+
 		Action::Complete query_being
 			( BeingQuery::ptr query
 			, std::function<bool(Being&)> predicate

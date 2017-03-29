@@ -4,7 +4,7 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION Types of being queries, i.e. requests to an agent to specify a being.
+* @section DESCRIPTION Requests to an agent to specify a being.
 */
 
 #pragma once

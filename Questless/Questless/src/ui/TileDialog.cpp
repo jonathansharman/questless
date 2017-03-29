@@ -3,11 +3,10 @@
 * @author  Jonathan Sharman
 *
 * @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implementation for the TileDialog class.
 */
 
 #include "ui/TileDialog.h"
+#include "Game.h"
 
 using namespace sdl;
 using namespace units;
@@ -37,7 +36,7 @@ namespace questless
 		}
 
 		if (input().pressed(MouseButton::left)) {
-			RegionTileCoords value = _camera.tile_hovered();
+			RegionTileCoords value = game().camera().tile_hovered();
 			if (_predicate(value)) {
 				return _cont(value);
 			}

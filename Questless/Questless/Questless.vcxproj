@@ -260,6 +260,7 @@
     <ClInclude Include="include\agents\BasicAI.h" />
     <ClInclude Include="include\agents\BeingQuery.h" />
     <ClInclude Include="include\agents\CountQuery.h" />
+    <ClInclude Include="include\agents\DirectionQuery.h" />
     <ClInclude Include="include\agents\ItemQuery.h" />
     <ClInclude Include="include\agents\LazyAI.h" />
     <ClInclude Include="include\agents\MagnitudeQuery.h" />
@@ -356,6 +357,7 @@
     <ClInclude Include="include\ui\DigraphMenuController.h" />
     <ClInclude Include="include\ui\DigraphMenuModel.h" />
     <ClInclude Include="include\ui\DigraphMenuView.h" />
+    <ClInclude Include="include\ui\DirectionDialog.h" />
     <ClInclude Include="include\ui\HUDController.h" />
     <ClInclude Include="include\ui\HUDModel.h" />
     <ClInclude Include="include\ui\HUDView.h" />
@@ -478,6 +480,7 @@
     <ClCompile Include="src\ui\DigraphMenuController.cpp" />
     <ClCompile Include="src\ui\DigraphMenuModel.cpp" />
     <ClCompile Include="src\ui\DigraphMenuView.cpp" />
+    <ClCompile Include="src\ui\DirectionDialog.cpp" />
     <ClCompile Include="src\ui\HUDController.cpp" />
     <ClCompile Include="src\ui\HUDModel.cpp" />
     <ClCompile Include="src\ui\HUDView.cpp" />

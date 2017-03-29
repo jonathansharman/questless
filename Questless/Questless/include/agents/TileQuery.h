@@ -4,7 +4,7 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION Types of tile queries, i.e. requests to an agent for tile coordinates.
+* @section DESCRIPTION Requests to an agent for tile coordinates.
 */
 
 #pragma once
@@ -13,8 +13,7 @@
 
 namespace questless
 {
-	struct TileQueryMeleeTarget;
-	struct TileQueryRangedTarget;
+	struct TileQueryRangedAttackTarget;
 	struct TileQueryLightningBoltTarget;
 	struct TileQueryTeleportTarget;
 
@@ -22,8 +21,7 @@ namespace questless
 	{
 		virtual ~TileQueryVisitor() = default;
 
-		virtual void visit(TileQueryMeleeTarget const&) = 0;
-		virtual void visit(TileQueryRangedTarget const&) = 0;
+		virtual void visit(TileQueryRangedAttackTarget const&) = 0;
 		virtual void visit(TileQueryLightningBoltTarget const&) = 0;
 		virtual void visit(TileQueryTeleportTarget const&) = 0;
 	};
@@ -34,14 +32,10 @@ namespace questless
 		virtual ~TileQuery() = default;
 		virtual void accept(TileQueryVisitor& visitor) = 0;
 	};
-	struct TileQueryMeleeTarget : TileQuery
-	{
-		void accept(TileQueryVisitor& visitor) override { visitor.visit(*this); }
-	};
-	struct TileQueryRangedTarget : TileQuery
+	struct TileQueryRangedAttackTarget : TileQuery
 	{
 		int range;
-		TileQueryRangedTarget(int range) : range{range} {}
+		TileQueryRangedAttackTarget(int range) : range{range} {}
 		void accept(TileQueryVisitor& visitor) override { visitor.visit(*this); }
 	};
 	struct TileQueryLightningBoltTarget : TileQuery

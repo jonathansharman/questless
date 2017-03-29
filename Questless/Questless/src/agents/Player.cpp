@@ -14,6 +14,7 @@
 #include "ui/CountDialog.h"
 #include "ui/MagnitudeDialog.h"
 #include "ui/TileDialog.h"
+#include "ui/DirectionDialog.h"
 
 #include "ui/qte/LightningBolt.h"
 
@@ -225,7 +226,7 @@ namespace questless
 		auto dialog = std::make_unique<MagnitudeDialog>(std::move(titler.title), std::move(prompter.prompt), default, min, max, std::move(cont));
 		return game().add_dialog(std::move(dialog));
 	}
-
+	
 	Action::Complete Player::query_tile
 		( TileQuery::ptr query
 		, std::optional<RegionTileCoords> origin
@@ -236,16 +237,14 @@ namespace questless
 		struct TileQueryTitler : TileQueryVisitor
 		{
 			std::string title;
-			void visit(TileQueryMeleeTarget const&) override { title = "Melee Attack"; }
-			void visit(TileQueryRangedTarget const&) override { title = "Ranged Attack"; }
+			void visit(TileQueryRangedAttackTarget const&) override { title = "Ranged Attack"; }
 			void visit(TileQueryLightningBoltTarget const&) override { title = "Lightning Bolt Target"; }
 			void visit(TileQueryTeleportTarget const&) override { title = "Teleport Target"; }
 		};
 		struct TileQueryPrompter : TileQueryVisitor
 		{
 			std::string prompt;
-			void visit(TileQueryMeleeTarget const&) override { prompt = "Choose attack target."; }
-			void visit(TileQueryRangedTarget const&) override { prompt = "Choose attack target."; }
+			void visit(TileQueryRangedAttackTarget const&) override { prompt = "Choose attack target."; }
 			void visit(TileQueryLightningBoltTarget const&) override { prompt = "Select a tile to be zapped with a lightning bolt."; }
 			void visit(TileQueryTeleportTarget const&) override { prompt = "Select a tile to teleport to."; }
 		};
@@ -254,7 +253,37 @@ namespace questless
 		query->accept(titler);
 		TileQueryPrompter prompter;
 		query->accept(prompter);
-		auto dialog = std::make_unique<TileDialog>(std::move(titler.title), std::move(prompter.prompt), game().camera(), std::move(origin), std::move(predicate), std::move(cont));
+		auto dialog = std::make_unique<TileDialog>
+			( std::move(titler.title)
+			, std::move(prompter.prompt)
+			, std::move(origin)
+			, std::move(predicate)
+			, std::move(cont)
+			);
+		return game().add_dialog(std::move(dialog));
+	}
+
+	Action::Complete Player::query_direction
+		( DirectionQuery::ptr query
+		, function<Action::Complete(std::optional<RegionTileCoords::Direction>)> cont
+		) const
+	{
+		struct DirectionQueryTitler : DirectionQueryVisitor
+		{
+			std::string title;
+			void visit(DirectionQueryMeleeAttack const&) override { title = "Melee Attack"; }
+		};
+		struct DirectionQueryPrompter : DirectionQueryVisitor
+		{
+			std::string prompt;
+			void visit(DirectionQueryMeleeAttack const&) override { prompt = "Choose attack direction."; }
+		};
+
+		DirectionQueryTitler titler;
+		query->accept(titler);
+		DirectionQueryPrompter prompter;
+		query->accept(prompter);
+		auto dialog = std::make_unique<DirectionDialog>(std::move(titler.title), std::move(prompter.prompt), std::move(cont));
 		return game().add_dialog(std::move(dialog));
 	}
 

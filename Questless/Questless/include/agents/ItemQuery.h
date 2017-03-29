@@ -4,7 +4,7 @@
 *
 * @section LICENSE See LICENSE.txt.
 *
-* @section DESCRIPTION Types of item queries, i.e. requests to an agent to choose an item from an inventory.
+* @section DESCRIPTION Requests to an agent for an item from an inventory.
 */
 
 #pragma once
