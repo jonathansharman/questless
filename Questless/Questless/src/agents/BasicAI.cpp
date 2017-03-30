@@ -44,7 +44,7 @@ namespace questless
 				// Idle next time.
 				ai._state = std::make_unique<IdleState>();
 				if (result == Action::Result::aborted) {
-					// Walk failed. Wait for up to 10 time units instead.
+					// Turn failed. Wait for up to 10 time units instead.
 					ai.idle(uniform(0.0, 10.0));
 				}
 				return Action::Complete{};
@@ -54,27 +54,39 @@ namespace questless
 	void BasicAI::AttackState::act(BasicAI& ai)
 	{
 		if (Being* target = game().beings.get(target_id)) {
-			if (ai.being.coords.distance_to(target->coords) == 1) {
-				// Within striking distance of target.
-				/// @todo This is a hack that assumes the first item in the inventory is a melee weapon.
-				Item* item = ai.being.inventory().items().head();
-				item->actions().front()->perform(ai.being, [&ai](Action::Result result) {
+			auto target_direction = ai.being.coords.direction_towards(target->coords);
+			if (ai.being.direction != target_direction) {
+				// Facing away from target. Turn towards it.
+				ai.turn(target_direction, [&ai](Action::Result result) {
 					if (result == Action::Result::aborted) {
-						// Attack failed. Wait for up to 10 time units instead.
+						// Turn failed. Wait for up to 10 time units instead.
 						ai.idle(uniform(0.0, 10.0));
 					}
 					return Action::Complete{};
 				});
 			} else {
-				// Out of range. Move towards target.
-				auto direction = ai.being.coords.direction_towards(target->coords);
-				ai.walk(direction, [&ai](Action::Result result) {
-					if (result == Action::Result::aborted) {
-						// Walk failed. Wait for up to 10 time units instead.
-						ai.idle(uniform(0.0, 10.0));
-					}
-					return Action::Complete{};
-				});
+				// Facing towards target.
+				if (ai.being.coords.distance_to(target->coords) == 1) {
+					// Within striking distance of target.
+					/// @todo This is a hack that assumes the first item in the inventory is a melee weapon.
+					Item* item = ai.being.inventory().items().head();
+					item->actions().front()->perform(ai.being, [&ai](Action::Result result) {
+						if (result == Action::Result::aborted) {
+							// Attack failed. Wait for up to 10 time units instead.
+							ai.idle(uniform(0.0, 10.0));
+						}
+						return Action::Complete{};
+					});
+				} else {
+					// Out of range. Move towards target.
+					ai.walk(target_direction, [&ai](Action::Result result) {
+						if (result == Action::Result::aborted) {
+							// Walk failed. Wait for up to 10 time units instead.
+							ai.idle(uniform(0.0, 10.0));
+						}
+						return Action::Complete{};
+					});
+				}
 			}
 		} else {
 			// Target not found. Switch to idle state.

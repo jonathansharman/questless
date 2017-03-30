@@ -51,6 +51,10 @@ namespace questless
 				weapon->active_cooldown = _cooldown;
 				auto coords = actor.coords.neighbor(_direction); /// @todo This will need to be more complicated for longer-ranged melee weapons.
 				if (Being* target = actor.region->being(coords)) {
+					// Reduce damage based on difference between direction faced and direction attacked.
+					constexpr double penalty_per_turn = 0.25;
+					_damage *= 1.0 - penalty_per_turn * RegionTileCoords::distance(actor.direction, _direction);
+
 					weapon->integrity -= _wear_ratio * _damage.total();
 					target->take_damage(_damage, nullptr, actor.id); /// @todo Part targeting
 					return cont(Result::success);
