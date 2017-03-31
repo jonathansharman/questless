@@ -288,9 +288,16 @@ namespace questless
 			unique_ptr<Section> const& dst_section = _section_map[dst_section_coords];
 			if (dst_section != nullptr) {
 				if (dst_section->being_id(coords)) {
-					// Collision. Prevent movement.
+					// Collision with another being. Prevent movement.
 					return false;
 				}
+				if (auto object_id = dst_section->object_id(coords)) {
+					if (game().objects.get(*object_id)->blocks_movement()) {
+						// Collision with an obstructing object. Prevent movement.
+						return false;
+					}
+				}
+
 				src_section.remove(being);
 				being.coords = coords;
 				dst_section->add(being);
@@ -300,8 +307,14 @@ namespace questless
 			}
 		} else {
 			if (src_section.being_id(coords)) {
-				// Collision. Prevent movement.
+				// Collision with another being. Prevent movement.
 				return false;
+			}
+			if (auto object_id = src_section.object_id(coords)) {
+				if (game().objects.get(*object_id)->blocks_movement()) {
+					// Collision with an obstructing object. Prevent movement.
+					return false;
+				}
 			}
 			src_section.remove(being);
 			being.coords = coords;
@@ -317,7 +330,7 @@ namespace questless
 		if (dst_section_coords != src_section.coords()) {
 			unique_ptr<Section> const& dst_section = _section_map[dst_section_coords];
 			if (dst_section != nullptr) {
-				if (dst_section->object_id(coords)) {
+				if (dst_section->being_id(coords) || dst_section->object_id(coords)) {
 					// Collision. Prevent movement.
 					return false;
 				}

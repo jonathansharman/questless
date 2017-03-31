@@ -31,6 +31,8 @@ namespace questless
 
 		virtual EntityClass entity_class() const { return EntityClass::CorpseClass; }
 
+		bool blocks_movement() const override { return true; }
+
 		Id<Being> being_id() const { return _being_id; }
 	private:
 		Id<Being> const _being_id;

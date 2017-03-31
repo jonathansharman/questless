@@ -44,6 +44,10 @@ namespace questless
 		/// @param out A stream object into which the serialized object is inserted.
 		void serialize(std::ostream& out) const override;
 
+		/// @return Whether the object blocks the movement of other entities.
+		////
+		virtual bool blocks_movement() const = 0;
+
 		/// Advances the object one time unit.
 		void update() override;
 	protected:
