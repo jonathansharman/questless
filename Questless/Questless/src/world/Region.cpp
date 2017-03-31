@@ -78,7 +78,7 @@ namespace questless
 		}
 	}
 
-	Region::Region(string const& save_name, string const& region_name)
+	Region::Region(char const* save_name, string region_name)
 		: _name{std::move(region_name)}, _turn_queue{turn_order_function}
 	{
 		fs::path saves_dir{"saves"};
@@ -138,7 +138,7 @@ namespace questless
 		}
 	}
 
-	void Region::save(string const& save_name)
+	void Region::save(char const* save_name)
 	{
 		/// @todo Reenable someday. Use SQLite or something to save games.
 
@@ -178,8 +178,6 @@ namespace questless
 				}
 			}
 		}
-#else
-		save_name.size();
 #endif
 	}
 

@@ -293,7 +293,7 @@ namespace questless
 			oss_fps.setf(std::ios::fixed);
 			oss_fps.precision(2);
 			oss_fps << fps_buffer_sum / _fps_buffer.size();
-			Texture txt_fps = _fnt_20pt->render(oss_fps.str(), Color::white());
+			Texture txt_fps = _fnt_20pt->render(oss_fps.str().c_str(), Color::white());
 			txt_fps.draw(ScreenPoint(window().width() - 1, window().height() - 1), HAlign::right, VAlign::bottom);
 
 			// Present rendering.
@@ -440,20 +440,20 @@ namespace questless
 			ss_cam_coords.precision(2);
 			ss_cam_coords << "Cam: ((" << _camera->position().x << ", " << _camera->position().y << "), ";
 			ss_cam_coords << _camera->angle().count() << ", " << _camera->zoom() << ")";
-			Texture txt_cam_coords = _fnt_20pt->render(ss_cam_coords.str(), Color::white());
+			Texture txt_cam_coords = _fnt_20pt->render(ss_cam_coords.str().c_str(), Color::white());
 			txt_cam_coords.draw(ScreenPoint{0, 0});
 		}
 		{
 			auto cam_hex_coords = Layout::dflt().to_hex_coords<RegionTileCoords>(_camera->position());
 			ostringstream ss_cam_hex_coords;
 			ss_cam_hex_coords << "Cam hex: (" << cam_hex_coords.q << ", " << cam_hex_coords.r << ")";
-			Texture txt_cam_hex_coords = _fnt_20pt->render(ss_cam_hex_coords.str(), Color::white());
+			Texture txt_cam_hex_coords = _fnt_20pt->render(ss_cam_hex_coords.str().c_str(), Color::white());
 			txt_cam_hex_coords.draw(ScreenPoint{0, 25});
 		}
 		{
 			ostringstream ss_time;
 			ss_time << "Time: " << _time;
-			Texture txt_turn = _fnt_20pt->render(ss_time.str(), Color::white());
+			Texture txt_turn = _fnt_20pt->render(ss_time.str().c_str(), Color::white());
 			txt_turn.draw(ScreenPoint{0, 50});
 		}
 

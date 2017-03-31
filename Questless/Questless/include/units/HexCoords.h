@@ -282,12 +282,12 @@ namespace std
 int const even = 1;
 int const odd = -1;
 
-void complain(string const& name)
+void complain(string_view name)
 {
 	cerr << "FAIL " << name << endl;
 }
 
-void equal_hex(string const& name, HexCoords a, HexCoords b)
+void equal_hex(string_view name, HexCoords a, HexCoords b)
 {
 	if (!(a.q == b.q && a.s == b.s && a.r == b.r)) {
 		complain(name);
@@ -301,14 +301,14 @@ void equal_offsetcoord(const char* name, OffsetCoords a, OffsetCoords b)
 	}
 }
 
-void equal_int(string const& name, int a, int b)
+void equal_int(string_view name, int a, int b)
 {
 	if (a != b) {
 		complain(name);
 	}
 }
 
-void equal_hex_array(string const& name, vector<HexCoords> a, vector<HexCoords> b)
+void equal_hex_array(string_view name, vector<HexCoords> a, vector<HexCoords> b)
 {
 	equal_int(name, a.size(), b.size());
 	for (int i = 0; i < a.size(); i++) {

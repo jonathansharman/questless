@@ -84,7 +84,7 @@ namespace questless
 			// Draw options.
 			for (size_t i = 0; i < _options.size(); ++i) {
 				int y = _bounds.y + _y_padding + _title_height + static_cast<int>(i) * _option_height;
-				_txt_options[i]->draw(units::ScreenPoint{_bounds.x + _x_padding, y});
+				_txt_options[i].draw(units::ScreenPoint{_bounds.x + _x_padding, y});
 			}
 		}
 	private:
@@ -99,7 +99,7 @@ namespace questless
 		Continuation<std::optional<int>> _cont;
 
 		sdl::Texture::ptr _txt_title;
-		std::vector<sdl::Texture::ptr> _txt_options;
+		std::vector<sdl::Texture> _txt_options;
 
 		int _selection;
 
@@ -109,12 +109,12 @@ namespace questless
 		{
 			static auto list_option_font_handle = sdl::font_manager().add("resources/fonts/dumbledor1.ttf", 20);
 
-			_txt_title = make_title(_title, sdl::Color::black());
+			_txt_title = make_title(_title.c_str(), sdl::Color::black());
 			_bounds.w = _txt_title->width();
 			_txt_options.clear();
 			for (auto const& option : _options) {
-				_txt_options.push_back(std::make_unique<sdl::Texture>(sdl::font_manager()[list_option_font_handle].render(option, sdl::Color::black())));
-				_bounds.w = std::max(_bounds.w, _txt_options.back()->width());
+				_txt_options.push_back(sdl::font_manager()[list_option_font_handle].render(option.c_str(), sdl::Color::black()));
+				_bounds.w = std::max(_bounds.w, _txt_options.back().width());
 			}
 			_bounds.w += 2 * _x_padding;
 			_bounds.h = _title_height + static_cast<int>(_options.size() * _option_height) + 2 * _y_padding;

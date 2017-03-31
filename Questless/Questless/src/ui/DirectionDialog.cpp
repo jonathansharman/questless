@@ -43,7 +43,7 @@ namespace questless
 
 	void DirectionDialog::load_textures()
 	{
-		_txt_title = make_title(_title);
-		_txt_prompt = make_prompt(_prompt);
+		_txt_title = make_title(_title.c_str());
+		_txt_prompt = make_prompt(_prompt.c_str());
 	}
 }

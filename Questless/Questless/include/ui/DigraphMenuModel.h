@@ -26,14 +26,14 @@ namespace questless
 
 				/// @param name The name of the option.
 				/// @param target The index of page to which this option links, or nullopt if the option is terminal.
-				Option(std::string name, std::optional<int> target) : name(name), target(target) {}
+				Option(std::string name, std::optional<int> target) : name{std::move(name)}, target{target} {}
 			};
 
 			std::string title;
 			std::vector<Option> options;
 			int option_index;
 
-			Page(std::string title) : title(title), option_index(0) {}
+			Page(std::string title) : title{std::move(title)}, option_index{0} {}
 		};
 
 		std::vector<Page> pages;

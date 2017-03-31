@@ -11,6 +11,7 @@
 #include "units/ScreenRect.h"
 
 using std::string;
+using std::string_view;
 using std::vector;
 using std::pair;
 using std::invalid_argument;
@@ -32,34 +33,34 @@ namespace questless
 
 	DigraphMenuController::DigraphMenuController(int min_width, int min_height) : _view{min_width, min_height} {}
 
-	void DigraphMenuController::add_page(string const& title)
+	void DigraphMenuController::add_page(string title)
 	{
 		if (!find(title)) {
-			_menu.pages.push_back(DigraphMenuModel::Page(title));
+			_menu.pages.push_back(DigraphMenuModel::Page(std::move(title)));
 			_view.invalidate_render();
 		} else {
 			throw invalid_argument("Page already exists.");
 		}
 	}
 
-	void DigraphMenuController::add_option(string const& page_title, string const& option_name)
+	void DigraphMenuController::add_option(string_view page_title, string option_name)
 	{
 		std::optional<int> page_index = find(page_title);
 		if (page_index) {
-			_menu.pages[page_index.value()].options.push_back(DigraphMenuModel::Page::Option(option_name, std::nullopt));
+			_menu.pages[page_index.value()].options.push_back(DigraphMenuModel::Page::Option(std::move(option_name), std::nullopt));
 			_view.invalidate_render();
 		} else {
 			throw invalid_argument("Attempted to add an option to a nonexistent menu page.");
 		}
 	}
 
-	void DigraphMenuController::add_option(string const& location_page_title, string const& option_name, string const& target_page_title)
+	void DigraphMenuController::add_option(string_view location_page_title, string option_name, string_view target_page_title)
 	{
 		std::optional<int> location_page_index = find(location_page_title);
 		if (location_page_index) {
 			std::optional<int> target_index = find(target_page_title);
 			if (target_index) {
-				_menu.pages[location_page_index.value()].options.push_back(DigraphMenuModel::Page::Option(option_name, target_index.value()));
+				_menu.pages[location_page_index.value()].options.push_back(DigraphMenuModel::Page::Option(std::move(option_name), target_index.value()));
 				_view.invalidate_render();
 			} else {
 				throw invalid_argument("Attempted to add an option linking to a nonexistent menu page.");
@@ -69,7 +70,7 @@ namespace questless
 		}
 	}
 
-	void DigraphMenuController::set_page(string const& title)
+	void DigraphMenuController::set_page(string_view title)
 	{
 		for (size_t index = 0; index < _menu.pages.size(); ++index) {
 			if (_menu.pages[index].title == title) {
@@ -80,7 +81,7 @@ namespace questless
 		throw invalid_argument("Attempted to navigate to a nonexistent menu page.");
 	}
 	
-	void DigraphMenuController::set_option(string const& page_title, int option_index)
+	void DigraphMenuController::set_option(string_view page_title, int option_index)
 	{
 		std::optional<int> page_index = find(page_title);
 		if (!page_index) {
@@ -176,7 +177,7 @@ namespace questless
 		_view.draw();
 	}
 
-	std::optional<int> DigraphMenuController::find(string const& page_title)
+	std::optional<int> DigraphMenuController::find(string_view page_title)
 	{
 		for (size_t i = 0; i < _menu.pages.size(); ++i) {
 			if (_menu.pages[i].title == page_title) {

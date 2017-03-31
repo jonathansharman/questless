@@ -68,9 +68,9 @@ namespace questless
 		}
 	}
 	
-	void Section::save(std::string const& filename)
+	void Section::save(char const* filename)
 	{
-		std::ofstream fout{filename.c_str()};
+		std::ofstream fout{filename};
 		for (auto& r_row : _tiles) {
 			for (auto& tile : r_row) {
 				fout << static_cast<char>(tile->tile_class()) << ' ' << tile->light_level() << ' ' << tile->temperature() << ' ';

@@ -34,14 +34,14 @@ namespace questless
 		/// Loads a region from disk.
 		/// @param save_name The name of the region's save file.
 		/// @param region_name The name of the region.
-		Region(std::string const& save_name, std::string const& region_name);
+		Region(char const* save_name, std::string region_name);
 
 		/// @return The region's name, as it appears in game and on disk.
 		std::string name() const { return _name; }
 
 		/// Saves the region to disk.
 		/// @param save_name The name of the region's save file.
-		void save(std::string const& save_name);
+		void save(char const* save_name);
 
 		/// Removes the given being from the turn queue if it's there.
 		/// @param being A being.

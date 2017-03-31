@@ -49,7 +49,7 @@ namespace questless
 
 		/// Saves the section to the specified file.
 		/// @param filename The section's filename.
-		void save(std::string const& filename);
+		void save(char const* filename);
 
 		/// @return The hex coordinates of the section within the region's sections.
 		RegionSectionCoords coords() const { return _coords; }

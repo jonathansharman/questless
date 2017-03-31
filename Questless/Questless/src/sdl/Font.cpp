@@ -12,12 +12,12 @@
 
 namespace sdl
 {
-	Font::Font(std::string const& filename, int size, SDL_BlendMode blend_mode)
+	Font::Font(char const* filename, int size, SDL_BlendMode blend_mode)
 		: _blend_mode(blend_mode), _size(size)
 	{
-		_font = TTF_OpenFont(filename.c_str(), _size);
+		_font = TTF_OpenFont(filename, _size);
 		if (_font == nullptr) {
-			throw std::runtime_error(("Failed to load font \"" + filename + "\".").c_str());
+			throw std::runtime_error(("Failed to load font \"" + std::string{filename} + "\".").c_str());
 		}
 	}
 
@@ -49,9 +49,9 @@ namespace sdl
 		std::swap(first._blend_mode, second._blend_mode);
 	}
 
-	Texture Font::render(std::string const& text, Color text_color) const
+	Texture Font::render(char const* text, Color text_color) const
 	{
-		SDL_Surface* surface = TTF_RenderText_Blended(_font, text.c_str(), static_cast<SDL_Color>(text_color));
+		SDL_Surface* surface = TTF_RenderText_Blended(_font, text, static_cast<SDL_Color>(text_color));
 		if (surface == nullptr) {
 			throw std::runtime_error{TTF_GetError()};
 		}
@@ -64,9 +64,9 @@ namespace sdl
 		return texture;
 	}
 
-	Texture Font::render(std::string const& text, Color text_color, Color background_color) const
+	Texture Font::render(char const* text, Color text_color, Color background_color) const
 	{
-		SDL_Surface* surface = TTF_RenderText_Shaded(_font, text.c_str(), static_cast<SDL_Color>(text_color), static_cast<SDL_Color>(background_color));
+		SDL_Surface* surface = TTF_RenderText_Shaded(_font, text, static_cast<SDL_Color>(text_color), static_cast<SDL_Color>(background_color));
 		if (surface == nullptr) {
 			throw std::runtime_error(TTF_GetError());
 		}
@@ -79,9 +79,9 @@ namespace sdl
 		return texture;
 	}
 
-	Texture Font::fast_render(std::string const& text, Color text_color) const
+	Texture Font::fast_render(char const* text, Color text_color) const
 	{
-		SDL_Surface* surface = TTF_RenderText_Solid(_font, text.c_str(), static_cast<SDL_Color>(text_color));
+		SDL_Surface* surface = TTF_RenderText_Solid(_font, text, static_cast<SDL_Color>(text_color));
 		if (surface == nullptr) {
 			throw std::runtime_error(TTF_GetError());
 		}

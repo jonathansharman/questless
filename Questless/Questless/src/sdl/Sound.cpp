@@ -11,11 +11,11 @@
 
 namespace sdl
 {
-	Sound::Sound(std::string const& filename)
+	Sound::Sound(char const* filename)
 	{
-		_chunk = Mix_LoadWAV(filename.c_str());
+		_chunk = Mix_LoadWAV(filename);
 		if (!_chunk) {
-			throw std::runtime_error{("Failed to load sound \"" + filename + "\".").c_str()};
+			throw std::runtime_error{("Failed to load sound \"" + std::string{filename} + "\".").c_str()};
 		}
 	}
 

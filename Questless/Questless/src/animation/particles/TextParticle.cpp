@@ -23,6 +23,6 @@ namespace questless
 
 	sdl::Texture TextParticle::make_texture() const
 	{
-		return sdl::font_manager()[_font_handle].render(_text, _color);
+		return sdl::font_manager()[_font_handle].render(_text.c_str(), _color);
 	}
 }

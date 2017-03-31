@@ -28,7 +28,7 @@ namespace sdl
 		/// @param filename The name of a TrueType font file.
 		/// @param blend_mode The SDL blend mode to use for this font. Determines the way the alpha channel is used.
 		/// @param size The point size of the font.
-		Font(std::string const& filename, int size, SDL_BlendMode blend_mode = SDL_BLENDMODE_BLEND);
+		Font(char const* filename, int size, SDL_BlendMode blend_mode = SDL_BLENDMODE_BLEND);
 
 		Font(Font const& font) = delete;
 
@@ -49,19 +49,19 @@ namespace sdl
 		/// Renders the provided string of text as a texture with a transparent background.
 		/// @param text The text to be rendered. Must be at least one character in length.
 		/// @param text_color The text color.
-		Texture render(std::string const& text, Color text_color) const;
+		Texture render(char const* text, Color text_color) const;
 	
 		/// Renders the provided string of text as a texture with a solid background.
 		/// @param text The text to be rendered. Must be at least one character in length.
 		/// @param text_color The text color.
 		/// @param background_color The background color.
-		Texture render(std::string const& text, Color text_color, Color background_color) const;
+		Texture render(char const* text, Color text_color, Color background_color) const;
 
 		/// Quickly renders the provided string of text as a texture with a transparent background.
 		/// @param text The text to be rendered. Must be at least one character in length.
 		/// @param text_color The text color.
 		/// @note Render quality is inferior to that produced by render, but the resulting texture is produced and drawn much faster.
-		Texture fast_render(std::string const& text, Color text_color) const;
+		Texture fast_render(char const* text, Color text_color) const;
 	private:
 		TTF_Font* _font;
 		int _size;

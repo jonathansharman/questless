@@ -28,7 +28,7 @@ namespace questless
 
 		// Update selector texture if value changed.
 		if (old_magnitude != _magnitude) {
-			_txt_selector = make_selector(std::to_string(_magnitude));
+			_txt_selector = make_selector(std::to_string(_magnitude).c_str());
 		}
 
 		if (input().pressed(MouseButton::left) || input().presses(SDLK_RETURN) || input().presses(SDLK_SPACE)) {
@@ -46,8 +46,8 @@ namespace questless
 
 	void MagnitudeDialog::load_textures()
 	{
-		_txt_title = make_title(_title);
-		_txt_prompt = make_prompt(_prompt);
-		_txt_selector = make_selector(std::to_string(_magnitude));
+		_txt_title = make_title(_title.c_str());
+		_txt_prompt = make_prompt(_prompt.c_str());
+		_txt_selector = make_selector(std::to_string(_magnitude).c_str());
 	}
 }
