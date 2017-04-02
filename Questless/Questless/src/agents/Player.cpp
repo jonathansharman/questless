@@ -135,6 +135,7 @@ namespace questless
 		{
 			std::string title;
 			void visit(MessageArrowMiss const&) override { title = "Ranged Attack"; }
+			void visit(MessageCannotEquip const&) override { title = "Cannot Equip"; }
 			void visit(MessageEntityInTheWay const&) override { title = "Obstruction"; }
 			void visit(MessageIncantFailedMute const&) override { title = "Incantation"; }
 			void visit(MessageMeleeMiss const&) override { title = "Melee Attack"; }
@@ -147,8 +148,9 @@ namespace questless
 		{
 			std::string prompt;
 			void visit(MessageArrowMiss const&) override { prompt = "Miss!"; }
+			void visit(MessageCannotEquip const&) override { prompt = "You don't have the requisite free body parts to equip this."; }
 			void visit(MessageEntityInTheWay const&) override { prompt = "There's something in the way!"; }
-			void visit(MessageIncantFailedMute const&) override { prompt = "You cannot perform an incantation while mute!"; }
+			void visit(MessageIncantFailedMute const&) override { prompt = "You can't perform an incantation while mute!"; }
 			void visit(MessageMeleeMiss const&) override { prompt = "Miss!"; }
 			void visit(MessageNotEnoughAmmo const&) override { prompt = "Not enough ammo!"; }
 			void visit(MessageNotEnoughMana const& m) override

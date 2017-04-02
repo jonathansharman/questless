@@ -20,6 +20,10 @@ namespace questless
 
 		/// @todo Report failure to equip.
 
+		auto fail = [&] {
+			return actor.agent().send_message(std::make_unique<MessageCannotEquip>(), [cont] { return cont(Result::aborted); });
+		};
+
 		_equipment._bearer_id = actor.id;
 
 		Requirements reqs = _equipment.requirements();
@@ -37,7 +41,7 @@ namespace questless
 			}
 			if (!found_head) {
 				_equipment.unequip();
-				return Complete{};
+				return fail();
 			}
 		}
 
@@ -54,7 +58,7 @@ namespace questless
 			}
 			if (!found_torso) {
 				_equipment.unequip();
-				return Complete{};
+				return fail();
 			}
 		}
 
@@ -71,7 +75,7 @@ namespace questless
 			}
 			if (!found_arm) {
 				_equipment.unequip();
-				return Complete{};
+				return fail();
 			}
 		}
 
@@ -88,7 +92,7 @@ namespace questless
 			}
 			if (!found_hand) {
 				_equipment.unequip();
-				return Complete{};
+				return fail();
 			}
 		}
 
@@ -105,7 +109,7 @@ namespace questless
 			}
 			if (!found_leg) {
 				_equipment.unequip();
-				return Complete{};
+				return fail();
 			}
 		}
 
@@ -122,7 +126,7 @@ namespace questless
 			}
 			if (!found_foot) {
 				_equipment.unequip();
-				return Complete{};
+				return fail();
 			}
 		}
 
@@ -139,7 +143,7 @@ namespace questless
 			}
 			if (!found_wing) {
 				_equipment.unequip();
-				return Complete{};
+				return fail();
 			}
 		}
 
@@ -156,13 +160,13 @@ namespace questless
 			}
 			if (!found_tail) {
 				_equipment.unequip();
-				return Complete{};
+				return fail();
 			}
 		}
 		
 		actor.busy_time += _equipment.equip_time();
 
-		return Complete{};
+		return cont(Result::success);
 	}
 
 	Complete Equipment::Unequip::perform(Being& actor, cont_t cont)
@@ -171,7 +175,7 @@ namespace questless
 
 		_equipment.unequip();
 
-		return Complete{};
+		return cont(Result::success);
 	}
 
 	void Equipment::unequip()

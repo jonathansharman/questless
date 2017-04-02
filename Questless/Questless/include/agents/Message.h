@@ -14,6 +14,7 @@
 namespace questless
 {
 	struct MessageArrowMiss;
+	struct MessageCannotEquip;
 	struct MessageEntityInTheWay;
 	struct MessageIncantFailedMute;
 	struct MessageMeleeMiss;
@@ -27,6 +28,7 @@ namespace questless
 		virtual ~MessageVisitor() = default;
 
 		virtual void visit(MessageArrowMiss const&) = 0;
+		virtual void visit(MessageCannotEquip const&) = 0;
 		virtual void visit(MessageEntityInTheWay const&) = 0;
 		virtual void visit(MessageIncantFailedMute const&) = 0;
 		virtual void visit(MessageMeleeMiss const&) = 0;
@@ -43,6 +45,10 @@ namespace questless
 		virtual void accept(MessageVisitor& visitor) = 0;
 	};
 	struct MessageArrowMiss : Message
+	{
+		void accept(MessageVisitor& visitor) override { visitor.visit(*this); }
+	};
+	struct MessageCannotEquip : Message
 	{
 		void accept(MessageVisitor& visitor) override { visitor.visit(*this); }
 	};
