@@ -16,9 +16,9 @@
 
 namespace questless
 {
-	Action::Complete Item::Drop::perform(Being& actor, cont_t cont)
+	Complete Item::Drop::perform(Being& actor, cont_t cont)
 	{
-		actor.take_item(_item.id);
+		actor.inventory.remove(_item.id);
 
 		if (Object* object = actor.region->object(actor.coords)) {
 			if (ItemBox* old_box = dynamic_cast<ItemBox*>(object)) {
@@ -40,7 +40,7 @@ namespace questless
 		}
 	}
 
-	Action::Complete Item::Throw::perform(Being& actor, cont_t cont)
+	Complete Item::Throw::perform(Being& actor, cont_t cont)
 	{
 		/// @todo This.
 		auto drop = Drop{_item};

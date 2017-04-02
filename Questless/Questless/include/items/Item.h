@@ -26,7 +26,7 @@ namespace questless
 	class Item
 	{
 	public:
-		using ptr = std::unique_ptr<Item>;
+		using uptr = std::unique_ptr<Item>;
 		using ref = std::reference_wrapper<Item>;
 
 		Id<Item> const id;
@@ -47,7 +47,7 @@ namespace questless
 
 		/// @return The list of actions that can be performed with the item.
 		////
-		virtual std::vector<Action::ptr> actions() = 0;
+		virtual std::vector<Action::uptr> actions() = 0;
 
 		/// Advances the item one time unit.
 		////
@@ -58,11 +58,11 @@ namespace questless
 		public:
 			Drop(Item& item) : _item{item} {}
 
-			static ptr make(Item& item) { return std::make_unique<Drop>(item); }
+			static uptr make(Item& item) { return std::make_unique<Drop>(item); }
 
 			std::string name() const override { return "Drop"; }
 
-			Action::Complete perform(Being& actor, cont_t cont) override;
+			Complete perform(Being& actor, cont_t cont) override;
 		private:
 			Item& _item;
 		};
@@ -72,11 +72,11 @@ namespace questless
 		public:
 			Throw(Item& item) : _item{item} {}
 
-			static ptr make(Item& item) { return std::make_unique<Throw>(item); }
+			static uptr make(Item& item) { return std::make_unique<Throw>(item); }
 
 			std::string name() const override { return "Throw"; }
 
-			Action::Complete perform(Being& actor, cont_t cont) override;
+			Complete perform(Being& actor, cont_t cont) override;
 		private:
 			Item& _item;
 		};

@@ -35,7 +35,7 @@ namespace questless
 		/// Updates the world renderer's world view.
 		/// @param world_view The new world view to render.
 		/// @param effects Any newly perceived effects to render.
-		void update_view(WorldView const& world_view, std::vector<Effect::ptr> effects);
+		void update_view(WorldView const& world_view, std::vector<Effect::uptr> effects);
 
 		/// Updates animations. To be called once per frame.
 		void update();
@@ -63,14 +63,14 @@ namespace questless
 	private:
 		WorldView const* _world_view;
 
-		std::unordered_map<Tile::TileClass, sdl::Texture::ptr> _tile_textures;
+		std::unordered_map<Tile::TileClass, sdl::Texture::uptr> _tile_textures;
 		std::unordered_map<Id<Being>, std::unique_ptr<AnimationSet>> _being_animation_sets;
 		std::unordered_map<Id<Object>, std::unique_ptr<AnimationSet>> _object_animations;
-		sdl::Texture::ptr _terrain_texture;
+		sdl::Texture::uptr _terrain_texture;
 		units::GameRect _terrain_bounds;
 		bool _terrain_render_is_current;
 
-		std::vector<Particle::ptr> _particles;
+		std::vector<Particle::uptr> _particles;
 
 		void refresh() override;
 

@@ -13,15 +13,15 @@
 
 namespace questless::spell
 {
-	Action::Complete Spell::Cast::perform(Being& actor, cont_t cont)
+	Complete Spell::Cast::perform(Being& actor, cont_t cont)
 	{
 		class CompleteCast : public Action
 		{
 		public:
 			CompleteCast(Spell& spell) : _spell{spell} {}
-			static ptr make(Spell& spell) { return std::make_unique<CompleteCast>(spell); }
+			static uptr make(Spell& spell) { return std::make_unique<CompleteCast>(spell); }
 			std::string name() const override { return ""; }
-			Action::Complete perform(Being& actor, cont_t cont) override { return _spell.perform_cast(actor, cont); }
+			Complete perform(Being& actor, cont_t cont) override { return _spell.perform_cast(actor, cont); }
 		private:
 			Spell& _spell;
 		};
@@ -30,13 +30,13 @@ namespace questless::spell
 			return actor.agent().send_message(std::make_unique<MessageSpellOnCooldown>(_spell.active_cooldown()), [cont] { return cont(Action::Result::aborted); });
 		}
 		if (_spell.charges() <= 0) {
-			return actor.agent().send_message(std::make_unique<MessageSpellOutOfCharges>(), [cont] { return cont(Action::Result::aborted); });
+			return actor.agent().send_message(std::make_unique<MessageSpellNotEnoughCharges>(), [cont] { return cont(Action::Result::aborted); });
 		}
 		actor.add_delayed_action(_spell.cast_time() / (1.0 + Being::intellect_factor * actor.stats.intellect), cont, CompleteCast::make(_spell));
-		return Action::Complete{};
+		return Complete{};
 	}
 
-	Action::Complete Spell::Incant::perform(Being& actor, cont_t cont)
+	Complete Spell::Incant::perform(Being& actor, cont_t cont)
 	{
 		if (actor.stats.mute) {
 			return actor.agent().send_message(std::make_unique<MessageIncantFailedMute>(), [cont] { return cont(Action::Result::aborted); });
@@ -46,7 +46,7 @@ namespace questless::spell
 		return cont(Result::success);
 	}
 
-	Action::Complete Spell::Discharge::perform(Being& actor, cont_t cont)
+	Complete Spell::Discharge::perform(Being& actor, cont_t cont)
 	{
 		actor.busy_time += _spell.discharge_time() / (1.0 + Being::intellect_factor * actor.stats.intellect);
 		_spell.lose_charge(1);

@@ -25,8 +25,8 @@ namespace questless
 		void visit(ItemBox const&) override;
 
 		/// @return The animation set produced by the last visit. Moves the animation set out of the animator.
-		AnimationSet::ptr animation_set() { return std::move(_animation_set); }
+		AnimationSet::uptr animation_set() { return std::move(_animation_set); }
 	private:
-		AnimationSet::ptr _animation_set;
+		AnimationSet::uptr _animation_set;
 	};
 }

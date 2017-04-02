@@ -69,7 +69,7 @@ namespace questless
 						if ((section_r != 0 || section_q != 0) && uniform(0, 10) == 0) {
 							auto entity_coords = Section::region_tile_coords(section_coords, SectionTileCoords{q, r});
 							auto new_being = make_unique<Goblin>(Agent::make<BasicAI>);
-							new_being->give_item(game().items.add(make_unique<Quarterstaff>()).id);
+							new_being->inventory.add(game().items.add(make_unique<Quarterstaff>()).id);
 							spawn(std::move(new_being), entity_coords);
 						}
 					}
@@ -224,7 +224,7 @@ namespace questless
 		}
 	}
 
-	void Region::spawn_player(Being::ptr player_being)
+	void Region::spawn_player(Being::uptr player_being)
 	{
 		/// @todo More advanced player spawning.
 
@@ -270,12 +270,12 @@ namespace questless
 		}
 	}
 
-	void Region::spawn(Being::ptr being, RegionTileCoords coords)
+	void Region::spawn(Being::uptr being, RegionTileCoords coords)
 	{
 		add(game().beings.add(std::move(being)), coords);
 	}
 
-	void Region::spawn(Object::ptr object, RegionTileCoords coords)
+	void Region::spawn(Object::uptr object, RegionTileCoords coords)
 	{
 		add(game().objects.add(std::move(object)), coords);
 	}

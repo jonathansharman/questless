@@ -28,66 +28,66 @@ namespace questless
 
 		void act() override;
 
-		void perceive(Effect::ptr const& effect) override;
+		void perceive(Effect::uptr const& effect) override;
 
 		/// Gets a list of perceived effects and removes them from the player agent.
 		/// @return All the effects the player has perceived since the last call to poll_effects().
-		std::vector<Effect::ptr> poll_perceived_effects();
+		std::vector<Effect::uptr> poll_perceived_effects();
 
 		// Queries and messages
 
-		Action::Complete send_message
-			( Message::ptr message
-			, std::function<Action::Complete()> cont
+		Complete send_message
+			( Message::uptr message
+			, std::function<Complete()> cont
 			) const override;
 
-		Action::Complete query_count
-			( CountQuery::ptr query
+		Complete query_count
+			( CountQuery::uptr query
 			, int default
 			, std::optional<int> min
 			, std::optional<int> max
-			, std::function<Action::Complete(std::optional<int>)> cont
+			, std::function<Complete(std::optional<int>)> cont
 			) const override;
 
-		Action::Complete query_magnitude
-			( MagnitudeQuery::ptr query
+		Complete query_magnitude
+			( MagnitudeQuery::uptr query
 			, double default
 			, std::optional<double> min
 			, std::optional<double> max
-			, std::function<Action::Complete(std::optional<double>)> cont
+			, std::function<Complete(std::optional<double>)> cont
 			) const override;
 
-		Action::Complete query_tile
-			( TileQuery::ptr query
+		Complete query_tile
+			( TileQuery::uptr query
 			, std::optional<RegionTileCoords> origin
 			, std::function<bool(RegionTileCoords)> predicate
-			, std::function<Action::Complete(std::optional<RegionTileCoords>)> cont
+			, std::function<Complete(std::optional<RegionTileCoords>)> cont
 			) const override;
 
-		Action::Complete query_direction
-			( DirectionQuery::ptr query
-			, std::function<Action::Complete(std::optional<RegionTileCoords::Direction>)> cont
+		Complete query_direction
+			( DirectionQuery::uptr query
+			, std::function<Complete(std::optional<RegionTileCoords::Direction>)> cont
 			) const override;
 
-		Action::Complete query_being
-			( BeingQuery::ptr query
+		Complete query_being
+			( BeingQuery::uptr query
 			, std::function<bool(Being&)> predicate
-			, std::function<Action::Complete(std::optional<Being*>)> cont
+			, std::function<Complete(std::optional<Being*>)> cont
 			) const override;
 
-		Action::Complete query_item
-			( ItemQuery::ptr query
+		Complete query_item
+			( ItemQuery::uptr query
 			, Being& source
 			, std::function<bool(Being&)> predicate
-			, std::function<Action::Complete(std::optional<Item*>)> cont
+			, std::function<Complete(std::optional<Item*>)> cont
 			) const override;
 
 		// Quick Time Events
 
-		Action::Complete get_lightning_bolt_quality(RegionTileCoords target_coords, std::function<Action::Complete(double)> cont) const override;
+		Complete get_lightning_bolt_quality(RegionTileCoords target_coords, std::function<Complete(double)> cont) const override;
 	private:
 		std::unique_ptr<WorldView> _world_view;
 
-		std::vector<Effect::ptr> _perceived_effects;
+		std::vector<Effect::uptr> _perceived_effects;
 	};
 }

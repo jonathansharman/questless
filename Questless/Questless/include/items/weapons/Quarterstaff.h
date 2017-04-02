@@ -39,15 +39,15 @@ namespace questless
 		public:
 			StandardForm(ModalWeapon& weapon)
 				: Form{weapon}
-				, _strike{std::make_unique<Strike>(weapon)}
-				, _jab{std::make_unique<Jab>(weapon)}
+				, _strike{std::make_shared<Strike>(weapon.id)}
+				, _jab{std::make_shared<Jab>(weapon.id)}
 			{}
 
 			std::string name() const override { return "Quarterstaff"; }
 
-			std::vector<Action::ptr> actions() override
+			std::vector<Action::uptr> actions() override
 			{
-				std::vector<Action::ptr> actions;
+				std::vector<Action::uptr> actions;
 				if (weapon().equipped()) {
 					actions.push_back(_strike->launch());
 					actions.push_back(_jab->launch());
@@ -84,8 +84,8 @@ namespace questless
 				double wear_ratio() const override { return 0.001; }
 			};
 
-			std::unique_ptr<Strike> _strike;
-			std::unique_ptr<Jab> _jab;
+			std::shared_ptr<Strike> _strike;
+			std::shared_ptr<Jab> _jab;
 		};
 
 		class HalfStaffForm : public Form
@@ -93,15 +93,15 @@ namespace questless
 		public:
 			HalfStaffForm(ModalWeapon& weapon)
 				: Form{weapon}
-				, _strike{std::make_unique<Strike>(weapon)}
-				, _jab{std::make_unique<Jab>(weapon)}
+				, _strike{std::make_shared<Strike>(weapon.id)}
+				, _jab{std::make_shared<Jab>(weapon.id)}
 			{}
 
 			std::string name() const override { return "Half Staff"; }
 
-			std::vector<Action::ptr> actions() override
+			std::vector<Action::uptr> actions() override
 			{
-				std::vector<Action::ptr> actions;
+				std::vector<Action::uptr> actions;
 				if (weapon().equipped()) {
 					actions.push_back(_strike->launch());
 					actions.push_back(_jab->launch());
@@ -138,8 +138,8 @@ namespace questless
 				double wear_ratio() const override { return 0.001; }
 			};
 
-			std::unique_ptr<Strike> _strike;
-			std::unique_ptr<Jab> _jab;
+			std::shared_ptr<Strike> _strike;
+			std::shared_ptr<Jab> _jab;
 		};
 
 		Requirements requirements() const override { return Hands{2}; }

@@ -36,7 +36,7 @@ namespace questless
 					// Walk failed. Wait for up to 10 time units instead.
 					ai.idle(uniform(0.0, 10.0));
 				}
-				return Action::Complete{};
+				return Complete{};
 			});
 		} else {
 			auto direction = static_cast<RegionTileCoords::Direction>(uniform(1, 6));
@@ -47,7 +47,7 @@ namespace questless
 					// Turn failed. Wait for up to 10 time units instead.
 					ai.idle(uniform(0.0, 10.0));
 				}
-				return Action::Complete{};
+				return Complete{};
 			});
 		}
 	}
@@ -62,20 +62,20 @@ namespace questless
 						// Turn failed. Wait for up to 10 time units instead.
 						ai.idle(uniform(0.0, 10.0));
 					}
-					return Action::Complete{};
+					return Complete{};
 				});
 			} else {
 				// Facing towards target.
 				if (ai.being.coords.distance_to(target->coords) == 1) {
 					// Within striking distance of target.
 					/// @todo This is a hack that assumes the first item in the inventory is a melee weapon.
-					Item* item = ai.being.inventory().items().head();
+					Item* item = ai.being.inventory.items().head();
 					item->actions().front()->perform(ai.being, [&ai](Action::Result result) {
 						if (result == Action::Result::aborted) {
 							// Attack failed. Wait for up to 10 time units instead.
 							ai.idle(uniform(0.0, 10.0));
 						}
-						return Action::Complete{};
+						return Complete{};
 					});
 				} else {
 					// Out of range. Move towards target.
@@ -84,7 +84,7 @@ namespace questless
 							// Walk failed. Wait for up to 10 time units instead.
 							ai.idle(uniform(0.0, 10.0));
 						}
-						return Action::Complete{};
+						return Complete{};
 					});
 				}
 			}
@@ -95,20 +95,20 @@ namespace questless
 		}
 	}
 
-	Action::Complete BasicAI::send_message
-		( Message::ptr //message
-		, std::function<Action::Complete()> cont
+	Complete BasicAI::send_message
+		( Message::uptr //message
+		, std::function<Complete()> cont
 		) const
 	{
 		return cont();
 	}
 
-	Action::Complete BasicAI::query_count
-		( CountQuery::ptr query
+	Complete BasicAI::query_count
+		( CountQuery::uptr query
 		, int default
 		, std::optional<int> min
 		, std::optional<int> max
-		, std::function<Action::Complete(std::optional<int>)> cont
+		, std::function<Complete(std::optional<int>)> cont
 		) const
 	{
 		struct CountQueryHandler : CountQueryVisitor
@@ -116,13 +116,13 @@ namespace questless
 			int default;
 			std::optional<int> min;
 			std::optional<int> max;
-			std::function<Action::Complete(std::optional<int>)> cont;
+			std::function<Complete(std::optional<int>)> cont;
 
 			CountQueryHandler
 				( int default
 				, std::optional<int> min
 				, std::optional<int> max
-				, std::function<Action::Complete(std::optional<int>)> cont
+				, std::function<Complete(std::optional<int>)> cont
 				)
 				: default{default}, min{min}, max{max}, cont{std::move(cont)}
 			{}
@@ -130,15 +130,15 @@ namespace questless
 
 		CountQueryHandler handler{std::move(default), min, max, std::move(cont)};
 		query->accept(handler);
-		return Action::Complete{};
+		return Complete{};
 	}
 
-	Action::Complete BasicAI::query_magnitude
-		( MagnitudeQuery::ptr query
+	Complete BasicAI::query_magnitude
+		( MagnitudeQuery::uptr query
 		, double default
 		, std::optional<double> min
 		, std::optional<double> max
-		, std::function<Action::Complete(std::optional<double>)> cont
+		, std::function<Complete(std::optional<double>)> cont
 		) const
 	{
 		struct MagnitudeQueryHandler : MagnitudeQueryVisitor
@@ -146,13 +146,13 @@ namespace questless
 			double default;
 			std::optional<double> min;
 			std::optional<double> max;
-			std::function<Action::Complete(std::optional<double>)> cont;
+			std::function<Complete(std::optional<double>)> cont;
 
 			MagnitudeQueryHandler
 				( double default
 				, std::optional<double> min
 				, std::optional<double> max
-				, std::function<Action::Complete(std::optional<double>)> cont
+				, std::function<Complete(std::optional<double>)> cont
 				)
 				: default{default}, min{min}, max{max}, cont{std::move(cont)}
 			{}
@@ -173,14 +173,14 @@ namespace questless
 
 		MagnitudeQueryHandler handler{std::move(default), min, max, std::move(cont)};
 		query->accept(handler);
-		return Action::Complete{};
+		return Complete{};
 	}
 
-	Action::Complete BasicAI::query_tile
-		( TileQuery::ptr query
+	Complete BasicAI::query_tile
+		( TileQuery::uptr query
 		, std::optional<RegionTileCoords> origin
 		, std::function<bool(RegionTileCoords)> predicate
-		, std::function<Action::Complete(std::optional<RegionTileCoords>)> cont
+		, std::function<Complete(std::optional<RegionTileCoords>)> cont
 		) const
 	{
 		struct TileQueryHandler : TileQueryVisitor
@@ -188,13 +188,13 @@ namespace questless
 			BasicAI const& ai;
 			std::optional<RegionTileCoords> origin;
 			std::function<bool(RegionTileCoords)> predicate;
-			std::function<Action::Complete(std::optional<RegionTileCoords>)> cont;
+			std::function<Complete(std::optional<RegionTileCoords>)> cont;
 
 			TileQueryHandler
 				( BasicAI const& ai
 				, std::optional<RegionTileCoords> origin
 				, std::function<bool(RegionTileCoords)> predicate
-				, std::function<Action::Complete(std::optional<RegionTileCoords>)> cont
+				, std::function<Complete(std::optional<RegionTileCoords>)> cont
 				)
 				: ai{ai}
 				, origin{std::move(origin)}
@@ -226,22 +226,22 @@ namespace questless
 
 		TileQueryHandler handler{*this, std::move(origin), std::move(predicate), std::move(cont)};
 		query->accept(handler);
-		return Action::Complete{};
+		return Complete{};
 	}
 
-	Action::Complete BasicAI::query_direction
-		( DirectionQuery::ptr query
-		, std::function<Action::Complete(std::optional<RegionTileCoords::Direction>)> cont
+	Complete BasicAI::query_direction
+		( DirectionQuery::uptr query
+		, std::function<Complete(std::optional<RegionTileCoords::Direction>)> cont
 		) const
 	{
 		struct DirectionQueryHandler : DirectionQueryVisitor
 		{
 			BasicAI const& ai;
-			std::function<Action::Complete(std::optional<RegionTileCoords::Direction>)> cont;
+			std::function<Complete(std::optional<RegionTileCoords::Direction>)> cont;
 
 			DirectionQueryHandler
 				( BasicAI const& ai
-				, std::function<Action::Complete(std::optional<RegionTileCoords::Direction>)> cont
+				, std::function<Complete(std::optional<RegionTileCoords::Direction>)> cont
 				)
 				: ai{ai}
 				, cont{std::move(cont)}
@@ -262,23 +262,23 @@ namespace questless
 
 		DirectionQueryHandler handler{*this, std::move(cont)};
 		query->accept(handler);
-		return Action::Complete{};
+		return Complete{};
 	}
 
-	Action::Complete BasicAI::query_being
-		( BeingQuery::ptr //query
+	Complete BasicAI::query_being
+		( BeingQuery::uptr //query
 		, std::function<bool(Being&)> //predicate
-		, std::function<Action::Complete(std::optional<Being*>)> cont
+		, std::function<Complete(std::optional<Being*>)> cont
 		) const
 	{
 		return cont(std::nullopt);
 	}
 
-	Action::Complete BasicAI::query_item
-		( ItemQuery::ptr //query
+	Complete BasicAI::query_item
+		( ItemQuery::uptr //query
 		, Being& //source
 		, std::function<bool(Being&)> //predicate
-		, std::function<Action::Complete(std::optional<Item*>)> cont
+		, std::function<Complete(std::optional<Item*>)> cont
 		) const
 	{
 		return cont(std::nullopt);

@@ -32,7 +32,7 @@ namespace questless::spell
 
 		double cooldown() const override { return 15.0; }
 	protected:
-		Action::Complete perform_cast(Being& caster, Action::cont_t cont) override;
+		Complete perform_cast(Being& caster, Action::cont_t cont) override;
 	private:
 		static constexpr double _cost_factor = 5.0;
 		static constexpr int _range = 15;

@@ -71,9 +71,9 @@ namespace questless
 
 		int _inv_column_count;
 
-		sdl::Texture::ptr _hotbar_slot_texture;
+		sdl::Texture::uptr _hotbar_slot_texture;
 
-		sdl::Font::ptr _fnt_item_count;
+		sdl::Font::uptr _fnt_item_count;
 
 		void refresh() override { load_textures_and_layout(); }
 

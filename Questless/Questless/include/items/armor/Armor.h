@@ -19,7 +19,7 @@ namespace questless
 	class Armor : public virtual Equipment, public virtual Breakable
 	{
 	public:
-		using ptr = std::unique_ptr<Armor>;
+		using uptr = std::unique_ptr<Armor>;
 		using ref = std::reference_wrapper<Armor>;
 
 		virtual ~Armor() = default;

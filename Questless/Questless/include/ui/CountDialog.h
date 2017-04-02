@@ -49,9 +49,9 @@ namespace questless
 		std::optional<int> _max;
 		Continuation<std::optional<int>> _cont;
 
-		sdl::Texture::ptr _txt_title;
-		sdl::Texture::ptr _txt_prompt;
-		sdl::Texture::ptr _txt_selector;
+		sdl::Texture::uptr _txt_title;
+		sdl::Texture::uptr _txt_prompt;
+		sdl::Texture::uptr _txt_selector;
 
 		void refresh() override { load_textures(); }
 

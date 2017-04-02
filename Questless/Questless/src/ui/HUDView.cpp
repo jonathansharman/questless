@@ -49,7 +49,7 @@ namespace questless
 			{
 				BodyTexturer texturer;
 				texturer.visit(player_being->body);
-				Texture::ptr texture = texturer.texture();
+				Texture::uptr texture = texturer.texture();
 				texture->draw(ScreenPoint{0, _screen_bottom - _condition_bar_height}, HAlign::left, VAlign::bottom);
 			}
 
@@ -61,10 +61,10 @@ namespace questless
 					int y = _screen_bottom - _hotbar_bottom_gap;
 					_hotbar_slot_texture->draw(ScreenPoint{x, y}, HAlign::left, VAlign::bottom);
 					if (auto inv_coords = hud.hotbar[i]) {
-						Item* item = player_being->inventory()[*inv_coords];
+						Item* item = player_being->inventory[*inv_coords];
 						if (item != nullptr) { /// @todo Find a way to sync the hotbar with the inventory so these checks aren't necessary.
 							item->accept(texturer);
-							Texture::ptr texture = texturer.texture();
+							Texture::uptr texture = texturer.texture();
 							texture->draw(ScreenPoint{x + _hotbar_slot_h_padding, y - _hotbar_slot_v_padding}, HAlign::left, VAlign::bottom);
 						}
 					}
@@ -76,13 +76,13 @@ namespace questless
 			if (hud.inv_open) {
 				renderer().draw_rect(ScreenRect{_inv_left, _inv_top, _inv_width, _inv_height}, Color::black(), Color::gray());
 				ItemTexturer texturer;
-				auto const& item_ids = player_being->inventory().page(hud.inv_page).item_ids;
+				auto const& item_ids = player_being->inventory.page(hud.inv_page).item_ids;
 				for (int row = 0; row < Inventory::Page::rows; ++row) {
 					for (int column = 0; column < Inventory::Page::columns; ++column) {
 						if (auto const& item_id = item_ids[row][column]) {
 							if (Item* item = game().items.get(*item_id)) {
 								item->accept(texturer);
-								Texture::ptr texture = texturer.texture();
+								Texture::uptr texture = texturer.texture();
 								texture->draw(ScreenPoint{_inv_left + column * HUDView::item_icon_width, _inv_top + row * HUDView::item_icon_height});
 								continue;
 							}

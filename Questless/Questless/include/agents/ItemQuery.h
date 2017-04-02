@@ -20,7 +20,7 @@ namespace questless
 
 	struct ItemQuery
 	{
-		using ptr = std::unique_ptr<ItemQuery>;
+		using uptr = std::unique_ptr<ItemQuery>;
 		virtual ~ItemQuery() = default;
 		virtual void accept(ItemQueryVisitor& visitor) = 0;
 	};

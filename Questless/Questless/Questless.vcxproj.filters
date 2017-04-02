@@ -667,9 +667,6 @@
     <ClInclude Include="include\items\weapons\Bow.h">
       <Filter>include\items\weapons</Filter>
     </ClInclude>
-    <ClInclude Include="include\items\weapons\Arrow.h">
-      <Filter>include\items</Filter>
-    </ClInclude>
     <ClInclude Include="include\utility\Id.h">
       <Filter>include\utility</Filter>
     </ClInclude>
@@ -690,6 +687,21 @@
     </ClInclude>
     <ClInclude Include="include\agents\DirectionQuery.h">
       <Filter>include\agents</Filter>
+    </ClInclude>
+    <ClInclude Include="include\agents\Cost.h">
+      <Filter>include\agents</Filter>
+    </ClInclude>
+    <ClInclude Include="include\spell\ManaCost.h">
+      <Filter>include\spell</Filter>
+    </ClInclude>
+    <ClInclude Include="include\items\weapons\Quiver.h">
+      <Filter>include\items\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="include\items\weapons\Arrow.h">
+      <Filter>include\items\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utility\Complete.h">
+      <Filter>include\utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -932,6 +944,9 @@
     </ClCompile>
     <ClCompile Include="src\ui\DirectionDialog.cpp">
       <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\spell\ManaCost.cpp">
+      <Filter>src\spell</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

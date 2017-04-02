@@ -20,7 +20,7 @@ namespace questless
 
 	struct CountQuery
 	{
-		using ptr = std::unique_ptr<CountQuery>;
+		using uptr = std::unique_ptr<CountQuery>;
 		virtual ~CountQuery() = default;
 		virtual void accept(CountQueryVisitor& visitor) = 0;
 	};

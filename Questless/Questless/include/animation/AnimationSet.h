@@ -23,7 +23,7 @@ namespace questless
 	class AnimationSet
 	{
 	public:
-		using ptr = std::unique_ptr<AnimationSet>;
+		using uptr = std::unique_ptr<AnimationSet>;
 
 		struct Handle
 		{
@@ -34,7 +34,7 @@ namespace questless
 		/// @param sprite_sheet_handle The handle of the sprite sheet texture in the texture manager.
 		/// @param cel_columns The number of cels in one row of the sprite sheet texture.
 		/// @param cel_rows The number of cels in one column of the sprite sheet texture.
-		static ptr make(sdl::TextureHandle sprite_sheet_handle, int cel_columns, int cel_rows)
+		static uptr make(sdl::TextureHandle sprite_sheet_handle, int cel_columns, int cel_rows)
 		{
 			return std::make_unique<AnimationSet>(sprite_sheet_handle, cel_columns, cel_rows);
 		}

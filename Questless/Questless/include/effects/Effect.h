@@ -19,7 +19,7 @@ namespace questless
 	class Effect
 	{
 	public:
-		using ptr = std::shared_ptr<Effect>;
+		using uptr = std::shared_ptr<Effect>;
 
 		/// @param origin The coordinates of the effect's origin.
 		Effect(RegionTileCoords origin) : _origin{origin} {}
@@ -41,12 +41,12 @@ namespace questless
 	class LightningBoltEffect : public Effect
 	{
 	public:
-		using ptr = std::shared_ptr<LightningBoltEffect>;
+		using sptr = std::shared_ptr<LightningBoltEffect>;
 
 		using Effect::Effect;
 
 		/// @param origin The coordinates of the effect's origin.
-		static ptr make(RegionTileCoords origin) { return std::make_shared<LightningBoltEffect>(origin); }
+		static sptr make(RegionTileCoords origin) { return std::make_shared<LightningBoltEffect>(origin); }
 
 		virtual void accept(EffectVisitor& visitor) const override { visitor.visit(*this); }
 
@@ -56,7 +56,7 @@ namespace questless
 	class InjuryEffect : public Effect
 	{
 	public:
-		using ptr = std::shared_ptr<InjuryEffect>;
+		using sptr = std::shared_ptr<InjuryEffect>;
 
 		/// @param origin The coordinates of the effect's origin.
 		/// @param damage The damage dealt.

@@ -7,8 +7,9 @@
 
 #pragma once
 
-#include <unordered_map>
+#include <cassert>
 #include <memory>
+#include <unordered_map>
 
 #include "Id.h"
 
@@ -64,6 +65,31 @@ namespace questless
 			return dynamic_cast<TargetType*>(get(id));
 		}
 
+		/// Retrieves an object from the cache, loading it from disk if necessary.
+		/// @param id The ID of the desired object.
+		/// @return A reference to the requested object.
+		/// @note The object must exist, or this will fail.
+		////
+		element_t& get_ref(Id<element_t> id) const
+		{
+			element_t* ptr = get(id);
+			assert(ptr);
+			return *ptr;
+		}
+
+		/// Retrieves an object from the cache, loading it from disk if necessary, and dynamically casts it to a reference of the given type.
+		/// @param id The ID of the desired object.
+		/// @tparam TargetType The desired type of the returned element. Must be a base class or derived class of the cache element type.
+		/// @return A reference to the requested object as the desired type.
+		/// @note The object must exist, or this will fail.
+		////
+		template <typename TargetType>
+		TargetType& get_ref_as(Id<element_t> id) const
+		{
+			TargetType* ptr = get_as<TargetType>(id);
+			assert(ptr);
+			return *ptr;
+		}
 
 		/// Removes the object with the given ID from the cache, if present.
 		/// @param id The ID of the object to be removed.

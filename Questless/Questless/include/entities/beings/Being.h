@@ -50,9 +50,9 @@ namespace questless
 		// Types //
 		///////////
 
-		using ptr = std::unique_ptr<Being>;
+		using uptr = std::unique_ptr<Being>;
 		using ref = std::reference_wrapper<Being>;
-		using ptr_less_t = std::function<bool(Being::ptr const&, Being::ptr const&)>;
+		using ptr_less_t = std::function<bool(uptr const&, uptr const&)>;
 		using ref_less_t = std::function<bool(Being const&, Being const&)>;
 
 		///////////////
@@ -105,6 +105,8 @@ namespace questless
 		Id<Being> const id;
 
 		Body body;
+
+		Inventory inventory;
 
 		// Stats
 
@@ -169,24 +171,13 @@ namespace questless
 		/// @param delay The delay before the action is performed.
 		/// @param cont The continuation function to call once the action completes.
 		/// @param action The action to perform after the delay.
-		void add_delayed_action(double delay, Action::cont_t cont, Action::ptr action);
+		void add_delayed_action(double delay, Action::cont_t cont, Action::uptr action);
 
 		/// Clears the being's delayed actions queue.
 		void clear_delayed_actions();
 
-		/// @return The being's inventory.
-		Inventory& inventory() { return _inventory; }
-
 		/// @return The being's equipped shields.
 		std::vector<std::unique_ptr<Armor>> const& shields() { return _shields; }
-
-		/// Adds the item with the given ID to the being's inventory.
-		/// @param item_id The ID of an item to be added to the inventory.
-		void give_item(Id<Item> item_id) { _inventory.add(item_id); }
-
-		/// Takes the item with the given ID from the being's inventory.
-		/// @param item_id The ID of an item to be taken from the inventory.
-		void take_item(Id<Item> item_id) { _inventory.remove(item_id); }
 
 		/// Advances the being one time unit.
 		void update() override;
@@ -214,7 +205,7 @@ namespace questless
 
 		/// @todo Maybe use a std::pair of actions and conts, and then use the auto [action, cont] = ... syntax in act() once supported?
 		std::deque<double> _action_delays; ///< The queue of delays before the next action in the delayed actions queue should begin.
-		std::deque<Action::ptr> _delayed_actions; ///< The queue of delayed actions to occur when this being is not busy.
+		std::deque<Action::uptr> _delayed_actions; ///< The queue of delayed actions to occur when this being is not busy.
 		std::deque<Action::cont_t> _delayed_action_conts; ///< The queue of delayed action continuations.
 
 		// Statuses
@@ -224,7 +215,6 @@ namespace questless
 
 		// Items
 
-		Inventory _inventory;
 		std::vector<std::unique_ptr<Weapon>> _equipped_weapons;
 		std::vector<std::unique_ptr<Armor>> _shields;
 

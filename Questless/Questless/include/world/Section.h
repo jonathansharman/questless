@@ -161,7 +161,7 @@ namespace questless
 		std::unordered_map<RegionTileCoords, Id<Object>> _object_ids;
 
 		template <typename EntityType, typename = typename std::enable_if_t<std::is_same<EntityType, Being>::value>>
-		std::unordered_map<RegionTileCoords, Being::ptr>& entities() { return _beings; }
+		std::unordered_map<RegionTileCoords, Being::uptr>& entities() { return _beings; }
 
 		template <typename EntityType, typename = typename std::enable_if_t<std::is_same<EntityType, Object>::value>>
 		std::unordered_map<RegionTileCoords, Id<Object>>& entities() { return _objects; }

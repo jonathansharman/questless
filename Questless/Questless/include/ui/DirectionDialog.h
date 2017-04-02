@@ -39,8 +39,8 @@ namespace questless
 		std::string _prompt;
 		Continuation<std::optional<RegionTileCoords::Direction>> _cont;
 
-		sdl::Texture::ptr _txt_title;
-		sdl::Texture::ptr _txt_prompt;
+		sdl::Texture::uptr _txt_title;
+		sdl::Texture::uptr _txt_prompt;
 
 		void refresh() override { load_textures(); }
 

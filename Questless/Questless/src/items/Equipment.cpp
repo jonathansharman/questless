@@ -14,7 +14,7 @@
 
 namespace questless
 {
-	Action::Complete Equipment::Equip::perform(Being& actor, cont_t cont)
+	Complete Equipment::Equip::perform(Being& actor, cont_t cont)
 	{
 		/// @todo Allow bearer to choose where to equip item.
 
@@ -165,7 +165,7 @@ namespace questless
 		return Complete{};
 	}
 
-	Action::Complete Equipment::Unequip::perform(Being& actor, cont_t cont)
+	Complete Equipment::Unequip::perform(Being& actor, cont_t cont)
 	{
 		actor.busy_time += _equipment.unequip_time();
 

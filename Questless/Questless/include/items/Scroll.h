@@ -19,7 +19,7 @@ namespace questless
 	class Scroll : public Item
 	{
 	public:
-		Scroll(spell::Spell::ptr spell, Id<Item> id = Id<Item>::make()) : Item{id}, _spell{std::move(spell)} {}
+		Scroll(spell::Spell::uptr spell, Id<Item> id = Id<Item>::make()) : Item{id}, _spell{std::move(spell)} {}
 
 		void accept(ItemVisitor& visitor) const override { return visitor.visit(*this); }
 
@@ -32,10 +32,10 @@ namespace questless
 		spell::Spell& spell() { return *_spell; }
 		spell::Spell const& spell() const { return *_spell; }
 
-		std::vector<Action::ptr> actions() override;
+		std::vector<Action::uptr> actions() override;
 
 		void update() override { _spell->update(); }
 	private:
-		spell::Spell::ptr _spell;
+		spell::Spell::uptr _spell;
 	};
 }

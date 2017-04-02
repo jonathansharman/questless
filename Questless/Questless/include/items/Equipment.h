@@ -102,9 +102,9 @@ namespace questless
 		{
 		public:
 			Equip(Equipment& equipment) : _equipment{equipment} {}
-			static ptr make(Equipment& equipment) { return std::make_unique<Equip>(equipment); }
+			static uptr make(Equipment& equipment) { return std::make_unique<Equip>(equipment); }
 			std::string name() const override { return "Equip"; }
-			Action::Complete perform(Being& actor, cont_t cont) override;
+			Complete perform(Being& actor, cont_t cont) override;
 		private:
 			Equipment& _equipment;
 		};
@@ -114,9 +114,9 @@ namespace questless
 		{
 		public:
 			Unequip(Equipment& equipment) : _equipment{equipment} {}
-			static ptr make(Equipment& equipment) { return std::make_unique<Unequip>(equipment); }
+			static uptr make(Equipment& equipment) { return std::make_unique<Unequip>(equipment); }
 			std::string name() const override { return "Unequip"; }
-			Action::Complete perform(Being& actor, cont_t cont) override;
+			Complete perform(Being& actor, cont_t cont) override;
 		private:
 			Equipment& _equipment;
 		};

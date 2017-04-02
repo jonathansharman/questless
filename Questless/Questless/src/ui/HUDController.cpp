@@ -34,7 +34,7 @@ namespace questless
 				int column = (input().x_mouse() - _view.inv_left()) / HUDView::item_icon_width;
 				if (0 <= row && row < Inventory::Page::rows && 0 <= column && column < Inventory::Page::columns) {
 					Inventory::Coords coords{_hud.inv_page, row, column};
-					if (player_being->inventory()[coords] != nullptr) {
+					if (player_being->inventory[coords] != nullptr) {
 						if (input().presses(SDLK_1)) {
 							_hud.hotbar[0] = coords;
 						}
@@ -78,10 +78,10 @@ namespace questless
 
 		if (Being* player_being = game().beings.get(player_id)) {
 			size_t count = 0;
-			for (int page = 0; page < player_being->inventory().pages(); ++page) {
+			for (int page = 0; page < player_being->inventory.pages(); ++page) {
 				for (int row = 0; row < Inventory::Page::rows; ++row) {
 					for (int column = 0; column < Inventory::Page::columns; ++column) {
-						if (player_being->inventory().page(page).item_ids[row][column] != std::nullopt) {
+						if (player_being->inventory.page(page).item_ids[row][column] != std::nullopt) {
 							_hud.hotbar[count++] = Inventory::Coords{page, row, column};
 							if (count == HUDModel::hotbar_size) {
 								return;

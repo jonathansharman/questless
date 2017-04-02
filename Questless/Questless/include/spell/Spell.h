@@ -22,15 +22,15 @@ namespace questless::spell
 	class Spell
 	{
 	public:
-		using ptr = std::unique_ptr<Spell>;
+		using uptr = std::unique_ptr<Spell>;
 
 		class Cast : public Action
 		{
 		public:
 			Cast(Spell& spell) : _spell{spell} {}
-			static ptr make(Spell& spell) { return std::make_unique<Cast>(spell); }
+			static uptr make(Spell& spell) { return std::make_unique<Cast>(spell); }
 			std::string name() const override { return "Cast"; }
-			Action::Complete perform(Being& actor, cont_t cont) override;
+			Complete perform(Being& actor, cont_t cont) override;
 		private:
 			Spell& _spell;
 		};
@@ -39,9 +39,9 @@ namespace questless::spell
 		{
 		public:
 			Incant(Spell& spell) : _spell{spell} {}
-			static ptr make(Spell& spell) { return std::make_unique<Incant>(spell); }
+			static uptr make(Spell& spell) { return std::make_unique<Incant>(spell); }
 			std::string name() const override { return "Incant"; }
-			Action::Complete perform(Being& actor, cont_t cont) override;
+			Complete perform(Being& actor, cont_t cont) override;
 		private:
 			Spell& _spell;
 		};
@@ -50,9 +50,9 @@ namespace questless::spell
 		{
 		public:
 			Discharge(Spell& spell) : _spell{spell} {}
-			static ptr make(Spell& spell) { return std::make_unique<Discharge>(spell); }
+			static uptr make(Spell& spell) { return std::make_unique<Discharge>(spell); }
 			std::string name() const override { return "Discharge"; }
-			Action::Complete perform(Being& actor, cont_t cont) override;
+			Complete perform(Being& actor, cont_t cont) override;
 		private:
 			Spell& _spell;
 		};
@@ -61,15 +61,15 @@ namespace questless::spell
 
 		/// @return An action that casts the spell.
 		////
-		Action::ptr cast() { return Cast::make(*this); }
+		Action::uptr cast() { return Cast::make(*this); }
 
 		/// @return An action that charges the spell for one charge.
 		////
-		Action::ptr incant() { return Incant::make(*this); }
+		Action::uptr incant() { return Incant::make(*this); }
 
 		/// @return An action that discharges the spell for one charge.
 		////
-		Action::ptr discharge() { return Discharge::make(*this); }
+		Action::uptr discharge() { return Discharge::make(*this); }
 
 		/// @return The spell's name.
 		////
@@ -134,6 +134,6 @@ namespace questless::spell
 		int _charges;
 		double _active_cooldown;
 
-		virtual Action::Complete perform_cast(Being& actor, Action::cont_t cont) = 0;
+		virtual Complete perform_cast(Being& actor, Action::cont_t cont) = 0;
 	};
 }

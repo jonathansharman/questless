@@ -15,14 +15,14 @@ namespace questless
 {
 	// Quick Time Events
 
-	Action::Complete Agent::get_lightning_bolt_quality(RegionTileCoords /*target_coords*/, std::function<Action::Complete(double)> cont) const
+	Complete Agent::get_lightning_bolt_quality(RegionTileCoords /*target_coords*/, std::function<Complete(double)> cont) const
 	{
 		return cont(1.0);
 	}
 
 	// Actions
 
-	Action::Complete Agent::idle(Action::cont_t cont)
+	Complete Agent::idle(Action::cont_t cont)
 	{
 		return query_magnitude(std::make_unique<MagnitudeQueryWaitTime>(), 10.0, 0.0, std::nullopt,
 			[this, cont](std::optional<double> duration) {
@@ -36,13 +36,13 @@ namespace questless
 		);
 	}
 
-	Action::Complete Agent::idle(double duration)
+	Complete Agent::idle(double duration)
 	{
 		being.busy_time += duration;
-		return Action::Complete{};
+		return Complete{};
 	}
 
-	Action::Complete Agent::turn(RegionTileCoords::Direction direction, Action::cont_t cont)
+	Complete Agent::turn(RegionTileCoords::Direction direction, Action::cont_t cont)
 	{
 		if (being.stats.agility > 0.0) {
 			// Base cost of turning any amount, as a percentage of the agility factor.
@@ -63,7 +63,7 @@ namespace questless
 		}
 	}
 
-	Action::Complete Agent::walk(RegionTileCoords::Direction direction, Action::cont_t cont)
+	Complete Agent::walk(RegionTileCoords::Direction direction, Action::cont_t cont)
 	{
 		if (being.stats.agility > 0.0) {
 			// Base cost of moving, as a percentage of the agility factor.
@@ -83,9 +83,9 @@ namespace questless
 		return cont(Action::Result::aborted);
 	}
 
-	Action::Complete Agent::fly()
+	Complete Agent::fly()
 	{
 		/// @todo This.
-		return Action::Complete{};
+		return Complete{};
 	}
 }

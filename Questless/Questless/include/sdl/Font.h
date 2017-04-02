@@ -22,7 +22,7 @@ namespace sdl
 	class Font
 	{
 	public:
-		using ptr = std::unique_ptr<Font>;
+		using uptr = std::unique_ptr<Font>;
 
 		/// Constructs an unloaded sound object.
 		/// @param filename The name of a TrueType font file.

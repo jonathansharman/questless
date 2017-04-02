@@ -44,7 +44,7 @@ namespace questless
 
 			// Remove current part from work list and add its children.
 			work_list.pop_front();
-			for (BodyPart::ptr const& child : part.children()) {
+			for (BodyPart::uptr const& child : part.children()) {
 				work_list.push_back(*child);
 			}
 		}

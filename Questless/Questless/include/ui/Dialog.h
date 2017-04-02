@@ -22,7 +22,7 @@ namespace questless
 	public:
 		enum class State {open, closed};
 
-		using ptr = std::unique_ptr<Dialog>;
+		using uptr = std::unique_ptr<Dialog>;
 
 		/// Updates the dialog state based on input. To be called once per frame as long as it's open.
 		/// @return The state of the dialog after this update: either open or closed.
@@ -55,9 +55,9 @@ namespace questless
 		static constexpr int _prompt_top = 40;
 		static constexpr int _selector_top = 100;
 
-		static sdl::Texture::ptr make_title(char const* title, sdl::Color color = sdl::Color::white());
-		static sdl::Texture::ptr make_prompt(char const* prompt, sdl::Color color = sdl::Color::white());
-		static sdl::Texture::ptr make_selector(char const* selector, sdl::Color color = sdl::Color::white());
+		static sdl::Texture::uptr make_title(char const* title, sdl::Color color = sdl::Color::white());
+		static sdl::Texture::uptr make_prompt(char const* prompt, sdl::Color color = sdl::Color::white());
+		static sdl::Texture::uptr make_selector(char const* selector, sdl::Color color = sdl::Color::white());
 
 		static void draw_title(sdl::Texture const& title);
 		static void draw_prompt(sdl::Texture const& prompt);

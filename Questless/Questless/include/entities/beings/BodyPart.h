@@ -28,7 +28,7 @@ namespace questless
 	class BodyPart
 	{
 	public:
-		using ptr = std::unique_ptr<BodyPart>;
+		using uptr = std::unique_ptr<BodyPart>;
 		using ref = std::reference_wrapper<BodyPart>;
 		using cref = std::reference_wrapper<BodyPart const>;
 
@@ -72,11 +72,11 @@ namespace questless
 
 		/// @return Stat modifiers to apply to the part's owner.
 		////
-		virtual std::vector<Modifier::ptr> modifiers() const = 0;
+		virtual std::vector<Modifier::uptr> modifiers() const = 0;
 
 		/// @return A list of actions that this body part enables its owner to perform.
 		////
-		virtual std::vector<Action::ptr> abilities() const = 0; /// @todo Is this useful?
+		virtual std::vector<Action::uptr> abilities() const = 0; /// @todo Is this useful?
 
 		/// Advances the body part one time unit.
 		////
@@ -84,7 +84,7 @@ namespace questless
 
 		/// Adds the given body part to the list of child parts.
 		////
-		void attach(ptr child) { _children.push_back(std::move(child)); }
+		void attach(uptr child) { _children.push_back(std::move(child)); }
 
 		/// @return The player-visisble name of the body part.
 		////
@@ -92,7 +92,7 @@ namespace questless
 
 		/// @return The body part to which this body part is attached.
 		////
-		std::vector<BodyPart::ptr> const& children() const { return _children; }
+		std::vector<BodyPart::uptr> const& children() const { return _children; }
 
 		/// @return The set of regions that this body part occupies.
 		////
@@ -127,7 +127,7 @@ namespace questless
 		Being& _owner;
 
 		std::string _name;
-		std::vector<BodyPart::ptr> _children;
+		std::vector<BodyPart::uptr> _children;
 		std::vector<units::ScreenRect> _regions;
 
 		bool _enabled;
@@ -145,7 +145,7 @@ namespace questless
 	class Head : public virtual BodyPart
 	{
 	public:
-		using ptr = std::unique_ptr<Head>;
+		using uptr = std::unique_ptr<Head>;
 		using ref = std::reference_wrapper<Head>;
 
 		Head
@@ -178,7 +178,7 @@ namespace questless
 
 		bool vital() const override { return true; }
 
-		std::vector<Modifier::ptr> modifiers() const override
+		std::vector<Modifier::uptr> modifiers() const override
 		{
 			return Modifier::make_vector
 				( std::make_unique<IntellectModifier>(_intellect)
@@ -188,7 +188,7 @@ namespace questless
 				);
 		}
 
-		virtual std::vector<Action::ptr> abilities() const { return {}; }
+		virtual std::vector<Action::uptr> abilities() const { return {}; }
 	private:
 		double _intellect;
 		double _spirit;
@@ -197,7 +197,7 @@ namespace questless
 	class Torso : public virtual BodyPart
 	{
 	public:
-		using ptr = std::unique_ptr<Torso>;
+		using uptr = std::unique_ptr<Torso>;
 		using ref = std::reference_wrapper<Torso>;
 		
 		Torso
@@ -228,7 +228,7 @@ namespace questless
 
 		bool vital() const override { return true; }
 
-		std::vector<Modifier::ptr> modifiers() const override
+		std::vector<Modifier::uptr> modifiers() const override
 		{
 			return Modifier::make_vector
 				( std::make_unique<StrengthModifier>(_strength)
@@ -236,7 +236,7 @@ namespace questless
 				);
 		}
 
-		virtual std::vector<Action::ptr> abilities() const { return {}; }
+		virtual std::vector<Action::uptr> abilities() const { return {}; }
 
 		double strength() const { return _strength; }
 	private:
@@ -246,7 +246,7 @@ namespace questless
 	class Arm : public virtual BodyPart
 	{
 	public:
-		using ptr = std::unique_ptr<Arm>;
+		using uptr = std::unique_ptr<Arm>;
 		using ref = std::reference_wrapper<Arm>;
 		
 		Arm
@@ -277,7 +277,7 @@ namespace questless
 
 		bool vital() const override { return false; }
 
-		std::vector<Modifier::ptr> modifiers() const override
+		std::vector<Modifier::uptr> modifiers() const override
 		{
 			return Modifier::make_vector
 				( std::make_unique<StrengthModifier>(_strength)
@@ -285,7 +285,7 @@ namespace questless
 				);
 		}
 
-		virtual std::vector<Action::ptr> abilities() const { return {}; }
+		virtual std::vector<Action::uptr> abilities() const { return {}; }
 
 		double strength() const { return _strength; }
 	private:
@@ -295,7 +295,7 @@ namespace questless
 	class Hand : public virtual BodyPart
 	{
 	public:
-		using ptr = std::unique_ptr<Hand>;
+		using uptr = std::unique_ptr<Hand>;
 		using ref = std::reference_wrapper<Hand>;
 
 		Hand
@@ -326,7 +326,7 @@ namespace questless
 
 		bool vital() const override { return false; }
 
-		std::vector<Modifier::ptr> modifiers() const override
+		std::vector<Modifier::uptr> modifiers() const override
 		{
 			return Modifier::make_vector
 				( std::make_unique<DexterityModifier>(_dexterity)
@@ -334,7 +334,7 @@ namespace questless
 			);
 		}
 
-		virtual std::vector<Action::ptr> abilities() const { return {}; }
+		virtual std::vector<Action::uptr> abilities() const { return {}; }
 
 		double dexterity() const { return _dexterity; }
 	private:
@@ -344,7 +344,7 @@ namespace questless
 	class Leg : public virtual BodyPart
 	{
 	public:
-		using ptr = std::unique_ptr<Leg>;
+		using uptr = std::unique_ptr<Leg>;
 		using ref = std::reference_wrapper<Leg>;
 
 		Leg
@@ -377,7 +377,7 @@ namespace questless
 
 		bool vital() const override { return false; }
 
-		std::vector<Modifier::ptr> modifiers() const override
+		std::vector<Modifier::uptr> modifiers() const override
 		{
 			return Modifier::make_vector
 				( std::make_unique<AgilityModifier>(_agility)
@@ -386,7 +386,7 @@ namespace questless
 				);
 		}
 
-		virtual std::vector<Action::ptr> abilities() const { return {}; }
+		virtual std::vector<Action::uptr> abilities() const { return {}; }
 
 		double agility() const { return _agility; }
 		double strength() const { return _strength; }
@@ -398,7 +398,7 @@ namespace questless
 	class Foot : public virtual BodyPart
 	{
 	public:
-		using ptr = std::unique_ptr<Foot>;
+		using uptr = std::unique_ptr<Foot>;
 		using ref = std::reference_wrapper<Foot>;
 		
 		Foot
@@ -429,7 +429,7 @@ namespace questless
 
 		bool vital() const override { return false; }
 
-		std::vector<Modifier::ptr> modifiers() const override
+		std::vector<Modifier::uptr> modifiers() const override
 		{
 			return Modifier::make_vector
 				( std::make_unique<AgilityModifier>(_agility)
@@ -437,7 +437,7 @@ namespace questless
 				);
 		}
 
-		virtual std::vector<Action::ptr> abilities() const { return {}; }
+		virtual std::vector<Action::uptr> abilities() const { return {}; }
 
 		double agility() const { return _agility; }
 	private:
@@ -447,7 +447,7 @@ namespace questless
 	class Wing : public virtual BodyPart
 	{
 	public:
-		using ptr = std::unique_ptr<Wing>;
+		using uptr = std::unique_ptr<Wing>;
 		using ref = std::reference_wrapper<Wing>;
 		
 		Wing
@@ -477,12 +477,12 @@ namespace questless
 
 		bool vital() const override { return false; }
 
-		std::vector<Modifier::ptr> modifiers() const override
+		std::vector<Modifier::uptr> modifiers() const override
 		{
 			return Modifier::make_vector(std::make_unique<WeightModifier>(weight()));
 		}
 
-		virtual std::vector<Action::ptr> abilities() const { return {}; }
+		virtual std::vector<Action::uptr> abilities() const { return {}; }
 
 		double weight() const { return _weight; }
 	private:
@@ -492,7 +492,7 @@ namespace questless
 	class Tail : public virtual BodyPart
 	{
 	public:
-		using ptr = std::unique_ptr<Tail>;
+		using uptr = std::unique_ptr<Tail>;
 		using ref = std::reference_wrapper<Tail>;
 
 		using BodyPart::BodyPart;
@@ -501,11 +501,11 @@ namespace questless
 
 		bool vital() const override { return false; }
 
-		std::vector<Modifier::ptr> modifiers() const override
+		std::vector<Modifier::uptr> modifiers() const override
 		{
 			return Modifier::make_vector(std::make_unique<WeightModifier>(weight()));
 		}
 
-		virtual std::vector<Action::ptr> abilities() const { return {}; }
+		virtual std::vector<Action::uptr> abilities() const { return {}; }
 	};
 }

@@ -29,9 +29,10 @@ using std::ostringstream;
 #include "spell/LightningBolt.h"
 #include "spell/Heal.h"
 #include "spell/Teleport.h"
-#include "items/weapons/Quarterstaff.h"
-#include "items/weapons/Bow.h"
 #include "items/weapons/Arrow.h"
+#include "items/weapons/Bow.h"
+#include "items/weapons/Quarterstaff.h"
+#include "items/weapons/Quiver.h"
 
 using std::move;
 using std::unique_ptr;
@@ -157,10 +158,10 @@ namespace questless
 		_txt_hex_circle = make_unique<Texture>("resources/textures/ui/hex_circle.png");
 	}
 
-	Action::Complete Game::add_dialog(Dialog::ptr dialog)
+	Complete Game::add_dialog(Dialog::uptr dialog)
 	{
 		_dialogs.push_back(move(dialog));
-		return Action::Complete{};
+		return Complete{};
 	}
 
 	void Game::query_player_choice(function<void(PlayerActionDialog::Choice)> cont)
@@ -168,7 +169,7 @@ namespace questless
 		_player_action_dialog = make_unique<PlayerActionDialog>(*_hud, move(cont));
 	}
 
-	void Game::add_effect(Effect::ptr const& effect)
+	void Game::add_effect(Effect::uptr const& effect)
 	{
 		int range = effect->range();
 		auto origin = effect->origin();
@@ -378,13 +379,19 @@ namespace questless
 						auto player_being = make_unique<Human>(Agent::make<Player>);
 						_player = dynamic_cast<Player*>(&player_being->agent());
 						_player_being_id = player_being->id;
-						player_being->give_item(items.add(make_unique<Scroll>(make_unique<spell::LightningBolt>())).id);
-						player_being->give_item(items.add(make_unique<Scroll>(make_unique<spell::Heal>())).id);
-						player_being->give_item(items.add(make_unique<Scroll>(make_unique<spell::Teleport>())).id);
-						player_being->give_item(items.add(make_unique<Quarterstaff>()).id);
-						player_being->give_item(items.add(make_unique<Bow>()).id);
-						for (int i = 0; i < 20; ++i) {
-							player_being->give_item(items.add(make_unique<Arrow>()).id);
+						player_being->inventory.add(items.add(make_unique<Scroll>(make_unique<spell::LightningBolt>())).id);
+						player_being->inventory.add(items.add(make_unique<Scroll>(make_unique<spell::Heal>())).id);
+						player_being->inventory.add(items.add(make_unique<Scroll>(make_unique<spell::Teleport>())).id);
+						player_being->inventory.add(items.add(make_unique<Quarterstaff>()).id);
+						{
+							Inventory inventory;
+							constexpr int arrow_count = 20;
+							for (int i = 0; i < arrow_count; ++i) {
+								inventory.add(items.add(make_unique<Arrow>()).id);
+							}
+							Item& quiver = items.add(make_unique<Quiver>(std::move(inventory)));
+							player_being->inventory.add(items.add(make_unique<Bow>(quiver.id)).id);
+							player_being->inventory.add(quiver.id);
 						}
 						_region->spawn_player(move(player_being));
 					}
@@ -504,6 +511,8 @@ namespace questless
 				_time += 1.0;
 				// Update the region.
 				_region->update();
+				// Update the player view at least once per time unit.
+				update_player_view();
 			}
 		}
 
@@ -573,8 +582,9 @@ namespace questless
 
 	void Game::update_player_view()
 	{
-		/// @todo Do something nice when the player dies.
-		if (Being* player_being = beings.get(*_player_being_id)) {
+		/// @todo Do something reasonable with the player view when the player dies.
+		Being* player_being = beings.get(*_player_being_id);
+		if (player_being && !player_being->dead) {
 			// Update the player's world view.
 			_player->update_world_view();
 			// Update the world renderer's world view.

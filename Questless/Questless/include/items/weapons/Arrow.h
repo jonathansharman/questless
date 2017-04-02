@@ -22,9 +22,9 @@ namespace questless
 
 		double weight() const override { return 0.1; }
 
-		std::vector<Action::ptr> actions() override
+		std::vector<Action::uptr> actions() override
 		{
-			std::vector<Action::ptr> actions;
+			std::vector<Action::uptr> actions;
 			actions.push_back(Drop::make(*this));
 			actions.push_back(Throw::make(*this));
 			return actions;

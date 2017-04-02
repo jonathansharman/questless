@@ -13,33 +13,33 @@
 
 namespace questless
 {
-	struct TileQueryRangedAttackTarget;
 	struct TileQueryLightningBoltTarget;
+	struct TileQueryRangedAttackTarget;
 	struct TileQueryTeleportTarget;
 
 	struct TileQueryVisitor
 	{
 		virtual ~TileQueryVisitor() = default;
 
-		virtual void visit(TileQueryRangedAttackTarget const&) = 0;
 		virtual void visit(TileQueryLightningBoltTarget const&) = 0;
+		virtual void visit(TileQueryRangedAttackTarget const&) = 0;
 		virtual void visit(TileQueryTeleportTarget const&) = 0;
 	};
 
 	struct TileQuery
 	{
-		using ptr = std::unique_ptr<TileQuery>;
+		using uptr = std::unique_ptr<TileQuery>;
 		virtual ~TileQuery() = default;
 		virtual void accept(TileQueryVisitor& visitor) = 0;
+	};
+	struct TileQueryLightningBoltTarget : TileQuery
+	{
+		void accept(TileQueryVisitor& visitor) override { visitor.visit(*this); }
 	};
 	struct TileQueryRangedAttackTarget : TileQuery
 	{
 		int range;
-		TileQueryRangedAttackTarget(int range) : range{range} {}
-		void accept(TileQueryVisitor& visitor) override { visitor.visit(*this); }
-	};
-	struct TileQueryLightningBoltTarget : TileQuery
-	{
+		TileQueryRangedAttackTarget(int range) : range{ range } {}
 		void accept(TileQueryVisitor& visitor) override { visitor.visit(*this); }
 	};
 	struct TileQueryTeleportTarget : TileQuery

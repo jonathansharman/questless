@@ -15,7 +15,7 @@
 
 namespace questless::spell
 {
-	Action::Complete Heal::perform_cast(Being& caster, Action::cont_t cont)
+	Complete Heal::perform_cast(Being& caster, Action::cont_t cont)
 	{
 		return caster.agent().query_being(std::make_unique<BeingQueryHealTarget>(), Action::being_in_range_predicate(caster, _range),
 			[this, &caster, cont](std::optional<Being*> opt_target) {

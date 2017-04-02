@@ -19,7 +19,7 @@ namespace questless
 	class Weapon : public Equipment, public Breakable
 	{
 	public:
-		using ptr = std::unique_ptr<Weapon>;
+		using uptr = std::unique_ptr<Weapon>;
 		using ref = std::reference_wrapper<Weapon>;
 		using cref = std::reference_wrapper<Weapon const>;
 

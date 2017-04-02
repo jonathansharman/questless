@@ -24,7 +24,7 @@ namespace questless
 
 	struct DirectionQuery
 	{
-		using ptr = std::unique_ptr<DirectionQuery>;
+		using uptr = std::unique_ptr<DirectionQuery>;
 		virtual ~DirectionQuery() = default;
 		virtual void accept(DirectionQueryVisitor& visitor) = 0;
 	};

@@ -23,7 +23,7 @@ namespace sdl
 	class Window
 	{
 	public:
-		using ptr = std::unique_ptr<Window>;
+		using uptr = std::unique_ptr<Window>;
 
 		/// Constructs a window object with the specified properties.
 		/// @param title The title of the window.

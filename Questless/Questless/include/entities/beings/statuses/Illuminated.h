@@ -31,9 +31,9 @@ namespace questless
 
 		virtual Type type() const { return Type::debuff; }
 
-		std::vector<Modifier::ptr> const& modifiers() const override { return _modifiers; }
+		std::vector<Modifier::uptr> const& modifiers() const override { return _modifiers; }
 	private:
 		double _magnitude;
-		std::vector<Modifier::ptr> _modifiers;
+		std::vector<Modifier::uptr> _modifiers;
 	};
 }

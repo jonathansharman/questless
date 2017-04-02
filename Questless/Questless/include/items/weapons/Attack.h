@@ -10,6 +10,7 @@
 #include <string>
 
 #include "agents/Action.h"
+#include "agents/Cost.h"
 #include "entities/beings/Damage.h"
 #include "utility/Id.h"
 
@@ -20,14 +21,12 @@ namespace questless
 
 	/// An attack that a weapon can perform.
 	////
-	class Attack
+	class Attack : public std::enable_shared_from_this<Attack>
 	{
 	public:
-		using ptr = std::unique_ptr<Attack>;
+		Id<Item> const weapon_id;
 
-		Weapon& weapon;
-
-		Attack(Weapon& weapon) : weapon{weapon} {}
+		Attack(Id<Item> weapon_id) : weapon_id{weapon_id} {}
 		virtual ~Attack() = default;
 
 		/// @return The name of the attack.
@@ -58,8 +57,12 @@ namespace questless
 		////
 		virtual double wear_ratio() const = 0;
 
+		/// @return The cost of performing the attack.
+		////
+		virtual Cost const& cost() const = 0;
+
 		/// @return An action that launches the attack.
-		virtual Action::ptr launch() = 0;
+		virtual Action::uptr launch() = 0;
 	};
 
 	/// A close-range attack.
@@ -67,36 +70,41 @@ namespace questless
 	class MeleeAttack : public Attack
 	{
 	public:
-		MeleeAttack(Weapon& weapon) : Attack{weapon} {}
+		MeleeAttack(Id<Item> weapon_id) : Attack{weapon_id} {}
 		virtual ~MeleeAttack() = default;
 
-		Action::ptr launch() override { return Launch::make(*this); }
+		Cost const& cost() const override
+		{
+			static Free free;
+			return free;
+		}
+
+		Action::uptr launch() override
+		{
+			return Launch::make(std::dynamic_pointer_cast<MeleeAttack>(shared_from_this()));
+		}
 	private:
 		class Launch : public Action
 		{
 		public:
-			Launch(Attack& attack) : _attack{attack} {}
-			static ptr make(Attack& attack) { return std::make_unique<Launch>(attack); }
-			std::string name() const override { return _attack.name(); }
-			Action::Complete perform(Being& actor, cont_t cont) override;
+			Launch(std::shared_ptr<MeleeAttack> attack) : _attack{std::move(attack)} {}
+			static uptr make(std::shared_ptr<MeleeAttack> attack) { return std::make_unique<Launch>(std::move(attack)); }
+			std::string name() const override { return _attack->name(); }
+			Complete perform(Being& actor, cont_t cont) override;
 		private:
-			Attack& _attack;
+			std::shared_ptr<MeleeAttack> _attack;
 		};
 
 		class Finish : public Action
 		{
 		public:
-			Finish(Attack const& attack, RegionTileCoords::Direction direction);
-			static ptr make(Attack const& attack, RegionTileCoords::Direction direction) { return std::make_unique<Finish>(attack, direction); }
-			std::string name() const override { return _name; }
-			Action::Complete perform(Being& actor, cont_t cont) override;
+			Finish(std::shared_ptr<MeleeAttack> attack, RegionTileCoords::Direction direction)
+				: _attack{std::move(attack)}, _direction{direction}
+			{}
+			std::string name() const override { return _attack->name(); }
+			Complete perform(Being& actor, cont_t cont) override;
 		private:
-			Id<Item> _weapon_id;
-			std::string _name;
-			Damage _damage;
-			double _follow_through;
-			double _cooldown;
-			double _wear_ratio;
+			std::shared_ptr<MeleeAttack> _attack;
 			RegionTileCoords::Direction _direction;
 		};
 	};
@@ -106,39 +114,36 @@ namespace questless
 	class RangedAttack : public Attack
 	{
 	public:
-		RangedAttack(Weapon& weapon) : Attack{weapon} {}
+		RangedAttack(Id<Item> weapon_id) : Attack{weapon_id} {}
 		virtual ~RangedAttack() = default;
 
-		Action::ptr launch() override { return Launch::make(*this); }
+		Action::uptr launch() override
+		{
+			return Launch::make(std::dynamic_pointer_cast<RangedAttack>(shared_from_this()));
+		}
 
 		virtual int range() const = 0;
 	private:
 		class Launch : public Action
 		{
 		public:
-			Launch(RangedAttack& attack) : _attack{attack} {}
-			static ptr make(RangedAttack& attack) { return std::make_unique<Launch>(attack); }
-			std::string name() const override { return _attack.name(); }
-			Action::Complete perform(Being& actor, cont_t cont) override;
+			Launch(std::shared_ptr<RangedAttack> attack) : _attack{std::move(attack)} {}
+			static uptr make(std::shared_ptr<RangedAttack> attack) { return std::make_unique<Launch>(std::move(attack)); }
+			std::string name() const override { return _attack->name(); }
+			Complete perform(Being& actor, cont_t cont) override;
 		private:
-			RangedAttack& _attack;
+			std::shared_ptr<RangedAttack> _attack;
 		};
 
 		class Finish : public Action
 		{
 		public:
-			Finish(RangedAttack const& attack);
-			static ptr make(RangedAttack const& attack) { return std::make_unique<Finish>(attack); }
-			std::string name() const override { return _name; }
-			Action::Complete perform(Being& actor, cont_t cont) override;
+			Finish(std::shared_ptr<RangedAttack> attack) : _attack{std::move(attack)} {}
+			static uptr make(std::shared_ptr<RangedAttack> attack) { return std::make_unique<Finish>(attack); }
+			std::string name() const override { return _attack->name(); }
+			Complete perform(Being& actor, cont_t cont) override;
 		private:
-			Id<Item> _weapon_id;
-			std::string _name;
-			Damage _damage;
-			double _follow_through;
-			double _cooldown;
-			double _wear_ratio;
-			int _range;
+			std::shared_ptr<RangedAttack> _attack;
 		};
 	};
 }

@@ -62,6 +62,11 @@ namespace questless
 
 			ObjectView(Id<Object> id, Perception perception) : id{id}, perception{perception} {}
 		};
+
+		/// Constructs the world view of the given being.
+		/// @param being The being whose perspective this world view represents.
+		/// @param find_bounds If true, the world view will find a bounding rectangle in world space around the visible tiles.
+		WorldView(Being const& being, bool find_bounds);
 		
 		/// Copy constructor.
 		WorldView(WorldView const&) = default;
@@ -74,11 +79,6 @@ namespace questless
 
 		/// Move assignment operator.
 		WorldView& operator =(WorldView&&) & = default;
-
-		/// Constructs the world view of the given being.
-		/// @param being The being whose perspective this world view represents.
-		/// @param find_bounds If true, the world view will find a bounding rectangle in world space around the visible tiles.
-		WorldView(Being const& being, bool find_bounds);
 
 		std::vector<SectionView> const& section_views() const { return _section_views; }
 		std::vector<BeingView> const& being_views() const { return _being_views; }

@@ -8,18 +8,18 @@
 #pragma once
 
 #include "items/weapons/Weapon.h"
-
-/// @todo Implementation file: Bow.cpp.
+#include "items/weapons/Quiver.h"
 
 namespace questless
 {
 	class Bow : public Weapon
 	{
 	public:
-		Bow(Id<Item> id = Id<Item>::make())
+		Bow(std::optional<Id<Item>> quiver_id, Id<Item> id = Id<Item>::make())
 			: Item{id}
 			, Weapon{durability()}
-			, _fire{std::make_unique<Fire>(*this)}
+			, _quiver_id{quiver_id}
+			, _fire{std::make_shared<Fire>(id)}
 		{}
 
 		void accept(ItemVisitor& visitor) const override { visitor.visit(*this); }
@@ -33,9 +33,9 @@ namespace questless
 
 		double durability() const override { return 400.0; }
 
-		virtual std::vector<Action::ptr> actions() override
+		virtual std::vector<Action::uptr> actions() override
 		{
-			std::vector<Action::ptr> actions;
+			std::vector<Action::uptr> actions;
 			if (equipped()) {
 				actions.push_back(_fire->launch());
 				actions.push_back(Unequip::make(*this));
@@ -50,17 +50,31 @@ namespace questless
 		class Fire : public RangedAttack
 		{
 		public:
-			using RangedAttack::RangedAttack;
+			Fire(Id<Item> weapon_id) : RangedAttack{weapon_id}, _cost{weapon_id} {}
 			std::string name() const override { return "Fire"; }
-			virtual Damage base_damage() const override { return Pierce{30.0}; }
-			virtual double wind_up() const override { return 5.0; }
-			virtual double follow_through() const override { return 0.5; }
-			virtual double cooldown() const override { return 1.0; }
-			virtual double wear_ratio() const override { return 0.002; };
+			Damage base_damage() const override { return Pierce{30.0}; }
+			double wind_up() const override { return 5.0; }
+			double follow_through() const override { return 0.5; }
+			double cooldown() const override { return 1.0; }
+			double wear_ratio() const override { return 0.002; };
+			Cost const& cost() const override { return _cost; }
 			int range() const override { return 7; }
+		private:
+			class ArrowCost : public Cost
+			{
+			public:
+				ArrowCost(Id<Item> bow_id) : _bow_id{bow_id} {}
+				Complete check(Being& actor, cont_t cont) const override;
+				void incur(Being& actor) const override;
+			private:
+				Id<Item> _bow_id;
+			};
+
+			ArrowCost _cost;
 		};
 
-		std::unique_ptr<Fire> _fire;
+		std::shared_ptr<Fire> _fire;
+		std::optional<Id<Item>> _quiver_id;
 
 		Requirements requirements() const override { return Hands{2}; }
 	};

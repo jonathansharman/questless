@@ -86,7 +86,7 @@ namespace questless
 
 		/// Spawns the given player-controlled being in the region at an arbitrary location and adds it to the being cache.
 		////
-		void spawn_player(Being::ptr player_being);
+		void spawn_player(Being::uptr player_being);
 
 		/// Adds the given existing being to the region, setting its coordinates to those given.
 		////
@@ -98,11 +98,11 @@ namespace questless
 
 		/// Spawns the given being in the region, setting its coordinates to those given and adding it to the being cache.
 		////
-		void spawn(Being::ptr being, RegionTileCoords coords);
+		void spawn(Being::uptr being, RegionTileCoords coords);
 
 		/// Spawns the given object in the region, setting its coordinates to those given and adding it to the object cache.
 		////
-		void spawn(Object::ptr object, RegionTileCoords coords);
+		void spawn(Object::uptr object, RegionTileCoords coords);
 
 		/// Moves the given being to the given coordinates.
 		/// @param being The being to move.

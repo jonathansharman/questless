@@ -37,8 +37,8 @@ namespace questless
 		static constexpr double percent_pad_to_bludgeon = 1.00;
 
 		static constexpr double percent_deflect_to_slash = 1.00;
-		static constexpr double percent_deflect_to_pierce = 0.75;
-		static constexpr double percent_deflect_to_cleave = 0.50;
+		static constexpr double percent_deflect_to_pierce = 0.50;
+		static constexpr double percent_deflect_to_cleave = 0.75;
 		static constexpr double percent_deflect_to_bludgeon = 0.25;
 
 		static constexpr double percent_fireproof_to_burn = 1.00;

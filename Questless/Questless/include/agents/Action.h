@@ -13,21 +13,20 @@
 #include <memory>
 
 #include "world/coordinates.h"
+#include "utility/Complete.h"
 
 namespace questless
 {
 	class Being;
 
 	/// An action that a being can perform via its controlling agent.
+	////
 	class Action
 	{
 	public:
-		/// Trivial type to return from the perform() method upon completion. The purpose of this return value is to enforce either calling the continuation at the end of the perform function or explicitly documenting the decision not to do so in that return path. Without this return type, it's too easy to forget to invoke the continuation or to invoke it without returning.
-		struct Complete {};
-
 		enum class Result { success, aborted };
 
-		using ptr = std::unique_ptr<Action>;
+		using uptr = std::unique_ptr<Action>;
 		using cont_t = std::function<Complete(Result)>;
 
 		virtual ~Action() = default;
@@ -38,7 +37,7 @@ namespace questless
 		/// Performs the action.
 		/// @param actor The being that is performing the action.
 		/// @param cont The continuation function to call once the action completes.
-		/// @return An Action::Complete object.
+		/// @return An Complete object.
 		virtual Complete perform(Being& actor, cont_t cont) = 0;
 
 		/// @todo Do these belong here?

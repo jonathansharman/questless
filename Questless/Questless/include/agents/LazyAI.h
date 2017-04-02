@@ -20,72 +20,72 @@ namespace questless
 
 		void act() override { being.busy_time += uniform(1.0, 2.0); }
 
-		void perceive(Effect::ptr const&) override {}
+		void perceive(Effect::uptr const&) override {}
 
 		// Queries and messages
 
-		Action::Complete send_message
-			( Message::ptr
-			, std::function<Action::Complete()> cont
+		Complete send_message
+			( Message::uptr
+			, std::function<Complete()> cont
 			) const override
 		{
 			return cont();
 		}
 
-		Action::Complete query_count
-			( CountQuery::ptr
+		Complete query_count
+			( CountQuery::uptr
 			, int
 			, std::optional<int>
 			, std::optional<int>
-			, std::function<Action::Complete(std::optional<int>)> cont
+			, std::function<Complete(std::optional<int>)> cont
 			) const override
 		{
 			return cont(std::nullopt);
 		}
 
-		Action::Complete query_magnitude
-			( MagnitudeQuery::ptr
+		Complete query_magnitude
+			( MagnitudeQuery::uptr
 			, double
 			, std::optional<double>
 			, std::optional<double>
-			, std::function<Action::Complete(std::optional<double>)> cont
+			, std::function<Complete(std::optional<double>)> cont
 			) const override
 		{
 			return cont(std::nullopt);
 		}
 
-		Action::Complete query_tile
-			( TileQuery::ptr
+		Complete query_tile
+			( TileQuery::uptr
 			, std::optional<RegionTileCoords>
 			, std::function<bool(RegionTileCoords)>
-			, std::function<Action::Complete(std::optional<RegionTileCoords>)> cont
+			, std::function<Complete(std::optional<RegionTileCoords>)> cont
 			) const override
 		{
 			return cont(std::nullopt);
 		}
 
-		Action::Complete query_direction
-			( DirectionQuery::ptr
-			, std::function<Action::Complete(std::optional<RegionTileCoords::Direction>)> cont
+		Complete query_direction
+			( DirectionQuery::uptr
+			, std::function<Complete(std::optional<RegionTileCoords::Direction>)> cont
 			) const override
 		{
 			return cont(std::nullopt);
 		}
 
-		Action::Complete query_being
-			( BeingQuery::ptr
+		Complete query_being
+			( BeingQuery::uptr
 			, std::function<bool(Being&)>
-			, std::function<Action::Complete(std::optional<Being*>)> cont
+			, std::function<Complete(std::optional<Being*>)> cont
 			) const override
 		{
 			return cont(std::nullopt);
 		}
 
-		Action::Complete query_item
-			( ItemQuery::ptr
+		Complete query_item
+			( ItemQuery::uptr
 			, Being&
 			, std::function<bool(Being&)>
-			, std::function<Action::Complete(std::optional<Item*>)> cont
+			, std::function<Complete(std::optional<Item*>)> cont
 			) const override
 		{
 			return cont(std::nullopt);

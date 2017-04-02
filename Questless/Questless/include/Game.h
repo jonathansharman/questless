@@ -64,7 +64,7 @@ namespace questless
 
 		/// Adds the given dialog to the dialogs stack.
 		////
-		Action::Complete add_dialog(Dialog::ptr dialog);
+		Complete add_dialog(Dialog::uptr dialog);
 
 		void query_player_choice(std::function<void(PlayerActionDialog::Choice)> cont);
 
@@ -74,7 +74,7 @@ namespace questless
 		/// Adds an effect to the world, notifying beings within range of its occurrence.
 		/// @param effect The effect to add.
 		////
-		void add_effect(Effect::ptr const& effect);
+		void add_effect(Effect::uptr const& effect);
 
 		HUDController& hud() { return *_hud; }
 		HUDController const& hud() const { return *_hud; }
@@ -105,8 +105,8 @@ namespace questless
 		static constexpr int _dflt_window_height = 1080;
 #endif
 		static constexpr sdl::Color _splash_clear_color = sdl::Color::black();
-		static constexpr sdl::Color _menu_clear_color = sdl::Color::blue();
-		static constexpr sdl::Color _playing_clear_color = sdl::Color::blue();
+		static constexpr sdl::Color _menu_clear_color = sdl::Color::black();
+		static constexpr sdl::Color _playing_clear_color = sdl::Color::black();
 
 		// Splash screen
 
@@ -118,7 +118,7 @@ namespace questless
 		// Data //
 		//////////
 
-		Camera::ptr _camera;
+		Camera::uptr _camera;
 
 		// Debug
 
@@ -126,15 +126,15 @@ namespace questless
 
 		// Textures
 
-		sdl::Texture::ptr _txt_test; ///< A placeholder texture used for testing.
-		sdl::Texture::ptr _txt_test2;
-		sdl::Texture::ptr _txt_test3;
+		sdl::Texture::uptr _txt_test; ///< A placeholder texture used for testing.
+		sdl::Texture::uptr _txt_test2;
+		sdl::Texture::uptr _txt_test3;
 
-		sdl::Texture::ptr _txt_splash_logo;
-		sdl::Texture::ptr _txt_splash_flame;
+		sdl::Texture::uptr _txt_splash_logo;
+		sdl::Texture::uptr _txt_splash_flame;
 		
-		sdl::Texture::ptr _txt_hex_highlight;
-		sdl::Texture::ptr _txt_hex_circle;
+		sdl::Texture::uptr _txt_hex_highlight;
+		sdl::Texture::uptr _txt_hex_circle;
 
 		// Animations
 
@@ -142,11 +142,11 @@ namespace questless
 
 		// Fonts
 
-		sdl::Font::ptr _fnt_20pt;
+		sdl::Font::uptr _fnt_20pt;
 
 		// Sounds
 
-		sdl::Sound::ptr _sfx_splash;
+		sdl::Sound::uptr _sfx_splash;
 
 		// Game state
 
@@ -172,7 +172,7 @@ namespace questless
 		DigraphMenuController _mnu_main;
 
 		std::unique_ptr<PlayerActionDialog> _player_action_dialog;
-		std::deque<Dialog::ptr> _dialogs;
+		std::deque<Dialog::uptr> _dialogs;
 
 		std::unique_ptr<HUDController> _hud;
 

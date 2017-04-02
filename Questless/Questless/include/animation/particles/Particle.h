@@ -28,7 +28,7 @@ namespace questless
 	class Particle
 	{
 	public:
-		using ptr = std::unique_ptr<Particle>;
+		using uptr = std::unique_ptr<Particle>;
 
 		/// @param position Initial position in game space.
 		/// @param velocity Initial velocity in game pixels per second.

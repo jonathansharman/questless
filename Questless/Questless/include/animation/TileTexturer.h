@@ -24,8 +24,8 @@ namespace questless
 		void visit(WaterTile const&) override;
 		void visit(SnowTile const&) override;
 
-		sdl::Texture::ptr texture() { return std::move(_texture); }
+		sdl::Texture::uptr texture() { return std::move(_texture); }
 	private:
-		sdl::Texture::ptr _texture;
+		sdl::Texture::uptr _texture;
 	};
 }

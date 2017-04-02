@@ -24,7 +24,7 @@ namespace questless
 
 	struct BeingQuery
 	{
-		using ptr = std::unique_ptr<BeingQuery>;
+		using uptr = std::unique_ptr<BeingQuery>;
 		virtual ~BeingQuery() = default;
 		virtual void accept(BeingQueryVisitor& visitor) = 0;
 	};

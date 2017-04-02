@@ -31,12 +31,12 @@ namespace questless
 	class Agent
 	{
 	public:
-		using ptr = std::unique_ptr<Agent>;
+		using uptr = std::unique_ptr<Agent>;
 
 		Agent(Being& being) : being{being} {}
 
 		template <typename Derived>
-		static ptr make(Being& being) { return std::make_unique<Derived>(being); }
+		static uptr make(Being& being) { return std::make_unique<Derived>(being); }
 
 		virtual ~Agent() = default;
 
@@ -49,66 +49,66 @@ namespace questless
 
 		/// Causes the agent to perceive the given effect, possibly updating its state accordingly.
 		/// @param effect The effect to perceive.
-		virtual void perceive(Effect::ptr const& effect) = 0;
+		virtual void perceive(Effect::uptr const& effect) = 0;
 
 		// Queries and messages
 		
 		/// @todo Update documentation here.
 
-		virtual Action::Complete send_message
-			( Message::ptr message
-			, std::function<Action::Complete()> cont
+		virtual Complete send_message
+			( Message::uptr message
+			, std::function<Complete()> cont
 			) const = 0;
 
-		virtual Action::Complete query_count
-			( CountQuery::ptr query
+		virtual Complete query_count
+			( CountQuery::uptr query
 			, int default
 			, std::optional<int> min
 			, std::optional<int> max
-			, std::function<Action::Complete(std::optional<int>)> cont
+			, std::function<Complete(std::optional<int>)> cont
 			) const = 0;
 
-		virtual Action::Complete query_magnitude
-			( MagnitudeQuery::ptr
+		virtual Complete query_magnitude
+			( MagnitudeQuery::uptr
 			, double default
 			, std::optional<double> min
 			, std::optional<double> max
-			, std::function<Action::Complete(std::optional<double>)> cont
+			, std::function<Complete(std::optional<double>)> cont
 			) const = 0;
 
-		virtual Action::Complete query_tile
-			( TileQuery::ptr query
+		virtual Complete query_tile
+			( TileQuery::uptr query
 			, std::optional<RegionTileCoords> origin
 			, std::function<bool(RegionTileCoords)> predicate
-			, std::function<Action::Complete(std::optional<RegionTileCoords>)> cont
+			, std::function<Complete(std::optional<RegionTileCoords>)> cont
 			) const = 0;
 
-		virtual Action::Complete query_direction
-			( DirectionQuery::ptr query
-			, std::function<Action::Complete(std::optional<RegionTileCoords::Direction>)> cont
+		virtual Complete query_direction
+			( DirectionQuery::uptr query
+			, std::function<Complete(std::optional<RegionTileCoords::Direction>)> cont
 			) const = 0;
 
-		virtual Action::Complete query_being
-			( BeingQuery::ptr query
+		virtual Complete query_being
+			( BeingQuery::uptr query
 			, std::function<bool(Being&)> predicate
-			, std::function<Action::Complete(std::optional<Being*>)> cont
+			, std::function<Complete(std::optional<Being*>)> cont
 			) const = 0;
 
-		virtual Action::Complete query_item
-			( ItemQuery::ptr query
+		virtual Complete query_item
+			( ItemQuery::uptr query
 			, Being& source
 			, std::function<bool(Being&)> predicate
-			, std::function<Action::Complete(std::optional<Item*>)> cont
+			, std::function<Complete(std::optional<Item*>)> cont
 			) const = 0;
 
 		// Quick Time Events
 
-		virtual Action::Complete get_lightning_bolt_quality(RegionTileCoords target_coords, std::function<Action::Complete(double)> cont) const;
+		virtual Complete get_lightning_bolt_quality(RegionTileCoords target_coords, std::function<Complete(double)> cont) const;
 	protected:
-		Action::Complete idle(Action::cont_t cont);
-		Action::Complete idle(double duration);
-		Action::Complete turn(RegionTileCoords::Direction direction, Action::cont_t cont);
-		Action::Complete walk(RegionTileCoords::Direction direction, Action::cont_t cont);
-		Action::Complete fly();
+		Complete idle(Action::cont_t cont);
+		Complete idle(double duration);
+		Complete turn(RegionTileCoords::Direction direction, Action::cont_t cont);
+		Complete walk(RegionTileCoords::Direction direction, Action::cont_t cont);
+		Complete fly();
 	};
 }

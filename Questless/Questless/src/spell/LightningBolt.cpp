@@ -11,6 +11,7 @@
 #include "Game.h"
 #include "entities/beings/Being.h"
 #include "effects/Effect.h"
+#include "spell/ManaCost.h"
 
 /// @todo Body part stuff - remove if not used.
 #include "entities/beings/BodyPart.h"
@@ -19,7 +20,7 @@
 
 namespace questless::spell
 {
-	Action::Complete LightningBolt::perform_cast(Being& caster, Action::cont_t cont)
+	Complete LightningBolt::perform_cast(Being& caster, Action::cont_t cont)
 	{
 		return caster.agent().query_tile(std::make_unique<TileQueryLightningBoltTarget>(), caster.coords, Action::tile_in_range_predicate(caster, _range),
 			[this, &caster, cont](std::optional<RegionTileCoords> opt_tile_coords) {
@@ -35,7 +36,10 @@ namespace questless::spell
 						double magnitude = *opt_magnitude;
 						double cost = _cost_factor * magnitude * log2(magnitude + _cost_log);
 						if (caster.mana < cost) {
-							return caster.agent().send_message(std::make_unique<MessageNotEnoughMana>(cost - caster.mana), [cont] { return cont(Action::Result::aborted); });
+							return caster.agent().send_message
+								( std::make_unique<MessageNotEnoughMana>(cost - caster.mana)
+								, [cont] { return cont(Action::Result::aborted); }
+								);
 						}
 						return caster.agent().get_lightning_bolt_quality(tile_coords, [this, &caster, cont, tile_coords, magnitude, cost](double quality) {
 							active_cooldown(cooldown());

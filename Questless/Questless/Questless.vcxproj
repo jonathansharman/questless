@@ -259,6 +259,7 @@
     <ClInclude Include="include\agents\Agent.h" />
     <ClInclude Include="include\agents\BasicAI.h" />
     <ClInclude Include="include\agents\BeingQuery.h" />
+    <ClInclude Include="include\agents\Cost.h" />
     <ClInclude Include="include\agents\CountQuery.h" />
     <ClInclude Include="include\agents\DirectionQuery.h" />
     <ClInclude Include="include\agents\ItemQuery.h" />
@@ -337,6 +338,7 @@
     <ClInclude Include="include\items\weapons\Bow.h" />
     <ClInclude Include="include\items\weapons\ModalWeapon.h" />
     <ClInclude Include="include\items\weapons\Quarterstaff.h" />
+    <ClInclude Include="include\items\weapons\Quiver.h" />
     <ClInclude Include="include\items\weapons\Weapon.h" />
     <ClInclude Include="include\sdl\Color.h" />
     <ClInclude Include="include\sdl\Font.h" />
@@ -350,6 +352,7 @@
     <ClInclude Include="include\sdl\Window.h" />
     <ClInclude Include="include\spell\Heal.h" />
     <ClInclude Include="include\spell\LightningBolt.h" />
+    <ClInclude Include="include\spell\ManaCost.h" />
     <ClInclude Include="include\spell\Spell.h" />
     <ClInclude Include="include\spell\Teleport.h" />
     <ClInclude Include="include\ui\CountDialog.h" />
@@ -397,6 +400,7 @@
     <ClInclude Include="include\units\Vector.h" />
     <ClInclude Include="include\units\Velocity.h" />
     <ClInclude Include="include\utility\Cache.h" />
+    <ClInclude Include="include\utility\Complete.h" />
     <ClInclude Include="include\utility\Delegate.h" />
     <ClInclude Include="include\utility\DynamicProperty.h" />
     <ClInclude Include="include\utility\Event.h" />
@@ -473,6 +477,7 @@
     <ClCompile Include="src\sdl\Window.cpp" />
     <ClCompile Include="src\spell\Heal.cpp" />
     <ClCompile Include="src\spell\LightningBolt.cpp" />
+    <ClCompile Include="src\spell\ManaCost.cpp" />
     <ClCompile Include="src\spell\Spell.cpp" />
     <ClCompile Include="src\spell\Teleport.cpp" />
     <ClCompile Include="src\ui\CountDialog.cpp" />

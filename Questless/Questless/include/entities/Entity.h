@@ -33,9 +33,9 @@ namespace questless
 	class Entity
 	{
 	public:
-		using ptr = std::unique_ptr<Entity>;
+		using uptr = std::unique_ptr<Entity>;
 		using ref_less_t = bool(*)(Entity const&, Entity const&);
-		using ptr_less_t = bool(*)(ptr const&, ptr const&);
+		using ptr_less_t = bool(*)(uptr const&, uptr const&);
 
 		Region* region;
 		Section* section;

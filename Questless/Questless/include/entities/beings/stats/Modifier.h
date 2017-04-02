@@ -18,22 +18,22 @@ namespace questless
 {
 	struct Modifier
 	{
-		using ptr = std::unique_ptr<Modifier>;
+		using uptr = std::unique_ptr<Modifier>;
 
 		/// Makes a vector of modifiers from the given modifier.
 		template <typename ModifierPtr>
-		static std::vector<ptr> make_vector(ModifierPtr modifier)
+		static std::vector<uptr> make_vector(ModifierPtr modifier)
 		{
-			std::vector<ptr> modifiers;
+			std::vector<uptr> modifiers;
 			modifiers.push_back(std::move(modifier));
 			return modifiers;
 		}
 
 		/// Makes a vector of modifiers from the given non-empty variadic list of modifiers.
 		template <typename FirstModifierPtr, typename... RestModifierPtrs>
-		static std::vector<ptr> make_vector(FirstModifierPtr first, RestModifierPtrs... rest)
+		static std::vector<uptr> make_vector(FirstModifierPtr first, RestModifierPtrs... rest)
 		{
-			std::vector<ptr> modifiers;
+			std::vector<uptr> modifiers;
 			modifiers.push_back(std::move(first));
 			auto rest = make_vector(std::forward<RestModifierPtrs>(rest)...);
 			modifiers.insert(modifiers.end(), std::make_move_iterator(rest.begin()), std::make_move_iterator(rest.end()));
@@ -42,7 +42,7 @@ namespace questless
 
 		/// Modifies the stat according to the given modifiers.
 		/// @param modifiers A vector of stat modifiers.
-		static void apply_all(std::vector<Modifier::ptr> const& modifiers, Stats& stats)
+		static void apply_all(std::vector<Modifier::uptr> const& modifiers, Stats& stats)
 		{
 			for (auto const& modifier : modifiers) {
 				modifier->apply(stats);
@@ -57,7 +57,7 @@ namespace questless
 	{
 	public:
 		constexpr MuteModifier(bool mute) : _mute{mute} {}
-		static ptr make(bool mute) { return std::make_unique<MuteModifier>(mute); }
+		static uptr make(bool mute) { return std::make_unique<MuteModifier>(mute); }
 		void apply(Stats& stats) override { stats.mute = _mute; }
 	private:
 		bool _mute;

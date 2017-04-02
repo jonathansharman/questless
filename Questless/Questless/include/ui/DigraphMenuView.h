@@ -98,7 +98,7 @@ namespace questless
 		units::ScreenPoint _content_position;
 		int _min_width, _min_height;
 		int _content_width, _content_height;
-		sdl::Texture::ptr _background;
+		sdl::Texture::uptr _background;
 		bool _render_is_current;
 
 		void refresh() override { _render_is_current = false; }

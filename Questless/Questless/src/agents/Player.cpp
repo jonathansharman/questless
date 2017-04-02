@@ -33,7 +33,7 @@ namespace questless
 								// Chosen action aborted. Player must try to act again.
 								act();
 							}
-							return Action::Complete{};
+							return Complete{};
 						});
 					} else {
 						idle(1.0);
@@ -49,7 +49,7 @@ namespace questless
 								// Chosen action aborted. Player must try to act again.
 								act();
 							}
-							return Action::Complete{};
+							return Complete{};
 						});
 					} else {
 						turn(direction, [this](Action::Result result) {
@@ -57,7 +57,7 @@ namespace questless
 								// Chosen action aborted. Player must try to act again.
 								act();
 							}
-							return Action::Complete{};
+							return Complete{};
 						});
 					}
 					break;
@@ -71,27 +71,27 @@ namespace questless
 							// Chosen action aborted. Player must try to act again.
 							act();
 						}
-						return Action::Complete{};
+						return Complete{};
 					});
 					break;
 				}
 				case PlayerActionDialog::Choice::Type::use:
 				{
 					if (auto item_coords = game().hud().hotbar()[player_choice.data]) {
-						Item* item = being.inventory()[*item_coords];
+						Item* item = being.inventory[*item_coords];
 						if (item != nullptr) { /// @todo Sync the hotbar with changes to the inventory so this is unnecessary.
 							// Get a list of the item's actions. It's shared so the lambda that captures it is copyable, so the lambda can be passed as a std::function.
-							auto actions = std::make_shared<std::vector<Action::ptr>>(item->actions());
+							auto actions = std::make_shared<std::vector<Action::uptr>>(item->actions());
 							// Get the action names from the list of actions.
 							std::vector<std::string> action_names;
-							std::transform(actions->begin(), actions->end(), std::back_inserter(action_names), [](Action::ptr const& action) { return action->name(); });
+							std::transform(actions->begin(), actions->end(), std::back_inserter(action_names), [](Action::uptr const& action) { return action->name(); });
 							// Open list dialog for the player to choose an action.
 							auto dialog = std::make_unique<ListDialog>(sdl::input().mouse_position(), item->name(), std::move(action_names),
 								[this, actions](std::optional<int> opt_action_idx) {
 									if (!opt_action_idx) {
 										// No action selected. Player must try to act again.
 										act();
-										return Action::Complete{};
+										return Complete{};
 									} else {
 										// Perform the chosen action.
 										int action_idx = *opt_action_idx;
@@ -100,7 +100,7 @@ namespace questless
 												// Chosen action aborted. Player must try to act again.
 												act();
 											}
-											return Action::Complete{};
+											return Complete{};
 										});
 									}
 								}
@@ -114,52 +114,52 @@ namespace questless
 		});
 	}
 
-	void Player::perceive(Effect::ptr const& effect)
+	void Player::perceive(Effect::uptr const& effect)
 	{
 		_perceived_effects.push_back(effect);
 	}
 
-	std::vector<Effect::ptr> Player::poll_perceived_effects()
+	std::vector<Effect::uptr> Player::poll_perceived_effects()
 	{
-		std::vector<Effect::ptr> perceived_effects = std::move(_perceived_effects);
+		std::vector<Effect::uptr> perceived_effects = std::move(_perceived_effects);
 		_perceived_effects.clear();
 		return perceived_effects;
 	}
 
-	Action::Complete Player::send_message
-		( Message::ptr message
-		, function<Action::Complete()> cont
+	Complete Player::send_message
+		( Message::uptr message
+		, function<Complete()> cont
 		) const
 	{
 		struct MessageTitler : MessageVisitor
 		{
 			std::string title;
-			void visit(MessageEntityInTheWay const&) override { title = "Obstruction"; }
-			void visit(MessageMeleeMiss const&) override { title = "Melee Attack"; }
 			void visit(MessageArrowMiss const&) override { title = "Ranged Attack"; }
-			void visit(MessageOutOfAmmo const&) override { title = "Attack"; }
-			void visit(MessageNotEnoughMana const&) override { title = "Spell Cast"; }
-			void visit(MessageSpellOutOfCharges const&) override { title = "Spell Cast"; }
-			void visit(MessageSpellOnCooldown const&) override { title = "Spell Cast"; }
+			void visit(MessageEntityInTheWay const&) override { title = "Obstruction"; }
 			void visit(MessageIncantFailedMute const&) override { title = "Incantation"; }
+			void visit(MessageMeleeMiss const&) override { title = "Melee Attack"; }
+			void visit(MessageNotEnoughAmmo const&) override { title = "Attack"; }
+			void visit(MessageNotEnoughMana const&) override { title = "Spell Cast"; }
+			void visit(MessageSpellNotEnoughCharges const&) override { title = "Spell Cast"; }
+			void visit(MessageSpellOnCooldown const&) override { title = "Spell Cast"; }
 		};
 		struct MessagePrompter : MessageVisitor
 		{
 			std::string prompt;
-			void visit(MessageEntityInTheWay const&) override { prompt = "There's something in the way!"; }
-			void visit(MessageMeleeMiss const&) override { prompt = "Miss!"; }
 			void visit(MessageArrowMiss const&) override { prompt = "Miss!"; }
-			void visit(MessageOutOfAmmo const&) override { prompt = "Out of ammo!"; }
+			void visit(MessageEntityInTheWay const&) override { prompt = "There's something in the way!"; }
+			void visit(MessageIncantFailedMute const&) override { prompt = "You cannot perform an incantation while mute!"; }
+			void visit(MessageMeleeMiss const&) override { prompt = "Miss!"; }
+			void visit(MessageNotEnoughAmmo const&) override { prompt = "Not enough ammo!"; }
 			void visit(MessageNotEnoughMana const& m) override
 			{
 				prompt = "Not enough mana! You need " + std::to_string(m.mana_deficit) + " more mana to cast this.";
 			}
-			void visit(MessageSpellOutOfCharges const&) override { prompt = "This spell is out of charges! You need to incant it first."; }
+			void visit(MessageSpellNotEnoughCharges const&) override { prompt = "This spell doesn't have enough charges! You need to incant it first."; }
 			void visit(MessageSpellOnCooldown const& m) override
 			{
 				prompt = "This spell on cooldown! It will be ready in " + std::to_string(m.active_cooldown) + ".";
 			}
-			void visit(MessageIncantFailedMute const&) override { prompt = "You cannot perform an incantation while mute!"; }
 		};
 
 		MessageTitler titler;
@@ -170,12 +170,12 @@ namespace questless
 		return game().add_dialog(std::move(dialog));
 	}
 
-	Action::Complete Player::query_count
-		( CountQuery::ptr query
+	Complete Player::query_count
+		( CountQuery::uptr query
 		, int default
 		, std::optional<int> min
 		, std::optional<int> max
-		, function<Action::Complete(std::optional<int>)> cont
+		, function<Complete(std::optional<int>)> cont
 		) const
 	{
 
@@ -196,27 +196,27 @@ namespace questless
 		return game().add_dialog(std::move(dialog));
 	}
 
-	Action::Complete Player::query_magnitude
-		( MagnitudeQuery::ptr query
+	Complete Player::query_magnitude
+		( MagnitudeQuery::uptr query
 		, double default
 		, std::optional<double> min
 		, std::optional<double> max
-		, function<Action::Complete(std::optional<double>)> cont
+		, function<Complete(std::optional<double>)> cont
 		) const
 	{
 		struct MagnitudeQueryTitler : MagnitudeQueryVisitor
 		{
 			std::string title;
-			void visit(MagnitudeQueryWaitTime const&) override { title = "Wait"; }
-			void visit(MagnitudeQueryLightningBolt const&) override { title = "Lightning Bolt Strength"; }
 			void visit(MagnitudeQueryHeal const&) override { title = "Heal Amount"; }
+			void visit(MagnitudeQueryLightningBolt const&) override { title = "Lightning Bolt Strength"; }
+			void visit(MagnitudeQueryWaitTime const&) override { title = "Wait"; }
 		};
 		struct MagnitudeQueryPrompter : MagnitudeQueryVisitor
 		{
 			std::string prompt;
-			void visit(MagnitudeQueryWaitTime const&) override { prompt = "Enter wait time."; }
-			void visit(MagnitudeQueryLightningBolt const&) override { prompt = "Choose how strong to make the lightning bolt."; }
 			void visit(MagnitudeQueryHeal const&) override { prompt = "Choose how much health to restore."; }
+			void visit(MagnitudeQueryLightningBolt const&) override { prompt = "Choose how strong to make the lightning bolt."; }
+			void visit(MagnitudeQueryWaitTime const&) override { prompt = "Enter wait time."; }
 		};
 
 		MagnitudeQueryTitler titler;
@@ -227,25 +227,25 @@ namespace questless
 		return game().add_dialog(std::move(dialog));
 	}
 	
-	Action::Complete Player::query_tile
-		( TileQuery::ptr query
+	Complete Player::query_tile
+		( TileQuery::uptr query
 		, std::optional<RegionTileCoords> origin
 		, function<bool(RegionTileCoords)> predicate
-		, function<Action::Complete(std::optional<RegionTileCoords>)> cont
+		, function<Complete(std::optional<RegionTileCoords>)> cont
 		) const
 	{
 		struct TileQueryTitler : TileQueryVisitor
 		{
 			std::string title;
-			void visit(TileQueryRangedAttackTarget const&) override { title = "Ranged Attack"; }
 			void visit(TileQueryLightningBoltTarget const&) override { title = "Lightning Bolt Target"; }
+			void visit(TileQueryRangedAttackTarget const&) override { title = "Ranged Attack"; }
 			void visit(TileQueryTeleportTarget const&) override { title = "Teleport Target"; }
 		};
 		struct TileQueryPrompter : TileQueryVisitor
 		{
 			std::string prompt;
-			void visit(TileQueryRangedAttackTarget const&) override { prompt = "Choose attack target."; }
 			void visit(TileQueryLightningBoltTarget const&) override { prompt = "Select a tile to be zapped with a lightning bolt."; }
+			void visit(TileQueryRangedAttackTarget const&) override { prompt = "Choose attack target."; }
 			void visit(TileQueryTeleportTarget const&) override { prompt = "Select a tile to teleport to."; }
 		};
 
@@ -263,9 +263,9 @@ namespace questless
 		return game().add_dialog(std::move(dialog));
 	}
 
-	Action::Complete Player::query_direction
-		( DirectionQuery::ptr query
-		, function<Action::Complete(std::optional<RegionTileCoords::Direction>)> cont
+	Complete Player::query_direction
+		( DirectionQuery::uptr query
+		, function<Complete(std::optional<RegionTileCoords::Direction>)> cont
 		) const
 	{
 		struct DirectionQueryTitler : DirectionQueryVisitor
@@ -287,10 +287,10 @@ namespace questless
 		return game().add_dialog(std::move(dialog));
 	}
 
-	Action::Complete Player::query_being
-		( BeingQuery::ptr //query
+	Complete Player::query_being
+		( BeingQuery::uptr //query
 		, function<bool(Being&)> //predicate
-		, function<Action::Complete(std::optional<Being*>)> cont
+		, function<Complete(std::optional<Being*>)> cont
 		) const
 	{
 		// spell::Heal: "Heal Target", "Select a being to be healed."
@@ -298,11 +298,11 @@ namespace questless
 		return cont(std::nullopt);
 	}
 
-	Action::Complete Player::query_item
-		( ItemQuery::ptr //query
+	Complete Player::query_item
+		( ItemQuery::uptr //query
 		, Being& //source
 		, function<bool(Being&)> //predicate
-		, function<Action::Complete(std::optional<Item*>)> cont
+		, function<Complete(std::optional<Item*>)> cont
 		) const
 	{
 		/// @todo This.
@@ -311,7 +311,7 @@ namespace questless
 
 	// Quick Time Events
 
-	Action::Complete Player::get_lightning_bolt_quality(RegionTileCoords target_coords, std::function<Action::Complete(double)> cont) const
+	Complete Player::get_lightning_bolt_quality(RegionTileCoords target_coords, std::function<Complete(double)> cont) const
 	{
 		auto dialog = std::make_unique<qte::LightningBolt>(target_coords, std::move(cont));
 		return game().add_dialog(std::move(dialog));
