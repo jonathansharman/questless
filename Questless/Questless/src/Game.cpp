@@ -383,15 +383,14 @@ namespace questless
 						player_being->inventory.add(items.add(make_unique<Scroll>(make_unique<spell::Heal>())).id);
 						player_being->inventory.add(items.add(make_unique<Scroll>(make_unique<spell::Teleport>())).id);
 						player_being->inventory.add(items.add(make_unique<Quarterstaff>()).id);
+						player_being->inventory.add(items.add(make_unique<Bow>()).id);
 						{
 							Inventory inventory;
 							constexpr int arrow_count = 20;
 							for (int i = 0; i < arrow_count; ++i) {
 								inventory.add(items.add(make_unique<Arrow>()).id);
 							}
-							Item& quiver = items.add(make_unique<Quiver>(std::move(inventory)));
-							player_being->inventory.add(items.add(make_unique<Bow>(quiver.id)).id);
-							player_being->inventory.add(quiver.id);
+							player_being->inventory.add(items.add(make_unique<Quiver>(std::move(inventory))).id);
 						}
 						_region->spawn_player(move(player_being));
 					}

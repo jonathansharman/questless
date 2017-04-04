@@ -15,10 +15,9 @@ namespace questless
 	class Bow : public Weapon
 	{
 	public:
-		Bow(std::optional<Id<Item>> quiver_id, Id<Item> id = Id<Item>::make())
+		Bow(Id<Item> id = Id<Item>::make())
 			: Item{id}
 			, Weapon{durability()}
-			, _quiver_id{quiver_id}
 			, _fire{std::make_shared<Fire>(id)}
 		{}
 
@@ -74,7 +73,6 @@ namespace questless
 		};
 
 		std::shared_ptr<Fire> _fire;
-		std::optional<Id<Item>> _quiver_id;
 
 		Requirements requirements() const override { return Hands{2}; }
 	};

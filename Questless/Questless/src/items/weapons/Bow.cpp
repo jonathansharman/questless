@@ -12,15 +12,16 @@
 
 namespace questless
 {
+	/// @todo These functions are O(n). Should be easy to find an efficient O(1) solution.
+
 	Complete Bow::Fire::ArrowCost::check(Being& actor, cont_t cont) const
 	{
-		if (Bow* bow = game().items.get_as<Bow>(_bow_id)) {
-			if (std::optional<Id<Item>> quiver_id = bow->_quiver_id) {
-				if (Quiver* quiver = game().items.get_as<Quiver>(*quiver_id)) {
-					/// @todo Check that quiver is still equipped.
+		for (Item* item : actor.inventory.items()) {
+			if (Quiver* quiver = dynamic_cast<Quiver*>(item)) {
+				if (quiver->equipped() && quiver->bearer_id() == actor.id) {
 					for (Item* item : quiver->inventory.items()) {
 						if (dynamic_cast<Arrow*>(item)) {
-							// Found an arrow in the quiver.
+							// Found an arrow in an equipped quiver.
 							return cont();
 						}
 					}
@@ -38,14 +39,13 @@ namespace questless
 
 	void Bow::Fire::ArrowCost::incur(Being& actor) const
 	{
-		/// @todo This function is O(n). Should be easy to find a ~O(1) solution.
-		if (Bow* bow = game().items.get_as<Bow>(_bow_id)) {
-			if (std::optional<Id<Item>> quiver_id = bow->_quiver_id) {
-				if (Quiver* quiver = game().items.get_as<Quiver>(*quiver_id)) {
+		for (Item* item : actor.inventory.items()) {
+			if (Quiver* quiver = dynamic_cast<Quiver*>(item)) {
+				if (quiver->equipped() && quiver->bearer_id() == actor.id) {
 					for (Item* item : quiver->inventory.items()) {
-						if (dynamic_cast<Arrow*>(item)) {
-							// Found an arrow in the quiver.
-							quiver->inventory.remove(item->id);
+						if (Arrow* arrow = dynamic_cast<Arrow*>(item)) {
+							// Found an arrow in an equipped quiver.
+							quiver->inventory.remove(arrow->id);
 							return;
 						}
 					}

@@ -7,20 +7,21 @@
 
 #pragma once
 
-#include "items/Item.h"
+#include "items/Equipment.h"
 #include "items/Inventory.h"
 
 namespace questless
 {
 	/// An item for containing projectiles, such as arrows.
 	////
-	class Quiver : public Item
+	class Quiver : public Equipment
 	{
 	public:
 		Inventory inventory;
 
 		Quiver(Inventory inventory, Id<Item> id = Id<Item>::make())
-			: inventory{std::move(inventory)}, Item{ id }
+			: Item{id}
+			, inventory{std::move(inventory)}
 		{}
 
 		void accept(ItemVisitor& visitor) const override { visitor.visit(*this); }
@@ -32,9 +33,19 @@ namespace questless
 		virtual std::vector<Action::uptr> actions() override
 		{
 			std::vector<Action::uptr> actions;
-			actions.push_back(Drop::make(*this));
-			actions.push_back(Throw::make(*this));
+			if (equipped()) {
+				actions.push_back(Unequip::make(*this));
+			} else {
+				actions.push_back(Equip::make(*this));
+				actions.push_back(Drop::make(*this));
+				actions.push_back(Throw::make(*this));
+			}
 			return actions;
 		}
+
+		double equip_time() const override { return 1.0; }
+		double unequip_time() const override { return 1.0; }
+	private:
+		Requirements requirements() const override { return Requirements{Torsos{1}}; }
 	};
 }

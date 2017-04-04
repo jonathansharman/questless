@@ -331,8 +331,10 @@ Weapons
 				Hands: 2
 				Damage type: piercing
 			Crossbow
+				Shorter range, lose damage at greater distances
+		Slings
 		Atlatl (spear-thrower) and darts
-		Javelin
+		Javelins
 Armor
 	Helmets
 	Breastplates

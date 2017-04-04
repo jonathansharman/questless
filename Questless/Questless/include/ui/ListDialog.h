@@ -47,6 +47,7 @@ namespace questless
 			if (!_options.empty()) {
 				_selection -= sdl::input().presses(SDLK_UP);
 				_selection += sdl::input().presses(SDLK_DOWN);
+				_selection += sdl::input().scroll();
 				_selection = _selection % option_count;
 				_selection = _selection < 0 ? _selection + option_count : _selection;
 
