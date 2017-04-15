@@ -49,7 +49,7 @@ namespace questless
 		class Fire : public RangedAttack
 		{
 		public:
-			Fire(Id<Item> weapon_id) : RangedAttack{weapon_id}, _cost{weapon_id} {}
+			Fire(Id<Item> weapon_id) : RangedAttack{weapon_id} {}
 			std::string name() const override { return "Fire"; }
 			Damage base_damage() const override { return Pierce{30.0}; }
 			double wind_up() const override { return 5.0; }
@@ -62,11 +62,8 @@ namespace questless
 			class ArrowCost : public Cost
 			{
 			public:
-				ArrowCost(Id<Item> bow_id) : _bow_id{bow_id} {}
 				Complete check(Being& actor, cont_t cont) const override;
 				void incur(Being& actor) const override;
-			private:
-				Id<Item> _bow_id;
 			};
 
 			ArrowCost _cost;

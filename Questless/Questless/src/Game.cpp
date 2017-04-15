@@ -14,8 +14,8 @@ using std::ostringstream;
 
 #include <SDL.h>
 #include <SDL_image.h>
-#include <SDL_ttf.h>
 #include <SDL_mixer.h>
+#include <SDL_ttf.h>
 
 #include "animation/EntityAnimator.h"
 #include "world/coordinates.h"
@@ -95,7 +95,7 @@ namespace questless
 
 		// Initialize and load menu resources.
 
-		_hud = make_unique<HUDController>();
+		_hud = make_unique<HUD>();
 
 		// Load textures and graphics.
 
@@ -395,7 +395,7 @@ namespace questless
 						_region->spawn_player(move(player_being));
 					}
 					// Pass the player's being ID to the HUD.
-					_hud->player_id(*_player_being_id);
+					_hud->set_player_being_id(*_player_being_id);
 					// Update the player's initial world view.
 					_player->update_world_view();
 					// Initialize the world renderer.

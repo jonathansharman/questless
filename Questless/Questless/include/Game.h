@@ -7,34 +7,35 @@
 
 #pragma once
 
-#include <string>
-#include <vector>
-#include <deque>
-#include <tuple>
-#include <unordered_map>
-#include <random>
 #include <chrono>
-#include <type_traits>
-#include <stdexcept>
+#include <deque>
 #include <memory>
+#include <random>
+#include <stdexcept>
+#include <string>
+#include <tuple>
+#include <type_traits>
+#include <unordered_map>
+#include <vector>
 
-#include "ui/DigraphMenuController.h"
-#include "ui/PlayerActionDialog.h"
-#include "ui/ListDialog.h"
-#include "sdl/Window.h"
-#include "sdl/Renderer.h"
-#include "sdl/Texture.h"
-#include "sdl/Font.h"
-#include "sdl/Sound.h"
-#include "sdl/Input.h"
+#include "agents/Player.h"
 #include "animation/Camera.h"
 #include "animation/WorldRenderer.h"
-#include "world/Region.h"
-#include "entities/beings/Being.h"
-#include "agents/Player.h"
-#include "items/Item.h"
 #include "effects/Effect.h"
+#include "entities/beings/Being.h"
+#include "items/Item.h"
+#include "sdl/Font.h"
+#include "sdl/Input.h"
+#include "sdl/Renderer.h"
+#include "sdl/Sound.h"
+#include "sdl/Texture.h"
+#include "sdl/Window.h"
+#include "ui/DigraphMenuController.h"
+#include "ui/HUD.h"
+#include "ui/ListDialog.h"
+#include "ui/PlayerActionDialog.h"
 #include "utility/Cache.h"
+#include "world/Region.h"
 
 namespace questless
 {
@@ -76,8 +77,8 @@ namespace questless
 		////
 		void add_effect(Effect::uptr const& effect);
 
-		HUDController& hud() { return *_hud; }
-		HUDController const& hud() const { return *_hud; }
+		HUD& hud() { return *_hud; }
+		HUD const& hud() const { return *_hud; }
 
 		Camera const& camera() const { return *_camera; }
 	private:
@@ -174,7 +175,7 @@ namespace questless
 		std::unique_ptr<PlayerActionDialog> _player_action_dialog;
 		std::deque<Dialog::uptr> _dialogs;
 
-		std::unique_ptr<HUDController> _hud;
+		std::unique_ptr<HUD> _hud;
 
 		units::GamePoint _point_clicked_rounded{0.0, 0.0};
 

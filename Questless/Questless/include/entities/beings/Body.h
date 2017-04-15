@@ -43,18 +43,12 @@ namespace questless
 		/// @return Const iterator to beginning of body parts.
 		auto begin() const
 		{
-			return boost::make_transform_iterator
-				( _parts.begin()
-				, (body_part_transform_t)[](BodyPart::ref bp) -> BodyPart::cref { return static_cast<BodyPart::cref>(bp); }
-				);
+			return boost::make_transform_iterator(_parts.begin(), body_part_ref_to_cref);
 		}
 		/// @return Const iterator to end of body parts.
 		auto end() const
 		{
-			return boost::make_transform_iterator
-				( _parts.end()
-				, (body_part_transform_t)[](BodyPart::ref bp) -> BodyPart::cref { return static_cast<BodyPart::cref>(bp); }
-				);
+			return boost::make_transform_iterator(_parts.end(), body_part_ref_to_cref);
 		}
 		
 		std::vector<Head::ref> const& heads() { return _heads; }
@@ -108,8 +102,6 @@ namespace questless
 		/// @return The offset from the upper left corner of the bounds to the body's center.
 		units::ScreenVector offset_to_center() const { return _offset_to_center; }
 	private:
-		using body_part_transform_t = BodyPart::cref (*)(BodyPart::ref);
-
 		class PartAttacher : public BodyPartVisitor
 		{
 		public:
@@ -145,5 +137,10 @@ namespace questless
 		std::vector<Foot::ref> _feet;
 		std::vector<Wing::ref> _wings;
 		std::vector<Tail::ref> _tails;
+
+		static BodyPart::cref body_part_ref_to_cref(BodyPart::ref body_part)
+		{
+			return static_cast<BodyPart::cref>(body_part);
+		}
 	};
 }

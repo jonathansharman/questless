@@ -30,13 +30,13 @@ namespace sdl
 		/// @param height The logical height of the window. Rendered image will be scaled as needed.
 		Renderer(Window& window, int width, int height);
 
-		Renderer(const Renderer* other) = delete;
-		Renderer(Renderer&& other) = default;
+		Renderer(const Renderer*) = delete;
+		Renderer(Renderer&&) = default;
 
 		~Renderer();
 
-		Renderer& operator =(Renderer const& other) = delete;
-		Renderer& operator =(Renderer&& other) & = default;
+		Renderer& operator =(Renderer const&) = delete;
+		Renderer& operator =(Renderer&&) & = default;
 
 		/// @return The internal SDL_Renderer pointer.
 		SDL_Renderer* const sdl_ptr() { return _renderer; }

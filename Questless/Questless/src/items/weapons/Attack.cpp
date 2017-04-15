@@ -80,7 +80,7 @@ namespace questless
 	{
 		if (Weapon* weapon = game().items.get_as<Weapon>(_attack->weapon_id)) {
 			if (weapon->equipped() && *weapon->bearer_id() == actor.id) {
-				_attack->cost().check(actor, [&] {
+				return _attack->cost().check(actor, [&] {
 					int range = _attack->range();
 					return actor.agent().query_tile(std::make_unique<TileQueryRangedAttackTarget>(range), actor.coords, tile_in_range_predicate(actor, range),
 						// Okay to capture weapon by reference; already checked that it's still there, and callback is synchronous here.

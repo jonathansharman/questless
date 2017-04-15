@@ -16,11 +16,11 @@ namespace questless
 
 	Complete Bow::Fire::ArrowCost::check(Being& actor, cont_t cont) const
 	{
-		for (Item* item : actor.inventory.items()) {
-			if (Quiver* quiver = dynamic_cast<Quiver*>(item)) {
+		for (Item& maybe_quiver : actor.inventory.items()) {
+			if (Quiver* quiver = dynamic_cast<Quiver*>(&maybe_quiver)) {
 				if (quiver->equipped() && quiver->bearer_id() == actor.id) {
-					for (Item* item : quiver->inventory.items()) {
-						if (dynamic_cast<Arrow*>(item)) {
+					for (Item& maybe_arrow : quiver->inventory.items()) {
+						if (dynamic_cast<Arrow*>(&maybe_arrow)) {
 							// Found an arrow in an equipped quiver.
 							return cont();
 						}
@@ -28,8 +28,8 @@ namespace questless
 				}
 			}
 		}
-		for (Item* item : actor.inventory.items()) {
-			if (dynamic_cast<Arrow*>(item)) {
+		for (Item& item : actor.inventory.items()) {
+			if (dynamic_cast<Arrow*>(&item)) {
 				// Found an arrow free-floating in the inventory.
 				return cont();
 			}
@@ -39,11 +39,11 @@ namespace questless
 
 	void Bow::Fire::ArrowCost::incur(Being& actor) const
 	{
-		for (Item* item : actor.inventory.items()) {
-			if (Quiver* quiver = dynamic_cast<Quiver*>(item)) {
+		for (Item& maybe_quiver : actor.inventory.items()) {
+			if (Quiver* quiver = dynamic_cast<Quiver*>(&maybe_quiver)) {
 				if (quiver->equipped() && quiver->bearer_id() == actor.id) {
-					for (Item* item : quiver->inventory.items()) {
-						if (Arrow* arrow = dynamic_cast<Arrow*>(item)) {
+					for (Item& maybe_arrow : quiver->inventory.items()) {
+						if (Arrow* arrow = dynamic_cast<Arrow*>(&maybe_arrow)) {
 							// Found an arrow in an equipped quiver.
 							quiver->inventory.remove(arrow->id);
 							return;
@@ -52,10 +52,10 @@ namespace questless
 				}
 			}
 		}
-		for (Item* item : actor.inventory.items()) {
-			if (dynamic_cast<Arrow*>(item)) {
+		for (Item& item : actor.inventory.items()) {
+			if (dynamic_cast<Arrow*>(&item)) {
 				// Found an arrow free-floating in the inventory.
-				actor.inventory.remove(item->id);
+				actor.inventory.remove(item.id);
 			}
 		}
 		throw std::logic_error{"Couldn't find arrow to spend."};

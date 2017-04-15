@@ -12,7 +12,7 @@
 #include <optional>
 
 #include "Dialog.h"
-#include "HUDController.h"
+#include "HUD.h"
 #include "utility/utility.h"
 
 namespace questless
@@ -30,14 +30,14 @@ namespace questless
 			Choice(Type type = Type::idle, int data = 0) : type{type}, data{data} {}
 		};
 
-		PlayerActionDialog(HUDController& hud, std::function<void(Choice)> cont) : _hud{hud}, _cont{std::move(cont)} {}
+		PlayerActionDialog(HUD& hud, std::function<void(Choice)> cont) : _hud{hud}, _cont{std::move(cont)} {}
 
 		State update() override;
 
 		void draw() const override
 		{}
 	private:
-		HUDController& _hud;
+		HUD& _hud;
 		Continuation<Choice> _cont;
 
 		void refresh() override {}

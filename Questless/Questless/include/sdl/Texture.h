@@ -55,16 +55,12 @@ namespace sdl
 		/// Constructs a texture object from an SDL texture.
 		/// @param texture An SDL texture pointer.
 		Texture(SDL_Texture* texture);
-
-		/// Copy constructor disabled.
-		Texture(Texture const& texture) = delete;
-
-		/// Move constructor.
-		Texture(Texture&& texture);
+		Texture(Texture const&) = delete;
+		Texture(Texture&& that);
 
 		~Texture();
 
-		Texture& operator =(Texture texture) &;
+		Texture& operator =(Texture that) &;
 
 		friend void swap(Texture& first, Texture& second);
 

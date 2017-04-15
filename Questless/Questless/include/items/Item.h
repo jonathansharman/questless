@@ -28,6 +28,7 @@ namespace questless
 	public:
 		using uptr = std::unique_ptr<Item>;
 		using ref = std::reference_wrapper<Item>;
+		using cref = std::reference_wrapper<Item const>;
 
 		Id<Item> const id;
 

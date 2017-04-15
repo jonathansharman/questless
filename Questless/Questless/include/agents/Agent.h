@@ -40,7 +40,7 @@ namespace questless
 
 		virtual ~Agent() = default;
 
-		Agent& operator =(Agent const& other) = delete;
+		Agent& operator =(Agent const&) = delete;
 
 		Being& being;
 

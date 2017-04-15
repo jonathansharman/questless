@@ -82,7 +82,7 @@ namespace units
 
 		constexpr int length() const { return static_cast<int>((abs(q) + abs(r) + abs(s)) / 2); }
 
-		constexpr int distance_to(HexCoords other) const { return (*this - other).length(); }
+		constexpr int distance_to(HexCoords that) const { return (*this - that).length(); }
 
 		Direction direction_towards(HexCoords dest) const
 		{

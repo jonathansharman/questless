@@ -361,9 +361,7 @@
     <ClInclude Include="include\ui\DigraphMenuModel.h" />
     <ClInclude Include="include\ui\DigraphMenuView.h" />
     <ClInclude Include="include\ui\DirectionDialog.h" />
-    <ClInclude Include="include\ui\HUDController.h" />
-    <ClInclude Include="include\ui\HUDModel.h" />
-    <ClInclude Include="include\ui\HUDView.h" />
+    <ClInclude Include="include\ui\HUD.h" />
     <ClInclude Include="include\ui\ListDialog.h" />
     <ClInclude Include="include\ui\MagnitudeDialog.h" />
     <ClInclude Include="include\ui\MessageDialog.h" />
@@ -486,9 +484,7 @@
     <ClCompile Include="src\ui\DigraphMenuModel.cpp" />
     <ClCompile Include="src\ui\DigraphMenuView.cpp" />
     <ClCompile Include="src\ui\DirectionDialog.cpp" />
-    <ClCompile Include="src\ui\HUDController.cpp" />
-    <ClCompile Include="src\ui\HUDModel.cpp" />
-    <ClCompile Include="src\ui\HUDView.cpp" />
+    <ClCompile Include="src\ui\HUD.cpp" />
     <ClCompile Include="src\ui\MagnitudeDialog.cpp" />
     <ClCompile Include="src\ui\MessageDialog.cpp" />
     <ClCompile Include="src\ui\PlayerActionDialog.cpp" />

@@ -24,17 +24,14 @@ namespace sdl
 		using uptr = std::unique_ptr<Sound>;
 
 		/// @param filename The WAV file from which to load the sound.
+		////
 		Sound(char const* filename);
-
-		/// Disable copy constructor.
-		Sound(Sound const& sound) = delete;
-
-		/// Move constructor.
-		Sound(Sound&& sound);
+		Sound(Sound const&) = delete;
+		Sound(Sound&& that);
 
 		~Sound();
 
-		Sound& operator =(Sound sound) &;
+		Sound& operator =(Sound that) &;
 	
 		friend void swap(Sound& first, Sound& second);
 

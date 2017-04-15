@@ -54,18 +54,18 @@ namespace units
 		friend Vector operator *(scalar_t k, Vector const& v) { return Vector{k * v.x, k * v.y}; }
 		friend Vector operator /(Vector const& v, scalar_t k) { return Vector{v.x / k, v.y / k}; }
 
-		Vector& operator =(Vector const& v) & = default;
+		Vector& operator =(Vector const&) & = default;
 
-		Vector& operator +=(Vector const& v) &
+		Vector& operator +=(Vector const& that) &
 		{
-			x += v.x;
-			y += v.y;
+			x += that.x;
+			y += that.y;
 			return *this;
 		}
-		Vector& operator -=(Vector const& v) &
+		Vector& operator -=(Vector const& that) &
 		{
-			x -= v.x;
-			y -= v.y;
+			x -= that.x;
+			y -= that.y;
 			return *this;
 		}
 		Vector& operator *=(scalar_t k) &

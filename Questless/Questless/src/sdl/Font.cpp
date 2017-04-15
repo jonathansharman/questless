@@ -21,12 +21,12 @@ namespace sdl
 		}
 	}
 
-	Font::Font(Font&& font)
-		: _font(font._font)
-		, _size(font._size)
-		, _blend_mode(font._blend_mode)
+	Font::Font(Font&& that)
+		: _font(that._font)
+		, _size(that._size)
+		, _blend_mode(that._blend_mode)
 	{
-		font._font = nullptr;
+		that._font = nullptr;
 	}
 
 	Font::~Font()
@@ -36,9 +36,9 @@ namespace sdl
 		}
 	}
 
-	Font& Font::operator =(Font font) &
+	Font& Font::operator =(Font that) &
 	{
-		swap(*this, font);
+		swap(*this, that);
 		return *this;
 	}
 

@@ -349,15 +349,6 @@
     <ClInclude Include="include\animation\ItemTexturer.h">
       <Filter>include\animation</Filter>
     </ClInclude>
-    <ClInclude Include="include\ui\HUDController.h">
-      <Filter>include\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ui\HUDView.h">
-      <Filter>include\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ui\HUDModel.h">
-      <Filter>include\ui</Filter>
-    </ClInclude>
     <ClInclude Include="include\ui\CountDialog.h">
       <Filter>include\ui</Filter>
     </ClInclude>
@@ -703,6 +694,9 @@
     <ClInclude Include="include\utility\Complete.h">
       <Filter>include\utility</Filter>
     </ClInclude>
+    <ClInclude Include="include\ui\HUD.h">
+      <Filter>include\ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\world\Region.cpp">
@@ -746,15 +740,6 @@
     </ClCompile>
     <ClCompile Include="src\animation\ItemTexturer.cpp">
       <Filter>src\animation</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\HUDController.cpp">
-      <Filter>src\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\HUDView.cpp">
-      <Filter>src\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\HUDModel.cpp">
-      <Filter>src\ui</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\Dialog.cpp">
       <Filter>src\ui</Filter>
@@ -947,6 +932,9 @@
     </ClCompile>
     <ClCompile Include="src\spell\ManaCost.cpp">
       <Filter>src\spell</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\HUD.cpp">
+      <Filter>src\ui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

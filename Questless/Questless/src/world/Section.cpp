@@ -43,23 +43,26 @@ namespace questless
 				data_stream >> c >> light_level >> temperature;
 
 				switch (static_cast<Tile::TileClass>(c)) {
-					case Tile::TileClass::edge:
-						tile = std::make_unique<EdgeTile>(light_level, temperature);
-						break;
-					case Tile::TileClass::stone:
-						tile = std::make_unique<StoneTile>(light_level, temperature);
-						break;
 					case Tile::TileClass::dirt:
 						tile = std::make_unique<DirtTile>(light_level, temperature);
+						break;
+					case Tile::TileClass::edge:
+						tile = std::make_unique<EdgeTile>(light_level, temperature);
 						break;
 					case Tile::TileClass::grass:
 						tile = std::make_unique<GrassTile>(light_level, temperature);
 						break;
-					case Tile::TileClass::water:
-						tile = std::make_unique<WaterTile>(light_level, temperature);
+					case Tile::TileClass::sand:
+						tile = std::make_unique<SandTile>(light_level, temperature);
 						break;
 					case Tile::TileClass::snow:
 						tile = std::make_unique<SnowTile>(light_level, temperature);
+						break;
+					case Tile::TileClass::stone:
+						tile = std::make_unique<StoneTile>(light_level, temperature);
+						break;
+					case Tile::TileClass::water:
+						tile = std::make_unique<WaterTile>(light_level, temperature);
 						break;
 					default:
 						throw std::logic_error{"Unrecognized tile type."};

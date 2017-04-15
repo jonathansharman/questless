@@ -30,13 +30,13 @@ namespace sdl
 		/// @param size The point size of the font.
 		Font(char const* filename, int size, SDL_BlendMode blend_mode = SDL_BLENDMODE_BLEND);
 
-		Font(Font const& font) = delete;
+		Font(Font const&) = delete;
 
-		Font(Font&& font);
+		Font(Font&& that);
 
 		~Font();
 
-		Font& operator =(Font font) &;
+		Font& operator =(Font that) &;
 
 		friend void swap(Font& first, Font& second);
 

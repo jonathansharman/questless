@@ -172,8 +172,8 @@ namespace questless
 		}
 
 		// Update items.
-		for (Item* item : inventory.items()) {
-			item->update();
+		for (Item& item : inventory.items()) {
+			item.update();
 		}
 	}
 

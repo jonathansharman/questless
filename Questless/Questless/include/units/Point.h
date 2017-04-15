@@ -24,7 +24,7 @@ namespace units
 
 		constexpr explicit Point() : x{scalar_t{}}, y{scalar_t{}} {}
 		constexpr explicit Point(scalar_t x, scalar_t y) : x{x}, y{y} {}
-		constexpr Point(Point const& p) : x{p.x}, y{p.y} {}
+		constexpr Point(Point const& that) : x{that.x}, y{that.y} {}
 
 		friend std::ostream& operator <<(std::ostream& out, Point const& p)
 		{
@@ -44,7 +44,7 @@ namespace units
 		constexpr friend Point operator *(scalar_t k, Point const& p) { return Point{k * p.x, k * p.y}; }
 		constexpr friend Point operator /(Point const& p, scalar_t k) { return Point{p.x / k, p.y / k}; }
 
-		Point& operator =(Point const& p) & = default;
+		Point& operator =(Point const&) & = default;
 
 		Point& operator +=(Vector<space_t> const& v) &
 		{

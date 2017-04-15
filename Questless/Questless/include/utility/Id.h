@@ -35,21 +35,21 @@ namespace questless
 		using key_t = uint64_t;
 
 		Id() = delete;
-		Id(Id const& other) = default;
+		Id(Id const&) = default;
 		constexpr explicit Id(key_t key) : _key{key} {}
 
 		/// Constructs an ID from a key read from the stream.
 		////
 		Id(std::istream& in) : _key{read_key(in)} {}
 
-		Id& operator =(Id const& other) & = default;
+		Id& operator =(Id const&) & = default;
 
 		/// @return A new unique ID.
 		////
 		static Id make() { return Id{next()}; }
 
-		bool operator <(Id other) const { return _key < other._key; }
-		bool operator ==(Id other) const { return _key == other._key; }
+		bool operator <(Id that) const { return _key < that._key; }
+		bool operator ==(Id that) const { return _key == that._key; }
 
 		/// Inserts the ID's key into the stream.
 		////

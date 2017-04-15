@@ -31,13 +31,13 @@ namespace questless
 		std::string region;
 		RegionSectionCoords section;
 
-		friend bool operator ==(GlobalCoords const& left, GlobalCoords const& that)
+		friend bool operator ==(GlobalCoords const& left, GlobalCoords const& right)
 		{
-			return left.region == that.region || (left.region == that.region && left.section < that.section);
+			return left.region == right.region || (left.region == right.region && left.section < right.section);
 		}
-		friend bool operator <(GlobalCoords const& left, GlobalCoords const& that)
+		friend bool operator <(GlobalCoords const& left, GlobalCoords const& right)
 		{
-			return left.region < that.region || (left.region == that.region && left.section < that.section);
+			return left.region < right.region || (left.region == right.region && left.section < right.section);
 		}
 	};
 }

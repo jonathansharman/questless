@@ -3,80 +3,89 @@
 * @author  Jonathan Sharman
 *
 * @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the Inventory class.
 */
 
 #pragma once
 
-#include <vector>
-#include <array>
-#include <string>
-#include <optional>
+#include <unordered_set>
+
+#include <boost/iterator/transform_iterator.hpp>
 
 #include "Item.h"
-#include "utility/Stream.h"
 
 namespace questless
 {
+	/// Represents a physical collection of items, e.g. the items in a being's possession.
+	////
 	class Inventory
 	{
+		class Items
+		{
+		public:
+			Items(std::unordered_set<Id<Item>>& item_ids) : _item_ids{item_ids} {}
+
+			/// @return Iterator to the beginning of the item IDs.
+			////
+			auto begin()
+			{
+				return boost::make_transform_iterator(_item_ids.begin(), item_id_to_ref);
+			}
+			/// @return Iterator to the end of the item IDs.
+			////
+			auto end()
+			{
+				return boost::make_transform_iterator(_item_ids.end(), item_id_to_ref);
+			}
+
+			/// @return Const iterator to the beginning of item IDs.
+			////
+			auto begin() const
+			{
+				return boost::make_transform_iterator(_item_ids.begin(), item_id_to_cref);
+			}
+			/// @return Const iterator to the end of the item IDs.
+			////
+			auto end() const
+			{
+				return boost::make_transform_iterator(_item_ids.end(), item_id_to_cref);
+			}
+
+			/// @return The number of items.
+			////
+			size_t size() { return _item_ids.size(); }
+		private:
+			std::unordered_set<Id<Item>>& _item_ids;
+
+			static Item::ref item_id_to_ref(Id<Item> item_id);
+			static Item::cref item_id_to_cref(Id<Item> item_id);
+		};
 	public:
-		struct Page
-		{
-			static constexpr int rows = 8;
-			static constexpr int columns = 12;
+		Inventory() : _items{_item_ids} {}
+		Inventory(Inventory const& that) : _item_ids{that._item_ids}, _items{_item_ids} {}
+		Inventory(Inventory&& that) : _item_ids{std::move(that._item_ids)}, _items{_item_ids} {}
 
-			std::string label = "";
+		/// @return The set of IDs of items in the inventory.
+		////
+		std::unordered_set<Id<Item>> const& item_ids() const { return _item_ids; }
 
-			std::array<std::array<std::optional<Id<Item>>, columns>, rows> item_ids;
-		};
+		/// @return The set of items in the inventory.
+		////
+		Items const& items() const { return _items; }
+		/// @return The set of items in the inventory.
+		////
+		Items& items() { return _items; }
 
-		struct Coords
-		{
-			int page;
-			int row;
-			int column;
-
-			Coords() : page{0}, row{0}, column{0} {}
-			Coords(int page, int row, int column) : page{page}, row{row}, column{column} {}
-		};
-
-		/// Adds the item with the given ID to the inventory in the first empty item slot.
+		/// Adds the item with the given ID to the inventory.
 		/// @param item_id The ID of the item to add to the inventory.
 		////
-		void add(Id<Item> item_id);
+		void add(Id<Item> item_id) { _item_ids.insert(item_id); }
 
-		/// Finds and removes the item with the given ID from the inventory.
+		/// Removes the item with the given ID from the inventory.
 		/// @param item_id The ID of an item to remove from the inventory.
-		void remove(Id<Item> item_id);
-
-		/// Removes the item at the given coordinates from the inventory.
-		/// @param coords The inventory coordinates of the item to remove.
-		void remove(Coords coords);
-
-		/// @return A stream of items in the inventory, ordered by page and then coordinates.
-		Stream<Item*> items() { return items(0); }
-
-		/// @return The number of item pages in the inventory.
-		int pages() const { return _pages.size(); }
-
-		/// @return The inventory page at the given index.
-		Page& page(int page_idx) { return _pages[page_idx]; }
-
-		/// @return The item at the given inventory coordinates or nullptr if none present.
-		/// @param coords Inventory coordinates (page, row, and column) of the requested item.
-		Item* get(Coords coords);
-
-		/// @return The item at the given inventory coordinates or nullptr if none present.
-		/// @param coords Inventory coordinates (page, row, and column) of the requested item.
-		Item* operator [](Coords coords) { return get(coords); }
+		////
+		void remove(Id<Item> item_id) { _item_ids.erase(item_id); }
 	private:
-		std::vector<Page> _pages;
-
-		/// @todo Is the convenience of streams really worth this monstrosity?
-		Stream<Item*> items(size_t page_start);
-		Stream<Item*> items(size_t page, size_t row_start);
-		Stream<Item*> items(size_t page, size_t row_start, size_t column_start);
+		std::unordered_set<Id<Item>> _item_ids;
+		Items _items;
 	};
 }

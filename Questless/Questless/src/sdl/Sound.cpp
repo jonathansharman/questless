@@ -19,9 +19,9 @@ namespace sdl
 		}
 	}
 
-	Sound::Sound(Sound&& sound) : _chunk(sound._chunk), _channel(sound._channel)
+	Sound::Sound(Sound&& that) : _chunk(that._chunk), _channel(that._channel)
 	{
-		sound._chunk = nullptr;
+		that._chunk = nullptr;
 	}
 
 	Sound::~Sound()
@@ -29,9 +29,9 @@ namespace sdl
 		Mix_FreeChunk(_chunk);
 	}
 
-	Sound& Sound::operator =(Sound sound) &
+	Sound& Sound::operator =(Sound that) &
 	{
-		swap(*this, sound);
+		swap(*this, that);
 		return *this;
 	}
 

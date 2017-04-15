@@ -77,36 +77,35 @@ namespace questless
 				}
 				case PlayerActionDialog::Choice::Type::use:
 				{
-					if (auto item_coords = game().hud().hotbar()[player_choice.data]) {
-						Item* item = being.inventory[*item_coords];
-						if (item != nullptr) { /// @todo Sync the hotbar with changes to the inventory so this is unnecessary.
-							// Get a list of the item's actions. It's shared so the lambda that captures it is copyable, so the lambda can be passed as a std::function.
-							auto actions = std::make_shared<std::vector<Action::uptr>>(item->actions());
-							// Get the action names from the list of actions.
-							std::vector<std::string> action_names;
-							std::transform(actions->begin(), actions->end(), std::back_inserter(action_names), [](Action::uptr const& action) { return action->name(); });
-							// Open list dialog for the player to choose an action.
-							auto dialog = std::make_unique<ListDialog>(sdl::input().mouse_position(), item->name(), std::move(action_names),
-								[this, actions](std::optional<int> opt_action_idx) {
-									if (!opt_action_idx) {
-										// No action selected. Player must try to act again.
-										act();
+					/// @todo Sync the hotbar with changes to the inventory.
+					if (std::optional<Id<Item>> opt_item_id = game().hud().hotbar()[player_choice.data]) {
+						Item& item = game().items.get_ref(*opt_item_id);
+						// Get a list of the item's actions. It's shared so the lambda that captures it is copyable, so the lambda can be passed as a std::function.
+						auto actions = std::make_shared<std::vector<Action::uptr>>(item.actions());
+						// Get the action names from the list of actions.
+						std::vector<std::string> action_names;
+						std::transform(actions->begin(), actions->end(), std::back_inserter(action_names), [](Action::uptr const& action) { return action->name(); });
+						// Open list dialog for the player to choose an action.
+						auto dialog = std::make_unique<ListDialog>(sdl::input().mouse_position(), item.name(), std::move(action_names),
+							[this, actions](std::optional<int> opt_action_idx) {
+								if (!opt_action_idx) {
+									// No action selected. Player must try to act again.
+									act();
+									return Complete{};
+								} else {
+									// Perform the chosen action.
+									int action_idx = *opt_action_idx;
+									return (*actions)[action_idx]->perform(being, [this](Action::Result result) {
+										if (result == Action::Result::aborted) {
+											// Chosen action aborted. Player must try to act again.
+											act();
+										}
 										return Complete{};
-									} else {
-										// Perform the chosen action.
-										int action_idx = *opt_action_idx;
-										return (*actions)[action_idx]->perform(being, [this](Action::Result result) {
-											if (result == Action::Result::aborted) {
-												// Chosen action aborted. Player must try to act again.
-												act();
-											}
-											return Complete{};
-										});
-									}
+									});
 								}
-							);
-							game().add_dialog(std::move(dialog));
-						}
+							}
+						);
+						game().add_dialog(std::move(dialog));
 					}
 					break;
 				}

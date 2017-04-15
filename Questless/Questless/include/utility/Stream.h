@@ -71,7 +71,7 @@ public:
 		/// @return End iterator.
 		ForwardIterator() : _itr{Stream{}} {}
 
-		void swap(ForwardIterator& other) noexcept { std::swap(_itr, other._itr); }
+		void swap(ForwardIterator& that) noexcept { std::swap(_itr, that._itr); }
 
 		ForwardIterator& operator ++()
 		{
@@ -93,10 +93,10 @@ public:
 		}
 
 		template <typename OtherType>
-		bool operator ==(ForwardIterator<OtherType> const& other) const { return _itr == other._itr; }
+		bool operator ==(ForwardIterator<OtherType> const& that) const { return _itr == that._itr; }
 
 		template <typename OtherType>
-		bool operator !=(ForwardIterator<OtherType> const& other) const { return _itr != other._itr; }
+		bool operator !=(ForwardIterator<OtherType> const& that) const { return _itr != that._itr; }
 
 		Type operator *() const
 		{
@@ -130,8 +130,8 @@ public:
 	Stream() {}
 	explicit Stream(std::function<Cell<T>()> f) : _lazy_cell{std::make_shared<Suspension<Cell<T>>>(f)} {}
 
-	bool operator ==(Stream const& other) const { return _lazy_cell == other._lazy_cell; }
-	bool operator !=(Stream const& other) const { return _lazy_cell != other._lazy_cell; }
+	bool operator ==(Stream const& that) const { return _lazy_cell == that._lazy_cell; }
+	bool operator !=(Stream const& that) const { return _lazy_cell != that._lazy_cell; }
 
 	bool empty() const { return !_lazy_cell; }
 

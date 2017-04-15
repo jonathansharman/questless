@@ -56,9 +56,9 @@ namespace questless
 				for (int r = -Section::radius; r <= Section::radius; ++r) {
 					for (int q = -Section::radius; q <= Section::radius; ++q) {
 						if (r == Section::radius || q == Section::radius) {
-							data += std::to_string(0) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
+							data += std::to_string(static_cast<int>(Tile::TileClass::edge)) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
 						} else {
-							data += std::to_string(uniform(1, 5)) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
+							data += std::to_string(uniform(0, static_cast<int>(Tile::TileClass::TILE_CLASS_COUNT) - 1)) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
 						}
 					}
 				}
@@ -138,7 +138,7 @@ namespace questless
 		}
 	}
 
-	void Region::save(char const* save_name)
+	void Region::save(char const* /*save_name*/)
 	{
 		/// @todo Reenable someday. Use SQLite or something to save games.
 

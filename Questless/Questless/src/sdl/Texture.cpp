@@ -70,10 +70,10 @@ namespace sdl
 		}
 	}
 
-	Texture::Texture(Texture&& texture) : _renderer{texture._renderer}
+	Texture::Texture(Texture&& that) : _renderer{that._renderer}
 	{
-		swap(*this, texture);
-		texture._texture = nullptr;
+		swap(*this, that);
+		that._texture = nullptr;
 	}
 
 	Texture::~Texture()
@@ -81,9 +81,9 @@ namespace sdl
 		SDL_DestroyTexture(_texture);
 	}
 
-	Texture& Texture::operator =(Texture texture) &
+	Texture& Texture::operator =(Texture that) &
 	{
-		swap(*this, texture);
+		swap(*this, that);
 		return *this;
 	}
 
