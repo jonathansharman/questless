@@ -39,6 +39,7 @@ namespace questless
 	private:
 		HUD& _hud;
 		Continuation<Choice> _cont;
+		static int _last_used;
 
 		void refresh() override {}
 	};
