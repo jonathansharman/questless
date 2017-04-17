@@ -1,11 +1,6 @@
-/**
-* @file    WhiteMagicParticle.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the white magic particle class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -14,10 +9,11 @@
 
 namespace questless
 {
+	//! A particle for effects involving white magic.
 	class WhiteMagicParticle : public Particle
 	{
 	public:
-		/// @param position The particle's starting position.
+		//! @param position The particle's starting position.
 		WhiteMagicParticle(units::GamePoint position) : Particle
 			{ position
 			, random_displacement(80.0) / 1.0s

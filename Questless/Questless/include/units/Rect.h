@@ -1,11 +1,6 @@
-/**
-* @file    Point.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION A generic 2D rectangle, with parameterized length and space types.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -14,10 +9,11 @@
 
 namespace units
 {
+	//! A 2D rectangle in @p SpaceType space.
 	template <typename SpaceType>
 	struct Rect
 	{
-		enum class Origin { upper_left, upper_right, lower_left, lower_right }; /// @todo These don't really make sense in different spaces.
+		enum class Origin { upper_left, upper_right, lower_left, lower_right }; //! @todo These don't really make sense in different spaces.
 
 		using space_t = SpaceType;
 		using scalar_t = typename space_t::scalar_t;
@@ -67,25 +63,25 @@ namespace units
 		}
 
 		constexpr Point<space_t> position() const { return Point<space_t>{x, y}; }
-		constexpr scalar_t right() const { return x + w; } /// @todo This is space-dependent.
-		constexpr scalar_t bottom() const { return y + h; } /// @todo This is space-dependent.
+		constexpr scalar_t right() const { return x + w; } //! @todo This is space-dependent.
+		constexpr scalar_t bottom() const { return y + h; } //! @todo This is space-dependent.
 
 		constexpr bool contains(Point<space_t> point) const
 		{
 			return point.x >= x && point.x < x + w && point.y >= y && point.y < y + h;
 		}
 
-		/// Translates the rectangle by the given offset.
+		//! Translates the rectangle by the given offset.
 		void translate(Vector<space_t> offset) &
 		{
 			x += offset.x;
 			y += offset.y;
 		}
 
-		/// @return A copy of the rectangle translated by the given offset.
+		//! A copy of the rectangle translated by the given offset.
 		constexpr Rect translated(Vector<space_t> offset) const { return Rect{x + offset.x, y + offset.y, w, h}; }
 
-		/// Extends the given bounding rectangle by the given point.
+		//! Extends the given bounding rectangle by the given point.
 		void extend(Point<space_t> const& point)
 		{
 			if (point.x < x) {

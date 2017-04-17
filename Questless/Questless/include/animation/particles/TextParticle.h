@@ -1,11 +1,6 @@
-/**
-* @file    TextParticle.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION A text particle.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -16,13 +11,13 @@
 
 namespace questless
 {
+	//! A particle composed of colored text.
 	class TextParticle : public Particle, public sdl::Renderable
 	{
 	public:
-		/// @param position The particle's starting position.
-		/// @param text The text for the particle to show.
-		/// @param color The color of the particle's text.
-		////
+		//! @param position The particle's starting position.
+		//! @param text The text for the particle to show.
+		//! @param color The color of the particle's text.
 		TextParticle(units::GamePoint position, std::string text, sdl::Color color)
 			: Particle
 				{ position

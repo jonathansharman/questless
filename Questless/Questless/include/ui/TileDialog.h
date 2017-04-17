@@ -1,9 +1,6 @@
-/**
-* @file    TileDialog.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -17,8 +14,7 @@
 
 namespace questless
 {
-	/// Retrieves region tile coordinates from the player.
-	////
+	//! Retrieves region tile coordinates from the player.
 	class TileDialog : public Dialog
 	{
 	public:
@@ -54,6 +50,5 @@ namespace questless
 		void refresh() override { load_textures(); }
 
 		void load_textures();
-
 	};
 }

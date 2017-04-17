@@ -1,9 +1,6 @@
-/**
-* @file    Abilities.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -16,7 +13,7 @@ namespace questless
 {
 	class Being;
 
-	/// The list of actions a being is able to perform.
+	//! The list of actions a being is able to perform.
 	class Abilities
 	{
 	public:

@@ -1,9 +1,6 @@
-/**
-* @file    Id.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -26,8 +23,7 @@ namespace std
 
 namespace questless
 {
-	/// Uniquely identifies an object of type T.
-	////
+	//! Uniquely identifies an object of type T.
 	template <typename T>
 	class Id
 	{
@@ -38,21 +34,18 @@ namespace questless
 		Id(Id const&) = default;
 		constexpr explicit Id(key_t key) : _key{key} {}
 
-		/// Constructs an ID from a key read from the stream.
-		////
+		//! Constructs an ID from a key read from the stream.
 		Id(std::istream& in) : _key{read_key(in)} {}
 
 		Id& operator =(Id const&) & = default;
 
-		/// @return A new unique ID.
-		////
+		//! A new unique ID.
 		static Id make() { return Id{next()}; }
 
 		bool operator <(Id that) const { return _key < that._key; }
 		bool operator ==(Id that) const { return _key == that._key; }
 
-		/// Inserts the ID's key into the stream.
-		////
+		//! Inserts the ID's key into the stream.
 		friend std::ostream& operator <<(std::ostream& out, Id id)
 		{
 			out << id._key;
@@ -63,17 +56,15 @@ namespace questless
 		
 		friend size_t std::hash<Id>::operator ()(const Id&) const;
 
-		/// @return The next unused ID key.
-		////
+		//! The next unused ID key.
 		static key_t next()
 		{
-			/// @todo This won't work once saving and loading are in place.
+			//! @todo This won't work once saving and loading are in place.
 			static key_t next_key = 0;
 			return next_key++;
 		}
 
-		/// Returns an ID key read from the given stream.
-		////
+		//! Returns an ID key read from the given stream.
 		static key_t read_key(std::istream& in)
 		{
 			key_t key;

@@ -1,11 +1,6 @@
-/**
-* @file    Camera.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the Camera class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -27,14 +22,14 @@ namespace questless
 	struct VFlip : TaggedType<bool> { using TaggedType::TaggedType; };
 	struct SrcRect : TaggedType<std::optional<units::TextureRect>> { using TaggedType::TaggedType; };
 
+	//! A simple 2D camera, useful for panning, zooming, and rotating around a scene.
 	class Camera
 	{
 	public:
 		using uptr = std::unique_ptr<Camera>;
 
-		/// Constructs a camera with the specified starting position.
-		/// @param position The starting position of the camera.
-		////
+		//! Constructs a camera with the specified starting position.
+		//! @param position The starting position of the camera.
 		Camera(units::GamePoint position)
 			: _position{position}
 			, _zoom{1.0}
@@ -44,85 +39,69 @@ namespace questless
 
 		Camera& operator =(Camera const&) = delete;
 
-		/// @return The camera's position.
-		////
+		//! The camera's position.
 		units::GamePoint position() const { return _position; }
 
-		/// Sets the camera's position.
-		/// @param position The new camera position.
-		////
+		//! Sets the camera's position.
+		//! @param position The new camera position.
 		void position(units::GamePoint const& position) { _position = position; }
 
-		/// Pans the camera the specified amount.
-		/// @param offset The offset which is added to the camera's position.
-		////
+		//! Pans the camera the specified amount.
+		//! @param offset The offset which is added to the camera's position.
 		void pan(units::GameVector const& offset) { _position += offset; }
 
-		/// @return The camera's zoom.
-		////
+		//! The camera's zoom.
 		inline double zoom() const { return _zoom; }
 
-		/// Sets the camera's zoom.
-		/// @param zoom A non-negative double for the zoom. If zoom is negative, it is clamped to 0.
-		////
+		//! Sets the camera's zoom.
+		//! @param zoom A non-negative double for the zoom. If zoom is negative, it is clamped to 0.
 		void zoom(double zoom) { _zoom = zoom < 0 ? 0 : zoom; }
 
-		/// Multiplies the camera's zoom by the provided factor.
-		/// @param factor A non-negative double by which zoom is multiplied.
-		////
+		//! Multiplies the camera's zoom by the provided factor.
+		//! @param factor A non-negative double by which zoom is multiplied.
 		void zoom_factor(double factor);
 
-		/// @return The camera's counter-clockwise rotation in radians, in the range [-pi, pi].
-		////
+		//! The camera's counter-clockwise rotation in radians, in the range [-pi, pi].
 		units::GameRadians angle() const { return _angle; }
 
-		/// @return The camera's counter-clockwise rotation in radians, in the range [0, tau).
-		////
+		//! The camera's counter-clockwise rotation in radians, in the range [0, tau).
 		units::GameRadians positive_angle() const;
 
-		/// Sets the camera's angle.
-		/// @param theta The camera's counter-clockwise rotation in radians, in the range [0, tau).
-		////
+		//! Sets the camera's angle.
+		//! @param theta The camera's counter-clockwise rotation in radians, in the range [0, tau).
 		void angle(units::GameRadians theta);
 
-		/// Adjusts the camera's angle.
-		/// @param dtheta The number of radians to offset the angle.
-		////
+		//! Adjusts the camera's angle.
+		//! @param dtheta The number of radians to offset the angle.
 		void rotate(units::GameRadians dtheta);
 
-		/// @return The camera's color multiplier.
-		////
+		//! The camera's color multiplier.
 		sdl::Color color() const { return _color; }
 
-		/// Sets the camera's color multiplier.
-		/// @param color The new color multiplier.
-		////
+		//! Sets the camera's color multiplier.
+		//! @param color The new color multiplier.
 		sdl::Color color(sdl::Color color) { _color = color; }
 
-		/// @return The game point the mouse is hovering over.
-		////
+		//! The game point the mouse is hovering over.
 		units::GamePoint point_hovered() const { return _point_hovered; }
 
-		/// @return The hex coordinates of the tile the mouse is hovering over.
-		////
+		//! The hex coordinates of the tile the mouse is hovering over.
 		RegionTileCoords tile_hovered() const { return _tile_hovered; }
 
-		/// Updates the camera. To be called once per frame.
-		////
+		//! Updates the camera. To be called once per frame.
 		void update();
 
-		/// Draws all or part of the provided texture with respect to the camera.
-		/// @param texture The texture to be drawn.
-		/// @param position The in-game coordinates of the texture.
-		/// @param origin The origin point within the texture. If nullopt, the texture's center is used.
-		/// @param color An additional color multiplier, applied on top of the camera's and texture's color members.
-		/// @param horizontal_scale The horizontal scale of the texture.
-		/// @param vertical_scale The vertical scale of the texture.
-		/// @param angle The counter-clockwise rotation of the texture, in radians.
-		/// @param flip_horizontally Whether to flip the texture horizontally.
-		/// @param flip_horizontally Whether to flip the texture vertically.
-		/// @param src_rect An optional Rect specifying the portion of the texture to be copied. If nullopt, the entire texture is used.
-		////
+		//! Draws all or part of the provided texture with respect to the camera.
+		//! @param texture The texture to be drawn.
+		//! @param position The in-game coordinates of the texture.
+		//! @param origin The origin point within the texture. If nullopt, the texture's center is used.
+		//! @param color An additional color multiplier, applied on top of the camera's and texture's color members.
+		//! @param horizontal_scale The horizontal scale of the texture.
+		//! @param vertical_scale The vertical scale of the texture.
+		//! @param angle The counter-clockwise rotation of the texture, in radians.
+		//! @param flip_horizontally Whether to flip the texture horizontally.
+		//! @param flip_horizontally Whether to flip the texture vertically.
+		//! @param src_rect An optional Rect specifying the portion of the texture to be copied. If nullopt, the entire texture is used.
 		void draw
 			( sdl::Texture const& texture
 			, units::GamePoint position
@@ -136,10 +115,9 @@ namespace questless
 			, SrcRect const& src_rect = SrcRect{std::nullopt}
 			) const;
 
-		/// Draws lines relative to the camera connecting the series of points contained in the vector.
-		/// @param points A vector of game points.
-		/// @param color The color of the lines.
-		////
+		//! Draws lines relative to the camera connecting the series of points contained in the vector.
+		//! @param points A vector of game points.
+		//! @param color The color of the lines.
 		void draw_lines(std::vector<units::GamePoint> points, sdl::Color color) const;
 	private:
 		units::GamePoint _position;
@@ -150,8 +128,7 @@ namespace questless
 		units::GamePoint _point_hovered;
 		RegionTileCoords _tile_hovered;
 
-		/// @return The given game point transformed to screen space, accounting for the camera.
-		////
+		//! The given game point transformed to screen space, accounting for the camera.
 		units::ScreenPoint screen_point(units::GamePoint point) const;
 	};
 }

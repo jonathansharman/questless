@@ -1,11 +1,6 @@
-/**
-* @file    Heal.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the Heal spell class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -13,6 +8,7 @@
 
 namespace questless::spell
 {
+	//! A spell that heals a being.
 	class Heal : public Spell
 	{
 	public:

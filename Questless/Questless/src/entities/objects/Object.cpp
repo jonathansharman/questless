@@ -1,11 +1,6 @@
-/**
-* @file    Object.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implementation for the Object class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "entities/objects/Object.h"
 #include "Game.h"
@@ -20,11 +15,11 @@ namespace questless
 
 		out << id << ' ';
 
-		/// @todo Object-specific serialization.
+		//! @todo Object-specific serialization.
 	}
 
 	void Object::update()
 	{
-		/// @todo This.
+		//! @todo This.
 	}
 }

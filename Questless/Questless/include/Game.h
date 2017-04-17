@@ -1,9 +1,6 @@
-/**
-* @file    Questless.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -39,7 +36,7 @@
 
 namespace questless
 {
-	/// Represents an instance of the game Questless.
+	//! Represents an instance of the game Questless.
 	class Game : public sdl::Renderable
 	{
 	public:
@@ -55,16 +52,13 @@ namespace questless
 
 		friend Game& game();
 
-		/// Releases game resources and breaks down the environment.
-		////
+		//! Releases game resources and breaks down the environment.
 		~Game();
 
-		/// Runs a new game of Questless.
-		////
+		//! Runs a new game of Questless.
 		void run();
 
-		/// Adds the given dialog to the dialogs stack.
-		////
+		//! Adds the given dialog to the dialogs stack.
 		Complete add_dialog(Dialog::uptr dialog);
 
 		void query_player_choice(std::function<void(PlayerActionDialog::Choice)> cont);
@@ -72,9 +66,8 @@ namespace questless
 		Region& region() { return *_region; }
 		Region const& region() const { return *_region; }
 
-		/// Adds an effect to the world, notifying beings within range of its occurrence.
-		/// @param effect The effect to add.
-		////
+		//! Adds an effect to the world, notifying beings within range of its occurrence.
+		//! @param effect The effect to add.
 		void add_effect(Effect::uptr const& effect);
 
 		HUD& hud() { return *_hud; }
@@ -127,7 +120,7 @@ namespace questless
 
 		// Textures
 
-		sdl::Texture::uptr _txt_test; ///< A placeholder texture used for testing.
+		sdl::Texture::uptr _txt_test; //!< A placeholder texture used for testing.
 		sdl::Texture::uptr _txt_test2;
 		sdl::Texture::uptr _txt_test3;
 
@@ -183,9 +176,8 @@ namespace questless
 		// Methods //
 		/////////////
 
-		/// Creates a game object, initializes the environment, and loads game resources.
-		/// @param fullscreen Whether to run the game in fullscreen mode.
-		////
+		//! Creates a game object, initializes the environment, and loads game resources.
+		//! @param fullscreen Whether to run the game in fullscreen mode.
 		Game(bool fullscreen);
 
 		void refresh() override { load_textures(); }
@@ -209,8 +201,7 @@ namespace questless
 		void render_playing();
 	};
 
-	/// @return The game instance.
-	////
+	//! The game instance.
 	inline Game& game()
 	{
 		static Game instance{false};

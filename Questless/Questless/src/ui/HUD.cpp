@@ -1,11 +1,6 @@
-/**
-* @file    HUD.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implementation for the HUD class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "ui/HUD.h"
 #include "Game.h"
@@ -207,7 +202,7 @@ namespace questless
 	{
 		_displayed_items = {player_being.inventory.items().begin(), player_being.inventory.items().end()};
 		// Sort displayed items alphabetically.
-		/// @todo Custom displayed items order and cache the displayed items (only need to regenerate list if a turn has been taken).
+		//! @todo Custom displayed items order and cache the displayed items (only need to regenerate list if a turn has been taken).
 		std::sort(_displayed_items.begin(), _displayed_items.end(), [](Item const& left, Item const& right) {
 			return left.name() < right.name();
 		});

@@ -1,9 +1,6 @@
-/**
-* @file    HUD.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -21,32 +18,26 @@ namespace questless
 {
 	class Being;
 
-	/// The head-up display controls and displays various elements, such as conditions, the hotbar, and the inventory.
-	////
+	//! The head-up display controls and displays various elements, such as conditions, the hotbar, and the inventory.
 	class HUD : public sdl::Renderable
 	{
 	public:
 		HUD();
 
-		/// Updates the HUD's state and animations. Should be called once per frame.
-		////
+		//! Updates the HUD's state and animations. Should be called once per frame.
 		void update();
 
-		/// Sets the HUD's associated player being ID to the given ID.
-		/// @param player_being_id The ID of the player-controlled being.
-		////
+		//! Sets the HUD's associated player being ID to the given ID.
+		//! @param player_being_id The ID of the player-controlled being.
 		void set_player_being_id(Id<Being> player_being_id);
 
-		/// Draws the HUD.
-		////
+		//! Draws the HUD.
 		void draw();
 
-		/// @return A constant reference to the hotbar.
-		////
+		//! A constant reference to the hotbar.
 		auto const& hotbar() { return _hotbar; }
 
-		/// @return Whether the inventory view is open.
-		////
+		//! Whether the inventory view is open.
 		bool inventory_open() const { return _inv_open; }
 	private:
 		// Constants
@@ -74,7 +65,7 @@ namespace questless
 		std::optional<Id<Being>> _player_being_id = std::nullopt;
 		std::array<std::optional<Id<Item>>, _hotbar_size> _hotbar;
 		bool _inv_open = false;
-		int _inv_page = 0; /// @todo Replace with filters.
+		int _inv_page = 0; //! @todo Replace with filters.
 		std::vector<Item::cref> _displayed_items;
 
 		// View Data

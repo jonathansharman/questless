@@ -1,11 +1,6 @@
-/**
-* @file    BloodParticle.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Blood particle implementation.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "animation/particles/BloodParticle.h"
 #include "sdl/resources.h"

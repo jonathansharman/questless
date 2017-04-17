@@ -1,11 +1,6 @@
-/**
-* @file    utility.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Implementation for utility functions.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "utility/utility.h"
 #include "Game.h"
@@ -18,11 +13,11 @@ namespace questless
 	// Debugging //
 	///////////////
 
-	double time(function<void()> code)
+	std::chrono::milliseconds time(function<void()> f)
 	{
 		auto start_time = Game::clock::now();
-		code();
-		return std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(Game::clock::now() - start_time).count();
+		f();
+		return std::chrono::duration_cast<std::chrono::milliseconds>(Game::clock::now() - start_time);
 	}
 
 	//////////////////////////////

@@ -1,9 +1,6 @@
-/**
-* @file    Equipment.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -13,27 +10,22 @@
 
 namespace questless
 {
-	/// Abstract base class for items that can be equipped to a being.
-	////
+	//! Abstract base class for items that can be equipped to a being.
 	class Equipment : public virtual Item
 	{
 	public:
 		virtual ~Equipment() = default;
 
-		/// @return The amount of time required to equip the item.
-		////
+		//! The amount of time required to equip the item.
 		virtual double equip_time() const = 0;
 
-		/// @return The amount of time required to unequip the item.
-		////
+		//! The amount of time required to unequip the item.
 		virtual double unequip_time() const = 0;
 
-		/// @return Whether the item is currently equipped to a being.
-		////
+		//! Whether the item is currently equipped to a being.
 		bool equipped() const { return _bearer_id.has_value(); }
 
-		/// @return The ID of the being bearing this equipment or nullopt if it's currently unequipped.
-		////
+		//! The ID of the being bearing this equipment or nullopt if it's currently unequipped.
 		std::optional<Id<Being>> bearer_id() const { return _bearer_id; }
 	protected:
 		struct Heads : TaggedType<int> { using TaggedType::TaggedType; };
@@ -134,12 +126,10 @@ namespace questless
 		std::vector<Id<BodyPart>> _wing_ids;
 		std::vector<Id<BodyPart>> _tail_ids;
 
-		/// @return The number of each body part type required to equip this item.
-		////
+		//! The number of each body part type required to equip this item.
 		virtual Requirements requirements() const = 0;
 
-		/// Unequips the item from its bearer.
-		////
+		//! Unequips the item from its bearer.
 		void unequip();
 	};
 }

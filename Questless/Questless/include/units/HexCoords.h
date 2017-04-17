@@ -1,11 +1,6 @@
-/**
-* @file    HexUtil.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Hexagonal coordinate type, adapted from http://www.redblobgames.com/grids/hexagons/.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -21,6 +16,7 @@
 
 namespace units
 {
+	//! Hexagonal coordinate type, adapted from the <a href="http://www.redblobgames.com/grids/hexagons/">Red Blob Games hexagons tutorial</a>.
 	template <typename Tag>
 	struct HexCoords
 	{
@@ -30,7 +26,7 @@ namespace units
 		int r;
 		int s;
 
-		/// @return The shortest distance between the two given directions.
+		//! The shortest distance between the two given directions.
 		static int distance(Direction d1, Direction d2)
 		{
 			int diff = static_cast<int>(d1) - static_cast<int>(d2);
@@ -77,7 +73,7 @@ namespace units
 		friend constexpr bool operator ==(HexCoords h1, HexCoords h2) { return h1.q == h2.q && h1.r == h2.r && h1.s == h2.s; }
 		friend constexpr bool operator !=(HexCoords h1, HexCoords h2) { return h1.q != h2.q || h1.r != h2.r || h1.s != h2.s; }
 
-		/// Arbitrary less-than function so that HexCoords are comparable.
+		//! Arbitrary less-than function so that HexCoords are comparable.
 		friend constexpr bool operator <(HexCoords h1, HexCoords h2) { return h1.q < h2.q || (h1.q == h2.q && h1.r < h2.r); }
 
 		constexpr int length() const { return static_cast<int>((abs(q) + abs(r) + abs(s)) / 2); }
@@ -117,7 +113,7 @@ namespace units
 			return HexCoords{this->q + (dest.q - this->q) * t, this->r + (dest.r - this->r) * t, this->s + (dest.s - this->s) * t};
 		}
 
-		/// @todo Make offset and neighbor constexpr when constexpr-if becomes available.
+		//! @todo Make offset and neighbor constexpr when constexpr-if becomes available.
 
 		static HexCoords offset(Direction direction)
 		{
@@ -190,7 +186,7 @@ namespace units
 		{}
 
 		template <typename HexCoordsType>
-		constexpr units::GamePoint to_world(HexCoordsType h) const /// @todo This function should just work for RegionTileCoords.
+		constexpr units::GamePoint to_world(HexCoordsType h) const //! @todo This function should just work for RegionTileCoords.
 		{
 			return units::GamePoint
 				{ ((orientation.f0 * h.q + orientation.f1 * h.r) * size.x + origin.x)
@@ -199,7 +195,7 @@ namespace units
 		}
 
 		template <typename HexCoordsType>
-		constexpr HexCoordsType to_hex_coords(units::GamePoint p) const /// @todo This function should just work for RegionTileCoords.
+		constexpr HexCoordsType to_hex_coords(units::GamePoint p) const //! @todo This function should just work for RegionTileCoords.
 		{
 			return HexCoordsType
 				{ orientation.b0 * (p.x - origin.x) / size.x + orientation.b1 * (p.y - origin.y) / size.y
@@ -214,7 +210,7 @@ namespace units
 		}
 
 		template <typename HexCoordsType>
-		std::vector<units::GamePoint> corner_points(HexCoordsType h) /// @todo This function should just work for RegionTileCoords.
+		std::vector<units::GamePoint> corner_points(HexCoordsType h) //! @todo This function should just work for RegionTileCoords.
 		{
 			std::vector<units::GamePoint> corners = {};
 			units::GamePoint center = to_world_f(h);
@@ -274,7 +270,7 @@ namespace std
 	};
 }
 
-/// @todo Replace these with doctest tests.
+//! @todo Replace these with doctest tests.
 /*
 
 // Tests

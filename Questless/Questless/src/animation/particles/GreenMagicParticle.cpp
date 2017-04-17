@@ -1,11 +1,6 @@
-/**
-* @file    GreenMagicParticle.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Green magic particle implementation.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "animation/particles/GreenMagicParticle.h"
 #include "Game.h"

@@ -1,11 +1,6 @@
-/**
-* @file    Being.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implementation for the Being class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "entities/beings/Being.h"
 #include "entities/beings/Body.h"
@@ -44,7 +39,7 @@ namespace questless
 		busy_time.set_mutator(busy_time_mutator(), false);
 	}
 
-	Being::Being(std::istream& in, Body body) /// @todo Load agent.
+	Being::Being(std::istream& in, Body body) //! @todo Load agent.
 		: Entity{in}
 		, id{in}
 		, body{std::move(body)}
@@ -54,14 +49,14 @@ namespace questless
 		, busy_time{busy_time_mutator()}
 		, _need_to_calculate_stats{true}
 	{
-		/// @todo Read body.
+		//! @todo Read body.
 
 		in >> base_stats;
 		in >> stats;
 
 		in >> health >> mana >> energy >> satiety >> alertness >> busy_time >> dead;
 
-		/// @todo Is there a better way to extract into an enum class?
+		//! @todo Is there a better way to extract into an enum class?
 		int direction_int;
 		in >> direction_int;
 		direction = static_cast<RegionTileCoords::Direction>(direction_int);
@@ -75,7 +70,7 @@ namespace questless
 
 		out << id << ' ';
 
-		/// @todo Write body.
+		//! @todo Write body.
 
 		out << health << ' ' << mana << ' ' << energy << ' ' << satiety << ' ' << alertness << ' '
 			<< busy_time << ' ' << dead << ' ' << static_cast<int>(direction);
@@ -162,7 +157,7 @@ namespace questless
 		abilities.update(*this);
 
 		// Handle temperature damage.
-		double temp = region->temperature(coords);
+		double temp = region->tile(coords)->temperature();
 		if (temp > stats.max_temp) {
 			Damage burn{Burn{(temp - stats.max_temp) / (stats.max_temp - stats.min_temp) * temperature_damage_factor}};
 			take_damage(burn, nullptr, std::nullopt);
@@ -219,7 +214,7 @@ namespace questless
 
 					// Check for part disability.
 					if (part->health <= 0) {
-						/// @todo Disable part.
+						//! @todo Disable part.
 						if (part->vital()) {
 							dead = true;
 						}
@@ -283,7 +278,7 @@ namespace questless
 
 	void Being::heal(double amount, BodyPart* part, std::optional<Id<Being>> opt_source_id)
 	{
-		/// @todo Heal the part, if present.
+		//! @todo Heal the part, if present.
 
 		// Get source.
 		Being* source = opt_source_id ? game().beings.get(*opt_source_id) : nullptr;
@@ -310,9 +305,9 @@ namespace questless
 		_statuses.push_back(std::move(status));
 	}
 
-	/////////////////////////////////////
-	//    Stats and Status Modifiers   //
-	/////////////////////////////////////
+	////////////////////////////////
+	// Stats and Status Modifiers //
+	////////////////////////////////
 
 	Stats Being::base_stats_plus_body_stats()
 	{

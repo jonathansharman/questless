@@ -1,9 +1,6 @@
-/**
-* @file    ResourceManager.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -15,8 +12,7 @@
 
 namespace sdl
 {
-	/// Manages shared resources of a given type.
-	////
+	//! Manages shared resources of a given type.
 	template <typename ResourceType>
 	class ResourceManager
 	{
@@ -36,10 +32,9 @@ namespace sdl
 			typename std::list<Entry>::iterator it;
 		};
 
-		/// Registers with the manager a resource constructed from the given arguments.
-		/// @param args Arguments with which to construct the resource in the generator.
-		/// @return The handle with which the resource can be accessed.
-		////
+		//! Registers with the manager a resource constructed from the given arguments.
+		//! @param args Arguments with which to construct the resource in the generator.
+		//! @return The handle with which the resource can be accessed.
 		template <typename... Args>
 		Handle add(Args... args)
 		{
@@ -49,12 +44,11 @@ namespace sdl
 			return Handle{_registry.begin()};
 		}
 
-		/// @todo Enable the use of the following specialization without the need for explicit parameterization.
+		//! @todo Enable the use of the following specialization without the need for explicit parameterization.
 
-		/// Registers with the manager a resource with the given generator.
-		/// @param generator A function that loads or creates the resource when it is needed.
-		/// @return The handle with which the resource can be accessed.
-		////
+		//! Registers with the manager a resource with the given generator.
+		//! @param generator A function that loads or creates the resource when it is needed.
+		//! @return The handle with which the resource can be accessed.
 		template <>
 		Handle add(std::function<std::unique_ptr<ResourceType>()> generator)
 		{
@@ -62,9 +56,8 @@ namespace sdl
 			return Handle{_registry.begin()};
 		}
 
-		/// @param handle The handle of the desired resource, obtained from the initial call to add().
-		/// @return The resource with the given handle.
-		////
+		//! @param handle The handle of the desired resource, obtained from the initial call to add().
+		//! @return The resource with the given handle.
 		ResourceType& operator [](Handle const& handle) const
 		{
 			auto& entry = *handle.it;
@@ -74,17 +67,15 @@ namespace sdl
 			return *entry.resource;
 		}
 
-		/// Removes the given resource and its generator from the registry.
-		/// @param handle The handle of the resource to be removed, obtained from the initial call to add().
-		////
+		//! Removes the given resource and its generator from the registry.
+		//! @param handle The handle of the resource to be removed, obtained from the initial call to add().
 		void erase(Handle const& handle)
 		{
 			_registry.erase(handle._it);
 		}
 
-		/// Removes the given resources and their generators from the registry.
-		/// @param names The names of the resources to be removed.
-		////
+		//! Removes the given resources and their generators from the registry.
+		//! @param names The names of the resources to be removed.
 		void erase(std::vector<Handle> const& handles)
 		{
 			for (Handle const& handle : handles) {
@@ -92,8 +83,7 @@ namespace sdl
 			}
 		}
 
-		/// Clears the cache such that each resource must be regenerated when next accessed.
-		////
+		//! Clears the cache such that each resource must be regenerated when next accessed.
 		void clear_cache()
 		{
 			for (auto& entry : _registry) {

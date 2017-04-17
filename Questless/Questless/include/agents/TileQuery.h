@@ -1,11 +1,6 @@
-/**
-* @file    TileQuery.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Requests to an agent for tile coordinates.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -17,6 +12,7 @@ namespace questless
 	struct TileQueryRangedAttackTarget;
 	struct TileQueryTeleportTarget;
 
+	//! Visitor type for tile queries.
 	struct TileQueryVisitor
 	{
 		virtual ~TileQueryVisitor() = default;
@@ -26,12 +22,14 @@ namespace questless
 		virtual void visit(TileQueryTeleportTarget const&) = 0;
 	};
 
+	//! A request to an agent for tile coordinates.
 	struct TileQuery
 	{
 		using uptr = std::unique_ptr<TileQuery>;
 		virtual ~TileQuery() = default;
 		virtual void accept(TileQueryVisitor& visitor) = 0;
 	};
+
 	struct TileQueryLightningBoltTarget : TileQuery
 	{
 		void accept(TileQueryVisitor& visitor) override { visitor.visit(*this); }

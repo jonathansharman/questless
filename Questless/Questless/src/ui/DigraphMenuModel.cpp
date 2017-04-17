@@ -1,13 +1,6 @@
-/**
-* @file    DigraphMenu.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE
-*
-* @todo This
-*
-* @section DESCRIPTION The implementation for the DigraphMenuModel struct.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "ui/DigraphMenuModel.h"
 

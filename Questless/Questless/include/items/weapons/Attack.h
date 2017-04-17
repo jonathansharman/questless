@@ -1,9 +1,6 @@
-/**
-* @file    Attack.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -19,8 +16,7 @@ namespace questless
 	class Item;
 	class Weapon;
 
-	/// An attack that a weapon can perform.
-	////
+	//! An attack that a weapon can perform.
 	class Attack : public std::enable_shared_from_this<Attack>
 	{
 	public:
@@ -29,44 +25,35 @@ namespace questless
 		Attack(Id<Item> weapon_id) : weapon_id{weapon_id} {}
 		virtual ~Attack() = default;
 
-		/// @return The name of the attack.
-		////
+		//! The name of the attack.
 		virtual std::string name() const = 0;
 
-		/// @return The attack's effective damage per hit, accounting for its weapon's integrity.
-		////
+		//! The attack's effective damage per hit, accounting for its weapon's integrity.
 		Damage damage() const;
 
-		/// @return The attack's base damage per hit.
-		////
+		//! The attack's base damage per hit.
 		virtual Damage base_damage() const = 0;
 
-		/// @return Busy time incurred before the attack connects.
-		////
+		//! Busy time incurred before the attack connects.
 		virtual double wind_up() const = 0;
 
-		/// @return Busy time incurred after the attack connects.
-		////
+		//! Busy time incurred after the attack connects.
 		virtual double follow_through() const = 0;
 
-		/// @return Time after using the attack before its weapon can be used again.
-		////
+		//! Time after using the attack before its weapon can be used again.
 		virtual double cooldown() const = 0;
 
-		/// @return The proportion of attack damage to be applied to the attack weapon as wear.
-		////
+		//! The proportion of attack damage to be applied to the attack weapon as wear.
 		virtual double wear_ratio() const = 0;
 
-		/// @return The cost of performing the attack.
-		////
+		//! The cost of performing the attack.
 		virtual Cost const& cost() const = 0;
 
-		/// @return An action that launches the attack.
+		//! An action that launches the attack.
 		virtual Action::uptr launch() = 0;
 	};
 
-	/// A close-range attack.
-	////
+	//! A close-range attack.
 	class MeleeAttack : public Attack
 	{
 	public:
@@ -109,8 +96,7 @@ namespace questless
 		};
 	};
 
-	/// A long-range attack.
-	////
+	//! A long-range attack.
 	class RangedAttack : public Attack
 	{
 	public:

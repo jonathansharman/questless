@@ -1,11 +1,6 @@
-/**
-* @file    Texture.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implementation for Texture, a simple wrapper class around SDL_Texture.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "sdl/Texture.h"
 

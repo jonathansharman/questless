@@ -1,11 +1,6 @@
-/**
-* @file    Entity.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the Entity class, which includes both beings and objects that can exist on the map.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -30,6 +25,7 @@ namespace questless
 	class Region;
 	class Section;
 
+	//! Things that can exist on the world map, including beings and objects.
 	class Entity
 	{
 	public:
@@ -43,25 +39,20 @@ namespace questless
 
 		virtual ~Entity() = default;
 
-		/// Accepts an entity visitor. Used to implement the visitor pattern for entities.
-		/// @param visitor An entity visitor.
+		//! Accepts an entity visitor. Used to implement the visitor pattern for entities.
+		//! @param visitor An entity visitor.
 		virtual void accept(EntityVisitor& visitor) = 0;
-		////
-		/// Accepts an entity visitor. Used to implement the visitor pattern for entities.
-		/// @param visitor An entity visitor.
-		////
+		//! Accepts an entity visitor. Used to implement the visitor pattern for entities.
+		//! @param visitor An entity visitor.
 		virtual void accept(EntityVisitor& visitor) const = 0;
 
-		/// @return The entity's class's enumerated value.
-		////
+		//! The entity's class's enumerated value.
 		virtual EntityClass entity_class() const = 0;
 
-		/// @param out A stream object into which the serialized entity is inserted.
-		////
+		//! @param out A stream object into which the serialized entity is inserted.
 		virtual void serialize(std::ostream& out) const;
 
-		/// Advances the entity one turn.
-		////
+		//! Advances the entity one turn.
 		virtual void update() = 0;
 	protected:
 		Entity() : region{}, section{}, coords{} {}

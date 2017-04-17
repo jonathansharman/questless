@@ -1,11 +1,6 @@
-/**
-* @file    Input.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the input class. Handles mouse and keyboard input as well as other SDL events.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -22,10 +17,11 @@ namespace sdl
 {
 	enum class MouseButton {left, right, middle};
 
+	//! Handles mouse and keyboard input as well as other SDL events.
 	class Input
 	{
 	public:
-		/// @return The number key corresponding to the given index, with the number keys ordered 1 to 9 and then 0.
+		//! The number key corresponding to the given index, with the number keys ordered 1 to 9 and then 0.
 		static decltype(SDLK_1) index_to_num_key(size_t index)
 		{
 			switch (index) {
@@ -53,24 +49,24 @@ namespace sdl
 
 		friend void swap(Input& first, Input& second);
 
-		/// Updates the input state.
-		/// @note Calls SDL_PumpEvents.
+		//! Updates the input state.
+		//! @note Calls SDL_PumpEvents.
 		void update();
 
 		// Event accessors
 
-		/// @return Whether the user has attempted to quit the application.
+		//! Whether the user has attempted to quit the application.
 		bool quit() const { return _quit; }
 
-		/// @return Whether the user maximized the window.
+		//! Whether the user maximized the window.
 		bool window_maximized() const { return _window_maximized; }
-		/// @return Whether the user restored the window.
+		//! Whether the user restored the window.
 		bool window_restored() const { return _window_restored; }
-		/// @return Whether the user resized the window.
+		//! Whether the user resized the window.
 		bool window_resized() const { return _window_resized; }
-		/// @return The window's new width after being resized. The value is unspecified if the window wasn't resized last update.
+		//! The window's new width after being resized. The value is unspecified if the window wasn't resized last update.
 		int resized_window_width() const { return _resized_window_width; }
-		/// @return The window's new height after being resized. The value is unspecified if the window wasn't resized last update.
+		//! The window's new height after being resized. The value is unspecified if the window wasn't resized last update.
 		int resized_window_height() const { return _resized_window_height; }
 
 		// Keyboard state accessors
@@ -108,19 +104,19 @@ namespace sdl
 		bool down(MouseButton button) const;
 		bool up(MouseButton button) const;
 
-		/// @return The number of ticks the mouse wheel has been scrolled up since the last call to update. Negative value indicates scroll down.
+		//! The number of ticks the mouse wheel has been scrolled up since the last call to update. Negative value indicates scroll down.
 		int scroll() const { return _scroll; }
 		
 		// Mouse state mutators
 
-		/// Sets the position of the mouse cursor in the window.
-		/// @param position The position to which the cursor is moved.
+		//! Sets the position of the mouse cursor in the window.
+		//! @param position The position to which the cursor is moved.
 		void move_mouse(units::ScreenPoint const& position);
 
-		/// Hides the mouse cursor.
+		//! Hides the mouse cursor.
 		void hide_mouse() const { SDL_ShowCursor(0); }
 
-		/// Shows the mouse cursor.
+		//! Shows the mouse cursor.
 		void show_mouse() const { SDL_ShowCursor(1); }
 	private:
 		SDL_Event _event;
@@ -148,6 +144,6 @@ namespace sdl
 		uint32_t _prev_mouse_state;
 		uint32_t _curr_mouse_state;
 
-		int _scroll; ///< The number of ticks the mouse wheel has been scrolled since the last call to update. Negative value indicates scroll down.
+		int _scroll; //!< The number of ticks the mouse wheel has been scrolled since the last call to update. Negative value indicates scroll down.
 	};
 }

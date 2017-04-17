@@ -1,11 +1,6 @@
-/**
-* @file    YellowMagicParticle.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the yellow magic particle class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -15,10 +10,11 @@
 
 namespace questless
 {
+	//! A particle for effects involving yellow magic.
 	class YellowMagicParticle : public Particle
 	{
 	public:
-		/// @param position The particle's starting position.
+		//! @param position The particle's starting position.
 		YellowMagicParticle(units::GamePoint position) : Particle
 			{ position
 			, units::GameVector{random_angle(), 100.0} / 1.0s

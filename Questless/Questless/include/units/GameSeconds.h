@@ -1,11 +1,6 @@
-/**
-* @file    GameSeconds.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Defines GameSeconds as std::chrono::duration<double> and puts std::literals::chrono_literals into the global namespace.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -15,5 +10,7 @@ namespace units
 {
 	using GameSeconds = std::chrono::duration<double>;
 }
+
+// Bring chrono_literals into the namespace, for convenience when dealing with game time.
 
 using namespace std::literals::chrono_literals;

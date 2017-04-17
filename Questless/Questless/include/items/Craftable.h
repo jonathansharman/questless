@@ -1,11 +1,6 @@
-/**
-* @file    Craftable.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the abstract Craftable class. Items which can be crafted from other items should multiply inherit from this class and Item.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -16,7 +11,8 @@
 
 namespace questless
 {
-	class Craftable
+	//! An item that can be crafted from other items.
+	class Craftable : public virtual Item
 	{
 	public:
 		virtual ~Craftable() = 0 {}
@@ -24,6 +20,6 @@ namespace questless
 		enum class Action {mix, boil, smoke, crush};
 	protected:
 		Action _action;
-		/// @todo Ingredients?
+		//! @todo Ingredients?
 	};
 }

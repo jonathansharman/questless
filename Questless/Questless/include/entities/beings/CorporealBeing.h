@@ -1,11 +1,6 @@
-/**
-* @file    CorporealBeing.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION A being with a physical body.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -13,6 +8,7 @@
 
 namespace questless
 {
+	//! A being with a physical body.
 	class CorporealBeing : public Being
 	{
 	public:

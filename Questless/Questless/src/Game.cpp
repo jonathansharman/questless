@@ -1,11 +1,6 @@
-/**
-* @file    Questless.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implemention for the Questless Game class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "Game.h"
 
@@ -20,7 +15,7 @@ using std::ostringstream;
 #include "animation/EntityAnimator.h"
 #include "world/coordinates.h"
 
-/// @todo The following are needed only for player spawning. Perhaps this should be the responsibility of a different class.
+//! @todo The following are needed only for player spawning. Perhaps this should be the responsibility of a different class.
 #include "agents/Agent.h"
 #include "agents/Player.h"
 #include "entities/beings/Human.h"
@@ -71,7 +66,7 @@ namespace questless
 
 		_camera = make_unique<Camera>(GamePoint{0, 0});
 
-		/// @todo Make render quality a game setting.
+		//! @todo Make render quality a game setting.
 		//SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
 
@@ -177,8 +172,8 @@ namespace questless
 		RegionTileCoords min_tile_coords{origin.q - range, origin.r - range};
 		RegionTileCoords max_tile_coords{origin.q + range, origin.r + range};
 
-		RegionSectionCoords min_section_coords = _region->containing_section_coords(min_tile_coords);
-		RegionSectionCoords max_section_coords = _region->containing_section_coords(max_tile_coords);
+		RegionSectionCoords min_section_coords = Section::region_section_coords(min_tile_coords);
+		RegionSectionCoords max_section_coords = Section::region_section_coords(max_tile_coords);
 
 		for (int r = min_section_coords.r; r <= max_section_coords.r; ++r) {
 			for (int q = min_section_coords.q; q <= max_section_coords.q; ++q) {
@@ -217,9 +212,9 @@ namespace questless
 				return;
 			}
 
-			/// @todo Sometimes resizing the window causes a crash.
+			//! @todo Sometimes resizing the window causes a crash.
 			if (input().window_restored()) {
-				/// @todo Save previous window size and restore it here.
+				//! @todo Save previous window size and restore it here.
 			}
 			if (input().window_resized()) {
 				window().recreate();
@@ -581,7 +576,7 @@ namespace questless
 
 	void Game::update_player_view()
 	{
-		/// @todo Do something reasonable with the player view when the player dies.
+		//! @todo Do something reasonable with the player view when the player dies.
 		Being* player_being = beings.get(*_player_being_id);
 		if (player_being && !player_being->dead) {
 			// Update the player's world view.

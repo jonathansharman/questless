@@ -1,11 +1,6 @@
-/**
-* @file    Renderable.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the Renderable abstract base class. Includes texture and font managers for shared resources.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -15,10 +10,15 @@
 
 namespace sdl
 {
+	//! An object that owns textures, which must be refreshed whenever the renderer is remade.
+	//!
+	//! Inherit from Renderable to refresh textures automatically whenever Renderable::refresh_all() is called.
 	class Renderable
 	{
 	public:
-		/// Refreshes all renderable objects.
+		//! Refreshes all renderable objects, reloading or remaking their held textures.
+		//!
+		//! This function should always be called after the window and renderer are remade, such as after resizing the window.
 		static void refresh_all();
 	protected:
 		Renderable() { _registry.insert(this); }
@@ -26,6 +26,8 @@ namespace sdl
 	private:
 		static std::unordered_set<Renderable*> _registry;
 
+		//! Reloads or remakes any textures owned by this object.
+		//!
 		virtual void refresh() = 0;
 	};
 }

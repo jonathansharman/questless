@@ -1,11 +1,6 @@
-/**
-* @file    Human.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the Human class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -96,7 +91,7 @@ namespace questless
 
 		void serialize(std::ostream& out) const override;
 
-		virtual std::string description() const
+		std::string const& description() const //! @todo Put this in Being or Entity?
 		{
 			return "You already know about humans.";
 		}

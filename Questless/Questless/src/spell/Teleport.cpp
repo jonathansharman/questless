@@ -1,9 +1,6 @@
-/**
-* @file    TeleportSpell.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "spell/Teleport.h"
 #include "Game.h"
@@ -20,7 +17,7 @@ namespace questless::spell
 				}
 				RegionTileCoords tile_coords = *opt_tile_coords;
 				int distance = caster.coords.distance_to(tile_coords);
-				double cost = _cost_factor * distance; /// @todo Reduce cost based on yellow power?
+				double cost = _cost_factor * distance; //! @todo Reduce cost based on yellow power?
 				if (caster.mana < cost) {
 					return caster.agent().send_message(std::make_unique<MessageNotEnoughMana>(cost - caster.mana), [cont] { return cont(Action::Result::aborted); });
 				}

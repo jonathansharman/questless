@@ -1,11 +1,6 @@
-/**
-* @file    ModalWeapon.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the Weapon class, which represents weapons with more than one mode of use.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -13,6 +8,7 @@
 
 namespace questless
 {
+	//! A weapon with different forms or modes of use.
 	class ModalWeapon : public Weapon
 	{
 	public:
@@ -23,13 +19,12 @@ namespace questless
 
 			Form(ModalWeapon& weapon) : _weapon{weapon} {}
 
-			/// @return The modal weapon of which this is a form.
+			//! The modal weapon of which this is a form.
 			ModalWeapon& weapon() { return _weapon; }
 
 			virtual std::string name() const = 0;
 
-			/// @return The list of actions that can be performed with the weapon.
-			////
+			//! The list of actions that can be performed with the weapon.
 			virtual std::vector<Action::uptr> actions() = 0;
 		private:
 			ModalWeapon& _weapon;
@@ -37,6 +32,7 @@ namespace questless
 
 		virtual ~ModalWeapon() = default;
 
+		//! The amount of time required to switch from one form to another.
 		virtual double switch_time() const = 0;
 
 		std::vector<Action::uptr> actions() override { return _form->actions(); }
@@ -70,8 +66,7 @@ namespace questless
 
 		ModalWeapon(double integrity, Form::uptr initial_form) : Weapon{integrity}, _form{std::move(initial_form)} {}
 
-		/// @return The weapon's current form.
-		////
+		//! The weapon's current form.
 		Form const& form() const { return *_form; }
 	private:
 		Form::uptr _form;

@@ -1,11 +1,6 @@
-/**
-* @file    Recharging.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Recharging implementation.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "entities/beings/statuses/Recharging.h"
 #include "entities/beings/Being.h"

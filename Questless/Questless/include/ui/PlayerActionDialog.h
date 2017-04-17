@@ -1,11 +1,6 @@
-/**
-* @file    PlayerActionDialog.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the PlayerActionDialog class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -17,6 +12,7 @@
 
 namespace questless
 {
+	//! Dialog for the player to choose an action for his or her controlled being.
 	class PlayerActionDialog : public Dialog
 	{
 	public:

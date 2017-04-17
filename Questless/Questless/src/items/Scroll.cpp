@@ -1,11 +1,6 @@
-/**
-* @file    Scroll.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Scroll implementation.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "items/Scroll.h"
 #include "entities/beings/Being.h"

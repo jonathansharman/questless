@@ -1,11 +1,6 @@
-/**
-* @file    BlackMagicParticle.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the black magic particle class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -14,10 +9,11 @@
 
 namespace questless
 {
+	//! A particle for effects involving black magic.
 	class BlackMagicParticle : public Particle
 	{
 	public:
-		/// @param position The particle's starting position.
+		//! @param position The particle's starting position.
 		BlackMagicParticle(units::GamePoint position) : Particle
 			{ position
 			, units::GameVelocity{units::GameVector{random_angle(), uniform(5.0, 25.0)}}

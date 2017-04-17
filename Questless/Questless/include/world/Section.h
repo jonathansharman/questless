@@ -1,11 +1,6 @@
-/**
-* @file    Section.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the Section class, which represents a hexagonal collection of hexes in the world.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -14,8 +9,6 @@
 #include <unordered_map>
 #include <memory>
 #include <iostream>
-#include <algorithm>
-#include <stdexcept>
 
 #include "coordinates.h"
 #include "entities/beings/Being.h"
@@ -26,6 +19,7 @@
 
 namespace questless
 {
+	//! An rhomboid section of hexes in a region.
 	class Section
 	{
 	public:
@@ -35,41 +29,46 @@ namespace questless
 		static constexpr int radius = 10;
 		static constexpr int diameter = 2 * radius + 1;
 
-		/// @param tile_coords Hex coordinates of a tile relative to the section.
-		/// @return The tile index in the section of the given section coordinates.
-		static SectionTileIndex tile_index(SectionTileCoords tile_coords);
+		//! The coordinates of the section that contains the tile at @p region_tile_coords.
+		static RegionSectionCoords region_section_coords(RegionTileCoords region_tile_coords);
 
-		/// @param region_tile_coords Hex coordinates of a tile relative to the region.
-		/// @return Positive hex coordinates relative to the section containing the given region coordinates.
-		static SectionTileIndex tile_index(RegionTileCoords region_tile_coords);
+		//! The coordinates of @p region_tile_coords relative to the section that contains them.
+		static SectionTileCoords section_tile_coords(RegionTileCoords region_tile_coords)
+		{
+			return SectionTileCoords
+				{ ((region_tile_coords.q + Section::radius) % Section::diameter + Section::diameter) % Section::diameter
+				, ((region_tile_coords.r + Section::radius) % Section::diameter + Section::diameter) % Section::diameter
+				};
+		}
 
-		/// @param coords The positive coordinates of the section within its region.
-		/// @param data_stream A stream of section data.
+		//! @param coords The coordinates of the section within its region.
+		//! @param data_stream A stream of section data.
 		Section(RegionSectionCoords coords, std::istream& data_stream);
 
-		/// Saves the section to the specified file.
-		/// @param filename The section's filename.
+		//! Saves the section to the specified file.
+		//! @param filename The section's filename.
 		void save(char const* filename);
 
-		/// @return The hex coordinates of the section within the region's sections.
+		//! The hex coordinates of this section within the region's sections.
 		RegionSectionCoords coords() const { return _coords; }
 
-		/// @return A list of beings in this section.
-		std::vector<Being::ref> beings() const;
+		//! A list of beings in this section.
+		std::vector<Being::cref> beings() const;
+		//! A list of beings in this section.
+		std::vector<Being::ref> beings();
 
-		/// @return A list objects in this section.
-		std::vector<Object::ref> objects() const;
+		//! A list objects in this section.
+		std::vector<Object::cref> objects() const;
+		//! A list objects in this section.
+		std::vector<Object::ref> objects();
 
-		/// @param tile_coords Tile coordinates within the region.
-		/// @return The ID of the being at the given tile coordinates or nullopt if there is none.
+		//! The ID of the being at @p tile_coords or nullopt if there is none.
 		std::optional<Id<Being>> being_id(RegionTileCoords tile_coords) const;
 
-		/// @param tile_coords Tile coordinates within the region.
-		/// @return The ID of the object at the given tile coordinates or nullopt if there is none.
+		//! The ID of the object at @p tile_coords or nullopt if there is none.
 		std::optional<Id<Object>> object_id(RegionTileCoords tile_coords) const;
 
-		/// Adds the given being to the section. Throws a logic_error if there is already a being at its coordinates.
-		////
+		//! Adds the given being to the section. Throws a logic_error if there is already a being at its coordinates.
 		void add(Being& being)
 		{
 			being.section = this;
@@ -79,8 +78,7 @@ namespace questless
 			}
 		}
 
-		/// Adds the given object to the section. Throws a logic_error if there is already an object at its coordinates.
-		////
+		//! Adds the given object to the section. Throws a logic_error if there is already an object at its coordinates.
 		void add(Object& object)
 		{
 			object.section = this;
@@ -90,72 +88,51 @@ namespace questless
 			}
 		}
 
-		/// Removes the being at the given region tile coordinates, if present.
-		////
+		//! Removes the being at the given region tile coordinates, if present.
 		void remove_being(RegionTileCoords coords);
 
-		/// Removes the object at the given region tile coordinates, if present.
+		//! Removes the object at the given region tile coordinates, if present.
 		void remove_object(RegionTileCoords coords);
 
-		/// Removes the given being from the section.
+		//! Removes the given being from the section.
 		typename void remove(Being& being)
 		{
 			remove_being(being.coords);
 		}
 
-		/// Removes the given object from the section.
+		//! Removes the given object from the section.
 		typename void remove(Object& object)
 		{
 			remove_object(object.coords);
 		}
 
-		/// @param section_coords Hex coordinates of a section relative to the region.
-		/// @param tile_coords Hex coordinates of a tile relative to the section.
-		/// @return Hex coordinates relative to the region.
-		static RegionTileCoords region_tile_coords(RegionSectionCoords section_coords, SectionTileCoords tile_coords)
+		//! Region tile coordinates from @p region_section_coords and @p section_tile_coords.
+		static RegionTileCoords region_tile_coords(RegionSectionCoords region_section_coords, SectionTileCoords section_tile_coords)
 		{
-			int q = section_coords.q * diameter + tile_coords.q;
-			int r = section_coords.r * diameter + tile_coords.r;
+			int q = region_section_coords.q * diameter + section_tile_coords.q - radius;
+			int r = region_section_coords.r * diameter + section_tile_coords.r - radius;
 			return RegionTileCoords{q, r};
 		}
-		/// @param tile_coords Hex coordinates of a tile relative to the section.
-		/// @return Hex coordinates relative to the region.
-		RegionTileCoords region_tile_coords(SectionTileCoords tile_coords) const
+
+		//! Region tile coordinates from @p section_tile_coords in this section.
+		RegionTileCoords region_tile_coords(SectionTileCoords section_tile_coords) const
 		{
-			return region_tile_coords(_coords, tile_coords);
+			return region_tile_coords(_coords, section_tile_coords);
 		}
 
-		/// @param tile_coords Hex coordinates of a tile relative to the section.
-		/// @return The tile at the given section tile coordinates.
-		Tile const& tile(SectionTileCoords tile_coords) const
+		//! The tile at @p section_tile_coords in this section.
+		Tile const& tile(SectionTileCoords section_tile_coords) const
 		{
-			SectionTileIndex index = tile_index(tile_coords);
-			return *_tiles[index.i][index.j];
+			return *_tiles[section_tile_coords.q][section_tile_coords.r];
 		}
-		/// @param region_tile_coords Hex coordinates of a tile relative to the region.
-		/// @return The tile at the given region tile coordinates.
-		Tile const& tile(RegionTileCoords region_tile_coords) const
+		//! The tile at @p section_tile_coords in this section.
+		Tile& tile(SectionTileCoords section_tile_coords)
 		{
-			SectionTileIndex index = tile_index(region_tile_coords);
-			return *_tiles[index.i][index.j];
+			return *_tiles[section_tile_coords.q][section_tile_coords.r];
 		}
-
-		/// @param tile_coords Hex coordinates of a tile relative to the section.
-		/// @return The light level at the given section coordinates.
-		double light_level(SectionTileCoords tile_coords) const { return tile(tile_coords).light_level(); }
-		/// @param tile_coords Hex coordinates of a tile relative to the region.
-		/// @return The light level at the given region coordinates.
-		double light_level(RegionTileCoords region_tile_coords) const { return tile(region_tile_coords).light_level(); }
-
-		/// @param tile_coords Hex coordinates of a tile relative to the section.
-		/// @return The temperature at the given section coordinates.
-		double temperature(SectionTileCoords tile_coords) const { return tile(tile_coords).temperature(); }
-		/// @param tile_coords Hex coordinates of a tile relative to the region.
-		/// @return The temperature at the given region coordinates.
-		double temperature(RegionTileCoords region_tile_coords) const { return tile(region_tile_coords).temperature(); }
 	private:
-		std::array<std::array<std::unique_ptr<Tile>, diameter>, diameter> _tiles; ///< An r-major array of tiles, representing a rhomboid section of world data centered around the section's hex coordinates.
-		RegionSectionCoords _coords; ///< The hex coordinates of the section within the region. The section's center's region tile coordinates are _coords * section_diameter.
+		std::array<std::array<std::unique_ptr<Tile>, diameter>, diameter> _tiles; //!< A q-major array of tiles, representing a rhomboid section of world data centered around the section's hex coordinates.
+		RegionSectionCoords _coords; //!< The hex coordinates of the section within the region. The section's center's region tile coordinates are _coords * section_diameter.
 
 		std::unordered_map<RegionTileCoords, Id<Being>> _being_ids;
 		std::unordered_map<RegionTileCoords, Id<Object>> _object_ids;
@@ -166,8 +143,8 @@ namespace questless
 		template <typename EntityType, typename = typename std::enable_if_t<std::is_same<EntityType, Object>::value>>
 		std::unordered_map<RegionTileCoords, Id<Object>>& entities() { return _objects; }
 
-		/// Reads section data from a stream.
-		/// @param in The stream from which to read the data.
+		//! Reads section data from a stream.
+		//! @param in The stream from which to read the data.
 		void read(std::istream& in);
 	};
 }

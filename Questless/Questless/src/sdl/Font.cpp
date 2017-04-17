@@ -1,14 +1,9 @@
-/**
-* @file    Font.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implementation for Font, a simple wrapper class around TTF_Font.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "sdl/Font.h"
-#include "sdl/Renderable.h" /// @todo Remove after done debugging.
+#include "sdl/Renderable.h" //! @todo Remove after done debugging.
 
 namespace sdl
 {

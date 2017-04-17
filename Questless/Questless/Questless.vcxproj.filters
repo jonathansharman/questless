@@ -235,9 +235,6 @@
     <ClInclude Include="include\animation\particles\Particle.h">
       <Filter>include\animation\particles</Filter>
     </ClInclude>
-    <ClInclude Include="include\entities\AllEntities.h">
-      <Filter>include\entities</Filter>
-    </ClInclude>
     <ClInclude Include="include\entities\Entity.h">
       <Filter>include\entities</Filter>
     </ClInclude>
@@ -696,6 +693,9 @@
     </ClInclude>
     <ClInclude Include="include\ui\HUD.h">
       <Filter>include\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\entities\all-entities.h">
+      <Filter>include\entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

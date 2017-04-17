@@ -1,11 +1,6 @@
-/**
-* @file    Vector.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION A generic 2D vector, with parameterized length and space types.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -17,6 +12,7 @@
 
 namespace units
 {
+	//! A 2D vector in @p SpaceType space.
 	template <typename SpaceType>
 	struct Vector
 	{
@@ -31,7 +27,7 @@ namespace units
 		constexpr explicit Vector(scalar_t x, scalar_t y) : x{std::move(x)}, y{std::move(y)} {}
 
 		template <typename UnitsPerCircle, typename = std::enable_if_t<std::is_floating_point<scalar_t>::value>>
-		explicit Vector(Angle<space_t, UnitsPerCircle> theta, scalar_t r) /// @todo Cannot be constexpr because of cos() and sin().
+		explicit Vector(Angle<space_t, UnitsPerCircle> theta, scalar_t r) //! @todo Cannot be constexpr because of cos() and sin().
 			: x{static_cast<scalar_t>(r * cos(theta.count()))}
 			, y{static_cast<scalar_t>(r * sin(theta.count()))}
 		{}
@@ -81,8 +77,8 @@ namespace units
 			return *this;
 		}
 
-		/// Rotates the vector, overwriting the original value.
-		/// @param dtheta The counter-clockwise rotation to apply, in radians.
+		//! Rotates the vector, overwriting the original value.
+		//! @param dtheta The counter-clockwise rotation to apply, in radians.
 		template <typename UnitsPerCircle, typename = std::enable_if_t<std::is_floating_point<scalar_t>::value>>
 		void rotate(Angle<space_t, UnitsPerCircle> const& dtheta) &
 		{
@@ -95,10 +91,10 @@ namespace units
 				};
 		}
 
-		/// Creates a rotated copy of the vector.
-		/// @param dtheta The counter-clockwise rotation to apply, in radians.
+		//! Creates a rotated copy of the vector.
+		//! @param dtheta The counter-clockwise rotation to apply, in radians.
 		template <typename UnitsPerCircle, typename = std::enable_if_t<std::is_floating_point<scalar_t>::value>>
-		Vector rotated(Angle<space_t, UnitsPerCircle> const& dtheta) const /// @todo Cannot be constexpr because of cos() and sin().
+		Vector rotated(Angle<space_t, UnitsPerCircle> const& dtheta) const //! @todo Cannot be constexpr because of cos() and sin().
 		{
 			scalar_t const dtheta_radians = angle_cast<Radians<space_t>>(dtheta).count();
 			auto const cos_dtheta = static_cast<scalar_t>(cos(dtheta_radians));
@@ -109,15 +105,15 @@ namespace units
 				};
 		}
 
-		/// @return The vector's length.
+		//! The vector's length.
 		constexpr scalar_t length() const { return static_cast<scalar_t>(constexpr_math::sqrt(x * x + y * y)); }
 
-		/// @return The square of the vector's length.
+		//! The square of the vector's length.
 		constexpr scalar_t length_squared() const { return x * x + y * y; }
 
-		/// @return The counter-clockwise angle of the vector from the positive x-axis (in radians by default).
+		//! The counter-clockwise angle of the vector from the positive x-axis (in radians by default).
 		template <typename UnitsPerCircle = Radians<space_t>::units_per_circle, typename = std::enable_if_t<std::is_floating_point<scalar_t>::value>>
-		Angle<space_t, UnitsPerCircle> angle() const /// @todo Cannot be constexpr because of atan2().
+		Angle<space_t, UnitsPerCircle> angle() const //! @todo Cannot be constexpr because of atan2().
 		{
 			return Angle<space_t, UnitsPerCircle>{static_cast<scalar_t>(atan2(y, x))};
 		}

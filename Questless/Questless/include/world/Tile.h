@@ -1,11 +1,6 @@
-/**
-* @file    Tile.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the Tile class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -36,16 +31,17 @@ namespace questless
 		virtual void visit(WaterTile const&) = 0;
 	};
 
+	//! The basic unit of terrain, a hexagonal region of uniform material, temperature, light level, etc.
 	class Tile
 	{
 	public:
-		enum class TileClass : int { dirt = 0, edge, grass, sand, snow, stone, water, TILE_CLASS_COUNT }; /// @todo Remove TILE_CLASS_COUNT if static reflection that can check enum length is ever added.
+		enum class TileClass : int { dirt = 0, edge, grass, sand, snow, stone, water, TILE_CLASS_COUNT }; //! @todo Remove TILE_CLASS_COUNT if static reflection that can check enum length is ever added.
 
 		Tile(double light_level, double temperature) : _light_level{light_level}, _temperature{temperature} {}
 
 		virtual ~Tile() {}
 
-		/// @return The tile's type enumeration, for use in serialization and deserialization.
+		//! The tile's type enumeration, for use in serialization and deserialization.
 		virtual TileClass tile_class() const = 0;
 
 		virtual void accept(TileVisitor& visitor) const = 0;

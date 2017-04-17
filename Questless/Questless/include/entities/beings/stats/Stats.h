@@ -1,9 +1,6 @@
-/**
-* @file    Stats.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -35,8 +32,7 @@ namespace questless
 	struct MaxTemp : TaggedType<double> { using TaggedType::TaggedType; };
 	struct Mute : TaggedType<bool> { using TaggedType::TaggedType; };
 
-	/// Represents the stats of a being.
-	////
+	//! Represents the stats of a being.
 	struct Stats
 	{
 		static constexpr double minimum_value = 0.0;

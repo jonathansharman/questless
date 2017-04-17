@@ -1,11 +1,6 @@
-/**
-* @file    BlueMagicParticle.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the blue magic particle class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -14,10 +9,11 @@
 
 namespace questless
 {
+	//! A particle for effects involving blue magic.
 	class BlueMagicParticle : public Particle
 	{
 	public:
-		/// @param position The particle's starting position.
+		//! @param position The particle's starting position.
 		BlueMagicParticle(units::GamePoint position) : Particle
 			{ position
 			, units::GameVector{units::GameRadians::circle() / 6.0 * uniform(0, 6), 45.0} / 1.0s

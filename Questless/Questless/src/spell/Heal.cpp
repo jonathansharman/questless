@@ -1,15 +1,12 @@
-/**
-* @file    HealSpell.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "spell/Heal.h"
 #include "entities/beings/Being.h"
 #include "agents/Agent.h"
 
-/// @todo double check all the captures to make sure they're the proper type.
+//! @todo double check all the captures to make sure they're the proper type.
 
 namespace questless::spell
 {

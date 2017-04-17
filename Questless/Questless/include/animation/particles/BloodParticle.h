@@ -1,11 +1,6 @@
-/**
-* @file    BloodParticle.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION A blood drop particle.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -13,10 +8,11 @@
 
 namespace questless
 {
+	//! A blood drop particle.
 	class BloodParticle : public Particle
 	{
 	public:
-		/// @param position The particle's starting position.
+		//! @param position The particle's starting position.
 		BloodParticle(units::GamePoint position) : Particle
 			{ position
 			, (random_displacement(160.0) + units::GameVector{0.0, 150.0}) / 1.0s

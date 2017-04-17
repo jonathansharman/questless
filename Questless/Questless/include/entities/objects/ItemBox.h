@@ -1,11 +1,6 @@
-/**
-* @file    ItemBox.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION A box holding some items.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -15,6 +10,7 @@
 
 namespace questless
 {
+	//! A box capable of holding some items.
 	class ItemBox : public Object
 	{
 	public:

@@ -1,11 +1,6 @@
-/**
-* @file    Rate.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION A rate data type designed to complement std::chrono::duration.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -13,6 +8,7 @@
 
 namespace units
 {
+	//! A rate data type designed to complement std::chrono::duration.
 	template <typename QuantityType, typename TimeRep, typename Period = std::ratio<1>>
 	class Rate
 	{
@@ -23,17 +19,17 @@ namespace units
 
 		constexpr Rate() : _step{quantity_t{}} {}
 
-		/// @param step The amount of the quantity type per unit period.
+		//! @param step The amount of the quantity type per unit period.
 		constexpr explicit Rate(quantity_t step) : _step{std::move(step)} {}
 
-		/// @return The zero rate for the specified representation and period, constructed using the default constructor of the quantity type.
+		//! The zero rate for the specified representation and period, constructed using the default constructor of the quantity type.
 		static constexpr Rate<quantity_t, time_rep, period> zero() { return Rate<quantity_t, time_rep, period>{quantity_t{}}; }
 
-		/// @return The amount of the quantity type per unit period.
+		//! The amount of the quantity type per unit period.
 		constexpr quantity_t const& step() const& { return _step; }
-		/// @return The amount of the quantity type per unit period.
+		//! The amount of the quantity type per unit period.
 		quantity_t&& step() && { return std::move(_step); }
-		/// @return The amount of the quantity type per unit period.
+		//! The amount of the quantity type per unit period.
 		quantity_t& step() & { return _step; }
 
 		constexpr bool operator <(Rate<quantity_t, time_rep, period> const& that) const { return _step < that._step; }
@@ -162,7 +158,7 @@ namespace units
 		return std::chrono::duration<QuantityType, TimeRep, Period>{quantity / rate._quantity};
 	}
 
-	/// @todo Why doesn't this seem to work in constexpr's?
+	//! @todo Why doesn't this seem to work in constexpr's?
 	// quantity / duration -> rate
 	template <typename QuantityType, typename TimeRep, typename Period>
 	constexpr Rate<QuantityType, TimeRep, Period> operator /(QuantityType const& quantity, std::chrono::duration<TimeRep, Period> const& duration)

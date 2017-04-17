@@ -1,11 +1,6 @@
-/**
-* @file    Angle.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Represents an angle in some space.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -14,8 +9,9 @@
 
 namespace units
 {
-	/// @tparam SpaceType The space type which contains angles of this type.
-	/// @tparam UnitsPerCircle The number of angle units per full circle, as a std::ratio.
+	//! An angle in some space.
+	//! @tparam SpaceType The space type which contains angles of this type.
+	//! @tparam UnitsPerCircle The number of angle units per full circle, as a std::ratio.
 	template <typename SpaceType, typename UnitsPerCircle>
 	class Angle
 	{
@@ -24,14 +20,14 @@ namespace units
 		using units_per_circle = UnitsPerCircle;
 		using scalar_t = typename space_t::scalar_t;
 
-		/// The number of this angle unit in one full circle.
+		//! The number of this angle unit in one full circle.
 		static constexpr Angle circle() { return Angle{static_cast<scalar_t>(units_per_circle::num) / static_cast<scalar_t>(units_per_circle::den)}; }
 
 		constexpr explicit Angle() : _count{scalar_t{}} {}
 
 		constexpr explicit Angle(scalar_t count) : _count{std::move(count)} {}
 
-		/// @return The zero angle for the specified space and unit size, constructed using the default constructor of the scalar type.
+		//! The zero angle for the specified space and unit size, constructed using the default constructor of the scalar type.
 		static constexpr Angle<SpaceType, UnitsPerCircle> zero() { return Angle<SpaceType, UnitsPerCircle>{scalar_t{}}; }
 
 		constexpr scalar_t const& count() const& { return _count; }

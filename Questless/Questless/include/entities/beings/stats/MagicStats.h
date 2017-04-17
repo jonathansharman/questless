@@ -1,11 +1,6 @@
-/**
-* @file    MagicStats.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Defines Magic and Antimagic, which represent a being's proficiency with or resistance to the six forms of magic, respectively.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -22,6 +17,7 @@ namespace questless
 	struct BlueMagic : TaggedType<double> { using TaggedType::TaggedType; };
 	struct YellowMagic : TaggedType<double> { using TaggedType::TaggedType; };
 
+	//! Base type for Magic and Antimagic, using CRTP.
 	template <typename Derived>
 	struct MagicStat
 	{
@@ -73,12 +69,14 @@ namespace questless
 		}
 	};
 
+	//! A being's proficiency with the six forms of magic.
 	class Magic : public MagicStat<Magic>
 	{
 	public:
 		using MagicStat<Magic>::MagicStat;
 	};
 
+	//! A being's resistance to the six forms of magic.
 	class Antimagic : public MagicStat<Antimagic>
 	{
 	public:

@@ -1,11 +1,6 @@
-/**
-* @file    Corpse.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The remains of a deceased corporeal being.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -14,6 +9,7 @@
 
 namespace questless
 {
+	//! The remains of a deceased corporeal being.
 	class Corpse : public Object
 	{
 	public:

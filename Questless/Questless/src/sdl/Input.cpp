@@ -1,11 +1,6 @@
-/**
-* @file    Input.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Implementation for input class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "sdl/Input.h"
 #include "sdl/resources.h"
@@ -156,7 +151,7 @@ namespace sdl
 
 	int Input::any_presses(bool include_mouse_buttons) const
 	{
-		/// @todo This is returning a bool...
+		//! @todo This is returning a bool...
 
 		if (include_mouse_buttons && _curr_mouse_state & (_curr_mouse_state ^ _prev_mouse_state)) {
 			return true;
@@ -166,7 +161,7 @@ namespace sdl
 
 	int Input::any_releases(bool include_mouse_buttons) const
 	{
-		/// @todo This is also returning a bool...
+		//! @todo This is also returning a bool...
 
 		if (include_mouse_buttons && ~_curr_mouse_state & (_curr_mouse_state ^ _prev_mouse_state)) {
 			return true;

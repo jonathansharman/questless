@@ -1,11 +1,6 @@
-/**
-* @file    Player.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implementation for the Player class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "agents/Player.h"
 #include "Game.h"
@@ -77,7 +72,7 @@ namespace questless
 				}
 				case PlayerActionDialog::Choice::Type::use:
 				{
-					/// @todo Sync the hotbar with changes to the inventory.
+					//! @todo Sync the hotbar with changes to the inventory.
 					if (std::optional<Id<Item>> opt_item_id = game().hud().hotbar()[player_choice.data]) {
 						Item& item = game().items.get_ref(*opt_item_id);
 						// Get a list of the item's actions. It's shared so the lambda that captures it is copyable, so the lambda can be passed as a std::function.
@@ -295,7 +290,7 @@ namespace questless
 		) const
 	{
 		// spell::Heal: "Heal Target", "Select a being to be healed."
-		/// @todo This.
+		//! @todo This.
 		return cont(std::nullopt);
 	}
 
@@ -306,7 +301,7 @@ namespace questless
 		, function<Complete(std::optional<Item*>)> cont
 		) const
 	{
-		/// @todo This.
+		//! @todo This.
 		return cont(std::nullopt);
 	}
 

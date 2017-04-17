@@ -1,11 +1,6 @@
-/**
-* @file    Color.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION A color type, convertible to SDL_Color.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -15,6 +10,7 @@
 
 namespace sdl
 {
+	//! A color type with some convenience methods, convertible to an SDL_Color.
 	struct Color
 	{
 		uint8_t r;

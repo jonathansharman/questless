@@ -1,11 +1,6 @@
-/**
-* @file    LazyAI.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the LazyAI class, which is an AI that does nothing.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -13,6 +8,9 @@
 
 namespace questless
 {
+	//! An AI that does nothing.
+	//!
+	//! Lazy AI respond to all queries with nullopt and simply idle when it's their turn.
 	class LazyAI : public Agent
 	{
 	public:

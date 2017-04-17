@@ -1,11 +1,6 @@
-/**
-* @file    Human.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implementation for the Human class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "entities/beings/Human.h"
 #include "entities/beings/Body.h"

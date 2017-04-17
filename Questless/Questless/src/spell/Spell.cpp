@@ -1,11 +1,6 @@
-/**
-* @file    Spell.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implementation for the Spell abstract base class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "spell/Spell.h"
 #include "entities/beings/Being.h"
@@ -53,7 +48,7 @@ namespace questless::spell
 		return cont(Result::success);
 	}
 
-	/// @todo I don't like these optional things... There has to be a better way. Also, make these properties.
+	//! @todo I don't like these optional things... There has to be a better way. Also, make these properties.
 
 	void Spell::gain_charge(int amount)
 	{

@@ -1,9 +1,6 @@
-/**
-* @file    Action.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "agents/Action.h"
 #include "entities/beings/Being.h"

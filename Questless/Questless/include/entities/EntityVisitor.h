@@ -1,11 +1,6 @@
-/**
-* @file    EntityVisitor.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the Entity visitor abstract base class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -20,6 +15,7 @@ namespace questless
 	class Corpse;
 	class ItemBox;
 
+	//! Visitor type for entities.
 	class EntityVisitor
 	{
 	public:

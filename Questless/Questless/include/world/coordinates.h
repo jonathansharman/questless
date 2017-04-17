@@ -1,11 +1,7 @@
-/**
-* @file    coordinates.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Defines types for the various coordinate spaces in the game.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
+//! @brief Defines types for the various coordinate spaces in the game.
 
 #pragma once
 
@@ -13,19 +9,16 @@
 
 namespace questless
 {
+	//! Hexagonal coordinates of a tile within a section.
 	using SectionTileCoords = units::HexCoords<struct SectionTileCoordsTag>;
+
+	//! Hexagonal coordinates of a tile within a region.
 	using RegionTileCoords = units::HexCoords<struct RegionTileCoordsTag>;
+
+	//! Hexagonal coordinates of a section within a region.
 	using RegionSectionCoords = units::HexCoords<struct RegionSectionCoordsTag>;
 
-	/// Index of a tile within a section's tile array.
-	struct SectionTileIndex
-	{
-		int i; int j;
-
-		SectionTileIndex(SectionTileIndex const&) = default;
-	};
-
-	/// Specifies a location within the entire world.
+	//! Location within the entire world.
 	struct GlobalCoords
 	{
 		std::string region;

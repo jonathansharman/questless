@@ -1,11 +1,6 @@
-/**
-* @file    DamageMultiplier.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Defines Resistance and Vulnerability, which reduce and increase damage taken, respectively.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -22,6 +17,7 @@ namespace questless
 	struct Freeze : TaggedType<double> { using TaggedType::TaggedType; };
 	struct Blight : TaggedType<double> { using TaggedType::TaggedType; };
 
+	//! Base type for Resistance and Vulnerability, using CRTP.
 	template <typename Derived>
 	class DamageMultiplier
 	{
@@ -147,12 +143,14 @@ namespace questless
 		Bounded<double, minimum_value> _blight = 0.0;
 	};
 
+	//! Reduces the percentage damage taken
 	class Resistance : public DamageMultiplier<Resistance>
 	{
 	public:
 		using DamageMultiplier<Resistance>::DamageMultiplier;
 	};
 
+	//! Increases the percentage of damage taken.
 	class Vulnerability : public DamageMultiplier<Vulnerability>
 	{
 	public:

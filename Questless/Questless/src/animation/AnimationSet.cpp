@@ -1,11 +1,6 @@
-/**
-* @file    AnimationSet.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implementation of the AnimationSet class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "animation/AnimationSet.h"
 
@@ -59,7 +54,7 @@ namespace questless
 			Animation::Frame const& frame = _current_animation->current_frame();
 			camera.draw
 				( texture_manager()[_sprite_sheet_handle]
-				, GamePoint{origin - GameVector{static_cast<double>(frame.origin.x), static_cast<double>(-frame.origin.y)}} /// @todo Uncouth point casting here.
+				, GamePoint{origin - GameVector{static_cast<double>(frame.origin.x), static_cast<double>(-frame.origin.y)}} //! @todo Uncouth point casting here.
 				, Origin{std::nullopt}
 				, color
 				, HScale{1.0}

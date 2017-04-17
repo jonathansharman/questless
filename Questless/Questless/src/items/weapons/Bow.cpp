@@ -1,9 +1,6 @@
-/**
-* @file    Bow.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "items/weapons/Bow.h"
 #include "items/weapons/Arrow.h"
@@ -12,7 +9,7 @@
 
 namespace questless
 {
-	/// @todo These functions are O(n). Should be easy to find an efficient O(1) solution.
+	//! @todo These functions are O(n). Should be easy to find an efficient O(1) solution.
 
 	Complete Bow::Fire::ArrowCost::check(Being& actor, cont_t cont) const
 	{

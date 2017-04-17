@@ -1,11 +1,6 @@
-/**
-* @file    ItemQuery.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Requests to an agent for an item from an inventory.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -13,11 +8,13 @@
 
 namespace questless
 {
+	//! Visitor type for item queries.
 	struct ItemQueryVisitor
 	{
 		virtual ~ItemQueryVisitor() = default;
 	};
 
+	//! A request to an agent for an item from an inventory.
 	struct ItemQuery
 	{
 		using uptr = std::unique_ptr<ItemQuery>;

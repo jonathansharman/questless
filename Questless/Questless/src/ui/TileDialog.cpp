@@ -1,9 +1,6 @@
-/**
-* @file    TileDialog.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "ui/TileDialog.h"
 #include "Game.h"
@@ -50,7 +47,7 @@ namespace questless
 		draw_prompt(*_txt_prompt);
 
 		// Highlight valid tiles.
-		/// @todo This.
+		//! @todo This.
 	}
 
 	void TileDialog::load_textures()

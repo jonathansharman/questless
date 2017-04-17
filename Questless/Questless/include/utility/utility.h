@@ -1,21 +1,18 @@
-/**
-* @file    utility.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Interface for utility functions.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
+//! @brief Miscellaneous basic utility functions for math, RNG, debugging, etc.
 
 #pragma once
 
-#include <string>
-#include <random>
+#include <chrono>
 #include <cmath>
 #include <functional>
+#include <random>
+#include <string>
 
-#include "units/GameVector.h"
 #include "units/GameRadians.h"
+#include "units/GameVector.h"
 
 namespace questless
 {
@@ -23,7 +20,9 @@ namespace questless
 	// Debugging //
 	///////////////
 
-	double time(std::function<void()> code);
+	//! Executes and times the function @p f.
+	//! @return The number of milliseconds it took to execute @p f.
+	std::chrono::milliseconds time(std::function<void()> f);
 
 	//////////////////////////////
 	// Random number generation //
@@ -31,16 +30,13 @@ namespace questless
 
 	extern std::mt19937_64 rng;
 
-	/// @return True or false with equal probability.
+	//! True or false with equal probability.
 	inline bool random_bool()
 	{
 		return std::uniform_int<int>(0, 1)(rng) == 0;
 	}
 
-	/// Generates a random integral value with a uniform distribution.
-	/// @param min The minimum possible value.
-	/// @param max The maxium possible value.
-	/// @return A random integral value in [min, max].
+	//! Generates a random integral value with a uniform distribution in [@p min, @p max].
 	template<typename Integer>
 	typename std::enable_if_t<std::is_integral<Integer>::value, Integer>
 	uniform(Integer min, Integer max)
@@ -48,10 +44,7 @@ namespace questless
 		return std::uniform_int_distribution<Integer>(min, max)(rng);
 	}
 
-	/// Generates a random floating-point value with a uniform distribution.
-	/// @param min The minimum possible value.
-	/// @param max The maxium possible value.
-	/// @return A random floating-point value in [min, max].
+	//! Generates a random floating-point value with a uniform distribution in [@p min, @p max].
 	template<typename Floating>
 	typename std::enable_if_t<std::is_floating_point<Floating>::value, Floating>
 	uniform(Floating min, Floating max)
@@ -59,22 +52,22 @@ namespace questless
 		return std::uniform_real_distribution<Floating>(min, max)(rng);
 	}
 
-	/// @return a random angle in radians.
+	//! A random angle in radians.
 	inline units::GameRadians random_angle()
 	{
 		return uniform(0.0, 1.0) * units::GameRadians::circle();
 	}
 
-	/// @return A displacement based on a uniform random distance and uniform random angle.
-	/// @param max_length The maximum possible length of the displacement.
+	//! A displacement based on a uniform random distance and uniform random angle.
+	//! @param max_length The maximum possible length of the displacement.
 	inline units::GameVector random_displacement(double max_length)
 	{
 		return units::GameVector{random_angle(), uniform(0.0, max_length)};
 	}
 
-	/// @return A displacement based on a uniform random distance and uniform random angle.
-	/// @param min_length The minimum possible length of the displacement.
-	/// @param max_length The maximum possible length of the displacement.
+	//! A displacement based on a uniform random distance and uniform random angle.
+	//! @param min_length The minimum possible length of the displacement.
+	//! @param max_length The maximum possible length of the displacement.
 	inline units::GameVector random_displacement(double min_length, double max_length)
 	{
 		return units::GameVector{random_angle(), uniform(min_length, max_length)};
@@ -84,16 +77,14 @@ namespace questless
 	// Math //
 	//////////
 
-	/// Converts a double in the range [0, 1] to an 8-bit integer (range [0, 255]).
-	/// @param percent A double in the range [0, 1].
-	/// @return The corresponding 8-bit integer.
+	//! Converts @p percent in the range [0, 1] to an 8-bit integer in the range [0, 255].
 	uint8_t percentage_to_byte(double percent);
 
-	/// @return The square of the given value.
+	//! The square of @p value.
 	template <typename T>
 	constexpr T square(T value) { return value * value; }
 
-	/// @return The cube of the given value.
+	//! The cube of the @p value.
 	template <typename T>
 	constexpr T cube(T value) { return value * value * value; }
 
@@ -101,14 +92,14 @@ namespace questless
 	// Miscellaneous //
 	///////////////////
 
-	/// Conditional element removal for unordered container types.
-	/// @param container A container.
-	/// @param predicate A predicate over elements of the container. Elements for which the predicate is true are removed.
+	//! Conditionally removes elements from a container.
+	//! @param container An iterable container.
+	//! @param predicate A predicate over elements of the container. Elements for which the predicate is true are removed.
 	template <typename ContainerType, typename PredicateType>
-	void erase_if(ContainerType& container, PredicateType const& predicate)
+	void erase_if(ContainerType& container, PredicateType&& predicate)
 	{
 		for (auto it = container.begin(); it != container.end();) {
-			if (predicate(*it)) {
+			if (std::forward<PredicateType>(predicate)(*it)) {
 				it = container.erase(it);
 			} else {
 				++it;

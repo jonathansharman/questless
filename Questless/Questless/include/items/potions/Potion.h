@@ -1,26 +1,22 @@
-/**
-* @file    Potion.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the Potion class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
 #include <functional>
 
-#include "Item.h"
-#include "Craftable.h"
+#include "items/Item.h"
+#include "items/Craftable.h"
 
 namespace questless
 {
+	//! A drinkable magic concoction.
 	class Potion : public Item, public Craftable
 	{
 	public:
 		virtual ~Potion() = 0 {}
 	protected:
-		function<void> _effect;
+		std::function<void> _effect;
 	};
 }

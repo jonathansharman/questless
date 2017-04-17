@@ -1,11 +1,6 @@
-/**
-* @file    Renderer.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implementation for Renderer, a simple wrapper class around SDL_Renderer.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "sdl/Renderer.h"
 

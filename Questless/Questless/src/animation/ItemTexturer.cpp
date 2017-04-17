@@ -1,11 +1,6 @@
-/**
-* @file    ItemTexturer.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implementation for the ItemTexturer class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "animation/ItemTexturer.h"
 #include "sdl/resources.h"

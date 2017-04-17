@@ -1,11 +1,6 @@
-/**
-* @file    Weapon.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the Weapon abstract base class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -16,6 +11,7 @@
 
 namespace questless
 {
+	//! An item that can be used for attacking.
 	class Weapon : public Equipment, public Breakable
 	{
 	public:
@@ -25,9 +21,8 @@ namespace questless
 
 		virtual ~Weapon() = default;
 
-		/// Time left before the weapon can be used again.
-		////
-		double active_cooldown = 0.0; /// @todo Replace with a non-negative double property.
+		//! Time left before the weapon can be used again.
+		double active_cooldown = 0.0; //! @todo Replace with a non-negative double property.
 	protected:
 		Weapon(double integrity) : Breakable{integrity} {}
 	};

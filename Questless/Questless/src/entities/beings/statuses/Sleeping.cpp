@@ -1,11 +1,6 @@
-/**
-* @file    Sleeping.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implementation for the Sleeping status class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "entities/beings/statuses/Sleeping.h"
 #include "entities/beings/Being.h"

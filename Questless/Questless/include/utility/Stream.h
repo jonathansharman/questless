@@ -1,8 +1,7 @@
 /**
-* @file    Stream.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
+* @file
+* @author Jonathan Sharman
+* @copyright See LICENSE.txt.
 *
 * The Stream class, which implements a lazy linked list.
 * Inspired by http://bartoszmilewski.com/2014/04/21/getting-lazy-with-c/.
@@ -68,7 +67,7 @@ public:
 	class ForwardIterator : public std::iterator<std::forward_iterator_tag, UnqualifiedType, std::ptrdiff_t, Type*, Type&>
 	{
 	public:
-		/// @return End iterator.
+		//! End iterator.
 		ForwardIterator() : _itr{Stream{}} {}
 
 		void swap(ForwardIterator& that) noexcept { std::swap(_itr, that._itr); }
@@ -114,7 +113,7 @@ public:
 			return &_itr.head();
 		}
 
-		/// @return Constant iterator from this iterator.
+		//! Constant iterator from this iterator.
 		operator ForwardIterator<const Type>() const { return ForwardIterator<const Type>{itr}; }
 	private:
 		friend class Stream<UnqualifiedType>;
@@ -248,4 +247,4 @@ inline static Stream<T> singleton(T v)
 	}};
 }
 
-/// @todo This whole thing is still a bit of a mess.
+//! @todo This whole thing is still a bit of a mess.

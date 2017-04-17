@@ -1,11 +1,6 @@
-/**
-* @file    CorporealBeing.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION CorporealBeing implementation.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "entities/beings/CorporealBeing.h"
 #include "agents/Agent.h"

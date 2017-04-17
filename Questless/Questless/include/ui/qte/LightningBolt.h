@@ -1,11 +1,6 @@
-/**
-* @file    QteLightningBolt.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Quick time event to determine lightning bolt strength.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -20,11 +15,12 @@
 
 namespace questless::qte
 {
+	//! Quick time event for determining lightning bolt strength.
 	class LightningBolt : public Dialog
 	{
 	public:
-		/// @param target_coords The target strike coordinates.
-		/// @param cont The dialog continuation function.
+		//! @param target_coords The target strike coordinates.
+		//! @param cont The dialog continuation function.
 		LightningBolt(RegionTileCoords target_coords, std::function<void(double)> cont);
 
 		State update() override;

@@ -1,11 +1,6 @@
-/**
-* @file    CountDialog.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the CountDialog class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -17,6 +12,7 @@
 
 namespace questless
 {
+	//! Retrieves a count from the player.
 	class CountDialog : public Dialog
 	{
 	public:

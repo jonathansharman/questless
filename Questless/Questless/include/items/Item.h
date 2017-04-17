@@ -1,11 +1,6 @@
-/**
-* @file    Item.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the Item abstract base class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -23,6 +18,7 @@ namespace questless
 {
 	class Being;
 
+	//! An item that can be picked up, used by beings, etc.
 	class Item
 	{
 	public:
@@ -38,20 +34,16 @@ namespace questless
 
 		virtual void accept(ItemVisitor& visitor) const = 0;
 
-		/// @return The item's name.
-		////
+		//! The item's name.
 		virtual std::string name() const = 0;
 
-		/// @return The item's weight.
-		////
+		//! The item's weight.
 		virtual double weight() const = 0;
 
-		/// @return The list of actions that can be performed with the item.
-		////
+		//! The list of actions that can be performed with the item.
 		virtual std::vector<Action::uptr> actions() = 0;
 
-		/// Advances the item one time unit.
-		////
+		//! Advances the item one time unit.
 		virtual void update() {}
 	protected:
 		class Drop : public Action

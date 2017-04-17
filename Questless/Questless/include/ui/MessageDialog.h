@@ -1,11 +1,6 @@
-/**
-* @file    MessageDialog.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the MessageDialog class, which displays a message to the player.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -15,6 +10,7 @@
 
 namespace questless
 {
+	//! Displays a message to the player.
 	class MessageDialog : public Dialog
 	{
 	public:

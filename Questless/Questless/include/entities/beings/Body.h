@@ -1,11 +1,6 @@
-/**
-* @file    Body.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the Body class, which represents a being's body. Holds a BodyPart tree.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -21,31 +16,32 @@ namespace questless
 {
 	class Being;
 
+	//! A being's body, which is composed of a tree of body parts.
 	class Body
 	{
 	public:
 		using uptr = std::unique_ptr<Body>;
 
-		/// @param owner The being that owns this body.
-		/// @param root The root of the body parts tree.
+		//! @param owner The being that owns this body.
+		//! @param root The root of the body parts tree.
 		Body(Being& owner, std::unique_ptr<BodyPart> root);
 
 		Body(Body&&) = default;
 
-		/// @return The root body part, to which all other body parts are attached.
+		//! The root body part, to which all other body parts are attached.
 		BodyPart& root() { return *_root; }
 
-		/// @return Iterator to beginning of body parts.
+		//! Iterator to beginning of body parts.
 		auto begin() { return _parts.begin(); }
-		/// @return Iterator to end of body parts.
+		//! Iterator to end of body parts.
 		auto end() { return _parts.end(); }
 
-		/// @return Const iterator to beginning of body parts.
+		//! Const iterator to beginning of body parts.
 		auto begin() const
 		{
 			return boost::make_transform_iterator(_parts.begin(), body_part_ref_to_cref);
 		}
-		/// @return Const iterator to end of body parts.
+		//! Const iterator to end of body parts.
 		auto end() const
 		{
 			return boost::make_transform_iterator(_parts.end(), body_part_ref_to_cref);
@@ -60,46 +56,37 @@ namespace questless
 		std::vector<Wing::ref> const& wings() { return _wings; }
 		std::vector<Tail::ref> const& tails() { return _tails; }
 
-		/// @return The body part on this body with the given ID or nullptr if none exists.
-		////
+		//! The body part on this body with the given ID or nullptr if none exists.
 		BodyPart* find_part(Id<BodyPart> id);
 
-		/// @return The head on this body with the given ID or nullptr if none exists.
-		////
+		//! The head on this body with the given ID or nullptr if none exists.
 		Head* find_head(Id<BodyPart> id);
 
-		/// @return The torso on this body with the given ID or nullptr if none exists.
-		////
+		//! The torso on this body with the given ID or nullptr if none exists.
 		Torso* find_torso(Id<BodyPart> id);
 
-		/// @return The arm on this body with the given ID or nullptr if none exists.
-		////
+		//! The arm on this body with the given ID or nullptr if none exists.
 		Arm* find_arm(Id<BodyPart> id);
 
-		/// @return The hand on this body with the given ID or nullptr if none exists.
-		////
+		//! The hand on this body with the given ID or nullptr if none exists.
 		Hand* find_hand(Id<BodyPart> id);
 
-		/// @return The leg on this body with the given ID or nullptr if none exists.
-		////
+		//! The leg on this body with the given ID or nullptr if none exists.
 		Leg* find_leg(Id<BodyPart> id);
 
-		/// @return The foot on this body with the given ID or nullptr if none exists.
-		////
+		//! The foot on this body with the given ID or nullptr if none exists.
 		Foot* find_foot(Id<BodyPart> id);
 
-		/// @return The wing on this body with the given ID or nullptr if none exists.
-		////
+		//! The wing on this body with the given ID or nullptr if none exists.
 		Wing* find_wing(Id<BodyPart> id);
 
-		/// @return The tail on this body with the given ID or nullptr if none exists.
-		////
+		//! The tail on this body with the given ID or nullptr if none exists.
 		Tail* find_tail(Id<BodyPart> id);
 
-		/// @return The bounding box around the body's parts.
+		//! The bounding box around the body's parts.
 		units::ScreenRect bounds() const { return _bounds; }
 
-		/// @return The offset from the upper left corner of the bounds to the body's center.
+		//! The offset from the upper left corner of the bounds to the body's center.
 		units::ScreenVector offset_to_center() const { return _offset_to_center; }
 	private:
 		class PartAttacher : public BodyPartVisitor

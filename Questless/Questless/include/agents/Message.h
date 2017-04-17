@@ -1,11 +1,6 @@
-/**
-* @file    Message.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Messages that can be sent to an agent.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -23,6 +18,7 @@ namespace questless
 	struct MessageSpellNotEnoughCharges;
 	struct MessageSpellOnCooldown;
 
+	//! Visitor type for messages.
 	struct MessageVisitor
 	{
 		virtual ~MessageVisitor() = default;
@@ -38,12 +34,14 @@ namespace questless
 		virtual void visit(MessageSpellOnCooldown const&) = 0;
 	};
 
+	//! A message that can be sent to an agent.
 	struct Message
 	{
 		using uptr = std::unique_ptr<Message>;
 		virtual ~Message() = default;
 		virtual void accept(MessageVisitor& visitor) = 0;
 	};
+
 	struct MessageArrowMiss : Message
 	{
 		void accept(MessageVisitor& visitor) override { visitor.visit(*this); }

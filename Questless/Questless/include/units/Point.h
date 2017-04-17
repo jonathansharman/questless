@@ -1,11 +1,6 @@
-/**
-* @file    Point.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION A generic 2D point, with parameterized length and space types.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -13,6 +8,7 @@
 
 namespace units
 {
+	//! A 2D point in @p SpaceType space.
 	template <typename SpaceType>
 	struct Point
 	{
@@ -71,9 +67,9 @@ namespace units
 			return *this;
 		}
 
-		/// Rotates the point about another point, overwriting the original value.
-		/// @param origin The origin around which the point will be rotated.
-		/// @param dtheta The counter-clockwise rotation to apply, in radians.
+		//! Rotates the point about another point, overwriting the original value.
+		//! @param origin The origin around which the point will be rotated.
+		//! @param dtheta The counter-clockwise rotation to apply, in radians.
 		template <typename UnitsPerCircle, typename = std::enable_if_t<std::is_floating_point<scalar_t>::value>>
 		void rotate(Point const& origin, Angle<space_t, UnitsPerCircle> const& dtheta) &
 		{
@@ -89,11 +85,11 @@ namespace units
 			*this += offset;
 		}
 
-		/// Creates a copy of the point, rotated about another point.
-		/// @param origin The origin around which the point will be rotated.
-		/// @param theta The counter-clockwise rotation to apply, in radians.
+		//! Creates a copy of the point, rotated about another point.
+		//! @param origin The origin around which the point will be rotated.
+		//! @param theta The counter-clockwise rotation to apply, in radians.
 		template <typename UnitsPerCircle, typename = std::enable_if_t<std::is_floating_point<scalar_t>::value>>
-		Point rotated(Point const& origin, Angle<space_t, UnitsPerCircle> const& dtheta) const /// @todo Cannot be constexpr because of cos() and sin().
+		Point rotated(Point const& origin, Angle<space_t, UnitsPerCircle> const& dtheta) const //! @todo Cannot be constexpr because of cos() and sin().
 		{
 			scalar_t const dtheta_radians = angle_cast<Radians<space_t>>(dtheta).count();
 			auto const cos_dtheta = static_cast<scalar_t>(cos(dtheta_radians));

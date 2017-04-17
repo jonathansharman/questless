@@ -1,9 +1,6 @@
-/**
-* @file    Damage.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -16,8 +13,7 @@
 
 namespace questless
 {
-	/// Represents a single instance of damage to a being, possibly including multiple types and quantities of damage and protection evasion.
-	////
+	//! Represents a single instance of damage to a being, possibly including multiple types and quantities of damage and protection evasion.
 	class Damage
 	{
 	public:
@@ -124,16 +120,13 @@ namespace questless
 			return *this;
 		}
 
-		/// @return The different parts/components of the damage instance.
-		////
+		//! The different parts/components of the damage instance.
 		std::vector<Part> const& parts() const { return _parts; }
 
-		/// @return The amount of protection this damage instance is capable of bypassing.
-		////
+		//! The amount of protection this damage instance is capable of bypassing.
 		Protection const& protection_evasion() const { return _protection_evasion; }
 
-		/// @return The sum of the damage components.
-		////
+		//! The sum of the damage components.
 		double total() const
 		{
 			double result = 0;
@@ -143,12 +136,10 @@ namespace questless
 			return result;
 		}
 
-		/// @return Damage adjusted by the given protection.
-		////
+		//! Damage adjusted by the given protection.
 		Damage with(Protection const& protection) const;
 
-		/// @return Damage adjusted by the given resistance and vulnerability.
-		////
+		//! Damage adjusted by the given resistance and vulnerability.
 		Damage with(Resistance const& resistance, Vulnerability const& vulnerability) const;
 	private:
 		std::vector<Part> _parts;

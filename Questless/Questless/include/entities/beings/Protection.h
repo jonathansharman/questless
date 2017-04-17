@@ -1,11 +1,6 @@
-/**
-* @file    Protection.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Protection reduces damage by a fixed amount.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -22,6 +17,7 @@ namespace questless
 	struct Frostproof : TaggedType<double> { using TaggedType::TaggedType; };
 	struct Cleanse : TaggedType<double> { using TaggedType::TaggedType; };
 
+	//! A fixed reduction to specific types of damage.
 	class Protection
 	{
 	public:

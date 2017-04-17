@@ -1,11 +1,6 @@
-/**
-* @file    DirectionQuery.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Requests to an agent for a direction.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -15,6 +10,7 @@ namespace questless
 {
 	struct DirectionQueryMeleeAttack;
 
+	//! Visitor type for direction queries.
 	struct DirectionQueryVisitor
 	{
 		virtual ~DirectionQueryVisitor() = default;
@@ -22,12 +18,14 @@ namespace questless
 		virtual void visit(DirectionQueryMeleeAttack const&) = 0;
 	};
 
+	//! A request to an agent for a direction.
 	struct DirectionQuery
 	{
 		using uptr = std::unique_ptr<DirectionQuery>;
 		virtual ~DirectionQuery() = default;
 		virtual void accept(DirectionQueryVisitor& visitor) = 0;
 	};
+
 	struct DirectionQueryMeleeAttack : DirectionQuery
 	{
 		void accept(DirectionQueryVisitor& visitor) override { visitor.visit(*this); }

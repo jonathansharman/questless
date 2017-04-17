@@ -1,11 +1,6 @@
-/**
-* @file    WorldView.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implementation of the WorldView class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "entities/beings/WorldView.h"
 
@@ -36,13 +31,12 @@ namespace questless
 
 		// Find the set of coordinates of sections plausibly visible to the being.
 		set<RegionSectionCoords> section_coords_set;
-		for (int r = -visual_range; r <= visual_range; ++r) {
-			for (int q = -visual_range; q <= visual_range; ++q) {
+		for (int q = -visual_range; q <= visual_range; ++q) {
+			for (int r = -visual_range; r <= visual_range; ++r) {
 				RegionTileCoords offset{q, r};
 				if (offset.length() > visual_range) continue;
-				RegionSectionCoords section_coords = region.containing_section_coords(coords + offset);
-				if (region.section_exists(section_coords)) {
-					section_coords_set.insert(section_coords);
+				if (Section const* section = region.containing_section(coords + offset)) {
+					section_coords_set.insert(section->coords());
 				}
 			}
 		}
@@ -52,8 +46,8 @@ namespace questless
 			SectionView section_view;
 			section_view.coords = section_coords;
 
-			for (int r = -Section::radius; r <= Section::radius; ++r) {
-				for (int q = -Section::radius; q <= Section::radius; ++q) {
+			for (int q = 0; q < Section::diameter; ++q) {
+				for (int r = 0; r < Section::diameter; ++r) {
 					auto region_tile_coords = Section::region_tile_coords(section_coords, SectionTileCoords{q, r});
 
 					bool in_front;
@@ -81,7 +75,7 @@ namespace questless
 							throw std::logic_error{"Invalid direction."};
 					}
 					if (in_front) {
-						double light_level = region.light_level(region_tile_coords);
+						double light_level = region.tile(region_tile_coords)->light_level();
 						double vision_divisor = 1.0 + (light_level - vision.ideal_light) * (light_level - vision.ideal_light) / vision.light_tolerance * Vision::light_factor;
 						int distance = coords.distance_to(region_tile_coords);
 
@@ -96,32 +90,32 @@ namespace questless
 								_bounds->extend(tile_game_point);
 							}
 						}
-						section_view.tile_visibilities[r + Section::radius][q + Section::radius] = tile_visibility;
+						section_view.tile_visibilities[q][r] = tile_visibility;
 					} else {
-						section_view.tile_visibilities[r + Section::radius][q + Section::radius] = 0.0;
+						section_view.tile_visibilities[q][r] = 0.0;
 					}
 				}
 			}
 
-			_section_views.push_back(section_view);
+			_section_views.push_back(std::move(section_view));
 
 			// Calculate being visibilities.
-			for (Being const& other_being : region.beings(section_coords)) {
+			for (Being const& other_being : region.section(section_coords)->beings()) {
 				RegionTileCoords other_coords = other_being.coords;
 				if (other_coords.distance_to(coords) < visual_range) {
-					SectionTileIndex other_tile_index = Section::tile_index(other_coords);
-					double tile_visibility = section_view.tile_visibilities[other_tile_index.i][other_tile_index.j];
+					SectionTileCoords other_section_coords = Section::section_tile_coords(other_coords);
+					double tile_visibility = section_view.tile_visibilities[other_section_coords.q][other_section_coords.r];
 					
 					if (tile_visibility >= _low_perception_threshold) {
-						BeingView::Perception perception;
+						PerceptionLevel perception;
 						if (tile_visibility < _medium_perception_threshold) {
-							perception = BeingView::Perception::low;
+							perception = PerceptionLevel::low;
 						} else if (tile_visibility < _high_perception_threshold) {
-							perception = BeingView::Perception::medium;
+							perception = PerceptionLevel::medium;
 						} else if (tile_visibility < _full_perception_threshold) {
-							perception = BeingView::Perception::high;
+							perception = PerceptionLevel::high;
 						} else {
-							perception = BeingView::Perception::full;
+							perception = PerceptionLevel::full;
 						}
 						_being_views.emplace_back(other_being.id, perception);
 					}
@@ -129,22 +123,22 @@ namespace questless
 			}
 
 			// Calculate object visibilities.
-			for (Object const& object : region.objects(section_coords)) {
+			for (Object const& object : region.section(section_coords)->objects()) {
 				RegionTileCoords other_coords = object.coords;
 				if (other_coords.distance_to(coords) < visual_range) {
-					SectionTileIndex other_tile_index = Section::tile_index(other_coords);
-					double tile_visibility = section_view.tile_visibilities[other_tile_index.i][other_tile_index.j];
+					SectionTileCoords other_section_coords = Section::section_tile_coords(other_coords);
+					double tile_visibility = section_view.tile_visibilities[other_section_coords.q][other_section_coords.r];
 
 					if (tile_visibility >= _low_perception_threshold) {
-						ObjectView::Perception perception;
+						PerceptionLevel perception;
 						if (tile_visibility < _medium_perception_threshold) {
-							perception = ObjectView::Perception::low;
+							perception = PerceptionLevel::low;
 						} else if (tile_visibility < _high_perception_threshold) {
-							perception = ObjectView::Perception::medium;
+							perception = PerceptionLevel::medium;
 						} else if (tile_visibility < _full_perception_threshold) {
-							perception = ObjectView::Perception::high;
+							perception = PerceptionLevel::high;
 						} else {
-							perception = ObjectView::Perception::full;
+							perception = PerceptionLevel::full;
 						}
 						_object_views.emplace_back(object.id, perception);
 					}
@@ -152,7 +146,7 @@ namespace questless
 			}
 		}
 		if (_bounds) {
-			/// @todo Figure out the correct way to compute these adjustments.
+			//! @todo Figure out the correct way to compute these adjustments.
 
 			//Point size = Layout::dflt().size.to_point();
 			//Point double_size = (2 * Layout::dflt().size).to_point();

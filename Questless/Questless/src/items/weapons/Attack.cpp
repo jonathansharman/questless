@@ -1,9 +1,6 @@
-/**
-* @file    Attack.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "items/weapons/Attack.h"
 #include "items/weapons/Weapon.h"
@@ -43,7 +40,7 @@ namespace questless
 				_attack->cost().incur(actor);
 				actor.busy_time += _attack->follow_through();
 				weapon->active_cooldown = _attack->cooldown();
-				auto coords = actor.coords.neighbor(_direction); /// @todo This will need to be more complicated for longer-ranged melee weapons.
+				auto coords = actor.coords.neighbor(_direction); //! @todo This will need to be more complicated for longer-ranged melee weapons.
 				if (Being* target = actor.region->being(coords)) {
 					// Reduce damage based on difference between direction faced and direction attacked.
 					constexpr double penalty_per_turn = 0.25;
@@ -51,7 +48,7 @@ namespace questless
 					damage *= 1.0 - penalty_per_turn * RegionTileCoords::distance(actor.direction, _direction);
 
 					weapon->integrity -= _attack->wear_ratio() * damage.total();
-					target->take_damage(damage, nullptr, actor.id); /// @todo Part targeting
+					target->take_damage(damage, nullptr, actor.id); //! @todo Part targeting
 					return cont(Result::success);
 				} else {
 					return actor.agent().send_message(std::make_unique<MessageMeleeMiss>(), [cont] { return cont(Result::success); });
@@ -92,7 +89,7 @@ namespace questless
 								if (Being* target = actor.region->being(*opt_coords)) {
 									Damage damage = attack->damage();
 									weapon.integrity -= attack->wear_ratio() * damage.total();
-									target->take_damage(damage, nullptr, actor.id); /// @todo Part targeting
+									target->take_damage(damage, nullptr, actor.id); //! @todo Part targeting
 									return cont(Result::success);
 								} else {
 									return actor.agent().send_message(std::make_unique<MessageArrowMiss>(), [cont] { return cont(Result::success); });

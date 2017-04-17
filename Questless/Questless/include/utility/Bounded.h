@@ -1,9 +1,6 @@
-/**
-* @file    Bounded.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -29,11 +26,10 @@ namespace questless
 		};
 	}
 
-	/// Represents an inclusive, bounded range of numeric values, clamping values outside the range to the nearest valid value.
-	/// @tparam NumericType A numeric type, supporting arithmetic operations.
-	/// @tparam lower_bound The minimum value in the range (inclusive).
-	/// @tparam upper_bound The maximum value in the range (inclusive).
-	////
+	//! Represents an inclusive, bounded range of numeric values, clamping values outside the range to the nearest valid value.
+	//! @tparam NumericType A numeric type, supporting arithmetic operations.
+	//! @tparam lower_bound The minimum value in the range (inclusive).
+	//! @tparam upper_bound The maximum value in the range (inclusive).
 	template
 		< typename NumericType
 		, typename NumericType const& lower_bound
@@ -55,17 +51,17 @@ namespace questless
 
 		// Accessors and Mutators
 
-		/// Sets the contained value to the given new value, clamped to the valid range.
+		//! Sets the contained value to the given new value, clamped to the valid range.
 		void set(numeric_t const& value)
 		{
-			/// @todo When constexpr-if is available, use it to avoid upper bound check if upper_bound is the maximum type value.
+			//! @todo When constexpr-if is available, use it to avoid upper bound check if upper_bound is the maximum type value.
 			_number = std::clamp(value, lower_bound, upper_bound);
 		}
 
-		/// @return The contained value.
+		//! The contained value.
 		constexpr operator numeric_t const&() const { return _number; }
 
-		/// @return The contained value.
+		//! The contained value.
 		constexpr numeric_t const& get() const { return _number; }
 
 		// Asignment

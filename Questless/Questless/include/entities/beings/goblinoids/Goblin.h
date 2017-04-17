@@ -1,11 +1,6 @@
-/**
-* @file    Goblin.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the Goblin class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -96,10 +91,13 @@ namespace questless
 
 		void serialize(std::ostream& out) const override;
 
-		std::string const& description() const { return "The goblins are a diminutive and simpleminded humanoid race, known "
-			"particularly for their bad tempers and love of mischief. Goblins rarely form large communities, preferring small "
-			"family groups or solitude. They are remarkably sneaky, and many an unwary traveller through goblin territory has "
-			"lost a coin purse or a limb to a goblin ambush."; }
+		std::string const& description() const
+		{
+			return "The goblins are a diminutive and simpleminded humanoid race, known particularly for their bad "
+				"tempers and love of mischief. Goblins rarely form large communities, preferring small family groups "
+				"or solitude. They are remarkably sneaky, and many an unwary traveller through goblin territory has "
+				"lost a coin purse or a limb to a goblin ambush.";
+		}
 	protected:
 		Body make_body() override;
 	};

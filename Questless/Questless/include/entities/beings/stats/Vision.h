@@ -1,9 +1,6 @@
-/**
-* @file    Vision.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -18,41 +15,35 @@ namespace questless
 	struct IdealLight : TaggedType<double> { using TaggedType::TaggedType; };
 	struct LightTolerance : TaggedType<double> { using TaggedType::TaggedType; };
 
-	/// Represents a being's vision-related stats.
-	///
-	/// Let v  = visibility at a tile
-	///     a  = visual acuity
-	///     d  = distance to tile
-	///     df = distance factor (constant)
-	///     l  = light level at tile
-	///     i  = ideal light
-	///     t  = light tolerance
-	///     af = affinity factor (constant)
-	///
-	/// Then v = (a - d^2 * df) / (1 + (l - i)^2 / t * af)
-	////
+	//! Represents a being's vision-related stats.
+	//!
+	//! Let v  = visibility at a tile
+	//!     a  = visual acuity
+	//!     d  = distance to tile
+	//!     df = distance factor (constant)
+	//!     l  = light level at tile
+	//!     i  = ideal light
+	//!     t  = light tolerance
+	//!     af = affinity factor (constant)
+	//!
+	//! Then v = (a - d^2 * df) / (1 + (l - i)^2 / t * af)
 	struct Vision
 	{
 		static constexpr double minimum_value = 0.0;
 
-		/// Increases the effect of distance on vision.
-		////
+		//! Increases the effect of distance on vision.
 		static constexpr double distance_factor = 1.0;
 
-		/// Increases the effect of lighting on vision.
-		////
+		//! Increases the effect of lighting on vision.
 		static constexpr double light_factor = 1.0;
 
-		/// Increases the range of visibility.
-		////
+		//! Increases the range of visibility.
 		Bounded<double, minimum_value> acuity;
 
-		/// The light level at which a being can see best.
-		////
+		//! The light level at which a being can see best.
 		Bounded<double, minimum_value> ideal_light;
 
-		/// Reduces the rate at which visibility falls off as light diverges from the ideal level.
-		////
+		//! Reduces the rate at which visibility falls off as light diverges from the ideal level.
 		Bounded<double, minimum_value> light_tolerance;
 
 		constexpr Vision() : acuity{0.0}, ideal_light{0.0}, light_tolerance{0.0} {}

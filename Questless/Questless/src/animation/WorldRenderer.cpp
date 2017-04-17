@@ -1,11 +1,6 @@
-/**
-* @file    WorldRenderer.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implementation for the WorldRenderer class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "animation/WorldRenderer.h"
 
@@ -34,7 +29,7 @@ namespace questless
 			effect->accept(*this);
 		}
 
-		/// @todo Should the tile texture and entity animation caches ever be cleaned out? If so, when and how? Consider tracking how long since a texture was last used and purging it after a set time.
+		//! @todo Should the tile texture and entity animation caches ever be cleaned out? If so, when and how? Consider tracking how long since a texture was last used and purging it after a set time.
 	}
 
 	void WorldRenderer::update()
@@ -94,14 +89,14 @@ namespace questless
 
 				uint8_t luminance;
 				switch (being_view.perception) {
-					case WorldView::BeingView::Perception::low:
+					case WorldView::PerceptionLevel::low:
 						luminance = 128;
 						break;
-					case WorldView::BeingView::Perception::medium:
+					case WorldView::PerceptionLevel::medium:
 						luminance = 192;
 						break;
-					case WorldView::BeingView::Perception::high:
-					case WorldView::BeingView::Perception::full:
+					case WorldView::PerceptionLevel::high:
+					case WorldView::PerceptionLevel::full:
 						luminance = 255;
 						break;
 					default:
@@ -129,14 +124,14 @@ namespace questless
 
 				uint8_t luminance;
 				switch (object_view.perception) {
-					case WorldView::ObjectView::Perception::low:
+					case WorldView::PerceptionLevel::low:
 						luminance = 128;
 						break;
-					case WorldView::ObjectView::Perception::medium:
+					case WorldView::PerceptionLevel::medium:
 						luminance = 192;
 						break;
-					case WorldView::ObjectView::Perception::high:
-					case WorldView::ObjectView::Perception::full:
+					case WorldView::PerceptionLevel::high:
+					case WorldView::PerceptionLevel::full:
 						luminance = 255;
 						break;
 					default:
@@ -203,11 +198,10 @@ namespace questless
 				auto opt_section = _world_view->region().section(section_view.coords);
 				if (opt_section) {
 					Section const& section = *opt_section;
-					for (int r = -Section::radius; r <= Section::radius; ++r) {
-						for (int q = -Section::radius; q <= Section::radius; ++q) {
+					for (int q = 0; q < Section::diameter; ++q) {
+						for (int r = 0; r < Section::diameter; ++r) {
 							SectionTileCoords section_tile_coords{q, r};
-							SectionTileIndex tile_index = Section::tile_index(section_tile_coords);
-							double tile_visibility = section_view.tile_visibilities[tile_index.i][tile_index.j];
+							double tile_visibility = section_view.tile_visibilities[section_tile_coords.q][section_tile_coords.r];
 							if (tile_visibility > 0) {
 								RegionTileCoords const region_tile_coords = section.region_tile_coords(section_tile_coords);
 								GamePoint const tile_game_point = Layout::dflt().to_world(region_tile_coords);
@@ -259,7 +253,7 @@ namespace questless
 
 		Being const* target = game().beings.get(e.target_id());
 		double const target_vitality = target ? target->stats.vitality.get() : 100.0; // Assume vitality = 100 if being no longer exists to check.
-		/// @todo Pass along the vitality in the event object if it's needed here.
+		//! @todo Pass along the vitality in the event object if it's needed here.
 
 		GamePoint position = Layout::dflt().to_world(e.origin());
 

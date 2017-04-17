@@ -1,11 +1,8 @@
 //! @file
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
+//! @brief Includes header files of all entity classes.
 
-#include "items/weapons/Weapon.h"
+#include "entities/Entity.h"
 #include "entities/beings/Being.h"
-#include "Game.h"
-
-namespace questless
-{
-}
+#include "entities/beings/goblinoids/Goblin.h"

@@ -1,11 +1,6 @@
-/**
-* @file    GreenMagicParticle.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the green magic particle class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -14,10 +9,11 @@
 
 namespace questless
 {
+	//! A particle for effects involving green magic.
 	class GreenMagicParticle : public Particle
 	{
 	public:
-		/// @param position The particle's starting position.
+		//! @param position The particle's starting position.
 		GreenMagicParticle(units::GamePoint position)
 			: Particle
 				{ position
@@ -36,7 +32,7 @@ namespace questless
 		static constexpr double _inflection_probability = 0.1;
 		static constexpr units::GameRadiansPerSec _turn_rate = units::GameRadians::circle() / 1.0s;
 
-		bool _turning_right; ///< True if the green magic particle is turning to the right (CW), false if turning left (CCW).
+		bool _turning_right; //!< True if the green magic particle is turning to the right (CW), false if turning left (CCW).
 
 		void subupdate() override;
 

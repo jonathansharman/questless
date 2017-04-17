@@ -1,11 +1,6 @@
-/**
-* @file    Frequency.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION A frequency data type designed to complement the STL duration type.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -14,6 +9,7 @@
 
 namespace units
 {
+	//! A frequency data type designed to complement std::chrono::duration.
 	template <typename Rep, typename Period = std::ratio<1>>
 	class Frequency
 	{
@@ -23,15 +19,15 @@ namespace units
 
 		constexpr Frequency() : _count{rep{}} {}
 
-		/// @param count The number of cycles per unit period.
+		//! @param count The number of cycles per unit period.
 		constexpr explicit Frequency(rep count) : _count{std::move(count)} {}
 
-		/// @return The zero f for the specified representation and period.
+		//! The zero f for the specified representation and period.
 		static constexpr Frequency<rep, period> zero() { return Frequency<rep, period>{std::chrono::duration_values<rep>::zero()}; }
 
-		/// @return The number of cycles per unit period.
+		//! The number of cycles per unit period.
 		constexpr rep const& count() const& { return _count; }
-		/// @return The number of cycles per unit period.
+		//! The number of cycles per unit period.
 		rep& count() & { return _count; }
 
 		constexpr bool operator <(Frequency<rep, period> that) const { return _count < that._count; }
@@ -147,13 +143,13 @@ namespace units
 		return ToFrequency{static_cast<ToFrequency::rep>(f.count() * ratio::den / ratio::num)};
 	}
 
-	/// Frequency type representing cycles per second.
+	//! Frequency type representing cycles per second.
 	using Hertz = Frequency<double>;
-	/// Frequency type representing thousounds of cycles per second or cycles per millisecond.
+	//! Frequency type representing thousounds of cycles per second or cycles per millisecond.
 	using kiloHertz = Frequency<double, std::milli>;
 }
 
-/// @todo Where's the best place to put user-defined literals?
+//! @todo Where's the best place to put user-defined literals?
 
 constexpr units::Hertz operator ""_Hz(long double cycles) { return units::Hertz{static_cast<double>(cycles)}; }
 constexpr units::kiloHertz operator ""_kHz(long double cycles) { return units::kiloHertz{static_cast<double>(cycles)}; }

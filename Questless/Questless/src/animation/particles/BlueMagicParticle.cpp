@@ -1,11 +1,6 @@
-/**
-* @file    BlueMagicParticle.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Blue magic particle implementation.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "animation/particles/BlueMagicParticle.h"
 #include "sdl/resources.h"

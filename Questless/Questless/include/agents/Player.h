@@ -1,11 +1,6 @@
-/**
-* @file    Player.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the Player class, which is the agent responsible for the player's being.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -13,6 +8,7 @@
 
 namespace questless
 {
+	//! The agent representing the player's control over his or her character.
 	class Player : public Agent
 	{
 	public:
@@ -21,7 +17,7 @@ namespace questless
 			, _world_view{nullptr}
 		{}
 
-		/// @return The player's current view of the world.
+		//! The player's current view of the world.
 		WorldView const& world_view() const { return *_world_view; }
 
 		void update_world_view() { _world_view = std::make_unique<WorldView>(being, true); }
@@ -30,8 +26,8 @@ namespace questless
 
 		void perceive(Effect::uptr const& effect) override;
 
-		/// Gets a list of perceived effects and removes them from the player agent.
-		/// @return All the effects the player has perceived since the last call to poll_effects().
+		//! Gets a list of perceived effects and removes them from the player agent.
+		//! @return All the effects the player has perceived since the last call to poll_perceived_effects().
 		std::vector<Effect::uptr> poll_perceived_effects();
 
 		// Queries and messages

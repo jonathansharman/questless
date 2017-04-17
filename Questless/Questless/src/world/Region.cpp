@@ -1,26 +1,21 @@
-/**
-* @file    Region.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implementation for the Region class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include <filesystem>
-namespace fs = std::tr2::sys; /// @todo Replace this with proper using statements if/when TR2 comes around.
+namespace fs = std::tr2::sys; //! @todo Replace this with proper using statements if/when TR2 comes around.
 #include <limits.h>
 #include <sstream>
 #include <fstream>
 
-#include "Game.h"
-#include "world/Region.h"
 #include "agents/Agent.h"
 #include "agents/LazyAI.h"
 #include "agents/BasicAI.h"
-#include "utility/utility.h"
-
+#include "entities/all-entities.h"
+#include "Game.h"
 #include "items/weapons/Quarterstaff.h"
+#include "utility/utility.h"
+#include "world/Region.h"
 
 using std::string;
 using std::vector;
@@ -32,7 +27,7 @@ using namespace sdl;
 
 namespace questless
 {
-	/// @todo Remove. Wait, why?
+	//! @todo Remove. Wait, why?
 	bool turn_order_function(Being const& first, Being const& second)
 	{
 		// Sort beings in the turn queue by lower busy-time first, then lower entity ID.
@@ -53,9 +48,9 @@ namespace questless
 
 				// Create a section with random terrain.
 				string data;
-				for (int r = -Section::radius; r <= Section::radius; ++r) {
-					for (int q = -Section::radius; q <= Section::radius; ++q) {
-						if (r == Section::radius || q == Section::radius) {
+				for (int q = 0; q < Section::diameter; ++q) {
+					for (int r = 0; r < Section::diameter; ++r) {
+						if (r == Section::diameter - 1 || q == Section::diameter - 1) {
 							data += std::to_string(static_cast<int>(Tile::TileClass::edge)) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
 						} else {
 							data += std::to_string(uniform(0, static_cast<int>(Tile::TileClass::TILE_CLASS_COUNT) - 1)) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
@@ -64,8 +59,8 @@ namespace questless
 				}
 				_section_map[section_coords] = make_unique<Section>(section_coords, std::istringstream{data});
 				// Add beings randomly.
-				for (int r = -Section::radius; r <= Section::radius; ++r) {
-					for (int q = -Section::radius; q <= Section::radius; ++q) {
+				for (int q = 0; q < Section::diameter; ++q) {
+					for (int r = 0; r < Section::diameter; ++r) {
 						if ((section_r != 0 || section_q != 0) && uniform(0, 10) == 0) {
 							auto entity_coords = Section::region_tile_coords(section_coords, SectionTileCoords{q, r});
 							auto new_being = make_unique<Goblin>(Agent::make<BasicAI>);
@@ -140,10 +135,10 @@ namespace questless
 
 	void Region::save(char const* /*save_name*/)
 	{
-		/// @todo Reenable someday. Use SQLite or something to save games.
+		//! @todo Reenable someday. Use SQLite or something to save games.
 
 #if 0
-		/// @todo How do deal with deleted sections? Their files should be cleaned out somehow.
+		//! @todo How do deal with deleted sections? Their files should be cleaned out somehow.
 
 		fs::path saves_dir{"saves"};
 		fs::path save_filename{save_name};
@@ -152,13 +147,13 @@ namespace questless
 		fs::path region_path{saves_dir / save_filename / regions_dir / region_filename};
 
 		for (auto const& coords_and_section : _section_map) {
-			HexCoords coords = coords_and_section.first;
+			HexCoords region_tile_coords = coords_and_section.first;
 
 			std::ostringstream section_filename_sstream;
-			section_filename_sstream << coords.q << '_' << coords.r << ".hex";
+			section_filename_sstream << region_tile_coords.q << '_' << region_tile_coords.r << ".hex";
 			fs::path hex_filename{section_filename_sstream.str()};
 
-			_section_map[coords]->save((region_path / hex_filename).string());
+			_section_map[region_tile_coords]->save((region_path / hex_filename).string());
 		}
 
 		fs::path entities_filename{"entities.dat"};
@@ -191,42 +186,27 @@ namespace questless
 		}
 	}
 
-	std::optional<Id<Being>> Region::being_id(RegionTileCoords tile_coords) const
+	std::optional<Id<Being>> Region::being_id(RegionTileCoords region_tile_coords) const
 	{
-		RegionSectionCoords section_coords = containing_section_coords(tile_coords);
-		auto it = _section_map.find(section_coords);
-		return it != _section_map.end() ? it->second->being_id(tile_coords) : std::nullopt;
-	}
-
-	std::optional<Id<Object>> Region::object_id(RegionTileCoords tile_coords) const
-	{
-		RegionSectionCoords section_coords = containing_section_coords(tile_coords);
-		auto it = _section_map.find(section_coords);
-		return it != _section_map.end() ? it->second->object_id(tile_coords) : std::nullopt;
-	}
-
-
-	Being* Region::being(RegionTileCoords tile_coords) const
-	{
-		if (auto opt_id = being_id(tile_coords)) {
-			return game().beings.get(*opt_id);
+		if (Section const* section = containing_section(region_tile_coords)) {
+			return section->being_id(region_tile_coords);
 		} else {
-			return nullptr;
+			return std::nullopt;
 		}
 	}
 
-	Object* Region::object(RegionTileCoords tile_coords) const
+	std::optional<Id<Object>> Region::object_id(RegionTileCoords region_tile_coords) const
 	{
-		if (auto opt_id = object_id(tile_coords)) {
-			return game().objects.get(*opt_id);
+		if (Section const* section = containing_section(region_tile_coords)) {
+			return section->object_id(region_tile_coords);
 		} else {
-			return nullptr;
+			return std::nullopt;
 		}
 	}
 
 	void Region::spawn_player(Being::uptr player_being)
 	{
-		/// @todo More advanced player spawning.
+		//! @todo More advanced player spawning.
 
 		// Put the player's character somewhere in the middle section.
 
@@ -235,63 +215,60 @@ namespace questless
 		RegionTileCoords player_coords{q, r};
 
 		// Erase the being currently there, if any.
-		auto& section = containing_section(player_coords);
-		section.remove_being(player_coords);
+		Section* section = containing_section(player_coords);
+		section->remove_being(player_coords);
 
 		spawn(std::move(player_being), player_coords);
 	}
 
-	void Region::add(Being& being, RegionTileCoords coords)
+	void Region::add(Being& being, RegionTileCoords region_tile_coords)
 	{
-		RegionSectionCoords section_coords = containing_section_coords(coords);
-		auto it = _section_map.find(section_coords);
-		if (it != _section_map.end()) {
-			Section* section = it->second.get();
+		if (Section* section = containing_section(region_tile_coords)) {
 			being.region = this;
 			being.section = section;
-			being.coords = coords;
+			being.coords = region_tile_coords;
 
 			add_to_turn_queue(being);
 			section->add(being);
+		} else {
+			//! @todo What to do when adding outside current sections?
 		}
 	}
 
-	void Region::add(Object& object, RegionTileCoords coords)
+	void Region::add(Object& object, RegionTileCoords region_tile_coords)
 	{
-		RegionSectionCoords section_coords = containing_section_coords(coords);
-		auto it = _section_map.find(section_coords);
-		if (it != _section_map.end()) {
-			Section* section = it->second.get();
+		if (Section* section = containing_section(region_tile_coords)) {
 			object.region = this;
 			object.section = section;
-			object.coords = coords;
+			object.coords = region_tile_coords;
 
 			section->add(object);
+		} else {
+			//! @todo What to do when adding outside current sections?
 		}
 	}
 
-	void Region::spawn(Being::uptr being, RegionTileCoords coords)
+	void Region::spawn(Being::uptr being, RegionTileCoords region_tile_coords)
 	{
-		add(game().beings.add(std::move(being)), coords);
+		add(game().beings.add(std::move(being)), region_tile_coords);
 	}
 
-	void Region::spawn(Object::uptr object, RegionTileCoords coords)
+	void Region::spawn(Object::uptr object, RegionTileCoords region_tile_coords)
 	{
-		add(game().objects.add(std::move(object)), coords);
+		add(game().objects.add(std::move(object)), region_tile_coords);
 	}
 
-	bool Region::move(Being& being, RegionTileCoords coords)
+	bool Region::move(Being& being, RegionTileCoords region_tile_coords)
 	{
 		Section& src_section = *being.section;
-		RegionSectionCoords dst_section_coords = containing_section_coords(coords);
-		if (dst_section_coords != src_section.coords()) {
-			unique_ptr<Section> const& dst_section = _section_map[dst_section_coords];
+		Section* dst_section = containing_section(region_tile_coords);
+		if (dst_section != &src_section) {
 			if (dst_section != nullptr) {
-				if (dst_section->being_id(coords)) {
+				if (dst_section->being_id(region_tile_coords)) {
 					// Collision with another being. Prevent movement.
 					return false;
 				}
-				if (auto object_id = dst_section->object_id(coords)) {
+				if (auto object_id = dst_section->object_id(region_tile_coords)) {
 					if (game().objects.get(*object_id)->blocks_movement()) {
 						// Collision with an obstructing object. Prevent movement.
 						return false;
@@ -299,55 +276,54 @@ namespace questless
 				}
 
 				src_section.remove(being);
-				being.coords = coords;
+				being.coords = region_tile_coords;
 				dst_section->add(being);
 			} else {
-				/// @todo Need to deal with null destination case.
+				//! @todo Need to deal with null destination case.
 				return false;
 			}
 		} else {
-			if (src_section.being_id(coords)) {
+			if (src_section.being_id(region_tile_coords)) {
 				// Collision with another being. Prevent movement.
 				return false;
 			}
-			if (auto object_id = src_section.object_id(coords)) {
+			if (auto object_id = src_section.object_id(region_tile_coords)) {
 				if (game().objects.get(*object_id)->blocks_movement()) {
 					// Collision with an obstructing object. Prevent movement.
 					return false;
 				}
 			}
 			src_section.remove(being);
-			being.coords = coords;
+			being.coords = region_tile_coords;
 			src_section.add(being);
 		}
 		return true;
 	}
 
-	bool Region::move(Object& object, RegionTileCoords coords)
+	bool Region::move(Object& object, RegionTileCoords region_tile_coords)
 	{
 		Section& src_section = *object.section;
-		RegionSectionCoords dst_section_coords = containing_section_coords(coords);
-		if (dst_section_coords != src_section.coords()) {
-			unique_ptr<Section> const& dst_section = _section_map[dst_section_coords];
+		Section* dst_section = containing_section(region_tile_coords);
+		if (dst_section != &src_section) {
 			if (dst_section != nullptr) {
-				if (dst_section->being_id(coords) || dst_section->object_id(coords)) {
+				if (dst_section->being_id(region_tile_coords) || dst_section->object_id(region_tile_coords)) {
 					// Collision. Prevent movement.
 					return false;
 				}
 				src_section.remove(object);
-				object.coords = coords;
+				object.coords = region_tile_coords;
 				dst_section->add(object);
 			} else {
-				/// @todo Need to deal with null destination case.
+				//! @todo Need to deal with null destination case.
 				return false;
 			}
 		} else {
-			if (src_section.object_id(coords)) {
+			if (src_section.object_id(region_tile_coords)) {
 				// Collision. Prevent movement.
 				return false;
 			}
 			src_section.remove(object);
-			object.coords = coords;
+			object.coords = region_tile_coords;
 			src_section.add(object);
 		}
 		return true;
@@ -372,23 +348,6 @@ namespace questless
 		object.section = nullptr;
 
 		section.remove(object);
-	}
-
-	bool Region::section_exists(RegionSectionCoords section_coords) const
-	{
-		auto it = _section_map.find(section_coords);
-		return it != _section_map.end() && it->second != nullptr;
-	}
-
-	Section* Region::section(RegionSectionCoords section_coords)
-	{
-		auto it = _section_map.find(section_coords);
-		return it == _section_map.end() ? nullptr : it->second.get();
-	}
-	Section const* Region::section(RegionSectionCoords section_coords) const
-	{
-		auto it = _section_map.find(section_coords);
-		return it == _section_map.end() ? nullptr : it->second.get();
 	}
 
 	void Region::update()
@@ -421,10 +380,39 @@ namespace questless
 			for (int q = -_loaded_sections_r_radius; q <= _loaded_sections_r_radius; ++q) {
 				RegionSectionCoords section_coords{q, r};
 				auto it = _section_map.find(section_coords);
-				if (it != _section_map.end() && it->second != nullptr) { /// @todo Null sections...?
+				if (it != _section_map.end() && it->second != nullptr) {
 					f(*it->second);
 				}
 			}
+		}
+	}
+
+	Being* Region::being_helper(RegionTileCoords region_tile_coords) const
+	{
+		if (auto opt_id = being_id(region_tile_coords)) {
+			return game().beings.get(*opt_id);
+		} else {
+			return nullptr;
+		}
+	}
+
+	Object* Region::object_helper(RegionTileCoords region_tile_coords) const
+	{
+		if (auto opt_id = object_id(region_tile_coords)) {
+			return game().objects.get(*opt_id);
+		} else {
+			return nullptr;
+		}
+	}
+
+	Tile* Region::tile_helper(RegionTileCoords region_tile_coords) const
+	{
+		Section* section = containing_section_helper(region_tile_coords);
+		if (section) {
+			SectionTileCoords section_tile_coords = Section::section_tile_coords(region_tile_coords);
+			return &section->tile(section_tile_coords);
+		} else {
+			return nullptr;
 		}
 	}
 }

@@ -1,10 +1,8 @@
 /**
-* @file    CountQuery.h
-* @author  Jonathan Sharman
+* @file
+* @author Jonathan Sharman
+* @copyright See LICENSE.txt.
 *
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Requests to an agent for a count.
 */
 
 #pragma once
@@ -13,11 +11,13 @@
 
 namespace questless
 {
+	//! Visitor type for count queries.
 	struct CountQueryVisitor
 	{
 		virtual ~CountQueryVisitor() = default;
 	};
 
+	//! A request to an agent for a count.
 	struct CountQuery
 	{
 		using uptr = std::unique_ptr<CountQuery>;

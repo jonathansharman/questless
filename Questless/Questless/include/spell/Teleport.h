@@ -1,9 +1,6 @@
-/**
-* @file    Teleport.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -11,8 +8,7 @@
 
 namespace questless::spell
 {
-	/// A spell that teleports the caster some distance from its current location.
-	////
+	//! A spell that teleports the caster some distance from its current location.
 	class Teleport : public Spell
 	{
 	public:

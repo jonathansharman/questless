@@ -1,9 +1,6 @@
-/**
-* @file    Equipment.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -16,9 +13,9 @@ namespace questless
 {
 	Complete Equipment::Equip::perform(Being& actor, cont_t cont)
 	{
-		/// @todo Allow bearer to choose where to equip item.
+		//! @todo Allow bearer to choose where to equip item.
 
-		/// @todo Report failure to equip.
+		//! @todo Report failure to equip.
 
 		auto fail = [&] {
 			return actor.agent().send_message(std::make_unique<MessageCannotEquip>(), [cont] { return cont(Result::aborted); });

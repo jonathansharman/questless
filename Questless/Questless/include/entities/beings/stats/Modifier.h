@@ -1,11 +1,6 @@
-/**
-* @file    Modifier.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Represents a modification to a stat.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -16,11 +11,12 @@
 
 namespace questless
 {
+	//! A modification to a stat of a being.
 	struct Modifier
 	{
 		using uptr = std::unique_ptr<Modifier>;
 
-		/// Makes a vector of modifiers from the given modifier.
+		//! Makes a vector of modifiers from the given modifier.
 		template <typename ModifierPtr>
 		static std::vector<uptr> make_vector(ModifierPtr modifier)
 		{
@@ -29,7 +25,7 @@ namespace questless
 			return modifiers;
 		}
 
-		/// Makes a vector of modifiers from the given non-empty variadic list of modifiers.
+		//! Makes a vector of modifiers from the given non-empty variadic list of modifiers.
 		template <typename FirstModifierPtr, typename... RestModifierPtrs>
 		static std::vector<uptr> make_vector(FirstModifierPtr first, RestModifierPtrs... rest)
 		{
@@ -40,8 +36,8 @@ namespace questless
 			return modifiers;
 		}
 
-		/// Modifies the stat according to the given modifiers.
-		/// @param modifiers A vector of stat modifiers.
+		//! Modifies the stat according to the given modifiers.
+		//! @param modifiers A vector of stat modifiers.
 		static void apply_all(std::vector<Modifier::uptr> const& modifiers, Stats& stats)
 		{
 			for (auto const& modifier : modifiers) {
@@ -52,7 +48,7 @@ namespace questless
 		virtual void apply(Stats& stats) = 0;
 	};
 
-	/// Overrides whether the being is mute.
+	//! Overrides whether the being is mute.
 	class MuteModifier : public Modifier
 	{
 	public:
@@ -63,7 +59,7 @@ namespace questless
 		bool _mute;
 	};
 
-	/// Adjusts a scalar stat by some magnitude.
+	//! Adjusts a scalar stat by some magnitude.
 	class ScalarModifier : public Modifier
 	{
 	public:

@@ -1,11 +1,6 @@
-/**
-* @file    BasicAI.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implementation for the BasicAI class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "agents/BasicAI.h"
 #include "Game.h"
@@ -28,7 +23,7 @@ namespace questless
 	void BasicAI::WalkState::act(BasicAI& ai)
 	{
 		// Move or turn at random.
-		if (uniform(0, 1)) {
+		if (random_bool()) {
 			ai.walk(ai.being.direction, [&ai](Action::Result result) {
 				// Idle next time.
 				ai._state = std::make_unique<IdleState>();
@@ -68,7 +63,7 @@ namespace questless
 				// Facing towards target.
 				if (ai.being.coords.distance_to(target->coords) == 1) {
 					// Within striking distance of target.
-					/// @todo This is a hack that assumes the first item in the inventory is a melee weapon.
+					//! @todo This is a hack that assumes the first item in the inventory is a melee weapon.
 					Item& item = *ai.being.inventory.items().begin();
 					item.actions().front()->perform(ai.being, [&ai](Action::Result result) {
 						if (result == Action::Result::aborted) {

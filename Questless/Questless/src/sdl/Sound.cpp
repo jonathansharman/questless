@@ -1,11 +1,6 @@
-/**
-* @file    Sound.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implementation for Sound, a simple wrapper class around Mix_Chunk.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "sdl/Sound.h"
 

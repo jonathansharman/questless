@@ -1,11 +1,6 @@
-/**
-* @file    Dialog.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the Dialog abstract base class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -17,6 +12,7 @@
 
 namespace questless
 {
+	//! A UI element used to exchange information with the player.
 	class Dialog : public sdl::Renderable
 	{
 	public:
@@ -24,13 +20,11 @@ namespace questless
 
 		using uptr = std::unique_ptr<Dialog>;
 
-		/// Updates the dialog state based on input. To be called once per frame as long as it's open.
-		/// @return The state of the dialog after this update: either open or closed.
-		////
-		virtual State update() = 0; /// @todo Take input by ref or const-ref?
+		//! Updates the dialog state based on input. To be called once per frame as long as it's open.
+		//! @return The state of the dialog after this update: either open or closed.
+		virtual State update() = 0; //! @todo Take input by ref or const-ref?
 
-		/// Draws the dialog to the screen.
-		////
+		//! Draws the dialog to the screen.
 		virtual void draw() const = 0;
 	protected:
 		template <typename... Args>

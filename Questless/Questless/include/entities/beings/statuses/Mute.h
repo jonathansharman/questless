@@ -1,11 +1,6 @@
-/**
-* @file    Mute.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface and implementation for the Mute status class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -13,19 +8,20 @@
 
 namespace questless
 {
+	//! A status that causes muteness.
 	class Mute : public Status
 	{
 	public:
-		/// @param duration The number of turns remaining before the status modifier expires.
-		/// @param source_id The ID of the being that caused the status modifier, if any.
-		Mute(int duration, std::optional<Id<Being>> source_id = nullopt)
-			: Status("Mute", duration, source_id), _modifiers{std::make_unique<Stats::MuteModifier>(true)}
+		//! @param duration The number of turns remaining before the status modifier expires.
+		//! @param source_id The ID of the being that caused the status modifier, if any.
+		Mute(int duration, std::optional<Id<Being>> source_id = std::nullopt)
+			: Status("Mute", duration, source_id), _modifiers{std::make_unique<MuteModifier>(true)}
 		{}
 
 		virtual Type type() const { return Type::debuff; }
 
-		Stats::modifiers_t const& modifiers() const override { return _modifiers; }
+		std::vector<Modifier::uptr> const& modifiers() const override { return _modifiers; }
 	private:
-		Stats::modifiers_t _modifiers;
+		std::vector<Modifier::uptr> _modifiers;
 	};
 }

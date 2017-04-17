@@ -1,11 +1,6 @@
-/**
-* @file    Section.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implementation for the Section class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "world/Section.h"
 
@@ -16,20 +11,17 @@
 
 namespace questless
 {
-	SectionTileIndex Section::tile_index(SectionTileCoords tile_coords)
+	RegionSectionCoords Section::region_section_coords(RegionTileCoords region_tile_coords)
 	{
-		return SectionTileIndex
-			{ tile_coords.r + Section::radius
-			, tile_coords.q + Section::radius
-			};
-	}
-
-	SectionTileIndex Section::tile_index(RegionTileCoords region_tile_coords)
-	{
-		return SectionTileIndex
-			{ ((region_tile_coords.r + Section::radius) % Section::diameter + Section::diameter) % Section::diameter
-			, ((region_tile_coords.q + Section::radius) % Section::diameter + Section::diameter) % Section::diameter
-			};
+		int q = region_tile_coords.q >= 0
+			? (region_tile_coords.q + Section::radius) / Section::diameter
+			: (region_tile_coords.q - Section::radius) / Section::diameter
+			;
+		int r = region_tile_coords.r >= 0
+			? (region_tile_coords.r + Section::radius) / Section::diameter
+			: (region_tile_coords.r - Section::radius) / Section::diameter
+			;
+		return RegionSectionCoords{q, r};
 	}
 
 	Section::Section(RegionSectionCoords coords, std::istream& data_stream) : _coords{coords}
@@ -80,23 +72,41 @@ namespace questless
 			}
 		}
 	}
-
-	std::vector<Being::ref> Section::beings() const
+	
+	std::vector<Being::cref> Section::beings() const
+	{
+		std::vector<Being::cref> beings;
+		for (auto const& pair : _being_ids) {
+			auto id = pair.second;
+			beings.push_back(game().beings.get_ref(id));
+		}
+		return beings;
+	}
+	std::vector<Being::ref> Section::beings()
 	{
 		std::vector<Being::ref> beings;
 		for (auto const& pair : _being_ids) {
 			auto id = pair.second;
-			beings.push_back(*game().beings.get(id)); // It is safe to assume anything referenced in the section still exists.
+			beings.push_back(game().beings.get_ref(id));
 		}
 		return beings;
 	}
-
-	std::vector<Object::ref> Section::objects() const
+	
+	std::vector<Object::cref> Section::objects() const
+	{
+		std::vector<Object::cref> objects;
+		for (auto const& pair : _object_ids) {
+			auto id = pair.second;
+			objects.push_back(game().objects.get_ref(id));
+		}
+		return objects;
+	}
+	std::vector<Object::ref> Section::objects()
 	{
 		std::vector<Object::ref> objects;
 		for (auto const& pair : _object_ids) {
 			auto id = pair.second;
-			objects.push_back(*game().objects.get(id)); // It is safe to assume anything referenced in the section still exists.
+			objects.push_back(game().objects.get_ref(id));
 		}
 		return objects;
 	}

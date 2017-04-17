@@ -1,11 +1,6 @@
-/**
-* @file    WorldRenderer.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the WorldRenderer class, which draws the elements of the world that the player can see.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -26,34 +21,31 @@ namespace questless
 {
 	class Game;
 
+	//! Draws the elements of the world that the player can see.
 	class WorldRenderer : public sdl::Renderable, EffectVisitor
 	{
 	public:
-		/// @param world_view The initial world view to render.
+		//! @param world_view The initial world view to render.
 		WorldRenderer(WorldView const& world_view) : _world_view{&world_view}, _terrain_render_is_current{false} {}
 
-		/// Updates the world renderer's world view.
-		/// @param world_view The new world view to render.
-		/// @param effects Any newly perceived effects to render.
+		//! Updates the world renderer's world view.
+		//! @param world_view The new world view to render.
+		//! @param effects Any newly perceived effects to render.
 		void update_view(WorldView const& world_view, std::vector<Effect::uptr> effects);
 
-		/// Updates animations. To be called once per frame.
+		//! Updates animations. To be called once per frame.
 		void update();
 
-		/// Draws the visible terrain.
-		////
+		//! Draws the visible terrain.
 		void draw_terrain();
 
-		/// Draws the visible beings in the world.
-		////
+		//! Draws the visible beings in the world.
 		void draw_beings();
 
-		/// Draws the visible objects in the world.
-		////
+		//! Draws the visible objects in the world.
 		void draw_objects();
 
-		/// Draws visualizations of any active effects in the world.
-		////
+		//! Draws visualizations of any active effects in the world.
 		void draw_effects();
 
 		// Effect visitor methods.

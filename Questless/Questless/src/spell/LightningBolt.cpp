@@ -1,11 +1,6 @@
-/**
-* @file    LightningBoltSpell.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implementation for the LightningBoltSpell class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "spell/LightningBolt.h"
 #include "Game.h"
@@ -13,7 +8,7 @@
 #include "effects/Effect.h"
 #include "spell/ManaCost.h"
 
-/// @todo Body part stuff - remove if not used.
+//! @todo Body part stuff - remove if not used.
 #include "entities/beings/BodyPart.h"
 #include <deque>
 #include <type_traits>
@@ -49,7 +44,7 @@ namespace questless::spell
 							if (Being* target = caster.region->being(tile_coords)) {
 								double burn_magnitude = magnitude * quality * caster.stats.magic.yellow / target->stats.antimagic.yellow;
 
-								/// @todo Experimental body part stuff here... Delete or fix.
+								//! @todo Experimental body part stuff here... Delete or fix.
 
 								// Pick a random strike path from the root to a leaf part.
 								BodyPart* part = &target->body.root();

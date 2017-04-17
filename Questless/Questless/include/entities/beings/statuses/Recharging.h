@@ -1,11 +1,6 @@
-/**
-* @file    Recharging.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Status of recharging mana over time.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -13,12 +8,13 @@
 
 namespace questless
 {
+	//! A status that causes a being to gain mana over time.
 	class Recharging : public Status
 	{
 	public:
-		/// @param magnitude How powerful the status modifier is.
-		/// @param duration The number of turns remaining before the status modifier expires.
-		/// @param source_id The ID of the being that caused the status modifier, if any.
+		//! @param magnitude How powerful the status modifier is.
+		//! @param duration The number of turns remaining before the status modifier expires.
+		//! @param source_id The ID of the being that caused the status modifier, if any.
 		Recharging(double magnitude, int duration, std::optional<Id<Being>> source_id = std::nullopt)
 			: Status("Recharging", duration, source_id), _magnitude{magnitude}
 		{}

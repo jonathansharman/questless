@@ -1,11 +1,6 @@
-/**
-* @file    Agent.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Agent implementation.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "agents/Agent.h"
 #include "entities/beings/Being.h"
@@ -52,7 +47,7 @@ namespace questless
 			constexpr double cost_factor_per_turn = 0.1;
 
 			double const agility_factor = 100.0 / being.stats.agility;
-			/// @todo Account for terrain.
+			//! @todo Account for terrain.
 			double const turn_cost_factor = cost_factor_per_turn * RegionTileCoords::distance(being.direction, direction);
 			being.busy_time += agility_factor * (base_cost_factor + turn_cost_factor);
 			being.direction = direction;
@@ -75,7 +70,7 @@ namespace questless
 			double const agility_factor = 100.0 / being.stats.agility;
 			if (being.region->move(being, being.coords.neighbor(direction))) {
 				double const strafe_cost_factor = cost_factor_per_turn * RegionTileCoords::distance(being.direction, direction);
-				being.busy_time += agility_factor * (base_cost_factor + strafe_cost_factor); /// @todo Account for terrain.
+				being.busy_time += agility_factor * (base_cost_factor + strafe_cost_factor); //! @todo Account for terrain.
 				
 				return cont(Action::Result::success);
 			}
@@ -85,7 +80,7 @@ namespace questless
 
 	Complete Agent::fly()
 	{
-		/// @todo This.
+		//! @todo This.
 		return Complete{};
 	}
 }

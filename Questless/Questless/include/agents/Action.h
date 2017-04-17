@@ -1,9 +1,6 @@
-/**
-* @file    Action.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -19,8 +16,7 @@ namespace questless
 {
 	class Being;
 
-	/// An action that a being can perform via its controlling agent.
-	////
+	//! An action that a being can perform via its controlling agent.
 	class Action
 	{
 	public:
@@ -31,16 +27,16 @@ namespace questless
 
 		virtual ~Action() = default;
 
-		/// @return The action's name/description, to be displayed to the player.
+		//! The action's name/description, to be displayed to the player.
 		virtual std::string name() const = 0;
 
-		/// Performs the action.
-		/// @param actor The being that is performing the action.
-		/// @param cont The continuation function to call once the action completes.
-		/// @return An Complete object.
+		//! Performs the action.
+		//! @param actor The being that is performing the action.
+		//! @param cont The continuation function to call once the action completes.
+		//! @return A Complete object.
 		virtual Complete perform(Being& actor, cont_t cont) = 0;
 
-		/// @todo Do these belong here?
+		//! @todo Do these belong here?
 		static std::function<bool(RegionTileCoords)> tile_in_range_predicate(Being& actor, int range);
 		static std::function<bool(Being&)> being_in_range_predicate(Being& actor, int range);
 	};

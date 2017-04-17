@@ -1,11 +1,6 @@
-/**
-* @file    RedMagicParticle.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Red magic particle implementation.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "animation/particles/RedMagicParticle.h"
 #include "sdl/resources.h"

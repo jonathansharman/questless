@@ -1,11 +1,6 @@
-/**
-* @file    BodyPart.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the BodyPart class, which represents a tree of body parts.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -25,6 +20,7 @@ namespace questless
 {
 	class Being;
 
+	//! A being's body part.
 	class BodyPart
 	{
 	public:
@@ -36,20 +32,18 @@ namespace questless
 
 		DynamicProperty<double> health;
 
-		/// The ID of the item equipped to this body or nullopt if none.
-		////
+		//! The ID of the item equipped to this body or nullopt if none.
 		std::optional<Id<Item>> equipped_item_id;
 
-		/// @param owner The being that owns this body.
-		/// @param name The name of the body part.
-		/// @param vitality The body part's vitality, which determines its maximum health.
-		/// @param weight The body part's contribution to its owner's weight.
-		/// @param protection The body part's protection stat.
-		/// @param resistance The body part's resistance stat.
-		/// @param vulnerability The body part's vulnerability stat.
-		/// @param regions The set of rectangular regions that this body part occupies. Used for display and hit detection.
-		/// @param id The body part's unique ID.
-		////
+		//! @param owner The being that owns this body.
+		//! @param name The name of the body part.
+		//! @param vitality The body part's vitality, which determines its maximum health.
+		//! @param weight The body part's contribution to its owner's weight.
+		//! @param protection The body part's protection stat.
+		//! @param resistance The body part's resistance stat.
+		//! @param vulnerability The body part's vulnerability stat.
+		//! @param regions The set of rectangular regions that this body part occupies. Used for display and hit detection.
+		//! @param id The body part's unique ID.
 		BodyPart
 			( Being& owner
 			, std::string name
@@ -66,62 +60,48 @@ namespace questless
 
 		virtual void accept(BodyPartVisitor& visitor) = 0;
 
-		/// @return Whether the body part is vital to its being. If true, the being dies when this body part is disabled.
-		////
+		//! Whether the body part is vital to its being. If true, the being dies when this body part is disabled.
 		virtual bool vital() const = 0;
 
-		/// @return Stat modifiers to apply to the part's owner.
-		////
+		//! Stat modifiers to apply to the part's owner.
 		virtual std::vector<Modifier::uptr> modifiers() const = 0;
 
-		/// @return A list of actions that this body part enables its owner to perform.
-		////
-		virtual std::vector<Action::uptr> abilities() const = 0; /// @todo Is this useful?
+		//! A list of actions that this body part enables its owner to perform.
+		virtual std::vector<Action::uptr> abilities() const = 0; //! @todo Is this useful?
 
-		/// Advances the body part one time unit.
-		////
+		//! Advances the body part one time unit.
 		void update();
 
-		/// Adds the given body part to the list of child parts.
-		////
+		//! Adds the given body part to the list of child parts.
 		void attach(uptr child) { _children.push_back(std::move(child)); }
 
-		/// @return The player-visisble name of the body part.
-		////
+		//! The player-visisble name of the body part.
 		std::string const& name() const { return _name; }
 
-		/// @return The body part to which this body part is attached.
-		////
+		//! The body part to which this body part is attached.
 		std::vector<BodyPart::uptr> const& children() const { return _children; }
 
-		/// @return The set of regions that this body part occupies.
-		////
+		//! The set of regions that this body part occupies.
 		std::vector<units::ScreenRect> const& regions() const { return _regions; }
 
-		/// @return The body part's vitality, which determines maximum health.
-		////
+		//! The body part's vitality, which determines maximum health.
 		double vitality() const { return _vitality; }
 
-		/// @return The body part's contribution to its owner's weight.
-		////
+		//! The body part's contribution to its owner's weight.
 		double weight() const { return _weight; }
 
-		/// @return The body part's protection stat.
-		////
+		//! The body part's protection stat.
 		Protection const& protection() const { return _protection; }
 
-		/// @return The body part's resistance stat.
-		////
+		//! The body part's resistance stat.
 		Resistance const& resistance() const { return _resistance; }
 
-		/// @return The body part's vulnerability stat.
-		////
+		//! The body part's vulnerability stat.
 		Vulnerability const& vulnerability() const { return _vulnerability; }
 
-		/// Causes the body part to take damage from the specified source being.
-		/// @param damage Damage to be applied to this being.
-		/// @param source_id The ID of the being which caused the damage, if any.
-		////
+		//! Causes the body part to take damage from the specified source being.
+		//! @param damage Damage to be applied to this being.
+		//! @param source_id The ID of the being which caused the damage, if any.
 		void take_damage(Damage& damage, std::optional<Id<Being>> source_id);
 	private:
 		Being& _owner;

@@ -1,11 +1,7 @@
-/**
-* @file    main.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Runs an instance of the game Questless.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
+//! @brief Runs an instance of the game Questless.
 
 #ifndef _DEBUG
 #define DOCTEST_CONFIG_DISABLE
@@ -31,7 +27,7 @@ int main(int argc, char* argv[])
 		questless::game().run();
 	//} catch (std::exception& ex) {
 	//	string message = ex.what();
-	//	/// @todo Try-catch for exception for last-resort error reporting. (Should log the message or something.)
+	//	//! @todo Try-catch for exception for last-resort error reporting. (Should log the message or something.)
 	//}
 	return result;
 }

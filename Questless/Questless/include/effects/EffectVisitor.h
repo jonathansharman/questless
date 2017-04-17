@@ -1,11 +1,6 @@
-/**
-* @file    EffectVisitor.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Implements the visitor pattern for the Effect class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -17,6 +12,7 @@ namespace questless
 	class LightningBoltEffect;
 	class InjuryEffect;
 
+	//! Visitor type for effects.
 	struct EffectVisitor
 	{
 		virtual ~EffectVisitor() = default;

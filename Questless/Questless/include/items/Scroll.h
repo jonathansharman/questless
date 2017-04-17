@@ -1,11 +1,6 @@
-/**
-* @file    Scroll.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the Scroll class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -16,6 +11,7 @@
 
 namespace questless
 {
+	//! A magic scroll for inscribing spells.
 	class Scroll : public Item
 	{
 	public:

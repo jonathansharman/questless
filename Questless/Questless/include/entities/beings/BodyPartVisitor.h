@@ -1,11 +1,6 @@
-/**
-* @file    BodyPartVisitor.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Implements the visitor pattern for the BodyPart class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -24,6 +19,7 @@ namespace questless
 	class Wing;
 	class Tail;
 
+	//! Visitor type for body parts.
 	class BodyPartVisitor
 	{
 	public:

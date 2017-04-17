@@ -1,11 +1,6 @@
-/**
-* @file    Object.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION An inanimate entity.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -17,6 +12,7 @@
 
 namespace questless
 {
+	//! An inanimate entity.
 	class Object : public Entity
 	{
 	public:
@@ -26,6 +22,7 @@ namespace questless
 
 		using uptr = std::unique_ptr<Object>;
 		using ref = std::reference_wrapper<Object>;
+		using cref = std::reference_wrapper<Object const>;
 		using ptr_less_t = std::function<bool(uptr const&, uptr const&)>;
 		using ref_less_t = std::function<bool(Object const&, Object const&)>;
 
@@ -41,14 +38,11 @@ namespace questless
 
 		virtual ~Object() = default;
 
-		/// @param out A stream object into which the serialized object is inserted.
 		void serialize(std::ostream& out) const override;
 
-		/// @return Whether the object blocks the movement of other entities.
-		////
+		//! Whether the object blocks the movement of other entities.
 		virtual bool blocks_movement() const = 0;
 
-		/// Advances the object one time unit.
 		void update() override;
 	protected:
 		Object(Id<Object> id) : Entity{}, id{id} {}

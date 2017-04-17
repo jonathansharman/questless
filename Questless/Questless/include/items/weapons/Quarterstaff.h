@@ -1,15 +1,12 @@
-/**
-* @file    Quarterstaff.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
 #include "items/weapons/ModalWeapon.h"
 
-/// @todo Implementation file: Quaterstaff.cpp.
+//! @todo Implementation file: Quaterstaff.cpp.
 
 namespace questless
 {

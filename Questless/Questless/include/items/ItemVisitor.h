@@ -1,11 +1,6 @@
-/**
-* @file    ItemVisitor.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Implements the visitor pattern for the Item class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -20,6 +15,7 @@ namespace questless
 	class Quiver;
 	class Scroll;
 
+	//! Visitor type for items.
 	class ItemVisitor
 	{
 	public:

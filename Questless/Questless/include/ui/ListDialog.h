@@ -1,11 +1,6 @@
-/**
-* @file    ListDialog.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the ListDialog class, which allows the player to choose from a list of options.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -18,6 +13,7 @@
 
 namespace questless
 {
+	//! Retrieves the player's choice from a list of options.
 	class ListDialog : public Dialog
 	{
 	public:

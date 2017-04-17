@@ -1,11 +1,6 @@
-/**
-* @file    Item.cpp
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The implementation for the Item abstract base class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "items/Item.h"
 #include "entities/beings/Being.h"
@@ -29,7 +24,7 @@ namespace questless
 				// There's another object in the way at the drop location.
 				return actor.agent().send_message(std::make_unique<MessageEntityInTheWay>(), [cont] { return cont(Result::aborted); });
 
-				/// @todo It should probably always be possible to drop stuff. This by itself is a good reason to allow multiple objects on a tile.
+				//! @todo It should probably always be possible to drop stuff. This by itself is a good reason to allow multiple objects on a tile.
 			}
 		} else {
 			// Nothing on the ground yet. Make a new box, and put the item in it.
@@ -42,7 +37,7 @@ namespace questless
 
 	Complete Item::Throw::perform(Being& actor, cont_t cont)
 	{
-		/// @todo This.
+		//! @todo This.
 		auto drop = Drop{_item};
 		return drop.perform(actor, cont);
 	}

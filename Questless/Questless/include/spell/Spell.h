@@ -1,11 +1,6 @@
-/**
-* @file    Spell.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the Spell abstract base class.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -19,6 +14,7 @@ namespace questless::spell
 {
 	enum class Color { white, black, green, red, blue, yellow };
 
+	//! A magical spell that can be cast by a being.
 	class Spell
 	{
 	public:
@@ -59,74 +55,57 @@ namespace questless::spell
 
 		virtual ~Spell() = default;
 
-		/// @return An action that casts the spell.
-		////
+		//! An action that casts the spell.
 		Action::uptr cast() { return Cast::make(*this); }
 
-		/// @return An action that charges the spell for one charge.
-		////
+		//! An action that charges the spell for one charge.
 		Action::uptr incant() { return Incant::make(*this); }
 
-		/// @return An action that discharges the spell for one charge.
-		////
+		//! An action that discharges the spell for one charge.
 		Action::uptr discharge() { return Discharge::make(*this); }
 
-		/// @return The spell's name.
-		////
+		//! The spell's name.
 		virtual std::string name() const = 0;
 
-		/// @return The spell's color.
-		////
+		//! The spell's color.
 		virtual Color color() const = 0;
 
-		/// @return The maximum number of charges the spell can hold or nullopt if the spell has infinite charges.
-		////
+		//! The maximum number of charges the spell can hold or nullopt if the spell has infinite charges.
 		virtual std::optional<int> max_charges() const = 0;
 
-		/// @return The current number of spell charges.
-		////
+		//! The current number of spell charges.
 		int charges() const{ return _charges; }
 
-		/// Sets the number of spell charges to the given value.
-		////
+		//! Sets the number of spell charges to the given value.
 		void charges(int value) { _charges = value; }
 
-		/// Increases the number of charges by the given amount.
-		/// @param amount The number of charges to add, 1 by default.
-		////
+		//! Increases the number of charges by the given amount.
+		//! @param amount The number of charges to add, 1 by default.
 		void gain_charge(int amount);
 
-		/// Decreases the number of charges by the given amount.
-		/// @param amount The number of charges to subtract, 1 by default.
-		////
+		//! Decreases the number of charges by the given amount.
+		//! @param amount The number of charges to subtract, 1 by default.
 		void lose_charge(int amount);
 
-		/// @return The amount of time between starting to cast the spell and the completion of the cast.
-		////
+		//! The amount of time between starting to cast the spell and the completion of the cast.
 		virtual double cast_time() const = 0;
 
-		/// @return The amount of time required to incant the spell.
-		////
+		//! The amount of time required to incant the spell.
 		virtual double incant_time() const = 0;
 
-		/// @return The amount of time required to incant the spell.
-		////
+		//! The amount of time required to incant the spell.
 		virtual double discharge_time() const = 0;
 
-		/// @return Time after casting the spell before it can be used again.
-		////
+		//! Time after casting the spell before it can be used again.
 		virtual double cooldown() const = 0;
 
-		/// @return Time left before the spell can be cast again.
-		////
+		//! Time left before the spell can be cast again.
 		double active_cooldown() const { return _active_cooldown; }
 
-		/// Sets the time left before the spell can be cast again to the given value.
-		////
+		//! Sets the time left before the spell can be cast again to the given value.
 		void active_cooldown(double value) { _active_cooldown = value; }
 
-		/// Advances the spell one time unit.
-		////
+		//! Advances the spell one time unit.
 		virtual void update();
 	protected:
 		Spell(int charges = 0) : _charges{charges}, _active_cooldown{0} {}

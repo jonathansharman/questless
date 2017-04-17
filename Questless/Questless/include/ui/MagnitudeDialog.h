@@ -1,11 +1,6 @@
-/**
-* @file    MagnitudeDialog.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the MagnitudeDialog class, which allows the player to choose a floating-point value.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -17,6 +12,7 @@
 
 namespace questless
 {
+	//! Retrieves a floating-point value from the player.
 	class MagnitudeDialog : public Dialog
 	{
 	public:

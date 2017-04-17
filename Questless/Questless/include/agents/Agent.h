@@ -1,11 +1,6 @@
-/**
-* @file    Agent.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION The interface for the Agent abstract base class, representing an agent acting on behalf of some number of beings. E.g., the player agent.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -28,6 +23,7 @@
 
 namespace questless
 {
+	//! Facilitates control of a being. Includes AIs and the player.
 	class Agent
 	{
 	public:
@@ -44,16 +40,16 @@ namespace questless
 
 		Being& being;
 
-		/// Chooses and executes an action for the agent's being to perform.
+		//! Chooses and executes an action for the agent's being to perform.
 		virtual void act() = 0;
 
-		/// Causes the agent to perceive the given effect, possibly updating its state accordingly.
-		/// @param effect The effect to perceive.
+		//! Causes the agent to perceive the given effect, possibly updating its state accordingly.
+		//! @param effect The effect to perceive.
 		virtual void perceive(Effect::uptr const& effect) = 0;
 
 		// Queries and messages
 		
-		/// @todo Update documentation here.
+		//! @todo Update documentation here.
 
 		virtual Complete send_message
 			( Message::uptr message

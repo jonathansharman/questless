@@ -1,9 +1,6 @@
-/**
-* @file    ManaCost.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
@@ -11,8 +8,7 @@
 
 namespace questless
 {
-	/// The cost of performing an action.
-	////
+	//! The cost of performing an action.
 	class ManaCost : public Cost
 	{
 	public:

@@ -1,11 +1,7 @@
-/**
-* @file    Media.h
-* @author  Jonathan Sharman
-*
-* @section LICENSE See LICENSE.txt.
-*
-* @section DESCRIPTION Provides access to shared resources.
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
+//! @brief Provides access to shared resources.
 
 #pragma once
 
@@ -21,38 +17,30 @@
 
 namespace sdl
 {
-	/// @return The renderer.
-	////
+	//! The renderer.
 	Renderer& renderer();
 
-	/// Sets the renderer to the given value.
-	////
+	//! Sets the renderer to the given value.
 	void renderer(std::unique_ptr<Renderer> renderer);
 
-	/// @return The application window.
-	////
+	//! The application window.
 	Window& window();
 
-	/// Sets the window to the given value.
-	////
+	//! Sets the window to the given value.
 	void window(std::unique_ptr<Window> window);
 
-	/// @return The input object.
-	////
+	//! The input object.
 	Input& input();
 
-	/// @return The texture manager.
-	////
+	//! The texture manager.
 	ResourceManager<Texture>& texture_manager();
 	using TextureHandle = ResourceManager<Texture>::Handle;
 
-	/// @return The font manager.
-	////
+	//! The font manager.
 	ResourceManager<Font>& font_manager();
 	using FontHandle = ResourceManager<Font>::Handle;
 
-	/// @return The sound manager.
-	////
+	//! The sound manager.
 	ResourceManager<Sound>& sound_manager();
 	using SoundHandle = ResourceManager<Sound>::Handle;
 }
