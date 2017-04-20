@@ -8,7 +8,7 @@
 
 namespace questless::spell
 {
-	//! A spell that summons a lightning bolt to strike a tile.
+	//! Summons a lightning bolt to strike a tile.
 	class LightningBolt : public Spell
 	{
 	public:

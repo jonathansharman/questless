@@ -48,10 +48,13 @@ namespace questless
 		//! Draws visualizations of any active effects in the world.
 		void draw_effects();
 
-		// Effect visitor methods.
+		////////////////////////////
+		// Effect Visitor Methods //
+		////////////////////////////
 
-		void visit(LightningBoltEffect const&) override;
+		void visit(EagleEyeEffect const&) override;
 		void visit(InjuryEffect const&) override;
+		void visit(LightningBoltEffect const&) override;
 	private:
 		WorldView const* _world_view;
 

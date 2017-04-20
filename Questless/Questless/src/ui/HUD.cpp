@@ -118,6 +118,18 @@ namespace questless
 				int mana_bar_height = lround(_condition_bar_height * player_being->mana / player_being->stats.spirit);
 				renderer().draw_rect(ScreenRect{left + 1, _screen_bottom, _condition_bar_width - 2, mana_bar_height - 1, ScreenRect::Origin::lower_left}, Color::blue(), true);
 				left += _condition_bar_width;
+				// Energy
+				int energy_bar_height = lround(_condition_bar_height * player_being->energy / player_being->stats.stamina);
+				renderer().draw_rect(ScreenRect{left + 1, _screen_bottom, _condition_bar_width - 2, energy_bar_height - 1, ScreenRect::Origin::lower_left}, Color::cyan(), true);
+				left += _condition_bar_width;
+				// Satiety
+				int satiety_bar_height = lround(_condition_bar_height * player_being->satiety / Being::max_satiety);
+				renderer().draw_rect(ScreenRect{left + 1, _screen_bottom, _condition_bar_width - 2, satiety_bar_height - 1, ScreenRect::Origin::lower_left}, Color::brown(), true);
+				left += _condition_bar_width;
+				// Alertness
+				int alertness_bar_height = lround(_condition_bar_height * player_being->alertness / Being::max_alertness);
+				renderer().draw_rect(ScreenRect{left + 1, _screen_bottom, _condition_bar_width - 2, alertness_bar_height - 1, ScreenRect::Origin::lower_left}, Color::yellow(), true);
+				left += _condition_bar_width;
 			}
 
 			{ // Draw the body.

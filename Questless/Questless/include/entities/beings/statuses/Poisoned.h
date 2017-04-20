@@ -8,7 +8,7 @@
 
 namespace questless
 {
-	//! A status that deals blight damage over time.
+	//! Deals blight damage over time.
 	class Poisoned : public Status
 	{
 	public:

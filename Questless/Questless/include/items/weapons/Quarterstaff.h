@@ -63,7 +63,7 @@ namespace questless
 			public:
 				using MeleeAttack::MeleeAttack;
 				std::string name() const override { return "Strike"; }
-				Damage base_damage() const override { return Bludgeon{25.0}; }
+				Damage base_damage() const override { return Bludgeon{24.0}; }
 				double wind_up() const override { return 1.0; }
 				double follow_through() const override { return 1.0; }
 				double cooldown() const override { return 2.0; }
@@ -74,10 +74,10 @@ namespace questless
 			public:
 				using MeleeAttack::MeleeAttack;
 				std::string name() const override { return "Jab"; }
-				Damage base_damage() const override { return Bludgeon{12.5}; }
-				double wind_up() const override { return 0.25; }
-				double follow_through() const override { return 0.625; }
-				double cooldown() const override { return 1.25; }
+				Damage base_damage() const override { return Bludgeon{12.0}; }
+				double wind_up() const override { return 0.2; }
+				double follow_through() const override { return 0.8; }
+				double cooldown() const override { return 1.3; }
 				double wear_ratio() const override { return 0.001; }
 			};
 
@@ -117,7 +117,7 @@ namespace questless
 			public:
 				using MeleeAttack::MeleeAttack;
 				std::string name() const override { return "Strike"; }
-				Damage base_damage() const override { return Bludgeon{18.0}; }
+				Damage base_damage() const override { return Damage{Bludgeon{18.0}, Protection{Pad{6.0}} + Protection{Deflect{6.0}}}; }
 				double wind_up() const override { return 0.8; }
 				double follow_through() const override { return 0.8; }
 				double cooldown() const override { return 1.6; }
@@ -128,10 +128,10 @@ namespace questless
 			public:
 				using MeleeAttack::MeleeAttack;
 				std::string name() const override { return "Jab"; }
-				Damage base_damage() const override { return Bludgeon{7.5}; }
-				double wind_up() const override { return 0.2; }
-				double follow_through() const override { return 0.5; }
-				double cooldown() const override { return 1.0; }
+				Damage base_damage() const override { return Damage{Bludgeon{9.0}, Protection{Pad{6.0}} + Protection{Deflect{6.0}}}; }
+				double wind_up() const override { return 0.16; }
+				double follow_through() const override { return 0.64; }
+				double cooldown() const override { return 1.04; }
 				double wear_ratio() const override { return 0.001; }
 			};
 

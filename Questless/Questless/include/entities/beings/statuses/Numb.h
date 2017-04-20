@@ -8,7 +8,7 @@
 
 namespace questless
 {
-	//! A status that reduces agility and dexterity.
+	//! Reduces agility and dexterity.
 	class Numb : public Status
 	{
 	public:

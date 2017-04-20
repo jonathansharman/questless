@@ -8,15 +8,15 @@
 
 namespace questless::spell
 {
-	//! Heals a being.
-	class Heal : public Spell
+	//! Temporarily increases the caster's visual acuity.
+	class EagleEye : public Spell
 	{
 	public:
-		Heal() : Spell{10} {}
+		EagleEye() : Spell{10} {}
 
-		std::string name() const override { return "Heal"; }
+		std::string name() const override { return "Eagle Eye"; }
 
-		Color color() const override { return Color::white; }
+		Color color() const override { return Color::green; }
 
 		std::optional<int> max_charges() const override { return 10; }
 
@@ -26,12 +26,10 @@ namespace questless::spell
 
 		double discharge_time() const override { return 1.0; }
 
-		double cooldown() const override { return 5.0; }
+		double cooldown() const override { return 50.0; }
 	protected:
 		Complete perform_cast(Being& caster, Action::cont_t cont) override;
 	private:
-		static constexpr double _cost_factor = 1.0;
-		static constexpr double _cost_log = 2.0;
-		static constexpr int _range = 10;
+		static constexpr double _cost = 10.0;
 	};
 }

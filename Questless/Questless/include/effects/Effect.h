@@ -34,19 +34,22 @@ namespace questless
 
 	//! @todo Eventually move effect subtypes to individual header files.
 
-	class LightningBoltEffect : public Effect
+	class EagleEyeEffect : public Effect
 	{
 	public:
-		using sptr = std::shared_ptr<LightningBoltEffect>;
+		using sptr = std::shared_ptr<EagleEyeEffect>;
 
-		using Effect::Effect;
+		Id<Being> const caster_id;
 
 		//! @param origin The coordinates of the effect's origin.
-		static sptr make(RegionTileCoords origin) { return std::make_shared<LightningBoltEffect>(origin); }
+		//! @param caster_id The ID of the caster.
+		EagleEyeEffect(RegionTileCoords origin, Id<Being> caster_id)
+			: Effect{origin}, caster_id{caster_id}
+		{}
 
 		virtual void accept(EffectVisitor& visitor) const override { visitor.visit(*this); }
 
-		int range() const override { return 10; }
+		int range() const override { return 3; }
 	};
 
 	class InjuryEffect : public Effect
@@ -54,24 +57,32 @@ namespace questless
 	public:
 		using sptr = std::shared_ptr<InjuryEffect>;
 
+		Damage const damage;
+		Id<Being> target_id;
+		std::optional<Id<Being>> opt_source_id;
+
 		//! @param origin The coordinates of the effect's origin.
 		//! @param damage The damage dealt.
-		//! @param target_id The id of the injured being.
-		//! @param opt_source_id The id of the being who caused the injury or nullopt if there is none.
+		//! @param target_id The ID of the injured being.
+		//! @param opt_source_id The ID of the being who caused the injury or nullopt if there is none.
 		InjuryEffect(RegionTileCoords origin, Damage damage, Id<Being> target_id, std::optional<Id<Being>> opt_source_id)
-			: Effect{origin}, _damage{damage}, _target_id{target_id}, _opt_source_id{opt_source_id}
+			: Effect{origin}, damage{damage}, target_id{target_id}, opt_source_id{opt_source_id}
 		{}
 
 		virtual void accept(EffectVisitor& visitor) const override { visitor.visit(*this); }
 
 		int range() const override { return 7; }
+	};
 
-		Damage const& damage() const { return _damage; }
-		Id<Being> target_id() const { return _target_id; }
-		std::optional<Id<Being>> opt_source_id() const { return _opt_source_id; }
-	private:
-		Damage _damage;
-		Id<Being> _target_id;
-		std::optional<Id<Being>> _opt_source_id;
+	class LightningBoltEffect : public Effect
+	{
+	public:
+		using sptr = std::shared_ptr<LightningBoltEffect>;
+
+		using Effect::Effect;
+
+		virtual void accept(EffectVisitor& visitor) const override { visitor.visit(*this); }
+
+		int range() const override { return 10; }
 	};
 }

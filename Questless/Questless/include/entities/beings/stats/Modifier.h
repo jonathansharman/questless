@@ -16,6 +16,8 @@ namespace questless
 	{
 		using uptr = std::unique_ptr<Modifier>;
 
+		//! @todo make_vector probably belongs in utility.h (as make_unique_vector<T> or something).
+
 		//! Makes a vector of modifiers from the given modifier.
 		template <typename ModifierPtr>
 		static std::vector<uptr> make_vector(ModifierPtr modifier)

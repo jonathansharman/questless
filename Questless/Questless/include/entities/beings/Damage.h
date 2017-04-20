@@ -101,15 +101,14 @@ namespace questless
 		friend Damage operator /(Damage const& d, double k)
 		{
 			Damage quotient = d;
-			for (auto& part : quotient._parts) {
-				part.amount /= k;
-			}
+			quotient /= k;
 			return quotient;
 		}
 
 		Damage& operator +=(Damage const& d)
 		{
 			_parts.insert(_parts.end(), d._parts.begin(), d._parts.end());
+			_protection_evasion += d._protection_evasion;
 			return *this;
 		}
 		Damage& operator *=(double k)
@@ -117,6 +116,15 @@ namespace questless
 			for (Part& part : _parts) {
 				part.amount *= k;
 			}
+			_protection_evasion *= k;
+			return *this;
+		}
+		Damage& operator /=(double k)
+		{
+			for (Part& part : _parts) {
+				part.amount /= k;
+			}
+			_protection_evasion /= k;
 			return *this;
 		}
 

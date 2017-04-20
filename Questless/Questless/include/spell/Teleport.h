@@ -8,7 +8,7 @@
 
 namespace questless::spell
 {
-	//! A spell that teleports the caster some distance from its current location.
+	//! Teleports the caster some distance from its current location.
 	class Teleport : public Spell
 	{
 	public:

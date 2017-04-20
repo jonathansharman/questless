@@ -8,7 +8,7 @@
 
 namespace questless
 {
-	//! A status that causes muteness.
+	//! Causes muteness.
 	class Mute : public Status
 	{
 	public:

@@ -9,7 +9,7 @@
 
 namespace questless
 {
-	//! A status that reduces stealth and black magic.
+	//! Reduces stealth and black magic.
 	class Illuminated : public Status
 	{
 	public:

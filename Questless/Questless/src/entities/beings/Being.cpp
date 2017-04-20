@@ -30,7 +30,6 @@ namespace questless
 		, dead{false}
 		, direction{static_cast<RegionTileCoords::Direction>(uniform(1, 6))}
 		, _agent{make_agent(*this)}
-		, _need_to_calculate_stats{false}
 		
 	{
 		stats = effective_stats();
@@ -47,7 +46,6 @@ namespace questless
 		, mana{mana_mutator()}
 		, energy{energy_mutator()}
 		, busy_time{busy_time_mutator()}
-		, _need_to_calculate_stats{true}
 	{
 		//! @todo Read body.
 
@@ -120,20 +118,16 @@ namespace questless
 
 	void Being::update()
 	{
-		if (_need_to_calculate_stats) {
-			stats = effective_stats();
-			_need_to_calculate_stats = false;
-		}
-
+		stats = effective_stats();
+		
 		// Update status modifiers.
 		{
-			auto i = _statuses.begin();
-			while (i != _statuses.end()) {
-				(*i)->update(*this);
-				if ((*i)->duration() == 0) {
-					(*i)->expire(*this);
-					_statuses.erase(i);
-					_need_to_calculate_stats = true;
+			size_t i = 0;
+			while (i < _statuses.size()) {
+				_statuses[i]->update(*this);
+				if (_statuses[i]->duration() == 0) {
+					_statuses[i]->expire(*this);
+					_statuses.erase(_statuses.begin() + i);
 				} else {
 					++i;
 				}

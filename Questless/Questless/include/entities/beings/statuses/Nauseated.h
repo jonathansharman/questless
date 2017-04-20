@@ -8,7 +8,7 @@
 
 namespace questless
 {
-	//! A status that reduces strength and endurance.
+	//! Reduces strength and endurance.
 	class Nauseated : public Status
 	{
 	public:

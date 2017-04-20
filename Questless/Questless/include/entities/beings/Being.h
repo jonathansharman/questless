@@ -67,16 +67,16 @@ namespace questless
 		// Satiety
 		static constexpr double min_satiety = 0.0;
 		static constexpr double max_satiety = 100.0;
-		static constexpr double satiety_rate = -1.0; //!< Satiety gained per turn (awake or asleep).
-		static constexpr double satiety_rate_asleep = 0.5; //!< Additional satiety gained per turn asleep.
+		static constexpr double satiety_rate = -0.05; //!< Satiety gained per turn (awake or asleep).
+		static constexpr double satiety_rate_asleep = 0.025; //!< Additional satiety gained per turn asleep.
 		static constexpr double satiety_health_regen_penalty = 1.0; //!< Proportion of base health regeneration removed at zero satiety.
 		static constexpr double satiety_mana_regen_penalty = 1.0; //!< Proportion of base mana regeneration removed at zero satiety.
 
 		// Alertness
 		static constexpr double min_alertness = 0.0;
 		static constexpr double max_alertness = 100.0;
-		static constexpr double alertness_rate = -1.0; //!< Alertness gained per turn (awake or asleep).
-		static constexpr double alertness_rate_asleep = 3.0; //!< Additional alertness gained per turn asleep.
+		static constexpr double alertness_rate = -0.1; //!< Alertness gained per turn (awake or asleep).
+		static constexpr double alertness_rate_asleep = 0.3; //!< Additional alertness gained per turn asleep.
 		static constexpr double alertness_agility_penalty = 0.75; //!< Proportion of base agility removed at zero alertness.
 		static constexpr double alertness_dexterity_penalty = 0.75; //!< Proportion of base dexterity removed at zero alertness.
 		static constexpr double alertness_intellect_penalty = 0.75; //!< Proportion of base intellect removed at zero alertness.
@@ -208,7 +208,6 @@ namespace questless
 		// Statuses
 
 		std::vector<std::unique_ptr<Status>> _statuses;
-		bool _need_to_calculate_stats; //! @todo Is there a way to avoid this?
 
 		// Items
 

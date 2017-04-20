@@ -21,8 +21,8 @@ namespace questless
 	///////////////
 
 	//! Executes and times the function @p f.
-	//! @return The number of milliseconds it took to execute @p f.
-	std::chrono::milliseconds time(std::function<void()> f);
+	//! @return The time it took to execute @p f, in nanoseconds.
+	std::chrono::nanoseconds time(std::function<void()> f);
 
 	//////////////////////////////
 	// Random number generation //

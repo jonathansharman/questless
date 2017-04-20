@@ -8,7 +8,7 @@
 
 namespace questless
 {
-	//! An intellect-reducing status.
+	//! Reduces intellect.
 	class Confused : public Status
 	{
 	public:

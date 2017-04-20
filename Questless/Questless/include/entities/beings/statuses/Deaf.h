@@ -8,7 +8,7 @@
 
 namespace questless
 {
-	//! A hearing-reducing status.
+	//! Reduces hearing.
 	class Deaf : public Status
 	{
 	public:

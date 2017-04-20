@@ -8,7 +8,7 @@
 
 namespace questless
 {
-	//! A status that causes a being to gain health over time.
+	//! Causes a being to gain health over time.
 	class Healing : public Status
 	{
 	public:

@@ -308,6 +308,7 @@
     <ClInclude Include="include\entities\beings\statuses\Confused.h" />
     <ClInclude Include="include\entities\beings\statuses\Deaf.h" />
     <ClInclude Include="include\entities\beings\statuses\Discharging.h" />
+    <ClInclude Include="include\entities\beings\statuses\EagleEyed.h" />
     <ClInclude Include="include\entities\beings\statuses\Healing.h" />
     <ClInclude Include="include\entities\beings\statuses\Illuminated.h" />
     <ClInclude Include="include\entities\beings\statuses\Mute.h" />
@@ -350,6 +351,7 @@
     <ClInclude Include="include\sdl\Sound.h" />
     <ClInclude Include="include\sdl\Texture.h" />
     <ClInclude Include="include\sdl\Window.h" />
+    <ClInclude Include="include\spell\EagleEye.h" />
     <ClInclude Include="include\spell\Heal.h" />
     <ClInclude Include="include\spell\LightningBolt.h" />
     <ClInclude Include="include\spell\ManaCost.h" />
@@ -473,6 +475,7 @@
     <ClCompile Include="src\sdl\Sound.cpp" />
     <ClCompile Include="src\sdl\Texture.cpp" />
     <ClCompile Include="src\sdl\Window.cpp" />
+    <ClCompile Include="src\spell\EagleEye.cpp" />
     <ClCompile Include="src\spell\Heal.cpp" />
     <ClCompile Include="src\spell\LightningBolt.cpp" />
     <ClCompile Include="src\spell\ManaCost.cpp" />

@@ -4,14 +4,15 @@
 
 #include "animation/WorldRenderer.h"
 
-#include "Game.h"
 #include "animation/EntityAnimator.h"
-#include "animation/TileTexturer.h"
-#include "animation/particles/YellowMagicParticle.h"
 #include "animation/particles/BloodParticle.h"
+#include "animation/particles/GreenMagicParticle.h"
 #include "animation/particles/TextParticle.h"
-#include "world/Region.h"
+#include "animation/particles/YellowMagicParticle.h"
+#include "animation/TileTexturer.h"
+#include "Game.h"
 #include "utility/utility.h"
+#include "world/Region.h"
 
 using std::make_unique;
 
@@ -233,17 +234,19 @@ namespace questless
 		});
 	}
 
-	// Effect Visitor Functions
+	//////////////////////////////
+	// Effect Visitor Functions //
+	//////////////////////////////
 
-	void WorldRenderer::visit(LightningBoltEffect const& e)
+	void WorldRenderer::visit(EagleEyeEffect const& e)
 	{
-		static auto lightning_bolt_sound_handle = sound_manager().add("resources/sounds/spells/lightning-bolt.wav");
+		static auto eagle_eye_sound_handle = sound_manager().add("resources/sounds/spells/eagle-eye.wav");
 
 		GamePoint position = Layout::dflt().to_world(e.origin());
-		for (int i = 0; i < 15; ++i) {
-			_particles.emplace_back(make_unique<YellowMagicParticle>(position));
+		for (int i = 0; i < 50; ++i) {
+			_particles.emplace_back(make_unique<GreenMagicParticle>(position));
 		}
-		sound_manager()[lightning_bolt_sound_handle].play();
+		sound_manager()[eagle_eye_sound_handle].play();
 	}
 
 	void WorldRenderer::visit(InjuryEffect const& e)
@@ -251,13 +254,13 @@ namespace questless
 		static auto pierce_sound_handle = sound_manager().add("resources/sounds/weapons/pierce.wav");
 		static auto hit_sound_handle = sound_manager().add("resources/sounds/weapons/hit.wav");
 
-		Being const* target = game().beings.get(e.target_id());
+		Being const* target = game().beings.get(e.target_id);
 		double const target_vitality = target ? target->stats.vitality.get() : 100.0; // Assume vitality = 100 if being no longer exists to check.
 		//! @todo Pass along the vitality in the event object if it's needed here.
 
 		GamePoint position = Layout::dflt().to_world(e.origin());
 
-		Damage const& damage = e.damage();
+		Damage const& damage = e.damage;
 
 		auto spawn_blood = [&](double const lost_health) {
 			int const n = static_cast<int>(lost_health / target_vitality * 100.0); // 100 is an arbitrary scaling factor.
@@ -292,5 +295,16 @@ namespace questless
 					break;
 			}
 		}
+	}
+
+	void WorldRenderer::visit(LightningBoltEffect const& e)
+	{
+		static auto lightning_bolt_sound_handle = sound_manager().add("resources/sounds/spells/lightning-bolt.wav");
+
+		GamePoint position = Layout::dflt().to_world(e.origin());
+		for (int i = 0; i < 35; ++i) {
+			_particles.emplace_back(make_unique<YellowMagicParticle>(position));
+		}
+		sound_manager()[lightning_bolt_sound_handle].play();
 	}
 }

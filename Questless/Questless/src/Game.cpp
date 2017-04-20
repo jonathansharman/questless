@@ -18,16 +18,17 @@ using std::ostringstream;
 //! @todo The following are needed only for player spawning. Perhaps this should be the responsibility of a different class.
 #include "agents/Agent.h"
 #include "agents/Player.h"
-#include "entities/beings/Human.h"
 #include "entities/beings/goblinoids/Goblin.h"
+#include "entities/beings/Human.h"
 #include "items/Scroll.h"
-#include "spell/LightningBolt.h"
-#include "spell/Heal.h"
-#include "spell/Teleport.h"
 #include "items/weapons/Arrow.h"
 #include "items/weapons/Bow.h"
 #include "items/weapons/Quarterstaff.h"
 #include "items/weapons/Quiver.h"
+#include "spell/EagleEye.h"
+#include "spell/Heal.h"
+#include "spell/LightningBolt.h"
+#include "spell/Teleport.h"
 
 using std::move;
 using std::unique_ptr;
@@ -377,6 +378,7 @@ namespace questless
 						player_being->inventory.add(items.add(make_unique<Scroll>(make_unique<spell::LightningBolt>())).id);
 						player_being->inventory.add(items.add(make_unique<Scroll>(make_unique<spell::Heal>())).id);
 						player_being->inventory.add(items.add(make_unique<Scroll>(make_unique<spell::Teleport>())).id);
+						player_being->inventory.add(items.add(make_unique<Scroll>(make_unique<spell::EagleEye>())).id);
 						player_being->inventory.add(items.add(make_unique<Quarterstaff>()).id);
 						player_being->inventory.add(items.add(make_unique<Bow>()).id);
 						{

@@ -410,6 +410,7 @@ Green - nature - earth
 		Metamorphose hide - Creates and equips a low-durability, high-power body armor. Currently equipped body armor is unequipped without incurring unequip time.
 		Metamorphose claws - Creates and equips a low-durability, high-power one-handed weapon for each hand. Currently equipped weapons are unequipped without incurring unequip times.
 		Feral Form - Temporarily become feral. While feral, a being is mute and has increased strength, endurance, agility, dexterity, vision, and hearing but decreased spirit, stamina, and intellect.
+			This seems like way too much stuff for one ability
 		Devour - Deals blight (?) damage to a target and restores health to the caster.
 		Eagle Eye - Temporarily increase visual acuity by 100%.
 		Scavenge - Destroy a target corpse and regain health in proportion to its vitality when it was alive.

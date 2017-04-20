@@ -24,8 +24,8 @@ namespace questless::spell
 				active_cooldown(cooldown());
 				discharge();
 				caster.mana -= cost;
-				game().add_effect(LightningBoltEffect::make(caster.coords));
-				game().add_effect(LightningBoltEffect::make(tile_coords));
+				game().add_effect(std::make_shared<LightningBoltEffect>(caster.coords));
+				game().add_effect(std::make_shared<LightningBoltEffect>(tile_coords));
 				caster.region->move(caster, tile_coords);
 				return cont(Action::Result::success);
 			}

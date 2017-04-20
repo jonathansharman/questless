@@ -8,7 +8,7 @@
 
 namespace questless
 {
-	//! A visual acuity-reducing status.
+	//! Decreases visual acuity.
 	class Blind : public Status
 	{
 	public:

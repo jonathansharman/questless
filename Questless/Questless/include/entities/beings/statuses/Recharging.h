@@ -8,7 +8,7 @@
 
 namespace questless
 {
-	//! A status that causes a being to gain mana over time.
+	//! Causes a being to gain mana over time.
 	class Recharging : public Status
 	{
 	public:

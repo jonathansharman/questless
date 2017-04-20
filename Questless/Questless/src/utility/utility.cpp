@@ -13,11 +13,11 @@ namespace questless
 	// Debugging //
 	///////////////
 
-	std::chrono::milliseconds time(function<void()> f)
+	std::chrono::nanoseconds time(function<void()> f)
 	{
 		auto start_time = Game::clock::now();
 		f();
-		return std::chrono::duration_cast<std::chrono::milliseconds>(Game::clock::now() - start_time);
+		return std::chrono::duration_cast<std::chrono::nanoseconds>(Game::clock::now() - start_time);
 	}
 
 	//////////////////////////////

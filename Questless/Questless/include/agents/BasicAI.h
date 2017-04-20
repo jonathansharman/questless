@@ -66,16 +66,19 @@ namespace questless
 			, std::function<Complete(std::optional<Item*>)> cont
 			) const override;
 
-		// Effect Visits
+		////////////////////////////
+		// Effect Visitor Methods //
+		////////////////////////////
 
-		virtual void visit(LightningBoltEffect const&) override {} // Ignore.
-		virtual void visit(InjuryEffect const& effect) override
+		void visit(EagleEyeEffect const&) override {} // Ignore.
+		void visit(InjuryEffect const& effect) override
 		{
 			// Retaliate against injuries.
-			if (effect.opt_source_id() && effect.target_id() == being.id) {
-				_state = std::make_unique<AttackState>(*effect.opt_source_id());
+			if (effect.opt_source_id && effect.target_id == being.id) {
+				_state = std::make_unique<AttackState>(*effect.opt_source_id);
 			}
 		}
+		void visit(LightningBoltEffect const&) override {} // Ignore.
 	private:
 		friend class State;
 		struct State

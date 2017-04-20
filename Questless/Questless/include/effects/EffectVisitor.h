@@ -9,15 +9,17 @@
 
 namespace questless
 {
-	class LightningBoltEffect;
+	class EagleEyeEffect;
 	class InjuryEffect;
+	class LightningBoltEffect;
 
 	//! Visitor type for effects.
 	struct EffectVisitor
 	{
 		virtual ~EffectVisitor() = default;
 
-		virtual void visit(LightningBoltEffect const&) = 0;
+		virtual void visit(EagleEyeEffect const&) = 0;
 		virtual void visit(InjuryEffect const&) = 0;
+		virtual void visit(LightningBoltEffect const&) = 0;
 	};
 }

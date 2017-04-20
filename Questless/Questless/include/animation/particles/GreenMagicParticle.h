@@ -26,7 +26,9 @@ namespace questless
 				, Lifetime{units::GameSeconds{uniform(1.8, 2.2)}}
 				}
 			, _turning_right{random_bool()}
-		{}
+		{
+			_scale_velocity = units::GameScaleVelocity{Scale{-_scale / _lifetime.count()}};
+		}
 	private:
 		static constexpr units::GameRadians _dtheta_max = 2.0 * units::GameRadians::circle();
 		static constexpr double _inflection_probability = 0.1;

@@ -8,7 +8,7 @@
 
 namespace questless
 {
-	//! A status representing that the being is sleeping.
+	//! Causes a being to sleep.
 	class Sleeping : public Status
 	{
 	public:

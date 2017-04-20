@@ -63,6 +63,7 @@ namespace questless
 		int _duration;
 		std::optional<Id<Being>> _source_id;
 
+		//! Carries out Status subtype-specific effects that should occur each update cycle.
 		virtual void subupdate(Being& target);
 	};
 }

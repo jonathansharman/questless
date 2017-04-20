@@ -125,6 +125,15 @@ namespace questless
 			_cleanse *= k;
 			return *this;
 		}
+		Protection& operator /=(double k)
+		{
+			_pad /= k;
+			_deflect /= k;
+			_fireproof /= k;
+			_frostproof /= k;
+			_cleanse /= k;
+			return *this;
+		}
 
 		constexpr double pad() const { return _pad; }
 		constexpr double deflect() const { return _deflect; }
