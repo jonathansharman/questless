@@ -349,15 +349,6 @@
     <ClInclude Include="include\ui\CountDialog.h">
       <Filter>include\ui</Filter>
     </ClInclude>
-    <ClInclude Include="include\ui\DigraphMenuController.h">
-      <Filter>include\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ui\DigraphMenuModel.h">
-      <Filter>include\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ui\DigraphMenuView.h">
-      <Filter>include\ui</Filter>
-    </ClInclude>
     <ClInclude Include="include\ui\MagnitudeDialog.h">
       <Filter>include\ui</Filter>
     </ClInclude>
@@ -703,6 +694,9 @@
     <ClInclude Include="include\entities\beings\statuses\EagleEyed.h">
       <Filter>include\entities\beings\statuses</Filter>
     </ClInclude>
+    <ClInclude Include="include\ui\DigraphMenu.h">
+      <Filter>include\ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\world\Region.cpp">
@@ -748,15 +742,6 @@
       <Filter>src\animation</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\Dialog.cpp">
-      <Filter>src\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\DigraphMenuController.cpp">
-      <Filter>src\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\DigraphMenuModel.cpp">
-      <Filter>src\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\DigraphMenuView.cpp">
       <Filter>src\ui</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\PlayerActionDialog.cpp">
@@ -944,6 +929,9 @@
     </ClCompile>
     <ClCompile Include="src\spell\EagleEye.cpp">
       <Filter>src\spell</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\DigraphMenu.cpp">
+      <Filter>src\ui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

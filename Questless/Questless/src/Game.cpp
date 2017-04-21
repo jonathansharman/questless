@@ -5,7 +5,7 @@
 #include "Game.h"
 
 #include <sstream>
-using std::ostringstream;
+#include <thread>
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -50,7 +50,7 @@ namespace questless
 		, _splash_sound_played{false}
 		, _state{State::splash}
 		, _time{0.0}
-		, _mnu_main{480, 640}
+		, _main_menu{480, 640}
 	{
 		// Initialize video.
 
@@ -286,7 +286,7 @@ namespace questless
 			for (double fps : _fps_buffer) {
 				fps_buffer_sum += fps;
 			}
-			ostringstream oss_fps;
+			std::ostringstream oss_fps;
 			oss_fps.setf(std::ios::fixed);
 			oss_fps.precision(2);
 			oss_fps << fps_buffer_sum / _fps_buffer.size();
@@ -325,15 +325,15 @@ namespace questless
 			// Initialize menu.
 
 			// Add pages.
-			_mnu_main.add_page("Questless");
-			_mnu_main.add_page("Settings");
+			_main_menu.add_page("Questless");
+			_main_menu.add_page("Settings");
 			// Add options.
-			_mnu_main.add_option("Questless", "Continue");
-			_mnu_main.add_option("Questless", "Begin Anew");
-			_mnu_main.add_option("Questless", "Settings", "Settings");
-			_mnu_main.add_option("Questless", "Quit");
-			_mnu_main.add_option("Settings", "Save", "Questless");
-			_mnu_main.add_option("Settings", "Cancel", "Questless");
+			_main_menu.add_option("Questless", "Continue");
+			_main_menu.add_option("Questless", "Begin Anew");
+			_main_menu.add_option("Questless", "Settings", "Settings");
+			_main_menu.add_option("Questless", "Quit");
+			_main_menu.add_option("Settings", "Save", "Questless");
+			_main_menu.add_option("Settings", "Cancel", "Questless");
 
 			_time_last_state_change = clock::now();
 			_state = State::menu;
@@ -364,8 +364,8 @@ namespace questless
 
 	void Game::update_menu()
 	{
-		_mnu_main.update();
-		for (auto const& option : _mnu_main.poll_selections()) {
+		_main_menu.update();
+		for (auto const& option : _main_menu.poll_selections()) {
 			if (option.first == "Questless") {
 				if (option.second == "Continue" || option.second == "Begin Anew") {
 					_region = make_unique<Region>("Region1");
@@ -412,7 +412,7 @@ namespace questless
 
 	void Game::render_menu()
 	{
-		_mnu_main.draw(window().center(), HAlign::center, VAlign::middle);
+		_main_menu.draw(window().center(), HAlign::center, VAlign::middle);
 	}
 
 	void Game::render_playing()
@@ -438,7 +438,7 @@ namespace questless
 		}
 
 		{
-			ostringstream ss_cam_coords;
+			std::ostringstream ss_cam_coords;
 			ss_cam_coords.setf(std::ios::fixed);
 			ss_cam_coords.precision(2);
 			ss_cam_coords << "Cam: ((" << _camera->position().x << ", " << _camera->position().y << "), ";
@@ -448,13 +448,13 @@ namespace questless
 		}
 		{
 			auto cam_hex_coords = Layout::dflt().to_hex_coords<RegionTileCoords>(_camera->position());
-			ostringstream ss_cam_hex_coords;
+			std::ostringstream ss_cam_hex_coords;
 			ss_cam_hex_coords << "Cam hex: (" << cam_hex_coords.q << ", " << cam_hex_coords.r << ")";
 			Texture txt_cam_hex_coords = _fnt_20pt->render(ss_cam_hex_coords.str().c_str(), Color::white());
 			txt_cam_hex_coords.draw(ScreenPoint{0, 25});
 		}
 		{
-			ostringstream ss_time;
+			std::ostringstream ss_time;
 			ss_time << "Time: " << _time;
 			Texture txt_turn = _fnt_20pt->render(ss_time.str().c_str(), Color::white());
 			txt_turn.draw(ScreenPoint{0, 50});

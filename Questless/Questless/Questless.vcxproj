@@ -359,9 +359,7 @@
     <ClInclude Include="include\spell\Teleport.h" />
     <ClInclude Include="include\ui\CountDialog.h" />
     <ClInclude Include="include\ui\Dialog.h" />
-    <ClInclude Include="include\ui\DigraphMenuController.h" />
-    <ClInclude Include="include\ui\DigraphMenuModel.h" />
-    <ClInclude Include="include\ui\DigraphMenuView.h" />
+    <ClInclude Include="include\ui\DigraphMenu.h" />
     <ClInclude Include="include\ui\DirectionDialog.h" />
     <ClInclude Include="include\ui\HUD.h" />
     <ClInclude Include="include\ui\ListDialog.h" />
@@ -483,9 +481,7 @@
     <ClCompile Include="src\spell\Teleport.cpp" />
     <ClCompile Include="src\ui\CountDialog.cpp" />
     <ClCompile Include="src\ui\Dialog.cpp" />
-    <ClCompile Include="src\ui\DigraphMenuController.cpp" />
-    <ClCompile Include="src\ui\DigraphMenuModel.cpp" />
-    <ClCompile Include="src\ui\DigraphMenuView.cpp" />
+    <ClCompile Include="src\ui\DigraphMenu.cpp" />
     <ClCompile Include="src\ui\DirectionDialog.cpp" />
     <ClCompile Include="src\ui\HUD.cpp" />
     <ClCompile Include="src\ui\MagnitudeDialog.cpp" />

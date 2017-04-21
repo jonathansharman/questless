@@ -27,7 +27,7 @@
 #include "sdl/Sound.h"
 #include "sdl/Texture.h"
 #include "sdl/Window.h"
-#include "ui/DigraphMenuController.h"
+#include "ui/DigraphMenu.h"
 #include "ui/HUD.h"
 #include "ui/ListDialog.h"
 #include "ui/PlayerActionDialog.h"
@@ -163,7 +163,7 @@ namespace questless
 
 		// UI
 
-		DigraphMenuController _mnu_main;
+		DigraphMenu _main_menu;
 
 		std::unique_ptr<PlayerActionDialog> _player_action_dialog;
 		std::deque<Dialog::uptr> _dialogs;
