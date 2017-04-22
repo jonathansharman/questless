@@ -494,11 +494,18 @@ namespace questless
 
 			// Work through the beings ready to take their turns, until all have acted or one of them can't finish acting yet.
 			while (Being* next_ready_being = _region->next_ready_being()) {
+				if (next_ready_being->id == _player_being_id) {
+					// Update the player view before the player acts.
+					update_player_view();
+				}
 				next_ready_being->act();
+				if (next_ready_being->id == _player_being_id) {
+					// Update the player view after the player acts.
+					update_player_view();
+				}
 
 				if (_player_action_dialog || !_dialogs.empty()) {
 					// Awaiting player input to complete current action. Stop taking turns, and start at the next agent once this action is complete.
-					update_player_view();
 					break;
 				}
 			}
@@ -507,7 +514,7 @@ namespace questless
 				_time += 1.0;
 				// Update the region.
 				_region->update();
-				// Update the player view at least once per time unit.
+				// Update the player view after each time unit passes.
 				update_player_view();
 			}
 		}

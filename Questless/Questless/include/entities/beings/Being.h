@@ -176,6 +176,9 @@ namespace questless
 		//! The being's equipped shields.
 		std::vector<std::unique_ptr<Armor>> const& shields() { return _shields; }
 
+		//! Recalculates this being's stats. Called automatically with each update.
+		void refresh_stats() { stats = get_stats(); }
+
 		//! Advances the being one time unit.
 		void update() override;
 
@@ -216,8 +219,8 @@ namespace questless
 
 		// Methods
 
-		Stats base_stats_plus_body_stats();
-		Stats effective_stats();
+		Stats get_base_stats_plus_body_stats();
+		Stats get_stats();
 
 		std::function<void(double&, double const&)> health_mutator();
 		std::function<void(double&, double const&)> mana_mutator();

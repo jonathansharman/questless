@@ -20,7 +20,7 @@ namespace questless
 		, id{id}
 		, body{std::move(body)}
 		, base_stats{make_base_stats()}
-		, stats{base_stats_plus_body_stats()}
+		, stats{get_base_stats_plus_body_stats()}
 		, health{stats.vitality, health_mutator()}
 		, mana{stats.spirit, mana_mutator()}
 		, energy{stats.stamina, energy_mutator()}
@@ -32,7 +32,7 @@ namespace questless
 		, _agent{make_agent(*this)}
 		
 	{
-		stats = effective_stats();
+		refresh_stats();
 
 		// Only set busy time mutator after initialization so that it won't try to access the being's region before it's placed in one.
 		busy_time.set_mutator(busy_time_mutator(), false);
@@ -118,7 +118,7 @@ namespace questless
 
 	void Being::update()
 	{
-		stats = effective_stats();
+		refresh_stats();
 		
 		// Update status modifiers.
 		{
@@ -126,8 +126,9 @@ namespace questless
 			while (i < _statuses.size()) {
 				_statuses[i]->update(*this);
 				if (_statuses[i]->duration() == 0) {
-					_statuses[i]->expire(*this);
+					auto expired = std::move(_statuses[i]);
 					_statuses.erase(_statuses.begin() + i);
+					expired->expire(*this);
 				} else {
 					++i;
 				}
@@ -295,15 +296,16 @@ namespace questless
 
 	void Being::add_status(std::unique_ptr<Status> status)
 	{
-		status->apply(*this);
+		Status& ref = *status;
 		_statuses.push_back(std::move(status));
+		ref.apply(*this);
 	}
 
 	////////////////////////////////
 	// Stats and Status Modifiers //
 	////////////////////////////////
 
-	Stats Being::base_stats_plus_body_stats()
+	Stats Being::get_base_stats_plus_body_stats()
 	{
 		Stats result = base_stats;
 
@@ -317,9 +319,9 @@ namespace questless
 		return result;
 	}
 
-	Stats Being::effective_stats()
+	Stats Being::get_stats()
 	{
-		Stats result = base_stats_plus_body_stats();
+		Stats result = get_base_stats_plus_body_stats();
 
 		// Apply status stat modifiers (may override body part modifiers).
 		for (auto const& status : _statuses) {
