@@ -67,7 +67,7 @@ namespace questless
 		Object* object(RegionTileCoords region_tile_coords) { return object_helper(region_tile_coords); }
 
 		//! Spawns the player-controlled being @p player_being in the region at an arbitrary location and adds it to the being cache.
-		void spawn_player(Being::uptr player_being);
+		void spawn_player(uptr<Being> player_being);
 
 		//! Adds @p being to the region, setting its coordinates to @p region_tile_coords.
 		void add(Being& being, RegionTileCoords region_tile_coords);
@@ -76,10 +76,10 @@ namespace questless
 		void add(Object& object, RegionTileCoords region_tile_coords);
 
 		//! Spawns @p being in the region, setting its coordinates to @p region_tile_coords and adding it to the being cache.
-		void spawn(Being::uptr being, RegionTileCoords region_tile_coords);
+		void spawn(uptr<Being> being, RegionTileCoords region_tile_coords);
 
 		//! Spawns @p object in the region, setting its coordinates to @p region_tile_coords and adding it to the object cache.
-		void spawn(Object::uptr object, RegionTileCoords region_tile_coords);
+		void spawn(uptr<Object> object, RegionTileCoords region_tile_coords);
 
 		//! Moves @p being to the tile at @p region_tile_coords.
 		//! @return Whether @p being was successfully moved.
@@ -166,7 +166,7 @@ namespace questless
 		double _time_of_day;
 		PeriodOfDay _period_of_day;
 
-		std::set<Being::ref, Being::ref_less_t> _turn_queue;
+		std::set<ref<Being>, Being::ref_less_t> _turn_queue;
 		double _ambient_illuminance;
 
 		//////////////////////

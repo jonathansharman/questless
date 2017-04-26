@@ -135,7 +135,7 @@ namespace questless
 			{ // Draw the body.
 				BodyTexturer texturer;
 				texturer.visit(player_being->body);
-				Texture::uptr texture = texturer.texture();
+				uptr<Texture> texture = texturer.texture();
 				texture->draw(ScreenPoint{0, _screen_bottom - _condition_bar_height}, HAlign::left, VAlign::bottom);
 			}
 
@@ -148,7 +148,7 @@ namespace questless
 					if (std::optional<Id<Item>> opt_item_id = _hotbar[i]) {
 						Item& item = game().items.get_ref(*opt_item_id);
 						item.accept(texturer);
-						Texture::uptr texture = texturer.texture();
+						uptr<Texture> texture = texturer.texture();
 						texture->draw(ScreenPoint{x + _hotbar_slot_h_padding, y - _hotbar_slot_v_padding}, HAlign::left, VAlign::bottom);
 					}
 				}
@@ -175,7 +175,7 @@ namespace questless
 					int index = 0;
 					for (Item const& item : _displayed_items) {
 						item.accept(texturer);
-						Texture::uptr texture = texturer.texture();
+						uptr<Texture> texture = texturer.texture();
 						int row = index / _inv_column_count;
 						int column = index % _inv_column_count;
 						texture->draw(ScreenPoint{ _inv_left + column * _item_icon_width, _inv_top + row * _item_icon_height });

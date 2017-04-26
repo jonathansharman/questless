@@ -17,7 +17,6 @@ namespace questless
 	//! A request to an agent for an item from an inventory.
 	struct ItemQuery
 	{
-		using uptr = std::unique_ptr<ItemQuery>;
 		virtual ~ItemQuery() = default;
 		virtual void accept(ItemQueryVisitor& visitor) = 0;
 	};

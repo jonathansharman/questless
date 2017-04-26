@@ -23,12 +23,12 @@ namespace questless
 
 		virtual Type type() const { return Type::buff; }
 
-		std::vector<Modifier::uptr> const& modifiers() const override { return _modifiers; }
+		std::vector<uptr<Modifier>> const& modifiers() const override { return _modifiers; }
 
 		void apply(Being& target) override { target.refresh_stats(); }
 		void expire(Being& target) override { target.refresh_stats(); }
 	private:
 		double _magnitude;
-		std::vector<Modifier::uptr> _modifiers;
+		std::vector<uptr<Modifier>> _modifiers;
 	};
 }

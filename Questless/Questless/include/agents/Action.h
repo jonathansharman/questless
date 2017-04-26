@@ -22,7 +22,6 @@ namespace questless
 	public:
 		enum class Result { success, aborted };
 
-		using uptr = std::unique_ptr<Action>;
 		using cont_t = std::function<Complete(Result)>;
 
 		virtual ~Action() = default;

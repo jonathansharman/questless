@@ -16,17 +16,17 @@ namespace questless
 
 		void act() override;
 
-		void perceive(Effect::uptr const& effect) override { effect->accept(*this); }
+		void perceive(sptr<Effect> const& effect) override { effect->accept(*this); }
 
 		// Queries and messages
 
 		Complete send_message
-			( Message::uptr message
+			( uptr<Message> message
 			, std::function<Complete()> cont
 			) const override;
 
 		Complete query_count
-			( CountQuery::uptr query
+			( uptr<CountQuery> query
 			, int default
 			, std::optional<int> min
 			, std::optional<int> max
@@ -34,7 +34,7 @@ namespace questless
 			) const override;
 
 		Complete query_magnitude
-			( MagnitudeQuery::uptr query
+			( uptr<MagnitudeQuery> query
 			, double default
 			, std::optional<double> min
 			, std::optional<double> max
@@ -42,25 +42,25 @@ namespace questless
 			) const override;
 
 		Complete query_tile
-			( TileQuery::uptr query
+			( uptr<TileQuery> query
 			, std::optional<RegionTileCoords> origin
 			, std::function<bool(RegionTileCoords)> predicate
 			, std::function<Complete(std::optional<RegionTileCoords>)> cont
 			) const override;
 
 		Complete query_direction
-			( DirectionQuery::uptr query
+			( uptr<DirectionQuery> query
 			, std::function<Complete(std::optional<RegionTileCoords::Direction>)> cont
 			) const override;
 
 		Complete query_being
-			( BeingQuery::uptr query
+			( uptr<BeingQuery> query
 			, std::function<bool(Being&)> predicate
 			, std::function<Complete(std::optional<Being*>)> cont
 			) const override;
 
 		Complete query_item
-			( ItemQuery::uptr query
+			( uptr<ItemQuery> query
 			, Being& source
 			, std::function<bool(Being&)> predicate
 			, std::function<Complete(std::optional<Item*>)> cont

@@ -66,7 +66,7 @@ namespace questless
 		std::array<std::optional<Id<Item>>, _hotbar_size> _hotbar;
 		bool _inv_open = false;
 		int _inv_page = 0; //! @todo Replace with filters.
-		std::vector<Item::cref> _displayed_items;
+		std::vector<cref<Item>> _displayed_items;
 
 		// View Data
 
@@ -83,9 +83,9 @@ namespace questless
 		int _inv_row_count;
 		int _inv_column_count;
 
-		sdl::Texture::uptr _hotbar_slot_texture;
+		uptr<sdl::Texture> _hotbar_slot_texture;
 
-		sdl::Font::uptr _fnt_item_count;
+		uptr<sdl::Font> _fnt_item_count;
 
 		// Methods
 

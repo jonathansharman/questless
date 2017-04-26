@@ -706,6 +706,9 @@
     <ClInclude Include="include\world\LightSource.h">
       <Filter>include\world</Filter>
     </ClInclude>
+    <ClInclude Include="include\utility\reference.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\world\Region.cpp">

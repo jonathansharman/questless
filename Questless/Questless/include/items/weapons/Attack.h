@@ -10,6 +10,7 @@
 #include "agents/Cost.h"
 #include "entities/beings/Damage.h"
 #include "utility/Id.h"
+#include "utility/reference.h"
 
 namespace questless
 {
@@ -50,7 +51,7 @@ namespace questless
 		virtual Cost const& cost() const = 0;
 
 		//! An action that launches the attack.
-		virtual Action::uptr launch() = 0;
+		virtual uptr<Action> launch() = 0;
 	};
 
 	//! A close-range attack.
@@ -66,7 +67,7 @@ namespace questless
 			return free;
 		}
 
-		Action::uptr launch() override
+		uptr<Action> launch() override
 		{
 			return Launch::make(std::dynamic_pointer_cast<MeleeAttack>(shared_from_this()));
 		}
@@ -75,7 +76,7 @@ namespace questless
 		{
 		public:
 			Launch(std::shared_ptr<MeleeAttack> attack) : _attack{std::move(attack)} {}
-			static uptr make(std::shared_ptr<MeleeAttack> attack) { return std::make_unique<Launch>(std::move(attack)); }
+			static uptr<Launch> make(std::shared_ptr<MeleeAttack> attack) { return std::make_unique<Launch>(std::move(attack)); }
 			std::string name() const override { return _attack->name(); }
 			Complete perform(Being& actor, cont_t cont) override;
 		private:
@@ -103,7 +104,7 @@ namespace questless
 		RangedAttack(Id<Item> weapon_id) : Attack{weapon_id} {}
 		virtual ~RangedAttack() = default;
 
-		Action::uptr launch() override
+		uptr<Action> launch() override
 		{
 			return Launch::make(std::dynamic_pointer_cast<RangedAttack>(shared_from_this()));
 		}
@@ -114,7 +115,7 @@ namespace questless
 		{
 		public:
 			Launch(std::shared_ptr<RangedAttack> attack) : _attack{std::move(attack)} {}
-			static uptr make(std::shared_ptr<RangedAttack> attack) { return std::make_unique<Launch>(std::move(attack)); }
+			static uptr<Launch> make(std::shared_ptr<RangedAttack> attack) { return std::make_unique<Launch>(std::move(attack)); }
 			std::string name() const override { return _attack->name(); }
 			Complete perform(Being& actor, cont_t cont) override;
 		private:
@@ -125,7 +126,7 @@ namespace questless
 		{
 		public:
 			Finish(std::shared_ptr<RangedAttack> attack) : _attack{std::move(attack)} {}
-			static uptr make(std::shared_ptr<RangedAttack> attack) { return std::make_unique<Finish>(attack); }
+			static auto make(std::shared_ptr<RangedAttack> attack) { return std::make_unique<Finish>(attack); }
 			std::string name() const override { return _attack->name(); }
 			Complete perform(Being& actor, cont_t cont) override;
 		private:

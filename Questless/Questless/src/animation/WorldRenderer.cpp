@@ -21,7 +21,7 @@ using namespace units;
 
 namespace questless
 {
-	void WorldRenderer::update_view(WorldView const& world_view, std::vector<Effect::uptr> effects)
+	void WorldRenderer::update_view(WorldView const& world_view, std::vector<sptr<Effect>> effects)
 	{
 		_world_view = &world_view;
 		_terrain_render_is_current = false;

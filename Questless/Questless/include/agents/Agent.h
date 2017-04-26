@@ -27,12 +27,10 @@ namespace questless
 	class Agent
 	{
 	public:
-		using uptr = std::unique_ptr<Agent>;
-
 		Agent(Being& being) : being{being} {}
 
 		template <typename Derived>
-		static uptr make(Being& being) { return std::make_unique<Derived>(being); }
+		static auto make(Being& being) { return std::make_unique<Derived>(being); }
 
 		virtual ~Agent() = default;
 
@@ -45,19 +43,19 @@ namespace questless
 
 		//! Causes the agent to perceive the given effect, possibly updating its state accordingly.
 		//! @param effect The effect to perceive.
-		virtual void perceive(Effect::uptr const& effect) = 0;
+		virtual void perceive(sptr<Effect> const& effect) = 0;
 
 		// Queries and messages
 		
 		//! @todo Update documentation here.
 
 		virtual Complete send_message
-			( Message::uptr message
+			( uptr<Message> message
 			, std::function<Complete()> cont
 			) const = 0;
 
 		virtual Complete query_count
-			( CountQuery::uptr query
+			( uptr<CountQuery> query
 			, int default
 			, std::optional<int> min
 			, std::optional<int> max
@@ -65,7 +63,7 @@ namespace questless
 			) const = 0;
 
 		virtual Complete query_magnitude
-			( MagnitudeQuery::uptr
+			( uptr<MagnitudeQuery>
 			, double default
 			, std::optional<double> min
 			, std::optional<double> max
@@ -73,25 +71,25 @@ namespace questless
 			) const = 0;
 
 		virtual Complete query_tile
-			( TileQuery::uptr query
+			( uptr<TileQuery> query
 			, std::optional<RegionTileCoords> origin
 			, std::function<bool(RegionTileCoords)> predicate
 			, std::function<Complete(std::optional<RegionTileCoords>)> cont
 			) const = 0;
 
 		virtual Complete query_direction
-			( DirectionQuery::uptr query
+			( uptr<DirectionQuery> query
 			, std::function<Complete(std::optional<RegionTileCoords::Direction>)> cont
 			) const = 0;
 
 		virtual Complete query_being
-			( BeingQuery::uptr query
+			( uptr<BeingQuery> query
 			, std::function<bool(Being&)> predicate
 			, std::function<Complete(std::optional<Being*>)> cont
 			) const = 0;
 
 		virtual Complete query_item
-			( ItemQuery::uptr query
+			( uptr<ItemQuery> query
 			, Being& source
 			, std::function<bool(Being&)> predicate
 			, std::function<Complete(std::optional<Item*>)> cont

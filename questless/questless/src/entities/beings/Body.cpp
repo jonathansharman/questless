@@ -22,7 +22,7 @@ namespace questless
 		int y_max = 0;
 
 		// Walk the parts tree to build the parts lists and compute bounds.
-		std::deque<BodyPart::ref> work_list;
+		std::deque<ref<BodyPart>> work_list;
 		work_list.push_back(*_root);
 		while (!work_list.empty()) {
 			BodyPart& part = work_list.front();
@@ -39,7 +39,7 @@ namespace questless
 
 			// Remove current part from work list and add its children.
 			work_list.pop_front();
-			for (BodyPart::uptr const& child : part.children()) {
+			for (uptr<BodyPart> const& child : part.children()) {
 				work_list.push_back(*child);
 			}
 		}

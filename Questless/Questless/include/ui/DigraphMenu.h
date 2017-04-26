@@ -12,6 +12,7 @@
 #include "sdl/Input.h"
 #include "sdl/Renderable.h"
 #include "utility/Initializer.h"
+#include "utility/reference.h"
 #include "utility/utility.h"
 
 namespace questless
@@ -123,7 +124,7 @@ namespace questless
 		units::ScreenPoint _content_position;
 		int _min_width, _min_height;
 		int _content_width, _content_height;
-		sdl::Texture::uptr _background;
+		uptr<sdl::Texture> _background;
 		bool _render_is_current;
 
 		//! Finds the first page with the given page title, if it exists.

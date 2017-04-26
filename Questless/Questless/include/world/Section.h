@@ -16,6 +16,7 @@
 #include "entities/objects/Object.h"
 #include "Tile.h"
 #include "units/HexCoords.h"
+#include "utility/reference.h"
 
 namespace questless
 {
@@ -25,9 +26,6 @@ namespace questless
 	class Section
 	{
 	public:
-		using ref = std::reference_wrapper<Section>;
-		using cref = std::reference_wrapper<const Section>;
-
 		static constexpr int radius = 10;
 		static constexpr int diameter = 2 * radius + 1;
 
@@ -55,14 +53,14 @@ namespace questless
 		RegionSectionCoords coords() const { return _coords; }
 
 		//! A list of beings in this section.
-		std::vector<Being::cref> beings() const;
+		std::vector<cref<Being>> beings() const;
 		//! A list of beings in this section.
-		std::vector<Being::ref> beings();
+		std::vector<ref<Being>> beings();
 
 		//! A list objects in this section.
-		std::vector<Object::cref> objects() const;
+		std::vector<cref<Object>> objects() const;
 		//! A list objects in this section.
-		std::vector<Object::ref> objects();
+		std::vector<ref<Object>> objects();
 
 		//! The ID of the being at @p tile_coords or nullopt if there is none.
 		std::optional<Id<Being>> being_id(RegionTileCoords tile_coords) const;
@@ -151,7 +149,7 @@ namespace questless
 		std::unordered_set<Id<LightSource>> _light_source_ids;
 
 		template <typename EntityType, typename = typename std::enable_if_t<std::is_same<EntityType, Being>::value>>
-		std::unordered_map<RegionTileCoords, Being::uptr>& entities() { return _beings; }
+		std::unordered_map<RegionTileCoords, uptr<Being>>& entities() { return _beings; }
 
 		template <typename EntityType, typename = typename std::enable_if_t<std::is_same<EntityType, Object>::value>>
 		std::unordered_map<RegionTileCoords, Id<Object>>& entities() { return _objects; }

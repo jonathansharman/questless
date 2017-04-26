@@ -26,8 +26,6 @@ namespace questless
 	class Camera
 	{
 	public:
-		using uptr = std::unique_ptr<Camera>;
-
 		//! Constructs a camera with the specified starting position.
 		//! @param position The starting position of the camera.
 		Camera(units::GamePoint position)

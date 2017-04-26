@@ -91,7 +91,7 @@ namespace questless
 	}
 
 	Complete BasicAI::send_message
-		( Message::uptr //message
+		( uptr<Message> //message
 		, std::function<Complete()> cont
 		) const
 	{
@@ -99,7 +99,7 @@ namespace questless
 	}
 
 	Complete BasicAI::query_count
-		( CountQuery::uptr query
+		( uptr<CountQuery> query
 		, int default
 		, std::optional<int> min
 		, std::optional<int> max
@@ -129,7 +129,7 @@ namespace questless
 	}
 
 	Complete BasicAI::query_magnitude
-		( MagnitudeQuery::uptr query
+		( uptr<MagnitudeQuery> query
 		, double default
 		, std::optional<double> min
 		, std::optional<double> max
@@ -172,7 +172,7 @@ namespace questless
 	}
 
 	Complete BasicAI::query_tile
-		( TileQuery::uptr query
+		( uptr<TileQuery> query
 		, std::optional<RegionTileCoords> origin
 		, std::function<bool(RegionTileCoords)> predicate
 		, std::function<Complete(std::optional<RegionTileCoords>)> cont
@@ -225,7 +225,7 @@ namespace questless
 	}
 
 	Complete BasicAI::query_direction
-		( DirectionQuery::uptr query
+		( uptr<DirectionQuery> query
 		, std::function<Complete(std::optional<RegionTileCoords::Direction>)> cont
 		) const
 	{
@@ -261,7 +261,7 @@ namespace questless
 	}
 
 	Complete BasicAI::query_being
-		( BeingQuery::uptr //query
+		( uptr<BeingQuery> //query
 		, std::function<bool(Being&)> //predicate
 		, std::function<Complete(std::optional<Being*>)> cont
 		) const
@@ -270,7 +270,7 @@ namespace questless
 	}
 
 	Complete BasicAI::query_item
-		( ItemQuery::uptr //query
+		( uptr<ItemQuery> //query
 		, Being& //source
 		, std::function<bool(Being&)> //predicate
 		, std::function<Complete(std::optional<Item*>)> cont

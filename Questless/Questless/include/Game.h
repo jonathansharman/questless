@@ -60,7 +60,7 @@ namespace questless
 		void run();
 
 		//! Adds the given dialog to the dialogs stack.
-		Complete add_dialog(Dialog::uptr dialog);
+		Complete add_dialog(uptr<Dialog> dialog);
 
 		void query_player_choice(std::function<void(PlayerActionDialog::Choice)> cont);
 
@@ -69,7 +69,7 @@ namespace questless
 
 		//! Adds an effect to the world, notifying beings within range of its occurrence.
 		//! @param effect The effect to add.
-		void add_effect(Effect::uptr const& effect);
+		void add_effect(sptr<Effect> const& effect);
 
 		HUD& hud() { return *_hud; }
 		HUD const& hud() const { return *_hud; }
@@ -113,7 +113,7 @@ namespace questless
 		// Data //
 		//////////
 
-		Camera::uptr _camera;
+		uptr<Camera> _camera;
 
 		// Debug
 
@@ -121,15 +121,15 @@ namespace questless
 
 		// Textures
 
-		sdl::Texture::uptr _txt_test; //!< A placeholder texture used for testing.
-		sdl::Texture::uptr _txt_test2;
-		sdl::Texture::uptr _txt_test3;
+		uptr<sdl::Texture> _txt_test; //!< A placeholder texture used for testing.
+		uptr<sdl::Texture> _txt_test2;
+		uptr<sdl::Texture> _txt_test3;
 
-		sdl::Texture::uptr _txt_splash_logo;
-		sdl::Texture::uptr _txt_splash_flame;
+		uptr<sdl::Texture> _txt_splash_logo;
+		uptr<sdl::Texture> _txt_splash_flame;
 		
-		sdl::Texture::uptr _txt_hex_highlight;
-		sdl::Texture::uptr _txt_hex_circle;
+		uptr<sdl::Texture> _txt_hex_highlight;
+		uptr<sdl::Texture> _txt_hex_circle;
 
 		// Animations
 
@@ -137,11 +137,11 @@ namespace questless
 
 		// Fonts
 
-		sdl::Font::uptr _fnt_20pt;
+		uptr<sdl::Font> _fnt_20pt;
 
 		// Sounds
 
-		sdl::Sound::uptr _sfx_splash;
+		uptr<sdl::Sound> _sfx_splash;
 
 		// Game state
 
@@ -165,7 +165,7 @@ namespace questless
 		DigraphMenu _main_menu;
 
 		std::unique_ptr<PlayerActionDialog> _player_action_dialog;
-		std::deque<Dialog::uptr> _dialogs;
+		std::deque<uptr<Dialog>> _dialogs;
 
 		std::unique_ptr<HUD> _hud;
 

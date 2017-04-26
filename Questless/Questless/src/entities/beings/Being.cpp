@@ -84,7 +84,7 @@ namespace questless
 			agent().act();
 		} else {
 			// Pop and execute the oldest delayed action, with its continuation.
-			Action::uptr action = std::move(_delayed_actions.front());
+			uptr<Action> action = std::move(_delayed_actions.front());
 			_delayed_actions.pop_front();
 			Action::cont_t cont = std::move(_delayed_action_conts.front());
 			_delayed_action_conts.pop_front();
@@ -97,7 +97,7 @@ namespace questless
 		}
 	}
 
-	void Being::add_delayed_action(double delay, Action::cont_t cont, Action::uptr action)
+	void Being::add_delayed_action(double delay, Action::cont_t cont, uptr<Action> action)
 	{
 		// If there are no enqueued delayed actions, just incur the delay immediately instead of enqueueing it.
 		if (_delayed_actions.empty()) {

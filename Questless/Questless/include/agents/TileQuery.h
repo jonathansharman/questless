@@ -25,7 +25,6 @@ namespace questless
 	//! A request to an agent for tile coordinates.
 	struct TileQuery
 	{
-		using uptr = std::unique_ptr<TileQuery>;
 		virtual ~TileQuery() = default;
 		virtual void accept(TileQueryVisitor& visitor) = 0;
 	};

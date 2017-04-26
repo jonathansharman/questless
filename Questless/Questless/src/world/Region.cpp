@@ -58,11 +58,11 @@ namespace questless
 						//if (r == Section::diameter - 1 || q == Section::diameter - 1) {
 						//	data += std::to_string(static_cast<int>(Tile::TileClass::edge)) + ' ' + std::to_string(0.0) + ' ';
 						//} else {
-						//	data += std::to_string(uniform(0, static_cast<int>(Tile::TileClass::TILE_CLASS_COUNT) - 1)) + ' ' + std::to_string(0.0) + ' ';
+							data += std::to_string(uniform(0, static_cast<int>(Tile::TileClass::TILE_CLASS_COUNT) - 1)) + ' ' + std::to_string(0.0) + ' ';
 						//}
 
 						// Every tile is snow (nice for testing lighting).
-						data += std::to_string(static_cast<int>(Tile::TileClass::snow)) + " 0 ";
+						//data += std::to_string(static_cast<int>(Tile::TileClass::snow)) + " 0 ";
 					}
 				}
 				_section_map[section_coords] = make_unique<Section>(section_coords, std::istringstream{data});
@@ -215,7 +215,7 @@ namespace questless
 		}
 	}
 
-	void Region::spawn_player(Being::uptr player_being)
+	void Region::spawn_player(uptr<Being> player_being)
 	{
 		//! @todo More advanced player spawning.
 
@@ -259,12 +259,12 @@ namespace questless
 		}
 	}
 
-	void Region::spawn(Being::uptr being, RegionTileCoords region_tile_coords)
+	void Region::spawn(uptr<Being> being, RegionTileCoords region_tile_coords)
 	{
 		add(game().beings.add(std::move(being)), region_tile_coords);
 	}
 
-	void Region::spawn(Object::uptr object, RegionTileCoords region_tile_coords)
+	void Region::spawn(uptr<Object> object, RegionTileCoords region_tile_coords)
 	{
 		add(game().objects.add(std::move(object)), region_tile_coords);
 	}

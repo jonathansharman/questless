@@ -95,7 +95,7 @@ namespace questless
 		std::vector<std::string> _options;
 		Continuation<std::optional<int>> _cont;
 
-		sdl::Texture::uptr _txt_title;
+		uptr<sdl::Texture> _txt_title;
 		std::vector<sdl::Texture> _txt_options;
 
 		int _selection;

@@ -47,8 +47,8 @@ namespace questless::qte
 
 		std::vector<Charge> _charges;
 
-		sdl::Texture::uptr _txt_title;
-		sdl::Texture::uptr _txt_prompt;
+		uptr<sdl::Texture> _txt_title;
+		uptr<sdl::Texture> _txt_prompt;
 
 		void refresh() override { load_textures(); }
 

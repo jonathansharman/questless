@@ -13,6 +13,7 @@
 #include "agents/Action.h"
 #include "units/HexCoords.h"
 #include "utility/Id.h"
+#include "utility/reference.h"
 
 namespace questless
 {
@@ -22,10 +23,6 @@ namespace questless
 	class Item
 	{
 	public:
-		using uptr = std::unique_ptr<Item>;
-		using ref = std::reference_wrapper<Item>;
-		using cref = std::reference_wrapper<Item const>;
-
 		Id<Item> const id;
 
 		Item(Id<Item> id) : id{id} {}
@@ -41,7 +38,7 @@ namespace questless
 		virtual double weight() const = 0;
 
 		//! The list of actions that can be performed with the item.
-		virtual std::vector<Action::uptr> actions() = 0;
+		virtual std::vector<uptr<Action>> actions() = 0;
 
 		//! Advances the item one time unit.
 		virtual void update() {}
@@ -51,7 +48,7 @@ namespace questless
 		public:
 			Drop(Item& item) : _item{item} {}
 
-			static uptr make(Item& item) { return std::make_unique<Drop>(item); }
+			static auto make(Item& item) { return std::make_unique<Drop>(item); }
 
 			std::string name() const override { return "Drop"; }
 
@@ -65,7 +62,7 @@ namespace questless
 		public:
 			Throw(Item& item) : _item{item} {}
 
-			static uptr make(Item& item) { return std::make_unique<Throw>(item); }
+			static auto make(Item& item) { return std::make_unique<Throw>(item); }
 
 			std::string name() const override { return "Throw"; }
 

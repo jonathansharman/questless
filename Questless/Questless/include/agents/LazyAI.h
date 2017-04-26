@@ -18,12 +18,12 @@ namespace questless
 
 		void act() override { being.busy_time += uniform(1.0, 2.0); }
 
-		void perceive(Effect::uptr const&) override {}
+		void perceive(sptr<Effect> const&) override {}
 
 		// Queries and messages
 
 		Complete send_message
-			( Message::uptr
+			( uptr<Message>
 			, std::function<Complete()> cont
 			) const override
 		{
@@ -31,7 +31,7 @@ namespace questless
 		}
 
 		Complete query_count
-			( CountQuery::uptr
+			( uptr<CountQuery>
 			, int
 			, std::optional<int>
 			, std::optional<int>
@@ -42,7 +42,7 @@ namespace questless
 		}
 
 		Complete query_magnitude
-			( MagnitudeQuery::uptr
+			( uptr<MagnitudeQuery>
 			, double
 			, std::optional<double>
 			, std::optional<double>
@@ -53,7 +53,7 @@ namespace questless
 		}
 
 		Complete query_tile
-			( TileQuery::uptr
+			( uptr<TileQuery>
 			, std::optional<RegionTileCoords>
 			, std::function<bool(RegionTileCoords)>
 			, std::function<Complete(std::optional<RegionTileCoords>)> cont
@@ -63,7 +63,7 @@ namespace questless
 		}
 
 		Complete query_direction
-			( DirectionQuery::uptr
+			( uptr<DirectionQuery>
 			, std::function<Complete(std::optional<RegionTileCoords::Direction>)> cont
 			) const override
 		{
@@ -71,7 +71,7 @@ namespace questless
 		}
 
 		Complete query_being
-			( BeingQuery::uptr
+			( uptr<BeingQuery>
 			, std::function<bool(Being&)>
 			, std::function<Complete(std::optional<Being*>)> cont
 			) const override
@@ -80,7 +80,7 @@ namespace questless
 		}
 
 		Complete query_item
-			( ItemQuery::uptr
+			( uptr<ItemQuery>
 			, Being&
 			, std::function<bool(Being&)>
 			, std::function<Complete(std::optional<Item*>)> cont

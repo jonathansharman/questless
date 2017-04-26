@@ -9,6 +9,7 @@
 #include <memory>
 
 #include "EntityVisitor.h"
+#include "utility/reference.h"
 #include "utility/utility.h"
 #include "world/coordinates.h"
 
@@ -29,9 +30,8 @@ namespace questless
 	class Entity
 	{
 	public:
-		using uptr = std::unique_ptr<Entity>;
 		using ref_less_t = bool(*)(Entity const&, Entity const&);
-		using ptr_less_t = bool(*)(uptr const&, uptr const&);
+		using ptr_less_t = bool(*)(uptr<Entity> const&, uptr<Entity> const&);
 
 		Region* region;
 		Section* section;

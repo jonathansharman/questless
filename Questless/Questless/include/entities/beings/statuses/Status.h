@@ -35,10 +35,10 @@ namespace questless
 		virtual Type type() const = 0;
 
 		//! The list of stat modifiers associated with this status.
-		virtual std::vector<Modifier::uptr> const& modifiers() const
+		virtual std::vector<uptr<Modifier>> const& modifiers() const
 		{
 			// No modifiers by default.
-			static std::vector<Modifier::uptr> modifiers;
+			static std::vector<uptr<Modifier>> modifiers;
 			return modifiers;
 		}
 

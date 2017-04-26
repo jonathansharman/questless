@@ -29,9 +29,9 @@ namespace questless
 
 		double durability() const override { return 400.0; }
 
-		virtual std::vector<Action::uptr> actions() override
+		virtual std::vector<uptr<Action>> actions() override
 		{
-			std::vector<Action::uptr> actions;
+			std::vector<uptr<Action>> actions;
 			if (equipped()) {
 				actions.push_back(_fire->launch());
 				actions.push_back(Unequip::make(*this));

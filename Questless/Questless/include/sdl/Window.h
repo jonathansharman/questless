@@ -19,8 +19,6 @@ namespace sdl
 	class Window
 	{
 	public:
-		using uptr = std::unique_ptr<Window>;
-
 		//! Constructs a window object with the specified properties.
 		//! @param title The title of the window.
 		//! @param icon_filename The filename of the window's icon.

@@ -73,18 +73,18 @@ namespace questless
 		}
 	}
 	
-	std::vector<Being::cref> Section::beings() const
+	std::vector<cref<Being>> Section::beings() const
 	{
-		std::vector<Being::cref> beings;
+		std::vector<cref<Being>> beings;
 		for (auto const& pair : _being_ids) {
 			auto id = pair.second;
 			beings.push_back(game().beings.get_ref(id));
 		}
 		return beings;
 	}
-	std::vector<Being::ref> Section::beings()
+	std::vector<ref<Being>> Section::beings()
 	{
-		std::vector<Being::ref> beings;
+		std::vector<ref<Being>> beings;
 		for (auto const& pair : _being_ids) {
 			auto id = pair.second;
 			beings.push_back(game().beings.get_ref(id));
@@ -92,18 +92,18 @@ namespace questless
 		return beings;
 	}
 	
-	std::vector<Object::cref> Section::objects() const
+	std::vector<cref<Object>> Section::objects() const
 	{
-		std::vector<Object::cref> objects;
+		std::vector<cref<Object>> objects;
 		for (auto const& pair : _object_ids) {
 			auto id = pair.second;
 			objects.push_back(game().objects.get_ref(id));
 		}
 		return objects;
 	}
-	std::vector<Object::ref> Section::objects()
+	std::vector<ref<Object>> Section::objects()
 	{
-		std::vector<Object::ref> objects;
+		std::vector<ref<Object>> objects;
 		for (auto const& pair : _object_ids) {
 			auto id = pair.second;
 			objects.push_back(game().objects.get_ref(id));
@@ -145,12 +145,12 @@ namespace questless
 		}
 	}
 	
-	std::vector<LightSource::cref> Section::light_sources() const
+	std::vector<cref<LightSource>> Section::light_sources() const
 	{
 		//! @todo Could make a lazy version of this, as in Inventory::Item. (Eager evaluation should be okay here though since the number of light sources will be small.)
 		//! @todo Make a generic List<Id<T>> -> List<T&> iterator/container type?
 
-		std::vector<LightSource::cref> result;
+		std::vector<cref<LightSource>> result;
 		for (Id<LightSource> id : _light_source_ids) {
 			result.push_back(game().light_sources.get_ref(id));
 		}

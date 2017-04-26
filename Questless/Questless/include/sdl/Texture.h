@@ -34,8 +34,6 @@ namespace sdl
 	class Texture
 	{
 	public:
-		using uptr = std::unique_ptr<Texture>;
-
 		//! Constructs a targetable, blank texture with the specified dimensions. Useful for building textures at run time.
 		//! @param width The width of the texture.
 		//! @param height The height of the texture.

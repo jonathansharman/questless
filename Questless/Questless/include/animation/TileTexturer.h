@@ -6,6 +6,7 @@
 
 #include "world/Tile.h"
 #include "sdl/Texture.h"
+#include "utility/reference.h"
 
 namespace questless
 {
@@ -21,8 +22,8 @@ namespace questless
 		void visit(StoneTile const&) override;
 		void visit(WaterTile const&) override;
 
-		sdl::Texture::uptr texture() { return std::move(_texture); }
+		uptr<sdl::Texture> texture() { return std::move(_texture); }
 	private:
-		sdl::Texture::uptr _texture;
+		uptr<sdl::Texture> _texture;
 	};
 }

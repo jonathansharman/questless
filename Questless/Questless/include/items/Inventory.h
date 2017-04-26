@@ -47,8 +47,8 @@ namespace questless
 		private:
 			std::unordered_set<Id<Item>>& _item_ids;
 
-			static Item::ref item_id_to_ref(Id<Item> item_id);
-			static Item::cref item_id_to_cref(Id<Item> item_id);
+			static ref<Item> item_id_to_ref(Id<Item> item_id);
+			static cref<Item> item_id_to_cref(Id<Item> item_id);
 		};
 	public:
 		Inventory() : _items{_item_ids} {}

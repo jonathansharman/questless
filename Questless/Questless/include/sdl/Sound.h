@@ -17,8 +17,6 @@ namespace sdl
 	class Sound
 	{
 	public:
-		using uptr = std::unique_ptr<Sound>;
-
 		//! @param filename The WAV file from which to load the sound.
 		Sound(char const* filename);
 		Sound(Sound const&) = delete;

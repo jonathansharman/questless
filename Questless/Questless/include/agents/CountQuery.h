@@ -20,7 +20,6 @@ namespace questless
 	//! A request to an agent for a count.
 	struct CountQuery
 	{
-		using uptr = std::unique_ptr<CountQuery>;
 		virtual ~CountQuery() = default;
 		virtual void accept(CountQueryVisitor& visitor) = 0;
 	};

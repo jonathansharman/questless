@@ -6,9 +6,9 @@
 
 #include <string>
 #include <optional>
-#include <memory>
 
 #include "agents/Action.h"
+#include "utility/reference.h"
 
 namespace questless::spell
 {
@@ -18,13 +18,11 @@ namespace questless::spell
 	class Spell
 	{
 	public:
-		using uptr = std::unique_ptr<Spell>;
-
 		class Cast : public Action
 		{
 		public:
 			Cast(Spell& spell) : _spell{spell} {}
-			static uptr make(Spell& spell) { return std::make_unique<Cast>(spell); }
+			static auto make(Spell& spell) { return std::make_unique<Cast>(spell); }
 			std::string name() const override { return "Cast"; }
 			Complete perform(Being& actor, cont_t cont) override;
 		private:
@@ -35,7 +33,7 @@ namespace questless::spell
 		{
 		public:
 			Incant(Spell& spell) : _spell{spell} {}
-			static uptr make(Spell& spell) { return std::make_unique<Incant>(spell); }
+			static auto make(Spell& spell) { return std::make_unique<Incant>(spell); }
 			std::string name() const override { return "Incant"; }
 			Complete perform(Being& actor, cont_t cont) override;
 		private:
@@ -46,7 +44,7 @@ namespace questless::spell
 		{
 		public:
 			Discharge(Spell& spell) : _spell{spell} {}
-			static uptr make(Spell& spell) { return std::make_unique<Discharge>(spell); }
+			static auto make(Spell& spell) { return std::make_unique<Discharge>(spell); }
 			std::string name() const override { return "Discharge"; }
 			Complete perform(Being& actor, cont_t cont) override;
 		private:
@@ -56,13 +54,13 @@ namespace questless::spell
 		virtual ~Spell() = default;
 
 		//! An action that casts the spell.
-		Action::uptr cast() { return Cast::make(*this); }
+		uptr<Action> cast() { return Cast::make(*this); }
 
 		//! An action that charges the spell for one charge.
-		Action::uptr incant() { return Incant::make(*this); }
+		uptr<Action> incant() { return Incant::make(*this); }
 
 		//! An action that discharges the spell for one charge.
-		Action::uptr discharge() { return Discharge::make(*this); }
+		uptr<Action> discharge() { return Discharge::make(*this); }
 
 		//! The spell's name.
 		virtual std::string name() const = 0;

@@ -15,8 +15,8 @@ namespace questless
 	public:
 		void visit(Body const& body);
 
-		sdl::Texture::uptr texture() { return std::move(_texture); }
+		uptr<sdl::Texture> texture() { return std::move(_texture); }
 	private:
-		sdl::Texture::uptr _texture;
+		uptr<sdl::Texture> _texture;
 	};
 }

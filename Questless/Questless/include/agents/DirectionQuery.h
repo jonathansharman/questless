@@ -21,7 +21,6 @@ namespace questless
 	//! A request to an agent for a direction.
 	struct DirectionQuery
 	{
-		using uptr = std::unique_ptr<DirectionQuery>;
 		virtual ~DirectionQuery() = default;
 		virtual void accept(DirectionQueryVisitor& visitor) = 0;
 	};

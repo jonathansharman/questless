@@ -16,10 +16,6 @@ namespace questless
 	class LightSource
 	{
 	public:
-		using uptr = std::unique_ptr<LightSource>;
-		using ref = std::reference_wrapper<LightSource>;
-		using cref = std::reference_wrapper<LightSource const>;
-
 		Id<LightSource> const id;
 
 		//! @param coords The coordinates of this light source in its region.

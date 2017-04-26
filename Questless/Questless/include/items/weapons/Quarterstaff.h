@@ -42,9 +42,9 @@ namespace questless
 
 			std::string name() const override { return "Quarterstaff"; }
 
-			std::vector<Action::uptr> actions() override
+			std::vector<uptr<Action>> actions() override
 			{
-				std::vector<Action::uptr> actions;
+				std::vector<uptr<Action>> actions;
 				if (weapon().equipped()) {
 					actions.push_back(_strike->launch());
 					actions.push_back(_jab->launch());
@@ -96,9 +96,9 @@ namespace questless
 
 			std::string name() const override { return "Half Staff"; }
 
-			std::vector<Action::uptr> actions() override
+			std::vector<uptr<Action>> actions() override
 			{
-				std::vector<Action::uptr> actions;
+				std::vector<uptr<Action>> actions;
 				if (weapon().equipped()) {
 					actions.push_back(_strike->launch());
 					actions.push_back(_jab->launch());

@@ -18,8 +18,6 @@ namespace sdl
 	class Font
 	{
 	public:
-		using uptr = std::unique_ptr<Font>;
-
 		//! Constructs an unloaded sound object.
 		//! @param filename The name of a TrueType font file.
 		//! @param blend_mode The SDL blend mode to use for this font. Determines the way the alpha channel is used.

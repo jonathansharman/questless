@@ -154,7 +154,7 @@ namespace questless
 		_txt_hex_circle = make_unique<Texture>("resources/textures/ui/hex_circle.png");
 	}
 
-	Complete Game::add_dialog(Dialog::uptr dialog)
+	Complete Game::add_dialog(uptr<Dialog> dialog)
 	{
 		_dialogs.push_back(move(dialog));
 		return Complete{};
@@ -165,7 +165,7 @@ namespace questless
 		_player_action_dialog = make_unique<PlayerActionDialog>(*_hud, move(cont));
 	}
 
-	void Game::add_effect(Effect::uptr const& effect)
+	void Game::add_effect(sptr<Effect> const& effect)
 	{
 		int range = effect->range();
 		auto origin = effect->origin();

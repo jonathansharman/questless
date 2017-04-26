@@ -25,7 +25,6 @@ namespace questless
 	//! A request to an agent for a magnitude.
 	struct MagnitudeQuery
 	{
-		using uptr = std::unique_ptr<MagnitudeQuery>;
 		virtual ~MagnitudeQuery() = default;
 		virtual void accept(MagnitudeQueryVisitor& visitor) = 0;
 	};

@@ -44,8 +44,8 @@ namespace questless
 		std::function<bool(RegionTileCoords)> _predicate;
 		Continuation<std::optional<RegionTileCoords>> _cont;
 
-		sdl::Texture::uptr _txt_title;
-		sdl::Texture::uptr _txt_prompt;
+		uptr<sdl::Texture> _txt_title;
+		uptr<sdl::Texture> _txt_prompt;
 
 		void refresh() override { load_textures(); }
 

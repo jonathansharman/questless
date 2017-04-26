@@ -15,8 +15,6 @@ namespace questless
 		class Form
 		{
 		public:
-			using uptr = std::unique_ptr<Form>;
-
 			Form(ModalWeapon& weapon) : _weapon{weapon} {}
 
 			//! The modal weapon of which this is a form.
@@ -25,7 +23,7 @@ namespace questless
 			virtual std::string name() const = 0;
 
 			//! The list of actions that can be performed with the weapon.
-			virtual std::vector<Action::uptr> actions() = 0;
+			virtual std::vector<uptr<Action>> actions() = 0;
 		private:
 			ModalWeapon& _weapon;
 		};
@@ -35,7 +33,7 @@ namespace questless
 		//! The amount of time required to switch from one form to another.
 		virtual double switch_time() const = 0;
 
-		std::vector<Action::uptr> actions() override { return _form->actions(); }
+		std::vector<uptr<Action>> actions() override { return _form->actions(); }
 	protected:
 		template <typename TargetForm>
 		class SwitchForm : public Action
@@ -45,7 +43,7 @@ namespace questless
 				: _weapon{weapon}, _form{weapon._form}, _name{std::move(name)}
 			{}
 
-			static uptr make(ModalWeapon& weapon, std::string name)
+			static auto make(ModalWeapon& weapon, std::string name)
 			{
 				return std::make_unique<SwitchForm<TargetForm>>(weapon, name);
 			}
@@ -64,11 +62,11 @@ namespace questless
 			std::string const _name;
 		};
 
-		ModalWeapon(double integrity, Form::uptr initial_form) : Weapon{integrity}, _form{std::move(initial_form)} {}
+		ModalWeapon(double integrity, uptr<Form> initial_form) : Weapon{integrity}, _form{std::move(initial_form)} {}
 
 		//! The weapon's current form.
 		Form const& form() const { return *_form; }
 	private:
-		Form::uptr _form;
+		uptr<Form> _form;
 	};
 }

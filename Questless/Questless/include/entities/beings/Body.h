@@ -20,8 +20,6 @@ namespace questless
 	class Body
 	{
 	public:
-		using uptr = std::unique_ptr<Body>;
-
 		//! @param owner The being that owns this body.
 		//! @param root The root of the body parts tree.
 		Body(Being& owner, std::unique_ptr<BodyPart> root);
@@ -47,14 +45,14 @@ namespace questless
 			return boost::make_transform_iterator(_parts.end(), body_part_ref_to_cref);
 		}
 		
-		std::vector<Head::ref> const& heads() { return _heads; }
-		std::vector<Torso::ref> const& torsos() { return _torsos; }
-		std::vector<Arm::ref> const& arms() { return _arms; }
-		std::vector<Hand::ref> const& hands() { return _hands; }
-		std::vector<Leg::ref> const& legs() { return _legs; }
-		std::vector<Foot::ref> const& feet() { return _feet; }
-		std::vector<Wing::ref> const& wings() { return _wings; }
-		std::vector<Tail::ref> const& tails() { return _tails; }
+		std::vector<ref<Head>> const& heads() { return _heads; }
+		std::vector<ref<Torso>> const& torsos() { return _torsos; }
+		std::vector<ref<Arm>> const& arms() { return _arms; }
+		std::vector<ref<Hand>> const& hands() { return _hands; }
+		std::vector<ref<Leg>> const& legs() { return _legs; }
+		std::vector<ref<Foot>> const& feet() { return _feet; }
+		std::vector<ref<Wing>> const& wings() { return _wings; }
+		std::vector<ref<Tail>> const& tails() { return _tails; }
 
 		//! The body part on this body with the given ID or nullptr if none exists.
 		BodyPart* find_part(Id<BodyPart> id);
@@ -114,20 +112,20 @@ namespace questless
 		units::ScreenRect _bounds;
 		units::ScreenVector _offset_to_center;
 
-		std::vector<BodyPart::ref> _parts;
+		std::vector<ref<BodyPart>> _parts;
 
-		std::vector<Head::ref> _heads;
-		std::vector<Torso::ref> _torsos;
-		std::vector<Arm::ref> _arms;
-		std::vector<Hand::ref> _hands;
-		std::vector<Leg::ref> _legs;
-		std::vector<Foot::ref> _feet;
-		std::vector<Wing::ref> _wings;
-		std::vector<Tail::ref> _tails;
+		std::vector<ref<Head>> _heads;
+		std::vector<ref<Torso>> _torsos;
+		std::vector<ref<Arm>> _arms;
+		std::vector<ref<Hand>> _hands;
+		std::vector<ref<Leg>> _legs;
+		std::vector<ref<Foot>> _feet;
+		std::vector<ref<Wing>> _wings;
+		std::vector<ref<Tail>> _tails;
 
-		static BodyPart::cref body_part_ref_to_cref(BodyPart::ref body_part)
+		static cref<BodyPart> body_part_ref_to_cref(ref<BodyPart> body_part)
 		{
-			return static_cast<BodyPart::cref>(body_part);
+			return static_cast<cref<BodyPart>>(body_part);
 		}
 	};
 }

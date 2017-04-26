@@ -4,9 +4,10 @@
 
 #pragma once
 
-#include "entities/EntityVisitor.h"
 #include "AnimationSet.h"
+#include "entities/EntityVisitor.h"
 #include "sdl/resources.h"
+#include "utility/reference.h"
 
 namespace questless
 {
@@ -21,8 +22,8 @@ namespace questless
 		void visit(ItemBox const&) override;
 
 		//! The animation set produced by the last visit. Moves the animation set out of the animator.
-		AnimationSet::uptr animation_set() { return std::move(_animation_set); }
+		uptr<AnimationSet> animation_set() { return std::move(_animation_set); }
 	private:
-		AnimationSet::uptr _animation_set;
+		uptr<AnimationSet> _animation_set;
 	};
 }

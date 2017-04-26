@@ -26,9 +26,9 @@ namespace questless
 
 		double weight() const override { return 0.5; }
 
-		virtual std::vector<Action::uptr> actions() override
+		virtual std::vector<uptr<Action>> actions() override
 		{
-			std::vector<Action::uptr> actions;
+			std::vector<uptr<Action>> actions;
 			if (equipped()) {
 				actions.push_back(Unequip::make(*this));
 			} else {

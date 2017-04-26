@@ -7,9 +7,9 @@
 
 namespace questless
 {
-	std::vector<Action::uptr> Scroll::actions()
+	std::vector<uptr<Action>> Scroll::actions()
 	{
-		std::vector<Action::uptr> actions;
+		std::vector<uptr<Action>> actions;
 		if (!blank()) {
 			if (_spell->charges() > 0) {
 				actions.push_back(_spell->cast());

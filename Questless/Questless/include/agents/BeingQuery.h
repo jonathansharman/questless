@@ -21,7 +21,6 @@ namespace questless
 	//! A request to an agent to specify a being.
 	struct BeingQuery
 	{
-		using uptr = std::unique_ptr<BeingQuery>;
 		virtual ~BeingQuery() = default;
 		virtual void accept(BeingQueryVisitor& visitor) = 0;
 	};

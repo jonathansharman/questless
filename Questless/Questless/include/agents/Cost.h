@@ -17,7 +17,6 @@ namespace questless
 	class Cost
 	{
 	public:
-		using sptr = std::shared_ptr<Cost>;
 		using cont_t = std::function<Complete()>;
 
 		virtual ~Cost() = default;

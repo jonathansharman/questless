@@ -76,10 +76,10 @@ namespace questless
 					if (std::optional<Id<Item>> opt_item_id = game().hud().hotbar()[player_choice.data]) {
 						Item& item = game().items.get_ref(*opt_item_id);
 						// Get a list of the item's actions. It's shared so the lambda that captures it is copyable, so the lambda can be passed as a std::function.
-						auto actions = std::make_shared<std::vector<Action::uptr>>(item.actions());
+						auto actions = std::make_shared<std::vector<uptr<Action>>>(item.actions());
 						// Get the action names from the list of actions.
 						std::vector<std::string> action_names;
-						std::transform(actions->begin(), actions->end(), std::back_inserter(action_names), [](Action::uptr const& action) { return action->name(); });
+						std::transform(actions->begin(), actions->end(), std::back_inserter(action_names), [](uptr<Action> const& action) { return action->name(); });
 						// Open list dialog for the player to choose an action.
 						auto dialog = std::make_unique<ListDialog>(sdl::input().mouse_position(), item.name(), std::move(action_names),
 							[this, actions](std::optional<int> opt_action_idx) {
@@ -108,20 +108,20 @@ namespace questless
 		});
 	}
 
-	void Player::perceive(Effect::uptr const& effect)
+	void Player::perceive(sptr<Effect> const& effect)
 	{
 		_perceived_effects.push_back(effect);
 	}
 
-	std::vector<Effect::uptr> Player::poll_perceived_effects()
+	std::vector<sptr<Effect>> Player::poll_perceived_effects()
 	{
-		std::vector<Effect::uptr> perceived_effects = std::move(_perceived_effects);
+		std::vector<sptr<Effect>> perceived_effects = std::move(_perceived_effects);
 		_perceived_effects.clear();
 		return perceived_effects;
 	}
 
 	Complete Player::send_message
-		( Message::uptr message
+		( uptr<Message> message
 		, function<Complete()> cont
 		) const
 	{
@@ -167,7 +167,7 @@ namespace questless
 	}
 
 	Complete Player::query_count
-		( CountQuery::uptr query
+		( uptr<CountQuery> query
 		, int default
 		, std::optional<int> min
 		, std::optional<int> max
@@ -193,7 +193,7 @@ namespace questless
 	}
 
 	Complete Player::query_magnitude
-		( MagnitudeQuery::uptr query
+		( uptr<MagnitudeQuery> query
 		, double default
 		, std::optional<double> min
 		, std::optional<double> max
@@ -224,7 +224,7 @@ namespace questless
 	}
 	
 	Complete Player::query_tile
-		( TileQuery::uptr query
+		( uptr<TileQuery> query
 		, std::optional<RegionTileCoords> origin
 		, function<bool(RegionTileCoords)> predicate
 		, function<Complete(std::optional<RegionTileCoords>)> cont
@@ -260,7 +260,7 @@ namespace questless
 	}
 
 	Complete Player::query_direction
-		( DirectionQuery::uptr query
+		( uptr<DirectionQuery> query
 		, function<Complete(std::optional<RegionTileCoords::Direction>)> cont
 		) const
 	{
@@ -284,7 +284,7 @@ namespace questless
 	}
 
 	Complete Player::query_being
-		( BeingQuery::uptr //query
+		( uptr<BeingQuery> //query
 		, function<bool(Being&)> //predicate
 		, function<Complete(std::optional<Being*>)> cont
 		) const
@@ -295,7 +295,7 @@ namespace questless
 	}
 
 	Complete Player::query_item
-		( ItemQuery::uptr //query
+		( uptr<ItemQuery> //query
 		, Being& //source
 		, function<bool(Being&)> //predicate
 		, function<Complete(std::optional<Item*>)> cont

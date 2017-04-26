@@ -15,17 +15,17 @@ using namespace sdl;
 
 namespace questless
 {
-	sdl::Texture::uptr Dialog::make_title(char const* title, Color color)
+	uptr<sdl::Texture> Dialog::make_title(char const* title, Color color)
 	{
 		static auto title_font_handle = font_manager().add("resources/fonts/dumbledor1.ttf", 32);
 		return std::make_unique<Texture>(font_manager()[title_font_handle].render(title, color));
 	}
-	sdl::Texture::uptr Dialog::make_prompt(char const* prompt, Color color)
+	uptr<sdl::Texture> Dialog::make_prompt(char const* prompt, Color color)
 	{
 		static auto prompt_font_handle = font_manager().add("resources/fonts/dumbledor1.ttf", 20);
 		return std::make_unique<Texture>(font_manager()[prompt_font_handle].render(prompt, color));
 	}
-	sdl::Texture::uptr Dialog::make_selector(char const* selector, Color color)
+	uptr<sdl::Texture> Dialog::make_selector(char const* selector, Color color)
 	{
 		static auto selector_font_handle = font_manager().add("resources/fonts/dumbledor1.ttf", 32);
 		return std::make_unique<Texture>(font_manager()[selector_font_handle].render(selector, color));

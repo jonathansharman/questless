@@ -24,21 +24,21 @@ namespace questless
 
 		void act() override;
 
-		void perceive(Effect::uptr const& effect) override;
+		void perceive(sptr<Effect> const& effect) override;
 
 		//! Gets a list of perceived effects and removes them from the player agent.
 		//! @return All the effects the player has perceived since the last call to poll_perceived_effects().
-		std::vector<Effect::uptr> poll_perceived_effects();
+		std::vector<sptr<Effect>> poll_perceived_effects();
 
 		// Queries and messages
 
 		Complete send_message
-			( Message::uptr message
+			( uptr<Message> message
 			, std::function<Complete()> cont
 			) const override;
 
 		Complete query_count
-			( CountQuery::uptr query
+			( uptr<CountQuery> query
 			, int default
 			, std::optional<int> min
 			, std::optional<int> max
@@ -46,7 +46,7 @@ namespace questless
 			) const override;
 
 		Complete query_magnitude
-			( MagnitudeQuery::uptr query
+			( uptr<MagnitudeQuery> query
 			, double default
 			, std::optional<double> min
 			, std::optional<double> max
@@ -54,25 +54,25 @@ namespace questless
 			) const override;
 
 		Complete query_tile
-			( TileQuery::uptr query
+			( uptr<TileQuery> query
 			, std::optional<RegionTileCoords> origin
 			, std::function<bool(RegionTileCoords)> predicate
 			, std::function<Complete(std::optional<RegionTileCoords>)> cont
 			) const override;
 
 		Complete query_direction
-			( DirectionQuery::uptr query
+			( uptr<DirectionQuery> query
 			, std::function<Complete(std::optional<RegionTileCoords::Direction>)> cont
 			) const override;
 
 		Complete query_being
-			( BeingQuery::uptr query
+			( uptr<BeingQuery> query
 			, std::function<bool(Being&)> predicate
 			, std::function<Complete(std::optional<Being*>)> cont
 			) const override;
 
 		Complete query_item
-			( ItemQuery::uptr query
+			( uptr<ItemQuery> query
 			, Being& source
 			, std::function<bool(Being&)> predicate
 			, std::function<Complete(std::optional<Item*>)> cont
@@ -84,6 +84,6 @@ namespace questless
 	private:
 		std::unique_ptr<WorldView> _world_view;
 
-		std::vector<Effect::uptr> _perceived_effects;
+		std::vector<sptr<Effect>> _perceived_effects;
 	};
 }

@@ -20,10 +20,7 @@ namespace questless
 		// Types //
 		///////////
 
-		using uptr = std::unique_ptr<Object>;
-		using ref = std::reference_wrapper<Object>;
-		using cref = std::reference_wrapper<Object const>;
-		using ptr_less_t = std::function<bool(uptr const&, uptr const&)>;
+		using ptr_less_t = std::function<bool(uptr<Object> const&, uptr<Object> const&)>;
 		using ref_less_t = std::function<bool(Object const&, Object const&)>;
 
 		/////////////////

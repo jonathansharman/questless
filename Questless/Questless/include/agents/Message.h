@@ -37,7 +37,6 @@ namespace questless
 	//! A message that can be sent to an agent.
 	struct Message
 	{
-		using uptr = std::unique_ptr<Message>;
 		virtual ~Message() = default;
 		virtual void accept(MessageVisitor& visitor) = 0;
 	};

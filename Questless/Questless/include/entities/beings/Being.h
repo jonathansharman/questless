@@ -46,11 +46,8 @@ namespace questless
 		// Types //
 		///////////
 
-		using uptr = std::unique_ptr<Being>;
-		using ref = std::reference_wrapper<Being>;
-		using cref = std::reference_wrapper<Being const>;
-		using ptr_less_t = std::function<bool(uptr const&, uptr const&)>;
 		using ref_less_t = std::function<bool(Being const&, Being const&)>;
+		using ptr_less_t = std::function<bool(uptr<Being> const&, uptr<Being> const&)>;
 
 		///////////////
 		// Constants //
@@ -168,7 +165,7 @@ namespace questless
 		//! @param delay The delay before the action is performed.
 		//! @param cont The continuation function to call once the action completes.
 		//! @param action The action to perform after the delay.
-		void add_delayed_action(double delay, Action::cont_t cont, Action::uptr action);
+		void add_delayed_action(double delay, Action::cont_t cont, uptr<Action> action);
 
 		//! Clears the being's delayed actions queue.
 		void clear_delayed_actions();
@@ -205,7 +202,7 @@ namespace questless
 
 		//! @todo Maybe use a std::pair of actions and conts, and then use the auto [action, cont] = ... syntax in act() once supported?
 		std::deque<double> _action_delays; //!< The queue of delays before the next action in the delayed actions queue should begin.
-		std::deque<Action::uptr> _delayed_actions; //!< The queue of delayed actions to occur when this being is not busy.
+		std::deque<uptr<Action>> _delayed_actions; //!< The queue of delayed actions to occur when this being is not busy.
 		std::deque<Action::cont_t> _delayed_action_conts; //!< The queue of delayed action continuations.
 
 		// Statuses
