@@ -159,7 +159,7 @@ namespace questless
 		/////////////////
 
 		std::string _name;
-		std::map<RegionSectionCoords, std::unique_ptr<Section>> _section_map; //! @todo Replace unique_ptr with reference_wrapper (disallow null sections).
+		std::map<RegionSectionCoords, Section> _section_map;
 		RegionSectionCoords center_section_coords = RegionSectionCoords{0, 0};
 
 		double _time;
@@ -192,13 +192,13 @@ namespace questless
 		Section* section_helper(RegionSectionCoords region_section_coords) const
 		{
 			auto it = _section_map.find(region_section_coords);
-			return it == _section_map.end() ? nullptr : it->second.get();
+			return it == _section_map.end() ? nullptr : const_cast<Section*>(&it->second);
 		}
 
 		Section* containing_section_helper(RegionTileCoords region_tile_coords) const
 		{
 			auto it = _section_map.find(Section::region_section_coords(region_tile_coords));
-			return it == _section_map.end() ? nullptr : it->second.get();
+			return it == _section_map.end() ? nullptr : const_cast<Section*>(&it->second);
 		}
 	};
 }

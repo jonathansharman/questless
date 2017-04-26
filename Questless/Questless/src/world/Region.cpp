@@ -65,7 +65,7 @@ namespace questless
 						//data += std::to_string(static_cast<int>(Tile::TileClass::snow)) + " 0 ";
 					}
 				}
-				_section_map[section_coords] = make_unique<Section>(section_coords, std::istringstream{data});
+				_section_map.insert(std::make_pair(section_coords, Section{section_coords, std::istringstream{data}}));
 				// Add beings randomly.
 				for (int q = 0; q < Section::diameter; ++q) {
 					for (int r = 0; r < Section::diameter; ++r) {
@@ -114,7 +114,7 @@ namespace questless
 			if (data_stream.fail()) {
 				throw std::logic_error("Could not open section file.");
 			}
-			_section_map[section_coords] = make_unique<Section>(section_coords, data_stream);
+			_section_map.insert(std::make_pair(section_coords, Section{section_coords, data_stream}));
 		}
 
 		fs::path entities_filename{"entities"};
@@ -508,9 +508,8 @@ namespace questless
 		for (int r = -_loaded_sections_q_radius; r <= _loaded_sections_q_radius; ++r) {
 			for (int q = -_loaded_sections_r_radius; q <= _loaded_sections_r_radius; ++q) {
 				RegionSectionCoords section_coords{q, r};
-				auto it = _section_map.find(section_coords);
-				if (it != _section_map.end() && it->second != nullptr) {
-					f(*it->second);
+				if (Section* s = section(section_coords)) {
+					f(*s);
 				}
 			}
 		}
