@@ -151,6 +151,9 @@
     <Filter Include="src\sdl">
       <UniqueIdentifier>{b3472b87-ac58-4240-8805-baf8a893ea93}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\entities\beings\stats">
+      <UniqueIdentifier>{0d52b999-0390-4620-a144-cc22ec627c51}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\test.png">
@@ -697,6 +700,12 @@
     <ClInclude Include="include\ui\DigraphMenu.h">
       <Filter>include\ui</Filter>
     </ClInclude>
+    <ClInclude Include="include\units\constants.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\world\LightSource.h">
+      <Filter>include\world</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\world\Region.cpp">
@@ -932,6 +941,12 @@
     </ClCompile>
     <ClCompile Include="src\ui\DigraphMenu.cpp">
       <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\world\LightSource.cpp">
+      <Filter>src\world</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\beings\stats\Vision.cpp">
+      <Filter>src\entities\beings\stats</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

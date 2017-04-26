@@ -369,6 +369,7 @@
     <ClInclude Include="include\ui\qte\LightningBolt.h" />
     <ClInclude Include="include\ui\TileDialog.h" />
     <ClInclude Include="include\units\Angle.h" />
+    <ClInclude Include="include\units\constants.h" />
     <ClInclude Include="include\units\constexpr-math.h" />
     <ClInclude Include="include\units\Frequency.h" />
     <ClInclude Include="include\units\GameAcceleration.h" />
@@ -410,6 +411,7 @@
     <ClInclude Include="include\utility\TaggedType.h" />
     <ClInclude Include="include\utility\utility.h" />
     <ClInclude Include="include\world\coordinates.h" />
+    <ClInclude Include="include\world\LightSource.h" />
     <ClInclude Include="include\world\Region.h" />
     <ClInclude Include="include\world\Section.h" />
     <ClInclude Include="include\world\Tile.h" />
@@ -444,6 +446,7 @@
     <ClCompile Include="src\entities\beings\Damage.cpp" />
     <ClCompile Include="src\entities\beings\Human.cpp" />
     <ClCompile Include="src\entities\beings\IncorporealBeing.cpp" />
+    <ClCompile Include="src\entities\beings\stats\Vision.cpp" />
     <ClCompile Include="src\entities\beings\statuses\Discharging.cpp" />
     <ClCompile Include="src\entities\beings\statuses\Healing.cpp" />
     <ClCompile Include="src\entities\beings\statuses\Poisoned.cpp" />
@@ -490,6 +493,7 @@
     <ClCompile Include="src\ui\qte\LightningBolt.cpp" />
     <ClCompile Include="src\ui\TileDialog.cpp" />
     <ClCompile Include="src\utility\utility.cpp" />
+    <ClCompile Include="src\world\LightSource.cpp" />
     <ClCompile Include="src\world\Region.cpp" />
     <ClCompile Include="src\world\Section.cpp" />
     <ClCompile Include="src\world\Tile.cpp" />

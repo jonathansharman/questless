@@ -14,7 +14,9 @@ namespace fs = std::tr2::sys; //! @todo Replace this with proper using statement
 #include "entities/all-entities.h"
 #include "Game.h"
 #include "items/weapons/Quarterstaff.h"
+#include "units/constants.h"
 #include "utility/utility.h"
+#include "world/LightSource.h"
 #include "world/Region.h"
 
 using std::string;
@@ -37,7 +39,10 @@ namespace questless
 	}
 
 	Region::Region(string region_name)
-		: _name{std::move(region_name)}, _turn_queue{turn_order_function}
+		: _name{std::move(region_name)}
+		, _time{0.0}
+		, _turn_queue{turn_order_function}
+		, _ambient_illuminance{get_ambient_illuminance()}
 	{
 		int const r_radius = 1;
 		int const q_radius = 1;
@@ -50,11 +55,14 @@ namespace questless
 				string data;
 				for (int q = 0; q < Section::diameter; ++q) {
 					for (int r = 0; r < Section::diameter; ++r) {
-						if (r == Section::diameter - 1 || q == Section::diameter - 1) {
-							data += std::to_string(static_cast<int>(Tile::TileClass::edge)) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
-						} else {
-							data += std::to_string(uniform(0, static_cast<int>(Tile::TileClass::TILE_CLASS_COUNT) - 1)) + ' ' + std::to_string(100.0) + ' ' + std::to_string(0.0) + ' ';
-						}
+						//if (r == Section::diameter - 1 || q == Section::diameter - 1) {
+						//	data += std::to_string(static_cast<int>(Tile::TileClass::edge)) + ' ' + std::to_string(0.0) + ' ';
+						//} else {
+						//	data += std::to_string(uniform(0, static_cast<int>(Tile::TileClass::TILE_CLASS_COUNT) - 1)) + ' ' + std::to_string(0.0) + ' ';
+						//}
+
+						// Every tile is snow (nice for testing lighting).
+						data += std::to_string(static_cast<int>(Tile::TileClass::snow)) + " 0 ";
 					}
 				}
 				_section_map[section_coords] = make_unique<Section>(section_coords, std::istringstream{data});
@@ -74,7 +82,10 @@ namespace questless
 	}
 
 	Region::Region(char const* save_name, string region_name)
-		: _name{std::move(region_name)}, _turn_queue{turn_order_function}
+		: _name{std::move(region_name)}
+		, _time{0.0}
+		, _turn_queue{turn_order_function}
+		, _ambient_illuminance{get_ambient_illuminance()}
 	{
 		fs::path saves_dir{"saves"};
 		fs::path save_filename{save_name};
@@ -350,8 +361,76 @@ namespace questless
 		section.remove(object);
 	}
 
+	void Region::add(LightSource const& light_source)
+	{
+		int range = light_source.range();
+		int const min_q = light_source.coords().q - range;
+		int const min_r = light_source.coords().r - range;
+		RegionTileCoords const min_region_tile_coords{min_q, min_r};
+		RegionSectionCoords const min_section_coords = Section::region_section_coords(min_region_tile_coords);
+
+		int const max_q = light_source.coords().q + range;
+		int const max_r = light_source.coords().r + range;
+		RegionTileCoords const max_region_tile_coords{max_q, max_r};
+		RegionSectionCoords const max_section_coords = Section::region_section_coords(max_region_tile_coords);
+
+		for (int section_q = min_section_coords.q; section_q <= max_section_coords.q; ++section_q) {
+			for (int section_r = min_section_coords.r; section_r <= max_section_coords.r; ++section_r) {
+				RegionSectionCoords section_coords{section_q, section_r};
+				if (Section* s = section(section_coords)) {
+					s->add(light_source);
+				}
+			}
+		}
+	}
+
+	void Region::remove(LightSource const& light_source)
+	{
+		int const min_q = light_source.coords().q - light_source.range();
+		int const min_r = light_source.coords().r - light_source.range();
+		RegionTileCoords const min_region_tile_coords{min_q, min_r};
+		RegionSectionCoords const min_section_coords = Section::region_section_coords(min_region_tile_coords);
+
+		int const max_q = light_source.coords().q + light_source.range();
+		int const max_r = light_source.coords().r + light_source.range();
+		RegionTileCoords const max_region_tile_coords{max_q, max_r};
+		RegionSectionCoords const max_section_coords = Section::region_section_coords(max_region_tile_coords);
+
+		for (int section_q = max_section_coords.q; section_q <= max_section_coords.q; ++section_q) {
+			for (int section_r = max_section_coords.r; section_r <= max_section_coords.r; ++section_r) {
+				RegionSectionCoords section_coords{section_q, section_r};
+				if (Section* s = section(section_coords)) {
+					s->remove(light_source);
+				}
+			}
+		}
+	}
+
+	double Region::illuminance(RegionTileCoords region_tile_coords) const
+	{
+		double result = _ambient_illuminance;
+		if (Section const* s = containing_section(region_tile_coords)) {
+			for (LightSource const& light_source : s->light_sources()) {
+				result += light_source.luminance(region_tile_coords);
+			}
+		}
+		return result;
+	}
+
+	double Region::temperature(RegionTileCoords region_tile_coords) const
+	{
+		return tile(region_tile_coords)->temperature_offset;
+	}
+
 	void Region::update()
 	{
+		// Advance local time by one time unit per update.
+		_time += 1.0;
+		_time_of_day = get_time_of_day();
+		_period_of_day = get_period_of_day();
+
+		_ambient_illuminance = get_ambient_illuminance();
+
 		std::vector<Id<Being>> beings_to_update;
 		std::vector<Id<Object>> objects_to_update;
 		for_each_loaded_section([&](Section& section) {
@@ -371,6 +450,56 @@ namespace questless
 			if (Object* object = game().objects.get(object_id)) {
 				object->update();
 			}
+		}
+	}
+
+	Region::PeriodOfDay Region::get_period_of_day() const
+	{
+		if (_time_of_day <= _end_of_morning) {
+			return PeriodOfDay::morning;
+		} else if (_time_of_day <= _end_of_afternoon) {
+			return PeriodOfDay::afternoon;
+		} else if (_time_of_day <= _end_of_dusk) {
+			return PeriodOfDay::dusk;
+		} else if (_time_of_day <= _end_of_evening) {
+			return PeriodOfDay::evening;
+		} else if (_time_of_day <= _end_of_night) {
+			return PeriodOfDay::night;
+		} else {
+			return PeriodOfDay::dawn;
+		}
+	}
+
+	double Region::get_ambient_illuminance()
+	{
+		double constexpr night_light = 25.0;
+		double constexpr dawn_and_dusk_light = 75.0;
+		double constexpr noon_light = 115.0;
+
+		switch (_period_of_day) {
+			case PeriodOfDay::morning:
+				[[fallthrough]];
+			case PeriodOfDay::afternoon:
+			{
+				double const daylight_progress = sin(_time / _day_length * units::constants::tau);
+				return dawn_and_dusk_light + daylight_progress * (noon_light - dawn_and_dusk_light);
+			}
+			case PeriodOfDay::dusk:
+			{
+				double const dusk_progress = (_time_of_day - _end_of_afternoon) / (_end_of_dusk - _end_of_afternoon);
+				return (1.0 - dusk_progress) * dawn_and_dusk_light + dusk_progress * night_light;
+			}
+			case PeriodOfDay::evening:
+				[[fallthrough]];
+			case PeriodOfDay::night:
+				return night_light;
+			case PeriodOfDay::dawn:
+			{
+				double const dawn_progress = (_time_of_day - _end_of_night) / (_day_length - _end_of_night);
+				return dawn_progress * dawn_and_dusk_light + (1.0 - dawn_progress) * night_light;
+			}
+			default:
+				throw std::logic_error{"Invalid period of day."};
 		}
 	}
 

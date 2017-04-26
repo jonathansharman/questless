@@ -25,9 +25,7 @@ namespace questless
 		Region const& region = _region;
 		RegionTileCoords coords = being.coords;
 		Vision vision = being.stats.vision;
-
-		// Calculate the maximum distance the being can see.
-		int visual_range = static_cast<int>(sqrt(vision.acuity / Vision::distance_factor));
+		int visual_range = vision.max_range();
 
 		// Find the set of coordinates of sections plausibly visible to the being.
 		set<RegionSectionCoords> section_coords_set;
@@ -74,12 +72,11 @@ namespace questless
 						default:
 							throw std::logic_error{"Invalid direction."};
 					}
-					if (in_front) {
-						double light_level = region.tile(region_tile_coords)->light_level();
-						double vision_divisor = 1.0 + (light_level - vision.ideal_light) * (light_level - vision.ideal_light) / vision.light_tolerance * Vision::light_factor;
+					if (in_front && region_tile_coords.distance_to(coords) <= visual_range) {
+						double illuminance = region.illuminance(region_tile_coords);
 						int distance = coords.distance_to(region_tile_coords);
 
-						double tile_visibility = in_front ? (vision.acuity - distance * distance * Vision::distance_factor) / vision_divisor : 0.0;
+						double tile_visibility = vision.visibility(illuminance, distance);
 
 						// Update bounding rectangle.
 						if (find_bounds && tile_visibility > 0.0) {
@@ -101,23 +98,28 @@ namespace questless
 
 			// Calculate being visibilities.
 			for (Being const& other_being : region.section(section_coords)->beings()) {
-				RegionTileCoords other_coords = other_being.coords;
-				if (other_coords.distance_to(coords) < visual_range) {
-					SectionTileCoords other_section_coords = Section::section_tile_coords(other_coords);
-					double tile_visibility = section_view.tile_visibilities[other_section_coords.q][other_section_coords.r];
-					
-					if (tile_visibility >= _low_perception_threshold) {
-						PerceptionLevel perception;
-						if (tile_visibility < _medium_perception_threshold) {
-							perception = PerceptionLevel::low;
-						} else if (tile_visibility < _high_perception_threshold) {
-							perception = PerceptionLevel::medium;
-						} else if (tile_visibility < _full_perception_threshold) {
-							perception = PerceptionLevel::high;
-						} else {
-							perception = PerceptionLevel::full;
+				if (other_being.id == being.id) {
+					// Can always perceive self fully.
+					_being_views.emplace_back(other_being.id, PerceptionLevel::full);
+				} else {
+					RegionTileCoords other_coords = other_being.coords;
+					if (other_coords.distance_to(coords) <= visual_range) {
+						SectionTileCoords other_section_coords = Section::section_tile_coords(other_coords);
+						double tile_visibility = section_view.tile_visibilities[other_section_coords.q][other_section_coords.r];
+
+						if (tile_visibility >= _low_perception_threshold) {
+							PerceptionLevel perception;
+							if (tile_visibility < _medium_perception_threshold) {
+								perception = PerceptionLevel::low;
+							} else if (tile_visibility < _high_perception_threshold) {
+								perception = PerceptionLevel::medium;
+							} else if (tile_visibility < _full_perception_threshold) {
+								perception = PerceptionLevel::high;
+							} else {
+								perception = PerceptionLevel::full;
+							}
+							_being_views.emplace_back(other_being.id, perception);
 						}
-						_being_views.emplace_back(other_being.id, perception);
 					}
 				}
 			}

@@ -23,6 +23,8 @@ namespace questless
 	class Region
 	{
 	public:
+		enum class PeriodOfDay { morning, afternoon, dusk, evening, night, dawn };
+
 		//! Pseudo-randomly generates a new region.
 		//! @param name The name of the new region.
 		Region(std::string region_name);
@@ -93,6 +95,12 @@ namespace questless
 		//! Removes @p object from the region, if present.
 		void remove(Object& object);
 
+		//! Adds @p light_source to the region's light sources.
+		void add(LightSource const& light_source);
+
+		//! Adds @p light_source from the region's light sources, if present.
+		void remove(LightSource const& light_source);
+
 		//! The tile at @p region_tile_coords or nullptr if none.
 		Tile* tile(RegionTileCoords region_tile_coords) { return tile_helper(region_tile_coords); }
 
@@ -109,18 +117,66 @@ namespace questless
 		//! The section that contains @p region_tile_coords or nullptr if none.
 		Section const* containing_section(RegionTileCoords region_tile_coords) const { return containing_section_helper(region_tile_coords); }
 
-		//! Updates everything contained in the region.
+		//! The total in-game time in this region.
+		double time() const { return _time; }
+
+		//! The time of day in this region.
+		double time_of_day() const { return _time_of_day; }
+
+		//! The period of day in this region.
+		PeriodOfDay period_of_day() const { return _period_of_day; }
+
+		//! The illuminance of the tile at @p region_tile_coords.
+		double illuminance(RegionTileCoords region_tile_coords) const;
+
+		//! The temperature of the tile at @p region_tile_coords.
+		double temperature(RegionTileCoords region_tile_coords) const;
+
+		//! Advances local time by one unit then updates everything contained in the region.
 		void update();
 	private:
-		// Define the maximum size of the sections rhomboid that should be loaded at any given time.
-		static const int _loaded_sections_q_radius = 1;
-		static const int _loaded_sections_r_radius = 1;
+		///////////////
+		// Constants //
+		///////////////
+
+		// These define the maximum size of the sections rhomboid that should be loaded at any given time.
+
+		static int const _loaded_sections_q_radius = 1;
+		static int const _loaded_sections_r_radius = 1;
+
+		// Time Constants
+
+		static double constexpr _day_length = 1200.0;
+		static double constexpr _twilight_percentage = 0.05;
+		static double constexpr _end_of_morning = 0.25 * _day_length;
+		static double constexpr _end_of_afternoon = 0.5 * _day_length;
+		static double constexpr _end_of_dusk = (0.5 + _twilight_percentage) * _day_length;
+		static double constexpr _end_of_evening = (2.0 / 3.0) * _day_length;
+		static double constexpr _end_of_night = (1.0 - _twilight_percentage) * _day_length;
+
+		/////////////////
+		// Member Data //
+		/////////////////
 
 		std::string _name;
 		std::map<RegionSectionCoords, std::unique_ptr<Section>> _section_map; //! @todo Replace unique_ptr with reference_wrapper (disallow null sections).
 		RegionSectionCoords center_section_coords = RegionSectionCoords{0, 0};
 
+		double _time;
+		double _time_of_day;
+		PeriodOfDay _period_of_day;
+
 		std::set<Being::ref, Being::ref_less_t> _turn_queue;
+		double _ambient_illuminance;
+
+		//////////////////////
+		// Member Functions //
+		//////////////////////
+
+		double get_time_of_day() const { return fmod(_time, _day_length); }
+		PeriodOfDay get_period_of_day() const;
+
+		double get_ambient_illuminance();
 
 		//! Performs some operation on each section in the loaded rhomboid of sections.
 		//! @param f The operation to perform on each section.

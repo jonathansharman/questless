@@ -152,7 +152,7 @@ namespace questless
 		abilities.update(*this);
 
 		// Handle temperature damage.
-		double temp = region->tile(coords)->temperature();
+		double temp = region->temperature(coords);
 		if (temp > stats.max_temp) {
 			Damage burn{Burn{(temp - stats.max_temp) / (stats.max_temp - stats.min_temp) * temperature_damage_factor}};
 			take_damage(burn, nullptr, std::nullopt);

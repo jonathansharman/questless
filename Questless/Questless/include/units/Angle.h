@@ -7,6 +7,8 @@
 #include <ratio>
 #include <ostream>
 
+#include "constants.h"
+
 namespace units
 {
 	//! An angle in some space.
@@ -128,7 +130,7 @@ namespace units
 	}
 
 	template <typename SpaceType>
-	using Radians = Angle<SpaceType, std::ratio<6'283'185, 1'000'000>>;
+	using Radians = Angle<SpaceType, std::ratio<static_cast<int>(constants::tau * 1'000'000), 1'000'000>>;
 
 	template <typename SpaceType>
 	using Degrees = Angle<SpaceType, std::ratio<360>>;

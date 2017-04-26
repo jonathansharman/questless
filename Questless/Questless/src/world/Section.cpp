@@ -7,6 +7,7 @@
 #include <fstream>
 
 #include "Game.h"
+#include "world/LightSource.h"
 #include "world/Region.h"
 
 namespace questless
@@ -29,32 +30,31 @@ namespace questless
 		for (auto& slice : _tiles) {
 			for (auto& tile : slice) {
 				int c;
-				double light_level;
-				double temperature;
+				double temperature_offset;
 
-				data_stream >> c >> light_level >> temperature;
+				data_stream >> c >> temperature_offset;
 
 				switch (static_cast<Tile::TileClass>(c)) {
 					case Tile::TileClass::dirt:
-						tile = std::make_unique<DirtTile>(light_level, temperature);
+						tile = std::make_unique<DirtTile>(temperature_offset);
 						break;
 					case Tile::TileClass::edge:
-						tile = std::make_unique<EdgeTile>(light_level, temperature);
+						tile = std::make_unique<EdgeTile>(temperature_offset);
 						break;
 					case Tile::TileClass::grass:
-						tile = std::make_unique<GrassTile>(light_level, temperature);
+						tile = std::make_unique<GrassTile>(temperature_offset);
 						break;
 					case Tile::TileClass::sand:
-						tile = std::make_unique<SandTile>(light_level, temperature);
+						tile = std::make_unique<SandTile>(temperature_offset);
 						break;
 					case Tile::TileClass::snow:
-						tile = std::make_unique<SnowTile>(light_level, temperature);
+						tile = std::make_unique<SnowTile>(temperature_offset);
 						break;
 					case Tile::TileClass::stone:
-						tile = std::make_unique<StoneTile>(light_level, temperature);
+						tile = std::make_unique<StoneTile>(temperature_offset);
 						break;
 					case Tile::TileClass::water:
-						tile = std::make_unique<WaterTile>(light_level, temperature);
+						tile = std::make_unique<WaterTile>(temperature_offset);
 						break;
 					default:
 						throw std::logic_error{"Unrecognized tile type."};
@@ -68,7 +68,7 @@ namespace questless
 		std::ofstream fout{filename};
 		for (auto& r_row : _tiles) {
 			for (auto& tile : r_row) {
-				fout << static_cast<char>(tile->tile_class()) << ' ' << tile->light_level() << ' ' << tile->temperature() << ' ';
+				fout << static_cast<char>(tile->tile_class()) << ' ' << tile->temperature_offset << ' ';
 			}
 		}
 	}
@@ -143,5 +143,27 @@ namespace questless
 			}
 			_object_ids.erase(it);
 		}
+	}
+	
+	std::vector<LightSource::cref> Section::light_sources() const
+	{
+		//! @todo Could make a lazy version of this, as in Inventory::Item. (Eager evaluation should be okay here though since the number of light sources will be small.)
+		//! @todo Make a generic List<Id<T>> -> List<T&> iterator/container type?
+
+		std::vector<LightSource::cref> result;
+		for (Id<LightSource> id : _light_source_ids) {
+			result.push_back(game().light_sources.get_ref(id));
+		}
+		return result;
+	}
+
+	void Section::add(LightSource const& light_source)
+	{
+		_light_source_ids.insert(light_source.id);
+	}
+
+	void Section::remove(LightSource const& light_source)
+	{
+		_light_source_ids.erase(light_source.id);
 	}
 }

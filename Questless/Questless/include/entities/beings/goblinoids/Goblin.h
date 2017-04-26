@@ -24,8 +24,8 @@ namespace questless
 			, Stealth{300.0}
 			, Vision
 				{ Acuity{60.0}
-				, IdealLight{100.0}
-				, LightTolerance{10.0}
+				, IdealIlluminance{100.0}
+				, IlluminanceTolerance{10.0}
 				}
 			, Hearing{180.0}
 			, Intellect{0.0}

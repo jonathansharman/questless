@@ -14,6 +14,7 @@
 
 #include "animation/EntityAnimator.h"
 #include "world/coordinates.h"
+#include "world/LightSource.h"
 
 //! @todo The following are needed only for player spawning. Perhaps this should be the responsibility of a different class.
 #include "agents/Agent.h"
@@ -49,7 +50,6 @@ namespace questless
 		, _game_over{false}
 		, _splash_sound_played{false}
 		, _state{State::splash}
-		, _time{0.0}
 		, _main_menu{480, 640}
 	{
 		// Initialize video.
@@ -371,6 +371,17 @@ namespace questless
 					_region = make_unique<Region>("Region1");
 					//_region = make_unique<Region>("Slot1", "Region1");
 
+					{ // Add a test light source.
+						auto light_source = std::make_unique<LightSource>(RegionTileCoords{0, 2}, 100.0);
+						_region->add(*light_source);
+						light_sources.add(std::move(light_source));
+					}
+					{ // Add a test shadow source.
+						auto light_source = std::make_unique<LightSource>(RegionTileCoords{0, -2}, -100.0);
+						_region->add(*light_source);
+						light_sources.add(std::move(light_source));
+					}
+
 					{ // Spawn the player's being.
 						auto player_being = make_unique<Human>(Agent::make<Player>);
 						_player = dynamic_cast<Player*>(&player_being->agent());
@@ -455,7 +466,29 @@ namespace questless
 		}
 		{
 			std::ostringstream ss_time;
-			ss_time << "Time: " << _time;
+			double const time_of_day = _region->time_of_day();
+			std::string time_name;
+			switch (_region->period_of_day()) {
+				case Region::PeriodOfDay::morning:
+					time_name = "Morning";
+					break;
+				case Region::PeriodOfDay::afternoon:
+					time_name = "Afternoon";
+					break;
+				case Region::PeriodOfDay::dusk:
+					time_name = "Dusk";
+					break;
+				case Region::PeriodOfDay::evening:
+					time_name = "Evening";
+					break;
+				case Region::PeriodOfDay::night:
+					time_name = "Night";
+					break;
+				case Region::PeriodOfDay::dawn:
+					time_name = "Dawn";
+					break;
+			}
+			ss_time << "Time: " << _region->time() << " (" << time_of_day << ", " << time_name << ')';
 			Texture txt_turn = _fnt_20pt->render(ss_time.str().c_str(), Color::white());
 			txt_turn.draw(ScreenPoint{0, 50});
 		}
@@ -510,8 +543,6 @@ namespace questless
 				}
 			}
 			if (!_player_action_dialog && _dialogs.empty()) {
-				// Advance the time.
-				_time += 1.0;
 				// Update the region.
 				_region->update();
 				// Update the player view after each time unit passes.

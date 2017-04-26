@@ -10,15 +10,17 @@
 #include <memory>
 #include <iostream>
 
+#include "animation/Camera.h"
 #include "coordinates.h"
 #include "entities/beings/Being.h"
 #include "entities/objects/Object.h"
+#include "Tile.h"
 #include "units/HexCoords.h"
-#include "world/Tile.h"
-#include "animation/Camera.h"
 
 namespace questless
 {
+	class LightSource;
+
 	//! An rhomboid section of hexes in a region.
 	class Section
 	{
@@ -106,6 +108,15 @@ namespace questless
 			remove_object(object.coords);
 		}
 
+		//! The IDs of the light sources whose light reaches this section.
+		std::vector<std::reference_wrapper<LightSource const>> light_sources() const;
+
+		//! Adds @p light_source to the sections's light sources.
+		void add(LightSource const& light_source);
+
+		//! Adds @p light_source from the section's light sources, if present.
+		void remove(LightSource const& light_source);
+
 		//! Region tile coordinates from @p region_section_coords and @p section_tile_coords.
 		static RegionTileCoords region_tile_coords(RegionSectionCoords region_section_coords, SectionTileCoords section_tile_coords)
 		{
@@ -136,6 +147,8 @@ namespace questless
 
 		std::unordered_map<RegionTileCoords, Id<Being>> _being_ids;
 		std::unordered_map<RegionTileCoords, Id<Object>> _object_ids;
+
+		std::unordered_set<Id<LightSource>> _light_source_ids;
 
 		template <typename EntityType, typename = typename std::enable_if_t<std::is_same<EntityType, Being>::value>>
 		std::unordered_map<RegionTileCoords, Being::uptr>& entities() { return _beings; }

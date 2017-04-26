@@ -88,22 +88,22 @@ namespace questless
 				GamePoint end = Layout::dflt().to_world(being->coords.neighbor(being->direction));
 				game().camera().draw_lines({start, end}, Color::magenta());
 
-				uint8_t luminance;
+				uint8_t intensity;
 				switch (being_view.perception) {
 					case WorldView::PerceptionLevel::low:
-						luminance = 128;
+						intensity = 128;
 						break;
 					case WorldView::PerceptionLevel::medium:
-						luminance = 192;
+						intensity = 192;
 						break;
 					case WorldView::PerceptionLevel::high:
 					case WorldView::PerceptionLevel::full:
-						luminance = 255;
+						intensity = 255;
 						break;
 					default:
 						throw std::logic_error{"Invalid perception level."};
 				}
-				being_animation.draw(Layout::dflt().to_world(being->coords), game().camera(), Color{luminance, luminance, luminance});
+				being_animation.draw(Layout::dflt().to_world(being->coords), game().camera(), Color{intensity, intensity, intensity});
 			} else {
 				// Remove the being from the animation cache if it doesn't exist anymore.
 				_being_animation_sets.erase(being_view.id);
@@ -123,22 +123,22 @@ namespace questless
 					? *it->second
 					: cache_object_animation(*object);
 
-				uint8_t luminance;
+				uint8_t intensity;
 				switch (object_view.perception) {
 					case WorldView::PerceptionLevel::low:
-						luminance = 128;
+						intensity = 128;
 						break;
 					case WorldView::PerceptionLevel::medium:
-						luminance = 192;
+						intensity = 192;
 						break;
 					case WorldView::PerceptionLevel::high:
 					case WorldView::PerceptionLevel::full:
-						luminance = 255;
+						intensity = 255;
 						break;
 					default:
 						throw std::logic_error{"Invalid perception level."};
 				}
-				object_animation.draw(Layout::dflt().to_world(object->coords), game().camera(), Color{luminance, luminance, luminance});
+				object_animation.draw(Layout::dflt().to_world(object->coords), game().camera(), Color{intensity, intensity, intensity});
 			} else {
 				// Remove the object from the animation cache if it doesn't exist anymore.
 				_object_animations.erase(object_view.id);
@@ -203,7 +203,7 @@ namespace questless
 						for (int r = 0; r < Section::diameter; ++r) {
 							SectionTileCoords section_tile_coords{q, r};
 							double tile_visibility = section_view.tile_visibilities[section_tile_coords.q][section_tile_coords.r];
-							if (tile_visibility > 0) {
+							if (tile_visibility > 0.0) {
 								RegionTileCoords const region_tile_coords = section.region_tile_coords(section_tile_coords);
 								GamePoint const tile_game_point = Layout::dflt().to_world(region_tile_coords);
 								GamePoint const terrain_game_point = _terrain_bounds.position();
@@ -212,19 +212,18 @@ namespace questless
 									, lround(terrain_game_point.y - tile_game_point.y + _terrain_bounds.h - 1)
 									};
 
-								uint8_t const luminance = static_cast<uint8_t>(255 * std::min(tile_visibility / 100.0, 1.0));
-
 								// Get the current tile.
 								Tile const& tile = section.tile(section_tile_coords);
 								// Search for its texture in the cache.
 								auto it = _tile_textures.find(tile.tile_class());
 								// If it's there, use it. Otherwise, create the texture and cache it.
 								Texture& tile_texture = it != _tile_textures.end() ? *it->second : cache_tile_texture(tile);
-
+								
+								uint8_t const intensity = static_cast<uint8_t>(255 * std::min(tile_visibility / 100.0, 1.0));
 								tile_texture.draw_transformed
 									( tile_screen_point
 									, std::nullopt // origin
-									, Color{luminance, luminance, luminance}
+									, Color{intensity, intensity, intensity}
 									);
 							}
 						}

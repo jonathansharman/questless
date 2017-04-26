@@ -31,13 +31,16 @@ namespace questless
 		virtual void visit(WaterTile const&) = 0;
 	};
 
-	//! The basic unit of terrain, a hexagonal region of uniform material, temperature, light level, etc.
+	//! The basic unit of terrain, a hexagonal region of uniform material, temperature, etc.
 	class Tile
 	{
 	public:
 		enum class TileClass : int { dirt = 0, edge, grass, sand, snow, stone, water, TILE_CLASS_COUNT }; //! @todo Remove TILE_CLASS_COUNT if static reflection that can check enum length is ever added.
 
-		Tile(double light_level, double temperature) : _light_level{light_level}, _temperature{temperature} {}
+		double temperature_offset; //!< Offset from ambient temperature at this tile.
+
+		//! @param temperaure_offset Offset from ambient temperature at this tile.
+		Tile(double temperature_offset) : temperature_offset{temperature_offset} {}
 
 		virtual ~Tile() {}
 
@@ -45,12 +48,6 @@ namespace questless
 		virtual TileClass tile_class() const = 0;
 
 		virtual void accept(TileVisitor& visitor) const = 0;
-
-		double light_level() const { return _light_level; }
-		double temperature() const { return _temperature; }
-	private:
-		double _light_level;
-		double _temperature;
 	};
 
 	class DirtTile : public Tile

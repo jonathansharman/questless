@@ -49,6 +49,7 @@ namespace questless
 		Cache<Being> beings;
 		Cache<Object> objects;
 		Cache<Item> items;
+		Cache<LightSource> light_sources;
 
 		friend Game& game();
 
@@ -149,8 +150,6 @@ namespace questless
 
 		std::optional<Id<Being>> _player_being_id;
 		Player* _player;
-
-		double _time;
 
 		bool _game_over;
 

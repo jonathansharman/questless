@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 
 #ifdef _DEBUG
 	doctest::Context context;
-	context.setOption("no-breaks", true);
+	context.setOption("no-breaks", false);
 	context.setOption("success", false);
 	context.applyCommandLine(argc, argv);
 	result = context.run();

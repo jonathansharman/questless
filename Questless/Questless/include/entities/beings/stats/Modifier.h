@@ -128,15 +128,15 @@ namespace questless
 		using ScalarModifier::ScalarModifier;
 		void apply(Stats& stats) override { stats.vision.acuity += magnitude(); }
 	};
-	struct IdealLightModifier : public ScalarModifier
+	struct IdealLuminanceModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.vision.ideal_light += magnitude(); }
+		void apply(Stats& stats) override { stats.vision.ideal_illuminance += magnitude(); }
 	};
 	struct LightToleranceModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.vision.light_tolerance += magnitude(); }
+		void apply(Stats& stats) override { stats.vision.illuminance_tolerance += magnitude(); }
 	};
 
 	struct HearingModifier : public ScalarModifier

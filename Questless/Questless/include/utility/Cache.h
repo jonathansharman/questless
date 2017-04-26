@@ -12,7 +12,7 @@
 
 namespace questless
 {
-	//! Stores objects of the given type and manages their transfer to/from disk.
+	//! Stores objects of type @p ElementType and manages their transfer to/from disk.
 	template <typename ElementType>
 	class Cache
 	{
