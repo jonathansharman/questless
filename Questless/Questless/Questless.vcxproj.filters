@@ -709,6 +709,9 @@
     <ClInclude Include="include\utility\reference.h">
       <Filter>include\utility</Filter>
     </ClInclude>
+    <ClInclude Include="include\utility\Visitor.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\world\Region.cpp">

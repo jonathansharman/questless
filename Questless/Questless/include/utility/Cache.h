@@ -5,90 +5,102 @@
 #pragma once
 
 #include <cassert>
-#include <memory>
 #include <unordered_map>
 
 #include "Id.h"
+#include "reference.h"
 
 namespace questless
 {
-	//! Stores objects of type @p ElementType and manages their transfer to/from disk.
-	template <typename ElementType>
+	//! Stores elements of type @p StoredType with ID type @IdType and manages their transfer to/from disk.
+	//! @tparam IdType The type that uniquely identifies elements.
+	//! @tparam StoredType The type of elements stored in the cache.
+	//! @tparam RetrievedType The type of elements retrieved from the cache.
+	//! @tparam id_to_element Mapping function from elements to their unique IDs.
+	//! @tparam stored_to_retrieved_ptr Mapping function from stored element to pointer to retrieved element.
+	template
+		< typename IdType
+		, typename StoredType
+		, typename RetrievedType
+		, IdType (*id_to_element)(StoredType const&)
+		, RetrievedType* (*stored_to_retrieved_ptr)(StoredType const&)
+		>
 	class Cache
 	{
 	public:
-		using element_t = ElementType;
+		using id_t = IdType;
+		using stored_t = StoredType;
+		using retrieved_t = RetrievedType;
 
-		//! Adds the given object to the cache. If the object's ID is not unique, may overwrite an existing object.
-		//! @param object The object to be added.
+		//! Adds @p element to the cache. If the element's ID is not unique, this may overwrite an existing element.
 		//! @return A reference to the added object.
-		element_t& add(std::unique_ptr<element_t> object)
+		retrieved_t& add(stored_t element)
 		{
-			element_t& object_ref = *object;
-			_cache[object->id] = std::move(object);
-			return object_ref;
+			retrieved_t* retrieved = stored_to_retrieved_ptr(element);
+			id_t id = id_to_element(element);
+			_cache.insert(std::make_pair(id, std::move(element)));
+			return *retrieved;
 		}
 
-		//! Retrieves an object from the cache, loading it from disk if necessary.
-		//! @param id The ID of the desired object.
-		//! @return A pointer to the requested object or nullptr if the object does not exist.
-		element_t* get(Id<element_t> id) const
+		//! Retrieves an element from the cache, loading it from disk if necessary.
+		//! @param id The ID of the desired element.
+		//! @return A pointer to the requested element or nullptr if it does not exist.
+		retrieved_t* get(id_t id) const
 		{
 			auto it = _cache.find(id);
 			if (it != _cache.end()) {
-				return it->second.get();
+				return stored_to_retrieved_ptr(it->second);
 			} else {
-				// Object is not in the cache. Attempt to load from disk.
+				// Element is not in the cache. Attempt to load from disk.
 
 				//! @todo This.
-				throw std::logic_error{"Load from disk not yet supported."};
+				throw std::logic_error{"Element not found. (Loading from disk not yet supported.)"};
 			}
 		}
 
-		//! Retrieves an object from the cache, loading it from disk if necessary, and dynamically casts it to a pointer of the given type.
-		//! @param id The ID of the desired object.
+		//! Retrieves an element from the cache, loading it from disk if necessary, and dynamically casts it to a pointer of the given type.
+		//! @param id The ID of the desired element.
 		//! @tparam TargetType The desired type of the returned element. Must be a base class or derived class of the cache element type.
-		//! @return A pointer to the requested object as the desired type or nullptr if the object does not exist.
+		//! @return A pointer to the requested element as the desired type or nullptr if the element does not exist.
 		template <typename TargetType>
-		TargetType* get_as(Id<element_t> id) const
+		TargetType* get_as(id_t id) const
 		{
-			constexpr bool valid_cast = std::is_base_of<element_t, TargetType>::value || std::is_base_of<TargetType, element_t>::value;
+			constexpr bool valid_cast = std::is_base_of<retrieved_t, TargetType>::value || std::is_base_of<TargetType, retrieved_t>::value;
 			static_assert(valid_cast, "Cache::get_as requires \"is-a\" relationship between the cache element type and the target type.");
 
 			return dynamic_cast<TargetType*>(get(id));
 		}
 
-		//! Retrieves an object from the cache, loading it from disk if necessary.
-		//! @param id The ID of the desired object.
-		//! @return A reference to the requested object.
-		//! @note The object must exist, or this will fail.
-		element_t& get_ref(Id<element_t> id) const
+		//! Retrieves an element from the cache, loading it from disk if necessary.
+		//! @param id The ID of the desired element.
+		//! @return A reference to the requested element.
+		//! @note The element must exist, or this will fail.
+		retrieved_t& get_ref(id_t id) const
 		{
-			element_t* ptr = get(id);
+			retrieved_t* ptr = get(id);
 			assert(ptr);
 			return *ptr;
 		}
 
-		//! Retrieves an object from the cache, loading it from disk if necessary, and dynamically casts it to a reference of the given type.
-		//! @param id The ID of the desired object.
+		//! Retrieves an element from the cache, loading it from disk if necessary, and dynamically casts it to a reference of the given type.
+		//! @param id The ID of the desired element.
 		//! @tparam TargetType The desired type of the returned element. Must be a base class or derived class of the cache element type.
-		//! @return A reference to the requested object as the desired type.
-		//! @note The object must exist, or this will fail.
+		//! @return A reference to the requested element as the desired type.
+		//! @note The element must exist, or this will fail.
 		template <typename TargetType>
-		TargetType& get_ref_as(Id<element_t> id) const
+		TargetType& get_ref_as(id_t id) const
 		{
 			TargetType* ptr = get_as<TargetType>(id);
 			assert(ptr);
 			return *ptr;
 		}
 
-		//! Removes the object with the given ID from the cache, if present.
-		//! @param id The ID of the object to be removed.
-		void erase(Id<element_t> id) { _cache.erase(id); }
+		//! Removes the element with ID @id from the cache, if present.
+		void erase(id_t id) { _cache.erase(id); }
 
-		//! Removes all objects from the cache.
+		//! Removes all elements from the cache.
 		void clear() { _cache.clear(); }
 	private:
-		std::unordered_map<Id<element_t>, std::unique_ptr<element_t>> _cache;
+		std::unordered_map<id_t, stored_t> _cache;
 	};
 }

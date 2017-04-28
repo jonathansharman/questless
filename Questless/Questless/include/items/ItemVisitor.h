@@ -4,8 +4,7 @@
 
 #pragma once
 
-#include <string>
-#include <stdexcept>
+#include "utility/Visitor.h"
 
 namespace questless
 {
@@ -16,15 +15,11 @@ namespace questless
 	class Scroll;
 
 	//! Visitor type for items.
-	class ItemVisitor
-	{
-	public:
-		virtual ~ItemVisitor() = default;
-
-		virtual void visit(Arrow const&) = 0;
-		virtual void visit(Bow const&) = 0;
-		virtual void visit(Quarterstaff const&) = 0;
-		virtual void visit(Quiver const&) = 0;
-		virtual void visit(Scroll const&) = 0;
-	};
+	using ItemVisitor = Visitor
+		< Arrow const
+		, Bow const
+		, Quarterstaff const
+		, Quiver const
+		, Scroll const
+		>;
 }

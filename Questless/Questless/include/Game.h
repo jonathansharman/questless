@@ -46,10 +46,18 @@ namespace questless
 		static constexpr units::Hertz frame_rate = 60.0_Hz;
 		static constexpr units::GameSeconds frame_duration = 1.0 / frame_rate;
 
-		Cache<Being> beings;
-		Cache<Object> objects;
-		Cache<Item> items;
-		Cache<LightSource> light_sources;
+		//! @todo Relocate these maps?
+		static Id<Being> get_being_id(uptr<Being> const& being);
+		static Id<Object> get_object_id(uptr<Object> const& object);
+		static Id<Item> get_item_id(uptr<Item> const& item);
+		static Id<LightSource> get_light_source_id(uptr<LightSource> const& light_source);
+		template <typename T>
+		static T* uptr_to_ptr(uptr<T> const& p) { return p.get(); }
+
+		Cache<Id<Being>, uptr<Being>, Being, get_being_id, uptr_to_ptr<Being>> beings;
+		Cache<Id<Object>, uptr<Object>, Object, get_object_id, uptr_to_ptr<Object>> objects;
+		Cache<Id<Item>, uptr<Item>, Item, get_item_id, uptr_to_ptr<Item>> items;
+		Cache<Id<LightSource>, uptr<LightSource>, LightSource, get_light_source_id, uptr_to_ptr<LightSource>> light_sources;
 
 		friend Game& game();
 

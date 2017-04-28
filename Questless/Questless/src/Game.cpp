@@ -45,6 +45,11 @@ using namespace sdl;
 
 namespace questless
 {
+	Id<Being> Game::get_being_id(uptr<Being> const& being) { return being->id; }
+	Id<Object> Game::get_object_id(uptr<Object> const& object) { return object->id; }
+	Id<Item> Game::get_item_id(uptr<Item> const& item) { return item->id; }
+	Id<LightSource> Game::get_light_source_id(uptr<LightSource> const& light_source) { return light_source->id; }
+
 	Game::Game(bool fullscreen)
 		: _player_being_id{std::nullopt}
 		, _game_over{false}

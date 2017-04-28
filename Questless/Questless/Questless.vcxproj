@@ -411,6 +411,7 @@
     <ClInclude Include="include\utility\Stream.h" />
     <ClInclude Include="include\utility\TaggedType.h" />
     <ClInclude Include="include\utility\utility.h" />
+    <ClInclude Include="include\utility\Visitor.h" />
     <ClInclude Include="include\world\coordinates.h" />
     <ClInclude Include="include\world\LightSource.h" />
     <ClInclude Include="include\world\Region.h" />
