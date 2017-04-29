@@ -4,29 +4,21 @@
 
 #pragma once
 
-#include <memory>
+#include "utility/Visitor.h"
 
 namespace questless
 {
 	struct BeingQueryHealTarget;
 
-	//! Visitor type for being queries.
-	struct BeingQueryVisitor
-	{
-		virtual ~BeingQueryVisitor() = default;
-
-		virtual void visit(BeingQueryHealTarget const&) = 0;
-	};
+	using BeingQueryMutableVisitor = Visitor<BeingQueryHealTarget>;
 
 	//! A request to an agent to specify a being.
-	struct BeingQuery
+	struct BeingQuery : public MutableElement<BeingQueryMutableVisitor>
 	{
 		virtual ~BeingQuery() = default;
-		virtual void accept(BeingQueryVisitor& visitor) = 0;
 	};
 
-	struct BeingQueryHealTarget : BeingQuery
-	{
-		void accept(BeingQueryVisitor& visitor) override { visitor.visit(*this); }
-	};
+	DEFINE_MUTABLE_ELEMENT_BASE(BeingQuery, BeingQuery)
+
+	struct BeingQueryHealTarget : BeingQueryMutableBase<BeingQueryHealTarget> {};
 }

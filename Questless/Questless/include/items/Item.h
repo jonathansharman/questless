@@ -20,16 +20,12 @@ namespace questless
 	class Being;
 
 	//! An item that can be picked up, used by beings, etc.
-	class Item
+	class Item : public ConstElement<ItemConstVisitor>
 	{
 	public:
 		Id<Item> const id;
 
-		Item(Id<Item> id) : id{id} {}
-
 		virtual ~Item() = default;
-
-		virtual void accept(ItemVisitor& visitor) const = 0;
 
 		//! The item's name.
 		virtual std::string name() const = 0;
@@ -70,5 +66,9 @@ namespace questless
 		private:
 			Item& _item;
 		};
+
+		Item(Id<Item> id) : id{id} {}
 	};
+
+	DEFINE_CONST_ELEMENT_BASE(Item, Item)
 }

@@ -87,7 +87,7 @@ namespace questless
 		//! The offset from the upper left corner of the bounds to the body's center.
 		units::ScreenVector offset_to_center() const { return _offset_to_center; }
 	private:
-		class PartAttacher : public BodyPartVisitor
+		class PartAttacher : public BodyPartMutableVisitor
 		{
 		public:
 			PartAttacher(Body& body) : _body{body} {}

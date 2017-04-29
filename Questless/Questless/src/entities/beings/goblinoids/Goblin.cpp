@@ -11,10 +11,10 @@ using namespace units;
 namespace questless
 {
 	Goblin::Goblin(const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, Id<Being> id)
-		: CorporealBeing{make_agent, id, make_body(), []() { return dflt_base_stats; } }
+		: CorporealBeingBase<Goblin>{make_agent, id, make_body(), []() { return dflt_base_stats; } }
 	{}
 
-	Goblin::Goblin(std::istream& in) : CorporealBeing{in, make_body()} {}
+	Goblin::Goblin(std::istream& in) : CorporealBeingBase<Goblin>{in, make_body()} {}
 
 	void Goblin::serialize(std::ostream& out) const
 	{

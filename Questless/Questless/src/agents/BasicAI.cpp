@@ -106,7 +106,7 @@ namespace questless
 		, std::function<Complete(std::optional<int>)> cont
 		) const
 	{
-		struct CountQueryHandler : CountQueryVisitor
+		struct CountQueryHandler : CountQueryConstVisitor
 		{
 			int default;
 			std::optional<int> min;
@@ -136,7 +136,7 @@ namespace questless
 		, std::function<Complete(std::optional<double>)> cont
 		) const
 	{
-		struct MagnitudeQueryHandler : MagnitudeQueryVisitor
+		struct MagnitudeQueryHandler : MagnitudeQueryConstVisitor
 		{
 			double default;
 			std::optional<double> min;
@@ -178,7 +178,7 @@ namespace questless
 		, std::function<Complete(std::optional<RegionTileCoords>)> cont
 		) const
 	{
-		struct TileQueryHandler : TileQueryVisitor
+		struct TileQueryHandler : TileQueryConstVisitor
 		{
 			BasicAI const& ai;
 			std::optional<RegionTileCoords> origin;
@@ -229,7 +229,7 @@ namespace questless
 		, std::function<Complete(std::optional<RegionTileCoords::Direction>)> cont
 		) const
 	{
-		struct DirectionQueryHandler : DirectionQueryVisitor
+		struct DirectionQueryHandler : DirectionQueryConstVisitor
 		{
 			BasicAI const& ai;
 			std::function<Complete(std::optional<RegionTileCoords::Direction>)> cont;

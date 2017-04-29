@@ -32,4 +32,6 @@ namespace questless
 	private:
 		std::function<void(double&, double const&)> integrity_mutator();
 	};
+
+	DEFINE_CONST_ELEMENT_BASE_MAKE_CTOR(Breakable, Item)
 }

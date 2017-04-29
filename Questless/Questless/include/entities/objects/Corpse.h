@@ -10,20 +10,17 @@
 namespace questless
 {
 	//! The remains of a deceased corporeal being.
-	class Corpse : public Object
+	class Corpse : public ObjectBase<Corpse>
 	{
 	public:
 		Corpse(Id<Being> being_id, Id<Object> id = Id<Object>::make())
-			: Object{id}
+			: ObjectBase<Corpse>{id}
 			, _being_id{being_id}
 		{}
 		Corpse(std::istream& in)
-			: Object{in}
+			: ObjectBase<Corpse>{in}
 			, _being_id{in}
 		{}
-
-		void accept(EntityVisitor& visitor) override { visitor.visit(*this); }
-		void accept(EntityVisitor& visitor) const override { visitor.visit(*this); }
 
 		virtual EntityClass entity_class() const { return EntityClass::CorpseClass; }
 

@@ -15,7 +15,7 @@ namespace questless
 	class Scroll;
 
 	//! Visitor type for items.
-	using ItemVisitor = Visitor
+	using ItemConstVisitor = Visitor
 		< Arrow const
 		, Bow const
 		, Quarterstaff const

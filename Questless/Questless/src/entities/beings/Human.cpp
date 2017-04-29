@@ -11,10 +11,10 @@ using namespace units;
 namespace questless
 {
 	Human::Human(const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, Id<Being> id)
-		: CorporealBeing{make_agent, id, make_body(), []() { return dflt_base_stats; }}
+		: CorporealBeingBase<Human>{make_agent, id, make_body(), []() { return dflt_base_stats; }}
 	{}
 
-	Human::Human(std::istream& in) : CorporealBeing{in, make_body()} {}
+	Human::Human(std::istream& in) : CorporealBeingBase<Human>{in, make_body()} {}
 
 	void Human::serialize(std::ostream& out) const
 	{

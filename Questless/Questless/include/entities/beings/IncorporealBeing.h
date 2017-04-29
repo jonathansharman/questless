@@ -12,9 +12,11 @@ namespace questless
 	class IncorporealBeing : public Being
 	{
 	public:
-		bool corporeal() const override { return true; }
+		bool corporeal() const override { return false; }
 	protected:
 		IncorporealBeing(const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, Id<Being> id, Body body, const std::function<Stats()>& make_base_stats);
 		IncorporealBeing(std::istream& in, Body body);
 	};
+
+	DEFINE_ELEMENT_BASE(IncorporealBeing, Entity)
 }

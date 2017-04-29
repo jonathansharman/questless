@@ -11,7 +11,7 @@
 namespace questless
 {
 	//! Creates textures for items.
-	class ItemTexturer : public ItemVisitor
+	class ItemTexturer : public ItemConstVisitor
 	{
 	public:
 		void visit(Arrow const&) override;

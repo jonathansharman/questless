@@ -4,14 +4,14 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
 
-#include "stats/Modifier.h"
 #include "BodyPartVisitor.h"
 #include "Damage.h"
 #include "items/Item.h"
+#include "stats/Modifier.h"
 #include "units/ScreenRect.h"
 #include "utility/DynamicProperty.h"
 #include "utility/Id.h"
@@ -21,7 +21,7 @@ namespace questless
 	class Being;
 
 	//! A being's body part.
-	class BodyPart
+	class BodyPart : public MutableElement<BodyPartMutableVisitor>
 	{
 	public:
 		Id<BodyPart> const id;
@@ -31,30 +31,7 @@ namespace questless
 		//! The ID of the item equipped to this body or nullopt if none.
 		std::optional<Id<Item>> equipped_item_id;
 
-		//! @param owner The being that owns this body.
-		//! @param name The name of the body part.
-		//! @param vitality The body part's vitality, which determines its maximum health.
-		//! @param weight The body part's contribution to its owner's weight.
-		//! @param protection The body part's protection stat.
-		//! @param resistance The body part's resistance stat.
-		//! @param vulnerability The body part's vulnerability stat.
-		//! @param regions The set of rectangular regions that this body part occupies. Used for display and hit detection.
-		//! @param id The body part's unique ID.
-		BodyPart
-			( Being& owner
-			, std::string name
-			, Vitality vitality
-			, Weight weight
-			, Protection protection
-			, Resistance resistance
-			, Vulnerability vulnerability
-			, std::vector<units::ScreenRect> regions
-			, Id<BodyPart> id = Id<BodyPart>::make()
-			);
-
 		virtual ~BodyPart() = default;
-
-		virtual void accept(BodyPartVisitor& visitor) = 0;
 
 		//! Whether the body part is vital to its being. If true, the being dies when this body part is disabled.
 		virtual bool vital() const = 0;
@@ -74,7 +51,7 @@ namespace questless
 		//! The player-visisble name of the body part.
 		std::string const& name() const { return _name; }
 
-		//! The body part to which this body part is attached.
+		//! The body parts attached to this body part.
 		std::vector<uptr<BodyPart>> const& children() const { return _children; }
 
 		//! The set of regions that this body part occupies.
@@ -99,6 +76,27 @@ namespace questless
 		//! @param damage Damage to be applied to this being.
 		//! @param source_id The ID of the being which caused the damage, if any.
 		void take_damage(Damage& damage, std::optional<Id<Being>> source_id);
+	protected:
+		//! @param owner The being that owns this body.
+		//! @param name The name of the body part.
+		//! @param vitality The body part's vitality, which determines its maximum health.
+		//! @param weight The body part's contribution to its owner's weight.
+		//! @param protection The body part's protection stat.
+		//! @param resistance The body part's resistance stat.
+		//! @param vulnerability The body part's vulnerability stat.
+		//! @param regions The set of rectangular regions that this body part occupies. Used for display and hit detection.
+		//! @param id The body part's unique ID.
+		BodyPart
+			( Being& owner
+			, std::string name
+			, Vitality vitality
+			, Weight weight
+			, Protection protection
+			, Resistance resistance
+			, Vulnerability vulnerability
+			, std::vector<units::ScreenRect> regions
+			, Id<BodyPart> id = Id<BodyPart>::make()
+			);
 	private:
 		Being& _owner;
 
@@ -116,9 +114,11 @@ namespace questless
 		std::function<void(double&, double const&)> health_mutator();
 	};
 
-	// Body part subtypes
+	DEFINE_MUTABLE_ELEMENT_BASE(BodyPart, BodyPart)
 
-	class Head : public virtual BodyPart
+	// BodyPart Subtypes
+
+	class Head : public BodyPartMutableBase<Head>
 	{
 	public:
 		Head
@@ -133,7 +133,7 @@ namespace questless
 			, Vulnerability vulnerability
 			, std::vector<units::ScreenRect> regions
 			)
-			: BodyPart
+			: BodyPartMutableBase<Head>
 				{ owner
 				, std::move(name)
 				, vitality
@@ -146,8 +146,6 @@ namespace questless
 			, _intellect{intellect}
 			, _spirit{spirit}
 		{}
-
-		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
 
 		bool vital() const override { return true; }
 
@@ -167,7 +165,7 @@ namespace questless
 		double _spirit;
 	};
 
-	class Torso : public virtual BodyPart
+	class Torso : public BodyPartMutableBase<Torso>
 	{
 	public:
 		Torso
@@ -181,7 +179,7 @@ namespace questless
 			, Vulnerability vulnerability
 			, std::vector<units::ScreenRect> regions
 			)
-			: BodyPart
+			: BodyPartMutableBase<Torso>
 				{ owner
 				, std::move(name)
 				, vitality
@@ -193,8 +191,6 @@ namespace questless
 				}
 			, _strength{strength}
 		{}
-
-		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
 
 		bool vital() const override { return true; }
 
@@ -213,7 +209,7 @@ namespace questless
 		double _strength;
 	};
 
-	class Arm : public virtual BodyPart
+	class Arm : public BodyPartMutableBase<Arm>
 	{
 	public:
 		Arm
@@ -227,7 +223,7 @@ namespace questless
 			, Vulnerability vulnerability
 			, std::vector<units::ScreenRect> regions
 			)
-			: BodyPart
+			: BodyPartMutableBase<Arm>
 				{ owner
 				, std::move(name)
 				, vitality
@@ -239,8 +235,6 @@ namespace questless
 				}
 			, _strength{strength}
 		{}
-
-		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
 
 		bool vital() const override { return false; }
 
@@ -259,7 +253,7 @@ namespace questless
 		double _strength;
 	};
 
-	class Hand : public virtual BodyPart
+	class Hand : public BodyPartMutableBase<Hand>
 	{
 	public:
 		Hand
@@ -273,7 +267,7 @@ namespace questless
 			, Vulnerability vulnerability
 			, std::vector<units::ScreenRect> regions
 			)
-			: BodyPart
+			: BodyPartMutableBase<Hand>
 				{ owner
 				, std::move(name)
 				, vitality
@@ -285,8 +279,6 @@ namespace questless
 				}
 			, _dexterity{dexterity}
 		{}
-
-		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
 
 		bool vital() const override { return false; }
 
@@ -305,7 +297,7 @@ namespace questless
 		double _dexterity;
 	};
 
-	class Leg : public virtual BodyPart
+	class Leg : public BodyPartMutableBase<Leg>
 	{
 	public:
 		Leg
@@ -320,7 +312,7 @@ namespace questless
 			, Vulnerability vulnerability
 			, std::vector<units::ScreenRect> regions
 			)
-			: BodyPart
+			: BodyPartMutableBase<Leg>
 				{ owner
 				, std::move(name)
 				, vitality
@@ -333,8 +325,6 @@ namespace questless
 			, _agility{agility}
 			, _strength{strength}
 		{}
-
-		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
 
 		bool vital() const override { return false; }
 
@@ -356,7 +346,7 @@ namespace questless
 		double _strength;
 	};
 
-	class Foot : public virtual BodyPart
+	class Foot : public BodyPartMutableBase<Foot>
 	{
 	public:
 		Foot
@@ -370,7 +360,7 @@ namespace questless
 			, Vulnerability vulnerability
 			, std::vector<units::ScreenRect> regions
 			)
-			: BodyPart
+			: BodyPartMutableBase<Foot>
 				{ owner
 				, std::move(name)
 				, vitality
@@ -382,8 +372,6 @@ namespace questless
 				}
 			, _agility{agility}
 		{}
-
-		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
 
 		bool vital() const override { return false; }
 
@@ -402,7 +390,7 @@ namespace questless
 		double _agility;
 	};
 
-	class Wing : public virtual BodyPart
+	class Wing : public BodyPartMutableBase<Wing>
 	{
 	public:
 		Wing
@@ -415,7 +403,7 @@ namespace questless
 			, Vulnerability vulnerability
 			, std::vector<units::ScreenRect> regions
 			)
-			: BodyPart
+			: BodyPartMutableBase<Wing>
 				{ owner
 				, std::move(name)
 				, vitality
@@ -427,8 +415,6 @@ namespace questless
 				}
 			, _weight{weight}
 		{}
-
-		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
 
 		bool vital() const override { return false; }
 
@@ -444,12 +430,10 @@ namespace questless
 		double _weight;
 	};
 
-	class Tail : public virtual BodyPart
+	class Tail : public BodyPartMutableBase<Tail>
 	{
 	public:
-		using BodyPart::BodyPart;
-
-		void accept(BodyPartVisitor& visitor) override { visitor.visit(*this); }
+		using BodyPartMutableBase<Tail>::BodyPartMutableBase;
 
 		bool vital() const override { return false; }
 

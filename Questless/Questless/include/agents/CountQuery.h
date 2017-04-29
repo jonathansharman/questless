@@ -1,26 +1,20 @@
-/**
-* @file
-* @author Jonathan Sharman
-* @copyright See LICENSE.txt.
-*
-*/
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #pragma once
 
-#include <memory>
+#include "utility/Visitor.h"
 
 namespace questless
 {
-	//! Visitor type for count queries.
-	struct CountQueryVisitor
-	{
-		virtual ~CountQueryVisitor() = default;
-	};
+	using CountQueryConstVisitor = Visitor<>;
 
 	//! A request to an agent for a count.
-	struct CountQuery
+	struct CountQuery : public ConstElement<CountQueryConstVisitor>
 	{
 		virtual ~CountQuery() = default;
-		virtual void accept(CountQueryVisitor& visitor) = 0;
 	};
+
+	DEFINE_CONST_ELEMENT_BASE(CountQuery, CountQuery)
 }

@@ -69,4 +69,6 @@ namespace questless
 	private:
 		uptr<Form> _form;
 	};
+
+	DEFINE_CONST_ELEMENT_BASE(ModalWeapon, Item)
 }

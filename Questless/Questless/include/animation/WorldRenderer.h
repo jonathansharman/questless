@@ -22,7 +22,7 @@ namespace questless
 	class Game;
 
 	//! Draws the elements of the world that the player can see.
-	class WorldRenderer : public sdl::Renderable, EffectVisitor
+	class WorldRenderer : public sdl::Renderable, EffectConstVisitor
 	{
 	public:
 		//! @param world_view The initial world view to render.

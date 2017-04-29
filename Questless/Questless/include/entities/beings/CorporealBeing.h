@@ -17,4 +17,6 @@ namespace questless
 		CorporealBeing(const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, Id<Being> id, Body body, const std::function<Stats()>& make_base_stats);
 		CorporealBeing(std::istream& in, Body body);
 	};
+
+	DEFINE_ELEMENT_BASE(CorporealBeing, Entity)
 }

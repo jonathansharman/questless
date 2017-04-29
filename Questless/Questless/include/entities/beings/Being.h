@@ -224,4 +224,6 @@ namespace questless
 		std::function<void(double&, double const&)> energy_mutator();
 		std::function<void(double&, double const&)> busy_time_mutator();
 	};
+
+	DEFINE_ELEMENT_BASE(Being, Entity)
 }

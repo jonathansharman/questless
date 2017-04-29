@@ -125,7 +125,7 @@ namespace questless
 		, function<Complete()> cont
 		) const
 	{
-		struct MessageTitler : MessageVisitor
+		struct MessageTitler : MessageConstVisitor
 		{
 			std::string title;
 			void visit(MessageArrowMiss const&) override { title = "Ranged Attack"; }
@@ -138,7 +138,7 @@ namespace questless
 			void visit(MessageSpellNotEnoughCharges const&) override { title = "Spell Cast"; }
 			void visit(MessageSpellOnCooldown const&) override { title = "Spell Cast"; }
 		};
-		struct MessagePrompter : MessageVisitor
+		struct MessagePrompter : MessageConstVisitor
 		{
 			std::string prompt;
 			void visit(MessageArrowMiss const&) override { prompt = "Miss!"; }
@@ -174,12 +174,11 @@ namespace questless
 		, function<Complete(std::optional<int>)> cont
 		) const
 	{
-
-		struct CountQueryTitler : CountQueryVisitor
+		struct CountQueryTitler : CountQueryConstVisitor
 		{
 			std::string title;
 		};
-		struct CountQueryPrompter : CountQueryVisitor
+		struct CountQueryPrompter : CountQueryConstVisitor
 		{
 			std::string prompt;
 		};
@@ -200,14 +199,14 @@ namespace questless
 		, function<Complete(std::optional<double>)> cont
 		) const
 	{
-		struct MagnitudeQueryTitler : MagnitudeQueryVisitor
+		struct MagnitudeQueryTitler : MagnitudeQueryConstVisitor
 		{
 			std::string title;
 			void visit(MagnitudeQueryHeal const&) override { title = "Heal Amount"; }
 			void visit(MagnitudeQueryLightningBolt const&) override { title = "Lightning Bolt Strength"; }
 			void visit(MagnitudeQueryWaitTime const&) override { title = "Wait"; }
 		};
-		struct MagnitudeQueryPrompter : MagnitudeQueryVisitor
+		struct MagnitudeQueryPrompter : MagnitudeQueryConstVisitor
 		{
 			std::string prompt;
 			void visit(MagnitudeQueryHeal const&) override { prompt = "Choose how much health to restore."; }
@@ -230,14 +229,14 @@ namespace questless
 		, function<Complete(std::optional<RegionTileCoords>)> cont
 		) const
 	{
-		struct TileQueryTitler : TileQueryVisitor
+		struct TileQueryTitler : TileQueryConstVisitor
 		{
 			std::string title;
 			void visit(TileQueryLightningBoltTarget const&) override { title = "Lightning Bolt Target"; }
 			void visit(TileQueryRangedAttackTarget const&) override { title = "Ranged Attack"; }
 			void visit(TileQueryTeleportTarget const&) override { title = "Teleport Target"; }
 		};
-		struct TileQueryPrompter : TileQueryVisitor
+		struct TileQueryPrompter : TileQueryConstVisitor
 		{
 			std::string prompt;
 			void visit(TileQueryLightningBoltTarget const&) override { prompt = "Select a tile to be zapped with a lightning bolt."; }
@@ -264,12 +263,12 @@ namespace questless
 		, function<Complete(std::optional<RegionTileCoords::Direction>)> cont
 		) const
 	{
-		struct DirectionQueryTitler : DirectionQueryVisitor
+		struct DirectionQueryTitler : DirectionQueryConstVisitor
 		{
 			std::string title;
 			void visit(DirectionQueryMeleeAttack const&) override { title = "Melee Attack"; }
 		};
-		struct DirectionQueryPrompter : DirectionQueryVisitor
+		struct DirectionQueryPrompter : DirectionQueryConstVisitor
 		{
 			std::string prompt;
 			void visit(DirectionQueryMeleeAttack const&) override { prompt = "Choose attack direction."; }

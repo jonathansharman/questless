@@ -12,12 +12,10 @@
 namespace questless
 {
 	//! A magic scroll for inscribing spells.
-	class Scroll : public Item, public Element<Scroll, ItemVisitor>
+	class Scroll : public ItemConstBase<Scroll>
 	{
 	public:
-		Scroll(uptr<spell::Spell> spell, Id<Item> id = Id<Item>::make()) : Item{id}, _spell{std::move(spell)} {}
-
-		void accept(ItemVisitor& visitor) const override { return visitor.visit(*this); }
+		Scroll(uptr<spell::Spell> spell, Id<Item> id = Id<Item>::make()) : ItemConstBase{id}, _spell{std::move(spell)} {}
 
 		std::string name() const override { return blank() ? "Blank Scroll" : "Scroll: " + _spell->name(); }
 

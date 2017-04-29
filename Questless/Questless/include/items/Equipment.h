@@ -4,12 +4,15 @@
 
 #pragma once
 
+#include <optional>
+
 #include "items/Item.h"
-#include "entities/beings/BodyPart.h"
 #include "utility/TaggedType.h"
 
 namespace questless
 {
+	class BodyPart;
+
 	//! Abstract base class for items that can be equipped to a being.
 	class Equipment : public virtual Item
 	{
@@ -132,4 +135,6 @@ namespace questless
 		//! Unequips the item from its bearer.
 		void unequip();
 	};
+
+	DEFINE_CONST_ELEMENT_BASE_MAKE_CTOR(Equipment, Item)
 }

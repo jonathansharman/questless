@@ -12,7 +12,7 @@
 namespace questless
 {
 	//! Creates animations for entities.
-	class EntityAnimator : public EntityVisitor
+	class EntityAnimator : public EntityConstVisitor
 	{
 	public:
 		void visit(Human const&) override;

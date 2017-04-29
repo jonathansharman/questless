@@ -27,7 +27,7 @@ namespace questless
 	class Section;
 
 	//! Things that can exist on the world map, including beings and objects.
-	class Entity
+	class Entity : public Element<EntityMutableVisitor, EntityConstVisitor>
 	{
 	public:
 		using ref_less_t = bool(*)(Entity const&, Entity const&);
@@ -38,13 +38,6 @@ namespace questless
 		RegionTileCoords coords;
 
 		virtual ~Entity() = default;
-
-		//! Accepts an entity visitor. Used to implement the visitor pattern for entities.
-		//! @param visitor An entity visitor.
-		virtual void accept(EntityVisitor& visitor) = 0;
-		//! Accepts an entity visitor. Used to implement the visitor pattern for entities.
-		//! @param visitor An entity visitor.
-		virtual void accept(EntityVisitor& visitor) const = 0;
 
 		//! The entity's class's enumerated value.
 		virtual EntityClass entity_class() const = 0;
@@ -58,4 +51,6 @@ namespace questless
 		Entity() : region{}, section{}, coords{} {}
 		Entity(std::istream& in);
 	};
+
+	DEFINE_ELEMENT_BASE(Entity, Entity)
 }

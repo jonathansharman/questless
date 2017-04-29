@@ -9,16 +9,14 @@
 
 namespace questless
 {
-	class Bow : public Weapon
+	class Bow : public WeaponConstBase<Bow>
 	{
 	public:
 		Bow(Id<Item> id = Id<Item>::make())
 			: Item{id}
-			, Weapon{durability()}
+			, WeaponConstBase<Bow>{durability()}
 			, _fire{std::make_shared<Fire>(id)}
 		{}
-
-		void accept(ItemVisitor& visitor) const override { visitor.visit(*this); }
 
 		std::string name() const override { return "Bow"; }
 

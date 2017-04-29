@@ -6,6 +6,7 @@
 
 #include "sdl/Renderer.h"
 #include "sdl/Texture.h"
+#include "utility/Visitor.h"
 
 namespace questless
 {
@@ -17,22 +18,18 @@ namespace questless
 	class StoneTile;
 	class WaterTile;
 
-	class TileVisitor
-	{
-	public:
-		virtual ~TileVisitor() = default;
-
-		virtual void visit(DirtTile const&) = 0;
-		virtual void visit(EdgeTile const&) = 0;
-		virtual void visit(GrassTile const&) = 0;
-		virtual void visit(SandTile const&) = 0;
-		virtual void visit(SnowTile const&) = 0;
-		virtual void visit(StoneTile const&) = 0;
-		virtual void visit(WaterTile const&) = 0;
-	};
+	using TileConstVisitor = Visitor
+		< DirtTile const
+		, EdgeTile const
+		, GrassTile const
+		, SandTile const
+		, SnowTile const
+		, StoneTile const
+		, WaterTile const
+		>;
 
 	//! The basic unit of terrain, a hexagonal region of uniform material, temperature, etc.
-	class Tile
+	class Tile : public ConstElement<TileConstVisitor>
 	{
 	public:
 		enum class TileClass : int { dirt = 0, edge, grass, sand, snow, stone, water, TILE_CLASS_COUNT }; //! @todo Remove TILE_CLASS_COUNT if static reflection that can check enum length is ever added.
@@ -46,63 +43,56 @@ namespace questless
 
 		//! The tile's type enumeration, for use in serialization and deserialization.
 		virtual TileClass tile_class() const = 0;
-
-		virtual void accept(TileVisitor& visitor) const = 0;
 	};
 
-	class DirtTile : public Tile
+	DEFINE_CONST_ELEMENT_BASE(Tile, Tile)
+
+	class DirtTile : public TileConstBase<DirtTile>
 	{
 	public:
-		using Tile::Tile;
+		using TileConstBase<DirtTile>::TileConstBase;
 		TileClass tile_class() const override { return TileClass::dirt; }
-		void accept(TileVisitor& visitor) const override { visitor.visit(*this); }
 	};
 
-	class EdgeTile : public Tile
+	class EdgeTile : public TileConstBase<EdgeTile>
 	{
 	public:
-		using Tile::Tile;
+		using TileConstBase<EdgeTile>::TileConstBase;
 		TileClass tile_class() const override { return TileClass::edge; }
-		void accept(TileVisitor& visitor) const override { visitor.visit(*this); }
 	};
 
-	class GrassTile : public Tile
+	class GrassTile : public TileConstBase<GrassTile>
 	{
 	public:
-		using Tile::Tile;
+		using TileConstBase<GrassTile>::TileConstBase;
 		TileClass tile_class() const override { return TileClass::grass; }
-		void accept(TileVisitor& visitor) const override { visitor.visit(*this); }
 	};
 
-	class SandTile : public Tile
+	class SandTile : public TileConstBase<SandTile>
 	{
 	public:
-		using Tile::Tile;
+		using TileConstBase<SandTile>::TileConstBase;
 		TileClass tile_class() const override { return TileClass::sand; }
-		void accept(TileVisitor& visitor) const override { visitor.visit(*this); }
 	};
 
-	class SnowTile : public Tile
+	class SnowTile : public TileConstBase<SnowTile>
 	{
 	public:
-		using Tile::Tile;
+		using TileConstBase<SnowTile>::TileConstBase;
 		TileClass tile_class() const override { return TileClass::snow; }
-		void accept(TileVisitor& visitor) const override { visitor.visit(*this); }
 	};
 
-	class StoneTile : public Tile
+	class StoneTile : public TileConstBase<StoneTile>
 	{
 	public:
-		using Tile::Tile;
+		using TileConstBase<StoneTile>::TileConstBase;
 		TileClass tile_class() const override { return TileClass::stone; }
-		void accept(TileVisitor& visitor) const override { visitor.visit(*this); }
 	};
 
-	class WaterTile : public Tile
+	class WaterTile : public TileConstBase<WaterTile>
 	{
 	public:
-		using Tile::Tile;
+		using TileConstBase<WaterTile>::TileConstBase;
 		TileClass tile_class() const override { return TileClass::water; }
-		void accept(TileVisitor& visitor) const override { visitor.visit(*this); }
 	};
 }

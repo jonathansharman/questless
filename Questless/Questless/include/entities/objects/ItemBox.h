@@ -11,14 +11,11 @@
 namespace questless
 {
 	//! A box capable of holding some items.
-	class ItemBox : public Object
+	class ItemBox : public ObjectBase<ItemBox>
 	{
 	public:
-		ItemBox(Id<Object> id = Id<Object>::make()) : Object{id} {}
-		ItemBox(std::istream& in) : Object{in} {}
-
-		void accept(EntityVisitor& visitor) override { visitor.visit(*this); }
-		void accept(EntityVisitor& visitor) const override { visitor.visit(*this); }
+		ItemBox(Id<Object> id = Id<Object>::make()) : ObjectBase<ItemBox>{id} {}
+		ItemBox(std::istream& in) : ObjectBase<ItemBox>{in} {}
 
 		virtual EntityClass entity_class() const { return EntityClass::ItemBoxClass; }
 

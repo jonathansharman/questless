@@ -6,7 +6,7 @@
 
 #include "items/Equipment.h"
 #include "items/Breakable.h"
-#include "entities/beings/Protection.h"
+#include "entities/beings/Damage.h"
 #include "entities/beings/DamageMultiplier.h"
 
 namespace questless

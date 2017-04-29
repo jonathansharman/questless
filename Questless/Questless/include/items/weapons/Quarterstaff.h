@@ -10,15 +10,13 @@
 
 namespace questless
 {
-	class Quarterstaff : public ModalWeapon
+	class Quarterstaff : public ModalWeaponConstBase<Quarterstaff>
 	{
 	public:
 		Quarterstaff(Id<Item> id = Id<Item>::make())
 			: Item{id}
-			, ModalWeapon{durability(), std::make_unique<StandardForm>(*this)}
+			, ModalWeaponConstBase<Quarterstaff>{durability(), std::make_unique<StandardForm>(*this)}
 		{}
-
-		void accept(ItemVisitor& visitor) const override { visitor.visit(*this); }
 
 		std::string name() const override { return "Staff (" + form().name() + ')'; }
 

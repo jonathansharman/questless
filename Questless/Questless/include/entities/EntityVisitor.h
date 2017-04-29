@@ -4,27 +4,35 @@
 
 #pragma once
 
-#include <string>
-#include <stdexcept>
+#include "utility/Visitor.h"
 
 namespace questless
 {
-	class Human;
+	// Beings
+
 	class Goblin;
+	class Human;
+
+	// Objects
 
 	class Corpse;
 	class ItemBox;
 
-	//! Visitor type for entities.
-	class EntityVisitor
-	{
-	public:
-		virtual ~EntityVisitor() = default;
+	using EntityMutableVisitor = Visitor
+		// Beings
+		< Goblin
+		, Human
+		// Objects
+		, Corpse
+		, ItemBox
+		>;
 
-		virtual void visit(Human const&) = 0;
-		virtual void visit(Goblin const&) = 0;
-
-		virtual void visit(Corpse const&) = 0;
-		virtual void visit(ItemBox const&) = 0;
-	};
+	using EntityConstVisitor = Visitor
+		// Beings
+		< Goblin const
+		, Human const
+		// Objects
+		, Corpse const
+		, ItemBox const
+		>;
 }

@@ -45,4 +45,6 @@ namespace questless
 		Object(Id<Object> id) : Entity{}, id{id} {}
 		Object(std::istream& in);
 	};
+
+	DEFINE_ELEMENT_BASE(Object, Entity)
 }

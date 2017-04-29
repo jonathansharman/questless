@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <memory>
+#include "utility/Visitor.h"
 
 namespace questless
 {
@@ -12,35 +12,25 @@ namespace questless
 	struct TileQueryRangedAttackTarget;
 	struct TileQueryTeleportTarget;
 
-	//! Visitor type for tile queries.
-	struct TileQueryVisitor
-	{
-		virtual ~TileQueryVisitor() = default;
-
-		virtual void visit(TileQueryLightningBoltTarget const&) = 0;
-		virtual void visit(TileQueryRangedAttackTarget const&) = 0;
-		virtual void visit(TileQueryTeleportTarget const&) = 0;
-	};
+	using TileQueryConstVisitor = Visitor
+		< TileQueryLightningBoltTarget const
+		, TileQueryRangedAttackTarget const
+		, TileQueryTeleportTarget const
+		>;
 
 	//! A request to an agent for tile coordinates.
-	struct TileQuery
+	struct TileQuery : public ConstElement<TileQueryConstVisitor>
 	{
 		virtual ~TileQuery() = default;
-		virtual void accept(TileQueryVisitor& visitor) = 0;
 	};
 
-	struct TileQueryLightningBoltTarget : TileQuery
-	{
-		void accept(TileQueryVisitor& visitor) override { visitor.visit(*this); }
-	};
-	struct TileQueryRangedAttackTarget : TileQuery
+	DEFINE_CONST_ELEMENT_BASE(TileQuery, TileQuery)
+
+	struct TileQueryLightningBoltTarget : TileQueryConstBase<TileQueryLightningBoltTarget> {};
+	struct TileQueryRangedAttackTarget : TileQueryConstBase<TileQueryRangedAttackTarget>
 	{
 		int range;
 		TileQueryRangedAttackTarget(int range) : range{ range } {}
-		void accept(TileQueryVisitor& visitor) override { visitor.visit(*this); }
 	};
-	struct TileQueryTeleportTarget : TileQuery
-	{
-		void accept(TileQueryVisitor& visitor) override { visitor.visit(*this); }
-	};
+	struct TileQueryTeleportTarget : TileQueryConstBase<TileQueryTeleportTarget> {};
 }

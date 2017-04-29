@@ -10,7 +10,7 @@
 namespace questless
 {
 	//! An item for containing projectiles, such as arrows.
-	class Quiver : public Equipment
+	class Quiver : public EquipmentConstBase<Quiver>
 	{
 	public:
 		Inventory inventory;
@@ -19,8 +19,6 @@ namespace questless
 			: Item{id}
 			, inventory{std::move(inventory)}
 		{}
-
-		void accept(ItemVisitor& visitor) const override { visitor.visit(*this); }
 
 		std::string name() const override { return "Quiver"; }
 

@@ -9,7 +9,7 @@
 namespace questless
 {
 	//! A basic AI, suitable for most NPCs.
-	class BasicAI : public Agent, EffectVisitor
+	class BasicAI : public Agent, public EffectConstVisitor
 	{
 	public:
 		BasicAI(Being& being) : Agent{being} {}

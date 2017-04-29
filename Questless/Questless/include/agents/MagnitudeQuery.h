@@ -12,32 +12,21 @@ namespace questless
 	struct MagnitudeQueryLightningBolt;
 	struct MagnitudeQueryWaitTime;
 
-	//! Visitor type for magnitude queries.
-	struct MagnitudeQueryVisitor
-	{
-		virtual ~MagnitudeQueryVisitor() = default;
-
-		virtual void visit(MagnitudeQueryHeal const&) = 0;
-		virtual void visit(MagnitudeQueryLightningBolt const&) = 0;
-		virtual void visit(MagnitudeQueryWaitTime const&) = 0;
-	};
+	using MagnitudeQueryConstVisitor = Visitor
+		< MagnitudeQueryHeal const
+		, MagnitudeQueryLightningBolt const
+		, MagnitudeQueryWaitTime const
+		>;
 
 	//! A request to an agent for a magnitude.
-	struct MagnitudeQuery
+	struct MagnitudeQuery : ConstElement<MagnitudeQueryConstVisitor>
 	{
 		virtual ~MagnitudeQuery() = default;
-		virtual void accept(MagnitudeQueryVisitor& visitor) = 0;
 	};
-	struct MagnitudeQueryHeal : MagnitudeQuery
-	{
-		void accept(MagnitudeQueryVisitor& visitor) override { visitor.visit(*this); }
-	};
-	struct MagnitudeQueryLightningBolt : MagnitudeQuery
-	{
-		void accept(MagnitudeQueryVisitor& visitor) override { visitor.visit(*this); }
-	};
-	struct MagnitudeQueryWaitTime : MagnitudeQuery
-	{
-		void accept(MagnitudeQueryVisitor& visitor) override { visitor.visit(*this); }
-	};
+
+	DEFINE_CONST_ELEMENT_BASE(MagnitudeQuery, MagnitudeQuery)
+
+	struct MagnitudeQueryHeal : MagnitudeQueryConstBase<MagnitudeQueryHeal> {};
+	struct MagnitudeQueryLightningBolt : MagnitudeQueryConstBase<MagnitudeQueryLightningBolt> {};
+	struct MagnitudeQueryWaitTime : MagnitudeQueryConstBase<MagnitudeQueryWaitTime> {};
 }

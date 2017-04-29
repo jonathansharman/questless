@@ -11,7 +11,7 @@
 namespace questless
 {
 	//! Creates textures for tiles.
-	class TileTexturer : public TileVisitor
+	class TileTexturer : public TileConstVisitor
 	{
 	public:
 		void visit(DirtTile const&) override;

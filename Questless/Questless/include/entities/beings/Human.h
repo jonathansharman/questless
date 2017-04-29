@@ -8,7 +8,7 @@
 
 namespace questless
 {
-	class Human : public CorporealBeing
+	class Human : public CorporealBeingBase<Human>
 	{
 	public:
 		static constexpr Stats dflt_base_stats
@@ -83,9 +83,6 @@ namespace questless
 
 		Human(const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, Id<Being> id = Id<Being>::make());
 		Human(std::istream& in);
-
-		void accept(EntityVisitor& visitor) override { return visitor.visit(*this); }
-		void accept(EntityVisitor& visitor) const override { return visitor.visit(*this); }
 
 		EntityClass entity_class() const override { return EntityClass::HumanClass; }
 
