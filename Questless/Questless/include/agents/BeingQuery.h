@@ -11,14 +11,15 @@ namespace questless
 	struct BeingQueryHealTarget;
 
 	using BeingQueryMutableVisitor = Visitor<BeingQueryHealTarget>;
+	using BeingQueryConstVisitor = Visitor<BeingQueryHealTarget const>;
 
 	//! A request to an agent to specify a being.
-	struct BeingQuery : public MutableElement<BeingQueryMutableVisitor>
+	struct BeingQuery : public Element<BeingQueryMutableVisitor, BeingQueryConstVisitor>
 	{
 		virtual ~BeingQuery() = default;
 	};
 
-	DEFINE_MUTABLE_ELEMENT_BASE(BeingQuery, BeingQuery)
+	DEFINE_ELEMENT_BASE(BeingQuery, BeingQuery)
 
-	struct BeingQueryHealTarget : BeingQueryMutableBase<BeingQueryHealTarget> {};
+	struct BeingQueryHealTarget : BeingQueryBase<BeingQueryHealTarget> {};
 }

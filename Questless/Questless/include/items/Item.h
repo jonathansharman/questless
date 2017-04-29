@@ -20,7 +20,7 @@ namespace questless
 	class Being;
 
 	//! An item that can be picked up, used by beings, etc.
-	class Item : public ConstElement<ItemConstVisitor>
+	class Item : public Element<ItemMutableVisitor, ItemConstVisitor>
 	{
 	public:
 		Id<Item> const id;
@@ -70,5 +70,5 @@ namespace questless
 		Item(Id<Item> id) : id{id} {}
 	};
 
-	DEFINE_CONST_ELEMENT_BASE(Item, Item)
+	DEFINE_ELEMENT_BASE(Item, Item)
 }

@@ -18,6 +18,16 @@ namespace questless
 	class StoneTile;
 	class WaterTile;
 
+	using TileMutableVisitor = Visitor
+		< DirtTile
+		, EdgeTile
+		, GrassTile
+		, SandTile
+		, SnowTile
+		, StoneTile
+		, WaterTile
+		>;
+
 	using TileConstVisitor = Visitor
 		< DirtTile const
 		, EdgeTile const
@@ -29,7 +39,7 @@ namespace questless
 		>;
 
 	//! The basic unit of terrain, a hexagonal region of uniform material, temperature, etc.
-	class Tile : public ConstElement<TileConstVisitor>
+	class Tile : public Element<TileMutableVisitor, TileConstVisitor>
 	{
 	public:
 		enum class TileClass : int { dirt = 0, edge, grass, sand, snow, stone, water, TILE_CLASS_COUNT }; //! @todo Remove TILE_CLASS_COUNT if static reflection that can check enum length is ever added.
@@ -45,54 +55,54 @@ namespace questless
 		virtual TileClass tile_class() const = 0;
 	};
 
-	DEFINE_CONST_ELEMENT_BASE(Tile, Tile)
+	DEFINE_ELEMENT_BASE(Tile, Tile)
 
-	class DirtTile : public TileConstBase<DirtTile>
+	class DirtTile : public TileBase<DirtTile>
 	{
 	public:
-		using TileConstBase<DirtTile>::TileConstBase;
+		using TileBase<DirtTile>::TileBase;
 		TileClass tile_class() const override { return TileClass::dirt; }
 	};
 
-	class EdgeTile : public TileConstBase<EdgeTile>
+	class EdgeTile : public TileBase<EdgeTile>
 	{
 	public:
-		using TileConstBase<EdgeTile>::TileConstBase;
+		using TileBase<EdgeTile>::TileBase;
 		TileClass tile_class() const override { return TileClass::edge; }
 	};
 
-	class GrassTile : public TileConstBase<GrassTile>
+	class GrassTile : public TileBase<GrassTile>
 	{
 	public:
-		using TileConstBase<GrassTile>::TileConstBase;
+		using TileBase<GrassTile>::TileBase;
 		TileClass tile_class() const override { return TileClass::grass; }
 	};
 
-	class SandTile : public TileConstBase<SandTile>
+	class SandTile : public TileBase<SandTile>
 	{
 	public:
-		using TileConstBase<SandTile>::TileConstBase;
+		using TileBase<SandTile>::TileBase;
 		TileClass tile_class() const override { return TileClass::sand; }
 	};
 
-	class SnowTile : public TileConstBase<SnowTile>
+	class SnowTile : public TileBase<SnowTile>
 	{
 	public:
-		using TileConstBase<SnowTile>::TileConstBase;
+		using TileBase<SnowTile>::TileBase;
 		TileClass tile_class() const override { return TileClass::snow; }
 	};
 
-	class StoneTile : public TileConstBase<StoneTile>
+	class StoneTile : public TileBase<StoneTile>
 	{
 	public:
-		using TileConstBase<StoneTile>::TileConstBase;
+		using TileBase<StoneTile>::TileBase;
 		TileClass tile_class() const override { return TileClass::stone; }
 	};
 
-	class WaterTile : public TileConstBase<WaterTile>
+	class WaterTile : public TileBase<WaterTile>
 	{
 	public:
-		using TileConstBase<WaterTile>::TileConstBase;
+		using TileBase<WaterTile>::TileBase;
 		TileClass tile_class() const override { return TileClass::water; }
 	};
 }

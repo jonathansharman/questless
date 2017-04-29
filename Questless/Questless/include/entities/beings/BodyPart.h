@@ -21,7 +21,7 @@ namespace questless
 	class Being;
 
 	//! A being's body part.
-	class BodyPart : public MutableElement<BodyPartMutableVisitor>
+	class BodyPart : public Element<BodyPartMutableVisitor, BodyPartConstVisitor>
 	{
 	public:
 		Id<BodyPart> const id;
@@ -114,11 +114,11 @@ namespace questless
 		std::function<void(double&, double const&)> health_mutator();
 	};
 
-	DEFINE_MUTABLE_ELEMENT_BASE(BodyPart, BodyPart)
+	DEFINE_ELEMENT_BASE(BodyPart, BodyPart)
 
 	// BodyPart Subtypes
 
-	class Head : public BodyPartMutableBase<Head>
+	class Head : public BodyPartBase<Head>
 	{
 	public:
 		Head
@@ -133,7 +133,7 @@ namespace questless
 			, Vulnerability vulnerability
 			, std::vector<units::ScreenRect> regions
 			)
-			: BodyPartMutableBase<Head>
+			: BodyPartBase<Head>
 				{ owner
 				, std::move(name)
 				, vitality
@@ -165,7 +165,7 @@ namespace questless
 		double _spirit;
 	};
 
-	class Torso : public BodyPartMutableBase<Torso>
+	class Torso : public BodyPartBase<Torso>
 	{
 	public:
 		Torso
@@ -179,7 +179,7 @@ namespace questless
 			, Vulnerability vulnerability
 			, std::vector<units::ScreenRect> regions
 			)
-			: BodyPartMutableBase<Torso>
+			: BodyPartBase<Torso>
 				{ owner
 				, std::move(name)
 				, vitality
@@ -209,7 +209,7 @@ namespace questless
 		double _strength;
 	};
 
-	class Arm : public BodyPartMutableBase<Arm>
+	class Arm : public BodyPartBase<Arm>
 	{
 	public:
 		Arm
@@ -223,7 +223,7 @@ namespace questless
 			, Vulnerability vulnerability
 			, std::vector<units::ScreenRect> regions
 			)
-			: BodyPartMutableBase<Arm>
+			: BodyPartBase<Arm>
 				{ owner
 				, std::move(name)
 				, vitality
@@ -253,7 +253,7 @@ namespace questless
 		double _strength;
 	};
 
-	class Hand : public BodyPartMutableBase<Hand>
+	class Hand : public BodyPartBase<Hand>
 	{
 	public:
 		Hand
@@ -267,7 +267,7 @@ namespace questless
 			, Vulnerability vulnerability
 			, std::vector<units::ScreenRect> regions
 			)
-			: BodyPartMutableBase<Hand>
+			: BodyPartBase<Hand>
 				{ owner
 				, std::move(name)
 				, vitality
@@ -297,7 +297,7 @@ namespace questless
 		double _dexterity;
 	};
 
-	class Leg : public BodyPartMutableBase<Leg>
+	class Leg : public BodyPartBase<Leg>
 	{
 	public:
 		Leg
@@ -312,7 +312,7 @@ namespace questless
 			, Vulnerability vulnerability
 			, std::vector<units::ScreenRect> regions
 			)
-			: BodyPartMutableBase<Leg>
+			: BodyPartBase<Leg>
 				{ owner
 				, std::move(name)
 				, vitality
@@ -346,7 +346,7 @@ namespace questless
 		double _strength;
 	};
 
-	class Foot : public BodyPartMutableBase<Foot>
+	class Foot : public BodyPartBase<Foot>
 	{
 	public:
 		Foot
@@ -360,7 +360,7 @@ namespace questless
 			, Vulnerability vulnerability
 			, std::vector<units::ScreenRect> regions
 			)
-			: BodyPartMutableBase<Foot>
+			: BodyPartBase<Foot>
 				{ owner
 				, std::move(name)
 				, vitality
@@ -390,7 +390,7 @@ namespace questless
 		double _agility;
 	};
 
-	class Wing : public BodyPartMutableBase<Wing>
+	class Wing : public BodyPartBase<Wing>
 	{
 	public:
 		Wing
@@ -403,7 +403,7 @@ namespace questless
 			, Vulnerability vulnerability
 			, std::vector<units::ScreenRect> regions
 			)
-			: BodyPartMutableBase<Wing>
+			: BodyPartBase<Wing>
 				{ owner
 				, std::move(name)
 				, vitality
@@ -430,10 +430,10 @@ namespace questless
 		double _weight;
 	};
 
-	class Tail : public BodyPartMutableBase<Tail>
+	class Tail : public BodyPartBase<Tail>
 	{
 	public:
-		using BodyPartMutableBase<Tail>::BodyPartMutableBase;
+		using BodyPartBase<Tail>::BodyPartBase;
 
 		bool vital() const override { return false; }
 

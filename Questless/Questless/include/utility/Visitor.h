@@ -42,23 +42,7 @@ namespace questless
 		using Visitor<RestElementTypes...>::visit;
 	};
 
-	//! An element that accepts modifying visitors of type @p VisitorType.
-	template <typename MutableVisitorType>
-	class MutableElement
-	{
-	public:
-		virtual void accept(MutableVisitorType& visitor) = 0;
-	};
-
-	//! An element that accepts non-modifying visitors of type @p VisitorType.
-	template <typename ConstVisitorType>
-	class ConstElement
-	{
-	public:
-		virtual void accept(ConstVisitorType& visitor) const = 0;
-	};
-
-	//! An element that accepts both modifying and non-modifying visitors of type @p VisitorType.
+	//! An element that accepts both modifying visitors of type @p MutableVisitorType and non-modifying visitors of type @p ConstVisitorType.
 	template <typename MutableVisitorType, typename ConstVisitorType>
 	class Element
 	{
@@ -68,29 +52,7 @@ namespace questless
 	};
 }
 
-//! Defines ParentType##MutableBase, implementing non-const ElementType::accept for ParentType using CRTP. Pulls the ParentClass constructors from protected to public.
-#define DEFINE_MUTABLE_ELEMENT_BASE(ParentType, ElementType) \
-template <typename Derived> \
-class ParentType##MutableBase : public ParentType \
-{ \
-public: \
-	void accept(ElementType##MutableVisitor& visitor) final { visitor.visit(static_cast<Derived&>(*this)); } \
-protected: \
-	using ParentType::ParentType; \
-};
-
-//! Defines ParentType##ConstBase, implementing const ElementType::accept for ParentType using CRTP. Pulls the ParentClass constructors from protected to public.
-#define DEFINE_CONST_ELEMENT_BASE(ParentType, ElementType) \
-template <typename Derived> \
-class ParentType##ConstBase : public ParentType \
-{ \
-public: \
-	void accept(ElementType##ConstVisitor& visitor) const final { visitor.visit(static_cast<Derived const&>(*this)); } \
-protected: \
-	using ParentType::ParentType; \
-};
-
-//! Defines ParentType##ConstBase, implementing const and non-cost ElementType::accept for ParentType using CRTP. Pulls the ParentClass constructors from protected to public.
+//! Defines ParentType##ConstBase, implementing const and non-cost ElementType::accept for ParentType using CRTP. Pulls in the visible ParentClass constructors as protected.
 #define DEFINE_ELEMENT_BASE(ParentType, ElementType) \
 template <typename Derived> \
 class ParentType##Base : public ParentType \
@@ -102,28 +64,6 @@ protected: \
 	using ParentType::ParentType; \
 };
 
-//! Defines ParentType##MutableBase, implementing non-const ElementType::accept for ParentType using CRTP. Makes a trivial protected default constructor.
-#define DEFINE_MUTABLE_ELEMENT_BASE_MAKE_CTOR(ParentType, ElementType) \
-template <typename Derived> \
-class ParentType##MutableBase : public ParentType \
-{ \
-public: \
-	void accept(ElementType##MutableVisitor& visitor) final { visitor.visit(static_cast<Derived&>(*this)); } \
-protected: \
-	ParentType##MutableBase() {} \
-};
-
-//! Defines ParentType##ConstBase, implementing const ElementType::accept for ParentType using CRTP. Makes a trivial protected default constructor.
-#define DEFINE_CONST_ELEMENT_BASE_MAKE_CTOR(ParentType, ElementType) \
-template <typename Derived> \
-class ParentType##ConstBase : public ParentType \
-{ \
-public: \
-	void accept(ElementType##ConstVisitor& visitor) const final { visitor.visit(static_cast<Derived const&>(*this)); } \
-protected: \
-	ParentType##ConstBase() {} \
-};
-
 //! Defines ParentType##ConstBase, implementing const and non-const ElementType::accept for ParentType using CRTP. Makes a trivial protected default constructor.
 #define DEFINE_ELEMENT_BASE_MAKE_CTOR(ParentType, ElementType) \
 template <typename Derived> \
@@ -133,5 +73,5 @@ public: \
 	void accept(ElementType##MutableVisitor& visitor) final { visitor.visit(static_cast<Derived&>(*this)); } \
 	void accept(ElementType##ConstVisitor& visitor) const final { visitor.visit(static_cast<Derived const&>(*this)); } \
 protected: \
-	ParentType##ConstBase() {} \
+	ParentType##Base() {} \
 };

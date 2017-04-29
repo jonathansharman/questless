@@ -10,7 +10,7 @@
 namespace questless
 {
 	//! An item for containing projectiles, such as arrows.
-	class Quiver : public EquipmentConstBase<Quiver>
+	class Quiver : public EquipmentBase<Quiver>
 	{
 	public:
 		Inventory inventory;

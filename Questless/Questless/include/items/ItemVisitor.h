@@ -14,7 +14,14 @@ namespace questless
 	class Quiver;
 	class Scroll;
 
-	//! Visitor type for items.
+	using ItemMutableVisitor = Visitor
+		< Arrow
+		, Bow
+		, Quarterstaff
+		, Quiver
+		, Scroll
+		>;
+
 	using ItemConstVisitor = Visitor
 		< Arrow const
 		, Bow const

@@ -8,13 +8,14 @@
 
 namespace questless
 {
+	using CountQueryMutableVisitor = Visitor<>;
 	using CountQueryConstVisitor = Visitor<>;
 
 	//! A request to an agent for a count.
-	struct CountQuery : public ConstElement<CountQueryConstVisitor>
+	struct CountQuery : public Element<CountQueryMutableVisitor, CountQueryConstVisitor>
 	{
 		virtual ~CountQuery() = default;
 	};
 
-	DEFINE_CONST_ELEMENT_BASE(CountQuery, CountQuery)
+	DEFINE_ELEMENT_BASE(CountQuery, CountQuery)
 }

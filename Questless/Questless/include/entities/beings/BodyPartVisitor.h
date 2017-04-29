@@ -17,5 +17,25 @@ namespace questless
 	class Wing;
 	class Tail;
 
-	using BodyPartMutableVisitor = Visitor<Head, Torso, Arm, Hand, Leg, Foot, Wing, Tail>;
+	using BodyPartMutableVisitor = Visitor
+		< Head
+		, Torso
+		, Arm
+		, Hand
+		, Leg
+		, Foot
+		, Wing
+		, Tail
+		>;
+
+	using BodyPartConstVisitor = Visitor
+		< Head const
+		, Torso const
+		, Arm const
+		, Hand const
+		, Leg const
+		, Foot const
+		, Wing const
+		, Tail const
+		>;
 }

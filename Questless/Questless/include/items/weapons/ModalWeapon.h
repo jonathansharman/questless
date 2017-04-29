@@ -70,5 +70,5 @@ namespace questless
 		uptr<Form> _form;
 	};
 
-	DEFINE_CONST_ELEMENT_BASE(ModalWeapon, Item)
+	DEFINE_ELEMENT_BASE(ModalWeapon, Item)
 }

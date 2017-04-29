@@ -9,12 +9,12 @@
 
 namespace questless
 {
-	class Bow : public WeaponConstBase<Bow>
+	class Bow : public WeaponBase<Bow>
 	{
 	public:
 		Bow(Id<Item> id = Id<Item>::make())
 			: Item{id}
-			, WeaponConstBase<Bow>{durability()}
+			, WeaponBase<Bow>{durability()}
 			, _fire{std::make_shared<Fire>(id)}
 		{}
 

@@ -8,10 +8,10 @@
 
 namespace questless
 {
-	class Arrow : public ItemConstBase<Arrow>
+	class Arrow : public ItemBase<Arrow>
 	{
 	public:
-		Arrow(Id<Item> id = Id<Item>::make()) : ItemConstBase<Arrow>{id} {}
+		Arrow(Id<Item> id = Id<Item>::make()) : ItemBase<Arrow>{id} {}
 
 		std::string name() const override { return "Arrow"; }
 

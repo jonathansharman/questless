@@ -13,6 +13,12 @@ namespace questless
 	class InjuryEffect;
 	class LightningBoltEffect;
 
+	using EffectMutableVisitor = Visitor
+		< EagleEyeEffect
+		, InjuryEffect
+		, LightningBoltEffect
+		>;
+
 	using EffectConstVisitor = Visitor
 		< EagleEyeEffect const
 		, InjuryEffect const

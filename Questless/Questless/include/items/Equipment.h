@@ -136,5 +136,5 @@ namespace questless
 		void unequip();
 	};
 
-	DEFINE_CONST_ELEMENT_BASE_MAKE_CTOR(Equipment, Item)
+	DEFINE_ELEMENT_BASE_MAKE_CTOR(Equipment, Item)
 }

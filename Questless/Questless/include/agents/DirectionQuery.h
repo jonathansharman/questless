@@ -10,15 +10,17 @@ namespace questless
 {
 	struct DirectionQueryMeleeAttack;
 
+	using DirectionQueryMutableVisitor = Visitor<DirectionQueryMeleeAttack>;
+
 	using DirectionQueryConstVisitor = Visitor<DirectionQueryMeleeAttack const>;
 
 	//! A request to an agent for a direction.
-	struct DirectionQuery : public ConstElement<DirectionQueryConstVisitor>
+	struct DirectionQuery : public Element<DirectionQueryMutableVisitor, DirectionQueryConstVisitor>
 	{
 		virtual ~DirectionQuery() = default;
 	};
 
-	DEFINE_CONST_ELEMENT_BASE(DirectionQuery, DirectionQuery)
+	DEFINE_ELEMENT_BASE(DirectionQuery, DirectionQuery)
 
-	struct DirectionQueryMeleeAttack : DirectionQueryConstBase<DirectionQueryMeleeAttack> {};
+	struct DirectionQueryMeleeAttack : DirectionQueryBase<DirectionQueryMeleeAttack> {};
 }

@@ -12,6 +12,12 @@ namespace questless
 	struct TileQueryRangedAttackTarget;
 	struct TileQueryTeleportTarget;
 
+	using TileQueryMutableVisitor = Visitor
+		< TileQueryLightningBoltTarget
+		, TileQueryRangedAttackTarget
+		, TileQueryTeleportTarget
+		>;
+
 	using TileQueryConstVisitor = Visitor
 		< TileQueryLightningBoltTarget const
 		, TileQueryRangedAttackTarget const
@@ -19,18 +25,18 @@ namespace questless
 		>;
 
 	//! A request to an agent for tile coordinates.
-	struct TileQuery : public ConstElement<TileQueryConstVisitor>
+	struct TileQuery : public Element<TileQueryMutableVisitor, TileQueryConstVisitor>
 	{
 		virtual ~TileQuery() = default;
 	};
 
-	DEFINE_CONST_ELEMENT_BASE(TileQuery, TileQuery)
+	DEFINE_ELEMENT_BASE(TileQuery, TileQuery)
 
-	struct TileQueryLightningBoltTarget : TileQueryConstBase<TileQueryLightningBoltTarget> {};
-	struct TileQueryRangedAttackTarget : TileQueryConstBase<TileQueryRangedAttackTarget>
+	struct TileQueryLightningBoltTarget : TileQueryBase<TileQueryLightningBoltTarget> {};
+	struct TileQueryRangedAttackTarget : TileQueryBase<TileQueryRangedAttackTarget>
 	{
 		int range;
 		TileQueryRangedAttackTarget(int range) : range{ range } {}
 	};
-	struct TileQueryTeleportTarget : TileQueryConstBase<TileQueryTeleportTarget> {};
+	struct TileQueryTeleportTarget : TileQueryBase<TileQueryTeleportTarget> {};
 }

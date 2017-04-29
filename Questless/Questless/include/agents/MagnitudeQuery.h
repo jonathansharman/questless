@@ -12,6 +12,12 @@ namespace questless
 	struct MagnitudeQueryLightningBolt;
 	struct MagnitudeQueryWaitTime;
 
+	using MagnitudeQueryMutableVisitor = Visitor
+		< MagnitudeQueryHeal
+		, MagnitudeQueryLightningBolt
+		, MagnitudeQueryWaitTime
+		>;
+
 	using MagnitudeQueryConstVisitor = Visitor
 		< MagnitudeQueryHeal const
 		, MagnitudeQueryLightningBolt const
@@ -19,14 +25,14 @@ namespace questless
 		>;
 
 	//! A request to an agent for a magnitude.
-	struct MagnitudeQuery : ConstElement<MagnitudeQueryConstVisitor>
+	struct MagnitudeQuery : Element<MagnitudeQueryMutableVisitor, MagnitudeQueryConstVisitor>
 	{
 		virtual ~MagnitudeQuery() = default;
 	};
 
-	DEFINE_CONST_ELEMENT_BASE(MagnitudeQuery, MagnitudeQuery)
+	DEFINE_ELEMENT_BASE(MagnitudeQuery, MagnitudeQuery)
 
-	struct MagnitudeQueryHeal : MagnitudeQueryConstBase<MagnitudeQueryHeal> {};
-	struct MagnitudeQueryLightningBolt : MagnitudeQueryConstBase<MagnitudeQueryLightningBolt> {};
-	struct MagnitudeQueryWaitTime : MagnitudeQueryConstBase<MagnitudeQueryWaitTime> {};
+	struct MagnitudeQueryHeal : MagnitudeQueryBase<MagnitudeQueryHeal> {};
+	struct MagnitudeQueryLightningBolt : MagnitudeQueryBase<MagnitudeQueryLightningBolt> {};
+	struct MagnitudeQueryWaitTime : MagnitudeQueryBase<MagnitudeQueryWaitTime> {};
 }

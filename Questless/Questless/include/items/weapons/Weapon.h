@@ -23,5 +23,5 @@ namespace questless
 		Weapon(double integrity) : Breakable{integrity} {}
 	};
 
-	DEFINE_CONST_ELEMENT_BASE(Weapon, Item)
+	DEFINE_ELEMENT_BASE(Weapon, Item)
 }

@@ -8,13 +8,14 @@
 
 namespace questless
 {
+	using ItemQueryMutableVisitor = Visitor<>;
 	using ItemQueryConstVisitor = Visitor<>;
 
 	//! A request to an agent for an item from an inventory.
-	struct ItemQuery : public MutableElement<ItemQueryConstVisitor>
+	struct ItemQuery : public Element<ItemQueryMutableVisitor, ItemQueryConstVisitor>
 	{
 		virtual ~ItemQuery() = default;
 	};
 
-	DEFINE_CONST_ELEMENT_BASE(ItemQuery, ItemQuery)
+	DEFINE_ELEMENT_BASE(ItemQuery, ItemQuery)
 }

@@ -18,6 +18,20 @@ namespace questless
 	struct MessageSpellNotEnoughCharges;
 	struct MessageSpellOnCooldown;
 
+	using MessageMutableVisitor = Visitor
+		< MessageArrowMiss
+		, MessageCannotEquip
+		, MessageArrowMiss
+		, MessageCannotEquip
+		, MessageEntityInTheWay
+		, MessageIncantFailedMute
+		, MessageMeleeMiss
+		, MessageNotEnoughAmmo
+		, MessageNotEnoughMana
+		, MessageSpellNotEnoughCharges
+		, MessageSpellOnCooldown
+		>;
+
 	using MessageConstVisitor = Visitor
 		< MessageArrowMiss const
 		, MessageCannotEquip const
@@ -33,26 +47,26 @@ namespace questless
 		>;
 
 	//! A message that can be sent to an agent.
-	struct Message : public ConstElement<MessageConstVisitor>
+	struct Message : public Element<MessageMutableVisitor, MessageConstVisitor>
 	{
 		virtual ~Message() = default;
 	};
 
-	DEFINE_CONST_ELEMENT_BASE(Message, Message)
+	DEFINE_ELEMENT_BASE(Message, Message)
 
-	struct MessageArrowMiss : MessageConstBase<MessageArrowMiss> {};
-	struct MessageCannotEquip : MessageConstBase<MessageCannotEquip> {};
-	struct MessageEntityInTheWay : MessageConstBase<MessageEntityInTheWay> {};
-	struct MessageIncantFailedMute : MessageConstBase<MessageIncantFailedMute> {};
-	struct MessageMeleeMiss : MessageConstBase<MessageMeleeMiss> {};
-	struct MessageNotEnoughAmmo : MessageConstBase<MessageNotEnoughAmmo> {};
-	struct MessageNotEnoughMana : MessageConstBase<MessageNotEnoughMana>
+	struct MessageArrowMiss : MessageBase<MessageArrowMiss> {};
+	struct MessageCannotEquip : MessageBase<MessageCannotEquip> {};
+	struct MessageEntityInTheWay : MessageBase<MessageEntityInTheWay> {};
+	struct MessageIncantFailedMute : MessageBase<MessageIncantFailedMute> {};
+	struct MessageMeleeMiss : MessageBase<MessageMeleeMiss> {};
+	struct MessageNotEnoughAmmo : MessageBase<MessageNotEnoughAmmo> {};
+	struct MessageNotEnoughMana : MessageBase<MessageNotEnoughMana>
 	{
 		double mana_deficit;
 		MessageNotEnoughMana(double mana_deficit) : mana_deficit{mana_deficit} {}
 	};
-	struct MessageSpellNotEnoughCharges : MessageConstBase<MessageSpellNotEnoughCharges> {};
-	struct MessageSpellOnCooldown : MessageConstBase<MessageSpellOnCooldown>
+	struct MessageSpellNotEnoughCharges : MessageBase<MessageSpellNotEnoughCharges> {};
+	struct MessageSpellOnCooldown : MessageBase<MessageSpellOnCooldown>
 	{
 		double active_cooldown;
 		MessageSpellOnCooldown(double active_cooldown) : active_cooldown{active_cooldown} {}

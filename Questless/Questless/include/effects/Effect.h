@@ -12,7 +12,7 @@
 namespace questless
 {
 	//! An in-game effect perceivable by beings, such as light and sound stimuli.
-	class Effect : public ConstElement<EffectConstVisitor>
+	class Effect : public Element<EffectMutableVisitor, EffectConstVisitor>
 	{
 	public:
 		//! @param origin The coordinates of the effect's origin.
@@ -28,11 +28,11 @@ namespace questless
 		RegionTileCoords _origin;
 	};
 
-	DEFINE_CONST_ELEMENT_BASE(Effect, Effect)
+	DEFINE_ELEMENT_BASE(Effect, Effect)
 
 	//! @todo Eventually move effect subtypes to individual header files.
 
-	class EagleEyeEffect : public EffectConstBase<EagleEyeEffect>
+	class EagleEyeEffect : public EffectBase<EagleEyeEffect>
 	{
 	public:
 		Id<Being> const caster_id;
@@ -40,13 +40,13 @@ namespace questless
 		//! @param origin The coordinates of the effect's origin.
 		//! @param caster_id The ID of the caster.
 		EagleEyeEffect(RegionTileCoords origin, Id<Being> caster_id)
-			: EffectConstBase<EagleEyeEffect>{origin}, caster_id{caster_id}
+			: EffectBase<EagleEyeEffect>{origin}, caster_id{caster_id}
 		{}
 
 		int range() const override { return 3; }
 	};
 
-	class InjuryEffect : public EffectConstBase<InjuryEffect>
+	class InjuryEffect : public EffectBase<InjuryEffect>
 	{
 	public:
 		Damage const damage;
@@ -58,16 +58,16 @@ namespace questless
 		//! @param target_id The ID of the injured being.
 		//! @param opt_source_id The ID of the being who caused the injury or nullopt if there is none.
 		InjuryEffect(RegionTileCoords origin, Damage damage, Id<Being> target_id, std::optional<Id<Being>> opt_source_id)
-			: EffectConstBase<InjuryEffect>{origin}, damage{damage}, target_id{target_id}, opt_source_id{opt_source_id}
+			: EffectBase<InjuryEffect>{origin}, damage{damage}, target_id{target_id}, opt_source_id{opt_source_id}
 		{}
 
 		int range() const override { return 7; }
 	};
 
-	class LightningBoltEffect : public EffectConstBase<LightningBoltEffect>
+	class LightningBoltEffect : public EffectBase<LightningBoltEffect>
 	{
 	public:
-		using EffectConstBase<LightningBoltEffect>::EffectConstBase;
+		using EffectBase<LightningBoltEffect>::EffectBase;
 
 		int range() const override { return 10; }
 	};
