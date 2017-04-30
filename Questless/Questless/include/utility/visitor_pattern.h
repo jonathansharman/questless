@@ -12,7 +12,7 @@
 namespace questless
 {
 	//! Visitor template for at least one type (recursive case).
-	template <typename ElementSubtypeList, int length>
+	template <typename ElementSubtypeList, int length = ElementSubtypeList::length_t::value>
 	class Visitor : public Visitor<typename ElementSubtypeList::tail_t, ElementSubtypeList::tail_t::length_t::value>
 	{
 	public:
@@ -43,15 +43,15 @@ namespace questless
 	class Element
 	{
 	public:
-		virtual void accept(Visitor<ElementSubtypeList, ElementSubtypeList::length_t::value>& visitor) = 0;
-		virtual void accept(Visitor<type_list::add_const_t<ElementSubtypeList>, ElementSubtypeList::length_t::value>& visitor) const = 0;
+		virtual void accept(Visitor<ElementSubtypeList>& visitor) = 0;
+		virtual void accept(Visitor<type_list::add_const_t<ElementSubtypeList>>& visitor) const = 0;
 	};
 }
 
 //! Defines ElementType##MutableVisitor and ElementType##ConstVisitor.
 #define DEFINE_VISITORS(ElementType, ElementSubtypeList) \
-using ElementType##MutableVisitor = Visitor<ElementSubtypeList, ElementSubtypeList::length_t::value>; \
-using ElementType##ConstVisitor = Visitor<type_list::add_const_t<ElementSubtypeList>, ElementSubtypeList::length_t::value>;
+using ElementType##MutableVisitor = Visitor<ElementSubtypeList>; \
+using ElementType##ConstVisitor = Visitor<type_list::add_const_t<ElementSubtypeList>>;
 
 //! Defines ParentType##ConstBase, implementing const and non-cost ElementType::accept for ParentType using CRTP. Pulls in the visible ParentClass constructors as protected.
 #define DEFINE_ELEMENT_BASE(ParentType, ElementType) \
