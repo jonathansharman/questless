@@ -27,7 +27,7 @@ namespace questless
 	class Section;
 
 	//! Things that can exist on the world map, including beings and objects.
-	class Entity : public Element<EntityMutableVisitor, EntityConstVisitor>
+	class Entity : public Element<EntitySubtypeList>
 	{
 	public:
 		using ref_less_t = bool(*)(Entity const&, Entity const&);

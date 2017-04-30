@@ -6,7 +6,7 @@
 
 #include "sdl/Renderer.h"
 #include "sdl/Texture.h"
-#include "utility/Visitor.h"
+#include "utility/visitor_pattern.h"
 
 namespace questless
 {
@@ -18,7 +18,7 @@ namespace questless
 	class StoneTile;
 	class WaterTile;
 
-	using TileMutableVisitor = Visitor
+	using TileSubtypeList = type_list::of_t
 		< DirtTile
 		, EdgeTile
 		, GrassTile
@@ -28,18 +28,10 @@ namespace questless
 		, WaterTile
 		>;
 
-	using TileConstVisitor = Visitor
-		< DirtTile const
-		, EdgeTile const
-		, GrassTile const
-		, SandTile const
-		, SnowTile const
-		, StoneTile const
-		, WaterTile const
-		>;
+	DEFINE_VISITORS(Tile, TileSubtypeList)
 
 	//! The basic unit of terrain, a hexagonal region of uniform material, temperature, etc.
-	class Tile : public Element<TileMutableVisitor, TileConstVisitor>
+	class Tile : public Element<TileSubtypeList>
 	{
 	public:
 		enum class TileClass : int { dirt = 0, edge, grass, sand, snow, stone, water, TILE_CLASS_COUNT }; //! @todo Remove TILE_CLASS_COUNT if static reflection that can check enum length is ever added.

@@ -21,7 +21,7 @@ namespace questless
 	class Being;
 
 	//! A being's body part.
-	class BodyPart : public Element<BodyPartMutableVisitor, BodyPartConstVisitor>
+	class BodyPart : public Element<BodyPartSubtypeList>
 	{
 	public:
 		Id<BodyPart> const id;

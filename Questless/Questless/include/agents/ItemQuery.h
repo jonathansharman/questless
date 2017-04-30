@@ -4,15 +4,16 @@
 
 #pragma once
 
-#include "utility/Visitor.h"
+#include "utility/visitor_pattern.h"
 
 namespace questless
 {
-	using ItemQueryMutableVisitor = Visitor<>;
-	using ItemQueryConstVisitor = Visitor<>;
+	using ItemQuerySubtypeList = type_list::Empty;
+
+	DEFINE_VISITORS(ItemQuery, ItemQuerySubtypeList)
 
 	//! A request to an agent for an item from an inventory.
-	struct ItemQuery : public Element<ItemQueryMutableVisitor, ItemQueryConstVisitor>
+	struct ItemQuery : public Element<ItemQuerySubtypeList>
 	{
 		virtual ~ItemQuery() = default;
 	};

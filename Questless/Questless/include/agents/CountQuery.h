@@ -4,15 +4,16 @@
 
 #pragma once
 
-#include "utility/Visitor.h"
+#include "utility/visitor_pattern.h"
 
 namespace questless
 {
-	using CountQueryMutableVisitor = Visitor<>;
-	using CountQueryConstVisitor = Visitor<>;
+	using CountQuerySubtypeList = type_list::Empty;
+
+	DEFINE_VISITORS(CountQuery, CountQuerySubtypeList)
 
 	//! A request to an agent for a count.
-	struct CountQuery : public Element<CountQueryMutableVisitor, CountQueryConstVisitor>
+	struct CountQuery : public Element<CountQuerySubtypeList>
 	{
 		virtual ~CountQuery() = default;
 	};

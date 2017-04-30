@@ -20,7 +20,7 @@ namespace questless
 	class Being;
 
 	//! An item that can be picked up, used by beings, etc.
-	class Item : public Element<ItemMutableVisitor, ItemConstVisitor>
+	class Item : public Element<ItemSubtypeList>
 	{
 	public:
 		Id<Item> const id;

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "utility/Visitor.h"
+#include "utility/visitor_pattern.h"
 
 namespace questless
 {
@@ -17,7 +17,7 @@ namespace questless
 	class Wing;
 	class Tail;
 
-	using BodyPartMutableVisitor = Visitor
+	using BodyPartSubtypeList = type_list::of_t
 		< Head
 		, Torso
 		, Arm
@@ -28,14 +28,5 @@ namespace questless
 		, Tail
 		>;
 
-	using BodyPartConstVisitor = Visitor
-		< Head const
-		, Torso const
-		, Arm const
-		, Hand const
-		, Leg const
-		, Foot const
-		, Wing const
-		, Tail const
-		>;
+	DEFINE_VISITORS(BodyPart, BodyPartSubtypeList)
 }

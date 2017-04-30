@@ -4,10 +4,12 @@
 
 #pragma once
 
-#include "utility/Visitor.h"
+#include "utility/visitor_pattern.h"
 
 namespace questless
 {
+	struct MessageArrowMiss;
+	struct MessageCannotEquip;
 	struct MessageArrowMiss;
 	struct MessageCannotEquip;
 	struct MessageEntityInTheWay;
@@ -18,7 +20,7 @@ namespace questless
 	struct MessageSpellNotEnoughCharges;
 	struct MessageSpellOnCooldown;
 
-	using MessageMutableVisitor = Visitor
+	using MessageSubtypeList = type_list::of_t
 		< MessageArrowMiss
 		, MessageCannotEquip
 		, MessageArrowMiss
@@ -32,22 +34,10 @@ namespace questless
 		, MessageSpellOnCooldown
 		>;
 
-	using MessageConstVisitor = Visitor
-		< MessageArrowMiss const
-		, MessageCannotEquip const
-		, MessageArrowMiss const
-		, MessageCannotEquip const
-		, MessageEntityInTheWay const
-		, MessageIncantFailedMute const
-		, MessageMeleeMiss const
-		, MessageNotEnoughAmmo const
-		, MessageNotEnoughMana const
-		, MessageSpellNotEnoughCharges const
-		, MessageSpellOnCooldown const
-		>;
+	DEFINE_VISITORS(Message, MessageSubtypeList)
 
 	//! A message that can be sent to an agent.
-	struct Message : public Element<MessageMutableVisitor, MessageConstVisitor>
+	struct Message : public Element<MessageSubtypeList>
 	{
 		virtual ~Message() = default;
 	};

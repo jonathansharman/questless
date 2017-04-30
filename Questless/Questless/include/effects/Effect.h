@@ -12,7 +12,7 @@
 namespace questless
 {
 	//! An in-game effect perceivable by beings, such as light and sound stimuli.
-	class Effect : public Element<EffectMutableVisitor, EffectConstVisitor>
+	class Effect : public Element<EffectSubtypeList>
 	{
 	public:
 		//! @param origin The coordinates of the effect's origin.

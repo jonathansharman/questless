@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "utility/Visitor.h"
+#include "utility/visitor_pattern.h"
 
 namespace questless
 {
@@ -18,7 +18,7 @@ namespace questless
 	class Corpse;
 	class ItemBox;
 
-	using EntityMutableVisitor = Visitor
+	using EntitySubtypeList = type_list::of_t
 		// Beings
 		< Goblin
 		, Human
@@ -27,12 +27,5 @@ namespace questless
 		, ItemBox
 		>;
 
-	using EntityConstVisitor = Visitor
-		// Beings
-		< Goblin const
-		, Human const
-		// Objects
-		, Corpse const
-		, ItemBox const
-		>;
+	DEFINE_VISITORS(Entity, EntitySubtypeList)
 }

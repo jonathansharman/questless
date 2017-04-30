@@ -4,8 +4,7 @@
 
 #pragma once
 
-#include <string>
-#include <stdexcept>
+#include "utility/visitor_pattern.h"
 
 namespace questless
 {
@@ -13,15 +12,11 @@ namespace questless
 	class InjuryEffect;
 	class LightningBoltEffect;
 
-	using EffectMutableVisitor = Visitor
+	using EffectSubtypeList = type_list::of_t
 		< EagleEyeEffect
 		, InjuryEffect
 		, LightningBoltEffect
 		>;
 
-	using EffectConstVisitor = Visitor
-		< EagleEyeEffect const
-		, InjuryEffect const
-		, LightningBoltEffect const
-		>;
+	DEFINE_VISITORS(Effect, EffectSubtypeList)
 }

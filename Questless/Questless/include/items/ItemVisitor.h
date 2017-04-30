@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "utility/Visitor.h"
+#include "utility/visitor_pattern.h"
 
 namespace questless
 {
@@ -14,7 +14,7 @@ namespace questless
 	class Quiver;
 	class Scroll;
 
-	using ItemMutableVisitor = Visitor
+	using ItemSubtypeList = type_list::of_t
 		< Arrow
 		, Bow
 		, Quarterstaff
@@ -22,11 +22,5 @@ namespace questless
 		, Scroll
 		>;
 
-	using ItemConstVisitor = Visitor
-		< Arrow const
-		, Bow const
-		, Quarterstaff const
-		, Quiver const
-		, Scroll const
-		>;
+	DEFINE_VISITORS(Item, ItemSubtypeList)
 }

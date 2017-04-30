@@ -12,20 +12,16 @@ namespace questless
 	struct MagnitudeQueryLightningBolt;
 	struct MagnitudeQueryWaitTime;
 
-	using MagnitudeQueryMutableVisitor = Visitor
+	using MagnitudeQuerySubtypeList = type_list::of_t
 		< MagnitudeQueryHeal
 		, MagnitudeQueryLightningBolt
 		, MagnitudeQueryWaitTime
 		>;
 
-	using MagnitudeQueryConstVisitor = Visitor
-		< MagnitudeQueryHeal const
-		, MagnitudeQueryLightningBolt const
-		, MagnitudeQueryWaitTime const
-		>;
+	DEFINE_VISITORS(MagnitudeQuery, MagnitudeQuerySubtypeList)
 
 	//! A request to an agent for a magnitude.
-	struct MagnitudeQuery : Element<MagnitudeQueryMutableVisitor, MagnitudeQueryConstVisitor>
+	struct MagnitudeQuery : Element<MagnitudeQuerySubtypeList>
 	{
 		virtual ~MagnitudeQuery() = default;
 	};

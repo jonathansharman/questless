@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "utility/Visitor.h"
+#include "utility/visitor_pattern.h"
 
 namespace questless
 {
@@ -12,20 +12,16 @@ namespace questless
 	struct TileQueryRangedAttackTarget;
 	struct TileQueryTeleportTarget;
 
-	using TileQueryMutableVisitor = Visitor
+	using TileQuerySubtypeList = type_list::of_t
 		< TileQueryLightningBoltTarget
 		, TileQueryRangedAttackTarget
 		, TileQueryTeleportTarget
 		>;
 
-	using TileQueryConstVisitor = Visitor
-		< TileQueryLightningBoltTarget const
-		, TileQueryRangedAttackTarget const
-		, TileQueryTeleportTarget const
-		>;
+	DEFINE_VISITORS(TileQuery, TileQuerySubtypeList)
 
 	//! A request to an agent for tile coordinates.
-	struct TileQuery : public Element<TileQueryMutableVisitor, TileQueryConstVisitor>
+	struct TileQuery : public Element<TileQuerySubtypeList>
 	{
 		virtual ~TileQuery() = default;
 	};
