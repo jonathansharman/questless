@@ -6,8 +6,8 @@
 
 #include <unordered_set>
 
+#include "utility/ContainerView.h"
 #include "utility/Id.h"
-#include "utility/XformedContainer.h"
 #include "utility/reference.h"
 
 namespace questless
@@ -20,7 +20,7 @@ namespace questless
 	public:
 		static ref<Item> item_id_to_ref(Id<Item> item_id);
 		static cref<Item> item_id_to_cref(Id<Item> item_id);
-		using ItemsView = XformedContainer
+		using ItemsView = ContainerView
 			< std::unordered_set<Id<Item>>
 			, ref<Item>
 			, cref<Item>

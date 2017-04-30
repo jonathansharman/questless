@@ -400,6 +400,7 @@
     <ClInclude Include="include\units\Velocity.h" />
     <ClInclude Include="include\utility\Cache.h" />
     <ClInclude Include="include\utility\Complete.h" />
+    <ClInclude Include="include\utility\ContainerView.h" />
     <ClInclude Include="include\utility\Delegate.h" />
     <ClInclude Include="include\utility\DynamicProperty.h" />
     <ClInclude Include="include\utility\Event.h" />
@@ -413,7 +414,6 @@
     <ClInclude Include="include\utility\type-list.h" />
     <ClInclude Include="include\utility\utility.h" />
     <ClInclude Include="include\utility\visitor-pattern.h" />
-    <ClInclude Include="include\utility\XformedContainer.h" />
     <ClInclude Include="include\world\coordinates.h" />
     <ClInclude Include="include\world\LightSource.h" />
     <ClInclude Include="include\world\Region.h" />

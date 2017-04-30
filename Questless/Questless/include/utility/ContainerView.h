@@ -23,13 +23,13 @@ namespace questless
 		, MutableViewType (*mutable_xform)(typename Container::value_type)
 		, ConstViewType (*const_xform)(typename Container::value_type)
 		>
-	struct XformedContainer
+	struct ContainerView
 	{
 		//! The underlying container.
 		Container& container;
 
 		//! @param container The underlying container.
-		XformedContainer(Container& container) : container{container} {}
+		ContainerView(Container& container) : container{container} {}
 
 		//! Iterator to the beginning of the transformed container.
 		auto begin()

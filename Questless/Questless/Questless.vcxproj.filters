@@ -715,7 +715,7 @@
     <ClInclude Include="include\utility\visitor-pattern.h">
       <Filter>include\utility</Filter>
     </ClInclude>
-    <ClInclude Include="include\utility\XformedContainer.h">
+    <ClInclude Include="include\utility\ContainerView.h">
       <Filter>include\utility</Filter>
     </ClInclude>
   </ItemGroup>

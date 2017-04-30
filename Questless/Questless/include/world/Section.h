@@ -15,9 +15,9 @@
 #include "coordinates.h"
 #include "Tile.h"
 #include "units/HexCoords.h"
+#include "utility/ContainerView.h"
 #include "utility/Id.h"
 #include "utility/reference.h"
-#include "utility/XformedContainer.h"
 
 namespace questless
 {
@@ -33,7 +33,7 @@ namespace questless
 	public:
 		static ref<Being> being_entry_to_ref(std::pair<RegionTileCoords const, Id<Being>> being_entry);
 		static cref<Being> being_entry_to_cref(std::pair<RegionTileCoords const, Id<Being>> being_entry);
-		using BeingsView = XformedContainer
+		using BeingsView = ContainerView
 			< std::unordered_map<RegionTileCoords, Id<Being>>
 			, ref<Being>
 			, cref<Being>
@@ -43,7 +43,7 @@ namespace questless
 
 		static ref<Object> object_entry_to_ref(std::pair<RegionTileCoords const, Id<Object>> object_entry);
 		static cref<Object> object_entry_to_cref(std::pair<RegionTileCoords const, Id<Object>> object_entry);
-		using ObjectsView = XformedContainer
+		using ObjectsView = ContainerView
 			< std::unordered_map<RegionTileCoords, Id<Object>>
 			, ref<Object>
 			, cref<Object>
@@ -53,7 +53,7 @@ namespace questless
 
 		static ref<LightSource> light_source_id_to_ref(Id<LightSource> light_source_id);
 		static cref<LightSource> light_source_id_to_cref(Id<LightSource> light_source_id);
-		using LightSourcesView = XformedContainer
+		using LightSourcesView = ContainerView
 			< std::unordered_set<Id<LightSource>>
 			, ref<LightSource>
 			, cref<LightSource>
