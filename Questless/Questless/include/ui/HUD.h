@@ -47,7 +47,7 @@ namespace questless
 
 		static constexpr int _item_icon_width = 55;
 		static constexpr int _item_icon_height = 55;
-		static const int _item_count_font_size = 10;
+		static constexpr int _item_count_font_size = 10;
 
 		static constexpr size_t _hotbar_size = 10;
 		static constexpr int _hotbar_interslot_gap = 2;

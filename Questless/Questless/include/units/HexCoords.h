@@ -113,11 +113,10 @@ namespace units
 			return HexCoords{this->q + (dest.q - this->q) * t, this->r + (dest.r - this->r) * t, this->s + (dest.s - this->s) * t};
 		}
 
-		//! @todo Make offset and neighbor constexpr when constexpr-if becomes available.
-
-		static HexCoords offset(Direction direction)
+		static constexpr HexCoords offset(Direction direction)
 		{
 			switch (direction) {
+				default: [[fallthrough]]; // Impossible case.
 				case Direction::one:   return HexCoords{1, 0};
 				case Direction::two:   return HexCoords{0, 1};
 				case Direction::three: return HexCoords{-1, 1};
@@ -125,7 +124,6 @@ namespace units
 				case Direction::five:  return HexCoords{0, -1};
 				case Direction::six:   return HexCoords{1, -1};
 			};
-			throw std::logic_error{"Invalid direction."};
 		}
 
 		constexpr HexCoords neighbor(Direction direction) const { return *this + offset(direction); }

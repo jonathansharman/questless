@@ -8,10 +8,10 @@ namespace questless
 {
 	namespace
 	{
-		double constexpr distance_factor = 0.25;
+		constexpr double distance_factor = 0.25;
 
 		// Use a cutoff to limit range.
-		double constexpr cutoff = 1.0;
+		constexpr double cutoff = 1.0;
 	}
 	int LightSource::range() const
 	{

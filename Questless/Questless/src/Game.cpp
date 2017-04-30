@@ -186,7 +186,7 @@ namespace questless
 				RegionSectionCoords section_coords{q, r};
 				Section* section = _region->section(section_coords);
 				if (section) {
-					for (Being& being : section->beings()) {
+					for (Being& being : section->beings) {
 						being.agent().perceive(effect);
 					}
 				}

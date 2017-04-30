@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "type_list.h"
+#include "type-list.h"
 
 namespace questless
 {

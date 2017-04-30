@@ -6,7 +6,7 @@
 
 #include "sdl/Renderer.h"
 #include "sdl/Texture.h"
-#include "utility/visitor_pattern.h"
+#include "utility/visitor-pattern.h"
 
 namespace questless
 {

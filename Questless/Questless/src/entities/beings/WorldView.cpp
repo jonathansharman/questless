@@ -97,7 +97,7 @@ namespace questless
 			_section_views.push_back(std::move(section_view));
 
 			// Calculate being visibilities.
-			for (Being const& other_being : region.section(section_coords)->beings()) {
+			for (Being const& other_being : region.section(section_coords)->beings) {
 				if (other_being.id == being.id) {
 					// Can always perceive self fully.
 					_being_views.emplace_back(other_being.id, PerceptionLevel::full);
@@ -125,7 +125,7 @@ namespace questless
 			}
 
 			// Calculate object visibilities.
-			for (Object const& object : region.section(section_coords)->objects()) {
+			for (Object const& object : region.section(section_coords)->objects) {
 				RegionTileCoords other_coords = object.coords;
 				if (other_coords.distance_to(coords) < visual_range) {
 					SectionTileCoords other_section_coords = Section::section_tile_coords(other_coords);

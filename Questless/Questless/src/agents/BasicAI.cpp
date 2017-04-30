@@ -64,7 +64,7 @@ namespace questless
 				if (ai.being.coords.distance_to(target->coords) == 1) {
 					// Within striking distance of target.
 					//! @todo This is a hack that assumes the first item in the inventory is a melee weapon.
-					Item& item = *ai.being.inventory.items().begin();
+					Item& item = *ai.being.inventory.items.begin();
 					item.actions().front()->perform(ai.being, [&ai](Action::Result result) {
 						if (result == Action::Result::aborted) {
 							// Attack failed. Wait for up to 10 time units instead.

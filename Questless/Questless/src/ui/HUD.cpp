@@ -212,7 +212,7 @@ namespace questless
 
 	void HUD::update_displayed_items(Being& player_being)
 	{
-		_displayed_items = {player_being.inventory.items().begin(), player_being.inventory.items().end()};
+		_displayed_items = {player_being.inventory.items.begin(), player_being.inventory.items.end()};
 		// Sort displayed items alphabetically.
 		//! @todo Custom displayed items order and cache the displayed items (only need to regenerate list if a turn has been taken).
 		std::sort(_displayed_items.begin(), _displayed_items.end(), [](Item const& left, Item const& right) {

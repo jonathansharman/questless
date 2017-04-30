@@ -7,11 +7,40 @@
 #include <fstream>
 
 #include "Game.h"
+#include "entities/beings/Being.h"
+#include "entities/objects/Object.h"
 #include "world/LightSource.h"
 #include "world/Region.h"
 
 namespace questless
 {
+	ref<Being> Section::being_entry_to_ref(std::pair<RegionTileCoords const, Id<Being>> being_entry)
+	{
+		return game().beings.get_ref(being_entry.second);
+	}
+	cref<Being> Section::being_entry_to_cref(std::pair<RegionTileCoords const, Id<Being>> being_entry)
+	{
+		return game().beings.get_ref(being_entry.second);
+	}
+
+	ref<Object> Section::object_entry_to_ref(std::pair<RegionTileCoords const, Id<Object>> object_entry)
+	{
+		return game().objects.get_ref(object_entry.second);
+	}
+	cref<Object> Section::object_entry_to_cref(std::pair<RegionTileCoords const, Id<Object>> object_entry)
+	{
+		return game().objects.get_ref(object_entry.second);
+	}
+
+	ref<LightSource> Section::light_source_id_to_ref(Id<LightSource> light_source_id)
+	{
+		return game().light_sources.get_ref(light_source_id);
+	}
+	cref<LightSource> Section::light_source_id_to_cref(Id<LightSource> light_source_id)
+	{
+		return game().light_sources.get_ref(light_source_id);
+	}
+
 	RegionSectionCoords Section::region_section_coords(RegionTileCoords region_tile_coords)
 	{
 		int q = region_tile_coords.q >= 0
@@ -25,7 +54,11 @@ namespace questless
 		return RegionSectionCoords{q, r};
 	}
 
-	Section::Section(RegionSectionCoords coords, std::istream& data_stream) : _coords{coords}
+	Section::Section(RegionSectionCoords coords, std::istream& data_stream)
+		: beings{_being_map}
+		, objects{_object_map}
+		, light_sources{_light_source_ids}
+		, _coords{coords}
 	{
 		for (auto& slice : _tiles) {
 			for (auto& tile : slice) {
@@ -72,89 +105,67 @@ namespace questless
 			}
 		}
 	}
-	
-	std::vector<cref<Being>> Section::beings() const
-	{
-		std::vector<cref<Being>> beings;
-		for (auto const& pair : _being_ids) {
-			auto id = pair.second;
-			beings.push_back(game().beings.get_ref(id));
-		}
-		return beings;
-	}
-	std::vector<ref<Being>> Section::beings()
-	{
-		std::vector<ref<Being>> beings;
-		for (auto const& pair : _being_ids) {
-			auto id = pair.second;
-			beings.push_back(game().beings.get_ref(id));
-		}
-		return beings;
-	}
-	
-	std::vector<cref<Object>> Section::objects() const
-	{
-		std::vector<cref<Object>> objects;
-		for (auto const& pair : _object_ids) {
-			auto id = pair.second;
-			objects.push_back(game().objects.get_ref(id));
-		}
-		return objects;
-	}
-	std::vector<ref<Object>> Section::objects()
-	{
-		std::vector<ref<Object>> objects;
-		for (auto const& pair : _object_ids) {
-			auto id = pair.second;
-			objects.push_back(game().objects.get_ref(id));
-		}
-		return objects;
-	}
 
 	std::optional<Id<Being>> Section::being_id(RegionTileCoords tile_coords) const
 	{
-		auto it = _being_ids.find(tile_coords);
-		return it != _being_ids.end() ? std::make_optional(it->second) : std::nullopt;
+		auto it = _being_map.find(tile_coords);
+		return it != _being_map.end() ? std::make_optional(it->second) : std::nullopt;
 	}
 
 	std::optional<Id<Object>> Section::object_id(RegionTileCoords tile_coords) const
 	{
-		auto it = _object_ids.find(tile_coords);
-		return it != _object_ids.end() ? std::make_optional(it->second) : std::nullopt;
+		auto it = _object_map.find(tile_coords);
+		return it != _object_map.end() ? std::make_optional(it->second) : std::nullopt;
+	}
+
+	void Section::add(Being& being)
+	{
+		being.section = this;
+		auto result = _being_map.insert({being.coords, being.id});
+		if (!result.second) {
+			throw std::logic_error{"Attempted to place a being on top of another in a section."};
+		}
+	}
+
+	void Section::add(Object& object)
+	{
+		object.section = this;
+		auto result = _object_map.insert({object.coords, object.id});
+		if (!result.second) {
+			throw std::logic_error{"Attempted to place an object on top of another in a section."};
+		}
 	}
 
 	typename void Section::remove_being(RegionTileCoords coords)
 	{
-		auto it = _being_ids.find(coords);
-		if (it != _being_ids.end()) {
+		auto it = _being_map.find(coords);
+		if (it != _being_map.end()) {
 			if (Being* removed_being = game().beings.get(it->second)) {
 				removed_being->section = nullptr;
 			}
-			_being_ids.erase(it);
+			_being_map.erase(it);
 		}
 	}
 
 	typename void Section::remove_object(RegionTileCoords coords)
 	{
-		auto it = _object_ids.find(coords);
-		if (it != _object_ids.end()) {
+		auto it = _object_map.find(coords);
+		if (it != _object_map.end()) {
 			if (Object* removed_object = game().objects.get(it->second)) {
 				removed_object->section = nullptr;
 			}
-			_object_ids.erase(it);
+			_object_map.erase(it);
 		}
 	}
-	
-	std::vector<cref<LightSource>> Section::light_sources() const
-	{
-		//! @todo Could make a lazy version of this, as in Inventory::Item. (Eager evaluation should be okay here though since the number of light sources will be small.)
-		//! @todo Make a generic List<Id<T>> -> List<T&> iterator/container type?
 
-		std::vector<cref<LightSource>> result;
-		for (Id<LightSource> id : _light_source_ids) {
-			result.push_back(game().light_sources.get_ref(id));
-		}
-		return result;
+	void Section::remove(Being& being)
+	{
+		remove_being(being.coords);
+	}
+
+	void Section::remove(Object& object)
+	{
+		remove_object(object.coords);
 	}
 
 	void Section::add(LightSource const& light_source)

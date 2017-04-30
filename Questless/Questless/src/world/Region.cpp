@@ -65,7 +65,8 @@ namespace questless
 						//data += std::to_string(static_cast<int>(Tile::TileClass::snow)) + " 0 ";
 					}
 				}
-				_section_map.insert(std::make_pair(section_coords, Section{section_coords, std::istringstream{data}}));
+				std::istringstream data_stream{data};
+				_section_map.insert(std::make_pair(section_coords, Section{section_coords, data_stream}));
 				// Add beings randomly.
 				for (int q = 0; q < Section::diameter; ++q) {
 					for (int r = 0; r < Section::diameter; ++r) {
@@ -410,7 +411,7 @@ namespace questless
 	{
 		double result = _ambient_illuminance;
 		if (Section const* s = containing_section(region_tile_coords)) {
-			for (LightSource const& light_source : s->light_sources()) {
+			for (LightSource const& light_source : s->light_sources) {
 				result += light_source.luminance(region_tile_coords);
 			}
 		}
@@ -434,10 +435,10 @@ namespace questless
 		std::vector<Id<Being>> beings_to_update;
 		std::vector<Id<Object>> objects_to_update;
 		for_each_loaded_section([&](Section& section) {
-			for (Being& being : section.beings()) {
+			for (Being& being : section.beings) {
 				beings_to_update.push_back(being.id);
 			}
-			for (Object& object : section.objects()) {
+			for (Object& object : section.objects) {
 				objects_to_update.push_back(object.id);
 			}
 		});
@@ -472,9 +473,9 @@ namespace questless
 
 	double Region::get_ambient_illuminance()
 	{
-		double constexpr night_light = 25.0;
-		double constexpr dawn_and_dusk_light = 75.0;
-		double constexpr noon_light = 115.0;
+		constexpr double night_light = 25.0;
+		constexpr double dawn_and_dusk_light = 75.0;
+		constexpr double noon_light = 115.0;
 
 		switch (_period_of_day) {
 			case PeriodOfDay::morning:

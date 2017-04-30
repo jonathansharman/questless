@@ -410,9 +410,10 @@
     <ClInclude Include="include\utility\reference.h" />
     <ClInclude Include="include\utility\Stream.h" />
     <ClInclude Include="include\utility\TaggedType.h" />
-    <ClInclude Include="include\utility\type_list.h" />
+    <ClInclude Include="include\utility\type-list.h" />
     <ClInclude Include="include\utility\utility.h" />
-    <ClInclude Include="include\utility\visitor_pattern.h" />
+    <ClInclude Include="include\utility\visitor-pattern.h" />
+    <ClInclude Include="include\utility\XformedContainer.h" />
     <ClInclude Include="include\world\coordinates.h" />
     <ClInclude Include="include\world\LightSource.h" />
     <ClInclude Include="include\world\Region.h" />

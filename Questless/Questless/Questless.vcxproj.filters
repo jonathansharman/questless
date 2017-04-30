@@ -709,10 +709,13 @@
     <ClInclude Include="include\utility\reference.h">
       <Filter>include\utility</Filter>
     </ClInclude>
-    <ClInclude Include="include\utility\type_list.h">
+    <ClInclude Include="include\utility\type-list.h">
       <Filter>include\utility</Filter>
     </ClInclude>
-    <ClInclude Include="include\utility\visitor_pattern.h">
+    <ClInclude Include="include\utility\visitor-pattern.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utility\XformedContainer.h">
       <Filter>include\utility</Filter>
     </ClInclude>
   </ItemGroup>
