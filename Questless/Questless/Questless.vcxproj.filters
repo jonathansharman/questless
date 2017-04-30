@@ -373,9 +373,6 @@
     <ClInclude Include="include\items\Breakable.h">
       <Filter>include\items</Filter>
     </ClInclude>
-    <ClInclude Include="include\utility\Stream.h">
-      <Filter>include\utility</Filter>
-    </ClInclude>
     <ClInclude Include="include\items\weapons\ModalWeapon.h">
       <Filter>include\items\weapons</Filter>
     </ClInclude>

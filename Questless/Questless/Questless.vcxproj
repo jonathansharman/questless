@@ -409,7 +409,6 @@
     <ClInclude Include="include\utility\Property.h" />
     <ClInclude Include="include\utility\Bounded.h" />
     <ClInclude Include="include\utility\reference.h" />
-    <ClInclude Include="include\utility\Stream.h" />
     <ClInclude Include="include\utility\TaggedType.h" />
     <ClInclude Include="include\utility\type-list.h" />
     <ClInclude Include="include\utility\utility.h" />
