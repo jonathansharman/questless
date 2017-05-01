@@ -3,6 +3,8 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "entities/beings/stats/Vision.h"
+#include "units/constexpr-math.h"
+using namespace units::constexpr_math;
 
 namespace questless
 {
@@ -21,10 +23,14 @@ namespace questless
 
 	double Vision::visibility(double illuminance, int distance) const
 	{
-		constexpr double illuminance_factor = 0.25;
+		constexpr double darkness_factor = 0.05;
+		constexpr double glare_factor = 0.05;
 
-		double const luminance_penalty = (illuminance - ideal_illuminance) * (illuminance - ideal_illuminance) / illuminance_tolerance * illuminance_factor;
+		double const illuminance_penalty = illuminance < ideal_illuminance
+			? square(ideal_illuminance - illuminance) / (1.0 + darkness_tolerance) * darkness_factor // Too dark
+			: square(illuminance - ideal_illuminance) / (1.0 + glare_tolerance) * glare_factor // Too bright
+			;
 		double const distance_penalty = distance * distance * distance_factor;
-		return acuity / (1.0 + luminance_penalty + distance_penalty);
+		return acuity / (1.0 + illuminance_penalty + distance_penalty);
 	}
 }

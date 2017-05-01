@@ -18,7 +18,7 @@ namespace units::constexpr_math
 		}
 	}
 
-	//! The square root of the given floating-point number.
+	//! The square root of the floating-point number @p x.
 	template <typename Floating>
 	constexpr std::enable_if_t<std::is_floating_point<Floating>::value, Floating>
 	sqrt(Floating x)
@@ -27,7 +27,7 @@ namespace units::constexpr_math
 		return detail::sqrt_iterative(x, 0.5 * x, 0.0);
 	}
 
-	//! The square root of the given integral number.
+	//! The square root of the integral number @p x.
 	template <typename Integer>
 	constexpr std::enable_if_t<std::is_integral<Integer>::value, Integer>
 	sqrt(Integer x)
@@ -35,4 +35,12 @@ namespace units::constexpr_math
 		//! @todo Replace sqrt_iterative with constexpr lambda when better supported.
 		return static_cast<Integer>(detail::sqrt_iterative(static_cast<double>(x), 0.5 * x, 0.0));
 	}
+
+	//! The square of @p value.
+	template <typename T>
+	constexpr T square(T value) { return value * value; }
+
+	//! The cube of the @p value.
+	template <typename T>
+	constexpr T cube(T value) { return value * value * value; }
 }

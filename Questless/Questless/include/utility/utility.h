@@ -80,14 +80,6 @@ namespace questless
 	//! Converts @p percent in the range [0, 1] to an 8-bit integer in the range [0, 255].
 	uint8_t percentage_to_byte(double percent);
 
-	//! The square of @p value.
-	template <typename T>
-	constexpr T square(T value) { return value * value; }
-
-	//! The cube of the @p value.
-	template <typename T>
-	constexpr T cube(T value) { return value * value * value; }
-
 	///////////////////
 	// Miscellaneous //
 	///////////////////
