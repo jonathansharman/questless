@@ -532,9 +532,6 @@
     <ClInclude Include="include\units\GameSeconds.h">
       <Filter>include\units</Filter>
     </ClInclude>
-    <ClInclude Include="include\units\constexpr-math.h">
-      <Filter>include\units</Filter>
-    </ClInclude>
     <ClInclude Include="include\entities\objects\Corpse.h">
       <Filter>include\entities\objects</Filter>
     </ClInclude>
@@ -714,6 +711,12 @@
     </ClInclude>
     <ClInclude Include="include\utility\ContainerView.h">
       <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\math.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\entities\Perception.h">
+      <Filter>include\entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

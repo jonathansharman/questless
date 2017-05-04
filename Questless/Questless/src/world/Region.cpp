@@ -412,7 +412,7 @@ namespace questless
 		double result = _ambient_illuminance;
 		if (Section const* s = containing_section(region_tile_coords)) {
 			for (LightSource const& light_source : s->light_sources) {
-				result += light_source.luminance(region_tile_coords);
+				result += light_source.luminance(*this, region_tile_coords);
 			}
 		}
 		return result;
@@ -421,6 +421,21 @@ namespace questless
 	double Region::temperature(RegionTileCoords region_tile_coords) const
 	{
 		return tile(region_tile_coords)->temperature_offset;
+	}
+
+	double Region::occlusion(RegionTileCoords start, RegionTileCoords end) const
+	{
+		auto line = start.line_to(end);
+		double result = 1.0;
+		for (size_t i = 1; i < line.size() - 1; ++i) {
+			if (Being const* other = game().region().being(line[i])) {
+				result *= other->transparency();
+			}
+			if (Object const* other = game().region().object(line[i])) {
+				result *= other->transparency();
+			}
+		}
+		return result;
 	}
 
 	void Region::update()

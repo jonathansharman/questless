@@ -4,14 +4,15 @@
 
 #pragma once
 
-#include <vector>
 #include <array>
 #include <optional>
+#include <vector>
 
-#include "world/coordinates.h"
-#include "world/Section.h"
+#include "entities/Perception.h"
 #include "units/GameRect.h"
 #include "utility/Id.h"
+#include "world/coordinates.h"
+#include "world/Section.h"
 
 namespace questless
 {
@@ -19,38 +20,30 @@ namespace questless
 	class Being;
 	class Object;
 
-	//! Represents everything an agent can perceive about its environment.
+	//! Represents everything an agent can perceive about its being's environment.
 	class WorldView
 	{
 	public:
 		struct SectionView
 		{
 			RegionSectionCoords coords;
-			std::array<std::array<double, Section::diameter>, Section::diameter> tile_visibilities; //!< Indices are r-major.
+			std::array<std::array<Perception, Section::diameter>, Section::diameter> tile_perceptions;
 		};
-
-		//! Represents discrete levels of perception of an entity.
-		enum class PerceptionLevel
-			{ low    // Can tell there's an entity there but can't identify it.
-			, medium // Can tell what type of entity is there.
-			, high   // Can tell what type of entity is there, as well as many attributes (e.g., health, mana, eqipped items).
-			, full   // Knows everything about the being.
-			};
 
 		struct BeingView
 		{
 			Id<Being> id;
-			PerceptionLevel perception;
+			Perception perception;
 
-			BeingView(Id<Being> id, PerceptionLevel perception) : id{id}, perception{perception} {}
+			BeingView(Id<Being> id, Perception perception) : id{id}, perception{perception} {}
 		};
 
 		struct ObjectView
 		{
 			Id<Object> id;
-			PerceptionLevel perception;
+			Perception perception;
 
-			ObjectView(Id<Object> id, PerceptionLevel perception) : id{id}, perception{perception} {}
+			ObjectView(Id<Object> id, Perception perception) : id{id}, perception{perception} {}
 		};
 
 		//! Constructs the world view of the given being.
@@ -78,11 +71,6 @@ namespace questless
 		//! A bounding rectangle around the visible tiles or nullopt if initialized with find_bounds set to false or if no tiles are visible.
 		std::optional<units::GameRect> bounds() const { return _bounds; }
 	private:
-		static constexpr double _low_perception_threshold = 20.0;
-		static constexpr double _medium_perception_threshold = 40.0;
-		static constexpr double _high_perception_threshold = 60.0;
-		static constexpr double _full_perception_threshold = 80.0;
-
 		std::vector<SectionView> _section_views;
 		std::vector<BeingView> _being_views;
 		std::vector<ObjectView> _object_views;

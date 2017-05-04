@@ -132,6 +132,9 @@ namespace questless
 		//! The temperature of the tile at @p region_tile_coords.
 		double temperature(RegionTileCoords region_tile_coords) const;
 
+		//! The proportion of light/vision occluded between @p start and @p end, as a number in [0, 1].
+		double occlusion(RegionTileCoords start, RegionTileCoords end) const;
+
 		//! Advances local time by one unit then updates everything contained in the region.
 		void update();
 	private:

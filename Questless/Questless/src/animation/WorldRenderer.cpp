@@ -21,6 +21,20 @@ using namespace units;
 
 namespace questless
 {
+	void WorldRenderer::initialize()
+	{
+		auto unknown_entity_animation_ss = texture_manager().add("resources/textures/entities/unknown.png");
+		_unknown_entity_animation = AnimationSet{unknown_entity_animation_ss, 1, 1};
+		auto animation = _unknown_entity_animation->add(Animation
+			{ {{GameSeconds{1.0}, SpriteSheetPoint{0, 0}, TexturePoint{0, 10}}}
+			, Looping{true}
+			});
+		_unknown_entity_animation->start(animation, RandomizeStartTime{true});
+	}
+
+	Initializer<WorldRenderer> _initializer;
+	std::optional<AnimationSet> WorldRenderer::_unknown_entity_animation;
+
 	void WorldRenderer::update_view(WorldView const& world_view, std::vector<sptr<Effect>> effects)
 	{
 		_world_view = &world_view;
@@ -37,15 +51,11 @@ namespace questless
 	{
 		// Update cached being and object animations.
 
-		for (auto const& id_and_animation : _being_animation_sets) {
-			if (id_and_animation.second != nullptr) {
-				id_and_animation.second->update();
-			}
+		for (auto& id_and_animation : _being_animation_set_map) {
+			id_and_animation.second.update();
 		}
-		for (auto const& id_and_animation : _object_animations) {
-			if (id_and_animation.second != nullptr) {
-				id_and_animation.second->update();
-			}
+		for (auto& id_and_animation : _object_animation_set_map) {
+			id_and_animation.second.update();
 		}
 
 		// Update effect sounds and animations.
@@ -76,37 +86,33 @@ namespace questless
 		for (auto const& being_view : _world_view->being_views()) {
 			// Attempt to load the being.
 			if (Being const* being = game().beings.get(being_view.id)) {
-				// Search for the being's animation in the cache.
-				auto it = _being_animation_sets.find(being_view.id);
-				// If it's there, use it. Otherwise, create the animation and cache it.
-				AnimationSet& being_animation = it != _being_animation_sets.end()
-					? *it->second
-					: cache_being_animation(*being);
+				auto being_animation = get_animation(*being);
 
-				// Draw heading.
-				GamePoint start = Layout::dflt().to_world(being->coords);
-				GamePoint end = Layout::dflt().to_world(being->coords.neighbor(being->direction));
-				game().camera().draw_lines({start, end}, Color::magenta());
+				uint8_t intensity = percentage_to_byte((being_view.perception.level - Perception::minimum_level) / (Perception::maximum_level - Perception::minimum_level));
+				switch (being_view.perception.category()) {
+					case Perception::Category::none:
+						break;
+					case Perception::Category::low:
+						_unknown_entity_animation->draw(Layout::dflt().to_world(being->coords), game().camera(), Color{intensity, intensity, intensity});
+						break;
+					case Perception::Category::medium:
+					case Perception::Category::high:
+					case Perception::Category::full:
+					{
+						// Draw heading.
+						GamePoint start = Layout::dflt().to_world(being->coords);
+						GamePoint end = Layout::dflt().to_world(being->coords.neighbor(being->direction));
+						game().camera().draw_lines({start, end}, Color::magenta());
 
-				uint8_t intensity;
-				switch (being_view.perception) {
-					case WorldView::PerceptionLevel::low:
-						intensity = 128;
+						being_animation.draw(Layout::dflt().to_world(being->coords), game().camera(), Color{intensity, intensity, intensity});
 						break;
-					case WorldView::PerceptionLevel::medium:
-						intensity = 192;
-						break;
-					case WorldView::PerceptionLevel::high:
-					case WorldView::PerceptionLevel::full:
-						intensity = 255;
-						break;
+					}
 					default:
-						throw std::logic_error{"Invalid perception level."};
+						throw std::logic_error{"Invalid perception category."};
 				}
-				being_animation.draw(Layout::dflt().to_world(being->coords), game().camera(), Color{intensity, intensity, intensity});
 			} else {
 				// Remove the being from the animation cache if it doesn't exist anymore.
-				_being_animation_sets.erase(being_view.id);
+				_being_animation_set_map.erase(being_view.id);
 			}
 		}
 	}
@@ -116,32 +122,26 @@ namespace questless
 		for (auto const& object_view : _world_view->object_views()) {
 			// Attempt to load the object.
 			if (Object const* object = game().objects.get(object_view.id)) {
-				// Search for the object's animation in the cache.
-				auto it = _object_animations.find(object_view.id);
-				// If it's there, use it. Otherwise, create the animation and cache it.
-				AnimationSet& object_animation = it != _object_animations.end()
-					? *it->second
-					: cache_object_animation(*object);
+				auto object_animation = get_animation(*object);
 
-				uint8_t intensity;
-				switch (object_view.perception) {
-					case WorldView::PerceptionLevel::low:
-						intensity = 128;
+				uint8_t intensity = percentage_to_byte((object_view.perception.level - Perception::minimum_level) / (Perception::maximum_level - Perception::minimum_level));
+				switch (object_view.perception.category()) {
+					case Perception::Category::none:
 						break;
-					case WorldView::PerceptionLevel::medium:
-						intensity = 192;
+					case Perception::Category::low:
+						_unknown_entity_animation->draw(Layout::dflt().to_world(object->coords), game().camera(), Color{intensity, intensity, intensity});
 						break;
-					case WorldView::PerceptionLevel::high:
-					case WorldView::PerceptionLevel::full:
-						intensity = 255;
+					case Perception::Category::medium:
+					case Perception::Category::high:
+					case Perception::Category::full:
+						object_animation.draw(Layout::dflt().to_world(object->coords), game().camera(), Color{intensity, intensity, intensity});
 						break;
 					default:
-						throw std::logic_error{"Invalid perception level."};
+						throw std::logic_error{"Invalid perception category."};
 				}
-				object_animation.draw(Layout::dflt().to_world(object->coords), game().camera(), Color{intensity, intensity, intensity});
 			} else {
 				// Remove the object from the animation cache if it doesn't exist anymore.
-				_object_animations.erase(object_view.id);
+				_object_animation_set_map.erase(object_view.id);
 			}
 		}
 	}
@@ -167,21 +167,41 @@ namespace questless
 		return *_tile_textures[tile.tile_class()];
 	};
 
-	AnimationSet& WorldRenderer::cache_being_animation(Being const& being)
+	AnimationSet& WorldRenderer::cache_animation(Being const& being)
 	{
 		EntityAnimator entity_animator;
 		being.accept(entity_animator);
-		_being_animation_sets[being.id] = entity_animator.animation_set();
-		return *_being_animation_sets[being.id];
+		_being_animation_set_map.insert(std::make_pair(being.id, std::move(entity_animator.animation_set())));
+		return _being_animation_set_map.at(being.id);
 	};
 
-	AnimationSet& WorldRenderer::cache_object_animation(Object const& object)
+	AnimationSet& WorldRenderer::cache_animation(Object const& object)
 	{
 		EntityAnimator entity_animator;
 		object.accept(entity_animator);
-		_object_animations[object.id] = entity_animator.animation_set();
-		return *_object_animations[object.id];
+		_object_animation_set_map.insert(std::make_pair(object.id, std::move(entity_animator.animation_set())));
+		return _object_animation_set_map.at(object.id);
 	};
+
+	AnimationSet& WorldRenderer::get_animation(Being const& being)
+	{
+		// Search for the being's animation in the cache.
+		auto it = _being_animation_set_map.find(being.id);
+		// If it's there, use it. Otherwise, create and cache the animation.
+		return it != _being_animation_set_map.end()
+			? it->second
+			: cache_animation(being);
+	}
+
+	AnimationSet& WorldRenderer::get_animation(Object const& being)
+	{
+		// Search for the being's animation in the cache.
+		auto it = _object_animation_set_map.find(being.id);
+		// If it's there, use it. Otherwise, create and cache the animation.
+		return it != _object_animation_set_map.end()
+			? it->second
+			: cache_animation(being);
+	}
 
 	void WorldRenderer::render_terrain()
 	{
@@ -202,8 +222,8 @@ namespace questless
 					for (int q = 0; q < Section::diameter; ++q) {
 						for (int r = 0; r < Section::diameter; ++r) {
 							SectionTileCoords section_tile_coords{q, r};
-							double tile_visibility = section_view.tile_visibilities[section_tile_coords.q][section_tile_coords.r];
-							if (tile_visibility > 0.0) {
+							Perception tile_perception = section_view.tile_perceptions[section_tile_coords.q][section_tile_coords.r];
+							if (tile_perception.category() != Perception::Category::none) {
 								RegionTileCoords const region_tile_coords = section.region_tile_coords(section_tile_coords);
 								GamePoint const tile_game_point = Layout::dflt().to_world(region_tile_coords);
 								GamePoint const terrain_game_point = _terrain_bounds.position();
@@ -218,8 +238,8 @@ namespace questless
 								auto it = _tile_textures.find(tile.tile_class());
 								// If it's there, use it. Otherwise, create the texture and cache it.
 								Texture& tile_texture = it != _tile_textures.end() ? *it->second : cache_tile_texture(tile);
-								
-								uint8_t const intensity = static_cast<uint8_t>(255 * std::min(tile_visibility / 100.0, 1.0));
+
+								uint8_t intensity = percentage_to_byte((tile_perception.level - Perception::minimum_level) / (Perception::maximum_level - Perception::minimum_level));
 								tile_texture.draw_transformed
 									( tile_screen_point
 									, std::nullopt // origin

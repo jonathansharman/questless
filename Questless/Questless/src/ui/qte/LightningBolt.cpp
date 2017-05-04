@@ -4,12 +4,12 @@
 
 #include "ui/qte/LightningBolt.h"
 #include "Game.h"
-#include "units/constexpr-math.h"
+#include "units/math.h"
 #include "utility/utility.h"
 
 using namespace sdl;
 using namespace units;
-using namespace units::constexpr_math;
+using namespace units::math;
 
 namespace questless::qte
 {

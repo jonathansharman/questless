@@ -8,7 +8,7 @@
 #include <ostream>
 
 #include "Angle.h"
-#include "constexpr-math.h"
+#include "math.h"
 
 namespace units
 {
@@ -106,7 +106,7 @@ namespace units
 		}
 
 		//! The vector's length.
-		constexpr scalar_t length() const { return static_cast<scalar_t>(constexpr_math::sqrt(x * x + y * y)); }
+		constexpr scalar_t length() const { return static_cast<scalar_t>(math::sqrt(x * x + y * y)); }
 
 		//! The square of the vector's length.
 		constexpr scalar_t length_squared() const { return x * x + y * y; }

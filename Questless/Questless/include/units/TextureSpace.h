@@ -8,6 +8,7 @@ namespace units
 {
 	struct TextureSpace
 	{
+		static constexpr int dimensions = 2;
 		using scalar_t = int;
 	};
 }

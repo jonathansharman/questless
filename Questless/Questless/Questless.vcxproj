@@ -324,6 +324,7 @@
     <ClInclude Include="include\entities\objects\Corpse.h" />
     <ClInclude Include="include\entities\objects\ItemBox.h" />
     <ClInclude Include="include\entities\objects\Object.h" />
+    <ClInclude Include="include\entities\Perception.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\items\armor\Armor.h" />
     <ClInclude Include="include\items\Craftable.h" />
@@ -370,7 +371,6 @@
     <ClInclude Include="include\ui\TileDialog.h" />
     <ClInclude Include="include\units\Angle.h" />
     <ClInclude Include="include\units\constants.h" />
-    <ClInclude Include="include\units\constexpr-math.h" />
     <ClInclude Include="include\units\Frequency.h" />
     <ClInclude Include="include\units\GameAcceleration.h" />
     <ClInclude Include="include\units\GameDegrees.h" />
@@ -384,6 +384,7 @@
     <ClInclude Include="include\units\GameVector.h" />
     <ClInclude Include="include\units\GameVelocity.h" />
     <ClInclude Include="include\units\HexCoords.h" />
+    <ClInclude Include="include\units\math.h" />
     <ClInclude Include="include\units\Point.h" />
     <ClInclude Include="include\units\Rate.h" />
     <ClInclude Include="include\units\Rect.h" />

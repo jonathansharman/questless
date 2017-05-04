@@ -10,17 +10,11 @@
 
 namespace questless
 {
-	struct WhiteMagic : TaggedType<double> { using TaggedType::TaggedType; };
-	struct BlackMagic : TaggedType<double> { using TaggedType::TaggedType; };
-	struct GreenMagic : TaggedType<double> { using TaggedType::TaggedType; };
-	struct RedMagic : TaggedType<double> { using TaggedType::TaggedType; };
-	struct BlueMagic : TaggedType<double> { using TaggedType::TaggedType; };
-	struct YellowMagic : TaggedType<double> { using TaggedType::TaggedType; };
-
 	//! Base type for Magic and Antimagic, using CRTP.
 	template <typename Derived>
-	struct MagicStat
+	class MagicStat
 	{
+	public:
 		static constexpr double minimum_value = 0.0;
 
 		Bounded<double, minimum_value> white = 0.0;
@@ -29,12 +23,6 @@ namespace questless
 		Bounded<double, minimum_value> red = 0.0;
 		Bounded<double, minimum_value> blue = 0.0;
 		Bounded<double, minimum_value> yellow = 0.0;
-
-		constexpr MagicStat() = default;
-
-		constexpr MagicStat(WhiteMagic white, BlackMagic black, GreenMagic green, RedMagic red, BlueMagic blue, YellowMagic yellow)
-			: white{std::max(0.0, white.value)}, black{std::max(0.0, black.value)}, green{std::max(0.0, green.value)}, red{std::max(0.0, red.value)}, blue{std::max(0.0, blue.value)}, yellow{std::max(0.0, yellow.value)}
-		{}
 
 		static constexpr Derived zero() { return Derived{}; }
 
@@ -67,19 +55,44 @@ namespace questless
 			if constexpr(color == spell::Color::blue)   blue(value);
 			if constexpr(color == spell::Color::yellow) yellow(value);
 		}
+	protected:
+		constexpr MagicStat() = default;
+		constexpr MagicStat(double white, double black, double green, double red, double blue, double yellow)
+			: white{white}, black{black}, green{green}, red{red}, blue{blue}, yellow{yellow}
+		{}
 	};
 
 	//! A being's proficiency with the six forms of magic.
 	class Magic : public MagicStat<Magic>
 	{
 	public:
-		using MagicStat<Magic>::MagicStat;
+		struct White : TaggedType<double> { using TaggedType::TaggedType; };
+		struct Black : TaggedType<double> { using TaggedType::TaggedType; };
+		struct Green : TaggedType<double> { using TaggedType::TaggedType; };
+		struct Red : TaggedType<double> { using TaggedType::TaggedType; };
+		struct Blue : TaggedType<double> { using TaggedType::TaggedType; };
+		struct Yellow : TaggedType<double> { using TaggedType::TaggedType; };
+
+		constexpr Magic() = default;
+		constexpr Magic(White white, Black black, Green green, Red red, Blue blue, Yellow yellow)
+			: MagicStat{white.value, black.value, green.value, red.value, blue.value, yellow.value}
+		{}
 	};
 
 	//! A being's resistance to the six forms of magic.
 	class Antimagic : public MagicStat<Antimagic>
 	{
 	public:
-		using MagicStat<Antimagic>::MagicStat;
+		struct White : TaggedType<double> { using TaggedType::TaggedType; };
+		struct Black : TaggedType<double> { using TaggedType::TaggedType; };
+		struct Green : TaggedType<double> { using TaggedType::TaggedType; };
+		struct Red : TaggedType<double> { using TaggedType::TaggedType; };
+		struct Blue : TaggedType<double> { using TaggedType::TaggedType; };
+		struct Yellow : TaggedType<double> { using TaggedType::TaggedType; };
+
+		constexpr Antimagic() = default;
+		constexpr Antimagic(White white, Black black, Green green, Red red, Blue blue, Yellow yellow)
+			: MagicStat{white.value, black.value, green.value, red.value, blue.value, yellow.value}
+		{}
 	};
 }

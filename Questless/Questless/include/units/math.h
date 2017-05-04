@@ -1,11 +1,11 @@
 //! @file
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
-//! @brief Provides constexpr versions of a subset of standard math functions.
+//! @brief Provides common math functions, including constexpr versions of a subset of standard math functions.
 
 #pragma once
 
-namespace units::constexpr_math
+namespace units::math
 {
 	namespace detail
 	{

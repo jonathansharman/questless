@@ -27,9 +27,19 @@ namespace sdl
 			std::function<std::unique_ptr<ResourceType>()> generator;
 		};
 
-		struct Handle
+		class Handle
 		{
+		public:
+			Handle() = default;
+			Handle(Handle const&) = default;
+			Handle(Handle&&) = default;
+			Handle& operator =(Handle const&) = default;
+			Handle& operator =(Handle&&) = default;
+		private:
+			friend class ResourceManager;
 			typename std::list<Entry>::iterator it;
+
+			Handle(decltype(it) it) : it{it} {}
 		};
 
 		//! Registers with the manager a resource constructed from the given arguments.

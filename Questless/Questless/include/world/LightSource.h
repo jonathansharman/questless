@@ -13,6 +13,8 @@
 
 namespace questless
 {
+	class Region;
+
 	class LightSource
 	{
 	public:
@@ -30,8 +32,8 @@ namespace questless
 		//! The distance this light source's light reaches.
 		int range() const;
 
-		//! How brightly this light source shines at @p region_tile_coords.
-		double luminance(RegionTileCoords region_tile_coords) const;
+		//! How brightly this light source shines at @p region_tile_coords in @p region.
+		double luminance(Region const& region, RegionTileCoords region_tile_coords) const;
 	private:
 		RegionTileCoords _coords;
 		double _luminance;

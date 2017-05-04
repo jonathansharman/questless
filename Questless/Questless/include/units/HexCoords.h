@@ -12,7 +12,7 @@
 #include "GameVector.h"
 #include "GamePoint.h"
 #include "GameRadians.h"
-#include "constexpr-math.h"
+#include "math.h"
 
 namespace units
 {
@@ -168,8 +168,8 @@ namespace units
 		{}
 	};
 
-	constexpr Orientation orientation_pointy{constexpr_math::sqrt(3.0), constexpr_math::sqrt(3.0) / 2.0, 0.0, 3.0 / 2.0, 0.5};
-	constexpr Orientation orientation_flat{3.0 / 2.0, 0.0, constexpr_math::sqrt(3.0) / 2.0, constexpr_math::sqrt(3.0), 0.0};
+	constexpr Orientation orientation_pointy{math::sqrt(3.0), math::sqrt(3.0) / 2.0, 0.0, 3.0 / 2.0, 0.5};
+	constexpr Orientation orientation_flat{3.0 / 2.0, 0.0, math::sqrt(3.0) / 2.0, math::sqrt(3.0), 0.0};
 
 	struct Layout
 	{
@@ -177,7 +177,7 @@ namespace units
 		units::GameVector size;
 		units::GamePoint origin;
 
-		static constexpr Layout dflt() { return Layout{orientation_flat, units::GameVector{29.0, 35.5 / constexpr_math::sqrt(3.0)}, units::GamePoint{0, 0}}; }
+		static constexpr Layout dflt() { return Layout{orientation_flat, units::GameVector{29.0, 35.5 / math::sqrt(3.0)}, units::GamePoint{0, 0}}; }
 
 		constexpr Layout(Orientation orientation, units::GameVector size, units::GamePoint origin)
 			: orientation{orientation}, size{std::move(size)}, origin{std::move(origin)}

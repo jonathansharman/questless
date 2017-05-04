@@ -19,6 +19,8 @@ namespace questless
 
 		virtual EntityClass entity_class() const { return EntityClass::ItemBoxClass; }
 
+		double transparency() const override { return 0.5; }
+
 		bool blocks_movement() const override { return false; }
 
 		std::vector<Id<Item>>& items() { return _items; }

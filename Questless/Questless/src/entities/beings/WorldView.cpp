@@ -23,7 +23,6 @@ namespace questless
 		, _bounds{std::nullopt}
 	{
 		Region const& region = _region;
-		RegionTileCoords coords = being.coords;
 		Vision vision = being.stats.vision;
 		int visual_range = vision.max_range();
 
@@ -32,9 +31,10 @@ namespace questless
 		for (int q = -visual_range; q <= visual_range; ++q) {
 			for (int r = -visual_range; r <= visual_range; ++r) {
 				RegionTileCoords offset{q, r};
-				if (offset.length() > visual_range) continue;
-				if (Section const* section = region.containing_section(coords + offset)) {
-					section_coords_set.insert(section->coords());
+				if (offset.length() <= visual_range) {
+					if (Section const* section = region.containing_section(being.coords + offset)) {
+						section_coords_set.insert(section->coords());
+					}
 				}
 			}
 		}
@@ -48,49 +48,18 @@ namespace questless
 				for (int r = 0; r < Section::diameter; ++r) {
 					auto region_tile_coords = Section::region_tile_coords(section_coords, SectionTileCoords{q, r});
 
-					bool in_front;
-					auto offset = region_tile_coords - being.coords;
-					switch (being.direction) {
-						case RegionTileCoords::Direction::one:
-							in_front = offset.q >= 0 && offset.q + offset.r >= 0;
-							break;
-						case RegionTileCoords::Direction::two:
-							in_front = offset.r >= 0 && offset.q + offset.r >= 0;
-							break;
-						case RegionTileCoords::Direction::three:
-							in_front = offset.q <= 0 && offset.r >= 0;
-							break;
-						case RegionTileCoords::Direction::four:
-							in_front = offset.q <= 0 && offset.q + offset.r <= 0;
-							break;
-						case RegionTileCoords::Direction::five:
-							in_front = offset.r <= 0 && offset.q + offset.r <= 0;
-							break;
-						case RegionTileCoords::Direction::six:
-							in_front = offset.q >= 0 && offset.r <= 0;
-							break;
-						default:
-							throw std::logic_error{"Invalid direction."};
-					}
-					if (in_front && region_tile_coords.distance_to(coords) <= visual_range) {
-						double illuminance = region.illuminance(region_tile_coords);
-						int distance = coords.distance_to(region_tile_coords);
+					Perception tile_perception = being.perception_of(region_tile_coords);
 
-						double tile_visibility = vision.visibility(illuminance, distance);
-
+					if (find_bounds && tile_perception.level > 0.0) {
 						// Update bounding rectangle.
-						if (find_bounds && tile_visibility > 0.0) {
-							GamePoint tile_game_point = Layout::dflt().to_world(region_tile_coords);
-							if (!_bounds) {
-								_bounds = GameRect{tile_game_point.x, tile_game_point.y, 0.0, 0.0};
-							} else {
-								_bounds->extend(tile_game_point);
-							}
-						}
-						section_view.tile_visibilities[q][r] = tile_visibility;
-					} else {
-						section_view.tile_visibilities[q][r] = 0.0;
+						GamePoint tile_game_point = Layout::dflt().to_world(region_tile_coords);
+						if (!_bounds) {
+							_bounds = GameRect{tile_game_point.x, tile_game_point.y, 0.0, 0.0};
+						} else {
+							_bounds->extend(tile_game_point);
+						}	
 					}
+					section_view.tile_perceptions[q][r] = tile_perception;
 				}
 			}
 
@@ -100,26 +69,14 @@ namespace questless
 			for (Being const& other_being : region.section(section_coords)->beings) {
 				if (other_being.id == being.id) {
 					// Can always perceive self fully.
-					_being_views.emplace_back(other_being.id, PerceptionLevel::full);
+					_being_views.emplace_back(other_being.id, Perception::maximum());
 				} else {
 					RegionTileCoords other_coords = other_being.coords;
-					if (other_coords.distance_to(coords) <= visual_range) {
+					if (other_coords.distance_to(being.coords) <= visual_range) {
 						SectionTileCoords other_section_coords = Section::section_tile_coords(other_coords);
-						double tile_visibility = section_view.tile_visibilities[other_section_coords.q][other_section_coords.r];
+						Perception tile_perception = section_view.tile_perceptions[other_section_coords.q][other_section_coords.r];
 
-						if (tile_visibility >= _low_perception_threshold) {
-							PerceptionLevel perception;
-							if (tile_visibility < _medium_perception_threshold) {
-								perception = PerceptionLevel::low;
-							} else if (tile_visibility < _high_perception_threshold) {
-								perception = PerceptionLevel::medium;
-							} else if (tile_visibility < _full_perception_threshold) {
-								perception = PerceptionLevel::high;
-							} else {
-								perception = PerceptionLevel::full;
-							}
-							_being_views.emplace_back(other_being.id, perception);
-						}
+						_being_views.emplace_back(other_being.id, tile_perception);
 					}
 				}
 			}
@@ -127,23 +84,10 @@ namespace questless
 			// Calculate object visibilities.
 			for (Object const& object : region.section(section_coords)->objects) {
 				RegionTileCoords other_coords = object.coords;
-				if (other_coords.distance_to(coords) < visual_range) {
+				if (other_coords.distance_to(being.coords) <= visual_range) {
 					SectionTileCoords other_section_coords = Section::section_tile_coords(other_coords);
-					double tile_visibility = section_view.tile_visibilities[other_section_coords.q][other_section_coords.r];
-
-					if (tile_visibility >= _low_perception_threshold) {
-						PerceptionLevel perception;
-						if (tile_visibility < _medium_perception_threshold) {
-							perception = PerceptionLevel::low;
-						} else if (tile_visibility < _high_perception_threshold) {
-							perception = PerceptionLevel::medium;
-						} else if (tile_visibility < _full_perception_threshold) {
-							perception = PerceptionLevel::high;
-						} else {
-							perception = PerceptionLevel::full;
-						}
-						_object_views.emplace_back(object.id, perception);
-					}
+					Perception tile_perception = section_view.tile_perceptions[other_section_coords.q][other_section_coords.r];
+					_object_views.emplace_back(object.id, tile_perception);
 				}
 			}
 		}

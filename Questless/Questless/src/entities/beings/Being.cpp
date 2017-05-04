@@ -77,6 +77,42 @@ namespace questless
 		out << stats << ' ';
 	}
 
+	Perception Being::perception_of(RegionTileCoords region_tile_coords) const
+	{
+		bool in_front;
+		auto offset = region_tile_coords - coords;
+		switch (direction) {
+			case RegionTileCoords::Direction::one:
+				in_front = offset.q >= 0 && offset.q + offset.r >= 0;
+				break;
+			case RegionTileCoords::Direction::two:
+				in_front = offset.r >= 0 && offset.q + offset.r >= 0;
+				break;
+			case RegionTileCoords::Direction::three:
+				in_front = offset.q <= 0 && offset.r >= 0;
+				break;
+			case RegionTileCoords::Direction::four:
+				in_front = offset.q <= 0 && offset.q + offset.r <= 0;
+				break;
+			case RegionTileCoords::Direction::five:
+				in_front = offset.r <= 0 && offset.q + offset.r <= 0;
+				break;
+			case RegionTileCoords::Direction::six:
+				in_front = offset.q >= 0 && offset.r <= 0;
+				break;
+			default:
+				throw std::logic_error{"Invalid direction."};
+		}
+		if (in_front && coords.distance_to(region_tile_coords) <= stats.vision.max_range()) {
+			double const illuminance = region->illuminance(region_tile_coords);
+			int const distance = coords.distance_to(region_tile_coords);
+			double const occlusion = region->occlusion(coords, region_tile_coords);
+			return stats.vision.visibility(illuminance, distance) * occlusion;
+		} else {
+			return 0.0;
+		}
+	}
+
 	void Being::act()
 	{
 		if (_delayed_actions.empty()) {

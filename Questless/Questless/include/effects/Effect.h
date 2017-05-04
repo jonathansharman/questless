@@ -4,13 +4,14 @@
 
 #pragma once
 
-#include <memory>
-
 #include "EffectVisitor.h"
 #include "entities/beings/Damage.h"
+#include "utility/Id.h"
 
 namespace questless
 {
+	class Being;
+
 	//! An in-game effect perceivable by beings, such as light and sound stimuli.
 	class Effect : public Element<EffectSubtypeList>
 	{

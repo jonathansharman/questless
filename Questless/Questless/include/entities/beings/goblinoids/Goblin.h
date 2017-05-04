@@ -38,20 +38,20 @@ namespace questless
 			, Resistance::zero()
 			, Vulnerability::zero()
 			, Magic
-				{ WhiteMagic{100.0}
-				, BlackMagic{100.0}
-				, GreenMagic{100.0}
-				, RedMagic{100.0}
-				, BlueMagic{100.0}
-				, YellowMagic{100.0}
+				{ Magic::White{100.0}
+				, Magic::Black{100.0}
+				, Magic::Green{100.0}
+				, Magic::Red{100.0}
+				, Magic::Blue{100.0}
+				, Magic::Yellow{100.0}
 				}
 			, Antimagic
-				{ WhiteMagic{100.0}
-				, BlackMagic{100.0}
-				, GreenMagic{100.0}
-				, RedMagic{100.0}
-				, BlueMagic{100.0}
-				, YellowMagic{100.0}
+				{ Antimagic::White{100.0}
+				, Antimagic::Black{100.0}
+				, Antimagic::Green{100.0}
+				, Antimagic::Red{100.0}
+				, Antimagic::Blue{100.0}
+				, Antimagic::Yellow{100.0}
 				}
 			};
 
@@ -88,6 +88,8 @@ namespace questless
 		EntityClass entity_class() const override { return EntityClass::GoblinClass; }
 
 		void serialize(std::ostream& out) const override;
+
+		double transparency() const override { return 0.5; }
 
 		std::string const& description() const
 		{

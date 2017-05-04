@@ -45,8 +45,11 @@ namespace questless
 		//! @param out A stream object into which the serialized entity is inserted.
 		virtual void serialize(std::ostream& out) const;
 
-		//! Advances the entity one turn.
+		//! Advances this entity one time unit.
 		virtual void update() = 0;
+
+		//! The proportion of light or visual information this entity allows through, in the range [0, 1].
+		virtual double transparency() const = 0;
 	protected:
 		Entity() : region{}, section{}, coords{} {}
 		Entity(std::istream& in);

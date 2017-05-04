@@ -147,7 +147,7 @@ Deaf - Reduces hearing
 Healing - Restores health over time
 Drunk - Causes unpredictable movement, reduces intellect, dexterity, vision
 Possessed - Allows the being who inflicted the possession to control the target being
-Illuminated - Reduces stealth and black magic power
+Illuminated - Reduces stealth and black magic
 
 ================================================================================
 World Mechanics
@@ -351,8 +351,9 @@ White - good - light - heaven - revelation
 		Celestial mage
 		Healer
 		Light mage
+			Light, detection, alertness
 	Celestial Runes
-		Exorcise - Empower black magic resistance, weaken black magic power, and remove possession on target being.
+		Exorcise - Empowers target's black antimagic, weaken its black magic, and removes possession from it.
 		Immortalize - Make a target being temporarily immortal.
 		Divine - Temporarily gain complete perception of a target being.
 		Raise Ladder - Can only cast while in the natural realm. Create a ladder to heaven, allowing travel between the realms.
@@ -366,7 +367,7 @@ White - good - light - heaven - revelation
 		Holistic Heal - Restore a being and all its body parts to full health.
 		Resurrect - Return a target corpse to life. Health after resurrection depends on spell magnitude.
 	Light Runes
-		Bright Vision - Temporarily raise target's light affinity.
+		Bright Vision - Temporarily raise target's glare tolerance.
 		Blinding Light - Dramatically increase the light level at target tile for a short duration.
 		Illuminate - Increase the light level in an area around the caster for a certain duration.
 		Lumiphile - Temporarily become a lumiphile. Lumiphiles have increased agility and health regen while in bright light.
@@ -376,9 +377,9 @@ Black - evil - darkness - hell - illusion
 		Demon master
 		Necromancer
 		Shadow mage
-			Focused on curses and stealth
+			Darkness, stealth, sleep
 	Demonic Runes
-		Corrupt - Empowers white magic resistance and weakens white magic power
+		Corrupt - Empowers target's white antimagic and weakens its white magic
 		Possess - Channeled, interrupted by taking 10% of vitality in damage at once. Take control of a target being for a certain duration. Invocation power times caster's black power divided by target's black resistance must be greater than target's intellect.
 		Damn - If the caster is alive after a certain duration, the target dies.
 		Curse - Caster chooses an item and curses it. Carrying a cursed item deals blight damage over time. When a cursed item is picked up or thrown, it explodes, dealing a large amount of blight damage.
@@ -388,31 +389,29 @@ Black - evil - darkness - hell - illusion
 	Necrotic Runes
 		Rot - Afflict target with rot, causing blight damage over time.
 		Enfeeble - Give a target a chosen amount of blight vulnerability for a chosen duration.
+		Defile?
 		Exanimate - Extract a target's soul, resulting in a corpse and a wraith under the caster's control.
 		Raise Dead - Raise a target corpse to undeath under the caster's control. The undead being's stats depend on the spell magnitude, and it disintegrates after the spell's duration elapses.
-		Summon undead (probably just spirits so as not to overlap with raising corpses?)
+		Summon spirits
 	Shadow Runes
-		Night Vision - Temporarily lower target's light affinity.
+		Night Vision - Temporarily raise target's darkness tolerance.
 		Blind Spot - Dramatically decrease the light level at target tile for a short duration.
 		Enshadow - Decrease the light level in an area around the caster for a certain duration.
-		Umbraphile - Temporarily become a shadowphile. Shadowphiles have increased dexterity and mana regen while in dim light.
+		Umbraphile - Temporarily become an umbraphile. Umbraphiles have increased dexterity and mana regen while in darkness.
 		Shadow Copy - Summon a temporary shadow copy of the caster onto an adjacent tile. The copy cannot attack and disintegrates when it takes damage.
-		Inflict Nightmares - Gives target being nightmares for a certain duration. Whenever a being with nightmares is asleep, it takes damage.
+		Inflict Nightmares - Gives target being nightmares for a certain duration. Whenever a being with nightmares is asleep, it takes damage (what kind?).
 Green - nature - earth
 	Specializations
-		Zoomancer (name?)
-		Botanomancer (name?)
-		Geomancer (name?)
-		Hunter?
-		Something based on taking the form of animals and plants?
-		Something based on weather effects?
+		Zoomage
+		Phytomage
+		Elementalist
 	Bestial Runes
 		Metamorphose hide - Creates and equips a low-durability, high-power body armor. Currently equipped body armor is unequipped without incurring unequip time.
 		Metamorphose claws - Creates and equips a low-durability, high-power one-handed weapon for each hand. Currently equipped weapons are unequipped without incurring unequip times.
 		Feral Form - Temporarily become feral. While feral, a being is mute and has increased strength, endurance, agility, dexterity, vision, and hearing but decreased spirit, stamina, and intellect.
 			This seems like way too much stuff for one ability
 		Devour - Deals blight (?) damage to a target and restores health to the caster.
-		Eagle Eye - Temporarily increase visual acuity by 100%.
+		Eagle Eye - Temporarily increases caster's visual acuity by 100%.
 		Scavenge - Destroy a target corpse and regain health in proportion to its vitality when it was alive.
 		Summon animals
 	Botanic Runes
@@ -420,32 +419,38 @@ Green - nature - earth
 		Communicate with animals/plants??
 		Summon plants
 			Growth - Creates a disc of trees at target location, blocking movement.
-		Summon elementals?
-			Should probably only be able to summon earth elemental, and the other magics should be able to summon the others
-Red - industry - war - fire
+	Elemental Runes
+		Fire
+			Ignite - Sets a fire at the target location, increasing the light level and greatly increasing the temperature at that location. Fire wanes in intensity over time and then is extinguished.
+			Pyrophile - Temporarily become a pyrophile. A pyrophile's maximum temperature is raised dramatically, and it heals over time in proportion to the ambient temperature. (Use a different effect besides healing?)
+			Flamewalk - Temporarily gain flamewalk status, which doubles agility and causes the being to set fire to every tile it moves into.
+			Summon fire elemental
+		Water
+			Chill - Temporarily raise the target being's minimum temperature.
+			Freeze - Freeze target location, drastically lowering its temperature. The temperature returns to normal over time.
+			Summon frost elemental
+		Storm
+			Change wind
+			Dispell/summon rain
+			Summon storm elemental
+Red - industry - war
 	Specializations
 		Battle mage
 		Technomage
-		Fire mage
 	Battle Runes
 		Battle Cry - Temporarily empowers strength and endurance.
 		Duel - A target being and the caster temporarily become immune to weapon-based attacks from all other beings except each other and unable to deal damage to other beings.
 			Exploitable with allies?
+				How about, "when it expires, the one with the lowest health percentage dies"?
 		Rampage - The caster's next x actions do not incur cooldown.
 		Weapon and armor enchantments
 	Mech Runes
 		Repair - Restores health to target machine.
 		Summon machines
-	Flame Runes
-		Ignite - Sets a fire at the target location, increasing the light level and greatly increasing the temperature at that location. Fire wanes in intensity over time and then is extinguished.
-		Pyrophile - Temporarily become a pyrophile. A pyrophile's maximum temperature is raised dramatically, and it heals over time in proportion to the ambient temperature. (Use a different effect besides healing?)
-		Flamewalk - Temporarily gain flamewalk status, which doubles agility and causes the being to set fire to every tile it moves into.
-		Summon fire elemental?
 Blue - order - time - ice
 	Specializations
 		Peacekeeper
 		Avenger
-		Cryomancer
 		Chronomancer
 	Stasis Runes
 		Imprison - For a certain duration, prevent target from moving or using melee attacks.
@@ -456,10 +461,6 @@ Blue - order - time - ice
 		Summon preservers from the stasis
 	Vengeance Runes
 		Retribution - Gives target being retribution status. Next time that target deals damage, it also deals that damage to itself.
-	Frost Runes
-		Chill - Temporarily raise the target being's minimum temperature.
-		Freeze - Freeze target location, drastically lowering its temperature. The temperature returns to normal over time.
-		Summon frost elemental?
 	Time Runes
 Yellow - chaos - energy
 	Specializations
@@ -491,7 +492,6 @@ Yellow - chaos - energy
 		Lightning bolt - Deal burn damage to a target being. Lightning bolt will chain to nearby beings, with less range and damage for each jump. Targets are chosen first by proximity, then by lowest yellow resistance, then at random. May target the caster and other friendly beings.
 		Scroll Magnet - Steal a scroll from target being.
 		Levitate - Temporarily gain the power of flight.
-		Summon shock elemental?
 	Void Runes - RENAME
 		Interport - Swap positions of two beings.
 		Teleport - Teleport within a certain distance.

@@ -12,13 +12,6 @@ using namespace units;
 
 namespace questless
 {
-	AnimationSet::AnimationSet(sdl::TextureHandle sprite_sheet_handle, int cel_columns, int cel_rows)
-		: _sprite_sheet_handle{std::move(sprite_sheet_handle)}, _current_animation{nullptr}, _paused{false}
-	{
-		_cel_width = texture_manager()[_sprite_sheet_handle].width() / cel_columns;
-		_cel_height = texture_manager()[_sprite_sheet_handle].height() / cel_rows;
-	}
-
 	AnimationSet::Handle AnimationSet::add(Animation animation)
 	{
 		_animations.push_back(std::move(animation));
@@ -27,31 +20,37 @@ namespace questless
 	
 	void AnimationSet::start(Handle animation_handle, RandomizeStartTime randomize_start_time)
 	{
-		_current_animation = &_animations[animation_handle.index];
-		_current_animation->reset(randomize_start_time);
+		_current_animation_idx = animation_handle.index;
+		current_animation().reset(randomize_start_time);
 	}
 
 	void AnimationSet::update()
 	{
-		if (!_paused && _current_animation != nullptr) {
-			_current_animation->update();
+		if (!_paused && _current_animation_idx) {
+			current_animation().update();
 		}
 	}
 
 	void AnimationSet::draw(GamePoint origin) const
 	{
-		if (_current_animation != nullptr) {
-			Animation::Frame const& frame = _current_animation->current_frame();
-			ScreenRect dst_rect{lround(origin.x - frame.origin.x), lround(origin.y - frame.origin.y), _cel_width, _cel_height};
-			TextureRect src_rect{_cel_width * frame.coords.x, _cel_height * frame.coords.y, _cel_width, _cel_height};
-			texture_manager()[_sprite_sheet_handle].draw(dst_rect, src_rect);
+		if (_current_animation_idx) {
+			Texture const& sprite_sheet = texture_manager()[_sprite_sheet_handle];
+			int const cel_width = sprite_sheet.width() / _cel_columns;
+			int const cel_height = sprite_sheet.height() / _cel_rows;
+			Animation::Frame const& frame = current_animation().current_frame();
+			ScreenRect dst_rect{lround(origin.x - frame.origin.x), lround(origin.y - frame.origin.y), cel_width, cel_height};
+			TextureRect src_rect{cel_width * frame.coords.x, cel_height * frame.coords.y, cel_width, cel_height};
+			sprite_sheet.draw(dst_rect, src_rect);
 		}
 	}
 
 	void AnimationSet::draw(GamePoint origin, Camera const& camera, Color color) const
 	{
-		if (_current_animation != nullptr) {
-			Animation::Frame const& frame = _current_animation->current_frame();
+		if (_current_animation_idx) {
+			Texture const& sprite_sheet = texture_manager()[_sprite_sheet_handle];
+			int const cel_width = sprite_sheet.width() / _cel_columns;
+			int const cel_height = sprite_sheet.height() / _cel_rows;
+			Animation::Frame const& frame = current_animation().current_frame();
 			camera.draw
 				( texture_manager()[_sprite_sheet_handle]
 				, GamePoint{origin - GameVector{static_cast<double>(frame.origin.x), static_cast<double>(-frame.origin.y)}} //! @todo Uncouth point casting here.
@@ -62,7 +61,7 @@ namespace questless
 				, GameRadians{0.0}
 				, HFlip{false}
 				, VFlip{false}
-				, SrcRect{TextureRect{_cel_width * frame.coords.x, _cel_height * frame.coords.y, _cel_width, _cel_height}}
+				, SrcRect{TextureRect{cel_width * frame.coords.x, cel_height * frame.coords.y, cel_width, cel_height}}
 				);
 		}
 	}

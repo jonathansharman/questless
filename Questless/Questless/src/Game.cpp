@@ -199,7 +199,7 @@ namespace questless
 	void Game::run()
 	{
 		game_loop();
-		if (_region != nullptr) {
+		if (_region) {
 			_region->save("Slot1");
 		}
 	}

@@ -8,6 +8,7 @@ namespace units
 {
 	struct ScreenSpace
 	{
+		static constexpr int dimensions = 2;
 		using scalar_t = int;
 	};
 }

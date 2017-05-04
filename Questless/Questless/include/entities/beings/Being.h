@@ -11,20 +11,21 @@
 #include <memory>
 
 #include "entities/Entity.h"
+#include "entities/beings/Abilities.h"
 #include "entities/beings/Body.h"
 #include "entities/beings/statuses/Status.h"
-#include "entities/beings/Abilities.h"
-#include "stats/Stats.h"
+#include "entities/Perception.h"
+#include "items/armor/Armor.h"
 #include "items/Inventory.h"
 #include "items/Item.h"
 #include "items/weapons/Weapon.h"
-#include "items/armor/Armor.h"
 #include "spell/Spell.h"
-#include "utility/utility.h"
-#include "utility/Id.h"
-#include "utility/Event.h"
+#include "stats/Stats.h"
 #include "utility/Bounded.h"
 #include "utility/DynamicProperty.h"
+#include "utility/Event.h"
+#include "utility/Id.h"
+#include "utility/utility.h"
 
 namespace questless
 {
@@ -157,6 +158,9 @@ namespace questless
 
 		//! Whether the being is corporeal.
 		virtual bool corporeal() const = 0;
+
+		//! This being's perception of the tile at @p region_tile_coords in its region.
+		Perception perception_of(RegionTileCoords region_tile_coords) const;
 
 		//! Causes the being to perform an action.
 		void act();

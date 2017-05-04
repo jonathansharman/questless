@@ -21,9 +21,10 @@ namespace questless
 		void visit(Corpse const&) override;
 		void visit(ItemBox const&) override;
 
-		//! The animation set produced by the last visit. Moves the animation set out of the animator.
-		uptr<AnimationSet> animation_set() { return std::move(_animation_set); }
+		//! The animation set produced by the last visit.
+		//! @note Throws std::bad_optional_access if this visitor hasn't visited an entity.
+		AnimationSet& animation_set() { return *_animation_set; }
 	private:
-		uptr<AnimationSet> _animation_set;
+		std::optional<AnimationSet> _animation_set;
 	};
 }

@@ -3,6 +3,7 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "world/LightSource.h"
+#include "world/Region.h"
 
 namespace questless
 {
@@ -18,10 +19,14 @@ namespace questless
 		return static_cast<int>(sqrt((std::max(0.0, std::abs(_luminance) - cutoff)) / distance_factor)) + 1;
 	}
 
-	double LightSource::luminance(RegionTileCoords region_tile_coords) const
+	double LightSource::luminance(Region const& region, RegionTileCoords region_tile_coords) const
 	{
+		// Compute light source's luminance at this distance.
 		int const distance = _coords.distance_to(region_tile_coords);
-		double const result = _luminance / (1.0 + distance * distance * distance_factor);
+		double const occlusion = region.occlusion(_coords, region_tile_coords);
+		double const result = _luminance / (1.0 + distance * distance * distance_factor) * occlusion;
+
+		// Clamp values below the cutoff to zero.
 		return std::abs(result) >= cutoff ? result : 0.0;
 	}
 }
