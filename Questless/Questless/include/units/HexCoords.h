@@ -82,10 +82,10 @@ namespace units
 
 		Direction direction_towards(HexCoords dest) const
 		{
-			int n = distance_to(dest);
-			double step = 1.0 / std::max(n, 1);
-			HexCoords offset = lerp(dest, step) - *this;
-			int hash = 3 * offset.q + offset.r; // Simple hash to allow switching on the offset.
+			int const n = distance_to(dest);
+			double const step = 1.0 / std::max(n, 1);
+			HexCoords const offset = lerp(dest, step) - *this;
+			int const hash = 3 * offset.q + offset.r; // Simple hash to allow switching on the offset.
 			switch (hash) {
 				case 3 /*(1, 0)*/:   return Direction::one;
 				case 1 /*(0, 1)*/:   return Direction::two;
@@ -177,7 +177,7 @@ namespace units
 		units::GameVector size;
 		units::GamePoint origin;
 
-		static constexpr Layout dflt() { return Layout{orientation_flat, units::GameVector{29.0, 35.5 / math::sqrt(3.0)}, units::GamePoint{0, 0}}; }
+		static constexpr Layout dflt() { return Layout{orientation_flat, units::GameVector{30.0, 36.0 / math::sqrt(3.0)}, units::GamePoint{0, 0}}; }
 
 		constexpr Layout(Orientation orientation, units::GameVector size, units::GamePoint origin)
 			: orientation{orientation}, size{std::move(size)}, origin{std::move(origin)}
@@ -210,8 +210,8 @@ namespace units
 		template <typename HexCoordsType>
 		std::vector<units::GamePoint> corner_points(HexCoordsType h) //! @todo This function should just work for RegionTileCoords.
 		{
-			std::vector<units::GamePoint> corners = {};
-			units::GamePoint center = to_world_f(h);
+			std::vector<units::GamePoint> corners;
+			units::GamePoint const center = to_world_f(h);
 			for (int i = 0; i < 6; i++) {
 				units::GamePoint offset = hex_corner_offset(i);
 				corners.push_back(units::GamePoint{center.x + offset.x, center.y + offset.y});
