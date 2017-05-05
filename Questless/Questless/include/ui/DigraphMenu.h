@@ -135,6 +135,6 @@ namespace questless
 		//! Renders or rerenders menu textures.
 		void render();
 
-		void refresh() override { _render_is_current = false; }
+		void refresh() final { _render_is_current = false; }
 	};
 }

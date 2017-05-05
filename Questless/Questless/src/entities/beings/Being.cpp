@@ -359,7 +359,7 @@ namespace questless
 	{
 		Stats result = get_base_stats_plus_body_stats();
 
-		// Apply status stat modifiers (may override body part modifiers).
+		// Apply status stat modifiers after body part modifiers.
 		for (auto const& status : _statuses) {
 			Modifier::apply_all(status->modifiers(), result);
 		}

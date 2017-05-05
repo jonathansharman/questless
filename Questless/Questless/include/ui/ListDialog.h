@@ -32,7 +32,7 @@ namespace questless
 			load_textures();
 		}
 
-		State update() override
+		State update() final
 		{
 			if (sdl::input().presses(SDLK_BACKSPACE) || sdl::input().presses(SDLK_ESCAPE)) {
 				return _cont(std::nullopt);
@@ -67,7 +67,7 @@ namespace questless
 			return State::open;
 		}
 
-		void draw() const override
+		void draw() const final
 		{
 			// Draw background.
 			sdl::renderer().draw_rect(_bounds, sdl::Color::black(), sdl::Color{255, 200, 150});
@@ -100,7 +100,7 @@ namespace questless
 
 		int _selection;
 
-		void refresh() override { load_textures(); }
+		void refresh() final { load_textures(); }
 
 		void load_textures()
 		{

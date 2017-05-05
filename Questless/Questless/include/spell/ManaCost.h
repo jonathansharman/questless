@@ -14,9 +14,9 @@ namespace questless
 	public:
 		ManaCost(double amount) : _amount{amount} {}
 
-		Complete check(Being& actor, cont_t cont) const override;
+		Complete check(Being& actor, cont_t cont) const final;
 		
-		void incur(Being& actor) const override;
+		void incur(Being& actor) const final;
 	private:
 		double _amount;
 	};

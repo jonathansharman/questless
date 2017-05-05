@@ -85,17 +85,17 @@ namespace questless
 		Human(const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, Id<Being> id = Id<Being>::make());
 		Human(std::istream& in);
 
-		EntityClass entity_class() const override { return EntityClass::HumanClass; }
+		EntityClass entity_class() const final { return EntityClass::HumanClass; }
 
-		void serialize(std::ostream& out) const override;
+		void serialize(std::ostream& out) const final;
 
-		double transparency() const override { return 0.5; }
+		double transparency() const final { return 0.5; }
 
 		std::string const& description() const //! @todo Put this in Being or Entity?
 		{
 			return "You already know about humans.";
 		}
 	protected:
-		Body make_body() override;
+		Body make_body() final;
 	};
 }

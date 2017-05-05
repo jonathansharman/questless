@@ -89,7 +89,7 @@ namespace questless
 
 		// Methods
 
-		void refresh() override { load_textures_and_layout(); }
+		void refresh() final { load_textures_and_layout(); }
 
 		void load_textures_and_layout();
 

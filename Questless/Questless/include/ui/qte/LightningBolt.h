@@ -23,9 +23,9 @@ namespace questless::qte
 		//! @param cont The dialog continuation function.
 		LightningBolt(RegionTileCoords target_coords, std::function<void(double)> cont);
 
-		State update() override;
+		State update() final;
 
-		void draw() const override;
+		void draw() const final;
 	private:
 		static constexpr units::GameSeconds _time_limit = 5.0s;
 		static constexpr int _charges_per_quadrant = 4;
@@ -50,7 +50,7 @@ namespace questless::qte
 		uptr<sdl::Texture> _txt_title;
 		uptr<sdl::Texture> _txt_prompt;
 
-		void refresh() override { load_textures(); }
+		void refresh() final { load_textures(); }
 
 		void load_textures();
 	};

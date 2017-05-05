@@ -34,13 +34,13 @@ namespace sdl
 
 	//! The texture manager.
 	ResourceManager<Texture>& texture_manager();
-	using TextureHandle = ResourceManager<Texture>::Handle;
+	using TextureHandle = Handle<Texture>;
 
 	//! The font manager.
 	ResourceManager<Font>& font_manager();
-	using FontHandle = ResourceManager<Font>::Handle;
+	using FontHandle = Handle<Font>;
 
 	//! The sound manager.
 	ResourceManager<Sound>& sound_manager();
-	using SoundHandle = ResourceManager<Sound>::Handle;
+	using SoundHandle = Handle<Sound>;
 }

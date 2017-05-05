@@ -53,9 +53,9 @@ namespace questless
 		// Effect Visitor Methods //
 		////////////////////////////
 
-		void visit(EagleEyeEffect const&) override;
-		void visit(InjuryEffect const&) override;
-		void visit(LightningBoltEffect const&) override;
+		void visit(EagleEyeEffect const&) final;
+		void visit(InjuryEffect const&) final;
+		void visit(LightningBoltEffect const&) final;
 	private:
 		friend class Initializer<WorldRenderer>;
 		static Initializer<WorldRenderer> _initializer;
@@ -74,7 +74,7 @@ namespace questless
 
 		std::vector<uptr<Particle>> _particles;
 
-		void refresh() override;
+		void refresh() final;
 
 		sdl::Texture& cache_tile_texture(Tile const& tile);
 		AnimationSet& cache_animation(Being const& being);

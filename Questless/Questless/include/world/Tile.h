@@ -53,48 +53,48 @@ namespace questless
 	{
 	public:
 		using TileBase<DirtTile>::TileBase;
-		TileClass tile_class() const override { return TileClass::dirt; }
+		TileClass tile_class() const final { return TileClass::dirt; }
 	};
 
 	class EdgeTile : public TileBase<EdgeTile>
 	{
 	public:
 		using TileBase<EdgeTile>::TileBase;
-		TileClass tile_class() const override { return TileClass::edge; }
+		TileClass tile_class() const final { return TileClass::edge; }
 	};
 
 	class GrassTile : public TileBase<GrassTile>
 	{
 	public:
 		using TileBase<GrassTile>::TileBase;
-		TileClass tile_class() const override { return TileClass::grass; }
+		TileClass tile_class() const final { return TileClass::grass; }
 	};
 
 	class SandTile : public TileBase<SandTile>
 	{
 	public:
 		using TileBase<SandTile>::TileBase;
-		TileClass tile_class() const override { return TileClass::sand; }
+		TileClass tile_class() const final { return TileClass::sand; }
 	};
 
 	class SnowTile : public TileBase<SnowTile>
 	{
 	public:
 		using TileBase<SnowTile>::TileBase;
-		TileClass tile_class() const override { return TileClass::snow; }
+		TileClass tile_class() const final { return TileClass::snow; }
 	};
 
 	class StoneTile : public TileBase<StoneTile>
 	{
 	public:
 		using TileBase<StoneTile>::TileBase;
-		TileClass tile_class() const override { return TileClass::stone; }
+		TileClass tile_class() const final { return TileClass::stone; }
 	};
 
 	class WaterTile : public TileBase<WaterTile>
 	{
 	public:
 		using TileBase<WaterTile>::TileBase;
-		TileClass tile_class() const override { return TileClass::water; }
+		TileClass tile_class() const final { return TileClass::water; }
 	};
 }

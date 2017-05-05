@@ -98,8 +98,8 @@ namespace questless
 		public:
 			Equip(Equipment& equipment) : _equipment{equipment} {}
 			static auto make(Equipment& equipment) { return std::make_unique<Equip>(equipment); }
-			std::string name() const override { return "Equip"; }
-			Complete perform(Being& actor, cont_t cont) override;
+			std::string name() const final { return "Equip"; }
+			Complete perform(Being& actor, cont_t cont) final;
 		private:
 			Equipment& _equipment;
 		};
@@ -110,8 +110,8 @@ namespace questless
 		public:
 			Unequip(Equipment& equipment) : _equipment{equipment} {}
 			static auto make(Equipment& equipment) { return std::make_unique<Unequip>(equipment); }
-			std::string name() const override { return "Unequip"; }
-			Complete perform(Being& actor, cont_t cont) override;
+			std::string name() const final { return "Unequip"; }
+			Complete perform(Being& actor, cont_t cont) final;
 		private:
 			Equipment& _equipment;
 		};

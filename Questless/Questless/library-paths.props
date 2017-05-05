@@ -2,12 +2,12 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-    <SDL_PATH>C:\vc-libs\SDL2-2.0.4\</SDL_PATH>
-    <SDL_IMAGE_PATH>C:\vc-libs\SDL2_image-2.0.1\</SDL_IMAGE_PATH>
-    <SDL_MIXER_PATH>C:\vc-libs\SDL2_mixer-2.0.1\</SDL_MIXER_PATH>
-    <SDL_TTF_PATH>C:\vc-libs\SDL2_ttf-2.0.14\</SDL_TTF_PATH>
-    <BOOST_PATH>C:\vc-libs\boost_1_63_0\</BOOST_PATH>
-    <DOCTEST_PATH>C:\vc-libs\doctest\</DOCTEST_PATH>
+    <SDL_PATH>D:\vc-libs\SDL2-2.0.4\</SDL_PATH>
+    <SDL_IMAGE_PATH>D:\vc-libs\SDL2_image-2.0.1\</SDL_IMAGE_PATH>
+    <SDL_MIXER_PATH>D:\vc-libs\SDL2_mixer-2.0.1\</SDL_MIXER_PATH>
+    <SDL_TTF_PATH>D:\vc-libs\SDL2_ttf-2.0.14\</SDL_TTF_PATH>
+    <BOOST_PATH>D:\vc-libs\boost_1_64_0\</BOOST_PATH>
+    <DOCTEST_PATH>D:\vc-libs\doctest\</DOCTEST_PATH>
   </PropertyGroup>
   <PropertyGroup />
   <ItemDefinitionGroup />

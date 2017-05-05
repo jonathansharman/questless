@@ -18,16 +18,16 @@ namespace questless
 			, _fire{std::make_shared<Fire>(id)}
 		{}
 
-		std::string name() const override { return "Bow"; }
+		std::string name() const final { return "Bow"; }
 
-		double weight() const override { return 3.5; }
+		double weight() const final { return 3.5; }
 
-		double equip_time() const override { return 12.0; }
-		double unequip_time() const override { return 3.0; }
+		double equip_time() const final { return 12.0; }
+		double unequip_time() const final { return 3.0; }
 
-		double durability() const override { return 400.0; }
+		double durability() const final { return 400.0; }
 
-		virtual std::vector<uptr<Action>> actions() override
+		virtual std::vector<uptr<Action>> actions() final
 		{
 			std::vector<uptr<Action>> actions;
 			if (equipped()) {
@@ -45,20 +45,20 @@ namespace questless
 		{
 		public:
 			Fire(Id<Item> weapon_id) : RangedAttack{weapon_id} {}
-			std::string name() const override { return "Fire"; }
-			Damage base_damage() const override { return Pierce{30.0}; }
-			double wind_up() const override { return 5.0; }
-			double follow_through() const override { return 0.5; }
-			double cooldown() const override { return 1.0; }
-			double wear_ratio() const override { return 0.002; };
-			Cost const& cost() const override { return _cost; }
-			int range() const override { return 7; }
+			std::string name() const final { return "Fire"; }
+			Damage base_damage() const final { return Pierce{30.0}; }
+			double wind_up() const final { return 5.0; }
+			double follow_through() const final { return 0.5; }
+			double cooldown() const final { return 1.0; }
+			double wear_ratio() const final { return 0.002; };
+			Cost const& cost() const final { return _cost; }
+			int range() const final { return 7; }
 		private:
 			class ArrowCost : public Cost
 			{
 			public:
-				Complete check(Being& actor, cont_t cont) const override;
-				void incur(Being& actor) const override;
+				Complete check(Being& actor, cont_t cont) const final;
+				void incur(Being& actor) const final;
 			};
 
 			ArrowCost _cost;
@@ -66,6 +66,6 @@ namespace questless
 
 		std::shared_ptr<Fire> _fire;
 
-		Requirements requirements() const override { return Hands{2}; }
+		Requirements requirements() const final { return Hands{2}; }
 	};
 }

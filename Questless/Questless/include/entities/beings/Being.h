@@ -181,7 +181,7 @@ namespace questless
 		void refresh_stats() { stats = get_stats(); }
 
 		//! Advances the being one time unit.
-		void update() override;
+		void update() final;
 
 		//! Causes the being to take damage from the specified source being.
 		//! @param damage Damage to be applied to this being.

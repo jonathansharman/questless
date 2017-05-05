@@ -13,11 +13,11 @@ namespace questless
 	public:
 		Arrow(Id<Item> id = Id<Item>::make()) : ItemBase<Arrow>{id} {}
 
-		std::string name() const override { return "Arrow"; }
+		std::string name() const final { return "Arrow"; }
 
-		double weight() const override { return 0.1; }
+		double weight() const final { return 0.1; }
 
-		std::vector<uptr<Action>> actions() override
+		std::vector<uptr<Action>> actions() final
 		{
 			std::vector<uptr<Action>> actions;
 			actions.push_back(Drop::make(*this));

@@ -152,15 +152,15 @@ namespace questless
 				: default{default}, min{min}, max{max}, cont{std::move(cont)}
 			{}
 
-			void visit(MagnitudeQueryWaitTime const&) override
+			void visit(MagnitudeQueryWaitTime const&) final
 			{
 				cont(default);
 			}
-			void visit(MagnitudeQueryLightningBolt const&) override
+			void visit(MagnitudeQueryLightningBolt const&) final
 			{
 				cont(default);
 			}
-			void visit(MagnitudeQueryHeal const&) override
+			void visit(MagnitudeQueryHeal const&) final
 			{
 				cont(default);
 			}
@@ -197,7 +197,7 @@ namespace questless
 				, cont{std::move(cont)}
 			{}
 
-			void visit(TileQueryRangedAttackTarget const& query) override
+			void visit(TileQueryRangedAttackTarget const& query) final
 			{
 				auto target_id = dynamic_cast<AttackState*>(ai._state.get())->target_id;
 				if (Being* target = game().beings.get(target_id)) {
@@ -209,11 +209,11 @@ namespace questless
 				}
 				cont(std::nullopt);
 			}
-			void visit(TileQueryLightningBoltTarget const&) override
+			void visit(TileQueryLightningBoltTarget const&) final
 			{
 				cont(std::nullopt);
 			}
-			void visit(TileQueryTeleportTarget const&) override
+			void visit(TileQueryTeleportTarget const&) final
 			{
 				cont(std::nullopt);
 			}
@@ -242,7 +242,7 @@ namespace questless
 				, cont{std::move(cont)}
 			{}
 
-			void visit(DirectionQueryMeleeAttack const&) override
+			void visit(DirectionQueryMeleeAttack const&) final
 			{
 				auto target_id = dynamic_cast<AttackState*>(ai._state.get())->target_id;
 				if (Being* target = game().beings.get(target_id)) {

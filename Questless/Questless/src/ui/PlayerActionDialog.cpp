@@ -13,7 +13,7 @@ namespace questless
 	Dialog::State PlayerActionDialog::update()
 	{
 		if (!_hud.inventory_open()) {
-			if (input().presses(SDLK_z) || input().presses(SDLK_RETURN)) {
+			if (input().presses(SDLK_z) || input().down(SDLK_x) || input().presses(SDLK_RETURN)) {
 				return _cont({Choice::Type::idle, input().shift() ? 1 : 0});
 			} else if (input().presses(SDLK_e)) {
 				return _cont({input().shift() ? Choice::Type::shift_move : Choice::Type::move, 1});

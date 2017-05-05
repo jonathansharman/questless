@@ -15,11 +15,11 @@ namespace questless
 	class EntityAnimator : public EntityConstVisitor
 	{
 	public:
-		void visit(Human const&) override;
-		void visit(Goblin const&) override;
+		void visit(Human const&) final;
+		void visit(Goblin const&) final;
 
-		void visit(Corpse const&) override;
-		void visit(ItemBox const&) override;
+		void visit(Corpse const&) final;
+		void visit(ItemBox const&) final;
 
 		//! The animation set produced by the last visit.
 		//! @note Throws std::bad_optional_access if this visitor hasn't visited an entity.

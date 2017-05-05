@@ -33,7 +33,7 @@ namespace questless
 		//! The amount of time required to switch from one form to another.
 		virtual double switch_time() const = 0;
 
-		std::vector<uptr<Action>> actions() override { return _form->actions(); }
+		std::vector<uptr<Action>> actions() final { return _form->actions(); }
 	protected:
 		template <typename TargetForm>
 		class SwitchForm : public Action
@@ -48,9 +48,9 @@ namespace questless
 				return std::make_unique<SwitchForm<TargetForm>>(weapon, name);
 			}
 
-			std::string name() const override { return _name; }
+			std::string name() const final { return _name; }
 
-			Complete perform(Being& actor, cont_t cont) override
+			Complete perform(Being& actor, cont_t cont) final
 			{
 				_form = std::make_unique<TargetForm>(_weapon);
 				actor.busy_time += _weapon.switch_time();

@@ -36,11 +36,11 @@ namespace questless
 	class Free : public Cost
 	{
 	public:
-		Complete check(Being&, cont_t cont) const override
+		Complete check(Being&, cont_t cont) const final
 		{
 			return cont();
 		}
 
-		void incur(Being&) const override {}
+		void incur(Being&) const final {}
 	};
 }

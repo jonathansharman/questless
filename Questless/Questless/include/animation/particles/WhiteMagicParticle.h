@@ -29,8 +29,8 @@ namespace questless
 		static constexpr units::Hertz _vx_percent_drag_rate = 1.8_Hz;
 		static constexpr units::GameRadians _dtheta_max = 2.0 * units::GameRadians::circle();
 
-		void subupdate() override;
+		void subupdate() final;
 
-		sdl::Texture const& texture() const override;
+		sdl::Texture const& texture() const final;
 	};
 }

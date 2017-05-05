@@ -20,11 +20,11 @@ namespace questless
 			, inventory{std::move(inventory)}
 		{}
 
-		std::string name() const override { return "Quiver"; }
+		std::string name() const final { return "Quiver"; }
 
-		double weight() const override { return 0.5; }
+		double weight() const final { return 0.5; }
 
-		virtual std::vector<uptr<Action>> actions() override
+		virtual std::vector<uptr<Action>> actions() final
 		{
 			std::vector<uptr<Action>> actions;
 			if (equipped()) {
@@ -37,9 +37,9 @@ namespace questless
 			return actions;
 		}
 
-		double equip_time() const override { return 1.0; }
-		double unequip_time() const override { return 1.0; }
+		double equip_time() const final { return 1.0; }
+		double unequip_time() const final { return 1.0; }
 	private:
-		Requirements requirements() const override { return Requirements{Torsos{1}}; }
+		Requirements requirements() const final { return Requirements{Torsos{1}}; }
 	};
 }

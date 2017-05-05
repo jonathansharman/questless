@@ -28,8 +28,8 @@ namespace questless
 	private:
 		static constexpr units::GameRadians _dtheta_max = 2.0 * units::GameRadians::circle();
 
-		void subupdate() override {}
+		void subupdate() final {}
 
-		sdl::Texture const& texture() const override;
+		sdl::Texture const& texture() const final;
 	};
 }

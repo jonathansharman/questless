@@ -35,12 +35,12 @@ namespace sdl
 		}
 	}
 
-	Texture::Texture(char const* filename, bool targetable, SDL_BlendMode blend_mode)
+	Texture::Texture(char const* filename, SDL_BlendMode blend_mode)
 		: _texture{nullptr }
 		, _renderer{renderer()}
 		, _blend_mode{blend_mode}
 		, _format{SDL_PIXELFORMAT_UNKNOWN}
-		, _access{targetable ? SDL_TEXTUREACCESS_TARGET : SDL_TEXTUREACCESS_STATIC}
+		, _access{SDL_TEXTUREACCESS_STATIC}
 		, _color{255, 255, 255}
 	{
 		_texture = IMG_LoadTexture(_renderer.sdl_ptr(), filename);
@@ -179,12 +179,5 @@ namespace sdl
 			, nullptr
 			, static_cast<SDL_RendererFlip>((flip_horizontally ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE) | (flip_vertically ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE))
 			);
-	}
-
-	void Texture::as_target(std::function<void()> f)
-	{
-		_renderer.target(_texture);
-		f();
-		_renderer.target(nullptr);
 	}
 }

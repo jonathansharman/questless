@@ -4,21 +4,20 @@
 
 #pragma once
 
-#include "items/ItemVisitor.h"
+#include "spell/SpellVisitor.h"
 #include "sdl/resources.h"
 #include "utility/reference.h"
 
 namespace questless
 {
 	//! Creates textures for items.
-	class ItemTexturer : public ItemConstVisitor
+	class SpellTexturer : public spell::SpellConstVisitor
 	{
 	public:
-		void visit(Arrow const&) final;
-		void visit(Bow const&) final;
-		void visit(Quarterstaff const&) final;
-		void visit(Quiver const&) final;
-		void visit(Scroll const&) final;
+		void visit(spell::EagleEye const&) final;
+		void visit(spell::Heal const&) final;
+		void visit(spell::LightningBolt const&) final;
+		void visit(spell::Teleport const&) final;
 
 		//! A handle to the texture of the last visited item.
 		auto texture_handle() const { return _texture_handle; }

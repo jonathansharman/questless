@@ -8,6 +8,7 @@
 #include <optional>
 
 #include "agents/Action.h"
+#include "SpellVisitor.h"
 #include "utility/reference.h"
 
 namespace questless::spell
@@ -15,7 +16,7 @@ namespace questless::spell
 	enum class Color { white, black, green, red, blue, yellow };
 
 	//! A magical spell that can be cast by a being.
-	class Spell
+	class Spell : public Element<SpellSubtypeList>
 	{
 	public:
 		class Cast : public Action
@@ -23,8 +24,8 @@ namespace questless::spell
 		public:
 			Cast(Spell& spell) : _spell{spell} {}
 			static auto make(Spell& spell) { return std::make_unique<Cast>(spell); }
-			std::string name() const override { return "Cast"; }
-			Complete perform(Being& actor, cont_t cont) override;
+			std::string name() const final { return "Cast"; }
+			Complete perform(Being& actor, cont_t cont) final;
 		private:
 			Spell& _spell;
 		};
@@ -34,8 +35,8 @@ namespace questless::spell
 		public:
 			Incant(Spell& spell) : _spell{spell} {}
 			static auto make(Spell& spell) { return std::make_unique<Incant>(spell); }
-			std::string name() const override { return "Incant"; }
-			Complete perform(Being& actor, cont_t cont) override;
+			std::string name() const final { return "Incant"; }
+			Complete perform(Being& actor, cont_t cont) final;
 		private:
 			Spell& _spell;
 		};
@@ -45,8 +46,8 @@ namespace questless::spell
 		public:
 			Discharge(Spell& spell) : _spell{spell} {}
 			static auto make(Spell& spell) { return std::make_unique<Discharge>(spell); }
-			std::string name() const override { return "Discharge"; }
-			Complete perform(Being& actor, cont_t cont) override;
+			std::string name() const final { return "Discharge"; }
+			Complete perform(Being& actor, cont_t cont) final;
 		private:
 			Spell& _spell;
 		};
@@ -113,4 +114,6 @@ namespace questless::spell
 
 		virtual Complete perform_cast(Being& actor, Action::cont_t cont) = 0;
 	};
+
+	DEFINE_ELEMENT_BASE(Spell, Spell)
 }

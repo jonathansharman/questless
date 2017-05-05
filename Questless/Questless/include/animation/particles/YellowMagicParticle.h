@@ -30,8 +30,8 @@ namespace questless
 	private:
 		static constexpr units::GameRadians _max_turn_rate = units::GameRadians::circle() / 6.0;
 
-		void subupdate() override;
+		void subupdate() final;
 
-		sdl::Texture const& texture() const override;
+		sdl::Texture const& texture() const final;
 	};
 }

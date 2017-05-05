@@ -40,7 +40,7 @@ namespace questless
 		//! Whether the object blocks the movement of other entities.
 		virtual bool blocks_movement() const = 0;
 
-		void update() override;
+		void update() final;
 	protected:
 		Object(Id<Object> id) : Entity{}, id{id} {}
 		Object(std::istream& in);

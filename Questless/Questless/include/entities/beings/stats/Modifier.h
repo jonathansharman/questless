@@ -54,7 +54,7 @@ namespace questless
 	public:
 		constexpr MuteModifier(bool mute) : _mute{mute} {}
 		static auto make(bool mute) { return std::make_unique<MuteModifier>(mute); }
-		void apply(Stats& stats) override { stats.mute = _mute; }
+		void apply(Stats& stats) final { stats.mute = _mute; }
 	private:
 		bool _mute;
 	};
@@ -71,52 +71,52 @@ namespace questless
 	struct VitalityModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.vitality += magnitude(); }
+		void apply(Stats& stats) final { stats.vitality += magnitude(); }
 	};
 	struct SpiritModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.spirit += magnitude(); }
+		void apply(Stats& stats) final { stats.spirit += magnitude(); }
 	};
 	struct HealthRegenModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.health_regen += magnitude(); }
+		void apply(Stats& stats) final { stats.health_regen += magnitude(); }
 	};
 	struct ManaRegenModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.mana_regen += magnitude(); }
+		void apply(Stats& stats) final { stats.mana_regen += magnitude(); }
 	};
 	struct StrengthModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.strength += magnitude(); }
+		void apply(Stats& stats) final { stats.strength += magnitude(); }
 	};
 	struct EnduranceModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.endurance += magnitude(); }
+		void apply(Stats& stats) final { stats.endurance += magnitude(); }
 	};
 	struct StaminaModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.stamina += magnitude(); }
+		void apply(Stats& stats) final { stats.stamina += magnitude(); }
 	};
 	struct AgilityModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.agility += magnitude(); }
+		void apply(Stats& stats) final { stats.agility += magnitude(); }
 	};
 	struct DexterityModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.dexterity += magnitude(); }
+		void apply(Stats& stats) final { stats.dexterity += magnitude(); }
 	};
 	struct StealthModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.stealth += magnitude(); }
+		void apply(Stats& stats) final { stats.stealth += magnitude(); }
 	};
 
 	// Vision Modifiers
@@ -124,43 +124,43 @@ namespace questless
 	struct VisualAcuityModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.vision.acuity += magnitude(); }
+		void apply(Stats& stats) final { stats.vision.acuity += magnitude(); }
 	};
 	struct IdealLuminanceModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.vision.ideal_illuminance += magnitude(); }
+		void apply(Stats& stats) final { stats.vision.ideal_illuminance += magnitude(); }
 	};
 	struct LightToleranceModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.vision.darkness_tolerance += magnitude(); }
+		void apply(Stats& stats) final { stats.vision.darkness_tolerance += magnitude(); }
 	};
 
 	struct HearingModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.hearing += magnitude(); }
+		void apply(Stats& stats) final { stats.hearing += magnitude(); }
 	};
 	struct IntellectModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.intellect += magnitude(); }
+		void apply(Stats& stats) final { stats.intellect += magnitude(); }
 	};
 	struct WeightModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.weight += magnitude(); }
+		void apply(Stats& stats) final { stats.weight += magnitude(); }
 	};
 	struct MinTempModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.min_temp += magnitude(); }
+		void apply(Stats& stats) final { stats.min_temp += magnitude(); }
 	};
 	struct MaxTempModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.max_temp += magnitude(); }
+		void apply(Stats& stats) final { stats.max_temp += magnitude(); }
 	};
 
 	// Magic Modifers
@@ -168,32 +168,32 @@ namespace questless
 	struct WhiteMagicModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.magic.white += magnitude(); }
+		void apply(Stats& stats) final { stats.magic.white += magnitude(); }
 	};
 	struct BlackMagicModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.magic.black += magnitude(); }
+		void apply(Stats& stats) final { stats.magic.black += magnitude(); }
 	};
 	struct GreenMagicModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.magic.green += magnitude(); }
+		void apply(Stats& stats) final { stats.magic.green += magnitude(); }
 	};
 	struct RedMagicModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.magic.red += magnitude(); }
+		void apply(Stats& stats) final { stats.magic.red += magnitude(); }
 	};
 	struct BlueMagicModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.magic.blue += magnitude(); }
+		void apply(Stats& stats) final { stats.magic.blue += magnitude(); }
 	};
 	struct YellowMagicModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.magic.yellow += magnitude(); }
+		void apply(Stats& stats) final { stats.magic.yellow += magnitude(); }
 	};
 
 	// Antimagic Modifiers
@@ -201,31 +201,31 @@ namespace questless
 	struct WhiteAntimagicModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.antimagic.white += magnitude(); }
+		void apply(Stats& stats) final { stats.antimagic.white += magnitude(); }
 	};
 	struct BlackAntimagicModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.antimagic.black += magnitude(); }
+		void apply(Stats& stats) final { stats.antimagic.black += magnitude(); }
 	};
 	struct GreenAntimagicModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.antimagic.green += magnitude(); }
+		void apply(Stats& stats) final { stats.antimagic.green += magnitude(); }
 	};
 	struct RedAntimagicModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.antimagic.red += magnitude(); }
+		void apply(Stats& stats) final { stats.antimagic.red += magnitude(); }
 	};
 	struct BlueAntimagicModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.antimagic.blue += magnitude(); }
+		void apply(Stats& stats) final { stats.antimagic.blue += magnitude(); }
 	};
 	struct YellowAntimagicModifier : public ScalarModifier
 	{
 		using ScalarModifier::ScalarModifier;
-		void apply(Stats& stats) override { stats.antimagic.yellow += magnitude(); }
+		void apply(Stats& stats) final { stats.antimagic.yellow += magnitude(); }
 	};
 }

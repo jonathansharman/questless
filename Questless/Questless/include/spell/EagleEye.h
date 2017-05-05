@@ -9,26 +9,26 @@
 namespace questless::spell
 {
 	//! Temporarily increases the caster's visual acuity.
-	class EagleEye : public Spell
+	class EagleEye : public SpellBase<EagleEye>
 	{
 	public:
-		EagleEye() : Spell{10} {}
+		EagleEye() : SpellBase<EagleEye>{10} {}
 
-		std::string name() const override { return "Eagle Eye"; }
+		std::string name() const final { return "Eagle Eye"; }
 
-		Color color() const override { return Color::green; }
+		Color color() const final { return Color::green; }
 
-		std::optional<int> max_charges() const override { return 10; }
+		std::optional<int> max_charges() const final { return 10; }
 
-		double cast_time() const override { return 1.0; }
+		double cast_time() const final { return 1.0; }
 
-		double incant_time() const override { return 10.0; }
+		double incant_time() const final { return 10.0; }
 
-		double discharge_time() const override { return 1.0; }
+		double discharge_time() const final { return 1.0; }
 
-		double cooldown() const override { return 50.0; }
+		double cooldown() const final { return 50.0; }
 	protected:
-		Complete perform_cast(Being& caster, Action::cont_t cont) override;
+		Complete perform_cast(Being& caster, Action::cont_t cont) final;
 	private:
 		static constexpr double _cost = 10.0;
 	};

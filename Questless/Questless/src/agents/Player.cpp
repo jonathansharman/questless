@@ -128,31 +128,31 @@ namespace questless
 		struct MessageTitler : MessageConstVisitor
 		{
 			std::string title;
-			void visit(MessageArrowMiss const&) override { title = "Ranged Attack"; }
-			void visit(MessageCannotEquip const&) override { title = "Cannot Equip"; }
-			void visit(MessageEntityInTheWay const&) override { title = "Obstruction"; }
-			void visit(MessageIncantFailedMute const&) override { title = "Incantation"; }
-			void visit(MessageMeleeMiss const&) override { title = "Melee Attack"; }
-			void visit(MessageNotEnoughAmmo const&) override { title = "Attack"; }
-			void visit(MessageNotEnoughMana const&) override { title = "Spell Cast"; }
-			void visit(MessageSpellNotEnoughCharges const&) override { title = "Spell Cast"; }
-			void visit(MessageSpellOnCooldown const&) override { title = "Spell Cast"; }
+			void visit(MessageArrowMiss const&) final { title = "Ranged Attack"; }
+			void visit(MessageCannotEquip const&) final { title = "Cannot Equip"; }
+			void visit(MessageEntityInTheWay const&) final { title = "Obstruction"; }
+			void visit(MessageIncantFailedMute const&) final { title = "Incantation"; }
+			void visit(MessageMeleeMiss const&) final { title = "Melee Attack"; }
+			void visit(MessageNotEnoughAmmo const&) final { title = "Attack"; }
+			void visit(MessageNotEnoughMana const&) final { title = "Spell Cast"; }
+			void visit(MessageSpellNotEnoughCharges const&) final { title = "Spell Cast"; }
+			void visit(MessageSpellOnCooldown const&) final { title = "Spell Cast"; }
 		};
 		struct MessagePrompter : MessageConstVisitor
 		{
 			std::string prompt;
-			void visit(MessageArrowMiss const&) override { prompt = "Miss!"; }
-			void visit(MessageCannotEquip const&) override { prompt = "You don't have the requisite free body parts to equip this."; }
-			void visit(MessageEntityInTheWay const&) override { prompt = "There's something in the way!"; }
-			void visit(MessageIncantFailedMute const&) override { prompt = "You can't perform an incantation while mute!"; }
-			void visit(MessageMeleeMiss const&) override { prompt = "Miss!"; }
-			void visit(MessageNotEnoughAmmo const&) override { prompt = "Not enough ammo!"; }
-			void visit(MessageNotEnoughMana const& m) override
+			void visit(MessageArrowMiss const&) final { prompt = "Miss!"; }
+			void visit(MessageCannotEquip const&) final { prompt = "You don't have the requisite free body parts to equip this."; }
+			void visit(MessageEntityInTheWay const&) final { prompt = "There's something in the way!"; }
+			void visit(MessageIncantFailedMute const&) final { prompt = "You can't perform an incantation while mute!"; }
+			void visit(MessageMeleeMiss const&) final { prompt = "Miss!"; }
+			void visit(MessageNotEnoughAmmo const&) final { prompt = "Not enough ammo!"; }
+			void visit(MessageNotEnoughMana const& m) final
 			{
 				prompt = "Not enough mana! You need " + std::to_string(m.mana_deficit) + " more mana to cast this.";
 			}
-			void visit(MessageSpellNotEnoughCharges const&) override { prompt = "This spell doesn't have enough charges! You need to incant it first."; }
-			void visit(MessageSpellOnCooldown const& m) override
+			void visit(MessageSpellNotEnoughCharges const&) final { prompt = "This spell doesn't have enough charges! You need to incant it first."; }
+			void visit(MessageSpellOnCooldown const& m) final
 			{
 				prompt = "This spell on cooldown! It will be ready in " + std::to_string(m.active_cooldown) + ".";
 			}
@@ -202,16 +202,16 @@ namespace questless
 		struct MagnitudeQueryTitler : MagnitudeQueryConstVisitor
 		{
 			std::string title;
-			void visit(MagnitudeQueryHeal const&) override { title = "Heal Amount"; }
-			void visit(MagnitudeQueryLightningBolt const&) override { title = "Lightning Bolt Strength"; }
-			void visit(MagnitudeQueryWaitTime const&) override { title = "Wait"; }
+			void visit(MagnitudeQueryHeal const&) final { title = "Heal Amount"; }
+			void visit(MagnitudeQueryLightningBolt const&) final { title = "Lightning Bolt Strength"; }
+			void visit(MagnitudeQueryWaitTime const&) final { title = "Wait"; }
 		};
 		struct MagnitudeQueryPrompter : MagnitudeQueryConstVisitor
 		{
 			std::string prompt;
-			void visit(MagnitudeQueryHeal const&) override { prompt = "Choose how much health to restore."; }
-			void visit(MagnitudeQueryLightningBolt const&) override { prompt = "Choose how strong to make the lightning bolt."; }
-			void visit(MagnitudeQueryWaitTime const&) override { prompt = "Enter wait time."; }
+			void visit(MagnitudeQueryHeal const&) final { prompt = "Choose how much health to restore."; }
+			void visit(MagnitudeQueryLightningBolt const&) final { prompt = "Choose how strong to make the lightning bolt."; }
+			void visit(MagnitudeQueryWaitTime const&) final { prompt = "Enter wait time."; }
 		};
 
 		MagnitudeQueryTitler titler;
@@ -232,16 +232,16 @@ namespace questless
 		struct TileQueryTitler : TileQueryConstVisitor
 		{
 			std::string title;
-			void visit(TileQueryLightningBoltTarget const&) override { title = "Lightning Bolt Target"; }
-			void visit(TileQueryRangedAttackTarget const&) override { title = "Ranged Attack"; }
-			void visit(TileQueryTeleportTarget const&) override { title = "Teleport Target"; }
+			void visit(TileQueryLightningBoltTarget const&) final { title = "Lightning Bolt Target"; }
+			void visit(TileQueryRangedAttackTarget const&) final { title = "Ranged Attack"; }
+			void visit(TileQueryTeleportTarget const&) final { title = "Teleport Target"; }
 		};
 		struct TileQueryPrompter : TileQueryConstVisitor
 		{
 			std::string prompt;
-			void visit(TileQueryLightningBoltTarget const&) override { prompt = "Select a tile to be zapped with a lightning bolt."; }
-			void visit(TileQueryRangedAttackTarget const&) override { prompt = "Choose attack target."; }
-			void visit(TileQueryTeleportTarget const&) override { prompt = "Select a tile to teleport to."; }
+			void visit(TileQueryLightningBoltTarget const&) final { prompt = "Select a tile to be zapped with a lightning bolt."; }
+			void visit(TileQueryRangedAttackTarget const&) final { prompt = "Choose attack target."; }
+			void visit(TileQueryTeleportTarget const&) final { prompt = "Select a tile to teleport to."; }
 		};
 
 		TileQueryTitler titler;
@@ -266,12 +266,12 @@ namespace questless
 		struct DirectionQueryTitler : DirectionQueryConstVisitor
 		{
 			std::string title;
-			void visit(DirectionQueryMeleeAttack const&) override { title = "Melee Attack"; }
+			void visit(DirectionQueryMeleeAttack const&) final { title = "Melee Attack"; }
 		};
 		struct DirectionQueryPrompter : DirectionQueryConstVisitor
 		{
 			std::string prompt;
-			void visit(DirectionQueryMeleeAttack const&) override { prompt = "Choose attack direction."; }
+			void visit(DirectionQueryMeleeAttack const&) final { prompt = "Choose attack direction."; }
 		};
 
 		DirectionQueryTitler titler;

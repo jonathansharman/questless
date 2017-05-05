@@ -14,13 +14,13 @@ namespace questless
 	class TileTexturer : public TileConstVisitor
 	{
 	public:
-		void visit(DirtTile const&) override;
-		void visit(EdgeTile const&) override;
-		void visit(GrassTile const&) override;
-		void visit(SandTile const&) override;
-		void visit(SnowTile const&) override;
-		void visit(StoneTile const&) override;
-		void visit(WaterTile const&) override;
+		void visit(DirtTile const&) final;
+		void visit(EdgeTile const&) final;
+		void visit(GrassTile const&) final;
+		void visit(SandTile const&) final;
+		void visit(SnowTile const&) final;
+		void visit(StoneTile const&) final;
+		void visit(WaterTile const&) final;
 
 		uptr<sdl::Texture> texture() { return std::move(_texture); }
 	private:

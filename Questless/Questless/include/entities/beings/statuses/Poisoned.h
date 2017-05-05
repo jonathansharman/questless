@@ -21,7 +21,7 @@ namespace questless
 
 		virtual Type type() const { return Type::debuff; }
 
-		void subupdate(Being& target) override;
+		void subupdate(Being& target) final;
 	private:
 		double _magnitude;
 	};

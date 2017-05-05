@@ -187,7 +187,7 @@ namespace questless
 		//! @param fullscreen Whether to run the game in fullscreen mode.
 		Game(bool fullscreen);
 
-		void refresh() override { load_textures(); }
+		void refresh() final { load_textures(); }
 
 		void load_textures();
 

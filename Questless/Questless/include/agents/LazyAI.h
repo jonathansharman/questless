@@ -16,16 +16,16 @@ namespace questless
 	public:
 		LazyAI(Being& being) : Agent{being} {}
 
-		void act() override { being.busy_time += uniform(1.0, 2.0); }
+		void act() final { being.busy_time += uniform(1.0, 2.0); }
 
-		void perceive(sptr<Effect> const&) override {}
+		void perceive(sptr<Effect> const&) final {}
 
 		// Queries and messages
 
 		Complete send_message
 			( uptr<Message>
 			, std::function<Complete()> cont
-			) const override
+			) const final
 		{
 			return cont();
 		}
@@ -36,7 +36,7 @@ namespace questless
 			, std::optional<int>
 			, std::optional<int>
 			, std::function<Complete(std::optional<int>)> cont
-			) const override
+			) const final
 		{
 			return cont(std::nullopt);
 		}
@@ -47,7 +47,7 @@ namespace questless
 			, std::optional<double>
 			, std::optional<double>
 			, std::function<Complete(std::optional<double>)> cont
-			) const override
+			) const final
 		{
 			return cont(std::nullopt);
 		}
@@ -57,7 +57,7 @@ namespace questless
 			, std::optional<RegionTileCoords>
 			, std::function<bool(RegionTileCoords)>
 			, std::function<Complete(std::optional<RegionTileCoords>)> cont
-			) const override
+			) const final
 		{
 			return cont(std::nullopt);
 		}
@@ -65,7 +65,7 @@ namespace questless
 		Complete query_direction
 			( uptr<DirectionQuery>
 			, std::function<Complete(std::optional<RegionTileCoords::Direction>)> cont
-			) const override
+			) const final
 		{
 			return cont(std::nullopt);
 		}
@@ -74,7 +74,7 @@ namespace questless
 			( uptr<BeingQuery>
 			, std::function<bool(Being&)>
 			, std::function<Complete(std::optional<Being*>)> cont
-			) const override
+			) const final
 		{
 			return cont(std::nullopt);
 		}
@@ -84,7 +84,7 @@ namespace questless
 			, Being&
 			, std::function<bool(Being&)>
 			, std::function<Complete(std::optional<Item*>)> cont
-			) const override
+			) const final
 		{
 			return cont(std::nullopt);
 		}

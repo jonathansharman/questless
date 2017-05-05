@@ -18,16 +18,16 @@ namespace questless
 			, ModalWeaponBase<Quarterstaff>{durability(), std::make_unique<StandardForm>(*this)}
 		{}
 
-		std::string name() const override { return "Staff (" + form().name() + ')'; }
+		std::string name() const final { return "Staff (" + form().name() + ')'; }
 
-		double weight() const override { return 10.0; }
+		double weight() const final { return 10.0; }
 
-		double equip_time() const override { return 1.5; }
-		double unequip_time() const override { return 1.0; }
+		double equip_time() const final { return 1.5; }
+		double unequip_time() const final { return 1.0; }
 
-		double durability() const override { return 500.0; }
+		double durability() const final { return 500.0; }
 
-		double switch_time() const override { return 0.25; }
+		double switch_time() const final { return 0.25; }
 	private:
 		class StandardForm : public Form
 		{
@@ -38,9 +38,9 @@ namespace questless
 				, _jab{std::make_shared<Jab>(weapon.id)}
 			{}
 
-			std::string name() const override { return "Quarterstaff"; }
+			std::string name() const final { return "Quarterstaff"; }
 
-			std::vector<uptr<Action>> actions() override
+			std::vector<uptr<Action>> actions() final
 			{
 				std::vector<uptr<Action>> actions;
 				if (weapon().equipped()) {
@@ -60,23 +60,23 @@ namespace questless
 			{
 			public:
 				using MeleeAttack::MeleeAttack;
-				std::string name() const override { return "Strike"; }
-				Damage base_damage() const override { return Bludgeon{24.0}; }
-				double wind_up() const override { return 1.0; }
-				double follow_through() const override { return 1.0; }
-				double cooldown() const override { return 2.0; }
-				double wear_ratio() const override { return 0.001; }
+				std::string name() const final { return "Strike"; }
+				Damage base_damage() const final { return Bludgeon{24.0}; }
+				double wind_up() const final { return 1.0; }
+				double follow_through() const final { return 1.0; }
+				double cooldown() const final { return 2.0; }
+				double wear_ratio() const final { return 0.001; }
 			};
 			class Jab : public MeleeAttack
 			{
 			public:
 				using MeleeAttack::MeleeAttack;
-				std::string name() const override { return "Jab"; }
-				Damage base_damage() const override { return Bludgeon{12.0}; }
-				double wind_up() const override { return 0.2; }
-				double follow_through() const override { return 0.8; }
-				double cooldown() const override { return 1.3; }
-				double wear_ratio() const override { return 0.001; }
+				std::string name() const final { return "Jab"; }
+				Damage base_damage() const final { return Bludgeon{12.0}; }
+				double wind_up() const final { return 0.2; }
+				double follow_through() const final { return 0.8; }
+				double cooldown() const final { return 1.3; }
+				double wear_ratio() const final { return 0.001; }
 			};
 
 			std::shared_ptr<Strike> _strike;
@@ -92,9 +92,9 @@ namespace questless
 				, _jab{std::make_shared<Jab>(weapon.id)}
 			{}
 
-			std::string name() const override { return "Half Staff"; }
+			std::string name() const final { return "Half Staff"; }
 
-			std::vector<uptr<Action>> actions() override
+			std::vector<uptr<Action>> actions() final
 			{
 				std::vector<uptr<Action>> actions;
 				if (weapon().equipped()) {
@@ -114,29 +114,29 @@ namespace questless
 			{
 			public:
 				using MeleeAttack::MeleeAttack;
-				std::string name() const override { return "Strike"; }
-				Damage base_damage() const override { return Damage{Bludgeon{18.0}, Protection{Pad{6.0}} + Protection{Deflect{6.0}}}; }
-				double wind_up() const override { return 0.8; }
-				double follow_through() const override { return 0.8; }
-				double cooldown() const override { return 1.6; }
-				double wear_ratio() const override { return 0.001; }
+				std::string name() const final { return "Strike"; }
+				Damage base_damage() const final { return Damage{Bludgeon{18.0}, Protection{Pad{6.0}} + Protection{Deflect{6.0}}}; }
+				double wind_up() const final { return 0.8; }
+				double follow_through() const final { return 0.8; }
+				double cooldown() const final { return 1.6; }
+				double wear_ratio() const final { return 0.001; }
 			};
 			class Jab : public MeleeAttack
 			{
 			public:
 				using MeleeAttack::MeleeAttack;
-				std::string name() const override { return "Jab"; }
-				Damage base_damage() const override { return Damage{Bludgeon{9.0}, Protection{Pad{6.0}} + Protection{Deflect{6.0}}}; }
-				double wind_up() const override { return 0.16; }
-				double follow_through() const override { return 0.64; }
-				double cooldown() const override { return 1.04; }
-				double wear_ratio() const override { return 0.001; }
+				std::string name() const final { return "Jab"; }
+				Damage base_damage() const final { return Damage{Bludgeon{9.0}, Protection{Pad{6.0}} + Protection{Deflect{6.0}}}; }
+				double wind_up() const final { return 0.16; }
+				double follow_through() const final { return 0.64; }
+				double cooldown() const final { return 1.04; }
+				double wear_ratio() const final { return 0.001; }
 			};
 
 			std::shared_ptr<Strike> _strike;
 			std::shared_ptr<Jab> _jab;
 		};
 
-		Requirements requirements() const override { return Hands{2}; }
+		Requirements requirements() const final { return Hands{2}; }
 	};
 }

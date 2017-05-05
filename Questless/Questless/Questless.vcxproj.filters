@@ -718,6 +718,12 @@
     <ClInclude Include="include\entities\Perception.h">
       <Filter>include\entities</Filter>
     </ClInclude>
+    <ClInclude Include="include\animation\SpellTexturer.h">
+      <Filter>include\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\spell\SpellVisitor.h">
+      <Filter>include\spell</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\world\Region.cpp">
@@ -959,6 +965,9 @@
     </ClCompile>
     <ClCompile Include="src\entities\beings\stats\Vision.cpp">
       <Filter>src\entities\beings\stats</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\SpellTexturer.cpp">
+      <Filter>src\animation</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

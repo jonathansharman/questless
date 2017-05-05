@@ -45,11 +45,11 @@ namespace questless
 
 		sdl::Texture _texture;
 
-		void subupdate() override {}
+		void subupdate() final {}
 
-		sdl::Texture const& texture() const override { return _texture; }
+		sdl::Texture const& texture() const final { return _texture; }
 
-		void refresh() override { _texture = make_texture(); }
+		void refresh() final { _texture = make_texture(); }
 
 		sdl::Texture make_texture() const;
 	};

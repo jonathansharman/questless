@@ -44,7 +44,7 @@ namespace questless
 			: EffectBase<EagleEyeEffect>{origin}, caster_id{caster_id}
 		{}
 
-		int range() const override { return 3; }
+		int range() const final { return 3; }
 	};
 
 	class InjuryEffect : public EffectBase<InjuryEffect>
@@ -62,7 +62,7 @@ namespace questless
 			: EffectBase<InjuryEffect>{origin}, damage{damage}, target_id{target_id}, opt_source_id{opt_source_id}
 		{}
 
-		int range() const override { return 7; }
+		int range() const final { return 7; }
 	};
 
 	class LightningBoltEffect : public EffectBase<LightningBoltEffect>
@@ -70,6 +70,6 @@ namespace questless
 	public:
 		using EffectBase<LightningBoltEffect>::EffectBase;
 
-		int range() const override { return 10; }
+		int range() const final { return 10; }
 	};
 }

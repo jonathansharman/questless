@@ -92,14 +92,14 @@ namespace questless
 		public:
 			PartAttacher(Body& body) : _body{body} {}
 
-			void visit(Head&) override;
-			void visit(Torso&) override;
-			void visit(Arm&) override;
-			void visit(Hand&) override;
-			void visit(Leg&) override;
-			void visit(Foot&) override;
-			void visit(Wing&) override;
-			void visit(Tail&) override;
+			void visit(Head&) final;
+			void visit(Torso&) final;
+			void visit(Arm&) final;
+			void visit(Hand&) final;
+			void visit(Leg&) final;
+			void visit(Foot&) final;
+			void visit(Wing&) final;
+			void visit(Tail&) final;
 		private:
 			Body& _body;
 		};

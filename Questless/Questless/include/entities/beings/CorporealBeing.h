@@ -12,7 +12,7 @@ namespace questless
 	class CorporealBeing : public Being
 	{
 	public:
-		bool corporeal() const override { return true; }
+		bool corporeal() const final { return true; }
 	protected:
 		CorporealBeing(const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, Id<Being> id, Body body, const std::function<Stats()>& make_base_stats);
 		CorporealBeing(std::istream& in, Body body);

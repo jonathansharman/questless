@@ -283,6 +283,7 @@
     <ClInclude Include="include\animation\particles\TextParticle.h" />
     <ClInclude Include="include\animation\particles\WhiteMagicParticle.h" />
     <ClInclude Include="include\animation\particles\YellowMagicParticle.h" />
+    <ClInclude Include="include\animation\SpellTexturer.h" />
     <ClInclude Include="include\animation\TileTexturer.h" />
     <ClInclude Include="include\animation\WorldRenderer.h" />
     <ClInclude Include="include\effects\Effect.h" />
@@ -357,6 +358,7 @@
     <ClInclude Include="include\spell\LightningBolt.h" />
     <ClInclude Include="include\spell\ManaCost.h" />
     <ClInclude Include="include\spell\Spell.h" />
+    <ClInclude Include="include\spell\SpellVisitor.h" />
     <ClInclude Include="include\spell\Teleport.h" />
     <ClInclude Include="include\ui\CountDialog.h" />
     <ClInclude Include="include\ui\Dialog.h" />
@@ -440,6 +442,7 @@
     <ClCompile Include="src\animation\particles\TextParticle.cpp" />
     <ClCompile Include="src\animation\particles\WhiteMagicParticle.cpp" />
     <ClCompile Include="src\animation\particles\YellowMagicParticle.cpp" />
+    <ClCompile Include="src\animation\SpellTexturer.cpp" />
     <ClCompile Include="src\animation\TileTexturer.cpp" />
     <ClCompile Include="src\animation\WorldRenderer.cpp" />
     <ClCompile Include="src\entities\beings\Abilities.cpp" />

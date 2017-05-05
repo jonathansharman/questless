@@ -42,9 +42,8 @@ namespace sdl
 
 		//! Constructs a texture object from the specified image file.
 		//! @param filename The name of the image file.
-		//! @param targetable Whether the texture can be used as a render target.
 		//! @param blend_mode The SDL blend mode to use for this texture. Determines the way the alpha channel is used.
-		Texture(char const* filename, bool targetable = false, SDL_BlendMode blend_mode = SDL_BLENDMODE_BLEND);
+		Texture(char const* filename, SDL_BlendMode blend_mode = SDL_BLENDMODE_BLEND);
 
 		//! Constructs a texture object from an SDL texture.
 		//! @param texture An SDL texture pointer.
@@ -116,7 +115,13 @@ namespace sdl
 
 		//! Executes the given code with this texture as the render target so that draw operations will affect this texture instead of the screen buffer.
 		//! @param f The function to be executed while the texture is the render target.
-		void as_target(std::function<void()> f);
+		template <typename F>
+		void as_target(F&& f)
+		{
+			_renderer.target(_texture);
+			std::forward<F>(f)();
+			_renderer.target(nullptr);
+		}
 	private:
 		SDL_Texture* _texture;
 		Renderer& _renderer;

@@ -28,15 +28,15 @@ namespace questless
 
 		PlayerActionDialog(HUD& hud, std::function<void(Choice)> cont) : _hud{hud}, _cont{std::move(cont)} {}
 
-		State update() override;
+		State update() final;
 
-		void draw() const override
+		void draw() const final
 		{}
 	private:
 		HUD& _hud;
 		Continuation<Choice> _cont;
 		static int _last_used;
 
-		void refresh() override {}
+		void refresh() final {}
 	};
 }

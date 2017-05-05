@@ -46,9 +46,9 @@ namespace questless
 
 			static auto make(Item& item) { return std::make_unique<Drop>(item); }
 
-			std::string name() const override { return "Drop"; }
+			std::string name() const final { return "Drop"; }
 
-			Complete perform(Being& actor, cont_t cont) override;
+			Complete perform(Being& actor, cont_t cont) final;
 		private:
 			Item& _item;
 		};
@@ -60,9 +60,9 @@ namespace questless
 
 			static auto make(Item& item) { return std::make_unique<Throw>(item); }
 
-			std::string name() const override { return "Throw"; }
+			std::string name() const final { return "Throw"; }
 
-			Complete perform(Being& actor, cont_t cont) override;
+			Complete perform(Being& actor, cont_t cont) final;
 		private:
 			Item& _item;
 		};

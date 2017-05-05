@@ -30,8 +30,8 @@ namespace questless
 		static constexpr units::GameRadians _dtheta_max = 2.0 * units::GameRadians::circle();
 		static constexpr units::Hertz _acceleration_factor = 1.25_Hz;
 
-		void subupdate() override;
+		void subupdate() final;
 
-		sdl::Texture const& texture() const override;
+		sdl::Texture const& texture() const final;
 	};
 }

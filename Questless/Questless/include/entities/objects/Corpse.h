@@ -24,9 +24,9 @@ namespace questless
 
 		virtual EntityClass entity_class() const { return EntityClass::CorpseClass; }
 
-		double transparency() const override { return 0.5; }
+		double transparency() const final { return 0.5; }
 
-		bool blocks_movement() const override { return true; }
+		bool blocks_movement() const final { return true; }
 
 		Id<Being> being_id() const { return _being_id; }
 	private:

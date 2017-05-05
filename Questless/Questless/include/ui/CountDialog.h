@@ -34,9 +34,9 @@ namespace questless
 			load_textures();
 		}
 
-		State update() override;
+		State update() final;
 
-		void draw() const override;
+		void draw() const final;
 	private:
 		std::string _title;
 		std::string _prompt;
@@ -49,7 +49,7 @@ namespace questless
 		uptr<sdl::Texture> _txt_prompt;
 		uptr<sdl::Texture> _txt_selector;
 
-		void refresh() override { load_textures(); }
+		void refresh() final { load_textures(); }
 
 		void load_textures();
 	};

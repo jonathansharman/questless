@@ -27,12 +27,12 @@ namespace questless
 			_scale_velocity = units::GameScaleVelocity{Scale{-_scale / _lifetime.count()}};
 		}
 	private:
-		bool fade_out() const override { return false; };
+		bool fade_out() const final { return false; };
 
-		bool face_towards_heading() const override { return true; }
+		bool face_towards_heading() const final { return true; }
 
-		void subupdate() override {}
+		void subupdate() final {}
 
-		sdl::Texture const& texture() const override;
+		sdl::Texture const& texture() const final;
 	};
 }

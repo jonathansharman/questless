@@ -36,8 +36,8 @@ namespace questless
 
 		bool _turning_right; //!< True if the green magic particle is turning to the right (CW), false if turning left (CCW).
 
-		void subupdate() override;
+		void subupdate() final;
 
-		sdl::Texture const& texture() const override;
+		sdl::Texture const& texture() const final;
 	};
 }
