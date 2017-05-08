@@ -175,7 +175,7 @@ namespace questless
 		void clear_delayed_actions();
 
 		//! The being's equipped shields.
-		std::vector<std::unique_ptr<Armor>> const& shields() { return _shields; }
+		std::vector<uptr<Armor>> const& shields() { return _shields; }
 
 		//! Recalculates this being's stats. Called automatically with each update.
 		void refresh_stats() { stats = get_stats(); }
@@ -195,14 +195,14 @@ namespace questless
 		//! @param opt_source_id The ID of the being which caused the healing, if any.
 		void heal(double amount, BodyPart* part, std::optional<Id<Being>> opt_source_id);
 
-		void add_status(std::unique_ptr<Status> status);
+		void add_status(uptr<Status> status);
 	protected:
-		Being(const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, Id<Being> id, Body body, const std::function<Stats()>& make_base_stats);
+		Being(const std::function<uptr<Agent>(Being&)>& make_agent, Id<Being> id, Body body, const std::function<Stats()>& make_base_stats);
 		Being(std::istream& in, Body body);
 
 		virtual Body make_body() = 0;
 	private:
-		std::unique_ptr<Agent> _agent; //!< The agent responsible for this being.
+		uptr<Agent> _agent; //!< The agent responsible for this being.
 
 		//! @todo Maybe use a std::pair of actions and conts, and then use the auto [action, cont] = ... syntax in act() once supported?
 		std::deque<double> _action_delays; //!< The queue of delays before the next action in the delayed actions queue should begin.
@@ -211,12 +211,12 @@ namespace questless
 
 		// Statuses
 
-		std::vector<std::unique_ptr<Status>> _statuses;
+		std::vector<uptr<Status>> _statuses;
 
 		// Items
 
-		std::vector<std::unique_ptr<Weapon>> _equipped_weapons;
-		std::vector<std::unique_ptr<Armor>> _shields;
+		std::vector<uptr<Weapon>> _equipped_weapons;
+		std::vector<uptr<Armor>> _shields;
 
 		// Methods
 

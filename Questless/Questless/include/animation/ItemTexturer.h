@@ -23,6 +23,6 @@ namespace questless
 		//! A handle to the texture of the last visited item.
 		auto texture_handle() const { return _texture_handle; }
 	private:
-		sdl::Handle<sdl::Texture> _texture_handle;
+		sdl::TextureHandle _texture_handle;
 	};
 }

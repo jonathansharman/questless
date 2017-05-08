@@ -229,32 +229,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Image Include="resources\textures\glow.png" />
-    <Image Include="resources\textures\human-animation.png" />
-    <Image Include="resources\textures\icon.png" />
-    <Image Include="resources\textures\items\blank-scroll.png" />
-    <Image Include="resources\textures\items\charged-scroll.png" />
-    <Image Include="resources\textures\items\uncharged-scroll.png" />
-    <Image Include="resources\textures\particles\blood.png" />
-    <Image Include="resources\textures\particles\magic\black.png" />
-    <Image Include="resources\textures\particles\magic\blue.png" />
-    <Image Include="resources\textures\particles\magic\green.png" />
-    <Image Include="resources\textures\particles\magic\red.png" />
-    <Image Include="resources\textures\particles\magic\white.png" />
-    <Image Include="resources\textures\particles\magic\yellow.png" />
-    <Image Include="resources\textures\splash\flame.png" />
-    <Image Include="resources\textures\splash\logo.png" />
-    <Image Include="resources\textures\test-animation.png" />
-    <Image Include="resources\textures\test.png" />
-    <Image Include="resources\textures\test2.png" />
-    <Image Include="resources\textures\test3.png" />
-    <Image Include="resources\textures\ui\hex_circle.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Font Include="resources\fonts\dumbledor1.ttf" />
-    <Font Include="resources\fonts\firamono.ttf" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="include\agents\Action.h" />
     <ClInclude Include="include\agents\Agent.h" />
     <ClInclude Include="include\agents\BasicAI.h" />
@@ -269,14 +243,17 @@
     <ClInclude Include="include\agents\Player.h" />
     <ClInclude Include="include\agents\TileQuery.h" />
     <ClInclude Include="include\animation\Animation.h" />
-    <ClInclude Include="include\animation\AnimationSet.h" />
+    <ClInclude Include="include\animation\AnimationStack.h" />
     <ClInclude Include="include\animation\BodyTexturer.h" />
     <ClInclude Include="include\animation\Camera.h" />
     <ClInclude Include="include\animation\EntityAnimator.h" />
+    <ClInclude Include="include\animation\Flame.h" />
     <ClInclude Include="include\animation\ItemTexturer.h" />
+    <ClInclude Include="include\animation\ParticleAnimation.h" />
     <ClInclude Include="include\animation\particles\BlackMagicParticle.h" />
     <ClInclude Include="include\animation\particles\BloodParticle.h" />
     <ClInclude Include="include\animation\particles\BlueMagicParticle.h" />
+    <ClInclude Include="include\animation\particles\FlameParticle.h" />
     <ClInclude Include="include\animation\particles\GreenMagicParticle.h" />
     <ClInclude Include="include\animation\particles\Particle.h" />
     <ClInclude Include="include\animation\particles\RedMagicParticle.h" />
@@ -284,6 +261,8 @@
     <ClInclude Include="include\animation\particles\WhiteMagicParticle.h" />
     <ClInclude Include="include\animation\particles\YellowMagicParticle.h" />
     <ClInclude Include="include\animation\SpellTexturer.h" />
+    <ClInclude Include="include\animation\SpriteAnimation.h" />
+    <ClInclude Include="include\animation\Still.h" />
     <ClInclude Include="include\animation\TileTexturer.h" />
     <ClInclude Include="include\animation\WorldRenderer.h" />
     <ClInclude Include="include\effects\Effect.h" />
@@ -322,6 +301,7 @@
     <ClInclude Include="include\entities\beings\WorldView.h" />
     <ClInclude Include="include\entities\Entity.h" />
     <ClInclude Include="include\entities\EntityVisitor.h" />
+    <ClInclude Include="include\entities\objects\Campfire.h" />
     <ClInclude Include="include\entities\objects\Corpse.h" />
     <ClInclude Include="include\entities\objects\ItemBox.h" />
     <ClInclude Include="include\entities\objects\Object.h" />
@@ -396,6 +376,7 @@
     <ClInclude Include="include\units\ScreenVector.h" />
     <ClInclude Include="include\units\SpriteSheetPoint.h" />
     <ClInclude Include="include\units\SpriteSheetSpace.h" />
+    <ClInclude Include="include\units\SpriteSheetVector.h" />
     <ClInclude Include="include\units\TexturePoint.h" />
     <ClInclude Include="include\units\TextureRect.h" />
     <ClInclude Include="include\units\TextureSpace.h" />
@@ -427,15 +408,15 @@
     <ClCompile Include="src\agents\Agent.cpp" />
     <ClCompile Include="src\agents\BasicAI.cpp" />
     <ClCompile Include="src\agents\Player.cpp" />
-    <ClCompile Include="src\animation\Animation.cpp" />
-    <ClCompile Include="src\animation\AnimationSet.cpp" />
     <ClCompile Include="src\animation\BodyTexturer.cpp" />
     <ClCompile Include="src\animation\Camera.cpp" />
     <ClCompile Include="src\animation\EntityAnimator.cpp" />
     <ClCompile Include="src\animation\ItemTexturer.cpp" />
+    <ClCompile Include="src\animation\ParticleAnimation.cpp" />
     <ClCompile Include="src\animation\particles\BlackMagicParticle.cpp" />
     <ClCompile Include="src\animation\particles\BloodParticle.cpp" />
     <ClCompile Include="src\animation\particles\BlueMagicParticle.cpp" />
+    <ClCompile Include="src\animation\particles\FlameParticle.cpp" />
     <ClCompile Include="src\animation\particles\GreenMagicParticle.cpp" />
     <ClCompile Include="src\animation\particles\Particle.cpp" />
     <ClCompile Include="src\animation\particles\RedMagicParticle.cpp" />
@@ -443,6 +424,8 @@
     <ClCompile Include="src\animation\particles\WhiteMagicParticle.cpp" />
     <ClCompile Include="src\animation\particles\YellowMagicParticle.cpp" />
     <ClCompile Include="src\animation\SpellTexturer.cpp" />
+    <ClCompile Include="src\animation\SpriteAnimation.cpp" />
+    <ClCompile Include="src\animation\Still.cpp" />
     <ClCompile Include="src\animation\TileTexturer.cpp" />
     <ClCompile Include="src\animation\WorldRenderer.cpp" />
     <ClCompile Include="src\entities\beings\Abilities.cpp" />
@@ -463,6 +446,7 @@
     <ClCompile Include="src\entities\beings\WorldView.cpp" />
     <ClCompile Include="src\entities\Entity.cpp" />
     <ClCompile Include="src\entities\beings\goblinoids\Goblin.cpp" />
+    <ClCompile Include="src\entities\objects\Campfire.cpp" />
     <ClCompile Include="src\entities\objects\Object.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\items\armor\Armor.cpp" />

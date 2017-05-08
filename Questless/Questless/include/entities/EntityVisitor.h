@@ -15,6 +15,7 @@ namespace questless
 
 	// Objects
 
+	class Campfire;
 	class Corpse;
 	class ItemBox;
 
@@ -23,6 +24,7 @@ namespace questless
 		< Goblin
 		, Human
 		// Objects
+		, Campfire
 		, Corpse
 		, ItemBox
 		>;

@@ -49,38 +49,46 @@ namespace questless
 	void BasicAI::AttackState::act(BasicAI& ai)
 	{
 		if (Being* target = game().beings.get(target_id)) {
-			auto target_direction = ai.being.coords.direction_towards(target->coords);
-			if (ai.being.direction != target_direction) {
-				// Facing away from target. Turn towards it.
-				ai.turn(target_direction, [&ai](Action::Result result) {
-					if (result == Action::Result::aborted) {
-						// Turn failed. Wait for up to 10 time units instead.
-						ai.idle(uniform(0.0, 10.0));
-					}
-					return Complete{};
-				});
+			if (ai.being.perception_of(target->coords).category() == Perception::Category::none) {
+				// Target not visible. Switch to idle state.
+				ai._state = std::make_unique<IdleState>();
+				ai.act();
+
+				//! @todo Only go passive while target is out of visual range. Keep a grudge list?
 			} else {
-				// Facing towards target.
-				if (ai.being.coords.distance_to(target->coords) == 1) {
-					// Within striking distance of target.
-					//! @todo This is a hack that assumes the first item in the inventory is a melee weapon.
-					Item& item = *ai.being.inventory.items.begin();
-					item.actions().front()->perform(ai.being, [&ai](Action::Result result) {
+				auto target_direction = ai.being.coords.direction_towards(target->coords);
+				if (ai.being.direction != target_direction) {
+					// Facing away from target. Turn towards it.
+					ai.turn(target_direction, [&ai](Action::Result result) {
 						if (result == Action::Result::aborted) {
-							// Attack failed. Wait for up to 10 time units instead.
+							// Turn failed. Wait for up to 10 time units instead.
 							ai.idle(uniform(0.0, 10.0));
 						}
 						return Complete{};
 					});
 				} else {
-					// Out of range. Move towards target.
-					ai.walk(target_direction, [&ai](Action::Result result) {
-						if (result == Action::Result::aborted) {
-							// Walk failed. Wait for up to 10 time units instead.
-							ai.idle(uniform(0.0, 10.0));
-						}
-						return Complete{};
-					});
+					// Facing towards target.
+					if (ai.being.coords.distance_to(target->coords) == 1) {
+						// Within striking distance of target.
+						//! @todo This is a hack that assumes the first item in the inventory is a melee weapon.
+						Item& item = *ai.being.inventory.items.begin();
+						item.actions().front()->perform(ai.being, [&ai](Action::Result result) {
+							if (result == Action::Result::aborted) {
+								// Attack failed. Wait for up to 10 time units instead.
+								ai.idle(uniform(0.0, 10.0));
+							}
+							return Complete{};
+						});
+					} else {
+						// Out of range. Move towards target.
+						ai.walk(target_direction, [&ai](Action::Result result) {
+							if (result == Action::Result::aborted) {
+								// Walk failed. Wait for up to 10 time units instead.
+								ai.idle(uniform(0.0, 10.0));
+							}
+							return Complete{};
+						});
+					}
 				}
 			}
 		} else {

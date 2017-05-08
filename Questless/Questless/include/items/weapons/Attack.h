@@ -75,24 +75,24 @@ namespace questless
 		class Launch : public Action
 		{
 		public:
-			Launch(std::shared_ptr<MeleeAttack> attack) : _attack{std::move(attack)} {}
-			static uptr<Launch> make(std::shared_ptr<MeleeAttack> attack) { return std::make_unique<Launch>(std::move(attack)); }
+			Launch(sptr<MeleeAttack> attack) : _attack{std::move(attack)} {}
+			static uptr<Launch> make(sptr<MeleeAttack> attack) { return std::make_unique<Launch>(std::move(attack)); }
 			std::string name() const final { return _attack->name(); }
 			Complete perform(Being& actor, cont_t cont) final;
 		private:
-			std::shared_ptr<MeleeAttack> _attack;
+			sptr<MeleeAttack> _attack;
 		};
 
 		class Finish : public Action
 		{
 		public:
-			Finish(std::shared_ptr<MeleeAttack> attack, RegionTileCoords::Direction direction)
+			Finish(sptr<MeleeAttack> attack, RegionTileCoords::Direction direction)
 				: _attack{std::move(attack)}, _direction{direction}
 			{}
 			std::string name() const final { return _attack->name(); }
 			Complete perform(Being& actor, cont_t cont) final;
 		private:
-			std::shared_ptr<MeleeAttack> _attack;
+			sptr<MeleeAttack> _attack;
 			RegionTileCoords::Direction _direction;
 		};
 	};
@@ -114,23 +114,23 @@ namespace questless
 		class Launch : public Action
 		{
 		public:
-			Launch(std::shared_ptr<RangedAttack> attack) : _attack{std::move(attack)} {}
-			static uptr<Launch> make(std::shared_ptr<RangedAttack> attack) { return std::make_unique<Launch>(std::move(attack)); }
+			Launch(sptr<RangedAttack> attack) : _attack{std::move(attack)} {}
+			static uptr<Launch> make(sptr<RangedAttack> attack) { return std::make_unique<Launch>(std::move(attack)); }
 			std::string name() const final { return _attack->name(); }
 			Complete perform(Being& actor, cont_t cont) final;
 		private:
-			std::shared_ptr<RangedAttack> _attack;
+			sptr<RangedAttack> _attack;
 		};
 
 		class Finish : public Action
 		{
 		public:
-			Finish(std::shared_ptr<RangedAttack> attack) : _attack{std::move(attack)} {}
-			static auto make(std::shared_ptr<RangedAttack> attack) { return std::make_unique<Finish>(attack); }
+			Finish(sptr<RangedAttack> attack) : _attack{std::move(attack)} {}
+			static auto make(sptr<RangedAttack> attack) { return std::make_unique<Finish>(attack); }
 			std::string name() const final { return _attack->name(); }
 			Complete perform(Being& actor, cont_t cont) final;
 		private:
-			std::shared_ptr<RangedAttack> _attack;
+			sptr<RangedAttack> _attack;
 		};
 	};
 }

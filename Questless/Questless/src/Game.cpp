@@ -32,7 +32,6 @@
 #include "spell/Teleport.h"
 
 using std::move;
-using std::unique_ptr;
 using std::make_unique;
 using std::dynamic_pointer_cast;
 using std::string;

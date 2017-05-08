@@ -34,11 +34,11 @@ namespace questless
 			, _texture{make_texture()}
 		{}
 	private:
+		static sdl::FontHandle _font_handle;
+
 		friend class Initializer<TextParticle>;
 		static Initializer<TextParticle> _initializer;
 		static void initialize();
-
-		static sdl::FontHandle _font_handle;
 
 		std::string _text;
 		sdl::Color _color;

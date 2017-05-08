@@ -30,12 +30,12 @@ namespace questless
 	TextureHandle DigraphMenu::_r_handle;
 	TextureHandle DigraphMenu::_tile_handle;
 
-	std::shared_future<int> DigraphMenu::_top_margin;
-	std::shared_future<int> DigraphMenu::_bottom_margin;
-	std::shared_future<int> DigraphMenu::_left_margin;
-	std::shared_future<int> DigraphMenu::_right_margin;
-	std::shared_future<int> DigraphMenu::_tile_width;
-	std::shared_future<int> DigraphMenu::_tile_height;
+	int DigraphMenu::_top_margin;
+	int DigraphMenu::_bottom_margin;
+	int DigraphMenu::_left_margin;
+	int DigraphMenu::_right_margin;
+	int DigraphMenu::_tile_width;
+	int DigraphMenu::_tile_height;
 
 	Initializer<DigraphMenu> DigraphMenu::_initializer;
 	void DigraphMenu::initialize()
@@ -55,13 +55,6 @@ namespace questless
 		_l_handle = texture_manager().add("resources/textures/menu/l.png");
 		_r_handle = texture_manager().add("resources/textures/menu/r.png");
 		_tile_handle = texture_manager().add("resources/textures/menu/tile.png");
-
-		_top_margin = std::async(std::launch::deferred, []() { return texture_manager()[_u_handle].height(); });
-		_bottom_margin = std::async(std::launch::deferred, []() { return texture_manager()[_d_handle].height(); });
-		_left_margin = std::async(std::launch::deferred, []() { return texture_manager()[_l_handle].width(); });
-		_right_margin = std::async(std::launch::deferred, []() { return texture_manager()[_r_handle].width(); });
-		_tile_width = std::async(std::launch::deferred, []() { return texture_manager()[_tile_handle].width(); });
-		_tile_height = std::async(std::launch::deferred, []() { return texture_manager()[_tile_handle].height(); });
 	}
 
 	DigraphMenu::DigraphMenu(int min_width, int min_height)
@@ -238,7 +231,7 @@ namespace questless
 
 		// Draw background.
 
-		_background->draw(ScreenPoint{_content_position.x - _left_margin.get(), _content_position.y - _top_margin.get()});
+		_background->draw(ScreenPoint{_content_position.x - _left_margin, _content_position.y - _top_margin});
 
 		// Draw text.
 
@@ -265,15 +258,22 @@ namespace questless
 
 	void DigraphMenu::render()
 	{
-		static int top_margin = _top_margin.get();
-		static int bottom_margin = _bottom_margin.get();
-		static int left_margin = _left_margin.get();
-		static int right_margin = _right_margin.get();
-		static int tile_width = _tile_width.get();
-		static int tile_height = _tile_height.get();
+		static bool first_call = true;
+		if (first_call) {
+			// Initialize these on first call to render() rather than at static initialization since they rely on loaded textures.
 
-		_content_width = _min_width - left_margin - right_margin;
-		_content_height = _min_height - top_margin - bottom_margin;
+			_top_margin = texture_manager()[_u_handle].height();
+			_bottom_margin = texture_manager()[_d_handle].height();
+			_left_margin = texture_manager()[_l_handle].width();
+			_right_margin = texture_manager()[_r_handle].width();
+			_tile_width = texture_manager()[_tile_handle].width();
+			_tile_height = texture_manager()[_tile_handle].height();
+
+			first_call = false;
+		}
+
+		_content_width = _min_width - _left_margin - _right_margin;
+		_content_height = _min_height - _top_margin - _bottom_margin;
 
 		// Render text.
 
@@ -288,47 +288,47 @@ namespace questless
 			_page_views.emplace_back(font_manager()[_title_font_handle].render(_pages[i].title.c_str(), _title_color), std::move(option_textures));
 		}
 
-		int width_remainder = _content_width % tile_width;
+		int width_remainder = _content_width % _tile_width;
 		if (width_remainder > 0) {
-			_content_width += tile_width - width_remainder;
+			_content_width += _tile_width - width_remainder;
 		}
 
-		int height_remainder = _content_height % tile_height;
+		int height_remainder = _content_height % _tile_height;
 		if (height_remainder > 0) {
-			_content_height += tile_height - height_remainder;
+			_content_height += _tile_height - height_remainder;
 		}
 
 		// Render background.
 
 		_background = std::make_unique<Texture>
-			( _content_width + left_margin + right_margin
-			, _content_height + top_margin + bottom_margin
+			( _content_width + _left_margin + _right_margin
+			, _content_height + _top_margin + _bottom_margin
 			);
 		_background->as_target([&] {
 			// Clear background texture with transparent color.
 			renderer().clear(Color::clear());
 			
 			// Interior
-			for (int x = 0; x < _content_width / tile_width; ++x) {
-				for (int y = 0; y < _content_height / tile_height; ++y) {
-					texture_manager()[_tile_handle].draw(ScreenPoint{left_margin + tile_width * x, top_margin + tile_height * y});
+			for (int x = 0; x < _content_width / _tile_width; ++x) {
+				for (int y = 0; y < _content_height / _tile_height; ++y) {
+					texture_manager()[_tile_handle].draw(ScreenPoint{_left_margin + _tile_width * x, _top_margin + _tile_height * y});
 				}
 			}
 			// Top and bottom margins
-			for (int x = 0; x < _content_width / tile_width; ++x) {
-				texture_manager()[_u_handle].draw(ScreenPoint{left_margin + tile_width * x, 0});
-				texture_manager()[_d_handle].draw(ScreenPoint{left_margin + tile_width * x, top_margin + _content_height});
+			for (int x = 0; x < _content_width / _tile_width; ++x) {
+				texture_manager()[_u_handle].draw(ScreenPoint{_left_margin + _tile_width * x, 0});
+				texture_manager()[_d_handle].draw(ScreenPoint{_left_margin + _tile_width * x, _top_margin + _content_height});
 			}
 			// Left and right margins
-			for (int y = 0; y < _content_height / tile_height; ++y) {
-				texture_manager()[_l_handle].draw(ScreenPoint{0, top_margin + tile_width * y});
-				texture_manager()[_r_handle].draw(ScreenPoint{left_margin + _content_width, top_margin + tile_width * y});
+			for (int y = 0; y < _content_height / _tile_height; ++y) {
+				texture_manager()[_l_handle].draw(ScreenPoint{0, _top_margin + _tile_width * y});
+				texture_manager()[_r_handle].draw(ScreenPoint{_left_margin + _content_width, _top_margin + _tile_width * y});
 			}
 			// Corners
 			texture_manager()[_ul_handle].draw(ScreenPoint{0, 0});
-			texture_manager()[_ur_handle].draw(ScreenPoint{left_margin + _content_width, 0});
-			texture_manager()[_dl_handle].draw(ScreenPoint{0, top_margin + _content_height});
-			texture_manager()[_dr_handle].draw(ScreenPoint{left_margin + _content_width, top_margin + _content_height});
+			texture_manager()[_ur_handle].draw(ScreenPoint{_left_margin + _content_width, 0});
+			texture_manager()[_dl_handle].draw(ScreenPoint{0, _top_margin + _content_height});
+			texture_manager()[_dr_handle].draw(ScreenPoint{_left_margin + _content_width, _top_margin + _content_height});
 		});
 
 		_render_is_current = true;

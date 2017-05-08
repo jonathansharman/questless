@@ -16,9 +16,12 @@
 namespace questless
 {
 	enum class EntityClass : unsigned
+		// Beings
 		{ HumanClass
 		, GoblinClass
 		, TrollClass
+		// Objects
+		, Campfire
 		, CorpseClass
 		, ItemBoxClass
 		};

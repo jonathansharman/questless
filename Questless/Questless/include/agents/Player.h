@@ -82,7 +82,7 @@ namespace questless
 
 		Complete get_lightning_bolt_quality(RegionTileCoords target_coords, std::function<Complete(double)> cont) const final;
 	private:
-		std::unique_ptr<WorldView> _world_view;
+		uptr<WorldView> _world_view;
 
 		std::vector<sptr<Effect>> _perceived_effects;
 	};

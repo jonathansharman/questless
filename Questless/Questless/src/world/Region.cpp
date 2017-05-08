@@ -22,7 +22,6 @@ namespace fs = std::tr2::sys; //! @todo Replace this with proper using statement
 using std::string;
 using std::vector;
 using std::function;
-using std::unique_ptr;
 using std::make_unique;
 
 using namespace sdl;
@@ -72,9 +71,13 @@ namespace questless
 					for (int r = 0; r < Section::diameter; ++r) {
 						if ((section_r != 0 || section_q != 0) && uniform(0, 10) == 0) {
 							auto entity_coords = Section::region_tile_coords(section_coords, SectionTileCoords{q, r});
-							auto new_being = make_unique<Goblin>(Agent::make<BasicAI>);
-							new_being->inventory.add(game().items.add(make_unique<Quarterstaff>()).id);
-							spawn(std::move(new_being), entity_coords);
+							if (!uniform(0, 12)) {
+								spawn(make_unique<Campfire>(*this, entity_coords), entity_coords);
+							} else {
+								auto new_being = make_unique<Goblin>(Agent::make<BasicAI>);
+								new_being->inventory.add(game().items.add(make_unique<Quarterstaff>()).id);
+								spawn(std::move(new_being), entity_coords);
+							}
 						}
 					}
 				}
@@ -427,7 +430,7 @@ namespace questless
 	{
 		auto line = start.line_to(end);
 		double result = 1.0;
-		for (size_t i = 1; i < line.size() - 1; ++i) {
+		for (std::size_t i = 1; i < line.size() - 1; ++i) {
 			if (Being const* other = game().region().being(line[i])) {
 				result *= other->transparency();
 			}

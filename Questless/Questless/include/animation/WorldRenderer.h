@@ -7,14 +7,14 @@
 #include <unordered_map>
 #include <memory>
 
-#include "animation/particles/Particle.h"
-#include "AnimationSet.h"
 #include "Camera.h"
 #include "effects/Effect.h"
 #include "entities/beings/WorldView.h"
 #include "entities/Entity.h"
+#include "particles/Particle.h"
 #include "sdl/Renderable.h"
 #include "sdl/Renderer.h"
+#include "Still.h"
 #include "utility/Initializer.h"
 #include "world/Tile.h"
 
@@ -57,17 +57,17 @@ namespace questless
 		void visit(InjuryEffect const&) final;
 		void visit(LightningBoltEffect const&) final;
 	private:
+		static std::optional<Still> _unknown_entity_animation;
+
 		friend class Initializer<WorldRenderer>;
 		static Initializer<WorldRenderer> _initializer;
 		static void initialize();
 
-		static std::optional<AnimationSet> _unknown_entity_animation;
-
 		WorldView const* _world_view;
 
 		std::unordered_map<Tile::TileClass, uptr<sdl::Texture>> _tile_textures;
-		std::unordered_map<Id<Being>, AnimationSet> _being_animation_set_map;
-		std::unordered_map<Id<Object>, AnimationSet> _object_animation_set_map; //! @todo It would be nice to combine the being and object animation maps since the logic is idenitical. Could add an Entity::id field.
+		std::unordered_map<Id<Being>, uptr<Animation>> _being_animation_map;
+		std::unordered_map<Id<Object>, uptr<Animation>> _object_animation_map; //! @todo It would be nice to combine the being and object animation maps since the logic is idenitical. Could add an Entity::id field.
 		uptr<sdl::Texture> _terrain_texture;
 		units::GameRect _terrain_bounds;
 		bool _terrain_render_is_current;
@@ -77,10 +77,10 @@ namespace questless
 		void refresh() final;
 
 		sdl::Texture& cache_tile_texture(Tile const& tile);
-		AnimationSet& cache_animation(Being const& being);
-		AnimationSet& cache_animation(Object const& object);
-		AnimationSet& get_animation(Being const& being);
-		AnimationSet& get_animation(Object const& being);
+		Animation& cache_animation(Being const& being);
+		Animation& cache_animation(Object const& object);
+		Animation& get_animation(Being const& being);
+		Animation& get_animation(Object const& being);
 		void render_terrain();
 	};
 }

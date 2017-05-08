@@ -96,7 +96,7 @@ namespace questless
 
 		// Debug
 
-		size_t const _max_fps_buffer_size = 25;
+		std::size_t const _max_fps_buffer_size = 25;
 
 		// Display
 
@@ -141,7 +141,7 @@ namespace questless
 
 		// Animations
 
-		std::unique_ptr<WorldRenderer> _world_renderer;
+		uptr<WorldRenderer> _world_renderer;
 
 		// Fonts
 
@@ -164,7 +164,7 @@ namespace questless
 		bool _splash_sound_played;
 		std::vector<units::ScreenPoint> _splash_flame_positions;
 
-		std::unique_ptr<Region> _region;
+		uptr<Region> _region;
 
 		clock::time_point _time_last_state_change;
 
@@ -172,10 +172,10 @@ namespace questless
 
 		DigraphMenu _main_menu;
 
-		std::unique_ptr<PlayerActionDialog> _player_action_dialog;
+		uptr<PlayerActionDialog> _player_action_dialog;
 		std::deque<uptr<Dialog>> _dialogs;
 
-		std::unique_ptr<HUD> _hud;
+		uptr<HUD> _hud;
 
 		units::GamePoint _point_clicked_rounded{0.0, 0.0};
 

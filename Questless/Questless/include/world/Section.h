@@ -160,7 +160,7 @@ namespace questless
 		}
 	private:
 		//! A q-major array of tiles, representing a rhomboid section of world data centered around the section's hex coordinates.
-		std::array<std::array<std::unique_ptr<Tile>, diameter>, diameter> _tiles;
+		std::array<std::array<uptr<Tile>, diameter>, diameter> _tiles;
 		//! The hex coordinates of the section within the region. The section's center's region tile coordinates are _coords * section_diameter.
 		RegionSectionCoords _coords;
 

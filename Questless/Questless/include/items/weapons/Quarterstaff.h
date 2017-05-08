@@ -79,8 +79,8 @@ namespace questless
 				double wear_ratio() const final { return 0.001; }
 			};
 
-			std::shared_ptr<Strike> _strike;
-			std::shared_ptr<Jab> _jab;
+			sptr<Strike> _strike;
+			sptr<Jab> _jab;
 		};
 
 		class HalfStaffForm : public Form
@@ -133,8 +133,8 @@ namespace questless
 				double wear_ratio() const final { return 0.001; }
 			};
 
-			std::shared_ptr<Strike> _strike;
-			std::shared_ptr<Jab> _jab;
+			sptr<Strike> _strike;
+			sptr<Jab> _jab;
 		};
 
 		Requirements requirements() const final { return Hands{2}; }

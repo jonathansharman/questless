@@ -11,7 +11,6 @@
 #include "world/coordinates.h"
 #include "utility/utility.h"
 #include "utility/TaggedType.h"
-#include "units/Point.h"
 
 namespace questless
 {

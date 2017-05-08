@@ -95,6 +95,6 @@ namespace questless
 			void act(BasicAI& ai) override;
 		};
 
-		std::unique_ptr<State> _state = std::make_unique<IdleState>();
+		uptr<State> _state = std::make_unique<IdleState>();
 	};
 }

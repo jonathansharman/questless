@@ -22,7 +22,7 @@ namespace questless
 	public:
 		//! @param owner The being that owns this body.
 		//! @param root The root of the body parts tree.
-		Body(Being& owner, std::unique_ptr<BodyPart> root);
+		Body(Being& owner, uptr<BodyPart> root);
 
 		Body(Body&&) = default;
 
@@ -107,7 +107,7 @@ namespace questless
 
 		Being& _owner;
 
-		std::unique_ptr<BodyPart> _root;
+		uptr<BodyPart> _root;
 
 		units::ScreenRect _bounds;
 		units::ScreenVector _offset_to_center;

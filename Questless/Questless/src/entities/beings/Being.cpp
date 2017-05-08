@@ -10,12 +10,11 @@
 #include "world/Section.h"
 #include "world/Region.h"
 
-using std::unique_ptr;
 using std::function;
 
 namespace questless
 {
-	Being::Being(const function<unique_ptr<Agent>(Being&)>& make_agent, Id<Being> id, Body body, const function<Stats()>& make_base_stats)
+	Being::Being(const function<uptr<Agent>(Being&)>& make_agent, Id<Being> id, Body body, const function<Stats()>& make_base_stats)
 		: Entity{}
 		, id{id}
 		, body{std::move(body)}
@@ -158,7 +157,7 @@ namespace questless
 		
 		// Update status modifiers.
 		{
-			size_t i = 0;
+			std::size_t i = 0;
 			while (i < _statuses.size()) {
 				_statuses[i]->update(*this);
 				if (_statuses[i]->duration() == 0) {
@@ -330,7 +329,7 @@ namespace questless
 		}
 	}
 
-	void Being::add_status(std::unique_ptr<Status> status)
+	void Being::add_status(uptr<Status> status)
 	{
 		Status& ref = *status;
 		_statuses.push_back(std::move(status));

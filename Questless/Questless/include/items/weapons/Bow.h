@@ -64,7 +64,7 @@ namespace questless
 			ArrowCost _cost;
 		};
 
-		std::shared_ptr<Fire> _fire;
+		sptr<Fire> _fire;
 
 		Requirements requirements() const final { return Hands{2}; }
 	};

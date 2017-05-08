@@ -14,7 +14,7 @@ using namespace units;
 
 namespace questless
 {
-	Body::Body(Being& owner, std::unique_ptr<BodyPart> root) : _owner{owner}, _root{std::move(root)}
+	Body::Body(Being& owner, uptr<BodyPart> root) : _owner{owner}, _root{std::move(root)}
 	{
 		int x_min = 0;
 		int y_min = 0;

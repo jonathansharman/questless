@@ -10,7 +10,7 @@ namespace questless
 	double Vision::visibility(double illuminance, int distance) const
 	{
 		constexpr double darkness_factor = 0.05;
-		constexpr double glare_factor = 0.05;
+		constexpr double glare_factor = 0.015;
 
 		double const illuminance_penalty = illuminance < ideal_illuminance
 			? square(ideal_illuminance - illuminance) / (1.0 + darkness_tolerance) * darkness_factor // Too dark

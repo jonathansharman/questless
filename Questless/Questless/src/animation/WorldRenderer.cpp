@@ -21,19 +21,14 @@ using namespace units;
 
 namespace questless
 {
+	std::optional<Still> WorldRenderer::_unknown_entity_animation;
+
+	Initializer<WorldRenderer> _initializer;
 	void WorldRenderer::initialize()
 	{
 		auto unknown_entity_animation_ss = texture_manager().add("resources/textures/entities/unknown.png");
-		_unknown_entity_animation = AnimationSet{unknown_entity_animation_ss, 1, 1};
-		auto animation = _unknown_entity_animation->add(Animation
-			{ {{GameSeconds{1.0}, SpriteSheetPoint{0, 0}, TexturePoint{0, 10}}}
-			, Looping{true}
-			});
-		_unknown_entity_animation->start(animation, RandomizeStartTime{true});
+		_unknown_entity_animation = Still{unknown_entity_animation_ss, TexturePoint{0, 0}};
 	}
-
-	Initializer<WorldRenderer> _initializer;
-	std::optional<AnimationSet> WorldRenderer::_unknown_entity_animation;
 
 	void WorldRenderer::update_view(WorldView const& world_view, std::vector<sptr<Effect>> effects)
 	{
@@ -51,16 +46,16 @@ namespace questless
 	{
 		// Update cached being and object animations.
 
-		for (auto& id_and_animation : _being_animation_set_map) {
-			id_and_animation.second.update();
+		for (auto& id_and_animation : _being_animation_map) {
+			id_and_animation.second->update();
 		}
-		for (auto& id_and_animation : _object_animation_set_map) {
-			id_and_animation.second.update();
+		for (auto& id_and_animation : _object_animation_map) {
+			id_and_animation.second->update();
 		}
 
 		// Update effect sounds and animations.
 
-		for (size_t i = 0; i < _particles.size();) {
+		for (std::size_t i = 0; i < _particles.size();) {
 			_particles[i]->update();
 			if (_particles[i]->expired()) {
 				_particles.erase(_particles.begin() + i);
@@ -86,14 +81,18 @@ namespace questless
 		for (auto const& being_view : _world_view->being_views()) {
 			// Attempt to load the being.
 			if (Being const* being = game().beings.get(being_view.id)) {
-				auto being_animation = get_animation(*being);
+				auto& being_animation = get_animation(*being);
 
 				uint8_t intensity = percentage_to_byte((being_view.perception.level - Perception::minimum_level) / (Perception::maximum_level - Perception::minimum_level));
 				switch (being_view.perception.category()) {
 					case Perception::Category::none:
 						break;
 					case Perception::Category::low:
-						_unknown_entity_animation->draw(Layout::dflt().to_world(being->coords), game().camera(), Color{intensity, intensity, intensity});
+						_unknown_entity_animation->draw
+							( Layout::dflt().to_world(being->coords)
+							, game().camera()
+							, Color{intensity, intensity, intensity}
+							);
 						break;
 					case Perception::Category::medium:
 					case Perception::Category::high:
@@ -104,7 +103,11 @@ namespace questless
 						GamePoint end = Layout::dflt().to_world(being->coords.neighbor(being->direction));
 						game().camera().draw_lines({start, end}, Color::magenta());
 
-						being_animation.draw(Layout::dflt().to_world(being->coords), game().camera(), Color{intensity, intensity, intensity});
+						being_animation.draw
+							( Layout::dflt().to_world(being->coords)
+							, game().camera()
+							, Color{intensity, intensity, intensity}
+							);
 						break;
 					}
 					default:
@@ -112,7 +115,7 @@ namespace questless
 				}
 			} else {
 				// Remove the being from the animation cache if it doesn't exist anymore.
-				_being_animation_set_map.erase(being_view.id);
+				_being_animation_map.erase(being_view.id);
 			}
 		}
 	}
@@ -122,26 +125,34 @@ namespace questless
 		for (auto const& object_view : _world_view->object_views()) {
 			// Attempt to load the object.
 			if (Object const* object = game().objects.get(object_view.id)) {
-				auto object_animation = get_animation(*object);
+				auto& object_animation = get_animation(*object);
 
 				uint8_t intensity = percentage_to_byte((object_view.perception.level - Perception::minimum_level) / (Perception::maximum_level - Perception::minimum_level));
 				switch (object_view.perception.category()) {
 					case Perception::Category::none:
 						break;
 					case Perception::Category::low:
-						_unknown_entity_animation->draw(Layout::dflt().to_world(object->coords), game().camera(), Color{intensity, intensity, intensity});
+						_unknown_entity_animation->draw
+							( Layout::dflt().to_world(object->coords)
+							, game().camera()
+							, Color{intensity, intensity, intensity}
+							);
 						break;
 					case Perception::Category::medium:
 					case Perception::Category::high:
 					case Perception::Category::full:
-						object_animation.draw(Layout::dflt().to_world(object->coords), game().camera(), Color{intensity, intensity, intensity});
+						object_animation.draw
+							( Layout::dflt().to_world(object->coords)
+							, game().camera()
+							, Color{intensity, intensity, intensity}
+							);
 						break;
 					default:
 						throw std::logic_error{"Invalid perception category."};
 				}
 			} else {
 				// Remove the object from the animation cache if it doesn't exist anymore.
-				_object_animation_set_map.erase(object_view.id);
+				_object_animation_map.erase(object_view.id);
 			}
 		}
 	}
@@ -167,39 +178,39 @@ namespace questless
 		return *_tile_textures[tile.tile_class()];
 	};
 
-	AnimationSet& WorldRenderer::cache_animation(Being const& being)
+	Animation& WorldRenderer::cache_animation(Being const& being)
 	{
 		EntityAnimator entity_animator;
 		being.accept(entity_animator);
-		_being_animation_set_map.insert(std::make_pair(being.id, std::move(entity_animator.animation_set())));
-		return _being_animation_set_map.at(being.id);
+		_being_animation_map.insert(std::make_pair(being.id, std::move(entity_animator.animation())));
+		return *_being_animation_map.at(being.id);
 	};
 
-	AnimationSet& WorldRenderer::cache_animation(Object const& object)
+	Animation& WorldRenderer::cache_animation(Object const& object)
 	{
 		EntityAnimator entity_animator;
 		object.accept(entity_animator);
-		_object_animation_set_map.insert(std::make_pair(object.id, std::move(entity_animator.animation_set())));
-		return _object_animation_set_map.at(object.id);
+		_object_animation_map.insert(std::make_pair(object.id, std::move(entity_animator.animation())));
+		return *_object_animation_map.at(object.id);
 	};
 
-	AnimationSet& WorldRenderer::get_animation(Being const& being)
+	Animation& WorldRenderer::get_animation(Being const& being)
 	{
 		// Search for the being's animation in the cache.
-		auto it = _being_animation_set_map.find(being.id);
+		auto it = _being_animation_map.find(being.id);
 		// If it's there, use it. Otherwise, create and cache the animation.
-		return it != _being_animation_set_map.end()
-			? it->second
+		return it != _being_animation_map.end()
+			? *it->second
 			: cache_animation(being);
 	}
 
-	AnimationSet& WorldRenderer::get_animation(Object const& being)
+	Animation& WorldRenderer::get_animation(Object const& being)
 	{
 		// Search for the being's animation in the cache.
-		auto it = _object_animation_set_map.find(being.id);
+		auto it = _object_animation_map.find(being.id);
 		// If it's there, use it. Otherwise, create and cache the animation.
-		return it != _object_animation_set_map.end()
-			? it->second
+		return it != _object_animation_map.end()
+			? *it->second
 			: cache_animation(being);
 	}
 

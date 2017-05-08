@@ -10,7 +10,7 @@ using namespace units;
 
 namespace questless
 {
-	Goblin::Goblin(const std::function<std::unique_ptr<Agent>(Being&)>& make_agent, Id<Being> id)
+	Goblin::Goblin(const std::function<uptr<Agent>(Being&)>& make_agent, Id<Being> id)
 		: CorporealBeingBase<Goblin>{make_agent, id, make_body(), []() { return dflt_base_stats; } }
 	{}
 
@@ -27,7 +27,7 @@ namespace questless
 	{
 		using std::move;
 
-		std::unique_ptr<Hand> left_hand = std::make_unique<Hand>(*this, "Left hand", hand_vitality, hand_weight, hand_dexterity, Protection::zero(), Resistance::zero(), Vulnerability::zero(), std::vector<ScreenRect>{ScreenRect{4, -2, 2, 2}});
+		uptr<Hand> left_hand = std::make_unique<Hand>(*this, "Left hand", hand_vitality, hand_weight, hand_dexterity, Protection::zero(), Resistance::zero(), Vulnerability::zero(), std::vector<ScreenRect>{ScreenRect{4, -2, 2, 2}});
 		auto left_arm = std::make_unique<Arm>(*this, "Left arm", arm_vitality, arm_weight, arm_strength, Protection::zero(), Resistance::zero(), Vulnerability::zero(), std::vector<ScreenRect>{ScreenRect{4, 6, 1, 1}, ScreenRect{4, 5, 2, 7}});
 		left_arm->attach(move(left_hand));
 

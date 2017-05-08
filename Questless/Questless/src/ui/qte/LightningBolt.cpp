@@ -92,7 +92,9 @@ namespace questless::qte
 
 	void LightningBolt::draw() const
 	{
-		static auto point_charge_texture_handle = texture_manager().add("resources/textures/glow.png");
+		//! @todo Refactor point charge to use a particle animation?
+
+		static auto point_charge_texture_handle = texture_manager().add("resources/textures/particles/glow-large.png");
 
 		// Draw point charges.
 		for (auto const& point_charge : _charges) {

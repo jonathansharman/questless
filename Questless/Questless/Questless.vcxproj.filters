@@ -1,24 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="resources">
-      <UniqueIdentifier>{ae2a9f75-f1a6-40bb-943d-b2391ec47c79}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="resources\sounds">
-      <UniqueIdentifier>{d573eddc-e51f-4217-b689-31183354219e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="resources\textures">
-      <UniqueIdentifier>{d94cedb8-2f20-4437-a6f5-f7ac14eb546d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="resources\fonts">
-      <UniqueIdentifier>{9980f248-c982-4d94-bb67-6d40c43cd7b2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="resources\textures\splash">
-      <UniqueIdentifier>{b0c3482e-8e45-4a2c-a458-a403937de9dd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="resources\textures\ui">
-      <UniqueIdentifier>{121d5c6e-39f3-457d-b0b7-2b3370529801}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{afaa3c08-9c64-4d9e-9d2d-b6689dc30af7}</UniqueIdentifier>
     </Filter>
@@ -48,9 +30,6 @@
     </Filter>
     <Filter Include="src\entities\beings\goblinoids">
       <UniqueIdentifier>{7a3b6635-f54f-499f-a8e8-a1c2ea9494a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="resources\textures\items">
-      <UniqueIdentifier>{e6f34e10-f2f7-4ad6-8ac1-122a1872dc0d}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\items">
       <UniqueIdentifier>{e363e4de-9bab-4f56-9da3-6a7b25071101}</UniqueIdentifier>
@@ -106,9 +85,6 @@
     <Filter Include="include\world">
       <UniqueIdentifier>{bbbb5d55-d9b6-4dde-a3b5-cb99a2d2c034}</UniqueIdentifier>
     </Filter>
-    <Filter Include="resources\music">
-      <UniqueIdentifier>{fb2e1f78-6d91-4b36-8493-f2f769247b07}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\items\armor">
       <UniqueIdentifier>{514dd0a6-9b8e-4360-af60-e11397c4d775}</UniqueIdentifier>
     </Filter>
@@ -133,12 +109,6 @@
     <Filter Include="src\spell">
       <UniqueIdentifier>{ea4c9649-02c6-4da1-bd4a-6628b0a695e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="resources\textures\particles">
-      <UniqueIdentifier>{3e3c900e-a7b3-4318-a7bf-124917710930}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="resources\textures\particles\magic">
-      <UniqueIdentifier>{b471f79e-fdbe-4cef-b79b-d475b49b81e8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="include\units">
       <UniqueIdentifier>{13a4e0e2-0fa8-4a11-ba4c-c7ccfc778251}</UniqueIdentifier>
     </Filter>
@@ -156,81 +126,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="resources\textures\test.png">
-      <Filter>resources\textures</Filter>
-    </Image>
-    <Image Include="resources\textures\splash\flame.png">
-      <Filter>resources\textures\splash</Filter>
-    </Image>
-    <Image Include="resources\textures\splash\logo.png">
-      <Filter>resources\textures\splash</Filter>
-    </Image>
-    <Image Include="resources\textures\ui\hex_circle.png">
-      <Filter>resources\textures\ui</Filter>
-    </Image>
-    <Image Include="resources\textures\items\blank-scroll.png">
-      <Filter>resources\textures\items</Filter>
-    </Image>
-    <Image Include="resources\textures\items\charged-scroll.png">
-      <Filter>resources\textures\items</Filter>
-    </Image>
-    <Image Include="resources\textures\items\uncharged-scroll.png">
-      <Filter>resources\textures\items</Filter>
-    </Image>
-    <Image Include="resources\textures\glow.png">
-      <Filter>resources\textures</Filter>
-    </Image>
-    <Image Include="resources\textures\human-animation.png">
-      <Filter>resources\textures</Filter>
-    </Image>
-    <Image Include="resources\textures\icon.png">
-      <Filter>resources\textures</Filter>
-    </Image>
-    <Image Include="resources\textures\test2.png">
-      <Filter>resources\textures</Filter>
-    </Image>
-    <Image Include="resources\textures\test3.png">
-      <Filter>resources\textures</Filter>
-    </Image>
-    <Image Include="resources\textures\test-animation.png">
-      <Filter>resources\textures</Filter>
-    </Image>
-    <Image Include="resources\textures\particles\magic\black.png">
-      <Filter>resources\textures\particles\magic</Filter>
-    </Image>
-    <Image Include="resources\textures\particles\magic\blue.png">
-      <Filter>resources\textures\particles\magic</Filter>
-    </Image>
-    <Image Include="resources\textures\particles\magic\green.png">
-      <Filter>resources\textures\particles\magic</Filter>
-    </Image>
-    <Image Include="resources\textures\particles\magic\red.png">
-      <Filter>resources\textures\particles\magic</Filter>
-    </Image>
-    <Image Include="resources\textures\particles\magic\white.png">
-      <Filter>resources\textures\particles\magic</Filter>
-    </Image>
-    <Image Include="resources\textures\particles\magic\yellow.png">
-      <Filter>resources\textures\particles\magic</Filter>
-    </Image>
-    <Image Include="resources\textures\particles\blood.png">
-      <Filter>resources\textures\particles</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Font Include="resources\fonts\dumbledor1.ttf">
-      <Filter>resources\fonts</Filter>
-    </Font>
-    <Font Include="resources\fonts\firamono.ttf">
-      <Filter>resources\fonts</Filter>
-    </Font>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="include\Game.h">
       <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\animation\Animation.h">
-      <Filter>include\animation</Filter>
     </ClInclude>
     <ClInclude Include="include\animation\Camera.h">
       <Filter>include\animation</Filter>
@@ -541,9 +438,6 @@
     <ClInclude Include="include\entities\beings\IncorporealBeing.h">
       <Filter>include\entities\beings</Filter>
     </ClInclude>
-    <ClInclude Include="include\animation\AnimationSet.h">
-      <Filter>include\animation</Filter>
-    </ClInclude>
     <ClInclude Include="include\animation\particles\BlueMagicParticle.h">
       <Filter>include\animation\particles</Filter>
     </ClInclude>
@@ -724,6 +618,33 @@
     <ClInclude Include="include\spell\SpellVisitor.h">
       <Filter>include\spell</Filter>
     </ClInclude>
+    <ClInclude Include="include\entities\objects\Campfire.h">
+      <Filter>include\entities\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\animation\SpriteAnimation.h">
+      <Filter>include\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\animation\Animation.h">
+      <Filter>include\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\animation\Still.h">
+      <Filter>include\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\SpriteSheetVector.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\animation\AnimationStack.h">
+      <Filter>include\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\animation\ParticleAnimation.h">
+      <Filter>include\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\animation\Flame.h">
+      <Filter>include\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\animation\particles\FlameParticle.h">
+      <Filter>include\animation\particles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\world\Region.cpp">
@@ -743,9 +664,6 @@
     </ClCompile>
     <ClCompile Include="src\animation\particles\Particle.cpp">
       <Filter>src\animation\particles</Filter>
-    </ClCompile>
-    <ClCompile Include="src\animation\Animation.cpp">
-      <Filter>src\animation</Filter>
     </ClCompile>
     <ClCompile Include="src\entities\beings\Being.cpp">
       <Filter>src\entities\beings</Filter>
@@ -867,9 +785,6 @@
     <ClCompile Include="src\items\Scroll.cpp">
       <Filter>src\items</Filter>
     </ClCompile>
-    <ClCompile Include="src\animation\AnimationSet.cpp">
-      <Filter>src\animation</Filter>
-    </ClCompile>
     <ClCompile Include="src\animation\particles\WhiteMagicParticle.cpp">
       <Filter>src\animation\particles</Filter>
     </ClCompile>
@@ -968,6 +883,21 @@
     </ClCompile>
     <ClCompile Include="src\animation\SpellTexturer.cpp">
       <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\objects\Campfire.cpp">
+      <Filter>src\entities\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\SpriteAnimation.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\Still.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\ParticleAnimation.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\particles\FlameParticle.cpp">
+      <Filter>src\animation\particles</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

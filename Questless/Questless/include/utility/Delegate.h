@@ -16,7 +16,7 @@ namespace questless
 	{
 	public:
 		//! The delegate callback type.
-		using callback_t = std::shared_ptr<std::function<void(Args...)>>; //! @todo This shared_ptr and the one in Event are smelly.
+		using callback_t = sptr<std::function<void(Args...)>>; //! @todo This shared_ptr and the one in Event are smelly.
 
 		//! Adds a new callback function @p f at the end of the callbacks list.
 		void add(callback_t const& f) { _callbacks.push_back(f); }

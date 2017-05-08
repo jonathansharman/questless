@@ -58,7 +58,7 @@ namespace questless
 			}
 		private:
 			ModalWeapon& _weapon;
-			std::unique_ptr<Form>& _form;
+			uptr<Form>& _form;
 			std::string const _name;
 		};
 

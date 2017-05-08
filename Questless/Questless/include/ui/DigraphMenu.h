@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include <future>
-#include <memory>
 #include <stdexcept>
 #include <utility>
 
@@ -105,16 +103,16 @@ namespace questless
 		static constexpr sdl::Color _unselected_color = sdl::Color::black();
 		static constexpr sdl::Color _selected_color = sdl::Color::red();
 
-		friend class Initializer<DigraphMenu>;
-		static Initializer<DigraphMenu> _initializer;
-		static void initialize();
-
 		static sdl::SoundHandle _hover_sound_handle, _select_sound_handle;
 
 		static sdl::FontHandle _title_font_handle, _option_font_handle;
 		static sdl::TextureHandle _ul_handle, _ur_handle, _dl_handle, _dr_handle, _u_handle, _d_handle, _l_handle, _r_handle, _tile_handle;
 
-		static std::shared_future<int> _top_margin, _bottom_margin, _left_margin, _right_margin, _tile_width, _tile_height;
+		static int _top_margin, _bottom_margin, _left_margin, _right_margin, _tile_width, _tile_height;
+
+		friend class Initializer<DigraphMenu>;
+		static Initializer<DigraphMenu> _initializer;
+		static void initialize();
 
 		std::vector<Page> _pages;
 		int _page_index;

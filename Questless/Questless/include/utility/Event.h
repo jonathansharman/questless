@@ -18,7 +18,7 @@ namespace questless
 	{
 	public:
 		//! The event handler type. Return type indicates whether the event was handled.
-		using handler_t = std::shared_ptr<std::function<bool(Args...)>>; //! @todo This shared_ptr and the one in Delegate are smelly.
+		using handler_t = sptr<std::function<bool(Args...)>>; //! @todo This shared_ptr and the one in Delegate are smelly.
 
 		//! Adds a new event handler @p f at the end of the handlers list.
 		void add(handler_t const& f) { _handlers.push_back(f); }
