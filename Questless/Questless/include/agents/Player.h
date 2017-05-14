@@ -55,14 +55,21 @@ namespace questless
 
 		Complete query_tile
 			( uptr<TileQuery> query
-			, std::optional<RegionTileCoords> origin
-			, std::function<bool(RegionTileCoords)> predicate
-			, std::function<Complete(std::optional<RegionTileCoords>)> cont
+			, std::optional<RegionTile::Point> origin
+			, std::function<bool(RegionTile::Point)> predicate
+			, std::function<Complete(std::optional<RegionTile::Point>)> cont
 			) const final;
 
 		Complete query_direction
 			( uptr<DirectionQuery> query
-			, std::function<Complete(std::optional<RegionTileCoords::Direction>)> cont
+			, std::function<Complete(std::optional<RegionTile::Direction>)> cont
+			) const final;
+
+		Complete query_vector
+			( uptr<VectorQuery> query
+			, std::optional<RegionTile::Point> origin
+			, std::function<bool(RegionTile::Vector)> predicate
+			, std::function<Complete(std::optional<RegionTile::Vector>)> cont
 			) const final;
 
 		Complete query_being
@@ -80,7 +87,7 @@ namespace questless
 
 		// Quick Time Events
 
-		Complete get_lightning_bolt_quality(RegionTileCoords target_coords, std::function<Complete(double)> cont) const final;
+		Complete get_lightning_bolt_quality(RegionTile::Point target_coords, std::function<Complete(double)> cont) const final;
 	private:
 		uptr<WorldView> _world_view;
 

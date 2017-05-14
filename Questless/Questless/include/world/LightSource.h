@@ -22,20 +22,20 @@ namespace questless
 
 		//! @param coords The coordinates of this light source in its region.
 		//! @param luminance How brightly this light source shines.
-		LightSource(RegionTileCoords coords, double luminance, Id<LightSource> id = Id<LightSource>::make())
+		LightSource(RegionTile::Point coords, double luminance, Id<LightSource> id = Id<LightSource>::make())
 			: id{id}, _coords{coords}, _luminance{luminance}
 		{}
 
 		//! The coordinates of this light source in its region.
-		RegionTileCoords coords() const { return _coords; }
+		RegionTile::Point coords() const { return _coords; }
 
 		//! The distance this light source's light reaches.
 		int range() const;
 
 		//! How brightly this light source shines at @p region_tile_coords in @p region.
-		double luminance(Region const& region, RegionTileCoords region_tile_coords) const;
+		double luminance(Region const& region, RegionTile::Point region_tile_coords) const;
 	private:
-		RegionTileCoords _coords;
+		RegionTile::Point _coords;
 		double _luminance;
 	};
 }

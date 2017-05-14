@@ -12,9 +12,8 @@ namespace questless
 	class BloodParticle : public Particle
 	{
 	public:
-		//! @param position The particle's starting position.
-		BloodParticle(units::GamePoint position) : Particle
-			{ position
+		BloodParticle() : Particle
+			{ units::GameVector{0.0, 0.0}
 			, (random_displacement(160.0) + units::GameVector{0.0, 150.0}) / 1.0s
 			, units::GameVector{0.0, -600.0} / 1.0s / 1.0s
 			, random_angle()
@@ -31,7 +30,9 @@ namespace questless
 
 		bool face_towards_heading() const final { return true; }
 
-		void subupdate() final {}
+		virtual bool ignore_color_mod() const { return false; }
+
+		void particle_subupdate() final {}
 
 		sdl::Texture const& texture() const final;
 	};

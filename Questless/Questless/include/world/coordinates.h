@@ -9,20 +9,20 @@
 
 namespace questless
 {
-	//! Hexagonal coordinates of a tile within a section.
-	using SectionTileCoords = units::HexCoords<struct SectionTileCoordsTag>;
+	//! The space of tiles in a section.
+	using SectionTile = units::HexSpace<struct SectionTileTag>;
 
-	//! Hexagonal coordinates of a tile within a region.
-	using RegionTileCoords = units::HexCoords<struct RegionTileCoordsTag>;
+	//! The space of tiles in a region.
+	using RegionTile = units::HexSpace<struct RegionTileTag>;
 
-	//! Hexagonal coordinates of a section within a region.
-	using RegionSectionCoords = units::HexCoords<struct RegionSectionCoordsTag>;
+	//! The space of sections in a region.
+	using RegionSection = units::HexSpace<struct RegionSectionTag>;
 
 	//! Location within the entire world.
 	struct GlobalCoords
 	{
 		std::string region;
-		RegionSectionCoords section;
+		RegionSection::Point section;
 
 		friend bool operator ==(GlobalCoords const& left, GlobalCoords const& right)
 		{
@@ -31,6 +31,74 @@ namespace questless
 		friend bool operator <(GlobalCoords const& left, GlobalCoords const& right)
 		{
 			return left.region < right.region || (left.region == right.region && left.section < right.section);
+		}
+	};
+}
+
+// Specialize std::hash.
+namespace std
+{
+	template <>
+	struct hash<questless::SectionTile::Point>
+	{
+		size_t operator()(questless::SectionTile::Point const& p) const
+		{
+			return hash_value(p);
+		}
+	};
+}
+namespace std
+{
+	template <>
+	struct hash<questless::SectionTile::Vector>
+	{
+		size_t operator()(questless::SectionTile::Vector const& v) const
+		{
+			return hash_value(v);
+		}
+	};
+}
+namespace std
+{
+	template <>
+	struct hash<questless::RegionTile::Point>
+	{
+		size_t operator()(questless::RegionTile::Point const& p) const
+		{
+			return hash_value(p);
+		}
+	};
+}
+namespace std
+{
+	template <>
+	struct hash<questless::RegionTile::Vector>
+	{
+		size_t operator()(questless::RegionTile::Vector const& v) const
+		{
+			return hash_value(v);
+		}
+	};
+}
+namespace std
+{
+	template <>
+	struct hash<questless::RegionSection::Point>
+	{
+		size_t operator()(questless::RegionSection::Point const& p) const
+		{
+			return hash_value(p);
+		}
+	};
+}
+namespace std
+{
+	template <>
+	struct hash<questless::RegionSection::Vector>
+	{
+		size_t operator()(questless::RegionSection::Vector const& v) const
+		{
+			return hash_value(v);
 		}
 	};
 }

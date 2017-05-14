@@ -5,11 +5,12 @@
 #include "agents/Player.h"
 #include "Game.h"
 #include "sdl/resources.h"
-#include "ui/MessageDialog.h"
 #include "ui/CountDialog.h"
-#include "ui/MagnitudeDialog.h"
-#include "ui/TileDialog.h"
 #include "ui/DirectionDialog.h"
+#include "ui/MagnitudeDialog.h"
+#include "ui/MessageDialog.h"
+#include "ui/TileDialog.h"
+#include "ui/VectorDialog.h"
 
 #include "ui/qte/LightningBolt.h"
 
@@ -37,7 +38,7 @@ namespace questless
 				case PlayerActionDialog::Choice::Type::move:
 				{
 					// Turn towards the chosen direction or move in that direction if already facing that way.
-					auto direction = static_cast<RegionTileCoords::Direction>(player_choice.data);
+					auto direction = static_cast<RegionTile::Direction>(player_choice.data);
 					if (being.direction == direction) {
 						walk(direction, [this](Action::Result result) {
 							if (result == Action::Result::aborted) {
@@ -60,7 +61,7 @@ namespace questless
 				case PlayerActionDialog::Choice::Type::shift_move:
 				{
 					// Strafe.
-					auto direction = static_cast<RegionTileCoords::Direction>(player_choice.data);
+					auto direction = static_cast<RegionTile::Direction>(player_choice.data);
 					walk(direction, [this](Action::Result result) {
 						if (result == Action::Result::aborted) {
 							// Chosen action aborted. Player must try to act again.
@@ -224,9 +225,9 @@ namespace questless
 	
 	Complete Player::query_tile
 		( uptr<TileQuery> query
-		, std::optional<RegionTileCoords> origin
-		, function<bool(RegionTileCoords)> predicate
-		, function<Complete(std::optional<RegionTileCoords>)> cont
+		, std::optional<RegionTile::Point> origin
+		, function<bool(RegionTile::Point)> predicate
+		, function<Complete(std::optional<RegionTile::Point>)> cont
 		) const
 	{
 		struct TileQueryTitler : TileQueryConstVisitor
@@ -260,18 +261,16 @@ namespace questless
 
 	Complete Player::query_direction
 		( uptr<DirectionQuery> query
-		, function<Complete(std::optional<RegionTileCoords::Direction>)> cont
+		, function<Complete(std::optional<RegionTile::Direction>)> cont
 		) const
 	{
 		struct DirectionQueryTitler : DirectionQueryConstVisitor
 		{
 			std::string title;
-			void visit(DirectionQueryMeleeAttack const&) final { title = "Melee Attack"; }
 		};
 		struct DirectionQueryPrompter : DirectionQueryConstVisitor
 		{
 			std::string prompt;
-			void visit(DirectionQueryMeleeAttack const&) final { prompt = "Choose attack direction."; }
 		};
 
 		DirectionQueryTitler titler;
@@ -279,6 +278,32 @@ namespace questless
 		DirectionQueryPrompter prompter;
 		query->accept(prompter);
 		auto dialog = std::make_unique<DirectionDialog>(std::move(titler.title), std::move(prompter.prompt), std::move(cont));
+		return game().add_dialog(std::move(dialog));
+	}
+
+	Complete Player::query_vector
+		( uptr<VectorQuery> query
+		, std::optional<RegionTile::Point> origin
+		, std::function<bool(RegionTile::Vector)> predicate
+		, std::function<Complete(std::optional<RegionTile::Vector>)> cont
+		) const
+	{
+		struct VectorQueryTitler : VectorQueryConstVisitor
+		{
+			std::string title;
+			void visit(VectorQueryMeleeAttack const&) final { title = "Melee Attack"; }
+		};
+		struct VectorQueryPrompter : VectorQueryConstVisitor
+		{
+			std::string prompt;
+			void visit(VectorQueryMeleeAttack const&) final { prompt = "Choose attack direction."; }
+		};
+
+		VectorQueryTitler titler;
+		query->accept(titler);
+		VectorQueryPrompter prompter;
+		query->accept(prompter);
+		auto dialog = std::make_unique<VectorDialog>(std::move(titler.title), std::move(prompter.prompt), origin, std::move(predicate), std::move(cont));
 		return game().add_dialog(std::move(dialog));
 	}
 
@@ -306,7 +331,7 @@ namespace questless
 
 	// Quick Time Events
 
-	Complete Player::get_lightning_bolt_quality(RegionTileCoords target_coords, std::function<Complete(double)> cont) const
+	Complete Player::get_lightning_bolt_quality(RegionTile::Point target_coords, std::function<Complete(double)> cont) const
 	{
 		auto dialog = std::make_unique<qte::LightningBolt>(target_coords, std::move(cont));
 		return game().add_dialog(std::move(dialog));

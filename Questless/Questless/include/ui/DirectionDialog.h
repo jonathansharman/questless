@@ -18,7 +18,7 @@ namespace questless
 		DirectionDialog
 			( std::string title
 			, std::string prompt
-			, std::function<void(std::optional<RegionTileCoords::Direction>)> cont
+			, std::function<void(std::optional<RegionTile::Direction>)> cont
 			)
 			: _title{std::move(title)}
 			, _prompt{std::move(prompt)}
@@ -33,7 +33,7 @@ namespace questless
 	private:
 		std::string _title;
 		std::string _prompt;
-		Continuation<std::optional<RegionTileCoords::Direction>> _cont;
+		Continuation<std::optional<RegionTile::Direction>> _cont;
 
 		uptr<sdl::Texture> _txt_title;
 		uptr<sdl::Texture> _txt_prompt;

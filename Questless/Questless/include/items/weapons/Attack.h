@@ -86,14 +86,14 @@ namespace questless
 		class Finish : public Action
 		{
 		public:
-			Finish(sptr<MeleeAttack> attack, RegionTileCoords::Direction direction)
-				: _attack{std::move(attack)}, _direction{direction}
+			Finish(sptr<MeleeAttack> attack, RegionTile::Vector vector)
+				: _attack{std::move(attack)}, _vector{vector}
 			{}
 			std::string name() const final { return _attack->name(); }
 			Complete perform(Being& actor, cont_t cont) final;
 		private:
 			sptr<MeleeAttack> _attack;
-			RegionTileCoords::Direction _direction;
+			RegionTile::Vector _vector;
 		};
 	};
 

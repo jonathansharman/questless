@@ -3,7 +3,7 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include <filesystem>
-namespace fs = std::tr2::sys; //! @todo Replace this with proper using statements if/when TR2 comes around.
+namespace fs = std::experimental::filesystem; //! @todo Replace this with std::filesystem when available.
 #include <limits.h>
 #include <sstream>
 #include <fstream>
@@ -28,7 +28,6 @@ using namespace sdl;
 
 namespace questless
 {
-	//! @todo Remove. Wait, why?
 	bool turn_order_function(Being const& first, Being const& second)
 	{
 		// Sort beings in the turn queue by lower busy-time first, then lower entity ID.
@@ -48,7 +47,7 @@ namespace questless
 
 		for (int section_r = -r_radius; section_r <= r_radius; ++section_r) {
 			for (int section_q = -q_radius; section_q <= q_radius; ++section_q) {
-				RegionSectionCoords section_coords{section_q, section_r};
+				RegionSection::Point section_coords{section_q, section_r};
 
 				// Create a section with random terrain.
 				string data;
@@ -70,7 +69,7 @@ namespace questless
 				for (int q = 0; q < Section::diameter; ++q) {
 					for (int r = 0; r < Section::diameter; ++r) {
 						if ((section_r != 0 || section_q != 0) && uniform(0, 10) == 0) {
-							auto entity_coords = Section::region_tile_coords(section_coords, SectionTileCoords{q, r});
+							auto entity_coords = Section::region_tile_coords(section_coords, SectionTile::Point{q, r});
 							if (!uniform(0, 12)) {
 								spawn(make_unique<Campfire>(*this, entity_coords), entity_coords);
 							} else {
@@ -112,7 +111,7 @@ namespace questless
 			}
 			int section_q = std::stoi(q_string);
 			int section_r = std::stoi(r_string);
-			RegionSectionCoords section_coords{section_q, section_r};
+			RegionSection::Point section_coords{section_q, section_r};
 
 			std::ifstream data_stream{(region_path / it->path()).string()};
 			if (data_stream.fail()) {
@@ -201,7 +200,7 @@ namespace questless
 		}
 	}
 
-	std::optional<Id<Being>> Region::being_id(RegionTileCoords region_tile_coords) const
+	std::optional<Id<Being>> Region::being_id(RegionTile::Point region_tile_coords) const
 	{
 		if (Section const* section = containing_section(region_tile_coords)) {
 			return section->being_id(region_tile_coords);
@@ -210,7 +209,7 @@ namespace questless
 		}
 	}
 
-	std::optional<Id<Object>> Region::object_id(RegionTileCoords region_tile_coords) const
+	std::optional<Id<Object>> Region::object_id(RegionTile::Point region_tile_coords) const
 	{
 		if (Section const* section = containing_section(region_tile_coords)) {
 			return section->object_id(region_tile_coords);
@@ -227,7 +226,7 @@ namespace questless
 
 		int q = uniform(-Section::radius, Section::radius);
 		int r = uniform(-Section::radius, Section::radius);
-		RegionTileCoords player_coords{q, r};
+		RegionTile::Point player_coords{q, r};
 
 		// Erase the being currently there, if any.
 		Section* section = containing_section(player_coords);
@@ -236,7 +235,7 @@ namespace questless
 		spawn(std::move(player_being), player_coords);
 	}
 
-	void Region::add(Being& being, RegionTileCoords region_tile_coords)
+	void Region::add(Being& being, RegionTile::Point region_tile_coords)
 	{
 		if (Section* section = containing_section(region_tile_coords)) {
 			being.region = this;
@@ -250,7 +249,7 @@ namespace questless
 		}
 	}
 
-	void Region::add(Object& object, RegionTileCoords region_tile_coords)
+	void Region::add(Object& object, RegionTile::Point region_tile_coords)
 	{
 		if (Section* section = containing_section(region_tile_coords)) {
 			object.region = this;
@@ -263,17 +262,17 @@ namespace questless
 		}
 	}
 
-	void Region::spawn(uptr<Being> being, RegionTileCoords region_tile_coords)
+	void Region::spawn(uptr<Being> being, RegionTile::Point region_tile_coords)
 	{
 		add(game().beings.add(std::move(being)), region_tile_coords);
 	}
 
-	void Region::spawn(uptr<Object> object, RegionTileCoords region_tile_coords)
+	void Region::spawn(uptr<Object> object, RegionTile::Point region_tile_coords)
 	{
 		add(game().objects.add(std::move(object)), region_tile_coords);
 	}
 
-	bool Region::move(Being& being, RegionTileCoords region_tile_coords)
+	bool Region::move(Being& being, RegionTile::Point region_tile_coords)
 	{
 		Section& src_section = *being.section;
 		Section* dst_section = containing_section(region_tile_coords);
@@ -315,7 +314,7 @@ namespace questless
 		return true;
 	}
 
-	bool Region::move(Object& object, RegionTileCoords region_tile_coords)
+	bool Region::move(Object& object, RegionTile::Point region_tile_coords)
 	{
 		Section& src_section = *object.section;
 		Section* dst_section = containing_section(region_tile_coords);
@@ -370,17 +369,17 @@ namespace questless
 		int range = light_source.range();
 		int const min_q = light_source.coords().q - range;
 		int const min_r = light_source.coords().r - range;
-		RegionTileCoords const min_region_tile_coords{min_q, min_r};
-		RegionSectionCoords const min_section_coords = Section::region_section_coords(min_region_tile_coords);
+		RegionTile::Point const min_region_tile_coords{min_q, min_r};
+		RegionSection::Point const min_section_coords = Section::region_section_coords(min_region_tile_coords);
 
 		int const max_q = light_source.coords().q + range;
 		int const max_r = light_source.coords().r + range;
-		RegionTileCoords const max_region_tile_coords{max_q, max_r};
-		RegionSectionCoords const max_section_coords = Section::region_section_coords(max_region_tile_coords);
+		RegionTile::Point const max_region_tile_coords{max_q, max_r};
+		RegionSection::Point const max_section_coords = Section::region_section_coords(max_region_tile_coords);
 
 		for (int section_q = min_section_coords.q; section_q <= max_section_coords.q; ++section_q) {
 			for (int section_r = min_section_coords.r; section_r <= max_section_coords.r; ++section_r) {
-				RegionSectionCoords section_coords{section_q, section_r};
+				RegionSection::Point section_coords{section_q, section_r};
 				if (Section* s = section(section_coords)) {
 					s->add(light_source);
 				}
@@ -392,17 +391,17 @@ namespace questless
 	{
 		int const min_q = light_source.coords().q - light_source.range();
 		int const min_r = light_source.coords().r - light_source.range();
-		RegionTileCoords const min_region_tile_coords{min_q, min_r};
-		RegionSectionCoords const min_section_coords = Section::region_section_coords(min_region_tile_coords);
+		RegionTile::Point const min_region_tile_coords{min_q, min_r};
+		RegionSection::Point const min_section_coords = Section::region_section_coords(min_region_tile_coords);
 
 		int const max_q = light_source.coords().q + light_source.range();
 		int const max_r = light_source.coords().r + light_source.range();
-		RegionTileCoords const max_region_tile_coords{max_q, max_r};
-		RegionSectionCoords const max_section_coords = Section::region_section_coords(max_region_tile_coords);
+		RegionTile::Point const max_region_tile_coords{max_q, max_r};
+		RegionSection::Point const max_section_coords = Section::region_section_coords(max_region_tile_coords);
 
 		for (int section_q = max_section_coords.q; section_q <= max_section_coords.q; ++section_q) {
 			for (int section_r = max_section_coords.r; section_r <= max_section_coords.r; ++section_r) {
-				RegionSectionCoords section_coords{section_q, section_r};
+				RegionSection::Point section_coords{section_q, section_r};
 				if (Section* s = section(section_coords)) {
 					s->remove(light_source);
 				}
@@ -410,7 +409,7 @@ namespace questless
 		}
 	}
 
-	double Region::illuminance(RegionTileCoords region_tile_coords) const
+	double Region::illuminance(RegionTile::Point region_tile_coords) const
 	{
 		double result = _ambient_illuminance;
 		if (Section const* s = containing_section(region_tile_coords)) {
@@ -421,12 +420,12 @@ namespace questless
 		return result;
 	}
 
-	double Region::temperature(RegionTileCoords region_tile_coords) const
+	double Region::temperature(RegionTile::Point region_tile_coords) const
 	{
 		return tile(region_tile_coords)->temperature_offset;
 	}
 
-	double Region::occlusion(RegionTileCoords start, RegionTileCoords end) const
+	double Region::occlusion(RegionTile::Point start, RegionTile::Point end) const
 	{
 		auto line = start.line_to(end);
 		double result = 1.0;
@@ -526,7 +525,7 @@ namespace questless
 	{
 		for (int r = -_loaded_sections_q_radius; r <= _loaded_sections_q_radius; ++r) {
 			for (int q = -_loaded_sections_r_radius; q <= _loaded_sections_r_radius; ++q) {
-				RegionSectionCoords section_coords{q, r};
+				RegionSection::Point section_coords{q, r};
 				if (Section* s = section(section_coords)) {
 					f(*s);
 				}
@@ -534,7 +533,7 @@ namespace questless
 		}
 	}
 
-	Being* Region::being_helper(RegionTileCoords region_tile_coords) const
+	Being* Region::being_helper(RegionTile::Point region_tile_coords) const
 	{
 		if (auto opt_id = being_id(region_tile_coords)) {
 			return game().beings.get(*opt_id);
@@ -543,7 +542,7 @@ namespace questless
 		}
 	}
 
-	Object* Region::object_helper(RegionTileCoords region_tile_coords) const
+	Object* Region::object_helper(RegionTile::Point region_tile_coords) const
 	{
 		if (auto opt_id = object_id(region_tile_coords)) {
 			return game().objects.get(*opt_id);
@@ -552,11 +551,11 @@ namespace questless
 		}
 	}
 
-	Tile* Region::tile_helper(RegionTileCoords region_tile_coords) const
+	Tile* Region::tile_helper(RegionTile::Point region_tile_coords) const
 	{
 		Section* section = containing_section_helper(region_tile_coords);
 		if (section) {
-			SectionTileCoords section_tile_coords = Section::section_tile_coords(region_tile_coords);
+			SectionTile::Point section_tile_coords = Section::section_tile_coords(region_tile_coords);
 			return &section->tile(section_tile_coords);
 		} else {
 			return nullptr;

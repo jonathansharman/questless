@@ -13,9 +13,8 @@ namespace questless
 	class WhiteMagicParticle : public Particle
 	{
 	public:
-		//! @param position The particle's starting position.
-		WhiteMagicParticle(units::GamePoint position) : Particle
-			{ position
+		WhiteMagicParticle() : Particle
+			{ units::GameVector{0.0, 0.0}
 			, random_displacement(80.0) / 1.0s
 			, units::GameVector{0.0, 50.0} / 1.0s / 1.0s
 			, random_angle()
@@ -29,7 +28,7 @@ namespace questless
 		static constexpr units::Hertz _vx_percent_drag_rate = 1.8_Hz;
 		static constexpr units::GameRadians _dtheta_max = 2.0 * units::GameRadians::circle();
 
-		void subupdate() final;
+		void particle_subupdate() final;
 
 		sdl::Texture const& texture() const final;
 	};

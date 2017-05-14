@@ -118,7 +118,7 @@ namespace questless
 
 		DynamicProperty<double> busy_time;
 		bool dead;
-		RegionTileCoords::Direction direction;
+		RegionTile::Direction direction;
 
 		// Abilities
 
@@ -160,7 +160,7 @@ namespace questless
 		virtual bool corporeal() const = 0;
 
 		//! This being's perception of the tile at @p region_tile_coords in its region.
-		Perception perception_of(RegionTileCoords region_tile_coords) const;
+		Perception perception_of(RegionTile::Point region_tile_coords) const;
 
 		//! Causes the being to perform an action.
 		void act();

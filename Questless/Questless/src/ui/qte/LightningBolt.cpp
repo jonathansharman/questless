@@ -13,7 +13,7 @@ using namespace units::math;
 
 namespace questless::qte
 {
-	LightningBolt::LightningBolt(RegionTileCoords target_coords, std::function<void(double)> cont)
+	LightningBolt::LightningBolt(RegionTile::Point target_coords, std::function<void(double)> cont)
 		: _target_point{units::Layout::dflt().to_world(target_coords)}
 		, _cont{std::move(cont)}
 	{

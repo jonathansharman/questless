@@ -14,20 +14,20 @@
 
 namespace questless
 {
-	ref<Being> Section::being_entry_to_ref(std::pair<RegionTileCoords const, Id<Being>> being_entry)
+	ref<Being> Section::being_entry_to_ref(std::pair<RegionTile::Point const, Id<Being>> being_entry)
 	{
 		return game().beings.get_ref(being_entry.second);
 	}
-	cref<Being> Section::being_entry_to_cref(std::pair<RegionTileCoords const, Id<Being>> being_entry)
+	cref<Being> Section::being_entry_to_cref(std::pair<RegionTile::Point const, Id<Being>> being_entry)
 	{
 		return game().beings.get_ref(being_entry.second);
 	}
 
-	ref<Object> Section::object_entry_to_ref(std::pair<RegionTileCoords const, Id<Object>> object_entry)
+	ref<Object> Section::object_entry_to_ref(std::pair<RegionTile::Point const, Id<Object>> object_entry)
 	{
 		return game().objects.get_ref(object_entry.second);
 	}
-	cref<Object> Section::object_entry_to_cref(std::pair<RegionTileCoords const, Id<Object>> object_entry)
+	cref<Object> Section::object_entry_to_cref(std::pair<RegionTile::Point const, Id<Object>> object_entry)
 	{
 		return game().objects.get_ref(object_entry.second);
 	}
@@ -41,7 +41,7 @@ namespace questless
 		return game().light_sources.get_ref(light_source_id);
 	}
 
-	RegionSectionCoords Section::region_section_coords(RegionTileCoords region_tile_coords)
+	RegionSection::Point Section::region_section_coords(RegionTile::Point region_tile_coords)
 	{
 		int q = region_tile_coords.q >= 0
 			? (region_tile_coords.q + Section::radius) / Section::diameter
@@ -51,10 +51,10 @@ namespace questless
 			? (region_tile_coords.r + Section::radius) / Section::diameter
 			: (region_tile_coords.r - Section::radius) / Section::diameter
 			;
-		return RegionSectionCoords{q, r};
+		return RegionSection::Point{q, r};
 	}
 
-	Section::Section(RegionSectionCoords coords, std::istream& data_stream)
+	Section::Section(RegionSection::Point coords, std::istream& data_stream)
 		: beings{_being_map}
 		, objects{_object_map}
 		, light_sources{_light_source_ids}
@@ -106,13 +106,13 @@ namespace questless
 		}
 	}
 
-	std::optional<Id<Being>> Section::being_id(RegionTileCoords tile_coords) const
+	std::optional<Id<Being>> Section::being_id(RegionTile::Point tile_coords) const
 	{
 		auto it = _being_map.find(tile_coords);
 		return it != _being_map.end() ? std::make_optional(it->second) : std::nullopt;
 	}
 
-	std::optional<Id<Object>> Section::object_id(RegionTileCoords tile_coords) const
+	std::optional<Id<Object>> Section::object_id(RegionTile::Point tile_coords) const
 	{
 		auto it = _object_map.find(tile_coords);
 		return it != _object_map.end() ? std::make_optional(it->second) : std::nullopt;
@@ -136,7 +136,7 @@ namespace questless
 		}
 	}
 
-	typename void Section::remove_being(RegionTileCoords coords)
+	typename void Section::remove_being(RegionTile::Point coords)
 	{
 		auto it = _being_map.find(coords);
 		if (it != _being_map.end()) {
@@ -147,7 +147,7 @@ namespace questless
 		}
 	}
 
-	typename void Section::remove_object(RegionTileCoords coords)
+	typename void Section::remove_object(RegionTile::Point coords)
 	{
 		auto it = _object_map.find(coords);
 		if (it != _object_map.end()) {

@@ -16,17 +16,17 @@ namespace questless
 		}
 
 		if (input().presses(SDLK_e)) {
-			return _cont(RegionTileCoords::Direction::one);
+			return _cont(RegionTile::Direction::one);
 		} else if (input().presses(SDLK_w)) {
-			return _cont(RegionTileCoords::Direction::two);
+			return _cont(RegionTile::Direction::two);
 		} else if (input().presses(SDLK_q)) {
-			return _cont(RegionTileCoords::Direction::three);
+			return _cont(RegionTile::Direction::three);
 		} else if (input().presses(SDLK_a)) {
-			return _cont(RegionTileCoords::Direction::four);
+			return _cont(RegionTile::Direction::four);
 		} else if (input().presses(SDLK_s)) {
-			return _cont(RegionTileCoords::Direction::five);
+			return _cont(RegionTile::Direction::five);
 		} else if (input().presses(SDLK_d)) {
-			return _cont(RegionTileCoords::Direction::six);
+			return _cont(RegionTile::Direction::six);
 		}
 
 		return State::open;

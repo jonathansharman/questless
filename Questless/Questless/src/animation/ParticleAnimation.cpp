@@ -4,21 +4,22 @@
 
 #include "animation/ParticleAnimation.h"
 
-using namespace units;
 using namespace sdl;
+using namespace units;
 
 namespace questless
 {
 	void ParticleAnimation::draw(units::ScreenPoint position) const
 	{
-		//! @todo Support this.
-		throw std::logic_error{"Particle animation does not support direct-to-screen drawing."};
+		for (auto& particle : _particles) {
+			particle->draw(position);
+		}
 	}
 
 	void ParticleAnimation::draw(units::GamePoint position, Camera const& camera, sdl::Color color) const
 	{
 		for (auto& particle : _particles) {
-			particle->draw(camera);
+			particle->draw(position, camera, color);
 		}
 	}
 
@@ -26,7 +27,7 @@ namespace questless
 	{
 		for (std::size_t i = 0; i < _particles.size();) {
 			_particles[i]->update();
-			if (_particles[i]->expired()) {
+			if (_particles[i]->over()) {
 				_particles.erase(_particles.begin() + i);
 			} else {
 				++i;

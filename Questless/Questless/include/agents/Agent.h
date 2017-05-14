@@ -5,21 +5,20 @@
 #pragma once
 
 #include <functional>
-#include <stdexcept>
-
 #include <optional>
 
-#include "Message.h"
-#include "CountQuery.h"
-#include "MagnitudeQuery.h"
-#include "TileQuery.h"
-#include "DirectionQuery.h"
 #include "BeingQuery.h"
-#include "ItemQuery.h"
+#include "CountQuery.h"
+#include "DirectionQuery.h"
+#include "effects/Effect.h"
 #include "entities/beings/Being.h"
 #include "entities/beings/WorldView.h"
+#include "ItemQuery.h"
 #include "items/Item.h"
-#include "effects/Effect.h"
+#include "MagnitudeQuery.h"
+#include "Message.h"
+#include "TileQuery.h"
+#include "VectorQuery.h"
 
 namespace questless
 {
@@ -72,14 +71,21 @@ namespace questless
 
 		virtual Complete query_tile
 			( uptr<TileQuery> query
-			, std::optional<RegionTileCoords> origin
-			, std::function<bool(RegionTileCoords)> predicate
-			, std::function<Complete(std::optional<RegionTileCoords>)> cont
+			, std::optional<RegionTile::Point> origin
+			, std::function<bool(RegionTile::Point)> predicate
+			, std::function<Complete(std::optional<RegionTile::Point>)> cont
 			) const = 0;
 
 		virtual Complete query_direction
 			( uptr<DirectionQuery> query
-			, std::function<Complete(std::optional<RegionTileCoords::Direction>)> cont
+			, std::function<Complete(std::optional<RegionTile::Direction>)> cont
+			) const = 0;
+
+		virtual Complete query_vector
+			( uptr<VectorQuery> query
+			, std::optional<RegionTile::Point> origin
+			, std::function<bool(RegionTile::Vector)> predicate
+			, std::function<Complete(std::optional<RegionTile::Vector>)> cont
 			) const = 0;
 
 		virtual Complete query_being
@@ -97,12 +103,12 @@ namespace questless
 
 		// Quick Time Events
 
-		virtual Complete get_lightning_bolt_quality(RegionTileCoords target_coords, std::function<Complete(double)> cont) const;
+		virtual Complete get_lightning_bolt_quality(RegionTile::Point target_coords, std::function<Complete(double)> cont) const;
 	protected:
 		Complete idle(Action::cont_t cont);
 		Complete idle(double duration);
-		Complete turn(RegionTileCoords::Direction direction, Action::cont_t cont);
-		Complete walk(RegionTileCoords::Direction direction, Action::cont_t cont);
+		Complete turn(RegionTile::Direction direction, Action::cont_t cont);
+		Complete walk(RegionTile::Direction direction, Action::cont_t cont);
 		Complete fly();
 	};
 }

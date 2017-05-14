@@ -645,6 +645,15 @@
     <ClInclude Include="include\animation\particles\FlameParticle.h">
       <Filter>include\animation\particles</Filter>
     </ClInclude>
+    <ClInclude Include="include\units\GameSpeed.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\VectorDialog.h">
+      <Filter>include\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\agents\VectorQuery.h">
+      <Filter>include\agents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\world\Region.cpp">
@@ -898,6 +907,12 @@
     </ClCompile>
     <ClCompile Include="src\animation\particles\FlameParticle.cpp">
       <Filter>src\animation\particles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\Animation.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\VectorDialog.cpp">
+      <Filter>src\ui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -98,4 +98,18 @@ namespace questless
 			}
 		}
 	};
+
+	//! @todo Why do the following lambda overload helpers not work?
+
+	/*template <typename... Functors>
+	struct overloaded : Functors...
+	{
+		using Functors::operator ()...;
+	};
+
+	template <typename... Functors>
+	overloaded<Functors...> overload(Functors...)
+	{
+		return overloaded<Functors...>{};
+	}*/
 }

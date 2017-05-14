@@ -14,16 +14,16 @@
 
 namespace questless
 {
-	//! Retrieves region tile coordinates from the player.
-	class TileDialog : public Dialog
+	//! Retrieves a region tile vector from the player.
+	class VectorDialog : public Dialog
 	{
 	public:
-		TileDialog
+		VectorDialog
 			( std::string title
 			, std::string prompt
 			, std::optional<RegionTile::Point> origin
-			, std::function<bool(RegionTile::Point)> predicate
-			, std::function<void(std::optional<RegionTile::Point>)> cont
+			, std::function<bool(RegionTile::Vector)> predicate
+			, std::function<void(std::optional<RegionTile::Vector>)> cont
 			)
 			: _title{std::move(title)}
 			, _prompt{std::move(prompt)}
@@ -41,8 +41,8 @@ namespace questless
 		std::string _title;
 		std::string _prompt;
 		std::optional<RegionTile::Point> _origin;
-		std::function<bool(RegionTile::Point)> _predicate;
-		Continuation<std::optional<RegionTile::Point>> _cont;
+		std::function<bool(RegionTile::Vector)> _predicate;
+		Continuation<std::optional<RegionTile::Vector>> _cont;
 
 		uptr<sdl::Texture> _txt_title;
 		uptr<sdl::Texture> _txt_prompt;

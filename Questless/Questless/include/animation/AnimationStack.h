@@ -40,14 +40,14 @@ namespace questless
 				animation->draw(position, camera, color);
 			}
 		}
-	protected:
+	private:
+		std::vector<uptr<Animation>> _animations;
+
 		void animation_subupdate() final
 		{
 			for (auto& animation : _animations) {
 				animation->update();
 			}
 		}
-	private:
-		std::vector<uptr<Animation>> _animations;
 	};
 }

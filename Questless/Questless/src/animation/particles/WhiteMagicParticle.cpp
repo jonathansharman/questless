@@ -8,7 +8,7 @@
 
 namespace questless
 {
-	void WhiteMagicParticle::subupdate()
+	void WhiteMagicParticle::particle_subupdate()
 	{
 		_velocity.step().x *= 1.0 - _vx_percent_drag_rate * Game::frame_duration;
 	}

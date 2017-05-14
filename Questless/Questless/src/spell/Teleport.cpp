@@ -11,12 +11,12 @@ namespace questless::spell
 	Complete Teleport::perform_cast(Being& caster, Action::cont_t cont)
 	{
 		return caster.agent().query_tile(std::make_unique<TileQueryTeleportTarget>(), std::nullopt, Action::tile_in_range_predicate(caster, _range),
-			[this, &caster, cont](std::optional<RegionTileCoords> opt_tile_coords) {
+			[this, &caster, cont](std::optional<RegionTile::Point> opt_tile_coords) {
 				if (!opt_tile_coords) {
 					return cont(Action::Result::aborted);
 				}
-				RegionTileCoords tile_coords = *opt_tile_coords;
-				int distance = caster.coords.distance_to(tile_coords);
+				RegionTile::Point tile_coords = *opt_tile_coords;
+				int distance = (tile_coords - caster.coords).length();
 				double cost = _cost_factor * distance; //! @todo Reduce cost based on yellow power?
 				if (caster.mana < cost) {
 					return caster.agent().send_message(std::make_unique<MessageNotEnoughMana>(cost - caster.mana), [cont] { return cont(Action::Result::aborted); });

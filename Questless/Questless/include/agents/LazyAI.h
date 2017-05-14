@@ -54,9 +54,9 @@ namespace questless
 
 		Complete query_tile
 			( uptr<TileQuery>
-			, std::optional<RegionTileCoords>
-			, std::function<bool(RegionTileCoords)>
-			, std::function<Complete(std::optional<RegionTileCoords>)> cont
+			, std::optional<RegionTile::Point>
+			, std::function<bool(RegionTile::Point)>
+			, std::function<Complete(std::optional<RegionTile::Point>)> cont
 			) const final
 		{
 			return cont(std::nullopt);
@@ -64,7 +64,17 @@ namespace questless
 
 		Complete query_direction
 			( uptr<DirectionQuery>
-			, std::function<Complete(std::optional<RegionTileCoords::Direction>)> cont
+			, std::function<Complete(std::optional<RegionTile::Direction>)> cont
+			) const final
+		{
+			return cont(std::nullopt);
+		}
+
+		Complete query_vector
+			( uptr<VectorQuery>
+			, std::optional<RegionTile::Point>
+			, std::function<bool(RegionTile::Vector)>
+			, std::function<Complete(std::optional<RegionTile::Vector>)> cont
 			) const final
 		{
 			return cont(std::nullopt);

@@ -11,7 +11,7 @@ namespace questless
 {
 	//! @todo How to keep the light source in sync with the movement of the campfire, if it were to move?
 
-	Campfire::Campfire(Region& region, RegionTileCoords coords, Id<Object> id) : ObjectBase<Campfire>{id}
+	Campfire::Campfire(Region& region, RegionTile::Point coords, Id<Object> id) : ObjectBase<Campfire>{id}
 	{
 		auto light_source = std::make_unique<LightSource>(coords, 100.0);
 		region.add(*light_source);

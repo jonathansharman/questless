@@ -18,12 +18,12 @@ namespace questless
 	Complete MeleeAttack::Launch::perform(Being& actor, cont_t cont)
 	{
 		return _attack->cost().check(actor, [&] {
-			return actor.agent().query_direction(std::make_unique<DirectionQueryMeleeAttack>(),
-				[&actor, cont, attack = _attack](std::optional<RegionTileCoords::Direction> opt_direction) {
-					if (opt_direction) {
+			return actor.agent().query_vector(std::make_unique<VectorQueryMeleeAttack>(), actor.coords, [](RegionTile::Vector v) { return v.length() != 0; },
+				[&actor, cont, attack = _attack](std::optional<RegionTile::Vector> opt_vector) {
+					if (opt_vector) {
 						auto& weapon = game().items.get_ref_as<Weapon>(attack->weapon_id);
 						double delay = weapon.active_cooldown + attack->wind_up();
-						actor.add_delayed_action(delay, std::move(cont), std::make_unique<Finish>(attack, *opt_direction));
+						actor.add_delayed_action(delay, std::move(cont), std::make_unique<Finish>(attack, *opt_vector));
 						return cont(Result::success);
 					} else {
 						return cont(Result::aborted);
@@ -40,12 +40,12 @@ namespace questless
 				_attack->cost().incur(actor);
 				actor.busy_time += _attack->follow_through();
 				weapon->active_cooldown = _attack->cooldown();
-				auto coords = actor.coords.neighbor(_direction); //! @todo This will need to be more complicated for longer-ranged melee weapons.
+				auto coords = actor.coords + _vector; //! @todo This will need to be more complicated for longer-ranged melee weapons.
 				if (Being* target = actor.region->being(coords)) {
 					// Reduce damage based on difference between direction faced and direction attacked.
 					constexpr double penalty_per_turn = 0.25;
 					Damage damage = _attack->damage();
-					damage *= 1.0 - penalty_per_turn * RegionTileCoords::distance(actor.direction, _direction);
+					damage *= 1.0 - penalty_per_turn * RegionTile::distance(actor.direction, _vector.direction());
 
 					weapon->integrity -= _attack->wear_ratio() * damage.total();
 					target->take_damage(damage, nullptr, actor.id); //! @todo Part targeting
@@ -81,7 +81,7 @@ namespace questless
 					int range = _attack->range();
 					return actor.agent().query_tile(std::make_unique<TileQueryRangedAttackTarget>(range), actor.coords, tile_in_range_predicate(actor, range),
 						// Okay to capture weapon by reference; already checked that it's still there, and callback is synchronous here.
-						[&actor, cont, attack = _attack, &weapon = *weapon](std::optional<RegionTileCoords> opt_coords) {
+						[&actor, cont, attack = _attack, &weapon = *weapon](std::optional<RegionTile::Point> opt_coords) {
 							if (opt_coords) {
 								attack->cost().incur(actor);
 								actor.busy_time += attack->follow_through();

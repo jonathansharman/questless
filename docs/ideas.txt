@@ -11,7 +11,7 @@ The Chaos
 	All of space exists at a single point
 	Contains infinite energy
 	Perpetually changing
-	Inhospitable to life, with the exception of the radicals
+	Inhospitable to life, with the exception of the transformers
 The Stasis
 	All of time exists at a single point
 	Contains no energy
@@ -460,7 +460,7 @@ Blue - order - time - ice
 		Ward - Equip a low-durability passive shield.
 		Summon preservers from the stasis
 	Vengeance Runes
-		Retribution - Gives target being retribution status. Next time that target deals damage, it also deals that damage to itself.
+		Retribution - Gives target being retribution status. Next time that target deals damage to another being, it also deals that damage to itself.
 	Time Runes
 Yellow - chaos - energy
 	Specializations
@@ -497,7 +497,7 @@ Yellow - chaos - energy
 		Teleport - Teleport within a certain distance.
 		Banish - Banish target being to the chaos for a certain duration. While banished, an impassable and indestructible chaos portal appears in its place. During banishment, the being cannot be interacted with and does not update its state.
 		Open portal - ???
-		Summon radicals from the chaos
+		Summon transformers from the chaos
 
 ================================================================================
 Real-time Events for Spells

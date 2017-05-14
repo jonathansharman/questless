@@ -8,8 +8,8 @@
 
 #include "sdl/resources.h"
 
-using namespace units;
 using namespace sdl;
+using namespace units;
 
 namespace questless
 {
@@ -41,7 +41,7 @@ namespace questless
 		GameVector scaled_center_to_mouse = GameVector{static_cast<double>(center_to_mouse.x), static_cast<double>(-center_to_mouse.y)} / _zoom;
 		_point_hovered = _position + scaled_center_to_mouse;
 		_point_hovered.rotate(_position, _angle);
-		_tile_hovered = Layout::dflt().to_hex_coords<RegionTileCoords>(_point_hovered);
+		_tile_hovered = Layout::dflt().to_hex_coords<RegionTile::Point>(_point_hovered);
 	}
 
 	void Camera::draw
@@ -60,12 +60,7 @@ namespace questless
 		if (origin.value) {
 			position += GameVector{texture.width() / 2 - origin.value->x, texture.height() / 2 - origin.value->y};
 		}
-		Color mixed_color = Color
-			{ static_cast<uint8_t>((static_cast<uint32_t>(color.r) * _color.r) / 255)
-			, static_cast<uint8_t>((static_cast<uint32_t>(color.g) * _color.g) / 255)
-			, static_cast<uint8_t>((static_cast<uint32_t>(color.b) * _color.b) / 255)
-			, static_cast<uint8_t>((static_cast<uint32_t>(color.a) * _color.a) / 255)
-			};
+		Color mixed_color = color.mod(_color);
 		texture.draw_transformed
 			( screen_point(position)
 			, std::nullopt
@@ -93,7 +88,7 @@ namespace questless
 
 	ScreenPoint Camera::screen_point(GamePoint point) const
 	{
-		GamePoint const window_center = GamePoint{static_cast<double>(window().width()), static_cast<double>(window().height())} / 2.0;
+		GamePoint const window_center = GamePoint{0.0, 0.0} + GameVector{static_cast<double>(window().width()), static_cast<double>(window().height())} / 2.0;
 		GameVector const camera_to_point = point - _position;
 		GamePoint const scaled_point = _zoom * GameVector{camera_to_point.x, -camera_to_point.y} + window_center;
 		GamePoint const rotated_scaled_point = scaled_point.rotated(window_center, _angle);

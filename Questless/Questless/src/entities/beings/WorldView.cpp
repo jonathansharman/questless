@@ -27,10 +27,10 @@ namespace questless
 		int visual_range = vision.max_range();
 
 		// Find the set of coordinates of sections plausibly visible to the being.
-		set<RegionSectionCoords> section_coords_set;
+		set<RegionSection::Point> section_coords_set;
 		for (int q = -visual_range; q <= visual_range; ++q) {
 			for (int r = -visual_range; r <= visual_range; ++r) {
-				RegionTileCoords offset{q, r};
+				RegionTile::Vector offset{q, r};
 				if (offset.length() <= visual_range) {
 					if (Section const* section = region.containing_section(being.coords + offset)) {
 						section_coords_set.insert(section->coords());
@@ -40,13 +40,13 @@ namespace questless
 		}
 
 		// Calculate tile visibilities for each section.
-		for (RegionSectionCoords section_coords : section_coords_set) {
+		for (RegionSection::Point section_coords : section_coords_set) {
 			SectionView section_view;
 			section_view.coords = section_coords;
 
 			for (int q = 0; q < Section::diameter; ++q) {
 				for (int r = 0; r < Section::diameter; ++r) {
-					auto region_tile_coords = Section::region_tile_coords(section_coords, SectionTileCoords{q, r});
+					auto region_tile_coords = Section::region_tile_coords(section_coords, SectionTile::Point{q, r});
 
 					Perception tile_perception = being.perception_of(region_tile_coords);
 
@@ -69,25 +69,25 @@ namespace questless
 			for (Being const& other_being : region.section(section_coords)->beings) {
 				if (other_being.id == being.id) {
 					// Can always perceive self fully.
-					_being_views.emplace_back(other_being.id, Perception::maximum());
+					_entity_views.emplace_back(other_being.id, Perception::maximum());
 				} else {
-					RegionTileCoords other_coords = other_being.coords;
-					if (other_coords.distance_to(being.coords) <= visual_range) {
-						SectionTileCoords other_section_coords = Section::section_tile_coords(other_coords);
+					RegionTile::Point other_coords = other_being.coords;
+					if ((being.coords - other_coords).length() <= visual_range) {
+						SectionTile::Point other_section_coords = Section::section_tile_coords(other_coords);
 						Perception tile_perception = section_view.tile_perceptions[other_section_coords.q][other_section_coords.r];
 
-						_being_views.emplace_back(other_being.id, tile_perception);
+						_entity_views.emplace_back(other_being.id, tile_perception);
 					}
 				}
 			}
 
 			// Calculate object visibilities.
 			for (Object const& object : region.section(section_coords)->objects) {
-				RegionTileCoords other_coords = object.coords;
-				if (other_coords.distance_to(being.coords) <= visual_range) {
-					SectionTileCoords other_section_coords = Section::section_tile_coords(other_coords);
+				RegionTile::Point other_coords = object.coords;
+				if ((being.coords - other_coords).length() <= visual_range) {
+					SectionTile::Point other_section_coords = Section::section_tile_coords(other_coords);
 					Perception tile_perception = section_view.tile_perceptions[other_section_coords.q][other_section_coords.r];
-					_object_views.emplace_back(object.id, tile_perception);
+					_entity_views.emplace_back(object.id, tile_perception);
 				}
 			}
 		}

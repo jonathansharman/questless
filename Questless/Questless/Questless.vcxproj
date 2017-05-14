@@ -242,6 +242,7 @@
     <ClInclude Include="include\agents\Message.h" />
     <ClInclude Include="include\agents\Player.h" />
     <ClInclude Include="include\agents\TileQuery.h" />
+    <ClInclude Include="include\agents\VectorQuery.h" />
     <ClInclude Include="include\animation\Animation.h" />
     <ClInclude Include="include\animation\AnimationStack.h" />
     <ClInclude Include="include\animation\BodyTexturer.h" />
@@ -351,6 +352,7 @@
     <ClInclude Include="include\ui\PlayerActionDialog.h" />
     <ClInclude Include="include\ui\qte\LightningBolt.h" />
     <ClInclude Include="include\ui\TileDialog.h" />
+    <ClInclude Include="include\ui\VectorDialog.h" />
     <ClInclude Include="include\units\Angle.h" />
     <ClInclude Include="include\units\constants.h" />
     <ClInclude Include="include\units\Frequency.h" />
@@ -363,6 +365,7 @@
     <ClInclude Include="include\units\GameScaleVelocity.h" />
     <ClInclude Include="include\units\GameSeconds.h" />
     <ClInclude Include="include\units\GameSpace.h" />
+    <ClInclude Include="include\units\GameSpeed.h" />
     <ClInclude Include="include\units\GameVector.h" />
     <ClInclude Include="include\units\GameVelocity.h" />
     <ClInclude Include="include\units\HexCoords.h" />
@@ -408,6 +411,7 @@
     <ClCompile Include="src\agents\Agent.cpp" />
     <ClCompile Include="src\agents\BasicAI.cpp" />
     <ClCompile Include="src\agents\Player.cpp" />
+    <ClCompile Include="src\animation\Animation.cpp" />
     <ClCompile Include="src\animation\BodyTexturer.cpp" />
     <ClCompile Include="src\animation\Camera.cpp" />
     <ClCompile Include="src\animation\EntityAnimator.cpp" />
@@ -483,6 +487,7 @@
     <ClCompile Include="src\ui\PlayerActionDialog.cpp" />
     <ClCompile Include="src\ui\qte\LightningBolt.cpp" />
     <ClCompile Include="src\ui\TileDialog.cpp" />
+    <ClCompile Include="src\ui\VectorDialog.cpp" />
     <ClCompile Include="src\utility\utility.cpp" />
     <ClCompile Include="src\world\LightSource.cpp" />
     <ClCompile Include="src\world\Region.cpp" />

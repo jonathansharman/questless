@@ -51,43 +51,43 @@ namespace questless
 		Being* next_ready_being();
 
 		//! The ID of the being at @p region_tile_coords or nullopt if none.
-		std::optional<Id<Being>> being_id(RegionTileCoords region_tile_coords) const;
+		std::optional<Id<Being>> being_id(RegionTile::Point region_tile_coords) const;
 
 		//! The ID of the object at @p region_tile_coords or nullopt if none.
-		std::optional<Id<Object>> object_id(RegionTileCoords region_tile_coords) const;
+		std::optional<Id<Object>> object_id(RegionTile::Point region_tile_coords) const;
 
 		//! The being at @p region_tile_coords or nullptr if none.
-		Being const* being(RegionTileCoords region_tile_coords) const { return being_helper(region_tile_coords); }
+		Being const* being(RegionTile::Point region_tile_coords) const { return being_helper(region_tile_coords); }
 		//! The being at @p region_tile_coords or nullptr if none.
-		Being* being(RegionTileCoords region_tile_coords) { return being_helper(region_tile_coords); }
+		Being* being(RegionTile::Point region_tile_coords) { return being_helper(region_tile_coords); }
 
 		//! The object at @p region_tile_coords or nullptr if none.
-		Object const* object(RegionTileCoords region_tile_coords) const { return object_helper(region_tile_coords); }
+		Object const* object(RegionTile::Point region_tile_coords) const { return object_helper(region_tile_coords); }
 		//! The object at @p region_tile_coords or nullptr if none.
-		Object* object(RegionTileCoords region_tile_coords) { return object_helper(region_tile_coords); }
+		Object* object(RegionTile::Point region_tile_coords) { return object_helper(region_tile_coords); }
 
 		//! Spawns the player-controlled being @p player_being in the region at an arbitrary location and adds it to the being cache.
 		void spawn_player(uptr<Being> player_being);
 
 		//! Adds @p being to the region, setting its coordinates to @p region_tile_coords.
-		void add(Being& being, RegionTileCoords region_tile_coords);
+		void add(Being& being, RegionTile::Point region_tile_coords);
 
 		//! Adds @p object to the region, setting its coordinates to @p region_tile_coords.
-		void add(Object& object, RegionTileCoords region_tile_coords);
+		void add(Object& object, RegionTile::Point region_tile_coords);
 
 		//! Spawns @p being in the region, setting its coordinates to @p region_tile_coords and adding it to the being cache.
-		void spawn(uptr<Being> being, RegionTileCoords region_tile_coords);
+		void spawn(uptr<Being> being, RegionTile::Point region_tile_coords);
 
 		//! Spawns @p object in the region, setting its coordinates to @p region_tile_coords and adding it to the object cache.
-		void spawn(uptr<Object> object, RegionTileCoords region_tile_coords);
+		void spawn(uptr<Object> object, RegionTile::Point region_tile_coords);
 
 		//! Moves @p being to the tile at @p region_tile_coords.
 		//! @return Whether @p being was successfully moved.
-		bool move(Being& being, RegionTileCoords region_tile_coords);
+		bool move(Being& being, RegionTile::Point region_tile_coords);
 
 		//! Moves @p object to the tile at @p region_tile_coords.
 		//! @return Whether @p object was successfully moved.
-		bool move(Object& object, RegionTileCoords region_tile_coords);
+		bool move(Object& object, RegionTile::Point region_tile_coords);
 
 		//! Removes @p being from the region, if present.
 		void remove(Being& being);
@@ -102,20 +102,20 @@ namespace questless
 		void remove(LightSource const& light_source);
 
 		//! The tile at @p region_tile_coords or nullptr if none.
-		Tile* tile(RegionTileCoords region_tile_coords) { return tile_helper(region_tile_coords); }
+		Tile* tile(RegionTile::Point region_tile_coords) { return tile_helper(region_tile_coords); }
 
 		//! The tile at @p region_tile_coords or nullptr if none.
-		Tile const* tile(RegionTileCoords region_tile_coords) const { return tile_helper(region_tile_coords); }
+		Tile const* tile(RegionTile::Point region_tile_coords) const { return tile_helper(region_tile_coords); }
 
 		//! The section at @p region_section_coords.
-		Section* section(RegionSectionCoords region_section_coords) { return section_helper(region_section_coords); }
+		Section* section(RegionSection::Point region_section_coords) { return section_helper(region_section_coords); }
 		//! The section at @p region_section_coords.
-		Section const* section(RegionSectionCoords region_section_coords) const { return section_helper(region_section_coords); }
+		Section const* section(RegionSection::Point region_section_coords) const { return section_helper(region_section_coords); }
 
 		//! The section that contains @p region_tile_coords or nullptr if none.
-		Section* containing_section(RegionTileCoords region_tile_coords) { return containing_section_helper(region_tile_coords); }
+		Section* containing_section(RegionTile::Point region_tile_coords) { return containing_section_helper(region_tile_coords); }
 		//! The section that contains @p region_tile_coords or nullptr if none.
-		Section const* containing_section(RegionTileCoords region_tile_coords) const { return containing_section_helper(region_tile_coords); }
+		Section const* containing_section(RegionTile::Point region_tile_coords) const { return containing_section_helper(region_tile_coords); }
 
 		//! The total in-game time in this region.
 		double time() const { return _time; }
@@ -127,13 +127,13 @@ namespace questless
 		PeriodOfDay period_of_day() const { return _period_of_day; }
 
 		//! The illuminance of the tile at @p region_tile_coords.
-		double illuminance(RegionTileCoords region_tile_coords) const;
+		double illuminance(RegionTile::Point region_tile_coords) const;
 
 		//! The temperature of the tile at @p region_tile_coords.
-		double temperature(RegionTileCoords region_tile_coords) const;
+		double temperature(RegionTile::Point region_tile_coords) const;
 
 		//! The proportion of light/vision occluded between @p start and @p end, as a number in [0, 1].
-		double occlusion(RegionTileCoords start, RegionTileCoords end) const;
+		double occlusion(RegionTile::Point start, RegionTile::Point end) const;
 
 		//! Advances local time by one unit then updates everything contained in the region.
 		void update();
@@ -162,8 +162,8 @@ namespace questless
 		/////////////////
 
 		std::string _name;
-		std::map<RegionSectionCoords, Section> _section_map;
-		RegionSectionCoords center_section_coords = RegionSectionCoords{0, 0};
+		std::map<RegionSection::Point, Section> _section_map;
+		RegionSection::Point center_section_coords = RegionSection::Point{0, 0};
 
 		double _time;
 		double _time_of_day;
@@ -187,18 +187,18 @@ namespace questless
 
 		// Helper methods to avoid duplicating code for const and non-const versions of methods.
 
-		Being* being_helper(RegionTileCoords region_tile_coords) const;
-		Object* object_helper(RegionTileCoords region_tile_coords) const;
+		Being* being_helper(RegionTile::Point region_tile_coords) const;
+		Object* object_helper(RegionTile::Point region_tile_coords) const;
 
-		Tile* tile_helper(RegionTileCoords region_tile_coords) const;
+		Tile* tile_helper(RegionTile::Point region_tile_coords) const;
 
-		Section* section_helper(RegionSectionCoords region_section_coords) const
+		Section* section_helper(RegionSection::Point region_section_coords) const
 		{
 			auto it = _section_map.find(region_section_coords);
 			return it == _section_map.end() ? nullptr : const_cast<Section*>(&it->second);
 		}
 
-		Section* containing_section_helper(RegionTileCoords region_tile_coords) const
+		Section* containing_section_helper(RegionTile::Point region_tile_coords) const
 		{
 			auto it = _section_map.find(Section::region_section_coords(region_tile_coords));
 			return it == _section_map.end() ? nullptr : const_cast<Section*>(&it->second);

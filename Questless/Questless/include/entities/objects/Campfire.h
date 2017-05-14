@@ -13,7 +13,7 @@ namespace questless
 	class Campfire : public ObjectBase<Campfire>
 	{
 	public:
-		Campfire(Region& region, RegionTileCoords coords, Id<Object> id = Id<Object>::make());
+		Campfire(Region& region, RegionTile::Point coords, Id<Object> id = Id<Object>::make());
 		Campfire(std::istream& in);
 
 		virtual EntityClass entity_class() const { return EntityClass::Campfire; }

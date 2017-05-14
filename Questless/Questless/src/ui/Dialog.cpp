@@ -10,8 +10,8 @@
 #include "units/ScreenPoint.h"
 #include "units/ScreenRect.h"
 
-using namespace units;
 using namespace sdl;
+using namespace units;
 
 namespace questless
 {

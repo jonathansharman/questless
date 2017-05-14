@@ -13,9 +13,8 @@ namespace questless
 	class RedMagicParticle : public Particle
 	{
 	public:
-		//! @param position The particle's starting position.
-		RedMagicParticle(units::GamePoint position) : Particle
-			{ position
+		RedMagicParticle() : Particle
+			{ units::GameVector{0.0, 0.0}
 			, (random_displacement(200.0) + units::GameVector{0.0, 150.0}) / 1.0s
 			, units::GameVector{0.0, -300.0} / 1.0s / 1.0s
 			, random_angle()
@@ -28,7 +27,7 @@ namespace questless
 	private:
 		static constexpr units::GameRadians _dtheta_max = 2.0 * units::GameRadians::circle();
 
-		void subupdate() final {}
+		void particle_subupdate() final {}
 
 		sdl::Texture const& texture() const final;
 	};

@@ -7,6 +7,7 @@
 #include "EffectVisitor.h"
 #include "entities/beings/Damage.h"
 #include "utility/Id.h"
+#include "world/coordinates.h"
 
 namespace questless
 {
@@ -17,16 +18,16 @@ namespace questless
 	{
 	public:
 		//! @param origin The coordinates of the effect's origin.
-		Effect(RegionTileCoords origin) : _origin{origin} {}
+		Effect(RegionTile::Point origin) : _origin{origin} {}
 
 		virtual ~Effect() = default;
 
 		//! The maximum distance from the origin at which this effect may be perceived.
 		virtual int range() const = 0;
 
-		RegionTileCoords origin() const { return _origin; }
+		RegionTile::Point origin() const { return _origin; }
 	private:
-		RegionTileCoords _origin;
+		RegionTile::Point _origin;
 	};
 
 	DEFINE_ELEMENT_BASE(Effect, Effect)
@@ -40,7 +41,7 @@ namespace questless
 
 		//! @param origin The coordinates of the effect's origin.
 		//! @param caster_id The ID of the caster.
-		EagleEyeEffect(RegionTileCoords origin, Id<Being> caster_id)
+		EagleEyeEffect(RegionTile::Point origin, Id<Being> caster_id)
 			: EffectBase<EagleEyeEffect>{origin}, caster_id{caster_id}
 		{}
 
@@ -58,7 +59,7 @@ namespace questless
 		//! @param damage The damage dealt.
 		//! @param target_id The ID of the injured being.
 		//! @param opt_source_id The ID of the being who caused the injury or nullopt if there is none.
-		InjuryEffect(RegionTileCoords origin, Damage damage, Id<Being> target_id, std::optional<Id<Being>> opt_source_id)
+		InjuryEffect(RegionTile::Point origin, Damage damage, Id<Being> target_id, std::optional<Id<Being>> opt_source_id)
 			: EffectBase<InjuryEffect>{origin}, damage{damage}, target_id{target_id}, opt_source_id{opt_source_id}
 		{}
 

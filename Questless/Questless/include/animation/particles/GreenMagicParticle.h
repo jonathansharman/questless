@@ -13,10 +13,9 @@ namespace questless
 	class GreenMagicParticle : public Particle
 	{
 	public:
-		//! @param position The particle's starting position.
-		GreenMagicParticle(units::GamePoint position)
+		GreenMagicParticle()
 			: Particle
-				{ position
+				{ units::GameVector{0.0, 0.0}
 				, random_displacement(20.0, 50.0) / 1.0s
 				, units::GameAcceleration::zero()
 				, random_angle()
@@ -36,7 +35,7 @@ namespace questless
 
 		bool _turning_right; //!< True if the green magic particle is turning to the right (CW), false if turning left (CCW).
 
-		void subupdate() final;
+		void particle_subupdate() final;
 
 		sdl::Texture const& texture() const final;
 	};

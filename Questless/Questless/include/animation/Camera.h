@@ -72,18 +72,18 @@ namespace questless
 		//! @param dtheta The number of radians to offset the angle.
 		void rotate(units::GameRadians dtheta);
 
-		//! The camera's color multiplier.
+		//! The camera's color modulator.
 		sdl::Color color() const { return _color; }
 
-		//! Sets the camera's color multiplier.
-		//! @param color The new color multiplier.
+		//! Sets the camera's color modulator.
+		//! @param color The new color modulator.
 		sdl::Color color(sdl::Color color) { _color = color; }
 
 		//! The game point the mouse is hovering over.
 		units::GamePoint point_hovered() const { return _point_hovered; }
 
 		//! The hex coordinates of the tile the mouse is hovering over.
-		RegionTileCoords tile_hovered() const { return _tile_hovered; }
+		RegionTile::Point tile_hovered() const { return _tile_hovered; }
 
 		//! Updates the camera. To be called once per frame.
 		void update();
@@ -92,7 +92,7 @@ namespace questless
 		//! @param texture The texture to be drawn.
 		//! @param position The in-game coordinates of the texture.
 		//! @param origin The origin point within the texture. If nullopt, the texture's center is used.
-		//! @param color An additional color multiplier, applied on top of the camera's and texture's color members.
+		//! @param color An additional color modulator, applied on top of the camera's and texture's color members.
 		//! @param horizontal_scale The horizontal scale of the texture.
 		//! @param vertical_scale The vertical scale of the texture.
 		//! @param angle The counter-clockwise rotation of the texture, in radians.
@@ -123,7 +123,7 @@ namespace questless
 		sdl::Color _color;
 
 		units::GamePoint _point_hovered;
-		RegionTileCoords _tile_hovered;
+		RegionTile::Point _tile_hovered;
 
 		//! The given game point transformed to screen space, accounting for the camera.
 		units::ScreenPoint screen_point(units::GamePoint point) const;

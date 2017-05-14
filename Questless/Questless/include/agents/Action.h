@@ -36,7 +36,7 @@ namespace questless
 		virtual Complete perform(Being& actor, cont_t cont) = 0;
 
 		//! @todo Do these belong here?
-		static std::function<bool(RegionTileCoords)> tile_in_range_predicate(Being& actor, int range);
+		static std::function<bool(RegionTile::Point)> tile_in_range_predicate(Being& actor, int range);
 		static std::function<bool(Being&)> being_in_range_predicate(Being& actor, int range);
 	};
 }

@@ -31,6 +31,9 @@
 #include "ui/HUD.h"
 #include "ui/ListDialog.h"
 #include "ui/PlayerActionDialog.h"
+#include "units/Frequency.h"
+#include "units/GameSeconds.h"
+#include "units/GameSpeed.h"
 #include "utility/Cache.h"
 #include "world/Region.h"
 
@@ -75,6 +78,8 @@ namespace questless
 		Region& region() { return *_region; }
 		Region const& region() const { return *_region; }
 
+		WorldRenderer& world_renderer() { return *_world_renderer; }
+
 		//! Adds an effect to the world, notifying beings within range of its occurrence.
 		//! @param effect The effect to add.
 		void add_effect(sptr<Effect> const& effect);
@@ -114,7 +119,7 @@ namespace questless
 		// Splash screen
 
 		static constexpr int _splash_flames_count = 20;
-		static constexpr units::Rate<double, double> _splash_flames_vy{-2800.0};
+		static constexpr units::GameSpeed _splash_flames_vy{-2800.0};
 		static constexpr int _splash_logo_jiggle = 3;
 
 		//////////

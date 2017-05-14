@@ -11,8 +11,8 @@
 #include "entities/all-entities.h"
 #include "units/Point.h"
 
-using namespace units;
 using namespace sdl;
+using namespace units;
 
 namespace questless
 {
@@ -59,14 +59,13 @@ namespace questless
 
 	// Objects
 	
-	void EntityAnimator::visit(Campfire const& campfire)
+	void EntityAnimator::visit(Campfire const&)
 	{
 		static auto texture_handle = texture_manager().add("resources/textures/entities/objects/campfire.png");
 		auto animation_stack = std::make_unique<AnimationStack>();
 		animation_stack->add(std::make_unique<Still>(texture_handle, TexturePoint{0, 0}));
-		animation_stack->add(std::make_unique<Flame>(campfire.coords));
+		animation_stack->add(std::make_unique<Flame>());
 		_animation = std::move(animation_stack);
-		//_animation = std::make_unique<Still>(texture_handle, TexturePoint{0, 0});
 	}
 	void EntityAnimator::visit(Corpse const&)
 	{

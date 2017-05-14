@@ -12,17 +12,13 @@ namespace questless
 	//! Creates sparks, smoke, and flame.
 	class Flame : public ParticleAnimation
 	{
-	public:
-		Flame(RegionTileCoords coords) : _coords{coords} {}
-	protected:
+	private:
 		void particle_animation_subupdate() final
 		{
 			constexpr int n_flames = 2;
 			for (int i = 0; i < n_flames; ++i) {
-				add(std::make_unique<FlameParticle>(units::Layout::dflt().to_world(_coords)));
+				push_front(std::make_unique<FlameParticle>());
 			}
 		}
-	private:
-		RegionTileCoords _coords;
 	};
 }

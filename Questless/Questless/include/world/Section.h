@@ -31,20 +31,20 @@ namespace questless
 	class Section
 	{
 	public:
-		static ref<Being> being_entry_to_ref(std::pair<RegionTileCoords const, Id<Being>> being_entry);
-		static cref<Being> being_entry_to_cref(std::pair<RegionTileCoords const, Id<Being>> being_entry);
+		static ref<Being> being_entry_to_ref(std::pair<RegionTile::Point const, Id<Being>> being_entry);
+		static cref<Being> being_entry_to_cref(std::pair<RegionTile::Point const, Id<Being>> being_entry);
 		using BeingsView = ContainerView
-			< std::unordered_map<RegionTileCoords, Id<Being>>
+			< std::unordered_map<RegionTile::Point, Id<Being>>
 			, ref<Being>
 			, cref<Being>
 			, being_entry_to_ref
 			, being_entry_to_cref
 			>;
 
-		static ref<Object> object_entry_to_ref(std::pair<RegionTileCoords const, Id<Object>> object_entry);
-		static cref<Object> object_entry_to_cref(std::pair<RegionTileCoords const, Id<Object>> object_entry);
+		static ref<Object> object_entry_to_ref(std::pair<RegionTile::Point const, Id<Object>> object_entry);
+		static cref<Object> object_entry_to_cref(std::pair<RegionTile::Point const, Id<Object>> object_entry);
 		using ObjectsView = ContainerView
-			< std::unordered_map<RegionTileCoords, Id<Object>>
+			< std::unordered_map<RegionTile::Point, Id<Object>>
 			, ref<Object>
 			, cref<Object>
 			, object_entry_to_ref
@@ -65,12 +65,12 @@ namespace questless
 		static constexpr int diameter = 2 * radius + 1;
 
 		//! The coordinates of the section that contains the tile at @p region_tile_coords.
-		static RegionSectionCoords region_section_coords(RegionTileCoords region_tile_coords);
+		static RegionSection::Point region_section_coords(RegionTile::Point region_tile_coords);
 
 		//! The coordinates of @p region_tile_coords relative to the section that contains them.
-		static SectionTileCoords section_tile_coords(RegionTileCoords region_tile_coords)
+		static SectionTile::Point section_tile_coords(RegionTile::Point region_tile_coords)
 		{
-			return SectionTileCoords
+			return SectionTile::Point
 				{ ((region_tile_coords.q + Section::radius) % Section::diameter + Section::diameter) % Section::diameter
 				, ((region_tile_coords.r + Section::radius) % Section::diameter + Section::diameter) % Section::diameter
 				};
@@ -82,7 +82,7 @@ namespace questless
 
 		//! @param coords The coordinates of the section within its region.
 		//! @param data_stream A stream of section data.
-		Section(RegionSectionCoords coords, std::istream& data_stream);
+		Section(RegionSection::Point coords, std::istream& data_stream);
 
 		Section(Section const& that) = delete;
 
@@ -102,13 +102,13 @@ namespace questless
 		void save(char const* filename);
 
 		//! The hex coordinates of this section within the region's sections.
-		RegionSectionCoords coords() const { return _coords; }
+		RegionSection::Point coords() const { return _coords; }
 
 		//! The ID of the being at @p tile_coords or nullopt if there is none.
-		std::optional<Id<Being>> being_id(RegionTileCoords tile_coords) const;
+		std::optional<Id<Being>> being_id(RegionTile::Point tile_coords) const;
 
 		//! The ID of the object at @p tile_coords or nullopt if there is none.
-		std::optional<Id<Object>> object_id(RegionTileCoords tile_coords) const;
+		std::optional<Id<Object>> object_id(RegionTile::Point tile_coords) const;
 
 		//! Adds the given being to the section. Throws a logic_error if there is already a being at its coordinates.
 		void add(Being& being);
@@ -117,10 +117,10 @@ namespace questless
 		void add(Object& object);
 
 		//! Removes the being at the given region tile coordinates, if present.
-		void remove_being(RegionTileCoords coords);
+		void remove_being(RegionTile::Point coords);
 
 		//! Removes the object at the given region tile coordinates, if present.
-		void remove_object(RegionTileCoords coords);
+		void remove_object(RegionTile::Point coords);
 
 		//! Removes @p being from the section.
 		void remove(Being& being);
@@ -135,26 +135,26 @@ namespace questless
 		void remove(LightSource const& light_source);
 
 		//! Region tile coordinates from @p region_section_coords and @p section_tile_coords.
-		static RegionTileCoords region_tile_coords(RegionSectionCoords region_section_coords, SectionTileCoords section_tile_coords)
+		static RegionTile::Point region_tile_coords(RegionSection::Point region_section_coords, SectionTile::Point section_tile_coords)
 		{
 			int q = region_section_coords.q * diameter + section_tile_coords.q - radius;
 			int r = region_section_coords.r * diameter + section_tile_coords.r - radius;
-			return RegionTileCoords{q, r};
+			return RegionTile::Point{q, r};
 		}
 
 		//! Region tile coordinates from @p section_tile_coords in this section.
-		RegionTileCoords region_tile_coords(SectionTileCoords section_tile_coords) const
+		RegionTile::Point region_tile_coords(SectionTile::Point section_tile_coords) const
 		{
 			return region_tile_coords(_coords, section_tile_coords);
 		}
 
 		//! The tile at @p section_tile_coords in this section.
-		Tile const& tile(SectionTileCoords section_tile_coords) const
+		Tile const& tile(SectionTile::Point section_tile_coords) const
 		{
 			return *_tiles[section_tile_coords.q][section_tile_coords.r];
 		}
 		//! The tile at @p section_tile_coords in this section.
-		Tile& tile(SectionTileCoords section_tile_coords)
+		Tile& tile(SectionTile::Point section_tile_coords)
 		{
 			return *_tiles[section_tile_coords.q][section_tile_coords.r];
 		}
@@ -162,10 +162,10 @@ namespace questless
 		//! A q-major array of tiles, representing a rhomboid section of world data centered around the section's hex coordinates.
 		std::array<std::array<uptr<Tile>, diameter>, diameter> _tiles;
 		//! The hex coordinates of the section within the region. The section's center's region tile coordinates are _coords * section_diameter.
-		RegionSectionCoords _coords;
+		RegionSection::Point _coords;
 
-		std::unordered_map<RegionTileCoords, Id<Being>> _being_map;
-		std::unordered_map<RegionTileCoords, Id<Object>> _object_map;
+		std::unordered_map<RegionTile::Point, Id<Being>> _being_map;
+		std::unordered_map<RegionTile::Point, Id<Object>> _object_map;
 
 		std::unordered_set<Id<LightSource>> _light_source_ids;
 	};

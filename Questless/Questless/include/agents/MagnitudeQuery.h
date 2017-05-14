@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <memory>
+#include "utility/visitor-pattern.h"
 
 namespace questless
 {

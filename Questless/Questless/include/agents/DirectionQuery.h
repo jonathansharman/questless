@@ -4,13 +4,11 @@
 
 #pragma once
 
-#include <memory>
+#include "utility/visitor-pattern.h"
 
 namespace questless
 {
-	struct DirectionQueryMeleeAttack;
-
-	using DirectionQuerySubtypeList = type_list::of_t<DirectionQueryMeleeAttack>;
+	using DirectionQuerySubtypeList = type_list::of_t<>;
 
 	DEFINE_VISITORS(DirectionQuery, DirectionQuerySubtypeList)
 
@@ -21,6 +19,4 @@ namespace questless
 	};
 
 	DEFINE_ELEMENT_BASE(DirectionQuery, DirectionQuery)
-
-	struct DirectionQueryMeleeAttack : DirectionQueryBase<DirectionQueryMeleeAttack> {};
 }

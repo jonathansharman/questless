@@ -38,7 +38,7 @@ namespace questless
 
 		Region* region;
 		Section* section;
-		RegionTileCoords coords;
+		RegionTile::Point coords;
 
 		virtual ~Entity() = default;
 

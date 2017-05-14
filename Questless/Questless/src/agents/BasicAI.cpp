@@ -34,7 +34,7 @@ namespace questless
 				return Complete{};
 			});
 		} else {
-			auto direction = static_cast<RegionTileCoords::Direction>(uniform(1, 6));
+			auto direction = static_cast<RegionTile::Direction>(uniform(1, 6));
 			ai.turn(direction, [&ai](Action::Result result) {
 				// Idle next time.
 				ai._state = std::make_unique<IdleState>();
@@ -56,7 +56,7 @@ namespace questless
 
 				//! @todo Only go passive while target is out of visual range. Keep a grudge list?
 			} else {
-				auto target_direction = ai.being.coords.direction_towards(target->coords);
+				auto target_direction = (target->coords - ai.being.coords).direction();
 				if (ai.being.direction != target_direction) {
 					// Facing away from target. Turn towards it.
 					ai.turn(target_direction, [&ai](Action::Result result) {
@@ -68,7 +68,7 @@ namespace questless
 					});
 				} else {
 					// Facing towards target.
-					if (ai.being.coords.distance_to(target->coords) == 1) {
+					if ((target->coords - ai.being.coords).length() == 1) {
 						// Within striking distance of target.
 						//! @todo This is a hack that assumes the first item in the inventory is a melee weapon.
 						Item& item = *ai.being.inventory.items.begin();
@@ -181,23 +181,23 @@ namespace questless
 
 	Complete BasicAI::query_tile
 		( uptr<TileQuery> query
-		, std::optional<RegionTileCoords> origin
-		, std::function<bool(RegionTileCoords)> predicate
-		, std::function<Complete(std::optional<RegionTileCoords>)> cont
+		, std::optional<RegionTile::Point> origin
+		, std::function<bool(RegionTile::Point)> predicate
+		, std::function<Complete(std::optional<RegionTile::Point>)> cont
 		) const
 	{
 		struct TileQueryHandler : TileQueryConstVisitor
 		{
 			BasicAI const& ai;
-			std::optional<RegionTileCoords> origin;
-			std::function<bool(RegionTileCoords)> predicate;
-			std::function<Complete(std::optional<RegionTileCoords>)> cont;
+			std::optional<RegionTile::Point> origin;
+			std::function<bool(RegionTile::Point)> predicate;
+			std::function<Complete(std::optional<RegionTile::Point>)> cont;
 
 			TileQueryHandler
 				( BasicAI const& ai
-				, std::optional<RegionTileCoords> origin
-				, std::function<bool(RegionTileCoords)> predicate
-				, std::function<Complete(std::optional<RegionTileCoords>)> cont
+				, std::optional<RegionTile::Point> origin
+				, std::function<bool(RegionTile::Point)> predicate
+				, std::function<Complete(std::optional<RegionTile::Point>)> cont
 				)
 				: ai{ai}
 				, origin{std::move(origin)}
@@ -209,7 +209,7 @@ namespace questless
 			{
 				auto target_id = dynamic_cast<AttackState*>(ai._state.get())->target_id;
 				if (Being* target = game().beings.get(target_id)) {
-					if (ai.being.coords.distance_to(target->coords) <= query.range) {
+					if ((target->coords - ai.being.coords).length() <= query.range) {
 						// If in range, shoot the target.
 						cont(target->coords);
 						return;
@@ -234,36 +234,61 @@ namespace questless
 
 	Complete BasicAI::query_direction
 		( uptr<DirectionQuery> query
-		, std::function<Complete(std::optional<RegionTileCoords::Direction>)> cont
+		, std::function<Complete(std::optional<RegionTile::Direction>)> cont
 		) const
 	{
 		struct DirectionQueryHandler : DirectionQueryConstVisitor
 		{
 			BasicAI const& ai;
-			std::function<Complete(std::optional<RegionTileCoords::Direction>)> cont;
+			std::function<Complete(std::optional<RegionTile::Direction>)> cont;
 
 			DirectionQueryHandler
 				( BasicAI const& ai
-				, std::function<Complete(std::optional<RegionTileCoords::Direction>)> cont
+				, std::function<Complete(std::optional<RegionTile::Direction>)> cont
+				)
+				: ai{ai}
+				, cont{std::move(cont)}
+			{}
+		};
+
+		DirectionQueryHandler handler{*this, std::move(cont)};
+		query->accept(handler);
+		return Complete{};
+	}
+
+	Complete BasicAI::query_vector
+		( uptr<VectorQuery> query
+		, std::optional<RegionTile::Point> origin
+		, std::function<bool(RegionTile::Vector)> predicate
+		, std::function<Complete(std::optional<RegionTile::Vector>)> cont
+		) const
+	{
+		struct VectorQueryHandler : VectorQueryConstVisitor
+		{
+			BasicAI const& ai;
+			std::function<Complete(std::optional<RegionTile::Vector>)> cont;
+
+			VectorQueryHandler
+				( BasicAI const& ai
+				, std::function<Complete(std::optional<RegionTile::Vector>)> cont
 				)
 				: ai{ai}
 				, cont{std::move(cont)}
 			{}
 
-			void visit(DirectionQueryMeleeAttack const&) final
+			void visit(VectorQueryMeleeAttack const&) final
 			{
 				auto target_id = dynamic_cast<AttackState*>(ai._state.get())->target_id;
 				if (Being* target = game().beings.get(target_id)) {
-					// Attack towards the target direction.
-					auto direction = ai.being.coords.direction_towards(target->coords);
-					cont(direction);
+					// Attack towards the target.
+					cont((target->coords - ai.being.coords).unit());
 					return;
 				}
 				cont(std::nullopt);
 			}
 		};
 
-		DirectionQueryHandler handler{*this, std::move(cont)};
+		VectorQueryHandler handler{*this, std::move(cont)};
 		query->accept(handler);
 		return Complete{};
 	}

@@ -8,7 +8,7 @@
 
 namespace questless
 {
-	void GreenMagicParticle::subupdate()
+	void GreenMagicParticle::particle_subupdate()
 	{
 		if (uniform(0.0, 1.0) < _inflection_probability) {
 			_turning_right = !_turning_right;

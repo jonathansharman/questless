@@ -5,21 +5,19 @@
 #include "animation/SpriteAnimation.h"
 #include "Game.h"
 
-using namespace units;
 using namespace sdl;
+using namespace units;
 
 namespace questless
 {
 	SpriteAnimation::SpriteAnimation(sptr<SpriteSheet> sprite_sheet, std::vector<Frame> frames, Looping looping)
 		: looping{looping}
 		, in_reverse{false}
-		, time_scale{1.0}
 		, _sprite_sheet{std::move(sprite_sheet)}
 		, _frames{std::move(frames)}
 		, _frame_index{0}
 		, _accrued_time{GameSeconds::zero()}
 		, _loops{0}
-		, _over{false}
 	{}
 
 	void SpriteAnimation::draw(units::ScreenPoint position) const
@@ -74,32 +72,30 @@ namespace questless
 
 	void SpriteAnimation::animation_subupdate()
 	{
-		if (!_over) {
-			_accrued_time += time_scale.get() * Game::frame_duration;
-			while (_accrued_time > _frames[_frame_index].duration) {
-				_accrued_time -= _frames[_frame_index].duration;
-				if (in_reverse) {
-					--_frame_index;
-				} else {
-					++_frame_index;
-				}
+		_accrued_time += elapsed_time();
+		while (_accrued_time > _frames[_frame_index].duration) {
+			_accrued_time -= _frames[_frame_index].duration;
+			if (in_reverse) {
+				--_frame_index;
+			} else {
+				++_frame_index;
+			}
 
-				if (_frame_index < 0) {
-					if (looping) {
-						_frame_index = static_cast<int>(_frames.size() - 1);
-						++_loops;
-					} else {
-						_over = true;
-						break;
-					}
-				} else if (_frame_index >= static_cast<int>(_frames.size())) {
-					if (looping) {
-						_frame_index = 0;
-						++_loops;
-					} else {
-						_over = true;
-						break;
-					}
+			if (_frame_index < 0) {
+				if (looping) {
+					_frame_index = static_cast<int>(_frames.size() - 1);
+					++_loops;
+				} else {
+					_over = true;
+					break;
+				}
+			} else if (_frame_index >= static_cast<int>(_frames.size())) {
+				if (looping) {
+					_frame_index = 0;
+					++_loops;
+				} else {
+					_over = true;
+					break;
 				}
 			}
 		}

@@ -21,7 +21,7 @@ namespace questless::qte
 	public:
 		//! @param target_coords The target strike coordinates.
 		//! @param cont The dialog continuation function.
-		LightningBolt(RegionTileCoords target_coords, std::function<void(double)> cont);
+		LightningBolt(RegionTile::Point target_coords, std::function<void(double)> cont);
 
 		State update() final;
 

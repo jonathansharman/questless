@@ -10,17 +10,17 @@ using namespace std;
 
 namespace questless
 {
-	function<bool(RegionTileCoords)> Action::tile_in_range_predicate(Being& actor, int range)
+	function<bool(RegionTile::Point)> Action::tile_in_range_predicate(Being& actor, int range)
 	{
-		return [&actor, range](RegionTileCoords tile_coords) {
-			return actor.coords.distance_to(tile_coords) <= range;
+		return [&actor, range](RegionTile::Point tile_coords) {
+			return (tile_coords - actor.coords).length() <= range;
 		};
 	}
 
 	function<bool(Being&)> Action::being_in_range_predicate(Being& actor, int range)
 	{
 		return [&actor, range](Being& being) {
-			return actor.coords.distance_to(being.coords) <= range;
+			return (being.coords - actor.coords).length() <= range;
 		};
 	}
 }

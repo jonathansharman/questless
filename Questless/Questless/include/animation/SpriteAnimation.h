@@ -64,8 +64,6 @@ namespace questless
 	class SpriteAnimation : public Animation
 	{
 	public:
-		static constexpr double minimum_timescale = 0.0;
-
 		struct Frame
 		{
 			units::GameSeconds duration;
@@ -83,9 +81,6 @@ namespace questless
 		//! If true, the animation plays backwards.
 		bool in_reverse;
 
-		//! The time scale of the animation. E.g., a time scale of 2.0 plays the animation at double speed.
-		Bounded<double, minimum_timescale> time_scale;
-
 		//! @param sprite_sheet The sprite sheet for this animation.
 		//! @param frames The sequence of frames that compose the animation.
 		//! @param looping Whether to loop the animation or play just once.
@@ -98,23 +93,19 @@ namespace questless
 		//! The number of times the animation has looped.
 		int loops() const { return _loops; }
 
-		//! Whether the animation has played to its end.
-		bool over() const { return _over; }
-
 		//! The total duration of the animation.
 		units::GameSeconds duration() const;
 
 		//! Moves to the start or a random time point in the animation, sets the loop counter to zero, and sets the over flag to false.
 		//! @param randomize_start_time If true, resets the animation to a random time point.
 		void reset(RandomizeStartTime randomize_start_time = RandomizeStartTime{false});
-	protected:
-		void animation_subupdate() final;
 	private:
 		sptr<SpriteSheet> _sprite_sheet;
 		std::vector<Frame> _frames;
 		int _frame_index;
 		units::GameSeconds _accrued_time;
 		int _loops;
-		bool _over;
+
+		void animation_subupdate() final;
 	};
 }

@@ -13,9 +13,8 @@ namespace questless
 	class BlackMagicParticle : public Particle
 	{
 	public:
-		//! @param position The particle's starting position.
-		BlackMagicParticle(units::GamePoint position) : Particle
-			{ position
+		BlackMagicParticle() : Particle
+			{ units::GameVector{0.0, 0.0}
 			, units::GameVelocity{units::GameVector{random_angle(), uniform(5.0, 25.0)}}
 			, units::GameAcceleration::zero()
 			, random_angle()
@@ -30,7 +29,7 @@ namespace questless
 		static constexpr units::GameRadians _dtheta_max = 2.0 * units::GameRadians::circle();
 		static constexpr units::Hertz _acceleration_factor = 1.25_Hz;
 
-		void subupdate() final;
+		void particle_subupdate() final;
 
 		sdl::Texture const& texture() const final;
 	};

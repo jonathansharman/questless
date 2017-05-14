@@ -27,7 +27,7 @@ namespace questless
 		, alertness{max_alertness}
 		, busy_time{0.0}
 		, dead{false}
-		, direction{static_cast<RegionTileCoords::Direction>(uniform(1, 6))}
+		, direction{static_cast<RegionTile::Direction>(uniform(1, 6))}
 		, _agent{make_agent(*this)}
 		
 	{
@@ -56,7 +56,7 @@ namespace questless
 		//! @todo Is there a better way to extract into an enum class?
 		int direction_int;
 		in >> direction_int;
-		direction = static_cast<RegionTileCoords::Direction>(direction_int);
+		direction = static_cast<RegionTile::Direction>(direction_int);
 	}
 
 	Being::~Being() = default;
@@ -76,35 +76,35 @@ namespace questless
 		out << stats << ' ';
 	}
 
-	Perception Being::perception_of(RegionTileCoords region_tile_coords) const
+	Perception Being::perception_of(RegionTile::Point region_tile_coords) const
 	{
 		bool in_front;
 		auto offset = region_tile_coords - coords;
 		switch (direction) {
-			case RegionTileCoords::Direction::one:
+			case RegionTile::Direction::one:
 				in_front = offset.q >= 0 && offset.q + offset.r >= 0;
 				break;
-			case RegionTileCoords::Direction::two:
+			case RegionTile::Direction::two:
 				in_front = offset.r >= 0 && offset.q + offset.r >= 0;
 				break;
-			case RegionTileCoords::Direction::three:
+			case RegionTile::Direction::three:
 				in_front = offset.q <= 0 && offset.r >= 0;
 				break;
-			case RegionTileCoords::Direction::four:
+			case RegionTile::Direction::four:
 				in_front = offset.q <= 0 && offset.q + offset.r <= 0;
 				break;
-			case RegionTileCoords::Direction::five:
+			case RegionTile::Direction::five:
 				in_front = offset.r <= 0 && offset.q + offset.r <= 0;
 				break;
-			case RegionTileCoords::Direction::six:
+			case RegionTile::Direction::six:
 				in_front = offset.q >= 0 && offset.r <= 0;
 				break;
 			default:
 				throw std::logic_error{"Invalid direction."};
 		}
-		if (in_front && coords.distance_to(region_tile_coords) <= stats.vision.max_range()) {
+		if (in_front && (region_tile_coords - coords).length() <= stats.vision.max_range()) {
 			double const illuminance = region->illuminance(region_tile_coords);
-			int const distance = coords.distance_to(region_tile_coords);
+			int const distance = (region_tile_coords - coords).length();
 			double const occlusion = region->occlusion(coords, region_tile_coords);
 			return stats.vision.visibility(illuminance, distance) * occlusion;
 		} else {

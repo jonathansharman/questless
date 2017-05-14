@@ -38,7 +38,20 @@ namespace sdl
 
 		constexpr explicit Color() : r{0}, g{0}, b{0}, a{255} {}
 		constexpr explicit Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255) : r{r}, g{g}, b{b}, a{a} {}
+
+		//! Creates a color with the RGB values from @p color and @p a as the alpha.
 		constexpr explicit Color(Color color, uint8_t a) : r{color.r}, g{color.g}, b{color.b}, a{a} {}
+
+		//! Modulates this color by @p that color.
+		constexpr Color mod(Color that)
+		{
+			return Color
+				{ static_cast<uint8_t>((static_cast<uint32_t>(this->r) * that.r) / 255)
+				, static_cast<uint8_t>((static_cast<uint32_t>(this->g) * that.g) / 255)
+				, static_cast<uint8_t>((static_cast<uint32_t>(this->b) * that.b) / 255)
+				, static_cast<uint8_t>((static_cast<uint32_t>(this->a) * that.a) / 255)
+				};
+		}
 
 		constexpr friend bool operator ==(Color left, Color right)
 		{

@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <deque>
+
 #include "Animation.h"
 #include "particles/Particle.h"
 #include "utility/reference.h"
@@ -20,10 +22,14 @@ namespace questless
 
 		void draw(units::GamePoint position, Camera const& camera, sdl::Color color = sdl::Color::white()) const final;
 	protected:
-		void animation_subupdate() final;
+		//! Adds @p particle to the front of the list of particles.
+		void push_front(uptr<Particle> particle)
+		{
+			_particles.push_front(std::move(particle));
+		}
 
-		//! Adds @p particle to the list of particles.
-		void add(uptr<Particle> particle)
+		//! Adds @p particle to the back of the list of particles.
+		void push_back(uptr<Particle> particle)
 		{
 			_particles.push_back(std::move(particle));
 		}
@@ -31,6 +37,8 @@ namespace questless
 		//! Particle animation subtype-specific update.
 		virtual void particle_animation_subupdate() = 0;
 	private:
-		std::vector<uptr<Particle>> _particles;
+		std::deque<uptr<Particle>> _particles;
+
+		void animation_subupdate() final;
 	};
 }

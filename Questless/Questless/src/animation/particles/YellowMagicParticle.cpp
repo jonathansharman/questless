@@ -7,7 +7,7 @@
 
 namespace questless
 {
-	void YellowMagicParticle::subupdate()
+	void YellowMagicParticle::particle_subupdate()
 	{
 		_velocity.step().rotate(uniform(-1.0, 1.0) * _max_turn_rate);
 		_angle = _velocity.step().angle();

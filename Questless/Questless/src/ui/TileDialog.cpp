@@ -13,31 +13,41 @@ namespace questless
 	Dialog::State TileDialog::update()
 	{
 		if (input().presses(SDLK_BACKSPACE) || input().presses(SDLK_ESCAPE)) {
+			game().world_renderer().clear_highlight_predicate();
 			return _cont(std::nullopt);
 		}
 
+		std::optional<RegionTile::Point> result;
+
 		if (_origin) {
 			if (input().presses(SDLK_e)) {
-				return _cont(_origin->neighbor(RegionTileCoords::Direction::one));
+				result = _origin->neighbor(RegionTile::Direction::one);
 			} else if (input().presses(SDLK_w)) {
-				return _cont(_origin->neighbor(RegionTileCoords::Direction::two));
+				result = _origin->neighbor(RegionTile::Direction::two);
 			} else if (input().presses(SDLK_q)) {
-				return _cont(_origin->neighbor(RegionTileCoords::Direction::three));
+				result = _origin->neighbor(RegionTile::Direction::three);
 			} else if (input().presses(SDLK_a)) {
-				return _cont(_origin->neighbor(RegionTileCoords::Direction::four));
+				result = _origin->neighbor(RegionTile::Direction::four);
 			} else if (input().presses(SDLK_s)) {
-				return _cont(_origin->neighbor(RegionTileCoords::Direction::five));
+				result = _origin->neighbor(RegionTile::Direction::five);
 			} else if (input().presses(SDLK_d)) {
-				return _cont(_origin->neighbor(RegionTileCoords::Direction::six));
+				result = _origin->neighbor(RegionTile::Direction::six);
+			}
+			if (result && _predicate(*result)) {
+				game().world_renderer().clear_highlight_predicate();
+				return _cont(*result);
 			}
 		}
 
 		if (input().pressed(MouseButton::left)) {
-			RegionTileCoords value = game().camera().tile_hovered();
-			if (_predicate(value)) {
-				return _cont(value);
+			result = game().camera().tile_hovered();
+			if (_predicate(*result)) {
+				game().world_renderer().clear_highlight_predicate();
+				return _cont(*result);
 			}
 		}
+
+		game().world_renderer().set_highlight_predicate(_predicate);
 		return State::open;
 	}
 

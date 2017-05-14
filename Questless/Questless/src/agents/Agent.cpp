@@ -10,7 +10,7 @@ namespace questless
 {
 	// Quick Time Events
 
-	Complete Agent::get_lightning_bolt_quality(RegionTileCoords /*target_coords*/, std::function<Complete(double)> cont) const
+	Complete Agent::get_lightning_bolt_quality(RegionTile::Point /*target_coords*/, std::function<Complete(double)> cont) const
 	{
 		return cont(1.0);
 	}
@@ -37,7 +37,7 @@ namespace questless
 		return Complete{};
 	}
 
-	Complete Agent::turn(RegionTileCoords::Direction direction, Action::cont_t cont)
+	Complete Agent::turn(RegionTile::Direction direction, Action::cont_t cont)
 	{
 		if (being.stats.agility > 0.0) {
 			// Base cost of turning any amount, as a percentage of the agility factor.
@@ -48,7 +48,7 @@ namespace questless
 
 			double const agility_factor = 100.0 / being.stats.agility;
 			//! @todo Account for terrain.
-			double const turn_cost_factor = cost_factor_per_turn * RegionTileCoords::distance(being.direction, direction);
+			double const turn_cost_factor = cost_factor_per_turn * RegionTile::distance(being.direction, direction);
 			being.busy_time += agility_factor * (base_cost_factor + turn_cost_factor);
 			being.direction = direction;
 
@@ -58,7 +58,7 @@ namespace questless
 		}
 	}
 
-	Complete Agent::walk(RegionTileCoords::Direction direction, Action::cont_t cont)
+	Complete Agent::walk(RegionTile::Direction direction, Action::cont_t cont)
 	{
 		if (being.stats.agility > 0.0) {
 			// Base cost of moving, as a percentage of the agility factor.
@@ -69,7 +69,7 @@ namespace questless
 
 			double const agility_factor = 100.0 / being.stats.agility;
 			if (being.region->move(being, being.coords.neighbor(direction))) {
-				double const strafe_cost_factor = cost_factor_per_turn * RegionTileCoords::distance(being.direction, direction);
+				double const strafe_cost_factor = cost_factor_per_turn * RegionTile::distance(being.direction, direction);
 				being.busy_time += agility_factor * (base_cost_factor + strafe_cost_factor); //! @todo Account for terrain.
 				
 				return cont(Action::Result::success);

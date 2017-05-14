@@ -39,8 +39,8 @@ using std::function;
 
 using namespace std::chrono;
 
-using namespace units;
 using namespace sdl;
+using namespace units;
 
 namespace questless
 {
@@ -174,15 +174,15 @@ namespace questless
 		int range = effect->range();
 		auto origin = effect->origin();
 
-		RegionTileCoords min_tile_coords{origin.q - range, origin.r - range};
-		RegionTileCoords max_tile_coords{origin.q + range, origin.r + range};
+		RegionTile::Point min_tile_coords{origin.q - range, origin.r - range};
+		RegionTile::Point max_tile_coords{origin.q + range, origin.r + range};
 
-		RegionSectionCoords min_section_coords = Section::region_section_coords(min_tile_coords);
-		RegionSectionCoords max_section_coords = Section::region_section_coords(max_tile_coords);
+		RegionSection::Point min_section_coords = Section::region_section_coords(min_tile_coords);
+		RegionSection::Point max_section_coords = Section::region_section_coords(max_tile_coords);
 
 		for (int r = min_section_coords.r; r <= max_section_coords.r; ++r) {
 			for (int q = min_section_coords.q; q <= max_section_coords.q; ++q) {
-				RegionSectionCoords section_coords{q, r};
+				RegionSection::Point section_coords{q, r};
 				Section* section = _region->section(section_coords);
 				if (section) {
 					for (Being& being : section->beings) {
@@ -375,17 +375,6 @@ namespace questless
 					_region = make_unique<Region>("Region1");
 					//_region = make_unique<Region>("Slot1", "Region1");
 
-					{ // Add a test light source.
-						auto light_source = std::make_unique<LightSource>(RegionTileCoords{0, 2}, 100.0);
-						_region->add(*light_source);
-						light_sources.add(std::move(light_source));
-					}
-					{ // Add a test shadow source.
-						auto light_source = std::make_unique<LightSource>(RegionTileCoords{0, -2}, -100.0);
-						_region->add(*light_source);
-						light_sources.add(std::move(light_source));
-					}
-
 					{ // Spawn the player's being.
 						auto player_being = make_unique<Human>(Agent::make<Player>);
 						_player = dynamic_cast<Player*>(&player_being->agent());
@@ -440,8 +429,7 @@ namespace questless
 		_camera->draw(*_txt_hex_highlight, Layout::dflt().to_world(_camera->tile_hovered()), Origin{std::nullopt}, Color::white(128));
 		_camera->draw(*_txt_hex_circle, _point_clicked_rounded);
 
-		_world_renderer->draw_objects();
-		_world_renderer->draw_beings();
+		_world_renderer->draw_entities();
 		_world_renderer->draw_effects();
 
 		// Draw HUD.
@@ -462,7 +450,7 @@ namespace questless
 			txt_cam_coords.draw(ScreenPoint{0, 0});
 		}
 		{
-			auto cam_hex_coords = Layout::dflt().to_hex_coords<RegionTileCoords>(_camera->position());
+			auto cam_hex_coords = Layout::dflt().to_hex_coords<RegionTile::Point>(_camera->position());
 			std::ostringstream ss_cam_hex_coords;
 			ss_cam_hex_coords << "Cam hex: (" << cam_hex_coords.q << ", " << cam_hex_coords.r << ")";
 			Texture txt_cam_hex_coords = _fnt_20pt->render(ss_cam_hex_coords.str().c_str(), Color::white());
@@ -498,9 +486,9 @@ namespace questless
 		}
 
 		// Draw q- and r-axes.
-		RegionTileCoords origin{0, 0};
-		RegionTileCoords q_axis{5, 0};
-		RegionTileCoords r_axis{0, 5};
+		RegionTile::Point origin{0, 0};
+		RegionTile::Point q_axis{5, 0};
+		RegionTile::Point r_axis{0, 5};
 		camera().draw_lines({Layout::dflt().to_world(origin), Layout::dflt().to_world(q_axis)}, Color::green());
 		camera().draw_lines({Layout::dflt().to_world(origin), Layout::dflt().to_world(r_axis)}, Color::red());
 	}

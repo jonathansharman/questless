@@ -30,6 +30,36 @@ namespace questless
 		_unknown_entity_animation = Still{unknown_entity_animation_ss, TexturePoint{0, 0}};
 	}
 
+	auto WorldRenderer::get_entity_id_var(entity_cref_var_t entity) -> entity_id_var_t
+	{
+		struct Visitor
+		{
+			entity_id_var_t operator ()(Being const& being) { return being.id; }
+			entity_id_var_t operator ()(Object const& object) { return object.id; }
+		};
+		return std::visit(Visitor{}, entity);
+	}
+
+	auto WorldRenderer::get_entity_cref_var(entity_id_var_t id) -> entity_cref_var_t
+	{
+		struct Visitor
+		{
+			entity_cref_var_t operator ()(Id<Being> being_id) { return game().beings.get_ref(being_id); }
+			entity_cref_var_t operator ()(Id<Object> object_id) { return game().objects.get_ref(object_id); }
+		};
+		return std::visit(Visitor{}, id);
+	}
+
+	Entity const* WorldRenderer::get_entity_cptr(entity_id_var_t id)
+	{
+		struct Visitor
+		{
+			Entity const* operator ()(Id<Being> id) { return game().beings.get(id); }
+			Entity const* operator ()(Id<Object> id) { return game().objects.get(id); }
+		};
+		return std::visit(Visitor{}, id);
+	}
+
 	void WorldRenderer::update_view(WorldView const& world_view, std::vector<sptr<Effect>> effects)
 	{
 		_world_view = &world_view;
@@ -44,21 +74,18 @@ namespace questless
 
 	void WorldRenderer::update()
 	{
-		// Update cached being and object animations.
+		// Update cached entity animations.
 
-		for (auto& id_and_animation : _being_animation_map) {
-			id_and_animation.second->update();
-		}
-		for (auto& id_and_animation : _object_animation_map) {
+		for (auto& id_and_animation : _entity_animation_map) {
 			id_and_animation.second->update();
 		}
 
 		// Update effect sounds and animations.
 
-		for (std::size_t i = 0; i < _particles.size();) {
-			_particles[i]->update();
-			if (_particles[i]->expired()) {
-				_particles.erase(_particles.begin() + i);
+		for (std::size_t i = 0; i < _animations.size();) {
+			_animations[i].first->update();
+			if (_animations[i].first->over()) {
+				_animations.erase(_animations.begin() + i);
 			} else {
 				++i;
 			}
@@ -76,38 +103,62 @@ namespace questless
 		}
 	}
 
-	void WorldRenderer::draw_beings()
+	void WorldRenderer::draw_entities()
 	{
-		for (auto const& being_view : _world_view->being_views()) {
-			// Attempt to load the being.
-			if (Being const* being = game().beings.get(being_view.id)) {
-				auto& being_animation = get_animation(*being);
+		for (auto const& entity_view : _world_view->entity_views()) {
+			// Attempt to load the entity.
+			if (Entity const* entity = get_entity_cptr(entity_view.id)) {
+				auto entity_var_ref = get_entity_cref_var(entity_view.id);
 
-				uint8_t intensity = percentage_to_byte((being_view.perception.level - Perception::minimum_level) / (Perception::maximum_level - Perception::minimum_level));
-				switch (being_view.perception.category()) {
+				auto& entity_animation = get_animation(entity_view.id);
+
+				uint8_t intensity = percentage_to_byte((entity_view.perception.level - Perception::minimum_level) / (Perception::maximum_level - Perception::minimum_level));
+				switch (entity_view.perception.category()) {
 					case Perception::Category::none:
 						break;
 					case Perception::Category::low:
 						_unknown_entity_animation->draw
-							( Layout::dflt().to_world(being->coords)
+						(Layout::dflt().to_world(entity->coords)
 							, game().camera()
 							, Color{intensity, intensity, intensity}
-							);
+						);
 						break;
 					case Perception::Category::medium:
 					case Perception::Category::high:
 					case Perception::Category::full:
 					{
 						// Draw heading.
-						GamePoint start = Layout::dflt().to_world(being->coords);
-						GamePoint end = Layout::dflt().to_world(being->coords.neighbor(being->direction));
-						game().camera().draw_lines({start, end}, Color::magenta());
+						struct HeadingDrawer
+						{
+							void operator ()(Being const& being)
+							{
+								GamePoint start = Layout::dflt().to_world(being.coords);
+								GamePoint end = Layout::dflt().to_world(being.coords.neighbor(being.direction));
+								game().camera().draw_lines({start, end}, Color::magenta());
+							}
+							void operator ()(Object const&) {}
+						};
+						std::visit(HeadingDrawer{}, entity_var_ref);
 
-						being_animation.draw
-							( Layout::dflt().to_world(being->coords)
+						//! @todo Use the following if the overload helpers in utility.h can be repaired.
+						//std::visit
+						//	( overload
+						//		( [](Being const& being)
+						//			{
+						//				GamePoint start = Layout::dflt().to_world(being.coords);
+						//				GamePoint end = Layout::dflt().to_world(being.coords.neighbor(being.direction));
+						//				game().camera().draw_lines({start, end}, Color::magenta());
+						//			}
+						//		, [](Object const&) {}
+						//		)
+						//	, entity_var_ref
+						//	);
+
+						entity_animation.draw
+						(Layout::dflt().to_world(entity->coords)
 							, game().camera()
 							, Color{intensity, intensity, intensity}
-							);
+						);
 						break;
 					}
 					default:
@@ -115,53 +166,29 @@ namespace questless
 				}
 			} else {
 				// Remove the being from the animation cache if it doesn't exist anymore.
-				_being_animation_map.erase(being_view.id);
-			}
-		}
-	}
-
-	void WorldRenderer::draw_objects()
-	{
-		for (auto const& object_view : _world_view->object_views()) {
-			// Attempt to load the object.
-			if (Object const* object = game().objects.get(object_view.id)) {
-				auto& object_animation = get_animation(*object);
-
-				uint8_t intensity = percentage_to_byte((object_view.perception.level - Perception::minimum_level) / (Perception::maximum_level - Perception::minimum_level));
-				switch (object_view.perception.category()) {
-					case Perception::Category::none:
-						break;
-					case Perception::Category::low:
-						_unknown_entity_animation->draw
-							( Layout::dflt().to_world(object->coords)
-							, game().camera()
-							, Color{intensity, intensity, intensity}
-							);
-						break;
-					case Perception::Category::medium:
-					case Perception::Category::high:
-					case Perception::Category::full:
-						object_animation.draw
-							( Layout::dflt().to_world(object->coords)
-							, game().camera()
-							, Color{intensity, intensity, intensity}
-							);
-						break;
-					default:
-						throw std::logic_error{"Invalid perception category."};
-				}
-			} else {
-				// Remove the object from the animation cache if it doesn't exist anymore.
-				_object_animation_map.erase(object_view.id);
+				_entity_animation_map.erase(entity_view.id);
 			}
 		}
 	}
 
 	void WorldRenderer::draw_effects()
 	{
-		for (auto& particle : _particles) {
-			particle->draw(game().camera());
+		for (auto& animation_and_coords : _animations) {
+			auto const& animation = *animation_and_coords.first;
+			animation.draw(animation_and_coords.second, game().camera());
 		}
+	}
+
+	void WorldRenderer::set_highlight_predicate(std::function<bool(RegionTile::Point)> predicate)
+	{
+		_highlight_predicate = std::move(predicate);
+		_terrain_render_is_current = false;
+	}
+
+	void WorldRenderer::clear_highlight_predicate()
+	{
+		_highlight_predicate = std::nullopt;
+		_terrain_render_is_current = false;
 	}
 
 	void WorldRenderer::refresh()
@@ -178,40 +205,23 @@ namespace questless
 		return *_tile_textures[tile.tile_class()];
 	};
 
-	Animation& WorldRenderer::cache_animation(Being const& being)
+	Animation& WorldRenderer::cache_animation(entity_id_var_t entity_id)
 	{
 		EntityAnimator entity_animator;
-		being.accept(entity_animator);
-		_being_animation_map.insert(std::make_pair(being.id, std::move(entity_animator.animation())));
-		return *_being_animation_map.at(being.id);
+		get_entity_cptr(entity_id)->accept(entity_animator);
+
+		auto result = _entity_animation_map.insert(std::make_pair(entity_id, std::move(entity_animator.animation())));
+		return *result.first->second;
 	};
 
-	Animation& WorldRenderer::cache_animation(Object const& object)
+	Animation& WorldRenderer::get_animation(entity_id_var_t entity_id)
 	{
-		EntityAnimator entity_animator;
-		object.accept(entity_animator);
-		_object_animation_map.insert(std::make_pair(object.id, std::move(entity_animator.animation())));
-		return *_object_animation_map.at(object.id);
-	};
-
-	Animation& WorldRenderer::get_animation(Being const& being)
-	{
-		// Search for the being's animation in the cache.
-		auto it = _being_animation_map.find(being.id);
+		// Search for the entity's animation in the cache.
+		auto it = _entity_animation_map.find(entity_id);
 		// If it's there, use it. Otherwise, create and cache the animation.
-		return it != _being_animation_map.end()
+		return it != _entity_animation_map.end()
 			? *it->second
-			: cache_animation(being);
-	}
-
-	Animation& WorldRenderer::get_animation(Object const& being)
-	{
-		// Search for the being's animation in the cache.
-		auto it = _object_animation_map.find(being.id);
-		// If it's there, use it. Otherwise, create and cache the animation.
-		return it != _object_animation_map.end()
-			? *it->second
-			: cache_animation(being);
+			: cache_animation(entity_id);
 	}
 
 	void WorldRenderer::render_terrain()
@@ -232,10 +242,10 @@ namespace questless
 					Section const& section = *opt_section;
 					for (int q = 0; q < Section::diameter; ++q) {
 						for (int r = 0; r < Section::diameter; ++r) {
-							SectionTileCoords section_tile_coords{q, r};
+							SectionTile::Point section_tile_coords{q, r};
 							Perception tile_perception = section_view.tile_perceptions[section_tile_coords.q][section_tile_coords.r];
 							if (tile_perception.category() != Perception::Category::none) {
-								RegionTileCoords const region_tile_coords = section.region_tile_coords(section_tile_coords);
+								RegionTile::Point const region_tile_coords = section.region_tile_coords(section_tile_coords);
 								GamePoint const tile_game_point = Layout::dflt().to_world(region_tile_coords);
 								GamePoint const terrain_game_point = _terrain_bounds.position();
 								ScreenPoint const tile_screen_point
@@ -251,6 +261,14 @@ namespace questless
 								Texture& tile_texture = it != _tile_textures.end() ? *it->second : cache_tile_texture(tile);
 
 								uint8_t intensity = percentage_to_byte((tile_perception.level - Perception::minimum_level) / (Perception::maximum_level - Perception::minimum_level));
+
+								// Apply highlights.
+								if (_highlight_predicate) {
+									if ((*_highlight_predicate)(region_tile_coords)) {
+										intensity = uint8_t{255};
+									}
+								}
+
 								tile_texture.draw_transformed
 									( tile_screen_point
 									, std::nullopt // origin
@@ -274,7 +292,7 @@ namespace questless
 
 		GamePoint position = Layout::dflt().to_world(e.origin());
 		for (int i = 0; i < 50; ++i) {
-			_particles.emplace_back(make_unique<GreenMagicParticle>(position));
+			_animations.push_back(std::make_pair(make_unique<GreenMagicParticle>(), position));
 		}
 		sound_manager()[eagle_eye_sound_handle].play();
 	}
@@ -295,7 +313,7 @@ namespace questless
 		auto spawn_blood = [&](double const lost_health) {
 			int const n = static_cast<int>(lost_health / target_vitality * 100.0); // 100 is an arbitrary scaling factor.
 			for (int i = 0; i < n; ++i) {
-				_particles.emplace_back(make_unique<BloodParticle>(position));
+				_animations.push_back(std::make_pair(make_unique<BloodParticle>(), position));
 			}
 		};
 		for (Damage::Part const& part : damage.parts()) {
@@ -304,24 +322,39 @@ namespace questless
 					[[fallthrough]];
 				case Damage::Part::Type::pierce:
 					spawn_blood(part.amount);
-					_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(part.amount)), Color::white()));
+					_animations.push_back(std::make_pair
+						( make_unique<TextParticle>(std::to_string(lround(part.amount)), Color::white())
+						, position
+						));
 					sound_manager()[pierce_sound_handle].play();
 					break;
 				case Damage::Part::Type::cleave:
 					[[fallthrough]];
 				case Damage::Part::Type::bludgeon:
 					spawn_blood(part.amount);
-					_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(part.amount)), Color::white()));
+					_animations.push_back(std::make_pair
+						( make_unique<TextParticle>(std::to_string(lround(part.amount)), Color::white())
+						, position
+						));
 					sound_manager()[hit_sound_handle].play();
 					break;
 				case Damage::Part::Type::burn:
-					_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(part.amount)), Color::orange()));
+					_animations.push_back(std::make_pair
+						( make_unique<TextParticle>(std::to_string(lround(part.amount)), Color::orange())
+						, position
+						));
 					break;
 				case Damage::Part::Type::freeze:
-					_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(part.amount)), Color::cyan()));
+					_animations.push_back(std::make_pair
+						( make_unique<TextParticle>(std::to_string(lround(part.amount)), Color::cyan())
+						, position
+						));
 					break;
 				case Damage::Part::Type::blight:
-					_particles.emplace_back(make_unique<TextParticle>(position, std::to_string(lround(part.amount)), Color::black()));
+					_animations.push_back(std::make_pair
+						( make_unique<TextParticle>(std::to_string(lround(part.amount)), Color::black())
+						, position
+						));
 					break;
 			}
 		}
@@ -333,7 +366,7 @@ namespace questless
 
 		GamePoint position = Layout::dflt().to_world(e.origin());
 		for (int i = 0; i < 35; ++i) {
-			_particles.emplace_back(make_unique<YellowMagicParticle>(position));
+			_animations.push_back(std::make_pair(make_unique<YellowMagicParticle>(), position));
 		}
 		sound_manager()[lightning_bolt_sound_handle].play();
 	}

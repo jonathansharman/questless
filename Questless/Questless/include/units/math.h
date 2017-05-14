@@ -43,4 +43,16 @@ namespace units::math
 	//! The cube of the @p value.
 	template <typename T>
 	constexpr T cube(T value) { return value * value * value; }
+
+	template <typename T>
+	constexpr T abs(T x)
+	{
+		return x < T(0) ? -x : x;
+	}
+
+	template <typename Floating, typename = std::enable_if_t<std::is_floating_point<Floating>::value>>
+	constexpr long lround(Floating x)
+	{
+		return x > 0 ? static_cast<long>(x + 0.5) : static_cast<long>(x - 0.5);
+	}
 }

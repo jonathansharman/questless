@@ -14,9 +14,8 @@ namespace questless
 	class YellowMagicParticle : public Particle
 	{
 	public:
-		//! @param position The particle's starting position.
-		YellowMagicParticle(units::GamePoint position) : Particle
-			{ position
+		YellowMagicParticle() : Particle
+			{ units::GameVector{0.0, 0.0}
 			, units::GameVector{random_angle(), 100.0} / 1.0s
 			, units::GameAcceleration::zero()
 			, random_angle()
@@ -30,7 +29,7 @@ namespace questless
 	private:
 		static constexpr units::GameRadians _max_turn_rate = units::GameRadians::circle() / 6.0;
 
-		void subupdate() final;
+		void particle_subupdate() final;
 
 		sdl::Texture const& texture() const final;
 	};

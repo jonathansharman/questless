@@ -24,11 +24,11 @@ namespace questless
 		void draw(units::ScreenPoint position) const final;
 
 		void draw(units::GamePoint position, Camera const& camera, sdl::Color color = sdl::Color::white()) const final;
-	protected:
-		void animation_subupdate() final {}
 	private:
 		sdl::TextureHandle _texture_handle;
 
 		units::TexturePoint _origin;
+
+		void animation_subupdate() final {}
 	};
 }

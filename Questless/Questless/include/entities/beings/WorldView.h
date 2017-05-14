@@ -6,6 +6,7 @@
 
 #include <array>
 #include <optional>
+#include <variant>
 #include <vector>
 
 #include "entities/Perception.h"
@@ -26,24 +27,18 @@ namespace questless
 	public:
 		struct SectionView
 		{
-			RegionSectionCoords coords;
+			RegionSection::Point coords;
 			std::array<std::array<Perception, Section::diameter>, Section::diameter> tile_perceptions;
 		};
 
-		struct BeingView
+		struct EntityView
 		{
-			Id<Being> id;
+			std::variant<Id<Being>, Id<Object>> id;
 			Perception perception;
 
-			BeingView(Id<Being> id, Perception perception) : id{id}, perception{perception} {}
-		};
-
-		struct ObjectView
-		{
-			Id<Object> id;
-			Perception perception;
-
-			ObjectView(Id<Object> id, Perception perception) : id{id}, perception{perception} {}
+			EntityView(std::variant<Id<Being>, Id<Object>> id, Perception perception)
+				: id{id}, perception{perception}
+			{}
 		};
 
 		//! Constructs the world view of the given being.
@@ -64,16 +59,14 @@ namespace questless
 		WorldView& operator =(WorldView&&) & = default;
 
 		std::vector<SectionView> const& section_views() const { return _section_views; }
-		std::vector<BeingView> const& being_views() const { return _being_views; }
-		std::vector<ObjectView> const& object_views() const { return _object_views; }
+		std::vector<EntityView> const& entity_views() const { return _entity_views; }
 		Region const& region() const { return _region; }
 
 		//! A bounding rectangle around the visible tiles or nullopt if initialized with find_bounds set to false or if no tiles are visible.
 		std::optional<units::GameRect> bounds() const { return _bounds; }
 	private:
 		std::vector<SectionView> _section_views;
-		std::vector<BeingView> _being_views;
-		std::vector<ObjectView> _object_views;
+		std::vector<EntityView> _entity_views;
 		std::reference_wrapper<const Region> _region;
 
 		std::optional<units::GameRect> _bounds;

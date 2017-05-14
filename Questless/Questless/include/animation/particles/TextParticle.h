@@ -18,9 +18,9 @@ namespace questless
 		//! @param position The particle's starting position.
 		//! @param text The text for the particle to show.
 		//! @param color The color of the particle's text.
-		TextParticle(units::GamePoint position, std::string text, sdl::Color color)
+		TextParticle(std::string text, sdl::Color color)
 			: Particle
-				{ position
+				{ units::GameVector{0.0, 0.0}
 				, (random_displacement(120.0) + units::GameVector{0.0, 160.0}) / 1.0s
 				, units::GameVector{0.0, -400.0} / 1.0s / 1.0s
 				, units::GameRadians{0.0}
@@ -45,7 +45,7 @@ namespace questless
 
 		sdl::Texture _texture;
 
-		void subupdate() final {}
+		void particle_subupdate() final {}
 
 		sdl::Texture const& texture() const final { return _texture; }
 

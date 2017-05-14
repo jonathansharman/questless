@@ -35,10 +35,6 @@ namespace units
 		constexpr friend Point operator +(Vector<space_t> const& v, Point p) { return Point{v.x + p.x, v.y + p.y}; }
 		constexpr friend Point operator -(Point const& p, Vector<space_t> const& v) { return Point{p.x - v.x, p.y - v.y}; }
 		constexpr friend Vector<space_t> operator -(Point const& p1, Point const& p2) { return Vector<space_t>{p1.x - p2.x, p1.y - p2.y}; }
-		constexpr friend Point operator -(Point const& p) { return Point{-p.x, -p.y}; }
-		constexpr friend Point operator *(Point const& p, scalar_t k) { return Point{k * p.x, k * p.y}; }
-		constexpr friend Point operator *(scalar_t k, Point const& p) { return Point{k * p.x, k * p.y}; }
-		constexpr friend Point operator /(Point const& p, scalar_t k) { return Point{p.x / k, p.y / k}; }
 
 		Point& operator =(Point const&) & = default;
 
@@ -52,18 +48,6 @@ namespace units
 		{
 			x -= v.x;
 			y -= v.y;
-			return *this;
-		}
-		Point& operator *=(scalar_t k) &
-		{
-			x *= k;
-			y *= k;
-			return *this;
-		}
-		Point& operator /=(scalar_t k) &
-		{
-			x /= k;
-			y /= k;
 			return *this;
 		}
 
@@ -144,25 +128,6 @@ TEST_CASE("[Point] operations")
 			constexpr units::Point<IntSpace> p_diff{2, -2};
 			pi1 -= vi;
 			CHECK(pi1 == p_diff);
-		}
-	}
-	SUBCASE("scalar operations")
-	{
-		constexpr int k = 2;
-		SUBCASE("scalar multiplication")
-		{
-			constexpr units::Point<IntSpace> p_prod{6, 8};
-			CHECK(k * pi1 == p_prod);
-			CHECK(pi1 * k == p_prod);
-			pi1 *= k;
-			CHECK(pi1 == p_prod);
-		}
-		SUBCASE("scalar division")
-		{
-			constexpr units::Point<IntSpace> p_quot{1, 2};
-			CHECK(pi1 / k == p_quot);
-			pi1 /= k;
-			CHECK(pi1 == p_quot);
 		}
 	}
 	SUBCASE("rotations")
