@@ -11,7 +11,7 @@ namespace questless
 {
 	Damage Attack::damage() const
 	{
-		auto& weapon = game().items.get_ref_as<Weapon>(weapon_id);
+		auto& weapon = game().items.cref_as<Weapon>(weapon_id);
 		return base_damage() * (0.5 + weapon.integrity / weapon.durability() / 2.0);
 	}
 
@@ -21,7 +21,7 @@ namespace questless
 			return actor.agent().query_vector(std::make_unique<VectorQueryMeleeAttack>(), actor.coords, [](RegionTile::Vector v) { return v.length() != 0; },
 				[&actor, cont, attack = _attack](std::optional<RegionTile::Vector> opt_vector) {
 					if (opt_vector) {
-						auto& weapon = game().items.get_ref_as<Weapon>(attack->weapon_id);
+						auto& weapon = game().items.cref_as<Weapon>(attack->weapon_id);
 						double delay = weapon.active_cooldown + attack->wind_up();
 						actor.add_delayed_action(delay, std::move(cont), std::make_unique<Finish>(attack, *opt_vector));
 						return cont(Result::success);
@@ -35,7 +35,7 @@ namespace questless
 
 	Complete MeleeAttack::Finish::perform(Being& actor, cont_t cont)
 	{
-		if (Weapon* weapon = game().items.get_as<Weapon>(_attack->weapon_id)) {
+		if (Weapon* weapon = game().items.ptr_as<Weapon>(_attack->weapon_id)) {
 			if (weapon->equipped() && *weapon->bearer_id() == actor.id) {
 				_attack->cost().incur(actor);
 				actor.busy_time += _attack->follow_through();
@@ -66,7 +66,7 @@ namespace questless
 	Complete RangedAttack::Launch::perform(Being& actor, cont_t cont)
 	{
 		return _attack->cost().check(actor, [&] {
-			Weapon& weapon = game().items.get_ref_as<Weapon>(_attack->weapon_id);
+			Weapon const& weapon = game().items.cref_as<Weapon>(_attack->weapon_id);
 			double delay = weapon.active_cooldown + _attack->wind_up();
 			actor.add_delayed_action(delay, std::move(cont), std::make_unique<Finish>(_attack));
 			return Complete{};
@@ -75,7 +75,7 @@ namespace questless
 
 	Complete RangedAttack::Finish::perform(Being& actor, cont_t cont)
 	{
-		if (Weapon* weapon = game().items.get_as<Weapon>(_attack->weapon_id)) {
+		if (Weapon* weapon = game().items.ptr_as<Weapon>(_attack->weapon_id)) {
 			if (weapon->equipped() && *weapon->bearer_id() == actor.id) {
 				return _attack->cost().check(actor, [&] {
 					int range = _attack->range();

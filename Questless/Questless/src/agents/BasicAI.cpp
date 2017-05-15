@@ -48,7 +48,7 @@ namespace questless
 	}
 	void BasicAI::AttackState::act(BasicAI& ai)
 	{
-		if (Being* target = game().beings.get(target_id)) {
+		if (Being* target = game().beings.ptr(target_id)) {
 			if (ai.being.perception_of(target->coords).category() == Perception::Category::none) {
 				// Target not visible. Switch to idle state.
 				ai._state = std::make_unique<IdleState>();
@@ -208,7 +208,7 @@ namespace questless
 			void visit(TileQueryRangedAttackTarget const& query) final
 			{
 				auto target_id = dynamic_cast<AttackState*>(ai._state.get())->target_id;
-				if (Being* target = game().beings.get(target_id)) {
+				if (Being* target = game().beings.ptr(target_id)) {
 					if ((target->coords - ai.being.coords).length() <= query.range) {
 						// If in range, shoot the target.
 						cont(target->coords);
@@ -279,7 +279,7 @@ namespace questless
 			void visit(VectorQueryMeleeAttack const&) final
 			{
 				auto target_id = dynamic_cast<AttackState*>(ai._state.get())->target_id;
-				if (Being* target = game().beings.get(target_id)) {
+				if (Being* target = game().beings.ptr(target_id)) {
 					// Attack towards the target.
 					cont((target->coords - ai.being.coords).unit());
 					return;

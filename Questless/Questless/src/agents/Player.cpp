@@ -75,7 +75,7 @@ namespace questless
 				{
 					//! @todo Sync the hotbar with changes to the inventory.
 					if (std::optional<Id<Item>> opt_item_id = game().hud().hotbar()[player_choice.data]) {
-						Item& item = game().items.get_ref(*opt_item_id);
+						Item& item = game().items.ref(*opt_item_id);
 						// Get a list of the item's actions. It's shared so the lambda that captures it is copyable, so the lambda can be passed as a std::function.
 						auto actions = std::make_shared<std::vector<uptr<Action>>>(item.actions());
 						// Get the action names from the list of actions.

@@ -23,7 +23,7 @@ namespace questless
 	void HUD::update()
 	{
 		if (_player_being_id) {
-			if (Being* player_being = game().beings.get(*_player_being_id)) {
+			if (Being const* player_being = game().beings.cptr(*_player_being_id)) {
 				update_displayed_items(*player_being);
 
 				if (input().presses(SDLK_ESCAPE)) {
@@ -83,7 +83,7 @@ namespace questless
 		_player_being_id = player_being_id;
 		_inv_page = 0;
 
-		if (Being* player_being = game().beings.get(player_being_id)) {
+		if (Being const* player_being = game().beings.cptr(player_being_id)) {
 			update_displayed_items(*player_being);
 
 			// Fill the hotbar with as many items as possible.
@@ -106,7 +106,7 @@ namespace questless
 		if (!_player_being_id) {
 			return;
 		}
-		if (Being* player_being = game().beings.get(*_player_being_id)) {
+		if (Being const* player_being = game().beings.cptr(*_player_being_id)) {
 			{ // Draw the condition bars.
 				int left = 0;
 				renderer().draw_rect(ScreenRect{left, _screen_bottom, _condition_bar_width * _conditions_count, _condition_bar_height, ScreenRect::Origin::lower_left}, Color::black(), true);
@@ -146,7 +146,7 @@ namespace questless
 					int y = _screen_bottom - _hotbar_bottom_gap;
 					_hotbar_slot_texture->draw(ScreenPoint{x, y}, HAlign::left, VAlign::bottom);
 					if (std::optional<Id<Item>> opt_item_id = _hotbar[i]) {
-						Item& item = game().items.get_ref(*opt_item_id);
+						Item const& item = game().items.cref(*opt_item_id);
 						item.accept(texturer);
 						texture_manager()[texturer.texture_handle()].draw
 							( ScreenPoint{x + _hotbar_slot_h_padding, y - _hotbar_slot_v_padding}
@@ -209,7 +209,7 @@ namespace questless
 		_inv_top = (window().height() - _inv_height) / 2;
 	}
 
-	void HUD::update_displayed_items(Being& player_being)
+	void HUD::update_displayed_items(Being const& player_being)
 	{
 		_displayed_items = {player_being.inventory.items.begin(), player_being.inventory.items.end()};
 		// Sort displayed items alphabetically.

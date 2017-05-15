@@ -44,8 +44,8 @@ namespace questless
 	{
 		struct Visitor
 		{
-			entity_cref_var_t operator ()(Id<Being> being_id) { return game().beings.get_ref(being_id); }
-			entity_cref_var_t operator ()(Id<Object> object_id) { return game().objects.get_ref(object_id); }
+			entity_cref_var_t operator ()(Id<Being> being_id) { return game().beings.cref(being_id); }
+			entity_cref_var_t operator ()(Id<Object> object_id) { return game().objects.cref(object_id); }
 		};
 		return std::visit(Visitor{}, id);
 	}
@@ -54,8 +54,8 @@ namespace questless
 	{
 		struct Visitor
 		{
-			Entity const* operator ()(Id<Being> id) { return game().beings.get(id); }
-			Entity const* operator ()(Id<Object> id) { return game().objects.get(id); }
+			Entity const* operator ()(Id<Being> id) { return game().beings.cptr(id); }
+			Entity const* operator ()(Id<Object> id) { return game().objects.cptr(id); }
 		};
 		return std::visit(Visitor{}, id);
 	}
@@ -302,7 +302,7 @@ namespace questless
 		static auto pierce_sound_handle = sound_manager().add("resources/sounds/weapons/pierce.wav");
 		static auto hit_sound_handle = sound_manager().add("resources/sounds/weapons/hit.wav");
 
-		Being const* target = game().beings.get(e.target_id);
+		Being const* target = game().beings.cptr(e.target_id);
 		double const target_vitality = target ? target->stats.vitality.get() : 100.0; // Assume vitality = 100 if being no longer exists to check.
 		//! @todo Pass along the vitality in the event object if it's needed here.
 

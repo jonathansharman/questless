@@ -178,7 +178,7 @@ namespace questless
 	void Equipment::unequip()
 	{
 		if (_bearer_id) {
-			if (Being* bearer = game().beings.get(*_bearer_id)) {
+			if (Being* bearer = game().beings.ptr(*_bearer_id)) {
 				for (auto head_id : _head_ids) {
 					if (Head* head = bearer->body.find_head(head_id)) {
 						head->equipped_item_id = std::nullopt;

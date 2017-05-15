@@ -402,7 +402,7 @@ namespace questless
 					// Initialize the world renderer.
 					_world_renderer = make_unique<WorldRenderer>(_player->world_view());
 					// Set the camera position relative to the player's being.
-					_camera->position(GamePoint{Layout::dflt().to_world(beings.get(*_player_being_id)->coords)});
+					_camera->position(GamePoint{Layout::dflt().to_world(beings.cref(*_player_being_id).coords)});
 
 					_time_last_state_change = clock::now();
 					_state = State::playing;
@@ -586,7 +586,7 @@ namespace questless
 			follow = !follow;
 		}
 		if (follow) {
-			if (Being* player = beings.get(*_player_being_id)) {
+			if (Being* player = beings.ptr(*_player_being_id)) {
 				constexpr double recoil = 0.2;
 
 				GameVector to_player = Layout::dflt().to_world(player->coords) - _camera->position();
@@ -609,7 +609,7 @@ namespace questless
 	void Game::update_player_view()
 	{
 		//! @todo Do something reasonable with the player view when the player dies.
-		Being* player_being = beings.get(*_player_being_id);
+		Being* player_being = beings.ptr(*_player_being_id);
 		if (player_being && !player_being->dead) {
 			// Update the player's world view.
 			_player->update_world_view();

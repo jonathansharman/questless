@@ -16,29 +16,29 @@ namespace questless
 {
 	ref<Being> Section::being_entry_to_ref(std::pair<RegionTile::Point const, Id<Being>> being_entry)
 	{
-		return game().beings.get_ref(being_entry.second);
+		return game().beings.ref(being_entry.second);
 	}
 	cref<Being> Section::being_entry_to_cref(std::pair<RegionTile::Point const, Id<Being>> being_entry)
 	{
-		return game().beings.get_ref(being_entry.second);
+		return game().beings.ref(being_entry.second);
 	}
 
 	ref<Object> Section::object_entry_to_ref(std::pair<RegionTile::Point const, Id<Object>> object_entry)
 	{
-		return game().objects.get_ref(object_entry.second);
+		return game().objects.ref(object_entry.second);
 	}
 	cref<Object> Section::object_entry_to_cref(std::pair<RegionTile::Point const, Id<Object>> object_entry)
 	{
-		return game().objects.get_ref(object_entry.second);
+		return game().objects.ref(object_entry.second);
 	}
 
 	ref<LightSource> Section::light_source_id_to_ref(Id<LightSource> light_source_id)
 	{
-		return game().light_sources.get_ref(light_source_id);
+		return game().light_sources.ref(light_source_id);
 	}
 	cref<LightSource> Section::light_source_id_to_cref(Id<LightSource> light_source_id)
 	{
-		return game().light_sources.get_ref(light_source_id);
+		return game().light_sources.ref(light_source_id);
 	}
 
 	RegionSection::Point Section::region_section_coords(RegionTile::Point region_tile_coords)
@@ -140,7 +140,7 @@ namespace questless
 	{
 		auto it = _being_map.find(coords);
 		if (it != _being_map.end()) {
-			if (Being* removed_being = game().beings.get(it->second)) {
+			if (Being* removed_being = game().beings.ptr(it->second)) {
 				removed_being->section = nullptr;
 			}
 			_being_map.erase(it);
@@ -151,7 +151,7 @@ namespace questless
 	{
 		auto it = _object_map.find(coords);
 		if (it != _object_map.end()) {
-			if (Object* removed_object = game().objects.get(it->second)) {
+			if (Object* removed_object = game().objects.ptr(it->second)) {
 				removed_object->section = nullptr;
 			}
 			_object_map.erase(it);

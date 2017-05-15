@@ -283,7 +283,7 @@ namespace questless
 					return false;
 				}
 				if (auto object_id = dst_section->object_id(region_tile_coords)) {
-					if (game().objects.get(*object_id)->blocks_movement()) {
+					if (game().objects.cref(*object_id).blocks_movement()) {
 						// Collision with an obstructing object. Prevent movement.
 						return false;
 					}
@@ -302,7 +302,7 @@ namespace questless
 				return false;
 			}
 			if (auto object_id = src_section.object_id(region_tile_coords)) {
-				if (game().objects.get(*object_id)->blocks_movement()) {
+				if (game().objects.cref(*object_id).blocks_movement()) {
 					// Collision with an obstructing object. Prevent movement.
 					return false;
 				}
@@ -460,12 +460,12 @@ namespace questless
 			}
 		});
 		for (Id<Being> being_id : beings_to_update) {
-			if (Being* being = game().beings.get(being_id)) {
+			if (Being* being = game().beings.ptr(being_id)) {
 				being->update();
 			}
 		}
 		for (Id<Object> object_id : objects_to_update) {
-			if (Object* object = game().objects.get(object_id)) {
+			if (Object* object = game().objects.ptr(object_id)) {
 				object->update();
 			}
 		}
@@ -536,7 +536,7 @@ namespace questless
 	Being* Region::being_helper(RegionTile::Point region_tile_coords) const
 	{
 		if (auto opt_id = being_id(region_tile_coords)) {
-			return game().beings.get(*opt_id);
+			return game().beings.ptr(*opt_id);
 		} else {
 			return nullptr;
 		}
@@ -545,7 +545,7 @@ namespace questless
 	Object* Region::object_helper(RegionTile::Point region_tile_coords) const
 	{
 		if (auto opt_id = object_id(region_tile_coords)) {
-			return game().objects.get(*opt_id);
+			return game().objects.ptr(*opt_id);
 		} else {
 			return nullptr;
 		}

@@ -45,7 +45,22 @@ namespace questless
 		//! Retrieves an element from the cache, loading it from disk if necessary.
 		//! @param id The ID of the desired element.
 		//! @return A pointer to the requested element or nullptr if it does not exist.
-		retrieved_t* get(id_t id) const
+		retrieved_t* ptr(id_t id)
+		{
+			auto it = _cache.find(id);
+			if (it != _cache.end()) {
+				return stored_to_retrieved_ptr(it->second);
+			} else {
+				// Element is not in the cache. Attempt to load from disk.
+
+				//! @todo This.
+				throw std::logic_error{"Element not found. (Loading from disk not yet supported.)"};
+			}
+		}
+		//! Retrieves an element from the cache, loading it from disk if necessary.
+		//! @param id The ID of the desired element.
+		//! @return A const pointer to the requested element or nullptr if it does not exist.
+		retrieved_t const* cptr(id_t id) const
 		{
 			auto it = _cache.find(id);
 			if (it != _cache.end()) {
@@ -63,23 +78,45 @@ namespace questless
 		//! @tparam TargetType The desired type of the returned element. Must be a base class or derived class of the cache element type.
 		//! @return A pointer to the requested element as the desired type or nullptr if the element does not exist.
 		template <typename TargetType>
-		TargetType* get_as(id_t id) const
+		TargetType* ptr_as(id_t id)
 		{
 			constexpr bool valid_cast = std::is_base_of<retrieved_t, TargetType>::value || std::is_base_of<TargetType, retrieved_t>::value;
 			static_assert(valid_cast, "Cache::get_as requires \"is-a\" relationship between the cache element type and the target type.");
 
-			return dynamic_cast<TargetType*>(get(id));
+			return dynamic_cast<TargetType*>(ptr(id));
+		}
+		//! Retrieves an element from the cache, loading it from disk if necessary, and dynamically casts it to a pointer of the given type.
+		//! @param id The ID of the desired element.
+		//! @tparam TargetType The desired type of the returned element. Must be a base class or derived class of the cache element type.
+		//! @return A const pointer to the requested element as the desired type or nullptr if the element does not exist.
+		template <typename TargetType>
+		TargetType const* cptr_as(id_t id) const
+		{
+			constexpr bool valid_cast = std::is_base_of<retrieved_t, TargetType>::value || std::is_base_of<TargetType, retrieved_t>::value;
+			static_assert(valid_cast, "Cache::get_as requires \"is-a\" relationship between the cache element type and the target type.");
+
+			return dynamic_cast<TargetType const*>(cptr(id));
 		}
 
 		//! Retrieves an element from the cache, loading it from disk if necessary.
 		//! @param id The ID of the desired element.
 		//! @return A reference to the requested element.
 		//! @note The element must exist, or this will fail.
-		retrieved_t& get_ref(id_t id) const
+		retrieved_t& ref(id_t id)
 		{
-			retrieved_t* ptr = get(id);
-			assert(ptr);
-			return *ptr;
+			retrieved_t* result_ptr = ptr(id);
+			assert(result_ptr);
+			return *result_ptr;
+		}
+		//! Retrieves an element from the cache, loading it from disk if necessary.
+		//! @param id The ID of the desired element.
+		//! @return A const reference to the requested element.
+		//! @note The element must exist, or this will fail.
+		retrieved_t const& cref(id_t id) const
+		{
+			retrieved_t const* result_cptr = cptr(id);
+			assert(result_cptr);
+			return *result_cptr;
 		}
 
 		//! Retrieves an element from the cache, loading it from disk if necessary, and dynamically casts it to a reference of the given type.
@@ -88,11 +125,23 @@ namespace questless
 		//! @return A reference to the requested element as the desired type.
 		//! @note The element must exist, or this will fail.
 		template <typename TargetType>
-		TargetType& get_ref_as(id_t id) const
+		TargetType& ref_as(id_t id) const
 		{
-			TargetType* ptr = get_as<TargetType>(id);
-			assert(ptr);
-			return *ptr;
+			TargetType* result_ptr = ptr_as<TargetType>(id);
+			assert(result_ptr);
+			return *result_ptr;
+		}
+		//! Retrieves an element from the cache, loading it from disk if necessary, and dynamically casts it to a reference of the given type.
+		//! @param id The ID of the desired element.
+		//! @tparam TargetType The desired type of the returned element. Must be a base class or derived class of the cache element type.
+		//! @return A reference to the requested element as the desired type.
+		//! @note The element must exist, or this will fail.
+		template <typename TargetType>
+		TargetType const& cref_as(id_t id) const
+		{
+			TargetType const* result_cptr = cptr_as<TargetType>(id);
+			assert(result_cptr);
+			return *result_cptr;
 		}
 
 		//! Removes the element with ID @id from the cache, if present.

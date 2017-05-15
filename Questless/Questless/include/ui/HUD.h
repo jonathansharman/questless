@@ -93,6 +93,6 @@ namespace questless
 
 		void load_textures_and_layout();
 
-		void update_displayed_items(Being& player_being);
+		void update_displayed_items(Being const& player_being);
 	};
 }

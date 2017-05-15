@@ -208,7 +208,7 @@ namespace questless
 		bool was_already_dead = dead;
 
 		// Get source.
-		Being* source = opt_source_id ? game().beings.get(*opt_source_id) : nullptr;
+		Being* source = opt_source_id ? game().beings.ptr(*opt_source_id) : nullptr;
 
 		// Target will take damage.
 		if (before_take_damage(damage, part, opt_source_id)) {
@@ -225,7 +225,7 @@ namespace questless
 
 					// Apply part's armor's protection and resistance.
 					if (part->equipped_item_id) {
-						if (Armor* armor = game().items.get_as<Armor>(*part->equipped_item_id)) {
+						if (Armor* armor = game().items.ptr_as<Armor>(*part->equipped_item_id)) {
 							armor->apply(damage);
 						}
 					}
@@ -311,7 +311,7 @@ namespace questless
 		//! @todo Heal the part, if present.
 
 		// Get source.
-		Being* source = opt_source_id ? game().beings.get(*opt_source_id) : nullptr;
+		Being* source = opt_source_id ? game().beings.ptr(*opt_source_id) : nullptr;
 
 		// Source will give healing.
 		if (source != nullptr) {
