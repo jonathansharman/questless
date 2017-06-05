@@ -17,8 +17,7 @@ namespace questless
 	}
 	void TileTexturer::visit(EdgeTile const&)
 	{
-		_texture = make_unique<Texture>("resources/textures/terrain/tile.png");
-		_texture->color(Color::black());
+		_texture = make_unique<Texture>("resources/textures/terrain/tile.png"); //! Edge tiles should simply not be drawn.
 	}
 	void TileTexturer::visit(GrassTile const&)
 	{

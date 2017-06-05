@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "entities/Perception.h"
-#include "units/GameRect.h"
+#include "units/GameSpace.h"
 #include "utility/Id.h"
 #include "world/coordinates.h"
 #include "world/Section.h"
@@ -62,13 +62,13 @@ namespace questless
 		std::vector<EntityView> const& entity_views() const { return _entity_views; }
 		Region const& region() const { return _region; }
 
-		//! A bounding rectangle around the visible tiles or nullopt if initialized with find_bounds set to false or if no tiles are visible.
-		std::optional<units::GameRect> bounds() const { return _bounds; }
+		//! A bounding box around the visible tiles or nullopt if initialized with find_bounds set to false or if no tiles are visible.
+		std::optional<units::GameSpace::Box> bounds() const { return _bounds; }
 	private:
 		std::vector<SectionView> _section_views;
 		std::vector<EntityView> _entity_views;
 		std::reference_wrapper<const Region> _region;
 
-		std::optional<units::GameRect> _bounds;
+		std::optional<units::GameSpace::Box> _bounds;
 	};
 }

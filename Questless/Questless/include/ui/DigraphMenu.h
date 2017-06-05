@@ -63,7 +63,7 @@ namespace questless
 		//! @param origin The origin point of the menu on the screen.
 		//! @param horizontal_alignment The horizontal alignment of the menu relative to the origin point.
 		//! @param vertical_alignment The vertical alignment of the menu relative to the origin point.
-		void draw(units::ScreenPoint origin, sdl::HAlign horizontal_alignment = sdl::HAlign::left, sdl::VAlign vertical_alignment = sdl::VAlign::top);
+		void draw(units::ScreenSpace::Point origin, sdl::HAlign horizontal_alignment = sdl::HAlign::left, sdl::VAlign vertical_alignment = sdl::VAlign::top);
 	private:
 		struct Page
 		{
@@ -99,9 +99,9 @@ namespace questless
 		static constexpr int title_font_size = 48;
 		static constexpr int option_font_size = 30;
 
-		static constexpr sdl::Color _title_color = sdl::Color::black();
-		static constexpr sdl::Color _unselected_color = sdl::Color::black();
-		static constexpr sdl::Color _selected_color = sdl::Color::red();
+		static constexpr units::colors::Color _title_color = units::colors::black();
+		static constexpr units::colors::ColorFactor _unselected_color_factor = units::colors::black_factor();
+		static constexpr units::colors::ColorFactor _selected_color_factor = units::colors::red_factor();
 
 		static sdl::SoundHandle _hover_sound_handle, _select_sound_handle;
 
@@ -119,7 +119,7 @@ namespace questless
 		std::vector<std::pair<std::string, std::string>> _selections;
 
 		std::vector<PageView> _page_views;
-		units::ScreenPoint _content_position;
+		units::ScreenSpace::Point _content_position;
 		int _min_width, _min_height;
 		int _content_width, _content_height;
 		uptr<sdl::Texture> _background;

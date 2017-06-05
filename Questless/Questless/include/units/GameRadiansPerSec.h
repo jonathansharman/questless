@@ -4,9 +4,10 @@
 
 #pragma once
 
-#include "GameVelocity.h"
+#include "GameSpace.h"
+#include "Rate.h"
 
 namespace units
 {
-	using GameRadiansPerSec = Rate<GameRadians, double>;
+	using GameRadiansPerSec = Rate<GameSpace::Radians, double>;
 }

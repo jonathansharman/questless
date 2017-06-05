@@ -9,5 +9,5 @@
 
 namespace units
 {
-	using GameRadians = Radians<GameSpace>;
+	using GameSpace::Radians = Radians<GameSpace>;
 }

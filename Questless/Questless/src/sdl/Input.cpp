@@ -74,7 +74,7 @@ namespace sdl
 
 		_prev_mouse_state = _curr_mouse_state;
 		_prev_mouse_position = _mouse_position;
-		_curr_mouse_state = SDL_GetMouseState(&_mouse_position.x, &_mouse_position.y);
+		_curr_mouse_state = SDL_GetMouseState(&_mouse_position.x(), &_mouse_position.y());
 
 		_scroll = 0;
 
@@ -271,9 +271,9 @@ namespace sdl
 		}
 	}
 
-	void Input::move_mouse(units::ScreenPoint const& position)
+	void Input::move_mouse(units::ScreenSpace::Point const& position)
 	{
-		SDL_WarpMouseInWindow(window().sdl_ptr(), position.x, position.y);
+		SDL_WarpMouseInWindow(window().sdl_ptr(), position.x(), position.y());
 		_mouse_position = position;
 	}
 }

@@ -15,10 +15,10 @@ namespace questless
 	public:
 		//! @param position The particle's starting position.
 		FlameParticle() : Particle
-			{ units::GameVector{0.0, 0.0}
+			{ units::GameSpace::Vector{0.0, 0.0}
 			, units::GameVelocity::zero()
-			, units::GameVector{0.0, 30.0} / 1.0s / 1.0s
-			, units::GameRadians::zero()
+			, units::GameSpace::Vector{0.0, 30.0} / 1.0s / 1.0s
+			, units::GameSpace::Radians::zero()
 			, units::GameRadiansPerSec::zero()
 			, Scale{0.75}
 			, units::GameScaleVelocity::zero()
@@ -26,7 +26,7 @@ namespace questless
 			, MaxDisplacement{5.0}
 			}
 		{
-			_color = sdl::Color{255, 128, 0};
+			_color_factor = units::colors::ColorFactor{1.0f, 0.5f, 0.0f};
 		}
 	private:
 		static constexpr units::Hertz _vx_percent_drag_rate = 1.8_Hz;

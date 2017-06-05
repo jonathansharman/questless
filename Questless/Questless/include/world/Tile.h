@@ -34,7 +34,16 @@ namespace questless
 	class Tile : public Element<TileSubtypeList>
 	{
 	public:
-		enum class TileClass : int { dirt = 0, edge, grass, sand, snow, stone, water, TILE_CLASS_COUNT }; //! @todo Remove TILE_CLASS_COUNT if static reflection that can check enum length is ever added.
+		enum class TileClass : int
+			{ dirt = 0
+			, edge
+			, grass
+			, sand
+			, snow
+			, stone
+			, water
+			, TILE_CLASS_COUNT //! @todo Remove TILE_CLASS_COUNT if static reflection that can check enum length is ever added.
+			};
 
 		double temperature_offset; //!< Offset from ambient temperature at this tile.
 

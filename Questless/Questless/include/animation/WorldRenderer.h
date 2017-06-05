@@ -81,10 +81,10 @@ namespace questless
 		std::unordered_map<Tile::TileClass, uptr<sdl::Texture>> _tile_textures;
 		std::unordered_map<entity_id_var_t, uptr<Animation>> _entity_animation_map;
 		uptr<sdl::Texture> _terrain_texture;
-		units::GameRect _terrain_bounds;
+		units::GameSpace::Box _terrain_bounds;
 		bool _terrain_render_is_current;
 
-		std::vector<std::pair<uptr<Animation>, units::GamePoint>> _animations;
+		std::vector<std::pair<uptr<Animation>, units::GameSpace::Point>> _animations;
 		
 		std::optional<std::function<bool(RegionTile::Point)>> _highlight_predicate;
 

@@ -8,11 +8,12 @@
 #include <chrono>
 #include <cmath>
 #include <functional>
+#include <fstream>
 #include <random>
 #include <string>
+#include <sstream>
 
-#include "units/GameRadians.h"
-#include "units/GameVector.h"
+#include "units/GameSpace.h"
 
 namespace questless
 {
@@ -24,54 +25,12 @@ namespace questless
 	//! @return The time it took to execute @p f, in nanoseconds.
 	std::chrono::nanoseconds time(std::function<void()> f);
 
-	//////////////////////////////
-	// Random number generation //
-	//////////////////////////////
+	//////////////
+	// File I/O //
+	//////////////
 
-	extern std::mt19937_64 rng;
-
-	//! True or false with equal probability.
-	inline bool random_bool()
-	{
-		return std::uniform_int<int>(0, 1)(rng) == 0;
-	}
-
-	//! Generates a random integral value with a uniform distribution in [@p min, @p max].
-	template<typename Integer>
-	typename std::enable_if_t<std::is_integral<Integer>::value, Integer>
-	uniform(Integer min, Integer max)
-	{
-		return std::uniform_int_distribution<Integer>(min, max)(rng);
-	}
-
-	//! Generates a random floating-point value with a uniform distribution in [@p min, @p max].
-	template<typename Floating>
-	typename std::enable_if_t<std::is_floating_point<Floating>::value, Floating>
-	uniform(Floating min, Floating max)
-	{
-		return std::uniform_real_distribution<Floating>(min, max)(rng);
-	}
-
-	//! A random angle in radians.
-	inline units::GameRadians random_angle()
-	{
-		return uniform(0.0, 1.0) * units::GameRadians::circle();
-	}
-
-	//! A displacement based on a uniform random distance and uniform random angle.
-	//! @param max_length The maximum possible length of the displacement.
-	inline units::GameVector random_displacement(double max_length)
-	{
-		return units::GameVector{random_angle(), uniform(0.0, max_length)};
-	}
-
-	//! A displacement based on a uniform random distance and uniform random angle.
-	//! @param min_length The minimum possible length of the displacement.
-	//! @param max_length The maximum possible length of the displacement.
-	inline units::GameVector random_displacement(double min_length, double max_length)
-	{
-		return units::GameVector{random_angle(), uniform(min_length, max_length)};
-	}
+	//! The contents, as a string, of the file with filename @p filename.
+	std::string contents_of_file(char const* filename);
 
 	//////////
 	// Math //
@@ -112,4 +71,53 @@ namespace questless
 	{
 		return overloaded<Functors...>{};
 	}*/
+
+	//////////////////////////////
+	// Random Number Generation //
+	//////////////////////////////
+
+	extern std::mt19937_64 rng;
+
+	//! True or false with equal probability.
+	inline bool random_bool()
+	{
+		return std::uniform_int<int>(0, 1)(rng) == 0;
+	}
+
+	//! Generates a random integral value with a uniform distribution in [@p min, @p max].
+	template<typename Integer>
+	typename std::enable_if_t<std::is_integral<Integer>::value, Integer>
+		uniform(Integer min, Integer max)
+	{
+		return std::uniform_int_distribution<Integer>(min, max)(rng);
+	}
+
+	//! Generates a random floating-point value with a uniform distribution in [@p min, @p max].
+	template<typename Floating>
+	typename std::enable_if_t<std::is_floating_point<Floating>::value, Floating>
+		uniform(Floating min, Floating max)
+	{
+		return std::uniform_real_distribution<Floating>(min, max)(rng);
+	}
+
+	//! A random angle in radians.
+	inline units::GameSpace::Radians random_angle()
+	{
+		return uniform(0.0, 1.0) * units::GameSpace::Radians::circle();
+	}
+
+	//! A displacement based on a uniform random distance and uniform random angle.
+	//! @param max_length The maximum possible length of the displacement.
+	inline units::GameSpace::Vector random_displacement(double max_length)
+	{
+		return units::GameSpace::Vector{random_angle(), uniform(0.0, max_length)};
+	}
+
+	//! A displacement based on a uniform random distance and uniform random angle.
+	//! @param min_length The minimum possible length of the displacement.
+	//! @param max_length The maximum possible length of the displacement.
+	inline units::GameSpace::Vector random_displacement(double min_length, double max_length)
+	{
+		return units::GameSpace::Vector{random_angle(), uniform(min_length, max_length)};
+	}
 }

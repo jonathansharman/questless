@@ -15,9 +15,9 @@ namespace questless
 		}
 
 		if (_turning_right) {
-			_velocity.step().rotate(units::GameRadians{-1.0 * _turn_rate * Game::frame_duration});
+			_velocity.step().rotate(units::GameSpace::Radians{-1.0 * _turn_rate * Game::frame_duration});
 		} else {
-			_velocity.step().rotate(units::GameRadians{_turn_rate * Game::frame_duration});
+			_velocity.step().rotate(units::GameSpace::Radians{_turn_rate * Game::frame_duration});
 		}
 	}
 

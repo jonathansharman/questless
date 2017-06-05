@@ -348,16 +348,7 @@
     <ClInclude Include="include\animation\particles\TextParticle.h">
       <Filter>include\animation\particles</Filter>
     </ClInclude>
-    <ClInclude Include="include\units\Point.h">
-      <Filter>include\units</Filter>
-    </ClInclude>
     <ClInclude Include="include\units\Rate.h">
-      <Filter>include\units</Filter>
-    </ClInclude>
-    <ClInclude Include="include\units\Rect.h">
-      <Filter>include\units</Filter>
-    </ClInclude>
-    <ClInclude Include="include\units\Vector.h">
       <Filter>include\units</Filter>
     </ClInclude>
     <ClInclude Include="include\units\Frequency.h">
@@ -384,34 +375,7 @@
     <ClInclude Include="include\units\GameSpace.h">
       <Filter>include\units</Filter>
     </ClInclude>
-    <ClInclude Include="include\units\ScreenPoint.h">
-      <Filter>include\units</Filter>
-    </ClInclude>
-    <ClInclude Include="include\units\TexturePoint.h">
-      <Filter>include\units</Filter>
-    </ClInclude>
-    <ClInclude Include="include\units\GameVector.h">
-      <Filter>include\units</Filter>
-    </ClInclude>
-    <ClInclude Include="include\units\SpriteSheetPoint.h">
-      <Filter>include\units</Filter>
-    </ClInclude>
-    <ClInclude Include="include\units\ScreenVector.h">
-      <Filter>include\units</Filter>
-    </ClInclude>
-    <ClInclude Include="include\units\ScreenRect.h">
-      <Filter>include\units</Filter>
-    </ClInclude>
     <ClInclude Include="include\units\GameRadians.h">
-      <Filter>include\units</Filter>
-    </ClInclude>
-    <ClInclude Include="include\units\GamePoint.h">
-      <Filter>include\units</Filter>
-    </ClInclude>
-    <ClInclude Include="include\units\GameRect.h">
-      <Filter>include\units</Filter>
-    </ClInclude>
-    <ClInclude Include="include\units\TextureRect.h">
       <Filter>include\units</Filter>
     </ClInclude>
     <ClInclude Include="include\units\GameVelocity.h">
@@ -500,9 +464,6 @@
     </ClInclude>
     <ClInclude Include="include\units\GameDegrees.h">
       <Filter>include\units</Filter>
-    </ClInclude>
-    <ClInclude Include="include\sdl\Color.h">
-      <Filter>include\sdl</Filter>
     </ClInclude>
     <ClInclude Include="include\sdl\Font.h">
       <Filter>include\sdl</Filter>
@@ -630,9 +591,6 @@
     <ClInclude Include="include\animation\Still.h">
       <Filter>include\animation</Filter>
     </ClInclude>
-    <ClInclude Include="include\units\SpriteSheetVector.h">
-      <Filter>include\units</Filter>
-    </ClInclude>
     <ClInclude Include="include\animation\AnimationStack.h">
       <Filter>include\animation</Filter>
     </ClInclude>
@@ -653,6 +611,15 @@
     </ClInclude>
     <ClInclude Include="include\agents\VectorQuery.h">
       <Filter>include\agents</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\Space.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\ColorSpace.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\colors.h">
+      <Filter>include\units</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

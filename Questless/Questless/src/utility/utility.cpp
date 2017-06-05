@@ -20,11 +20,17 @@ namespace questless
 		return std::chrono::duration_cast<std::chrono::nanoseconds>(Game::clock::now() - start_time);
 	}
 
-	//////////////////////////////
-	// Random number generation //
-	//////////////////////////////
+	//////////////
+	// File I/O //
+	//////////////
 
-	std::mt19937_64 rng(Game::clock::now().time_since_epoch().count());
+	std::string contents_of_file(char const* filename)
+	{
+		std::ifstream fin(filename);
+		std::stringstream ss;
+		ss << fin.rdbuf();
+		return ss.str();
+	}
 
 	//////////
 	// Math //
@@ -40,4 +46,10 @@ namespace questless
 			return static_cast<uint8_t>(255 * percentage);
 		}
 	}
+
+	//////////////////////////////
+	// Random Number Generation //
+	//////////////////////////////
+
+	std::mt19937_64 rng(Game::clock::now().time_since_epoch().count());
 }

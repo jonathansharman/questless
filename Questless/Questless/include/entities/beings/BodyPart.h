@@ -12,7 +12,7 @@
 #include "Damage.h"
 #include "items/Item.h"
 #include "stats/Modifier.h"
-#include "units/ScreenRect.h"
+#include "units/ScreenSpace.h"
 #include "utility/DynamicProperty.h"
 #include "utility/Id.h"
 
@@ -55,7 +55,7 @@ namespace questless
 		std::vector<uptr<BodyPart>> const& children() const { return _children; }
 
 		//! The set of regions that this body part occupies.
-		std::vector<units::ScreenRect> const& regions() const { return _regions; }
+		std::vector<units::ScreenSpace::Box> const& regions() const { return _regions; }
 
 		//! The body part's vitality, which determines maximum health.
 		double vitality() const { return _vitality; }
@@ -94,7 +94,7 @@ namespace questless
 			, Protection protection
 			, Resistance resistance
 			, Vulnerability vulnerability
-			, std::vector<units::ScreenRect> regions
+			, std::vector<units::ScreenSpace::Box> regions
 			, Id<BodyPart> id = Id<BodyPart>::make()
 			);
 	private:
@@ -102,7 +102,7 @@ namespace questless
 
 		std::string _name;
 		std::vector<uptr<BodyPart>> _children;
-		std::vector<units::ScreenRect> _regions;
+		std::vector<units::ScreenSpace::Box> _regions;
 
 		bool _enabled;
 		double _vitality;
@@ -131,7 +131,7 @@ namespace questless
 			, Protection protection
 			, Resistance resistance
 			, Vulnerability vulnerability
-			, std::vector<units::ScreenRect> regions
+			, std::vector<units::ScreenSpace::Box> regions
 			)
 			: BodyPartBase<Head>
 				{ owner
@@ -177,7 +177,7 @@ namespace questless
 			, Protection protection
 			, Resistance resistance
 			, Vulnerability vulnerability
-			, std::vector<units::ScreenRect> regions
+			, std::vector<units::ScreenSpace::Box> regions
 			)
 			: BodyPartBase<Torso>
 				{ owner
@@ -221,7 +221,7 @@ namespace questless
 			, Protection protection
 			, Resistance resistance
 			, Vulnerability vulnerability
-			, std::vector<units::ScreenRect> regions
+			, std::vector<units::ScreenSpace::Box> regions
 			)
 			: BodyPartBase<Arm>
 				{ owner
@@ -265,7 +265,7 @@ namespace questless
 			, Protection protection
 			, Resistance resistance
 			, Vulnerability vulnerability
-			, std::vector<units::ScreenRect> regions
+			, std::vector<units::ScreenSpace::Box> regions
 			)
 			: BodyPartBase<Hand>
 				{ owner
@@ -310,7 +310,7 @@ namespace questless
 			, Protection protection
 			, Resistance resistance
 			, Vulnerability vulnerability
-			, std::vector<units::ScreenRect> regions
+			, std::vector<units::ScreenSpace::Box> regions
 			)
 			: BodyPartBase<Leg>
 				{ owner
@@ -358,7 +358,7 @@ namespace questless
 			, Protection protection
 			, Resistance resistance
 			, Vulnerability vulnerability
-			, std::vector<units::ScreenRect> regions
+			, std::vector<units::ScreenSpace::Box> regions
 			)
 			: BodyPartBase<Foot>
 				{ owner
@@ -401,7 +401,7 @@ namespace questless
 			, Protection protection
 			, Resistance resistance
 			, Vulnerability vulnerability
-			, std::vector<units::ScreenRect> regions
+			, std::vector<units::ScreenSpace::Box> regions
 			)
 			: BodyPartBase<Wing>
 				{ owner

@@ -30,7 +30,7 @@ namespace units
 		constexpr explicit Angle(scalar_t count) : _count{std::move(count)} {}
 
 		//! The zero angle for the specified space and unit size, constructed using the default constructor of the scalar type.
-		static constexpr Angle<SpaceType, UnitsPerCircle> zero() { return Angle<SpaceType, UnitsPerCircle>{scalar_t{}}; }
+		static constexpr Angle zero() { return Angle{scalar_t{}}; }
 
 		constexpr scalar_t const& count() const& { return _count; }
 		scalar_t&& count() && { return std::move(_count); }
@@ -42,36 +42,71 @@ namespace units
 			return out;
 		}
 
-		constexpr bool operator <(Angle<space_t, units_per_circle> const& that) const { return _count < that._count; }
-		constexpr bool operator <=(Angle<space_t, units_per_circle> const& that) const { return _count <= that._count; }
-		constexpr bool operator ==(Angle<space_t, units_per_circle> const& that) const { return _count == that._count; }
-		constexpr bool operator !=(Angle<space_t, units_per_circle> const& that) const { return _count != that._count; }
-		constexpr bool operator >=(Angle<space_t, units_per_circle> const& that) const { return _count >= that._count; }
-		constexpr bool operator >(Angle<space_t, units_per_circle> const& that) const { return _count > that._count; }
+		constexpr bool operator <(Angle const& that) const { return _count < that._count; }
+		constexpr bool operator <=(Angle const& that) const { return _count <= that._count; }
+		constexpr bool operator ==(Angle const& that) const { return _count == that._count; }
+		constexpr bool operator !=(Angle const& that) const { return _count != that._count; }
+		constexpr bool operator >=(Angle const& that) const { return _count >= that._count; }
+		constexpr bool operator >(Angle const& that) const { return _count > that._count; }
+
+		// angle + angle -> angle
+		constexpr friend Angle operator +(Angle const& theta1, Angle const& theta2)
+		{
+			return Angle{theta1.count() + theta2.count()};
+		}
+
+		// angle - angle -> angle
+		constexpr friend Angle operator -(Angle const& theta1, Angle const& theta2)
+		{
+			return Angle<SpaceType, UnitsPerCircle>{theta1.count() - theta2.count()};
+		}
+
+		// -angle -> angle
+		constexpr friend Angle operator -(Angle const& theta)
+		{
+			return Angle<SpaceType, UnitsPerCircle>{-theta.count()};
+		}
+
+		// k * angle -> angle
+		constexpr friend Angle operator *(scalar_t k, Angle const& theta)
+		{
+			return Angle<SpaceType, UnitsPerCircle>{k * theta.count()};
+		}
+		// angle * k -> angle
+		constexpr friend Angle operator *(Angle const& theta, scalar_t k)
+		{
+			return Angle<SpaceType, UnitsPerCircle>{k * theta.count()};
+		}
+
+		// angle / k -> angle
+		constexpr friend Angle operator /(Angle const& theta, scalar_t k)
+		{
+			return Angle<SpaceType, UnitsPerCircle>{theta.count() / k};
+		}
 
 		// Closed under addition.
-		Angle<space_t, units_per_circle>& operator +=(Angle<space_t, units_per_circle> const& theta) &
+		Angle& operator +=(Angle const& theta) &
 		{
 			_count += theta._count;
 			return *this;
 		}
 
 		// Closed under subtraction.
-		Angle<space_t, units_per_circle>& operator -=(Angle<space_t, units_per_circle> const& theta) &
+		Angle& operator -=(Angle const& theta) &
 		{
 			_count -= theta._count;
 			return *this;
 		}
 
 		// Closed under scalar multiplication.
-		Angle<space_t, units_per_circle>& operator *=(scalar_t k) &
+		Angle& operator *=(scalar_t k) &
 		{
 			_count *= k;
 			return *this;
 		}
 
 		// Closed under scalar division.
-		Angle<space_t, units_per_circle>& operator /=(scalar_t k) &
+		Angle& operator /=(scalar_t k) &
 		{
 			_count /= k;
 			return *this;
@@ -80,47 +115,7 @@ namespace units
 		scalar_t _count;
 	};
 
-	// angle + angle -> angle
-	template <typename SpaceType, typename UnitsPerCircle>
-	constexpr Angle<SpaceType, UnitsPerCircle> operator +(Angle<SpaceType, UnitsPerCircle> const& theta1, Angle<SpaceType, UnitsPerCircle> const& theta2)
-	{
-		return Angle<SpaceType, UnitsPerCircle>{theta1.count() + theta2.count()};
-	}
-
-	// angle - angle -> angle
-	template <typename SpaceType, typename UnitsPerCircle>
-	constexpr Angle<SpaceType, UnitsPerCircle> operator -(Angle<SpaceType, UnitsPerCircle> const& theta1, Angle<SpaceType, UnitsPerCircle> const& theta2)
-	{
-		return Angle<SpaceType, UnitsPerCircle>{theta1.count() - theta2.count()};
-	}
-
-	// -angle -> angle
-	template <typename SpaceType, typename UnitsPerCircle>
-	constexpr Angle<SpaceType, UnitsPerCircle> operator -(Angle<SpaceType, UnitsPerCircle> const& theta)
-	{
-		return Angle<SpaceType, UnitsPerCircle>{-theta.count()};
-	}
-
-	// k * angle -> angle
-	template <typename SpaceType, typename UnitsPerCircle>
-	constexpr Angle<SpaceType, UnitsPerCircle> operator *(typename SpaceType::scalar_t k, Angle<SpaceType, UnitsPerCircle> const& theta)
-	{
-		return Angle<SpaceType, UnitsPerCircle>{k * theta.count()};
-	}
-	// angle * k -> angle
-	template <typename SpaceType, typename UnitsPerCircle>
-	constexpr Angle<SpaceType, UnitsPerCircle> operator *(Angle<SpaceType, UnitsPerCircle> const& theta, typename SpaceType::scalar_t k)
-	{
-		return Angle<SpaceType, UnitsPerCircle>{k * theta.count()};
-	}
-
-	// angle / k -> angle
-	template <typename SpaceType, typename UnitsPerCircle>
-	constexpr Angle<SpaceType, UnitsPerCircle> operator /(Angle<SpaceType, UnitsPerCircle> const& theta, typename SpaceType::scalar_t k)
-	{
-		return Angle<SpaceType, UnitsPerCircle>{theta.count() / k};
-	}
-
+	//! Casts @p theta from SpaceType::Angle<UnitsPerCircle> to @p ToAngle.
 	template<typename ToAngle, typename SpaceType, typename UnitsPerCircle>
 	constexpr ToAngle angle_cast(Angle<SpaceType, UnitsPerCircle> const& theta)
 	{
@@ -137,23 +132,4 @@ namespace units
 
 	template <typename SpaceType>
 	using Gradians = Angle<SpaceType, std::ratio<400>>;
-}
-
-#ifndef _DEBUG
-#define DOCTEST_CONFIG_DISABLE
-#endif
-#include <doctest.h>
-
-TEST_CASE("[Angle] operations")
-{
-	struct DoubleSpace
-	{
-		using scalar_t = double;
-	};
-
-	SUBCASE("conversions")
-	{
-		constexpr auto circle_degrees = units::angle_cast<units::Degrees<DoubleSpace>>(units::Radians<DoubleSpace>::circle());
-		CHECK(circle_degrees.count() == doctest::Approx(360.0));
-	}
 }

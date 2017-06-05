@@ -17,6 +17,18 @@
 
 namespace sdl
 {
+	//! The default OpenGL program, using basic shaders.
+	GLuint& dflt_program();
+
+	//! The ID of the position attribute in the vertex shader.
+	GLint vs_attr_position();
+
+	//! The ID of the texture_coords attribute in the vertex shader.
+	GLint vs_attr_texture_coords();
+
+	//! The ID of the color_factor attribute in the vertex shader.
+	GLint vs_attr_color_factor();
+
 	//! The renderer.
 	Renderer& renderer();
 

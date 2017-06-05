@@ -5,9 +5,8 @@
 #pragma once
 
 #include "animation/Camera.h"
-#include "sdl/Color.h"
 #include "units/GameSeconds.h"
-#include "units/ScreenPoint.h"
+#include "units/ScreenSpace.h"
 #include "utility/Bounded.h"
 
 namespace questless
@@ -44,13 +43,13 @@ namespace questless
 		}
 
 		//! Draws the animation at @p position in screen space.
-		virtual void draw(units::ScreenPoint position) const = 0;
+		virtual void draw(units::ScreenSpace::Point position) const = 0;
 
 		//! Draws the animation at @p position in game space using @p camera.
 		//! @param position The position in game space at which to draw the animation.
 		//! @param camera The camera with which to draw the animation.
-		//! @param color An additional color mod, applied on top of the camera's and texture's color mods.
-		virtual void draw(units::GamePoint position, Camera const& camera, sdl::Color color = sdl::Color::white()) const = 0;
+		//! @param color_factor An additional color factor, applied on top of the camera's color factor.
+		virtual void draw(units::GameSpace::Point position, Camera const& camera, units::colors::ColorFactor color_factor = units::colors::white_factor()) const = 0;
 	protected:
 		bool _over = false;
 

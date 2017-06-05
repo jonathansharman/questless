@@ -6,6 +6,7 @@
 #include "Game.h"
 
 using namespace sdl;
+using namespace units;
 
 namespace questless
 {
@@ -31,25 +32,24 @@ namespace questless
 		particle_subupdate();
 	}
 
-	void Particle::draw(units::ScreenPoint position) const
+	void Particle::draw(units::ScreenSpace::Point position) const
 	{
 		texture().draw(position, HAlign::center, VAlign::middle);
 	}
 
-	void Particle::draw(units::GamePoint position, Camera const& camera, Color color) const
+	void Particle::draw(units::GameSpace::Point position, Camera const& camera, colors::ColorFactor color_factor) const
 	{
-		// Determine color mod to use.
-		color = ignore_color_mod() ? _color : color.mod(_color);
+		// Determine color factor to use.
+		color_factor = ignore_color_mod() ? _color_factor : color_factor * _color_factor;
 		if (fade_out()) {
-			uint8_t a = percentage_to_byte(_time_left.count() / _lifetime.count());
-			color.a = static_cast<uint8_t>(static_cast<uint32_t>(color.a) * a / 255);
+			color_factor[3] *= static_cast<float>(_time_left.count() / _lifetime.count());
 		}
 
 		camera.draw
 			( texture()
 			, position + _displacement
 			, Origin{std::nullopt}
-			, color
+			, color_factor
 			, HScale{_scale}
 			, VScale{_scale}
 			, _angle

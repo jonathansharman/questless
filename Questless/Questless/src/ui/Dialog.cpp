@@ -7,25 +7,24 @@
 #include "sdl/Font.h"
 #include "sdl/resources.h"
 
-#include "units/ScreenPoint.h"
-#include "units/ScreenRect.h"
+#include "units/ScreenSpace.h"
 
 using namespace sdl;
 using namespace units;
 
 namespace questless
 {
-	uptr<sdl::Texture> Dialog::make_title(char const* title, Color color)
+	uptr<sdl::Texture> Dialog::make_title(char const* title, colors::Color color)
 	{
 		static auto title_font_handle = font_manager().add("resources/fonts/dumbledor1.ttf", 32);
 		return std::make_unique<Texture>(font_manager()[title_font_handle].render(title, color));
 	}
-	uptr<sdl::Texture> Dialog::make_prompt(char const* prompt, Color color)
+	uptr<sdl::Texture> Dialog::make_prompt(char const* prompt, colors::Color color)
 	{
 		static auto prompt_font_handle = font_manager().add("resources/fonts/dumbledor1.ttf", 20);
 		return std::make_unique<Texture>(font_manager()[prompt_font_handle].render(prompt, color));
 	}
-	uptr<sdl::Texture> Dialog::make_selector(char const* selector, Color color)
+	uptr<sdl::Texture> Dialog::make_selector(char const* selector, colors::Color color)
 	{
 		static auto selector_font_handle = font_manager().add("resources/fonts/dumbledor1.ttf", 32);
 		return std::make_unique<Texture>(font_manager()[selector_font_handle].render(selector, color));
@@ -33,20 +32,41 @@ namespace questless
 
 	void Dialog::draw_title(Texture const& title)
 	{
-		int x_center = window().center().x;
-		renderer().draw_rect(ScreenRect{x_center - title.width() / 2, 0, title.width(), title.height()}, Color::black(128), true);
-		title.draw(ScreenPoint{x_center, 0}, HAlign::center);
+		int x_center = window().center().x();
+		renderer().draw_box
+			( ScreenSpace::Box
+				{ ScreenSpace::Point{x_center - title.width() / 2, 0}
+				, ScreenSpace::Vector{title.width(), title.height()}
+				}
+			, colors::black(0.5f)
+			, true
+			);
+		title.draw(ScreenSpace::Point{x_center, 0}, HAlign::center);
 	}
 	void Dialog::draw_prompt(Texture const& prompt)
 	{
-		int x_center = window().center().x;
-		renderer().draw_rect(ScreenRect{x_center - prompt.width() / 2, _prompt_top, prompt.width(), prompt.height()}, Color::black(128), true);
-		prompt.draw(ScreenPoint{x_center, _prompt_top}, HAlign::center);
+		int x_center = window().center().x();
+		renderer().draw_box
+			( ScreenSpace::Box
+				{ ScreenSpace::Point{x_center - prompt.width() / 2, _prompt_top}
+				, ScreenSpace::Vector{prompt.width(), prompt.height()}
+				}
+			, colors::black(0.5f)
+			, true
+			);
+		prompt.draw(ScreenSpace::Point{x_center, _prompt_top}, HAlign::center);
 	}
 	void Dialog::draw_selector(Texture const& selector)
 	{
-		int x_center = window().center().x;
-		renderer().draw_rect(ScreenRect{x_center - selector.width() / 2, _selector_top, selector.width(), selector.height()}, Color::black(128), true);
-		selector.draw(ScreenPoint{x_center, _selector_top}, HAlign::center);
+		int x_center = window().center().x();
+		renderer().draw_box
+			( ScreenSpace::Box
+				{ ScreenSpace::Point{x_center - selector.width() / 2, _selector_top}
+				, ScreenSpace::Vector{selector.width(), selector.height()}
+				}
+			, colors::black(0.5f)
+			, true
+			);
+		selector.draw(ScreenSpace::Point{x_center, _selector_top}, HAlign::center);
 	}
 }

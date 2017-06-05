@@ -9,17 +9,17 @@ using namespace units;
 
 namespace questless
 {
-	void ParticleAnimation::draw(units::ScreenPoint position) const
+	void ParticleAnimation::draw(units::ScreenSpace::Point position) const
 	{
 		for (auto& particle : _particles) {
 			particle->draw(position);
 		}
 	}
 
-	void ParticleAnimation::draw(units::GamePoint position, Camera const& camera, sdl::Color color) const
+	void ParticleAnimation::draw(units::GameSpace::Point position, Camera const& camera, colors::ColorFactor color_factor) const
 	{
 		for (auto& particle : _particles) {
-			particle->draw(position, camera, color);
+			particle->draw(position, camera, color_factor);
 		}
 	}
 

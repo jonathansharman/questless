@@ -11,9 +11,7 @@
 #include <algorithm>
 #include <exception>
 
-#include "GameVector.h"
-#include "GamePoint.h"
-#include "GameRadians.h"
+#include "GameSpace.h"
 #include "math.h"
 
 namespace units
@@ -30,6 +28,117 @@ namespace units
 			int diff = static_cast<int>(d1) - static_cast<int>(d2);
 			return std::min((diff + 6) % 6, (-diff + 6) % 6);
 		}
+
+		//! Hexagonal vector type.
+		struct Vector
+		{
+			int q;
+			int r;
+			int s;
+
+			//! Unit vector in the given direction.
+			constexpr static Vector unit(Direction direction)
+			{
+				switch (direction) {
+					default: [[fallthrough]]; // Impossible case.
+					case Direction::one:   return Vector{ 1,  0};
+					case Direction::two:   return Vector{ 0,  1};
+					case Direction::three: return Vector{-1,  1};
+					case Direction::four:  return Vector{-1,  0};
+					case Direction::five:  return Vector{ 0, -1};
+					case Direction::six:   return Vector{ 1, -1};
+				};
+			}
+
+			constexpr explicit Vector() = default;
+			constexpr explicit Vector(int q, int r) : q{q}, r{r}, s{-q - r} {}
+			constexpr explicit Vector(int q, int r, int s) : q{q}, r{r}, s{s} {}
+			constexpr explicit Vector(double q, double r)
+				: Vector{q, r, -q - r}
+			{}
+
+			constexpr explicit Vector(double q, double r, double s)
+				: q{math::abs(q - math::lround(q)) > math::abs(r - math::lround(r)) && math::abs(q - math::lround(q)) > math::abs(s - math::lround(s))
+					? -math::lround(r) - math::lround(s)
+					: math::lround(q)
+					}
+				, r{math::abs(q - math::lround(q)) > math::abs(r - math::lround(r)) && math::abs(q - math::lround(q)) > math::abs(s - math::lround(s))
+					? math::lround(r)
+					: math::abs(r - math::lround(r)) > math::abs(s - math::lround(s))
+						? -math::lround(q) - math::lround(s)
+						: math::lround(r)
+					}
+				, s{math::abs(q - math::lround(q)) > math::abs(r - math::lround(r)) && math::abs(q - math::lround(q)) > math::abs(s - math::lround(s))
+					? math::lround(s)
+					: math::abs(r - math::lround(r)) > math::abs(s - math::lround(s))
+						? math::lround(s)
+						: -math::lround(q) - math::lround(r)
+					}
+			{}
+
+			friend constexpr Vector operator +(Vector v1, Vector v2) { return Vector{v1.q + v2.q, v1.r + v2.r, v1.s + v2.s}; }
+
+			constexpr Vector operator -() { return Vector{-q, -r, -s}; }
+
+			friend constexpr Vector operator -(Vector v1, Vector v2) { return Vector{v1.q - v2.q, v1.r - v2.r, v1.s - v2.s}; }
+		
+			friend constexpr Vector operator *(Vector h, int k) { return Vector{k * h.q, k * h.r, k * h.s}; }
+			friend constexpr Vector operator *(int k, Vector h) { return Vector{k * h.q, k * h.r, k * h.s}; }
+
+			friend constexpr Vector operator *(Vector h, double k) { return Vector{k * h.q, k * h.r, k * h.s}; }
+			friend constexpr Vector operator *(double k, Vector h) { return Vector{k * h.q, k * h.r, k * h.s}; }
+
+			friend constexpr Vector operator /(Vector h, int k) { return Vector{h.q / k, h.r / k, h.s / k}; }
+			friend constexpr Vector operator /(Vector h, double k) { return Vector{h.q / k, h.r / k, h.s / k}; }
+
+			friend constexpr bool operator ==(Vector v1, Vector v2) { return v1.q == v2.q && v1.r == v2.r && v1.s == v2.s; }
+			friend constexpr bool operator !=(Vector v1, Vector v2) { return v1.q != v2.q || v1.r != v2.r || v1.s != v2.s; }
+
+			//! Arbitrary less-than function so that HexCoords are comparable.
+			friend constexpr bool operator <(Vector v1, Vector v2) { return v1.q < v2.q || (v1.q == v2.q && v1.r < v2.r); }
+
+			constexpr int length() const { return static_cast<int>((math::abs(q) + math::abs(r) + math::abs(s)) / 2); }
+
+			//! The unit vector nearest this vector. Throws a @p std::domain_error for the zero vector.
+			constexpr Vector unit() const
+			{
+				double l = length();
+				if (l == 0) {
+					throw std::domain_error{"Unit vector of a zero-length vector is undefined."};
+				}
+				return *this / static_cast<double>(l);
+			}
+
+			//! The nearest direction this vector points towards. Throws a @p std::domain_error for the zero vector.
+			constexpr Direction direction() const
+			{
+				Vector const u = unit();
+				switch (u.q) {
+					case -1:
+						switch (u.r) {
+							case  0: return Direction::four;
+							case  1: return Direction::three;
+						}
+					case  0:
+						switch (u.r) {
+							case -1: return Direction::five;
+							case  1: return Direction::two;
+						}
+					case  1:
+						switch (u.r) {
+							case -1: return Direction::six;
+							case  0: return Direction::one;
+						}
+				}
+				throw std::logic_error{"Invalid unit vector."};
+			}
+
+			//! Simple hash function.
+			constexpr friend std::size_t hash_value(Vector const& v)
+			{
+				return 31 * v.q + v.r;
+			}
+		};
 
 		//! Hexagonal point type.
 		struct Point
@@ -64,7 +173,11 @@ namespace units
 					}
 			{}
 
+			friend constexpr Point operator +(Point p, Vector v) { return Point{p.q + v.q, p.r + v.r, p.s + v.s}; }
+			friend constexpr Point operator +(Vector v, Point p) { return Point{v.q + p.q, v.r + p.r, v.s + p.s}; }
+
 			friend constexpr Vector operator -(Point h1, Point h2) { return Vector{h1.q - h2.q, h1.r - h2.r, h1.s - h2.s}; }
+			friend constexpr Point operator -(Point p, Vector v) { return Point{p.q - v.q, p.r - v.r, p.s - v.s}; }
 
 			friend constexpr bool operator ==(Point p1, Point p2) { return p1.q == p2.q && p1.r == p2.r && p1.s == p2.s; }
 			friend constexpr bool operator !=(Point p1, Point p2) { return p1.q != p2.q || p1.r != p2.r || p1.s != p2.s; }
@@ -115,119 +228,6 @@ namespace units
 				return 31 * p.q + p.r;
 			}
 		};
-
-		//! Hexagonal vector type.
-		struct Vector
-		{
-			int q;
-			int r;
-			int s;
-
-			//! Unit vector in the given direction.
-			constexpr static Vector unit(Direction direction)
-			{
-				switch (direction) {
-					default: [[fallthrough]]; // Impossible case.
-					case Direction::one:   return Vector{ 1,  0};
-					case Direction::two:   return Vector{ 0,  1};
-					case Direction::three: return Vector{-1,  1};
-					case Direction::four:  return Vector{-1,  0};
-					case Direction::five:  return Vector{ 0, -1};
-					case Direction::six:   return Vector{ 1, -1};
-				};
-			}
-
-			constexpr explicit Vector() = default;
-			constexpr explicit Vector(int q, int r) : q{q}, r{r}, s{-q - r} {}
-			constexpr explicit Vector(int q, int r, int s) : q{q}, r{r}, s{s} {}
-			constexpr explicit Vector(double q, double r)
-				: Vector{q, r, -q - r}
-			{}
-
-			constexpr explicit Vector(double q, double r, double s)
-				: q{math::abs(q - math::lround(q)) > math::abs(r - math::lround(r)) && math::abs(q - math::lround(q)) > math::abs(s - math::lround(s))
-					? -math::lround(r) - math::lround(s)
-					: math::lround(q)
-					}
-				, r{math::abs(q - math::lround(q)) > math::abs(r - math::lround(r)) && math::abs(q - math::lround(q)) > math::abs(s - math::lround(s))
-					? math::lround(r)
-					: math::abs(r - math::lround(r)) > math::abs(s - math::lround(s))
-						? -math::lround(q) - math::lround(s)
-						: math::lround(r)
-					}
-				, s{math::abs(q - math::lround(q)) > math::abs(r - math::lround(r)) && math::abs(q - math::lround(q)) > math::abs(s - math::lround(s))
-					? math::lround(s)
-					: math::abs(r - math::lround(r)) > math::abs(s - math::lround(s))
-						? math::lround(s)
-						: -math::lround(q) - math::lround(r)
-					}
-			{}
-
-			friend constexpr Vector operator +(Vector v1, Vector v2) { return Vector{v1.q + v2.q, v1.r + v2.r, v1.s + v2.s}; }
-			friend constexpr Point operator +(Point p, Vector v) { return Point{p.q + v.q, p.r + v.r, p.s + v.s}; }
-			friend constexpr Point operator +(Vector v, Point p) { return Point{v.q + p.q, v.r + p.r, v.s + p.s}; }
-
-			constexpr Vector operator -() { return Vector{-q, -r, -s}; }
-
-			friend constexpr Vector operator -(Vector v1, Vector v2) { return Vector{v1.q - v2.q, v1.r - v2.r, v1.s - v2.s}; }
-			friend constexpr Point operator -(Point p, Vector v) { return Point{p.q - v.q, p.r - v.r, p.s - v.s}; }
-		
-			friend constexpr Vector operator *(Vector h, int k) { return Vector{k * h.q, k * h.r, k * h.s}; }
-			friend constexpr Vector operator *(int k, Vector h) { return Vector{k * h.q, k * h.r, k * h.s}; }
-
-			friend constexpr Vector operator *(Vector h, double k) { return Vector{k * h.q, k * h.r, k * h.s}; }
-			friend constexpr Vector operator *(double k, Vector h) { return Vector{k * h.q, k * h.r, k * h.s}; }
-
-			friend constexpr Vector operator /(Vector h, int k) { return Vector{h.q / k, h.r / k, h.s / k}; }
-			friend constexpr Vector operator /(Vector h, double k) { return Vector{h.q / k, h.r / k, h.s / k}; }
-
-			friend constexpr bool operator ==(Vector v1, Vector v2) { return v1.q == v2.q && v1.r == v2.r && v1.s == v2.s; }
-			friend constexpr bool operator !=(Vector v1, Vector v2) { return v1.q != v2.q || v1.r != v2.r || v1.s != v2.s; }
-
-			//! Arbitrary less-than function so that HexCoords are comparable.
-			friend constexpr bool operator <(Vector v1, Vector v2) { return v1.q < v2.q || (v1.q == v2.q && v1.r < v2.r); }
-
-			constexpr int length() const { return static_cast<int>((math::abs(q) + math::abs(r) + math::abs(s)) / 2); }
-
-			//! The unit vector nearest this vector. Throws a @p std::domain_error for the zero vector.
-			constexpr Vector unit() const
-			{
-				double l = length();
-				if (l == 0) {
-					throw std::domain_error{"Unit vector of a zero-length vector is undefined."};
-				}
-				return *this / static_cast<double>(l);
-			}
-
-			//! The nearest direction this vector points towards. Throws a @p std::domain_error for the zero vector.
-			constexpr Direction direction() const
-			{
-				Vector const u = unit();
-				switch (u.q) {
-					case -1:
-						switch (u.r) {
-							case  0: return Direction::four;
-							case  1: return Direction::three;
-						}
-					case  0:
-						switch (u.r) {
-							case -1: return Direction::five;
-							case  1: return Direction::two;
-						}
-					case  1:
-						switch (u.r) {
-							case -1: return Direction::six;
-							case  0: return Direction::one;
-						}
-				}
-			}
-
-			//! Simple hash function.
-			constexpr friend std::size_t hash_value(Vector const& v)
-			{
-				return 31 * v.q + v.r;
-			}
-		};
 	};
 
 	struct Orientation
@@ -268,47 +268,50 @@ namespace units
 	struct Layout
 	{
 		Orientation orientation;
-		units::GameVector size;
-		units::GamePoint origin;
+		GameSpace::Vector size;
+		GameSpace::Point origin;
 
-		static constexpr Layout dflt() { return Layout{orientation_flat, units::GameVector{30.0, 36.0 / math::sqrt(3.0)}, units::GamePoint{0, 0}}; }
+		static constexpr Layout dflt()
+		{
+			return Layout{orientation_flat, GameSpace::Vector{30.0f, 36.0f / math::sqrt(3.0f)}, GameSpace::Point{0.0f, 0.0f}};
+		}
 
-		constexpr Layout(Orientation orientation, units::GameVector size, units::GamePoint origin)
+		constexpr Layout(Orientation orientation, GameSpace::Vector size, GameSpace::Point origin)
 			: orientation{orientation}, size{std::move(size)}, origin{std::move(origin)}
 		{}
 
 		template <typename HexCoordsType>
-		constexpr units::GamePoint to_world(HexCoordsType h) const //! @todo This function should just work for RegionTile::Point.
+		constexpr GameSpace::Point to_world(HexCoordsType h) const //! @todo This function should just work for RegionTile::Point.
 		{
-			return units::GamePoint
-				{ ((orientation.f0 * h.q + orientation.f1 * h.r) * size.x + origin.x)
-				, ((orientation.f2 * h.q + orientation.f3 * h.r) * size.y + origin.y)
+			return GameSpace::Point
+				{ ((orientation.f0 * h.q + orientation.f1 * h.r) * size.x() + origin.x())
+				, ((orientation.f2 * h.q + orientation.f3 * h.r) * size.y() + origin.y())
 				};
 		}
 
 		template <typename HexCoordsType>
-		constexpr HexCoordsType to_hex_coords(units::GamePoint p) const //! @todo This function should just work for RegionTile::Point.
+		constexpr HexCoordsType to_hex_coords(GameSpace::Point p) const //! @todo This function should just work for RegionTile::Point.
 		{
 			return HexCoordsType
-				{ orientation.b0 * (p.x - origin.x) / size.x + orientation.b1 * (p.y - origin.y) / size.y
-				, orientation.b2 * (p.x - origin.x) / size.x + orientation.b3 * (p.y - origin.y) / size.y
+				{ orientation.b0 * (p.x() - origin.x()) / size.x() + orientation.b1 * (p.y() - origin.y()) / size.y()
+				, orientation.b2 * (p.x() - origin.x()) / size.x() + orientation.b3 * (p.y() - origin.y()) / size.y()
 				};
 		}
 
-		units::GamePoint hex_corner_offset(int corner)
+		GameSpace::Point hex_corner_offset(int corner)
 		{
-			units::GameRadians angle = units::GameRadians::circle() * (corner + orientation.start_angle) / 6.0;
-			return units::GamePoint{size.x * cos(angle.count()), size.y * sin(angle.count())};
+			GameSpace::Radians angle = GameSpace::Radians::circle() * (corner + orientation.start_angle) / 6.0;
+			return GameSpace::Point{size.x() * cos(angle.count()), size.y() * sin(angle.count())};
 		}
 
 		template <typename HexCoordsType>
-		std::vector<units::GamePoint> corner_points(HexCoordsType h) //! @todo This function should just work for RegionTile::Point.
+		std::vector<GameSpace::Point> corner_points(HexCoordsType h) //! @todo This function should just work for RegionTile::Point.
 		{
-			std::vector<units::GamePoint> corners;
-			units::GamePoint const center = to_world_f(h);
+			std::vector<GameSpace::Point> corners;
+			GameSpace::Point const center = to_world_f(h);
 			for (int i = 0; i < 6; i++) {
-				units::GamePoint offset = hex_corner_offset(i);
-				corners.push_back(units::GamePoint{center.x + offset.x, center.y + offset.y});
+				GameSpace::Point offset = hex_corner_offset(i);
+				corners.push_back(GameSpace::Point{center.x + offset.x, center.y + offset.y});
 			}
 			return corners;
 		}
@@ -398,11 +401,13 @@ void test_hex_linedraw()
 void test_layout()
 {
 	HexCoords h{3, 4, -7};
-	Layout flat{orientation_flat, units::GamePoint{10, 15}, units::GamePoint{35, 71}};
+	Layout flat{orientation_flat, units::GameSpace::Point{10, 15}, units::GameSpace::Point{35, 71}};
 	equal_hex("layout", h, flat.to_hex_coords(flat.to_world(h)));
-	Layout pointy = Layout(orientation_pointy, units::GamePoint{10, 15}, units::GamePoint{35, 71});
+	Layout pointy = Layout(orientation_pointy, units::GameSpace::Point{10, 15}, units::GameSpace::Point{35, 71});
 	equal_hex("layout", h, pointy.to_hex_coords(pointy.to_world(h)));
 }
+
+if not main_byid_df.ix[sampleList[i], 'Grain_ID'][j] in rimVsCore
 
 void test_conversion_roundtrip()
 {

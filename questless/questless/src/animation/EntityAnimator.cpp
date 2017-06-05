@@ -9,7 +9,6 @@
 #include "animation/SpriteAnimation.h"
 #include "animation/Still.h"
 #include "entities/all-entities.h"
-#include "units/Point.h"
 
 using namespace sdl;
 using namespace units;
@@ -22,15 +21,15 @@ namespace questless
 	{
 		static auto sprite_sheet = std::make_shared<SpriteSheet>
 			(texture_manager().add("resources/textures/human-animation.png")
-				, SpriteSheetVector{3, 1}
+				, SpriteSheetSpace::Vector{3, 1}
 		);
 		auto sprite_animation = std::make_unique<SpriteAnimation>
 			( sprite_sheet
 			, std::vector<SpriteAnimation::Frame>
-				{ {GameSeconds{0.2}, SpriteSheetPoint{0, 0}, TexturePoint{0, 10}}
-				, {GameSeconds{0.2}, SpriteSheetPoint{1, 0}, TexturePoint{0, 10}}
-				, {GameSeconds{0.2}, SpriteSheetPoint{2, 0}, TexturePoint{0, 10}}
-				, {GameSeconds{0.2}, SpriteSheetPoint{1, 0}, TexturePoint{0, 10}}
+				{ {GameSeconds{0.2}, SpriteSheetSpace::Point{0, 0}, TextureSpace::Point{0, 10}}
+				, {GameSeconds{0.2}, SpriteSheetSpace::Point{1, 0}, TextureSpace::Point{0, 10}}
+				, {GameSeconds{0.2}, SpriteSheetSpace::Point{2, 0}, TextureSpace::Point{0, 10}}
+				, {GameSeconds{0.2}, SpriteSheetSpace::Point{1, 0}, TextureSpace::Point{0, 10}}
 				}
 			, Looping{true}
 			);
@@ -41,15 +40,15 @@ namespace questless
 	{
 		static auto sprite_sheet = std::make_shared<SpriteSheet>
 			( texture_manager().add("resources/textures/goblin-animation.png")
-			, SpriteSheetVector{3, 1}
+			, SpriteSheetSpace::Vector{3, 1}
 			);
 		auto sprite_animation = std::make_unique<SpriteAnimation>
 			( sprite_sheet
 			, std::vector<SpriteAnimation::Frame>
-				{ {GameSeconds{0.2}, SpriteSheetPoint{0, 0}, TexturePoint{0, 10}}
-				, {GameSeconds{0.2}, SpriteSheetPoint{1, 0}, TexturePoint{0, 10}}
-				, {GameSeconds{0.2}, SpriteSheetPoint{2, 0}, TexturePoint{0, 10}}
-				, {GameSeconds{0.2}, SpriteSheetPoint{1, 0}, TexturePoint{0, 10}}
+				{ {GameSeconds{0.2}, SpriteSheetSpace::Point{0, 0}, TextureSpace::Point{0, 10}}
+				, {GameSeconds{0.2}, SpriteSheetSpace::Point{1, 0}, TextureSpace::Point{0, 10}}
+				, {GameSeconds{0.2}, SpriteSheetSpace::Point{2, 0}, TextureSpace::Point{0, 10}}
+				, {GameSeconds{0.2}, SpriteSheetSpace::Point{1, 0}, TextureSpace::Point{0, 10}}
 				}
 			, Looping{true}
 			);
@@ -63,18 +62,18 @@ namespace questless
 	{
 		static auto texture_handle = texture_manager().add("resources/textures/entities/objects/campfire.png");
 		auto animation_stack = std::make_unique<AnimationStack>();
-		animation_stack->add(std::make_unique<Still>(texture_handle, TexturePoint{0, 0}));
+		animation_stack->add(std::make_unique<Still>(texture_handle, TextureSpace::Point{0, 0}));
 		animation_stack->add(std::make_unique<Flame>());
 		_animation = std::move(animation_stack);
 	}
 	void EntityAnimator::visit(Corpse const&)
 	{
 		static auto texture_handle = texture_manager().add("resources/textures/entities/objects/grave.png");
-		_animation = std::make_unique<Still>(texture_handle, TexturePoint{0, 10});
+		_animation = std::make_unique<Still>(texture_handle, TextureSpace::Point{0, 10});
 	}
 	void EntityAnimator::visit(ItemBox const&)
 	{
 		static auto texture_handle = texture_manager().add("resources/textures/entities/objects/item-box.png");
-		_animation = std::make_unique<Still>(texture_handle, TexturePoint{0, 4});
+		_animation = std::make_unique<Still>(texture_handle, TextureSpace::Point{0, 4});
 	}
 }

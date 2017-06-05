@@ -258,7 +258,7 @@ namespace questless
 
 	Complete BasicAI::query_vector
 		( uptr<VectorQuery> query
-		, std::optional<RegionTile::Point> origin
+		, std::optional<RegionTile::Point>
 		, std::function<bool(RegionTile::Vector)> predicate
 		, std::function<Complete(std::optional<RegionTile::Vector>)> cont
 		) const

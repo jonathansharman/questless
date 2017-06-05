@@ -17,7 +17,7 @@ namespace questless
 	public:
 		virtual ~Craftable() = 0 {}
 
-		enum class Action {mix, boil, smoke, crush};
+		enum class Action { mix, boil, smoke, crush };
 	protected:
 		Action _action;
 		//! @todo Ingredients?

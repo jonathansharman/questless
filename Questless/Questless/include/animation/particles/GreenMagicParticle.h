@@ -15,7 +15,7 @@ namespace questless
 	public:
 		GreenMagicParticle()
 			: Particle
-				{ units::GameVector{0.0, 0.0}
+				{ units::GameSpace::Vector{0.0, 0.0}
 				, random_displacement(20.0, 50.0) / 1.0s
 				, units::GameAcceleration::zero()
 				, random_angle()
@@ -29,9 +29,9 @@ namespace questless
 			_scale_velocity = units::GameScaleVelocity{Scale{-_scale / _lifetime.count()}};
 		}
 	private:
-		static constexpr units::GameRadians _dtheta_max = 2.0 * units::GameRadians::circle();
+		static constexpr units::GameSpace::Radians _dtheta_max = 2.0 * units::GameSpace::Radians::circle();
 		static constexpr double _inflection_probability = 0.1;
-		static constexpr units::GameRadiansPerSec _turn_rate = units::GameRadians::circle() / 1.0s;
+		static constexpr units::GameRadiansPerSec _turn_rate = units::GameSpace::Radians::circle() / 1.0s;
 
 		bool _turning_right; //!< True if the green magic particle is turning to the right (CW), false if turning left (CCW).
 

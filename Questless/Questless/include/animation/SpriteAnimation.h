@@ -8,9 +8,8 @@
 
 #include "Animation.h"
 #include "sdl/resources.h"
-#include "units/SpriteSheetPoint.h"
-#include "units/SpriteSheetVector.h"
-#include "units/TexturePoint.h"
+#include "units/SpriteSheetSpace.h"
+#include "units/TextureSpace.h"
 #include "units/GameSeconds.h"
 #include "utility/Bounded.h"
 #include "utility/reference.h"
@@ -26,11 +25,11 @@ namespace questless
 	{
 	public:
 		sdl::TextureHandle const texture_handle;
-		units::SpriteSheetVector const cel_dimensions;
+		units::SpriteSheetSpace::Vector const cel_dimensions;
 
 		//! @param texture_handle A texture handle to the sprite sheet texture.
 		//! @param cel_dimensions The dimensions of this sprite sheet's cel grid.
-		SpriteSheet(sdl::TextureHandle texture_handle, units::SpriteSheetVector cel_dimensions)
+		SpriteSheet(sdl::TextureHandle texture_handle, units::SpriteSheetSpace::Vector cel_dimensions)
 			: texture_handle{texture_handle}, cel_dimensions{cel_dimensions}
 		{}
 
@@ -38,7 +37,7 @@ namespace questless
 		int cel_width() const
 		{
 			if (_need_cel_width) {
-				_cel_width = sdl::texture_manager()[texture_handle].width() / cel_dimensions.x;
+				_cel_width = sdl::texture_manager()[texture_handle].width() / cel_dimensions.x();
 				_need_cel_width = false;
 			}
 			return _cel_width;
@@ -48,7 +47,7 @@ namespace questless
 		int cel_height() const
 		{
 			if (_need_cel_height) {
-				_cel_height = sdl::texture_manager()[texture_handle].height() / cel_dimensions.y;
+				_cel_height = sdl::texture_manager()[texture_handle].height() / cel_dimensions.y();
 				_need_cel_height = false;
 			}
 			return _cel_height;
@@ -67,10 +66,10 @@ namespace questless
 		struct Frame
 		{
 			units::GameSeconds duration;
-			units::SpriteSheetPoint coords; //!< The cel coordinates within the sprite sheet.
-			units::TexturePoint origin; //!< The origin of the frame's texture relative to the animation origin.
+			units::SpriteSheetSpace::Point coords; //!< The cel coordinates within the sprite sheet.
+			units::TextureSpace::Point origin; //!< The origin of the frame's texture relative to the animation origin.
 
-			Frame(units::GameSeconds duration, units::SpriteSheetPoint coords, units::TexturePoint origin)
+			Frame(units::GameSeconds duration, units::SpriteSheetSpace::Point coords, units::TextureSpace::Point origin)
 				: duration{duration}, coords{coords}, origin{origin}
 			{}
 		};
@@ -86,9 +85,9 @@ namespace questless
 		//! @param looping Whether to loop the animation or play just once.
 		SpriteAnimation(sptr<SpriteSheet> sprite_sheet, std::vector<Frame> frames, Looping looping);
 
-		void draw(units::ScreenPoint position) const final;
+		void draw(units::ScreenSpace::Point position) const final;
 
-		void draw(units::GamePoint position, Camera const& camera, sdl::Color color = sdl::Color::white()) const final;
+		void draw(units::GameSpace::Point position, Camera const& camera, units::colors::ColorFactor color_factor = units::colors::white_factor()) const final;
 
 		//! The number of times the animation has looped.
 		int loops() const { return _loops; }

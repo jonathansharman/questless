@@ -18,9 +18,9 @@ namespace questless
 	public:
 		virtual ~ParticleAnimation() = default;
 
-		void draw(units::ScreenPoint position) const final;
+		void draw(units::ScreenSpace::Point position) const final;
 
-		void draw(units::GamePoint position, Camera const& camera, sdl::Color color = sdl::Color::white()) const final;
+		void draw(units::GameSpace::Point position, Camera const& camera, units::colors::ColorFactor color_factor = units::colors::white_factor()) const final;
 	protected:
 		//! Adds @p particle to the front of the list of particles.
 		void push_front(uptr<Particle> particle)

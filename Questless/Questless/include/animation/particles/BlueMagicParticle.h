@@ -14,8 +14,8 @@ namespace questless
 	{
 	public:
 		BlueMagicParticle() : Particle
-			{ units::GameVector{0.0, 0.0}
-			, units::GameVector{units::GameRadians::circle() / 6.0 * uniform(0, 6), 45.0} / 1.0s
+			{ units::GameSpace::Vector{0.0, 0.0}
+			, units::GameSpace::Vector{units::GameSpace::Radians::circle() / 6.0 * uniform(0, 6), 45.0} / 1.0s
 			, units::GameAcceleration::zero()
 			, random_angle()
 			, uniform(-1.0, 1.0) * _dtheta_max / 1.0s
@@ -25,7 +25,7 @@ namespace questless
 			}
 		{}
 	private:
-		static constexpr units::GameRadians _dtheta_max = 2.0 * units::GameRadians::circle();
+		static constexpr units::GameSpace::Radians _dtheta_max = 2.0 * units::GameSpace::Radians::circle();
 
 		void particle_subupdate() final {}
 

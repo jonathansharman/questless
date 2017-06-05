@@ -20,33 +20,35 @@ namespace questless
 		, _loops{0}
 	{}
 
-	void SpriteAnimation::draw(units::ScreenPoint position) const
+	void SpriteAnimation::draw(units::ScreenSpace::Point position) const
 	{
 		SpriteAnimation::Frame const& frame = _frames[_frame_index];
-		ScreenRect dst_rect{position.x - frame.origin.x, position.y - frame.origin.y, _sprite_sheet->cel_width(), _sprite_sheet->cel_height()};
-		TextureRect src_rect
-			{ _sprite_sheet->cel_width() * frame.coords.x
-			, _sprite_sheet->cel_height() * frame.coords.y
-			, _sprite_sheet->cel_width()
-			, _sprite_sheet->cel_height()
+		ScreenSpace::Box dst_rect
+			{ ScreenSpace::Point{position.x() - frame.origin.x(), position.y() - frame.origin.y()}
+			, ScreenSpace::Vector{_sprite_sheet->cel_width(), _sprite_sheet->cel_height()}
 			};
-		texture_manager()[_sprite_sheet->texture_handle].draw(dst_rect, src_rect);
+		TextureSpace::Box src_rect
+			{ TextureSpace::Point{_sprite_sheet->cel_width() * frame.coords.x(), _sprite_sheet->cel_height() * frame.coords.y()}
+			, TextureSpace::Vector{_sprite_sheet->cel_width(), _sprite_sheet->cel_height()}
+			};
+		texture_manager()[_sprite_sheet->texture_handle].draw(dst_rect, colors::white_factor(), src_rect);
 	}
 
-	void SpriteAnimation::draw(units::GamePoint position, Camera const& camera, sdl::Color color) const
+	void SpriteAnimation::draw(units::GameSpace::Point position, Camera const& camera, colors::ColorFactor color_factor) const
 	{
 		SpriteAnimation::Frame const& frame = _frames[_frame_index];
 		camera.draw
 			( texture_manager()[_sprite_sheet->texture_handle]
-			, GamePoint{position - GameVector{static_cast<double>(frame.origin.x), static_cast<double>(-frame.origin.y)}} //! @todo Uncouth point casting here.
+			, GameSpace::Point{position - GameSpace::Vector{static_cast<double>(frame.origin.x()), static_cast<double>(-frame.origin.y())}} //! @todo Uncouth point casting here.
 			, Origin{std::nullopt}
-			, color
+			, color_factor
 			, HScale{1.0}
 			, VScale{1.0}
-			, GameRadians{0.0}
-			, HFlip{false}
-			, VFlip{false}
-			, SrcRect{TextureRect{_sprite_sheet->cel_width() * frame.coords.x, _sprite_sheet->cel_height() * frame.coords.y, _sprite_sheet->cel_width(), _sprite_sheet->cel_height()}}
+			, GameSpace::Radians{0.0}
+			, SrcRect{TextureSpace::Box
+				{ TextureSpace::Point{_sprite_sheet->cel_width() * frame.coords.x(), _sprite_sheet->cel_height() * frame.coords.y()}
+				, TextureSpace::Vector{_sprite_sheet->cel_width(), _sprite_sheet->cel_height()}
+				}}
 			);
 	}
 

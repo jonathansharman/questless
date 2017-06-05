@@ -7,6 +7,9 @@
 #include <sstream>
 #include <thread>
 
+#include <glew.h>
+#include <gl/GL.h>
+#include <gl/GLU.h>
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
@@ -56,20 +59,133 @@ namespace questless
 		, _state{State::splash}
 		, _main_menu{480, 640}
 	{
-		// Initialize video.
+		// Set OpenGL version.
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
+		// Initialize SDL.
 		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
 			throw std::runtime_error("Failed to initialize SDL. SDL Error: " + string{SDL_GetError()});
 		}
+
+		// Initialize window.
 		if (fullscreen) {
 			window(make_unique<Window>("Questless", "resources/textures/icon.png", true));
 		} else {
 			window(make_unique<Window>("Questless", "resources/textures/icon.png", false, _dflt_window_width, _dflt_window_height, true, true, true, false));
 		}
 
+		{ // Initialize OpenGL.
+			// Create OpenGL context.
+			SDL_GLContext gl_context = SDL_GL_CreateContext(window().sdl_ptr()); //! @todo Destroy context.
+			if (!gl_context) {
+				throw std::runtime_error("Failed to create OpenGL context. SDL Error: " + string{SDL_GetError()});
+			}
+
+			// Initialize GLEW.
+			glewExperimental = GL_TRUE;
+			if (glewInit() != GLEW_OK) {
+				throw std::runtime_error("Failed to initialize GLEW.");
+			}
+
+			// Use late swap tearing.
+			if (SDL_GL_SetSwapInterval(-1)) {
+				// Fall back to VSync.
+				if (SDL_GL_SetSwapInterval(1)) {
+					throw std::runtime_error("Failed to set swap interval. SDL Error: " + string{SDL_GetError()});
+				}
+			}
+
+			// Generate default OpenGL program.
+			dflt_program() = glCreateProgram();
+
+			// Create vertex shader
+			GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+
+			{ // Define vertex shader.
+				auto source = contents_of_file("resources/shaders/dflt.vert");
+				auto source_c_str = source.c_str();
+				glShaderSource(vertex_shader, 1, &source_c_str, nullptr);
+			}
+
+			// Compile vertex shader source.
+			glCompileShader(vertex_shader);
+			{ // Check vertex shader for errors.
+				GLint success = GL_FALSE;
+				glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
+				if (success != GL_TRUE) {
+					throw std::runtime_error{"Unable to compile vertex shader."};
+				}
+			}
+
+			// Attach vertex shader to program.
+			glAttachShader(dflt_program(), vertex_shader);
+
+			// Create fragment shader.
+			GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+			{ // Define fragment shader.
+				auto source = contents_of_file("resources/shaders/dflt.frag");
+				auto source_c_str = source.c_str();
+				glShaderSource(fragment_shader, 1, &source_c_str, nullptr);
+			}
+
+			// Compile fragment shader source.
+			glCompileShader(fragment_shader);
+			{ // Check fragment shader for errors.
+				GLint success = GL_FALSE;
+				glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
+				if (success != GL_TRUE) {
+					throw std::runtime_error{"Unable to compile fragment shader."};
+				}
+			}
+
+			// Attach fragment shader to program.
+			glAttachShader(dflt_program(), fragment_shader);
+
+			// Link program.
+			glLinkProgram(dflt_program());
+			{ // Check for link errors.
+				GLint success = GL_TRUE;
+				glGetProgramiv(dflt_program(), GL_LINK_STATUS, &success);
+				if (success != GL_TRUE) {
+					throw std::runtime_error{"Error linking OpenGL program."};
+				}
+			}
+
+			// Set clear color.
+			glClearColor(0.0, 0.0, 0.0, 1.0);
+
+			{ // Set uniforms.
+				glUseProgram(dflt_program());
+				GLint window_size_uniform = glGetUniformLocation(dflt_program(), "window_size");
+				int window_width = window().width();
+				int window_height = window().height();
+				glUniform2f(window_size_uniform, static_cast<float>(window_width), static_cast<float>(window_height));
+				glUseProgram(NULL);
+			}
+
+			//! @todo Are the following necessary when using shaders?
+
+			// Set projection matrix.
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			gluOrtho2D(0.0, window().width(), window().height(), 0.0);
+
+			// Set model view matrix.
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+
+			// Set blend function.
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		}
+
+		// Initialize renderer.
 		renderer(make_unique<Renderer>(window(), window().width(), window().height()));
 
-		_camera = make_unique<Camera>(GamePoint{0, 0});
+		_camera = make_unique<Camera>(GameSpace::Point{0.0, 0.0});
 
 		//! @todo Make render quality a game setting.
 		//SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
@@ -271,15 +387,15 @@ namespace questless
 
 			switch (_state) {
 				case State::splash:
-					renderer().clear(_splash_clear_color);
+					glClear(GL_COLOR_BUFFER_BIT);
 					render_splash();
 					break;
 				case State::menu:
-					renderer().clear(_menu_clear_color);
+					glClear(GL_COLOR_BUFFER_BIT);
 					render_menu();
 					break;
 				case State::playing:
-					renderer().clear(_playing_clear_color);
+					glClear(GL_COLOR_BUFFER_BIT);
 					render_playing();
 					break;
 			}
@@ -294,12 +410,11 @@ namespace questless
 			oss_fps.setf(std::ios::fixed);
 			oss_fps.precision(2);
 			oss_fps << fps_buffer_sum / _fps_buffer.size();
-			Texture txt_fps = _fnt_20pt->render(oss_fps.str().c_str(), Color::white());
-			txt_fps.draw(ScreenPoint(window().width() - 1, window().height() - 1), HAlign::right, VAlign::bottom);
+			Texture txt_fps = _fnt_20pt->render(oss_fps.str().c_str(), colors::white());
+			txt_fps.draw(ScreenSpace::Point(window().width() - 1, window().height() - 1), HAlign::right, VAlign::bottom);
 
-			// Present rendering.
-
-			renderer().present();
+			// Swap buffers to update the screen.
+			SDL_GL_SwapWindow(window().sdl_ptr());
 		}
 	}
 
@@ -310,11 +425,11 @@ namespace questless
 			_sfx_splash->play();
 		}
 
-		for (ScreenPoint& position : _splash_flame_positions) {
-			position.y += lround(_splash_flames_vy * frame_duration);
-			if (position.y < 0) {
-				position.y += window().height() + _txt_splash_flame->height();
-				position.x = uniform(0, window().width() - 1);
+		for (ScreenSpace::Point& position : _splash_flame_positions) {
+			position.y() += lround(_splash_flames_vy * frame_duration);
+			if (position.y() < 0) {
+				position.y() += window().height() + _txt_splash_flame->height();
+				position.x() = uniform(0, window().width() - 1);
 			}
 		}
 
@@ -346,23 +461,20 @@ namespace questless
 	
 	void Game::render_splash()
 	{
+		float intensity;
 		if (clock::now() - _time_last_state_change < _splash_fade_in_duration) {
 			auto ms_fading_in = duration_cast<GameSeconds>(clock::now() - _time_last_state_change).count();
-			uint8_t intensity = percentage_to_byte(static_cast<double>(ms_fading_in / _splash_fade_in_duration.count()));
-			_txt_splash_logo->color(Color{intensity, intensity, intensity});
-			_txt_splash_flame->color(Color{intensity, intensity, intensity});
+			intensity = static_cast<float>(ms_fading_in / _splash_fade_in_duration.count());
 		} else {
 			auto ms_fading_out = duration_cast<GameSeconds>(clock::now() - _time_last_state_change - _splash_fade_in_duration).count();
-			uint8_t intensity = percentage_to_byte(1 - static_cast<double>(ms_fading_out / _splash_fade_out_duration.count()));
-			_txt_splash_logo->color(Color{intensity, intensity, intensity});
-			_txt_splash_flame->color(Color{intensity, intensity, intensity});
+			intensity = static_cast<float>(1.0 - ms_fading_out / _splash_fade_out_duration.count());
 		}
 
-		ScreenPoint logo_position = window().center() + ScreenVector{uniform(-_splash_logo_jiggle, _splash_logo_jiggle), uniform(-_splash_logo_jiggle, _splash_logo_jiggle)};
-		_txt_splash_logo->draw(logo_position, HAlign::center, VAlign::middle);
+		ScreenSpace::Point logo_position = window().center() + ScreenSpace::Vector{uniform(-_splash_logo_jiggle, _splash_logo_jiggle), uniform(-_splash_logo_jiggle, _splash_logo_jiggle)};
+		_txt_splash_logo->draw(logo_position, HAlign::center, VAlign::middle, colors::ColorFactor{intensity, intensity, intensity});
 
-		for (ScreenPoint position : _splash_flame_positions) {
-			_txt_splash_flame->draw(position, HAlign::center, VAlign::bottom);
+		for (ScreenSpace::Point position : _splash_flame_positions) {
+			_txt_splash_flame->draw(position, HAlign::center, VAlign::bottom, colors::ColorFactor{intensity, intensity, intensity});
 		}
 	}
 
@@ -402,7 +514,7 @@ namespace questless
 					// Initialize the world renderer.
 					_world_renderer = make_unique<WorldRenderer>(_player->world_view());
 					// Set the camera position relative to the player's being.
-					_camera->position(GamePoint{Layout::dflt().to_world(beings.cref(*_player_being_id).coords)});
+					_camera->position(GameSpace::Point{Layout::dflt().to_world(beings.cref(*_player_being_id).coords)});
 
 					_time_last_state_change = clock::now();
 					_state = State::playing;
@@ -426,7 +538,7 @@ namespace questless
 		if (input().pressed(MouseButton::right)) {
 			_point_clicked_rounded = Layout::dflt().to_world(_camera->tile_hovered());
 		}
-		_camera->draw(*_txt_hex_highlight, Layout::dflt().to_world(_camera->tile_hovered()), Origin{std::nullopt}, Color::white(128));
+		_camera->draw(*_txt_hex_highlight, Layout::dflt().to_world(_camera->tile_hovered()), Origin{std::nullopt}, colors::white_factor(0.5f));
 		_camera->draw(*_txt_hex_circle, _point_clicked_rounded);
 
 		_world_renderer->draw_entities();
@@ -444,17 +556,17 @@ namespace questless
 			std::ostringstream ss_cam_coords;
 			ss_cam_coords.setf(std::ios::fixed);
 			ss_cam_coords.precision(2);
-			ss_cam_coords << "Cam: ((" << _camera->position().x << ", " << _camera->position().y << "), ";
+			ss_cam_coords << "Cam: ((" << _camera->position().x() << ", " << _camera->position().y() << "), ";
 			ss_cam_coords << _camera->angle().count() << ", " << _camera->zoom() << ")";
-			Texture txt_cam_coords = _fnt_20pt->render(ss_cam_coords.str().c_str(), Color::white());
-			txt_cam_coords.draw(ScreenPoint{0, 0});
+			Texture txt_cam_coords = _fnt_20pt->render(ss_cam_coords.str().c_str(), colors::white());
+			txt_cam_coords.draw(ScreenSpace::Point{0, 0});
 		}
 		{
 			auto cam_hex_coords = Layout::dflt().to_hex_coords<RegionTile::Point>(_camera->position());
 			std::ostringstream ss_cam_hex_coords;
 			ss_cam_hex_coords << "Cam hex: (" << cam_hex_coords.q << ", " << cam_hex_coords.r << ")";
-			Texture txt_cam_hex_coords = _fnt_20pt->render(ss_cam_hex_coords.str().c_str(), Color::white());
-			txt_cam_hex_coords.draw(ScreenPoint{0, 25});
+			Texture txt_cam_hex_coords = _fnt_20pt->render(ss_cam_hex_coords.str().c_str(), colors::white());
+			txt_cam_hex_coords.draw(ScreenSpace::Point{0, 25});
 		}
 		{
 			std::ostringstream ss_time;
@@ -481,16 +593,16 @@ namespace questless
 					break;
 			}
 			ss_time << "Time: " << _region->time() << " (" << time_of_day << ", " << time_name << ')';
-			Texture txt_turn = _fnt_20pt->render(ss_time.str().c_str(), Color::white());
-			txt_turn.draw(ScreenPoint{0, 50});
+			Texture txt_turn = _fnt_20pt->render(ss_time.str().c_str(), colors::white());
+			txt_turn.draw(ScreenSpace::Point{0, 50});
 		}
 
 		// Draw q- and r-axes.
 		RegionTile::Point origin{0, 0};
 		RegionTile::Point q_axis{5, 0};
 		RegionTile::Point r_axis{0, 5};
-		camera().draw_lines({Layout::dflt().to_world(origin), Layout::dflt().to_world(q_axis)}, Color::green());
-		camera().draw_lines({Layout::dflt().to_world(origin), Layout::dflt().to_world(r_axis)}, Color::red());
+		camera().draw_lines({Layout::dflt().to_world(origin), Layout::dflt().to_world(q_axis)}, colors::green());
+		camera().draw_lines({Layout::dflt().to_world(origin), Layout::dflt().to_world(r_axis)}, colors::red());
 	}
 
 	void Game::update_playing()
@@ -549,34 +661,34 @@ namespace questless
 		if (_dialogs.empty()) {
 			// Pan camera.
 			if (input().down(MouseButton::middle)) {
-				ScreenVector mouse_shift = input().last_mouse_position() - input().mouse_position();
-				auto pan = GameVector{static_cast<double>(mouse_shift.x), static_cast<double>(-mouse_shift.y)} / _camera->zoom();
+				ScreenSpace::Vector mouse_shift = input().last_mouse_position() - input().mouse_position();
+				auto pan = GameSpace::Vector{static_cast<double>(mouse_shift.x()), static_cast<double>(-mouse_shift.y())} / _camera->zoom();
 				pan.rotate(_camera->angle());
 				_camera->pan(pan);
 			}
 			double const pan_amount = 10.0;
 			if (input().down(SDLK_KP_8)) {
-				_camera->pan(GameVector{0.0, pan_amount} / _camera->zoom());
+				_camera->pan(GameSpace::Vector{0.0, pan_amount} / _camera->zoom());
 			}
 			if (input().down(SDLK_KP_4)) {
-				_camera->pan(GameVector{-pan_amount, 0.0} / _camera->zoom());
+				_camera->pan(GameSpace::Vector{-pan_amount, 0.0} / _camera->zoom());
 			}
 			if (input().down(SDLK_KP_2)) {
-				_camera->pan(GameVector{0.0, -pan_amount} / _camera->zoom());
+				_camera->pan(GameSpace::Vector{0.0, -pan_amount} / _camera->zoom());
 			}
 			if (input().down(SDLK_KP_6)) {
-				_camera->pan(GameVector{pan_amount, 0.0} / _camera->zoom());
+				_camera->pan(GameSpace::Vector{pan_amount, 0.0} / _camera->zoom());
 			}
 
 			// Scale camera.
 			_camera->zoom_factor(1 + input().scroll() / 10.0f);
 
 			// Rotate camera.
-			GameRadians angle = _camera->angle();
+			GameSpace::Radians angle = _camera->angle();
 			if (input().down(SDLK_KP_9)) {
-				_camera->rotate((-GameRadians::circle() / 6.0 - angle) / 20.0);
+				_camera->rotate((-GameSpace::Radians::circle() / 6.0 - angle) / 20.0);
 			} else if (input().down(SDLK_KP_7)) {
-				_camera->rotate((GameRadians::circle() / 6.0 - angle) / 20.0);
+				_camera->rotate((GameSpace::Radians::circle() / 6.0 - angle) / 20.0);
 			}
 		}
 
@@ -589,7 +701,7 @@ namespace questless
 			if (Being* player = beings.ptr(*_player_being_id)) {
 				constexpr double recoil = 0.2;
 
-				GameVector to_player = Layout::dflt().to_world(player->coords) - _camera->position();
+				GameSpace::Vector to_player = Layout::dflt().to_world(player->coords) - _camera->position();
 				_camera->position(_camera->position() + recoil * to_player);
 
 				double to_zoom_1 = 1.0 - _camera->zoom();

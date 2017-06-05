@@ -14,8 +14,8 @@ namespace questless
 	{
 	public:
 		BlackMagicParticle() : Particle
-			{ units::GameVector{0.0, 0.0}
-			, units::GameVelocity{units::GameVector{random_angle(), uniform(5.0, 25.0)}}
+			{ units::GameSpace::Vector{0.0, 0.0}
+			, units::GameVelocity{units::GameSpace::Vector{random_angle(), uniform(5.0, 25.0)}}
 			, units::GameAcceleration::zero()
 			, random_angle()
 			, uniform(-1.0, 1.0) * _dtheta_max / 1.0s
@@ -25,8 +25,8 @@ namespace questless
 			}
 		{}
 	private:
-		static constexpr units::GameRadiansPerSec _turn_rate = units::GameRadians{4.0} / 1.0s;
-		static constexpr units::GameRadians _dtheta_max = 2.0 * units::GameRadians::circle();
+		static constexpr units::GameRadiansPerSec _turn_rate = units::GameSpace::Radians{4.0} / 1.0s;
+		static constexpr units::GameSpace::Radians _dtheta_max = 2.0 * units::GameSpace::Radians::circle();
 		static constexpr units::Hertz _acceleration_factor = 1.25_Hz;
 
 		void particle_subupdate() final;

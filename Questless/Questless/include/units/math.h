@@ -9,12 +9,13 @@ namespace units::math
 {
 	namespace detail
 	{
-		template <typename Floating, typename = std::enable_if_t<std::is_floating_point<Floating>::value>>
+		template <typename Floating>
 		constexpr Floating sqrt_iterative(Floating x, Floating current, Floating previous)
 		{
+			static_assert(std::is_floating_point_v<Floating>, "Requires a floating-point type.");
 			return current == previous
 				? current
-				: sqrt_iterative(x, 0.5 * (current + x / current), current);
+				: sqrt_iterative(x, static_cast<Floating>(0.5 * (current + x / current)), current);
 		}
 	}
 
@@ -24,7 +25,7 @@ namespace units::math
 	sqrt(Floating x)
 	{
 		//! @todo Replace sqrt_iterative with constexpr lambda when better supported.
-		return detail::sqrt_iterative(x, 0.5 * x, 0.0);
+		return detail::sqrt_iterative(x, static_cast<Floating>(0.5 * x), Floating(0.0));
 	}
 
 	//! The square root of the integral number @p x.

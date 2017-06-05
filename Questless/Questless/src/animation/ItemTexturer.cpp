@@ -77,8 +77,8 @@ namespace questless
 					Texture& scroll_texture = texture_manager()[scroll_handle];
 					auto texture = std::make_unique<Texture>(scroll_texture.width(), scroll_texture.height());
 					texture->as_target([&] {
-						scroll_texture.draw(ScreenPoint{0, 0});
-						texture_manager()[spell_handle].draw(ScreenPoint{0, 0});
+						scroll_texture.draw(ScreenSpace::Point{0, 0});
+						texture_manager()[spell_handle].draw(ScreenSpace::Point{0, 0});
 					});
 					return texture;
 				});

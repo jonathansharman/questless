@@ -10,9 +10,8 @@
 #include <SDL.h>
 
 #include "Window.h"
-#include "Color.h"
-#include "units/ScreenPoint.h"
-#include "units/ScreenRect.h"
+#include "units/colors.h"
+#include "units/ScreenSpace.h"
 
 namespace sdl
 {
@@ -57,24 +56,24 @@ namespace sdl
 		void present() { SDL_RenderPresent(_renderer); }
 
 		//! Clears the screen with the current drawing color.
-		void clear(Color color);
+		void clear(units::colors::Color color);
 
 		//! Draws lines connecting the series of points contained in the vector.
 		//! @param points A vector of screen points.
 		//! @param color The color of the lines.
-		void draw_lines(std::vector<units::ScreenPoint> points, Color color);
+		void draw_lines(std::vector<units::ScreenSpace::Point> points, units::colors::Color color);
 
-		//! Draws a rectangle. Can be filled or just an outline.
-		//! @param rect The rectangle to be drawn.
+		//! Draws a box. Can be filled or just outlined.
+		//! @param box The rectangle to be drawn.
 		//! @param color The color of the rectangle.
 		//! @param filled If true, a filled rectangle is drawn. Otherwise, only its outline is drawn.
-		void draw_rect(units::ScreenRect const& rect, Color color, bool filled);
+		void draw_box(units::ScreenSpace::Box const& box, units::colors::Color color, bool filled);
 
-		//! Draws a filled rectangle with a border.
-		//! @param rect The rectangle to be drawn.
+		//! Draws a filled box with a border.
+		//! @param box The rectangle to be drawn.
 		//! @param border_color The color of the rectangle's border.
 		//! @param fill_color The color of the rectangle's interior.
-		void draw_rect(units::ScreenRect const& rect, Color border_color, Color fill_color);
+		void draw_box(units::ScreenSpace::Box const& box, units::colors::Color border_color, units::colors::Color fill_color);
 	private:
 		SDL_Renderer* _renderer;
 		int _w;
@@ -82,6 +81,6 @@ namespace sdl
 		SDL_RendererInfo _info;
 		SDL_Texture* _target;
 
-		void set_draw_color(Color color);
+		void set_draw_color(units::colors::Color color);
 	};
 }

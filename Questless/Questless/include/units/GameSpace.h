@@ -4,11 +4,25 @@
 
 #pragma once
 
+#include "Space.h"
+
 namespace units
 {
-	struct GameSpace
+	namespace detail
 	{
-		static constexpr int dimensions = 2;
-		using scalar_t = double;
-	};
+		class GameSpaceBuffer : public BaseBuffer<double, 2>
+		{
+		public:
+			double& x() & { return _elements[0]; }
+			constexpr double const& x() const& { return _elements[0]; }
+
+			double& y() & { return _elements[1]; }
+			constexpr double const& y() const& { return _elements[1]; }
+		protected:
+			using BaseBuffer::BaseBuffer;
+			using BaseBuffer::operator =;
+		};
+	}
+
+	using GameSpace = Space<struct GameSpaceTag, double, 2, detail::GameSpaceBuffer>;
 }

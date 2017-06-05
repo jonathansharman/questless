@@ -14,9 +14,9 @@ namespace questless
 	{
 	public:
 		WhiteMagicParticle() : Particle
-			{ units::GameVector{0.0, 0.0}
+			{ units::GameSpace::Vector{0.0, 0.0}
 			, random_displacement(80.0) / 1.0s
-			, units::GameVector{0.0, 50.0} / 1.0s / 1.0s
+			, units::GameSpace::Vector{0.0, 50.0} / 1.0s / 1.0s
 			, random_angle()
 			, uniform(-1.0, 1.0) * _dtheta_max / 1.0s
 			, Scale{1.0}
@@ -26,7 +26,7 @@ namespace questless
 		{}
 	private:
 		static constexpr units::Hertz _vx_percent_drag_rate = 1.8_Hz;
-		static constexpr units::GameRadians _dtheta_max = 2.0 * units::GameRadians::circle();
+		static constexpr units::GameSpace::Radians _dtheta_max = 2.0 * units::GameSpace::Radians::circle();
 
 		void particle_subupdate() final;
 

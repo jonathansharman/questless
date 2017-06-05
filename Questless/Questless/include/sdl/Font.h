@@ -11,6 +11,7 @@
 #include <SDL_ttf.h>
 
 #include "Texture.h"
+#include "units/ColorSpace.h"
 
 namespace sdl
 {
@@ -43,19 +44,19 @@ namespace sdl
 		//! Renders the provided string of text as a texture with a transparent background.
 		//! @param text The text to be rendered. Must be at least one character in length.
 		//! @param text_color The text color.
-		Texture render(char const* text, Color text_color) const;
+		Texture render(char const* text, units::ColorSpace::Point text_color) const;
 	
 		//! Renders the provided string of text as a texture with a solid background.
 		//! @param text The text to be rendered. Must be at least one character in length.
 		//! @param text_color The text color.
 		//! @param background_color The background color.
-		Texture render(char const* text, Color text_color, Color background_color) const;
+		Texture render(char const* text, units::colors::Color text_color, units::colors::Color background_color) const;
 
 		//! Quickly renders the provided string of text as a texture with a transparent background.
 		//! @param text The text to be rendered. Must be at least one character in length.
 		//! @param text_color The text color.
 		//! @note Render quality is inferior to that produced by render, but the resulting texture is produced and drawn much faster.
-		Texture fast_render(char const* text, Color text_color) const;
+		Texture fast_render(char const* text, units::colors::Color text_color) const;
 	private:
 		TTF_Font* _font;
 		int _size;

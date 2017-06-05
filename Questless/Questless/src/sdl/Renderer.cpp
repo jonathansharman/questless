@@ -51,25 +51,25 @@ namespace sdl
 		}
 	}
 
-	void Renderer::clear(Color color)
+	void Renderer::clear(colors::Color color)
 	{
 		set_draw_color(color);
 		SDL_RenderClear(_renderer);
 	}
 
-	void Renderer::draw_lines(vector<ScreenPoint> points, Color color)
+	void Renderer::draw_lines(vector<ScreenSpace::Point> points, colors::Color color)
 	{
 		set_draw_color(color);
-		// This reinterpret_cast is safe because SDL_Point and ScreenPoint have the same data structure.
+		// This reinterpret_cast is safe because SDL_Point and ScreenSpace::Point have the same data structure.
 		SDL_RenderDrawLines(_renderer, reinterpret_cast<SDL_Point*>(&points[0]), points.size());
 	}
 
-	void Renderer::draw_rect(ScreenRect const& rect, Color color, bool filled)
+	void Renderer::draw_box(ScreenSpace::Box const& box, colors::Color color, bool filled)
 	{
 		set_draw_color(color);
 
-		// This reinterpret_cast is safe because SDL_Rect and ScreenRect have the same data structure.
-		SDL_Rect const* sdl_rect = reinterpret_cast<const SDL_Rect*>(&rect);
+		// This reinterpret_cast is safe because SDL_Rect and ScreenSpace::Box have the same data structure.
+		SDL_Rect const* sdl_rect = reinterpret_cast<const SDL_Rect*>(&box);
 
 		if (filled) {
 			SDL_RenderFillRect(_renderer, sdl_rect);
@@ -78,9 +78,9 @@ namespace sdl
 		}
 	}
 
-	void Renderer::draw_rect(ScreenRect const& rect, Color border_color, Color fill_color)
+	void Renderer::draw_box(ScreenSpace::Box const& box, colors::Color border_color, colors::Color fill_color)
 	{
-		SDL_Rect sdl_rect{rect.x, rect.y, rect.w, rect.h};
+		SDL_Rect sdl_rect{box.x(), box.y(), box.width(), box.height()};
 
 		set_draw_color(border_color);
 		SDL_RenderDrawRect(_renderer, &sdl_rect);
@@ -92,9 +92,16 @@ namespace sdl
 		SDL_RenderFillRect(_renderer, &sdl_rect);
 	}
 
-	void Renderer::set_draw_color(Color color)
+	void Renderer::set_draw_color(colors::Color color)
 	{
-		if (SDL_SetRenderDrawColor(_renderer, color.r, color.g, color.b, color.a)) {
+		auto error = SDL_SetRenderDrawColor
+			( _renderer
+			, static_cast<uint8_t>(255 * color.red())
+			, static_cast<uint8_t>(255 * color.green())
+			, static_cast<uint8_t>(255 * color.blue())
+			, static_cast<uint8_t>(255 * color.alpha())
+			);
+		if (error) {
 			std::string message = "Failed to set renderer draw color. SDL error: "s + SDL_GetError();
 			throw runtime_error{message};
 		}

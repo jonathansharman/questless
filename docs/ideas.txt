@@ -1,22 +1,30 @@
 ================================================================================
 Realms
 ================================================================================
-Earth
-	The abode of mortals
 Heaven
 	The abode of hosts
 Hell
 	The abode of fiends, including the undead, demons, and devils
-The Chaos
+Chaos
 	All of space exists at a single point
+		I.e., distance loses meaning
 	Contains infinite energy
 	Perpetually changing
-	Inhospitable to life, with the exception of the transformers
-The Stasis
+	Inhospitable, except for the shifters
+Stasis
 	All of time exists at a single point
+		I.e., duration loses meaning
 	Contains no energy
 	Everything within it is eternal, unchanging
-	Inhospitable to life, with the exception of the preservers
+	Inhospitable, except for the preservers
+Physis
+	The realm of untamed and unadulterated nature
+	Home to the elementals
+Techne
+	The realm of art, reason, and technology
+	Home to the crafters and constructs
+The World
+	The intersection of the six other realms, where good meets evil, light meets shadow, chaos meets order, space meets time, and nature meets technology
 
 ================================================================================
 Potion brewing
@@ -261,10 +269,16 @@ Utility
 		A simple pack for storing some volume of items
 		Starting item
 	Chaos satchel
-		Stores some volume of items in the Chaos
-		Has a fixed (small) earth mass and volume, regardless of its contents
-		Every time a chaos satchel is opened, there's a chance a chaos radical will escape into the current realm
-			The presence of food in the chaos satchel increases this chance
+		Stores some volume of items in Chaos
+		Has a fixed (small) mass and volume, regardless of its contents
+		There's a small chance item placed in the satchel will change into random new items, thanks to the mutators
+			The chance of mutation for each item is based on the amount of time it has spent in the satchel
+				This makes chaos satchels a great place to store junk and a bad place to store valuables
+	Stasis chest
+		Stores some volume of items in Stasis
+		Has a fixed (small) mass and volume, regardless of its contents
+		Items in the chest do not experience the passage of time
+			This makes stasis chests ideal for food storage
 Weapons
 	Melee
 		Blades
@@ -497,7 +511,7 @@ Yellow - chaos - energy
 		Teleport - Teleport within a certain distance.
 		Banish - Banish target being to the chaos for a certain duration. While banished, an impassable and indestructible chaos portal appears in its place. During banishment, the being cannot be interacted with and does not update its state.
 		Open portal - ???
-		Summon transformers from the chaos
+		Summon shifters from the chaos
 
 ================================================================================
 Real-time Events for Spells

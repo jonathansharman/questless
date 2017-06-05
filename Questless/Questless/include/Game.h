@@ -112,9 +112,9 @@ namespace questless
 		static constexpr int _dflt_window_width = 1920;
 		static constexpr int _dflt_window_height = 1080;
 #endif
-		static constexpr sdl::Color _splash_clear_color = sdl::Color::black();
-		static constexpr sdl::Color _menu_clear_color = sdl::Color::black();
-		static constexpr sdl::Color _playing_clear_color = sdl::Color::black();
+		static constexpr units::colors::Color _splash_clear_color = units::colors::black();
+		static constexpr units::colors::Color _menu_clear_color = units::colors::black();
+		static constexpr units::colors::Color _playing_clear_color = units::colors::black();
 
 		// Splash screen
 
@@ -167,7 +167,7 @@ namespace questless
 		bool _game_over;
 
 		bool _splash_sound_played;
-		std::vector<units::ScreenPoint> _splash_flame_positions;
+		std::vector<units::ScreenSpace::Point> _splash_flame_positions;
 
 		uptr<Region> _region;
 
@@ -182,7 +182,7 @@ namespace questless
 
 		uptr<HUD> _hud;
 
-		units::GamePoint _point_clicked_rounded{0.0, 0.0};
+		units::GameSpace::Point _point_clicked_rounded{0.0, 0.0};
 
 		/////////////
 		// Methods //

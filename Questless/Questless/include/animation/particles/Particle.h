@@ -34,10 +34,10 @@ namespace questless
 		//! @param lifetime The duration of the particle's life, after which it is considered expired and should be removed.
 		//! @param max_displacement Maximum random displacement from the given position.
 		Particle
-			( units::GameVector displacement
+			( units::GameSpace::Vector displacement
 			, units::GameVelocity velocity
 			, units::GameAcceleration acceleration
-			, units::GameRadians angle
+			, units::GameSpace::Radians angle
 			, units::GameRadiansPerSec angular_velocity
 			, Scale scale
 			, units::GameScaleVelocity scale_velocity
@@ -53,27 +53,27 @@ namespace questless
 			, _scale_velocity{scale_velocity}
 			, _lifetime{lifetime}
 			, _time_left{lifetime}
-			, _color{sdl::Color::white()}
+			, _color_factor{units::colors::white_factor()}
 		{}
 
 		virtual ~Particle() = default;
 
-		void draw(units::ScreenPoint position) const final;
+		void draw(units::ScreenSpace::Point position) const final;
 
-		void draw(units::GamePoint position, Camera const& camera, sdl::Color color = sdl::Color::white()) const final;
+		void draw(units::GameSpace::Point position, Camera const& camera, units::colors::ColorFactor color_factor = units::colors::white_factor()) const final;
 	protected:
 		//! @todo Are these protected variables the right way to do this?
 
-		units::GameVector _displacement;
+		units::GameSpace::Vector _displacement;
 		units::GameVelocity _velocity;
 		units::GameAcceleration _acceleration;
-		units::GameRadians _angle;
+		units::GameSpace::Radians _angle;
 		units::GameRadiansPerSec _angular_velocity;
 		double _scale;
 		units::GameScaleVelocity _scale_velocity;
 		units::GameSeconds _lifetime;
 		units::GameSeconds _time_left;
-		sdl::Color _color;
+		units::colors::ColorFactor _color_factor;
 
 		//! The texture to be used when drawing a particle.
 		virtual sdl::Texture const& texture() const = 0;

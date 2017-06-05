@@ -30,28 +30,28 @@ namespace questless::qte
 		// Acclerate only when the mouse moves to the next quadrant over.
 		bool accelerate = false;
 		{
-			GameVector v = game().camera().point_hovered() - _target_point;
+			GameSpace::Vector v = game().camera().point_hovered() - _target_point;
 			switch (_quadrant) {
 				case 0:
-					if (v.x > 0.0 && v.y > 0.0) {
+					if (v.x() > 0.0 && v.y() > 0.0) {
 						_quadrant = 1;
 						accelerate = true;
 					}
 					break;
 				case 1:
-					if (v.x < 0.0 && v.y > 0.0) {
+					if (v.x() < 0.0 && v.y() > 0.0) {
 						_quadrant = 2;
 						accelerate = true;
 					}
 					break;
 				case 2:
-					if (v.x < 0.0 && v.y < 0.0) {
+					if (v.x() < 0.0 && v.y() < 0.0) {
 						_quadrant = 3;
 						accelerate = true;
 					}
 					break;
 				case 3:
-					if (v.x > 0.0 && v.y < 0.0) {
+					if (v.x() > 0.0 && v.y() < 0.0) {
 						_quadrant = 0;
 						accelerate = true;
 					}
@@ -62,18 +62,18 @@ namespace questless::qte
 			for (int i = 0; i < _charges_per_quadrant; ++i) {
 				_charges.push_back(Charge
 					{ _target_point + random_displacement(100.0)
-					, GameVelocity{GameVector{random_angle(), 100.0}}
+					, GameVelocity{GameSpace::Vector{random_angle(), 100.0}}
 					});
 			}
 		}
 
 		for (auto& point_charge : _charges) {
-			GameVector r = _target_point - point_charge.position; // displacement to target
+			GameSpace::Vector r = _target_point - point_charge.position; // displacement to target
 			double d = r.length(); // distance to target
 
 			if (accelerate) {
 				// Accelerate counter-clockwise from the target.
-				point_charge.velocity.step() += 7'000.0 * GameVector{-r.y, r.x} / square(d);
+				point_charge.velocity.step() += 7'000.0 * GameSpace::Vector{-r.y(), r.x()} / square(d);
 			}
 
 			// Apply drag.
@@ -98,15 +98,15 @@ namespace questless::qte
 
 		// Draw point charges.
 		for (auto const& point_charge : _charges) {
-			double intensity = uniform(0.0, 1.0);
+			float intensity = uniform(0.0f, 1.0f);
 			game().camera().draw
 				( texture_manager()[point_charge_texture_handle]
 				, point_charge.position
 				, Origin{std::nullopt}
-				, Color{255, 255, percentage_to_byte(intensity)}
+				, colors::ColorFactor{1.0f, 1.0f, intensity}
 				, HScale{(1.0 + intensity) / 2.0}
 				, VScale{(1.0 + intensity) / 2.0}
-				, GameRadians{0.0}
+				, GameSpace::Radians{0.0}
 				);
 		}
 

@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "Dialog.h"
-#include "units/ScreenRect.h"
+#include "units/ScreenSpace.h"
 #include "sdl/resources.h"
 
 namespace questless
@@ -18,12 +18,12 @@ namespace questless
 	{
 	public:
 		ListDialog
-			( units::ScreenPoint origin
+			( units::ScreenSpace::Point origin
 			, std::string title
 			, std::vector<std::string> options
 			, std::function<void(std::optional<int>)> cont
 			)
-			: _bounds{origin.x, origin.y, 0, 0}
+			: _bounds{origin, units::ScreenSpace::Vector::zero()}
 			, _title{std::move(title)}
 			, _options{std::move(options)}
 			, _cont{std::move(cont)}
@@ -70,18 +70,25 @@ namespace questless
 		void draw() const final
 		{
 			// Draw background.
-			sdl::renderer().draw_rect(_bounds, sdl::Color::black(), sdl::Color{255, 200, 150});
+			sdl::renderer().draw_box(_bounds, units::colors::black(), units::colors::Color{1.0f, 0.75f, 0.6f});
 
-			// Draw highlight.
-			sdl::renderer().draw_rect(units::ScreenRect{_bounds.x + _x_padding, _bounds.y + _y_padding + _title_height + _selection * _option_height, _bounds.w - 2 * _x_padding, _option_height}, sdl::Color::white(), true);
+			{ // Draw highlight.
+				units::ScreenSpace::Box bounds
+					{ units::ScreenSpace::Point{_bounds.x() + _x_padding, _bounds.y() + _y_padding + _title_height + _selection * _option_height}
+					, units::ScreenSpace::Vector{_bounds.width() - 2 * _x_padding, _option_height}
+					};
+				sdl::renderer().draw_box(bounds, units::colors::white(), true);
+			}
 
 			// Draw title.
-			_txt_title->draw(units::ScreenPoint{_bounds.x + _x_padding, _bounds.y + _y_padding});
+			_txt_title->draw(units::ScreenSpace::Point{_bounds.x() + _x_padding, _bounds.y() + _y_padding});
 
 			// Draw options.
 			for (size_t i = 0; i < _options.size(); ++i) {
-				int y = _bounds.y + _y_padding + _title_height + static_cast<int>(i) * _option_height;
-				_txt_options[i].draw(units::ScreenPoint{_bounds.x + _x_padding, y});
+				_txt_options[i].draw(units::ScreenSpace::Point
+					{ _bounds.x() + _x_padding
+					, _bounds.y() + _y_padding + _title_height + static_cast<int>(i) * _option_height
+					});
 			}
 		}
 	private:
@@ -90,7 +97,7 @@ namespace questless
 		static constexpr int _x_padding = 10;
 		static constexpr int _y_padding = 10;
 
-		units::ScreenRect _bounds;
+		units::ScreenSpace::Box _bounds;
 		std::string _title;
 		std::vector<std::string> _options;
 		Continuation<std::optional<int>> _cont;
@@ -106,22 +113,22 @@ namespace questless
 		{
 			static auto list_option_font_handle = sdl::font_manager().add("resources/fonts/dumbledor1.ttf", 20);
 
-			_txt_title = make_title(_title.c_str(), sdl::Color::black());
-			_bounds.w = _txt_title->width();
+			_txt_title = make_title(_title.c_str(), units::colors::black());
+			_bounds.width() = _txt_title->width();
 			_txt_options.clear();
 			for (auto const& option : _options) {
-				_txt_options.push_back(sdl::font_manager()[list_option_font_handle].render(option.c_str(), sdl::Color::black()));
-				_bounds.w = std::max(_bounds.w, _txt_options.back().width());
+				_txt_options.push_back(sdl::font_manager()[list_option_font_handle].render(option.c_str(), units::colors::black()));
+				_bounds.width() = std::max(_bounds.width(), _txt_options.back().width());
 			}
-			_bounds.w += 2 * _x_padding;
-			_bounds.h = _title_height + static_cast<int>(_options.size() * _option_height) + 2 * _y_padding;
+			_bounds.width() += 2 * _x_padding;
+			_bounds.height() = _title_height + static_cast<int>(_options.size() * _option_height) + 2 * _y_padding;
 
 			// Confine bounds to window.
-			if (_bounds.x + _bounds.w > sdl::window().width()) {
-				_bounds.x -= _bounds.w;
+			if (_bounds.x() + _bounds.width() > sdl::window().width()) {
+				_bounds.x() -= _bounds.width();
 			}
-			if (_bounds.y + _bounds.h > sdl::window().height()) {
-				_bounds.y -= _bounds.h;
+			if (_bounds.y() + _bounds.height() > sdl::window().height()) {
+				_bounds.y() -= _bounds.height();
 			}
 		}
 	};

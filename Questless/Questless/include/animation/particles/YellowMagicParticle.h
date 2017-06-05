@@ -15,11 +15,11 @@ namespace questless
 	{
 	public:
 		YellowMagicParticle() : Particle
-			{ units::GameVector{0.0, 0.0}
-			, units::GameVector{random_angle(), 100.0} / 1.0s
+			{ units::GameSpace::Vector{0.0, 0.0}
+			, units::GameSpace::Vector{random_angle(), 100.0} / 1.0s
 			, units::GameAcceleration::zero()
 			, random_angle()
-			, units::GameRadians{0.0} / 1.0s
+			, units::GameSpace::Radians{0.0} / 1.0s
 			, Scale{1.0}
 			, units::GameScaleVelocity::zero()
 			, Lifetime{units::GameSeconds{uniform(0.8, 1.2)}}
@@ -27,7 +27,7 @@ namespace questless
 			}
 		{}
 	private:
-		static constexpr units::GameRadians _max_turn_rate = units::GameRadians::circle() / 6.0;
+		static constexpr units::GameSpace::Radians _max_turn_rate = units::GameSpace::Radians::circle() / 6.0;
 
 		void particle_subupdate() final;
 

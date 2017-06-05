@@ -28,7 +28,7 @@ namespace sdl
 			, h_centered ? SDL_WINDOWPOS_CENTERED : SDL_WINDOWPOS_UNDEFINED
 			, v_centered ? SDL_WINDOWPOS_CENTERED : SDL_WINDOWPOS_UNDEFINED
 			, width, height
-			, (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | (resizable ? SDL_WINDOW_RESIZABLE : 0) | (grab_input ? SDL_WINDOW_INPUT_GRABBED : 0)
+			, SDL_WINDOW_OPENGL | (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | (resizable ? SDL_WINDOW_RESIZABLE : 0) | (grab_input ? SDL_WINDOW_INPUT_GRABBED : 0)
 			);
 		if (_sdl_window == nullptr) {
 			throw std::runtime_error{"Failed to create window."};
@@ -102,10 +102,10 @@ namespace sdl
 		return (flags() & SDL_WINDOW_RESIZABLE) != 0;
 	}
 
-	ScreenPoint Window::position() const
+	ScreenSpace::Point Window::position() const
 	{
-		ScreenPoint p;
-		SDL_GetWindowPosition(_sdl_window, &p.x, &p.y);
+		ScreenSpace::Point p;
+		SDL_GetWindowPosition(_sdl_window, &p.x(), &p.y());
 		return p;
 	}
 	int Window::x() const
@@ -121,9 +121,9 @@ namespace sdl
 		return y;
 	}
 
-	ScreenVector Window::resolution() const
+	ScreenSpace::Vector Window::resolution() const
 	{
-		return ScreenVector{width(), height()};
+		return ScreenSpace::Vector{width(), height()};
 	}
 	int Window::width() const
 	{
@@ -147,8 +147,8 @@ namespace sdl
 			return height;
 		}
 	}
-	ScreenPoint Window::center() const
+	ScreenSpace::Point Window::center() const
 	{
-		return ScreenPoint{width() / 2, height() / 2};
+		return ScreenSpace::Point{width() / 2, height() / 2};
 	}
 }

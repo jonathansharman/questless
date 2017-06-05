@@ -8,6 +8,7 @@
     <SDL_TTF_PATH>D:\vc-libs\SDL2_ttf-2.0.14\</SDL_TTF_PATH>
     <BOOST_PATH>D:\vc-libs\boost_1_64_0\</BOOST_PATH>
     <DOCTEST_PATH>D:\vc-libs\doctest\</DOCTEST_PATH>
+    <GLEW_PATH>D:\vc-libs\glew-2.0.0\</GLEW_PATH>
   </PropertyGroup>
   <PropertyGroup />
   <ItemDefinitionGroup />
@@ -34,6 +35,10 @@
     </BuildMacro>
     <BuildMacro Include="DOCTEST_PATH">
       <Value>$(DOCTEST_PATH)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="GLEW_PATH">
+      <Value>$(GLEW_PATH)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
   </ItemGroup>

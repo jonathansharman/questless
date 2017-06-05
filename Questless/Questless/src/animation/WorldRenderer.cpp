@@ -27,7 +27,7 @@ namespace questless
 	void WorldRenderer::initialize()
 	{
 		auto unknown_entity_animation_ss = texture_manager().add("resources/textures/entities/unknown.png");
-		_unknown_entity_animation = Still{unknown_entity_animation_ss, TexturePoint{0, 0}};
+		_unknown_entity_animation = Still{unknown_entity_animation_ss, TextureSpace::Point{0, 0}};
 	}
 
 	auto WorldRenderer::get_entity_id_var(entity_cref_var_t entity) -> entity_id_var_t
@@ -99,7 +99,7 @@ namespace questless
 			_terrain_render_is_current = true;
 		}
 		if (_terrain_texture) {
-			game().camera().draw(*_terrain_texture, GamePoint{_terrain_bounds.position()}, Origin{GamePoint{0, 0}});
+			game().camera().draw(*_terrain_texture, GameSpace::Point{_terrain_bounds.position}, Origin{GameSpace::Point{0.0, 0.0}});
 		}
 	}
 
@@ -112,16 +112,16 @@ namespace questless
 
 				auto& entity_animation = get_animation(entity_view.id);
 
-				uint8_t intensity = percentage_to_byte((entity_view.perception.level - Perception::minimum_level) / (Perception::maximum_level - Perception::minimum_level));
+				float intensity = static_cast<float>((entity_view.perception.level - Perception::minimum_level) / (Perception::maximum_level - Perception::minimum_level));
 				switch (entity_view.perception.category()) {
 					case Perception::Category::none:
 						break;
 					case Perception::Category::low:
 						_unknown_entity_animation->draw
-						(Layout::dflt().to_world(entity->coords)
+							( Layout::dflt().to_world(entity->coords)
 							, game().camera()
-							, Color{intensity, intensity, intensity}
-						);
+							, colors::ColorFactor{intensity, intensity, intensity}
+							);
 						break;
 					case Perception::Category::medium:
 					case Perception::Category::high:
@@ -132,9 +132,9 @@ namespace questless
 						{
 							void operator ()(Being const& being)
 							{
-								GamePoint start = Layout::dflt().to_world(being.coords);
-								GamePoint end = Layout::dflt().to_world(being.coords.neighbor(being.direction));
-								game().camera().draw_lines({start, end}, Color::magenta());
+								GameSpace::Point start = Layout::dflt().to_world(being.coords);
+								GameSpace::Point end = Layout::dflt().to_world(being.coords.neighbor(being.direction));
+								game().camera().draw_lines({start, end}, colors::magenta());
 							}
 							void operator ()(Object const&) {}
 						};
@@ -145,8 +145,8 @@ namespace questless
 						//	( overload
 						//		( [](Being const& being)
 						//			{
-						//				GamePoint start = Layout::dflt().to_world(being.coords);
-						//				GamePoint end = Layout::dflt().to_world(being.coords.neighbor(being.direction));
+						//				GameSpace::Point start = Layout::dflt().to_world(being.coords);
+						//				GameSpace::Point end = Layout::dflt().to_world(being.coords.neighbor(being.direction));
 						//				game().camera().draw_lines({start, end}, Color::magenta());
 						//			}
 						//		, [](Object const&) {}
@@ -155,10 +155,10 @@ namespace questless
 						//	);
 
 						entity_animation.draw
-						(Layout::dflt().to_world(entity->coords)
+							( Layout::dflt().to_world(entity->coords)
 							, game().camera()
-							, Color{intensity, intensity, intensity}
-						);
+							, colors::ColorFactor{intensity, intensity, intensity}
+							);
 						break;
 					}
 					default:
@@ -226,16 +226,16 @@ namespace questless
 
 	void WorldRenderer::render_terrain()
 	{
-		std::optional<GameRect> opt_bounds = _world_view->bounds();
+		std::optional<GameSpace::Box> opt_bounds = _world_view->bounds();
 		if (!opt_bounds) {
 			_terrain_texture = nullptr;
 			return;
 		}
 		_terrain_bounds = *opt_bounds;
 		
-		_terrain_texture = make_unique<Texture>(lround(_terrain_bounds.w), lround(_terrain_bounds.h));
+		_terrain_texture = make_unique<Texture>(lround(_terrain_bounds.width()), lround(_terrain_bounds.height()));
 		_terrain_texture->as_target([&] {
-			renderer().clear(Color::clear());
+			renderer().clear(colors::clear());
 			for (auto const& section_view : _world_view->section_views()) {
 				auto opt_section = _world_view->region().section(section_view.coords);
 				if (opt_section) {
@@ -246,11 +246,11 @@ namespace questless
 							Perception tile_perception = section_view.tile_perceptions[section_tile_coords.q][section_tile_coords.r];
 							if (tile_perception.category() != Perception::Category::none) {
 								RegionTile::Point const region_tile_coords = section.region_tile_coords(section_tile_coords);
-								GamePoint const tile_game_point = Layout::dflt().to_world(region_tile_coords);
-								GamePoint const terrain_game_point = _terrain_bounds.position();
-								ScreenPoint const tile_screen_point
-									{ lround(tile_game_point.x - terrain_game_point.x)
-									, lround(terrain_game_point.y - tile_game_point.y + _terrain_bounds.h - 1)
+								GameSpace::Point const tile_game_point = Layout::dflt().to_world(region_tile_coords);
+								GameSpace::Point const terrain_game_point = _terrain_bounds.position;
+								ScreenSpace::Point const tile_screen_point
+									{ lround(tile_game_point.x() - terrain_game_point.x())
+									, lround(terrain_game_point.y() - tile_game_point.y() + _terrain_bounds.height() - 1)
 									};
 
 								// Get the current tile.
@@ -260,19 +260,19 @@ namespace questless
 								// If it's there, use it. Otherwise, create the texture and cache it.
 								Texture& tile_texture = it != _tile_textures.end() ? *it->second : cache_tile_texture(tile);
 
-								uint8_t intensity = percentage_to_byte((tile_perception.level - Perception::minimum_level) / (Perception::maximum_level - Perception::minimum_level));
+								float intensity = static_cast<float>((tile_perception.level - Perception::minimum_level) / (Perception::maximum_level - Perception::minimum_level));
 
 								// Apply highlights.
 								if (_highlight_predicate) {
 									if ((*_highlight_predicate)(region_tile_coords)) {
-										intensity = uint8_t{255};
+										intensity = 1.0f;
 									}
 								}
 
 								tile_texture.draw_transformed
 									( tile_screen_point
 									, std::nullopt // origin
-									, Color{intensity, intensity, intensity}
+									, colors::ColorFactor{intensity, intensity, intensity}
 									);
 							}
 						}
@@ -290,7 +290,7 @@ namespace questless
 	{
 		static auto eagle_eye_sound_handle = sound_manager().add("resources/sounds/spells/eagle-eye.wav");
 
-		GamePoint position = Layout::dflt().to_world(e.origin());
+		GameSpace::Point position = Layout::dflt().to_world(e.origin());
 		for (int i = 0; i < 50; ++i) {
 			_animations.push_back(std::make_pair(make_unique<GreenMagicParticle>(), position));
 		}
@@ -306,7 +306,7 @@ namespace questless
 		double const target_vitality = target ? target->stats.vitality.get() : 100.0; // Assume vitality = 100 if being no longer exists to check.
 		//! @todo Pass along the vitality in the event object if it's needed here.
 
-		GamePoint position = Layout::dflt().to_world(e.origin());
+		GameSpace::Point position = Layout::dflt().to_world(e.origin());
 
 		Damage const& damage = e.damage;
 
@@ -323,7 +323,7 @@ namespace questless
 				case Damage::Part::Type::pierce:
 					spawn_blood(part.amount);
 					_animations.push_back(std::make_pair
-						( make_unique<TextParticle>(std::to_string(lround(part.amount)), Color::white())
+						( make_unique<TextParticle>(std::to_string(lround(part.amount)), colors::white())
 						, position
 						));
 					sound_manager()[pierce_sound_handle].play();
@@ -333,26 +333,26 @@ namespace questless
 				case Damage::Part::Type::bludgeon:
 					spawn_blood(part.amount);
 					_animations.push_back(std::make_pair
-						( make_unique<TextParticle>(std::to_string(lround(part.amount)), Color::white())
+						( make_unique<TextParticle>(std::to_string(lround(part.amount)), colors::white())
 						, position
 						));
 					sound_manager()[hit_sound_handle].play();
 					break;
 				case Damage::Part::Type::burn:
 					_animations.push_back(std::make_pair
-						( make_unique<TextParticle>(std::to_string(lround(part.amount)), Color::orange())
+						( make_unique<TextParticle>(std::to_string(lround(part.amount)), colors::orange())
 						, position
 						));
 					break;
 				case Damage::Part::Type::freeze:
 					_animations.push_back(std::make_pair
-						( make_unique<TextParticle>(std::to_string(lround(part.amount)), Color::cyan())
+						( make_unique<TextParticle>(std::to_string(lround(part.amount)), colors::cyan())
 						, position
 						));
 					break;
 				case Damage::Part::Type::blight:
 					_animations.push_back(std::make_pair
-						( make_unique<TextParticle>(std::to_string(lround(part.amount)), Color::black())
+						( make_unique<TextParticle>(std::to_string(lround(part.amount)), colors::black())
 						, position
 						));
 					break;
@@ -364,7 +364,7 @@ namespace questless
 	{
 		static auto lightning_bolt_sound_handle = sound_manager().add("resources/sounds/spells/lightning-bolt.wav");
 
-		GamePoint position = Layout::dflt().to_world(e.origin());
+		GameSpace::Point position = Layout::dflt().to_world(e.origin());
 		for (int i = 0; i < 35; ++i) {
 			_animations.push_back(std::make_pair(make_unique<YellowMagicParticle>(), position));
 		}

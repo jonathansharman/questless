@@ -109,26 +109,74 @@ namespace questless
 		if (Being const* player_being = game().beings.cptr(*_player_being_id)) {
 			{ // Draw the condition bars.
 				int left = 0;
-				renderer().draw_rect(ScreenRect{left, _screen_bottom, _condition_bar_width * _conditions_count, _condition_bar_height, ScreenRect::Origin::lower_left}, Color::black(), true);
+				renderer().draw_box
+					( ScreenSpace::Box
+						{ ScreenSpace::Point{left, _screen_bottom}
+						, ScreenSpace::Vector{_condition_bar_width * _conditions_count, _condition_bar_height}
+						, { ScreenSpace::Box::Align::close, ScreenSpace::Box::Align::far }
+						}
+					, colors::black()
+					, true
+					);
 				// Health
 				int health_bar_height = lround(_condition_bar_height * player_being->health / player_being->stats.vitality);
-				renderer().draw_rect(ScreenRect{left + 1, _screen_bottom, _condition_bar_width - 2, health_bar_height - 1, ScreenRect::Origin::lower_left}, Color::red(), true);
+				renderer().draw_box
+					( ScreenSpace::Box
+						{ ScreenSpace::Point{left + 1, _screen_bottom}
+						, ScreenSpace::Vector{_condition_bar_width - 2, health_bar_height - 1}
+						, { ScreenSpace::Box::Align::close, ScreenSpace::Box::Align::far }
+						}
+					, colors::red()
+					, true
+					);
 				left += _condition_bar_width;
 				// Mana
 				int mana_bar_height = lround(_condition_bar_height * player_being->mana / player_being->stats.spirit);
-				renderer().draw_rect(ScreenRect{left + 1, _screen_bottom, _condition_bar_width - 2, mana_bar_height - 1, ScreenRect::Origin::lower_left}, Color::blue(), true);
+				renderer().draw_box
+					( ScreenSpace::Box
+						{ ScreenSpace::Point{left + 1, _screen_bottom}
+						, ScreenSpace::Vector{_condition_bar_width - 2, mana_bar_height - 1}
+						, { ScreenSpace::Box::Align::close, ScreenSpace::Box::Align::far }
+						}
+					, colors::blue()
+					, true
+					);
 				left += _condition_bar_width;
 				// Energy
 				int energy_bar_height = lround(_condition_bar_height * player_being->energy / player_being->stats.stamina);
-				renderer().draw_rect(ScreenRect{left + 1, _screen_bottom, _condition_bar_width - 2, energy_bar_height - 1, ScreenRect::Origin::lower_left}, Color::cyan(), true);
+				renderer().draw_box
+					( ScreenSpace::Box
+						{ ScreenSpace::Point{left + 1, _screen_bottom}
+						, ScreenSpace::Vector{_condition_bar_width - 2, energy_bar_height - 1}
+						, { ScreenSpace::Box::Align::close, ScreenSpace::Box::Align::far }
+						}
+					, colors::cyan()
+					, true
+					);
 				left += _condition_bar_width;
 				// Satiety
 				int satiety_bar_height = lround(_condition_bar_height * player_being->satiety / Being::max_satiety);
-				renderer().draw_rect(ScreenRect{left + 1, _screen_bottom, _condition_bar_width - 2, satiety_bar_height - 1, ScreenRect::Origin::lower_left}, Color::brown(), true);
+				renderer().draw_box
+					( ScreenSpace::Box
+						{ ScreenSpace::Point{left + 1, _screen_bottom}
+						, ScreenSpace::Vector{_condition_bar_width - 2, satiety_bar_height - 1}
+						, { ScreenSpace::Box::Align::close, ScreenSpace::Box::Align::far }
+						}
+					, colors::brown()
+					, true
+					);
 				left += _condition_bar_width;
 				// Alertness
 				int alertness_bar_height = lround(_condition_bar_height * player_being->alertness / Being::max_alertness);
-				renderer().draw_rect(ScreenRect{left + 1, _screen_bottom, _condition_bar_width - 2, alertness_bar_height - 1, ScreenRect::Origin::lower_left}, Color::yellow(), true);
+				renderer().draw_box
+					( ScreenSpace::Box
+						{ ScreenSpace::Point{left + 1, _screen_bottom}
+						, ScreenSpace::Vector{_condition_bar_width - 2, alertness_bar_height - 1}
+						, { ScreenSpace::Box::Align::close, ScreenSpace::Box::Align::far }
+						}
+					, colors::yellow()
+					, true
+					);
 				left += _condition_bar_width;
 			}
 
@@ -136,7 +184,7 @@ namespace questless
 				BodyTexturer texturer;
 				texturer.visit(player_being->body);
 				uptr<Texture> texture = texturer.texture();
-				texture->draw(ScreenPoint{0, _screen_bottom - _condition_bar_height}, HAlign::left, VAlign::bottom);
+				texture->draw(ScreenSpace::Point{0, _screen_bottom - _condition_bar_height}, HAlign::left, VAlign::bottom);
 			}
 
 			{ // Draw hotbar items.
@@ -144,12 +192,12 @@ namespace questless
 				for (int i = 0; i < _hotbar_size; ++i) {
 					int x = _hotbar_x_start + (_hotbar_slot_width + _hotbar_interslot_gap) * i;
 					int y = _screen_bottom - _hotbar_bottom_gap;
-					_hotbar_slot_texture->draw(ScreenPoint{x, y}, HAlign::left, VAlign::bottom);
+					_hotbar_slot_texture->draw(ScreenSpace::Point{x, y}, HAlign::left, VAlign::bottom);
 					if (std::optional<Id<Item>> opt_item_id = _hotbar[i]) {
 						Item const& item = game().items.cref(*opt_item_id);
 						item.accept(texturer);
 						texture_manager()[texturer.texture_handle()].draw
-							( ScreenPoint{x + _hotbar_slot_h_padding, y - _hotbar_slot_v_padding}
+							( ScreenSpace::Point{x + _hotbar_slot_h_padding, y - _hotbar_slot_v_padding}
 							, HAlign::left
 							, VAlign::bottom
 							);
@@ -159,7 +207,14 @@ namespace questless
 
 			// Draw the inventory if it's open.
 			if (_inv_open) {
-				renderer().draw_rect(ScreenRect{_inv_left, _inv_top, _inv_width, _inv_height}, Color::black(), Color::gray());
+				renderer().draw_box
+					( ScreenSpace::Box
+						{ ScreenSpace::Point{_inv_left, _inv_top}
+						, ScreenSpace::Vector{_inv_width, _inv_height}
+						}
+					, colors::black()
+					, colors::gray()
+					);
 				ItemTexturer texturer;
 
 				{ // Draw selection.
@@ -170,7 +225,14 @@ namespace questless
 					if (_inv_top <= y_mouse && row < _inv_row_count && _inv_left <= x_mouse && column < _inv_column_count) {
 						int x = _inv_left + _item_icon_width * column;
 						int y = _inv_top + _item_icon_height * row;
-						renderer().draw_rect(ScreenRect{x, y, _item_icon_width, _item_icon_height}, Color::black(), Color::silver());
+						renderer().draw_box
+							( ScreenSpace::Box
+								{ ScreenSpace::Point{x, y}
+								, ScreenSpace::Vector{_item_icon_width, _item_icon_height}
+								}
+							, colors::black()
+							, colors::silver()
+							);
 					}
 				}
 
@@ -179,7 +241,7 @@ namespace questless
 					_displayed_items[i].get().accept(texturer);
 					int row = i / _inv_column_count;
 					int column = i % _inv_column_count;
-					texture_manager()[texturer.texture_handle()].draw(ScreenPoint{_inv_left + column * _item_icon_width, _inv_top + row * _item_icon_height });
+					texture_manager()[texturer.texture_handle()].draw(ScreenSpace::Point{_inv_left + column * _item_icon_width, _inv_top + row * _item_icon_height });
 				}
 			}
 		}

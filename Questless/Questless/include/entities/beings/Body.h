@@ -10,7 +10,7 @@
 #include <boost/iterator/transform_iterator.hpp>
 
 #include "entities/beings/BodyPart.h"
-#include "units/ScreenVector.h"
+#include "units/ScreenSpace.h"
 
 namespace questless
 {
@@ -82,10 +82,10 @@ namespace questless
 		Tail* find_tail(Id<BodyPart> id);
 
 		//! The bounding box around the body's parts.
-		units::ScreenRect bounds() const { return _bounds; }
+		units::ScreenSpace::Box bounds() const { return _bounds; }
 
 		//! The offset from the upper left corner of the bounds to the body's center.
-		units::ScreenVector offset_to_center() const { return _offset_to_center; }
+		units::ScreenSpace::Vector offset_to_center() const { return _offset_to_center; }
 	private:
 		class PartAttacher : public BodyPartMutableVisitor
 		{
@@ -109,8 +109,8 @@ namespace questless
 
 		uptr<BodyPart> _root;
 
-		units::ScreenRect _bounds;
-		units::ScreenVector _offset_to_center;
+		units::ScreenSpace::Box _bounds;
+		units::ScreenSpace::Vector _offset_to_center;
 
 		std::vector<ref<BodyPart>> _parts;
 

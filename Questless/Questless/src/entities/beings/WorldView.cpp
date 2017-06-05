@@ -5,7 +5,6 @@
 #include "entities/beings/WorldView.h"
 
 #include <set>
-using std::set;
 #include <limits.h>
 
 #include "Game.h"
@@ -27,7 +26,7 @@ namespace questless
 		int visual_range = vision.max_range();
 
 		// Find the set of coordinates of sections plausibly visible to the being.
-		set<RegionSection::Point> section_coords_set;
+		std::set<RegionSection::Point> section_coords_set;
 		for (int q = -visual_range; q <= visual_range; ++q) {
 			for (int r = -visual_range; r <= visual_range; ++r) {
 				RegionTile::Vector offset{q, r};
@@ -52,9 +51,9 @@ namespace questless
 
 					if (find_bounds && tile_perception.level > 0.0) {
 						// Update bounding rectangle.
-						GamePoint tile_game_point = Layout::dflt().to_world(region_tile_coords);
+						GameSpace::Point tile_game_point = Layout::dflt().to_world(region_tile_coords);
 						if (!_bounds) {
-							_bounds = GameRect{tile_game_point.x, tile_game_point.y, 0.0, 0.0};
+							_bounds = GameSpace::Box{GameSpace::Point{tile_game_point.x(), tile_game_point.y()}, GameSpace::Vector::zero()};
 						} else {
 							_bounds->extend(tile_game_point);
 						}	
@@ -101,12 +100,12 @@ namespace questless
 			//_bounds->w += double_size.x;
 			//_bounds->h += double_size.y;
 
-			GameVector size = Layout::dflt().size;
-			GameVector double_size = 2 * Layout::dflt().size;
-			_bounds->x -= 31;
-			_bounds->y -= 19;
-			_bounds->w += 62;
-			_bounds->h += 39;
+			GameSpace::Vector size = Layout::dflt().size;
+			GameSpace::Vector double_size = 2 * Layout::dflt().size;
+			_bounds->x() -= 31;
+			_bounds->y() -= 19;
+			_bounds->width() += 62;
+			_bounds->height() += 39;
 		}
 	}
 }

@@ -12,7 +12,7 @@ namespace questless
 	void BlackMagicParticle::particle_subupdate()
 	{
 		_velocity *= 1.0 + _acceleration_factor * Game::frame_duration;
-		_velocity.step().rotate(GameRadians{_turn_rate * Game::frame_duration});
+		_velocity.step().rotate(GameSpace::Radians{_turn_rate * Game::frame_duration});
 	}
 
 	sdl::Texture const& BlackMagicParticle::texture() const

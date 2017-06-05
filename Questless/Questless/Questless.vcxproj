@@ -98,12 +98,12 @@
     <Import Project="library-paths.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(BOOST_PATH);$(DOCTEST_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">
-    <IncludePath>$(ProjectDir)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(BOOST_PATH);$(DOCTEST_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>C:\Program Files (x86)\Windows Kits\8.1\Include\shared\;$(SourcePath)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(VC_IncludePath)</IncludePath>
@@ -114,8 +114,8 @@
     <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(BOOST_PATH);$(DOCTEST_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>C:\Program Files (x86)\Windows Kits\8.1\Include\shared\;$(SourcePath)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(VC_IncludePath)</IncludePath>
@@ -135,7 +135,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(BOOST_PATH)\boost_1_61_0\stage\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;opengl32.lib;glew32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <PerUserRedirection>true</PerUserRedirection>
     </Link>
@@ -154,7 +154,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(BOOST_PATH)\boost_1_61_0\stage\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libboost_system-vc140-mt-gd-1_61.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;opengl32.lib;glew32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <PerUserRedirection>true</PerUserRedirection>
     </Link>
@@ -208,7 +208,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;opengl32.lib;glew32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -324,7 +324,6 @@
     <ClInclude Include="include\items\weapons\Quarterstaff.h" />
     <ClInclude Include="include\items\weapons\Quiver.h" />
     <ClInclude Include="include\items\weapons\Weapon.h" />
-    <ClInclude Include="include\sdl\Color.h" />
     <ClInclude Include="include\sdl\Font.h" />
     <ClInclude Include="include\sdl\Input.h" />
     <ClInclude Include="include\sdl\Renderable.h" />
@@ -354,36 +353,26 @@
     <ClInclude Include="include\ui\TileDialog.h" />
     <ClInclude Include="include\ui\VectorDialog.h" />
     <ClInclude Include="include\units\Angle.h" />
+    <ClInclude Include="include\units\colors.h" />
+    <ClInclude Include="include\units\ColorSpace.h" />
     <ClInclude Include="include\units\constants.h" />
     <ClInclude Include="include\units\Frequency.h" />
     <ClInclude Include="include\units\GameAcceleration.h" />
     <ClInclude Include="include\units\GameDegrees.h" />
-    <ClInclude Include="include\units\GamePoint.h" />
     <ClInclude Include="include\units\GameRadians.h" />
     <ClInclude Include="include\units\GameRadiansPerSec.h" />
-    <ClInclude Include="include\units\GameRect.h" />
     <ClInclude Include="include\units\GameScaleVelocity.h" />
     <ClInclude Include="include\units\GameSeconds.h" />
     <ClInclude Include="include\units\GameSpace.h" />
     <ClInclude Include="include\units\GameSpeed.h" />
-    <ClInclude Include="include\units\GameVector.h" />
     <ClInclude Include="include\units\GameVelocity.h" />
     <ClInclude Include="include\units\HexCoords.h" />
     <ClInclude Include="include\units\math.h" />
-    <ClInclude Include="include\units\Point.h" />
     <ClInclude Include="include\units\Rate.h" />
-    <ClInclude Include="include\units\Rect.h" />
-    <ClInclude Include="include\units\ScreenPoint.h" />
-    <ClInclude Include="include\units\ScreenRect.h" />
     <ClInclude Include="include\units\ScreenSpace.h" />
-    <ClInclude Include="include\units\ScreenVector.h" />
-    <ClInclude Include="include\units\SpriteSheetPoint.h" />
+    <ClInclude Include="include\units\Space.h" />
     <ClInclude Include="include\units\SpriteSheetSpace.h" />
-    <ClInclude Include="include\units\SpriteSheetVector.h" />
-    <ClInclude Include="include\units\TexturePoint.h" />
-    <ClInclude Include="include\units\TextureRect.h" />
     <ClInclude Include="include\units\TextureSpace.h" />
-    <ClInclude Include="include\units\Vector.h" />
     <ClInclude Include="include\units\Velocity.h" />
     <ClInclude Include="include\utility\Cache.h" />
     <ClInclude Include="include\utility\Complete.h" />

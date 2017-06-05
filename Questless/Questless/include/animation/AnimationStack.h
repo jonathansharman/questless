@@ -27,17 +27,17 @@ namespace questless
 			return *_animations.back();
 		}
 
-		void draw(units::ScreenPoint position) const
+		void draw(units::ScreenSpace::Point position) const
 		{
 			for (auto& animation : _animations) {
 				animation->draw(position);
 			}
 		}
 
-		void draw(units::GamePoint position, Camera const& camera, sdl::Color color = sdl::Color::white()) const
+		void draw(units::GameSpace::Point position, Camera const& camera, units::colors::ColorFactor color_factor = units::colors::white_factor()) const
 		{
 			for (auto& animation : _animations) {
-				animation->draw(position, camera, color);
+				animation->draw(position, camera, color_factor);
 			}
 		}
 	private:

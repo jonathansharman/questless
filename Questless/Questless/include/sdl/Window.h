@@ -10,8 +10,7 @@
 
 #include <SDL.h>
 
-#include "units/ScreenVector.h"
-#include "units/ScreenPoint.h"
+#include "units/ScreenSpace.h"
 
 namespace sdl
 {
@@ -83,20 +82,20 @@ namespace sdl
 		bool resizable() const;
 
 		//! The position of the window.
-		units::ScreenPoint position() const;
+		units::ScreenSpace::Point position() const;
 		//! The x-coordinate of the window.
 		int x() const;
 		//! The y-coordinate of the window.
 		int y() const;
 
 		//! The resolution of the window, width x height.
-		units::ScreenVector resolution() const;
+		units::ScreenSpace::Vector resolution() const;
 		//! The window width.
 		int width() const;
 		//! The window height.
 		int height() const;
 		//! The center point of the window.
-		units::ScreenPoint center() const;
+		units::ScreenSpace::Point center() const;
 	private:
 		SDL_Window* _sdl_window;
 		std::string _title;

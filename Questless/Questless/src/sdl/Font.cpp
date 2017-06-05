@@ -5,8 +5,23 @@
 #include "sdl/Font.h"
 #include "sdl/Renderable.h" //! @todo Remove after done debugging.
 
+using namespace units;
+
 namespace sdl
 {
+	namespace
+	{
+		SDL_Color sdl_color(colors::Color color)
+		{
+			return SDL_Color
+				{ static_cast<uint8_t>(255.0f * color.red())
+				, static_cast<uint8_t>(255.0f * color.green())
+				, static_cast<uint8_t>(255.0f * color.blue())
+				, static_cast<uint8_t>(255.0f * color.alpha())
+				};
+		}
+	}
+
 	Font::Font(char const* filename, int size, SDL_BlendMode blend_mode)
 		: _blend_mode(blend_mode), _size(size)
 	{
@@ -44,43 +59,35 @@ namespace sdl
 		std::swap(first._blend_mode, second._blend_mode);
 	}
 
-	Texture Font::render(char const* text, Color text_color) const
+	Texture Font::render(char const* text, colors::Color text_color) const
 	{
-		SDL_Surface* surface = TTF_RenderText_Blended(_font, text, static_cast<SDL_Color>(text_color));
+		SDL_Surface* surface = TTF_RenderText_Blended(_font, text, sdl_color(text_color));
 		if (surface == nullptr) {
 			throw std::runtime_error{TTF_GetError()};
 		}
-		SDL_Texture* sdl_texture = SDL_CreateTextureFromSurface(renderer().sdl_ptr(), surface);
-		if (sdl_texture == nullptr) {
-			throw std::runtime_error{"SDL texture created from surface is null."};
-		}
-		Texture texture{sdl_texture};
+		Texture texture{surface};
 		SDL_FreeSurface(surface);
 		return texture;
 	}
 
-	Texture Font::render(char const* text, Color text_color, Color background_color) const
+	Texture Font::render(char const* text, colors::Color text_color, colors::Color background_color) const
 	{
-		SDL_Surface* surface = TTF_RenderText_Shaded(_font, text, static_cast<SDL_Color>(text_color), static_cast<SDL_Color>(background_color));
+		SDL_Surface* surface = TTF_RenderText_Shaded(_font, text, sdl_color(text_color), sdl_color(background_color));
 		if (surface == nullptr) {
 			throw std::runtime_error(TTF_GetError());
 		}
-		SDL_Texture* sdl_texture = SDL_CreateTextureFromSurface(renderer().sdl_ptr(), surface);
-		if (sdl_texture == nullptr) {
-			throw std::runtime_error{"SDL texture created from surface is null."};
-		}
-		Texture texture{sdl_texture};
+		Texture texture{surface};
 		SDL_FreeSurface(surface);
 		return texture;
 	}
 
-	Texture Font::fast_render(char const* text, Color text_color) const
+	Texture Font::fast_render(char const* text, colors::Color text_color) const
 	{
-		SDL_Surface* surface = TTF_RenderText_Solid(_font, text, static_cast<SDL_Color>(text_color));
+		SDL_Surface* surface = TTF_RenderText_Solid(_font, text, sdl_color(text_color));
 		if (surface == nullptr) {
 			throw std::runtime_error(TTF_GetError());
 		}
-		Texture texture{SDL_CreateTextureFromSurface(renderer().sdl_ptr(), surface)};
+		Texture texture{surface};
 		SDL_FreeSurface(surface);
 		return texture;
 	}

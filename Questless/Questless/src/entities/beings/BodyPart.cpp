@@ -20,7 +20,7 @@ namespace questless
 		, Protection protection
 		, Resistance resistance
 		, Vulnerability vulnerability
-		, std::vector<ScreenRect> regions
+		, std::vector<ScreenSpace::Box> regions
 		, Id<BodyPart> id
 		)
 		: id{id}
@@ -37,16 +37,16 @@ namespace questless
 	{
 		health.set_mutator(health_mutator(), false);
 		for (auto& region : _regions) {
-			region.x *= 5;
-			region.y *= 5;
+			region.x() *= 5;
+			region.y() *= 5;
 			
-			region.y = -region.y;
+			region.y() = -region.y();
 
-			region.w *= 5;
-			region.h *= 5;
+			region.width() *= 5;
+			region.height() *= 5;
 
-			++region.w;
-			++region.h;
+			++region.width();
+			++region.height();
 		}
 	}
 

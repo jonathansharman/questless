@@ -10,7 +10,8 @@
 
 #include "../Dialog.h"
 #include "animation/Camera.h"
-#include "units/Point.h"
+#include "units/GameSpace.h"
+#include "units/GameSeconds.h"
 #include "units/GameVelocity.h"
 
 namespace questless::qte
@@ -33,13 +34,13 @@ namespace questless::qte
 
 		struct Charge
 		{
-			units::GamePoint position;
+			units::GameSpace::Point position;
 			units::GameVelocity velocity;
 		};
 
 		static sdl::TextureHandle LightningBolt::_point_charge_texture_handle;
 
-		units::GamePoint _target_point;
+		units::GameSpace::Point _target_point;
 		Continuation<double> _cont;
 
 		units::GameSeconds _elapsed_time = 0.0s;

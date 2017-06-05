@@ -6,8 +6,7 @@
 
 #include <algorithm>
 
-#include "units/ScreenRect.h"
-#include "units/ScreenVector.h"
+#include "units/ScreenSpace.h"
 
 using namespace sdl;
 using namespace units;
@@ -144,17 +143,20 @@ namespace questless
 		// Get index of option over which the mouse is hovering, if any.
 
 		std::optional<int> hovered_option_index = std::nullopt;
-		ScreenPoint position = _content_position;
-		position.y += title_height;
+		ScreenSpace::Point position = _content_position;
+		position.y() += title_height;
 		for (size_t i = 0; i < _pages[_page_index].options.size(); ++i) {
-			ScreenVector dimensions = _page_views[_page_index].option_textures[i].dimensions();
-			ScreenRect rect = ScreenRect{position.x, position.y, dimensions.x, dimensions.y};
-			ScreenPoint point = input().mouse_position();
-			if (rect.contains(point)) {
+			TextureSpace::Vector texture_size = _page_views[_page_index].option_textures[i].size();
+			ScreenSpace::Box box = ScreenSpace::Box
+				{ ScreenSpace::Point{position.x(), position.y()}
+				, ScreenSpace::Vector{texture_size.x(), texture_size.y()}
+				};
+			ScreenSpace::Point point = input().mouse_position();
+			if (box.contains(point)) {
 				hovered_option_index = static_cast<int>(i);
 				break;
 			}
-			position.y += option_height;
+			position.y() += option_height;
 		}
 
 		// Change option index, if necessary.
@@ -201,7 +203,7 @@ namespace questless
 		return selections;
 	}
 
-	void DigraphMenu::draw(ScreenPoint origin, HAlign horizontal_alignment, VAlign vertical_alignment)
+	void DigraphMenu::draw(ScreenSpace::Point origin, HAlign horizontal_alignment, VAlign vertical_alignment)
 	{
 		if (!_render_is_current) {
 			render();
@@ -212,37 +214,36 @@ namespace questless
 		case HAlign::left:
 			break;
 		case HAlign::center:
-			_content_position.x -= _content_width / 2;
+			_content_position.x() -= _content_width / 2;
 			break;
 		case HAlign::right:
-			_content_position.x -= _content_width;
+			_content_position.x() -= _content_width;
 			break;
 		}
 		switch (vertical_alignment) {
 		case VAlign::top:
 			break;
 		case VAlign::middle:
-			_content_position.y -= _content_height / 2;
+			_content_position.y() -= _content_height / 2;
 			break;
 		case VAlign::bottom:
-			_content_position.y -= _content_height;
+			_content_position.y() -= _content_height;
 			break;
 		}
 
 		// Draw background.
 
-		_background->draw(ScreenPoint{_content_position.x - _left_margin, _content_position.y - _top_margin});
+		_background->draw(ScreenSpace::Point{_content_position.x() - _left_margin, _content_position.y() - _top_margin});
 
 		// Draw text.
 
 		_page_views[_page_index].title_texture.draw(_content_position);
 
 		for (int i = 0; i < static_cast<int>(_page_views[_page_index].option_textures.size()); ++i) {
-			Color option_color = _pages[_page_index].option_index == i ? _selected_color : _unselected_color;
-			_page_views[_page_index].option_textures[i].color(option_color);
+			colors::ColorFactor option_color_factor = _pages[_page_index].option_index == i ? _selected_color_factor : _unselected_color_factor;
 
-			ScreenPoint option_position{_content_position.x, _content_position.y + title_height + i * option_height};
-			_page_views[_page_index].option_textures[i].draw(option_position);
+			ScreenSpace::Point option_position{_content_position.x(), _content_position.y() + title_height + i * option_height};
+			_page_views[_page_index].option_textures[i].draw(option_position, HAlign::left, VAlign::top, option_color_factor);
 		}
 	}
 
@@ -282,7 +283,7 @@ namespace questless
 			_content_height = std::max(_content_height, static_cast<int>(title_height + _pages[_page_index].options.size() * option_height));
 			std::vector<Texture> option_textures;
 			for (size_t j = 0; j < _pages[i].options.size(); ++j) {
-				option_textures.push_back(font_manager()[_option_font_handle].render(_pages[i].options[j].name.c_str(), Color::white()));
+				option_textures.push_back(font_manager()[_option_font_handle].render(_pages[i].options[j].name.c_str(), colors::white()));
 				_content_width = std::max(_content_width, option_textures[j].width());
 			}
 			_page_views.emplace_back(font_manager()[_title_font_handle].render(_pages[i].title.c_str(), _title_color), std::move(option_textures));
@@ -306,29 +307,29 @@ namespace questless
 			);
 		_background->as_target([&] {
 			// Clear background texture with transparent color.
-			renderer().clear(Color::clear());
+			renderer().clear(colors::clear());
 			
 			// Interior
 			for (int x = 0; x < _content_width / _tile_width; ++x) {
 				for (int y = 0; y < _content_height / _tile_height; ++y) {
-					texture_manager()[_tile_handle].draw(ScreenPoint{_left_margin + _tile_width * x, _top_margin + _tile_height * y});
+					texture_manager()[_tile_handle].draw(ScreenSpace::Point{_left_margin + _tile_width * x, _top_margin + _tile_height * y});
 				}
 			}
 			// Top and bottom margins
 			for (int x = 0; x < _content_width / _tile_width; ++x) {
-				texture_manager()[_u_handle].draw(ScreenPoint{_left_margin + _tile_width * x, 0});
-				texture_manager()[_d_handle].draw(ScreenPoint{_left_margin + _tile_width * x, _top_margin + _content_height});
+				texture_manager()[_u_handle].draw(ScreenSpace::Point{_left_margin + _tile_width * x, 0});
+				texture_manager()[_d_handle].draw(ScreenSpace::Point{_left_margin + _tile_width * x, _top_margin + _content_height});
 			}
 			// Left and right margins
 			for (int y = 0; y < _content_height / _tile_height; ++y) {
-				texture_manager()[_l_handle].draw(ScreenPoint{0, _top_margin + _tile_width * y});
-				texture_manager()[_r_handle].draw(ScreenPoint{_left_margin + _content_width, _top_margin + _tile_width * y});
+				texture_manager()[_l_handle].draw(ScreenSpace::Point{0, _top_margin + _tile_width * y});
+				texture_manager()[_r_handle].draw(ScreenSpace::Point{_left_margin + _content_width, _top_margin + _tile_width * y});
 			}
 			// Corners
-			texture_manager()[_ul_handle].draw(ScreenPoint{0, 0});
-			texture_manager()[_ur_handle].draw(ScreenPoint{_left_margin + _content_width, 0});
-			texture_manager()[_dl_handle].draw(ScreenPoint{0, _top_margin + _content_height});
-			texture_manager()[_dr_handle].draw(ScreenPoint{_left_margin + _content_width, _top_margin + _content_height});
+			texture_manager()[_ul_handle].draw(ScreenSpace::Point{0, 0});
+			texture_manager()[_ur_handle].draw(ScreenSpace::Point{_left_margin + _content_width, 0});
+			texture_manager()[_dl_handle].draw(ScreenSpace::Point{0, _top_margin + _content_height});
+			texture_manager()[_dr_handle].draw(ScreenSpace::Point{_left_margin + _content_width, _top_margin + _content_height});
 		});
 
 		_render_is_current = true;
