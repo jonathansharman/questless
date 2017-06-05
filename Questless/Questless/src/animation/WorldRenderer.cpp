@@ -120,7 +120,7 @@ namespace questless
 						_unknown_entity_animation->draw
 							( Layout::dflt().to_world(entity->coords)
 							, game().camera()
-							, colors::ColorFactor{intensity, intensity, intensity}
+							, colors::ColorFactor{intensity, intensity, intensity, 1.0f}
 							);
 						break;
 					case Perception::Category::medium:
@@ -157,7 +157,7 @@ namespace questless
 						entity_animation.draw
 							( Layout::dflt().to_world(entity->coords)
 							, game().camera()
-							, colors::ColorFactor{intensity, intensity, intensity}
+							, colors::ColorFactor{intensity, intensity, intensity, 1.0f}
 							);
 						break;
 					}
@@ -272,7 +272,7 @@ namespace questless
 								tile_texture.draw_transformed
 									( tile_screen_point
 									, std::nullopt // origin
-									, colors::ColorFactor{intensity, intensity, intensity}
+									, colors::ColorFactor{intensity, intensity, intensity, 1.0f}
 									);
 							}
 						}

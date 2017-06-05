@@ -17,8 +17,6 @@ namespace units
 	class BaseBuffer
 	{
 	protected:
-		std::array<ScalarType, DimensionCount> _elements;
-
 		constexpr BaseBuffer() = default;
 		constexpr BaseBuffer(BaseBuffer const&) = default;
 		constexpr BaseBuffer(BaseBuffer&&) = default;
@@ -34,6 +32,8 @@ namespace units
 
 		BaseBuffer& operator =(BaseBuffer const&) & = default;
 		BaseBuffer& operator =(BaseBuffer&&) & = default;
+
+		std::array<ScalarType, DimensionCount> _elements;
 	};
 
 	//! A generic type-safe space, parameterized over a number of dimensions and a scalar type.
@@ -176,7 +176,9 @@ namespace units
 			template <typename... Args>
 			constexpr explicit Vector(Args... args)
 				: Buffer{{std::forward<Args>(args)...}}
-			{}
+			{
+				static_assert(sizeof...(args) == dimension_count, "All components of a Vector must be initialized.");
+			}
 
 			template <typename UnitsPerCircle>
 			explicit Vector(Angle<UnitsPerCircle> theta, scalar_t r) //! @todo Cannot be constexpr because of cos() and sin(). Implement constexpr trig functions in units::math to enable.
@@ -368,7 +370,9 @@ namespace units
 			template <typename... Args>
 			constexpr explicit Point(Args... args)
 				: Buffer{{std::forward<Args>(args)...}}
-			{}
+			{
+				static_assert(sizeof...(args) == dimension_count, "All coordinates of a Point must be initialized.");
+			}
 
 			Point& operator =(Point const&) & = default;
 			Point& operator =(Point&&) & = default;

@@ -70,7 +70,7 @@ namespace questless
 		void draw() const final
 		{
 			// Draw background.
-			sdl::renderer().draw_box(_bounds, units::colors::black(), units::colors::Color{1.0f, 0.75f, 0.6f});
+			sdl::renderer().draw_box(_bounds, units::colors::black(), units::colors::Color{1.0f, 0.75f, 0.6f, 1.0f});
 
 			{ // Draw highlight.
 				units::ScreenSpace::Box bounds

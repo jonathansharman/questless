@@ -46,7 +46,7 @@ namespace questless
 						red = static_cast<float>(1.0 - (health_percentage - threshold) / (1.0 - threshold));
 						green = 1.0f;
 					}
-					colors::Color color{red, green, 0.0f};
+					colors::Color color{red, green, 0.0f, 1.0f};
 					renderer().draw_box(region.translated(body.offset_to_center()), colors::black(), color);
 				}
 			}

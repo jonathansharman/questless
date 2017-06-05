@@ -26,7 +26,7 @@ namespace questless
 			, MaxDisplacement{5.0}
 			}
 		{
-			_color_factor = units::colors::ColorFactor{1.0f, 0.5f, 0.0f};
+			_color_factor = units::colors::orange_factor();
 		}
 	private:
 		static constexpr units::Hertz _vx_percent_drag_rate = 1.8_Hz;

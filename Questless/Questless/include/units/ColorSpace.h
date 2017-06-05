@@ -10,7 +10,8 @@ namespace units
 {
 	namespace detail
 	{
-		class ColorBuffer : public BaseBuffer<float, 4>
+		using color_buffer_base_t = BaseBuffer<float, 4>;
+		class ColorBuffer : public color_buffer_base_t
 		{
 		public:
 			float& red() & { return _elements[0]; }
@@ -25,8 +26,8 @@ namespace units
 			float& alpha() & { return _elements[3]; }
 			constexpr float const& alpha() const& { return _elements[3]; }
 		protected:
-			using BaseBuffer::BaseBuffer;
-			using BaseBuffer::operator =;
+			using color_buffer_base_t::color_buffer_base_t;
+			using color_buffer_base_t::operator =;
 		};
 	}
 

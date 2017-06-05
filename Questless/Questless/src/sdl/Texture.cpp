@@ -200,8 +200,11 @@ namespace sdl
 			// Bind program.
 			glUseProgram(dflt_program());
 
-			// Enable vertex position.
+
+			// Enable vertex attributes.
 			glEnableVertexAttribArray(vs_attr_position());
+			glEnableVertexAttribArray(vs_attr_texture_coords());
+			glEnableVertexAttribArray(vs_attr_color_factor());
 
 			// Set vertex data.
 			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
@@ -228,9 +231,10 @@ namespace sdl
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
 			glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, nullptr);
 
-			// Disable attributes.
+			// Disable vertex attributes.
 			glDisableVertexAttribArray(vs_attr_position());
 			glDisableVertexAttribArray(vs_attr_texture_coords());
+			glDisableVertexAttribArray(vs_attr_color_factor());
 
 			// Unbind program.
 			glUseProgram(NULL);
@@ -298,11 +302,10 @@ namespace sdl
 			// Bind program.
 			glUseProgram(dflt_program());
 
-			// Enable vertex position.
+			// Enable vertex attributes.
 			glEnableVertexAttribArray(vs_attr_position());
-
-			// Enable vertex texture coordinate.
 			glEnableVertexAttribArray(vs_attr_texture_coords());
+			glEnableVertexAttribArray(vs_attr_color_factor());
 
 			// Bind texture.
 			glBindTexture(GL_TEXTURE_2D, _texture);
@@ -334,9 +337,10 @@ namespace sdl
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
 			glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, nullptr);
 
-			// Disable attributes.
+			// Disable vertex attributes.
 			glDisableVertexAttribArray(vs_attr_position());
 			glDisableVertexAttribArray(vs_attr_texture_coords());
+			glDisableVertexAttribArray(vs_attr_color_factor());
 
 			// Unbind program.
 			glUseProgram(NULL);

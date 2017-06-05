@@ -471,10 +471,10 @@ namespace questless
 		}
 
 		ScreenSpace::Point logo_position = window().center() + ScreenSpace::Vector{uniform(-_splash_logo_jiggle, _splash_logo_jiggle), uniform(-_splash_logo_jiggle, _splash_logo_jiggle)};
-		_txt_splash_logo->draw(logo_position, HAlign::center, VAlign::middle, colors::ColorFactor{intensity, intensity, intensity});
+		_txt_splash_logo->draw(logo_position, HAlign::center, VAlign::middle, colors::ColorFactor{intensity, intensity, intensity, 1.0f});
 
 		for (ScreenSpace::Point position : _splash_flame_positions) {
-			_txt_splash_flame->draw(position, HAlign::center, VAlign::bottom, colors::ColorFactor{intensity, intensity, intensity});
+			_txt_splash_flame->draw(position, HAlign::center, VAlign::bottom, colors::ColorFactor{intensity, intensity, intensity, 1.0f});
 		}
 	}
 

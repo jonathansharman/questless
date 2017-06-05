@@ -103,7 +103,7 @@ namespace questless::qte
 				( texture_manager()[point_charge_texture_handle]
 				, point_charge.position
 				, Origin{std::nullopt}
-				, colors::ColorFactor{1.0f, 1.0f, intensity}
+				, colors::ColorFactor{1.0f, 1.0f, intensity, 1.0f}
 				, HScale{(1.0 + intensity) / 2.0}
 				, VScale{(1.0 + intensity) / 2.0}
 				, GameSpace::Radians{0.0}
