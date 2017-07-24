@@ -31,10 +31,10 @@ namespace questless
 			part.accept(attacher);
 
 			for (ScreenSpace::Box const& region : part.regions()) {
-				x_min = std::min(x_min, region.x());
-				x_max = std::max(x_max, region.right());
-				y_min = std::min(y_min, region.y());
-				y_max = std::max(y_max, region.bottom());
+				x_min = std::min(x_min, left(region));
+				x_max = std::max(x_max, right(region));
+				y_min = std::min(y_min, top(region));
+				y_max = std::max(y_max, bottom(region));
 			}
 
 			// Remove current part from work list and add its children.

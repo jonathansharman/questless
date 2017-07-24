@@ -102,10 +102,10 @@ namespace questless
 
 			GameSpace::Vector size = Layout::dflt().size;
 			GameSpace::Vector double_size = 2 * Layout::dflt().size;
-			_bounds->x() -= 31;
-			_bounds->y() -= 19;
-			_bounds->width() += 62;
-			_bounds->height() += 39;
+			left(*_bounds) -= 31.0;
+			top(*_bounds) -= 19.0;
+			width(*_bounds) += 62.0;
+			height(*_bounds) += 39.0;
 		}
 	}
 }

@@ -13,8 +13,8 @@ void main() {
 	frag_texture_coords = texture_coords;
 	frag_color_factor = color_factor;
 
-	float t = 0.0;
-	float b = viewport_size.y;
+	float t = viewport_size.y;
+	float b = 0.0;
 	float l = 0.0;
 	float r = viewport_size.x;
 	float f = -1.0;

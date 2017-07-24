@@ -1,30 +1,28 @@
 ================================================================================
 Realms
 ================================================================================
-Heaven
+The Heavens
 	The abode of hosts
-Hell
+The Abyss
 	The abode of fiends, including the undead, demons, and devils
-Chaos
-	All of space exists at a single point
-		I.e., distance loses meaning
-	Contains infinite energy
-	Perpetually changing
-	Inhospitable, except for the shifters
-Stasis
-	All of time exists at a single point
-		I.e., duration loses meaning
-	Contains no energy
-	Everything within it is eternal, unchanging
-	Inhospitable, except for the preservers
 Physis
 	The realm of untamed and unadulterated nature
 	Home to the elementals
 Techne
 	The realm of art, reason, and technology
 	Home to the crafters and constructs
+Chaos
+	Space is folded onto itself
+	Contains infinite energy
+	Perpetually changing
+	Inhospitable, except for the shifters
+Stasis
+	Time is folded onto itself
+	Contains no energy
+	Everything within it is eternal, unchanging
+	Inhospitable, except for the preservers
 The World
-	The intersection of the six other realms, where good meets evil, light meets shadow, chaos meets order, space meets time, and nature meets technology
+	The intersection of the six other realms, where good meets evil, light meets shadow, chaos meets order, space meets time, and nature meets technology.
 
 ================================================================================
 Potion brewing
@@ -69,17 +67,14 @@ Must be written on magic scrolls or in a grimoire (both reusable) and recited to
 NPCs may use spells, but only if they are not mute (beasts are mute)
 	The game will play the sound effect of the spell, allowing the player to copy it if he/she can discern what is said (still doing this?)
 Incantation
-	Before a spell can be cast, its incantation must be performed
-	Takes a significant amount of time, depending on the spell
-	Once the incantation is complete, the spell's scroll/page is charged
+	Before a spell can be cast, its incantation must be performed on one's soul or a soul gem
+	Takes a significant amount of time, varies by spell
+	Once the incantation is complete, the spell is charged within the soul/soul gem
 	Charged spells may be cast very quickly (maybe instantly?)
 	Some spells may be incanted multiple times to build up more charges
-	Spell charges expire over time (should they?)
-	While a spell is charged, it occupies some of the spellcaster's spirit
-		The amount of spirit required per charge is a property of each spell
-		This limits the number of spells that can be quickly cast during a single battle
+		Each charge requires a certain amount of spirit
 	Mana cost is not incurred until the spell is actually cast
-When casting a spell, the caster may choose the magnitude and duration of the spell, if applicable. The cost of the casting is linear with the duration and quasilinear (n log n) with the magnitude.
+When casting a spell, the caster may choose the magnitude and duration of the spell, if applicable. The cost of the casting is typically linear with the duration and quasilinear (n log n) with the magnitude.
 
 ================================================================================
 Attributes
@@ -271,14 +266,15 @@ Utility
 	Chaos satchel
 		Stores some volume of items in Chaos
 		Has a fixed (small) mass and volume, regardless of its contents
-		There's a small chance item placed in the satchel will change into random new items, thanks to the mutators
+		There's a small chance item placed in the satchel will change into random new items, thanks to the shifters
 			The chance of mutation for each item is based on the amount of time it has spent in the satchel
 				This makes chaos satchels a great place to store junk and a bad place to store valuables
 	Stasis chest
 		Stores some volume of items in Stasis
 		Has a fixed (small) mass and volume, regardless of its contents
 		Items in the chest do not experience the passage of time
-			This makes stasis chests ideal for food storage
+			This makes stasis chests ideal for storage of perishables
+		Inventory is tied to the coordinates of the chest
 Weapons
 	Melee
 		Blades
@@ -414,7 +410,7 @@ Black - evil - darkness - hell - illusion
 		Umbraphile - Temporarily become an umbraphile. Umbraphiles have increased dexterity and mana regen while in darkness.
 		Shadow Copy - Summon a temporary shadow copy of the caster onto an adjacent tile. The copy cannot attack and disintegrates when it takes damage.
 		Inflict Nightmares - Gives target being nightmares for a certain duration. Whenever a being with nightmares is asleep, it takes damage (what kind?).
-Green - nature - earth
+Green - matter - nature
 	Specializations
 		Zoomage
 		Phytomage
@@ -447,10 +443,11 @@ Green - nature - earth
 			Change wind
 			Dispell/summon rain
 			Summon storm elemental
-Red - industry - war
+Red - energy - technology
 	Specializations
 		Battle mage
 		Technomage
+		Power mage
 	Battle Runes
 		Battle Cry - Temporarily empowers strength and endurance.
 		Duel - A target being and the caster temporarily become immune to weapon-based attacks from all other beings except each other and unable to deal damage to other beings.
@@ -458,27 +455,37 @@ Red - industry - war
 				How about, "when it expires, the one with the lowest health percentage dies"?
 		Rampage - The caster's next x actions do not incur cooldown.
 		Weapon and armor enchantments
+	Power Runes
+		Charge - Gain mana over time. Total mana restored is equal to casting cost plus spell duration times a constant factor.
+			E.g., spend 100 mana to recover 100 mana over 0 turns. Or spend 100 mana to recover 200 mana over, say, 25 turns.
+		Overcharge - Gain mana and then lose twice that much over time. The more mana gained, the faster it depletes.
+			E.g., gain 0 mana and lose 0 over 0 turns. Gain 100 mana and lose 200 mana over 10 turns. Gain 200 mana and lose 400 mana over 5 turns.
+			ALTERNATE IDEA: Gain mana immediately, but also gain mana poisoning in proportion to the amount gained. Mana poisoning deals blight damage over time.
+		Discharge - Deal burn damage within an area of effect. Does less damage farther from the caster, down to zero damage at maximum range. Does more damage the fuller the caster's mana is before casting, up to 100% extra damage at full mana.
+		Shock - Deal shock damage to a target being. Chain to nearby beings, with less range and damage for each jump. Targets are chosen first by proximity then at random. May target the caster and other friendly beings.
+		Scroll Magnet - Steal a scroll from target being.
+		Levitate - Temporarily gain the power of flight.
 	Mech Runes
 		Repair - Restores health to target machine.
 		Summon machines
 Blue - order - time - ice
 	Specializations
 		Peacekeeper
-		Avenger
+		Avenger?
 		Chronomancer
-	Stasis Runes
+	Peace Runes
 		Imprison - For a certain duration, prevent target from moving or using melee attacks.
 		Silence - Cause muteness in target being for a certain duration.
 		Disarmament - Unequip all weapons (including caster's weapons) within a certain range. Unequip times are not incurred; the effect is immediate. Any weapons being readied will not connect with their targets. Recovery times from weapons used prior to casting are unaffected.
 		Pacify - For a certain duration, cause the target to become passive. Passive beings cannot perform any actions.
 		Ward - Equip a low-durability passive shield.
+	Stasis Runes
 		Summon preservers from the stasis
 	Vengeance Runes
 		Retribution - Gives target being retribution status. Next time that target deals damage to another being, it also deals that damage to itself.
 	Time Runes
-Yellow - chaos - energy
+Yellow - chaos - space
 	Specializations
-		Shock mage
 		Chaos mage
 	Chaos Runes - RENAME
 		Revolt - Swaps a stat of two beings.
@@ -493,19 +500,8 @@ Yellow - chaos - energy
 			Health
 			Attack
 			...
-		Mirage - Summon a weaker copy of a target being that attacks that being. The copy expires after a set duration.
-			Does this belong in yellow?
-		Transmute??
-	Energy Runes
-		Charge - Gain mana over time. Total mana restored is equal to casting cost plus spell duration times a constant factor.
-			E.g., spend 100 mana to recover 100 mana over 0 turns. Or spend 100 mana to recover 200 mana over, say, 25 turns.
-		Overcharge - Gain mana and then lose twice that much over time. The more mana gained, the faster it depletes.
-			E.g., gain 0 mana and lose 0 over 0 turns. Gain 100 mana and lose 200 mana over 10 turns. Gain 200 mana and lose 400 mana over 5 turns.
-			ALTERNATE IDEA: Gain mana immediately, but also gain mana poisoning in proportion to the amount gained. Mana poisoning deals blight damage over time.
-		Discharge - Deal burn damage within an area of effect. Does less damage farther from the caster, down to zero damage at maximum range. Does more damage the fuller the caster's mana is before casting, up to 100% extra damage at full mana.
-		Lightning bolt - Deal burn damage to a target being. Lightning bolt will chain to nearby beings, with less range and damage for each jump. Targets are chosen first by proximity, then by lowest yellow resistance, then at random. May target the caster and other friendly beings.
-		Scroll Magnet - Steal a scroll from target being.
-		Levitate - Temporarily gain the power of flight.
+		Mirage - Cause a being to perceive something that's not there.
+		Transmute - ???
 	Void Runes - RENAME
 		Interport - Swap positions of two beings.
 		Teleport - Teleport within a certain distance.
@@ -714,16 +710,15 @@ Elemental
 			Can be forced to change phase with fire/ice attacks
 Constructs
 	Golem - beings constructed, not summoned, by a mage to do that mage's bidding
-		A practice of yellow magic
 		Types
 			Mud - Summoned from a dirt tile.
 			Wood - Summoned from a tree.
 			Stone - Summoned from a stone tile.
 			Iron - Summoned from a dirt or stone tile.
-			Corpse - Summoned from one or more corpses. Possesses none of the deceaseds' original attributes except size.
+			Corpse - Summoned from one or more corpses. Possesses none of the deceased's original attributes except size.
 	Machines
-		Flamechugger
-			Recovers health and loses weariness and hunger when engulfed in flames.
+		Flameguzzler
+			Recovers health, energy, and satiety when engulfed in flames.
 	Tulpa - http://en.wikipedia.org/wiki/Tulpa
 
 ================================================================================

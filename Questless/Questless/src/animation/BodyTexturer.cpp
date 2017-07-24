@@ -21,7 +21,7 @@ namespace questless
 	{
 		ScreenSpace::Box bounds = body.bounds();
 
-		_texture = std::make_unique<Texture>(bounds.width(), bounds.height());
+		_texture = std::make_unique<Texture>(width(bounds), height(bounds));
 		_texture->as_target([this, &body] {
 			renderer().clear(colors::clear());
 			{ // Draw outline.

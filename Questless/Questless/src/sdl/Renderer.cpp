@@ -59,13 +59,15 @@ namespace sdl
 
 	void Renderer::draw_lines(vector<ScreenSpace::Point> points, colors::Color color)
 	{
+		return; //! @todo Remove.
 		set_draw_color(color);
 		// This reinterpret_cast is safe because SDL_Point and ScreenSpace::Point have the same data structure.
-		SDL_RenderDrawLines(_renderer, reinterpret_cast<SDL_Point*>(&points[0]), points.size());
+		SDL_RenderDrawLines(_renderer, reinterpret_cast<SDL_Point const*>(&points[0]), points.size());
 	}
 
 	void Renderer::draw_box(ScreenSpace::Box const& box, colors::Color color, bool filled)
 	{
+		return; //! @todo Remove.
 		set_draw_color(color);
 
 		// This reinterpret_cast is safe because SDL_Rect and ScreenSpace::Box have the same data structure.
@@ -80,7 +82,8 @@ namespace sdl
 
 	void Renderer::draw_box(ScreenSpace::Box const& box, colors::Color border_color, colors::Color fill_color)
 	{
-		SDL_Rect sdl_rect{box.x(), box.y(), box.width(), box.height()};
+		return; //! @todo Remove.
+		SDL_Rect sdl_rect{left(box), top(box), units::width(box), units::height(box)};
 
 		set_draw_color(border_color);
 		SDL_RenderDrawRect(_renderer, &sdl_rect);

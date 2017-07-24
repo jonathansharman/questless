@@ -9,19 +9,24 @@ namespace sdl
 {
 	namespace
 	{
-		GLuint opengl_program = 0;
+		std::unique_ptr<ShaderProgram> _dflt_program;
+		std::unique_ptr<ShaderProgram> _texture_program;
 		std::unique_ptr<Renderer> _renderer = nullptr;
 		std::unique_ptr<Window> _window = nullptr;
 	}
 
-	GLuint& dflt_program() { return opengl_program; }
+	ShaderProgram& dflt_program() { return *_dflt_program; }
+	void dflt_program(std::unique_ptr<ShaderProgram> shader_program) { _dflt_program = std::move(shader_program); }
 
-	GLint vs_attr_position()
+	ShaderProgram& texture_program() { return *_texture_program; }
+	void texture_program(std::unique_ptr<ShaderProgram> shader_program) { _texture_program = std::move(shader_program); }
+
+	GLint vs_attr_position(ShaderProgram const& shader_program)
 	{
 		static bool first_call = true;
 		static GLint result = -1;
 		if (first_call) {
-			result = glGetAttribLocation(dflt_program(), "position");
+			result = glGetAttribLocation(shader_program.opengl_program_handle(), "position");
 			if (result == -1) {
 				throw std::runtime_error{"\"position\" is not a valid GLSL program variable."};
 			}
@@ -30,12 +35,12 @@ namespace sdl
 		return result;
 	}
 
-	GLint vs_attr_texture_coords()
+	GLint vs_attr_texture_coords(ShaderProgram const& shader_program)
 	{
 		static bool first_call = true;
 		static GLint result = -1;
 		if (first_call) {
-			result = glGetAttribLocation(dflt_program(), "texture_coords");
+			result = glGetAttribLocation(shader_program.opengl_program_handle(), "texture_coords");
 			if (result == -1) {
 				throw std::runtime_error{"\"texture_coords\" is not a valid GLSL program variable."};
 			}
@@ -44,12 +49,12 @@ namespace sdl
 		return result;
 	}
 
-	GLint vs_attr_color_factor()
+	GLint vs_attr_color_factor(ShaderProgram const& shader_program)
 	{
 		static bool first_call = true;
 		static GLint result = -1;
 		if (first_call) {
-			result = glGetAttribLocation(dflt_program(), "color_factor");
+			result = glGetAttribLocation(shader_program.opengl_program_handle(), "color_factor");
 			if (result == -1) {
 				throw std::runtime_error{"\"color_factor\" is not a valid GLSL program variable."};
 			}

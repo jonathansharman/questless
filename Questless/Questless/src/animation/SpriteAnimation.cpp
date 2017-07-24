@@ -24,7 +24,7 @@ namespace questless
 	{
 		SpriteAnimation::Frame const& frame = _frames[_frame_index];
 		ScreenSpace::Box dst_rect
-			{ ScreenSpace::Point{position.x() - frame.origin.x(), position.y() - frame.origin.y()}
+			{ ScreenSpace::Point{position.x() - frame.origin.u(), position.y() - frame.origin.v()}
 			, ScreenSpace::Vector{_sprite_sheet->cel_width(), _sprite_sheet->cel_height()}
 			};
 		TextureSpace::Box src_rect
@@ -39,7 +39,7 @@ namespace questless
 		SpriteAnimation::Frame const& frame = _frames[_frame_index];
 		camera.draw
 			( texture_manager()[_sprite_sheet->texture_handle]
-			, GameSpace::Point{position - GameSpace::Vector{static_cast<double>(frame.origin.x()), static_cast<double>(-frame.origin.y())}} //! @todo Uncouth point casting here.
+			, GameSpace::Point{position - GameSpace::Vector{static_cast<double>(frame.origin.u()), static_cast<double>(-frame.origin.v())}} //! @todo Uncouth point casting here.
 			, Origin{std::nullopt}
 			, color_factor
 			, HScale{1.0}

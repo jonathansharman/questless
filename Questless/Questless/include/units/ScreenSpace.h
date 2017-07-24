@@ -25,4 +25,20 @@ namespace units
 	}
 
 	using ScreenSpace = Space<struct ScreenSpaceTag, int, 2, detail::ScreenSpaceBuffer>;
+
+	inline int& width(ScreenSpace::Box& box) { return box.size.x(); }
+	inline int width(ScreenSpace::Box const& box) { return box.size.x(); }
+
+	inline int& height(ScreenSpace::Box& box) { return box.size.y(); }
+	inline int height(ScreenSpace::Box const& box) { return box.size.y(); }
+
+	inline int& left(ScreenSpace::Box& box) { return box.position.x(); }
+	inline int left(ScreenSpace::Box const& box) { return box.position.x(); }
+
+	inline int& top(ScreenSpace::Box& box) { return box.position.y(); }
+	inline int top(ScreenSpace::Box const& box) { return box.position.y(); }
+
+	inline int right(ScreenSpace::Box const& box) { return box.position.x() + box.size.x(); }
+
+	inline int bottom(ScreenSpace::Box const& box) { return box.position.y() + box.size.y(); }
 }

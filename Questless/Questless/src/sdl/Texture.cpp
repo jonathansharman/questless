@@ -45,13 +45,37 @@ namespace
 
 namespace sdl
 {
-	Texture::Texture(int width, int height)
-		: _texture{0}
-		, _width{width}
+	Texture::Texture(int width, int height, colors::Color color)
+		: _width{width}
 		, _height{height}
 	{
 		if (_width != 0 && _height != 0) {
-			//! @todo Create texture here.
+			// Generate texture.
+			glGenTextures(1, &_texture);
+			// Bind texture.
+			glBindTexture(GL_TEXTURE_2D, _texture);
+			// Set texture data.
+			std::vector<GLubyte> blank_buffer(width * height * 4);
+			for (std::size_t i = 0; i < blank_buffer.size(); i += 4) {
+				blank_buffer[i] = static_cast<GLubyte>(255 * color.red());
+				blank_buffer[i + 1] = static_cast<GLubyte>(255 * color.green());
+				blank_buffer[i + 2] = static_cast<GLubyte>(255 * color.blue());
+				blank_buffer[i + 3] = static_cast<GLubyte>(255 * color.alpha());
+			}
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &blank_buffer[0]);
+			// Set minification and magnification filters.
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+			// Create VBO.
+			glGenBuffers(1, &_vbo);
+
+			{ // Create IBO.
+				GLuint index_data[]{0, 1, 2, 3};
+				glGenBuffers(1, &_ibo);
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), index_data, GL_DYNAMIC_DRAW);
+			}
 		} else {
 			throw std::runtime_error("Attempted to create texture with zero dimensions.");
 		}
@@ -59,8 +83,6 @@ namespace sdl
 
 	Texture::Texture(char const* filename)
 	{
-		// Load OpenGL texture.
-
 		// Load image into a surface.
 		SDL_Surface* surface = IMG_Load(filename);
 		if (!surface) {
@@ -162,82 +184,61 @@ namespace sdl
 		( ScreenSpace::Box const& dst_rect
 		, ColorFactor color_factor
 		, std::optional<TextureSpace::Box> const& src_rect
+		, ShaderProgram const& shader_program
 		) const
 	{
-		//! @todo Draw using OpenGL only.
-
-		// Draw using SDL renderer.
-
-		// This reinterpret_cast is safe because SDL_Rect and TextureSpace::Box have the same data structure.
-		//SDL_Rect const* sdl_dst_rect = reinterpret_cast<const SDL_Rect*>(&dst_rect);
-
-		// This reinterpret_cast is safe because SDL_Rect and ScreenSpace::Box have the same data structure.
-		//SDL_Rect const* sdl_src_rect = src_rect ? reinterpret_cast<const SDL_Rect*>(&src_rect.value()) : nullptr;
-
-		//SDL_SetTextureColorMod(_texture, _color.r, _color.g, _color.b);
-		//SDL_SetTextureAlphaMod(_texture, _color.a);
-		//SDL_RenderCopy(_renderer.sdl_ptr(), _texture, sdl_src_rect, sdl_dst_rect);
-
-		// Draw using OpenGL directly.
-
-		/*if (_texture) {
-			glBindTexture(GL_TEXTURE_2D, _texture);
-			glEnable(GL_TEXTURE_2D);
-			glBegin(GL_QUADS);
-				glTexCoord2f(0.0, 0.0);
-				glVertex3f(dst_rect.x, dst_rect.y, 0.0);
-				glTexCoord2f(1.0, 0.0);
-				glVertex3f(dst_rect.x + dst_rect.w, dst_rect.y, 0.0);
-				glTexCoord2f(1.0, 1.0);
-				glVertex3f(dst_rect.x + dst_rect.w, dst_rect.y + dst_rect.h, 0.0);
-				glTexCoord2f(0.0, 1.0);
-				glVertex3f(dst_rect.x, dst_rect.y + dst_rect.h, 0.0);
-			glEnd();
-			glDisable(GL_TEXTURE_2D);
-		}*/
-
 		if (_texture) {
 			// Bind program.
-			glUseProgram(dflt_program());
-
+			glUseProgram(shader_program.opengl_program_handle());
 
 			// Enable vertex attributes.
-			glEnableVertexAttribArray(vs_attr_position());
-			glEnableVertexAttribArray(vs_attr_texture_coords());
-			glEnableVertexAttribArray(vs_attr_color_factor());
+			glEnableVertexAttribArray(shader_program.vs_attr_position());
+			glEnableVertexAttribArray(shader_program.vs_attr_texture_coords());
+			glEnableVertexAttribArray(shader_program.vs_attr_color_factor());
+
+			// Calculate texture coordinates.
+			float u0, u1, v0, v1;
+			if (src_rect) {
+				u0 = static_cast<float>(src_rect->position.u()) / src_rect->size.u();
+				u1 = static_cast<float>(src_rect->position.u() + src_rect->size.u()) / src_rect->size.u();
+				v0 = static_cast<float>(src_rect->position.v()) / src_rect->size.v();
+				v1 = static_cast<float>(src_rect->position.v() + src_rect->size.v()) / src_rect->size.v();
+			} else {
+				u0 = 0.0f;
+				u1 = 1.0f;
+				v0 = 0.0f;
+				v1 = 1.0f;
+			}
 
 			// Set vertex data.
 			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-			float x0 = static_cast<float>(dst_rect.x());
-			float y0 = static_cast<float>(dst_rect.y());
-			float x1 = static_cast<float>(dst_rect.x() + dst_rect.width());
-			float y1 = static_cast<float>(dst_rect.y() + dst_rect.height());
+			float x0 = static_cast<float>(left(dst_rect));
+			float y0 = static_cast<float>(top(dst_rect));
+			float x1 = static_cast<float>(right(dst_rect));
+			float y1 = static_cast<float>(bottom(dst_rect));
 			float r = color_factor.red();
 			float g = color_factor.green();
 			float b = color_factor.blue();
 			float a = color_factor.alpha();
 			GLfloat vertex_data[] =
-				{ x0, y0, 0.0f, 0.0f, r, g, b, a
-				, x1, y0, 1.0f, 0.0f, r, g, b, a
-				, x1, y1, 1.0f, 1.0f, r, g, b, a
-				, x0, y1, 0.0f, 1.0f, r, g, b, a
+				{ x0, y0, u0, v0, r, g, b, a
+				, x1, y0, u1, v0, r, g, b, a
+				, x1, y1, u1, v1, r, g, b, a
+				, x0, y1, u0, v1, r, g, b, a
 				};
 			glBufferData(GL_ARRAY_BUFFER, 4 * 8 * sizeof(GLfloat), vertex_data, GL_DYNAMIC_DRAW);
-			glVertexAttribPointer(vs_attr_position(), 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), 0);
-			glVertexAttribPointer(vs_attr_texture_coords(), 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
-			glVertexAttribPointer(vs_attr_color_factor(), 4, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(4 * sizeof(GLfloat)));
+			glVertexAttribPointer(shader_program.vs_attr_position(), 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), 0);
+			glVertexAttribPointer(shader_program.vs_attr_texture_coords(), 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
+			glVertexAttribPointer(shader_program.vs_attr_color_factor(), 4, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(4 * sizeof(GLfloat)));
 
 			// Set index data and render.
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
 			glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, nullptr);
 
 			// Disable vertex attributes.
-			glDisableVertexAttribArray(vs_attr_position());
-			glDisableVertexAttribArray(vs_attr_texture_coords());
-			glDisableVertexAttribArray(vs_attr_color_factor());
-
-			// Unbind program.
-			glUseProgram(NULL);
+			glDisableVertexAttribArray(shader_program.vs_attr_position());
+			glDisableVertexAttribArray(shader_program.vs_attr_texture_coords());
+			glDisableVertexAttribArray(shader_program.vs_attr_color_factor());
 		}
 	}
 
@@ -247,6 +248,7 @@ namespace sdl
 		, VAlign vertical_alignment
 		, ColorFactor color_factor
 		, std::optional<TextureSpace::Box> const& src_rect
+		, ShaderProgram const& shader_program
 		) const
 	{
 		switch (horizontal_alignment) {
@@ -300,12 +302,12 @@ namespace sdl
 
 		if (_texture) {
 			// Bind program.
-			glUseProgram(dflt_program());
+			glUseProgram(shader_program.opengl_program_handle());
 
 			// Enable vertex attributes.
-			glEnableVertexAttribArray(vs_attr_position());
-			glEnableVertexAttribArray(vs_attr_texture_coords());
-			glEnableVertexAttribArray(vs_attr_color_factor());
+			glEnableVertexAttribArray(shader_program.vs_attr_position());
+			glEnableVertexAttribArray(shader_program.vs_attr_texture_coords());
+			glEnableVertexAttribArray(shader_program.vs_attr_color_factor());
 
 			// Bind texture.
 			glBindTexture(GL_TEXTURE_2D, _texture);
@@ -329,21 +331,18 @@ namespace sdl
 				, x0, y1, 0.0f, 1.0f, r, g, b, a
 				};
 			glBufferData(GL_ARRAY_BUFFER, 4 * 8 * sizeof(GLfloat), vertex_data, GL_DYNAMIC_DRAW);
-			glVertexAttribPointer(vs_attr_position(), 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), 0);
-			glVertexAttribPointer(vs_attr_texture_coords(), 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
-			glVertexAttribPointer(vs_attr_color_factor(), 4, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(4 * sizeof(GLfloat)));
+			glVertexAttribPointer(shader_program.vs_attr_position(), 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), 0);
+			glVertexAttribPointer(shader_program.vs_attr_texture_coords(), 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
+			glVertexAttribPointer(shader_program.vs_attr_color_factor(), 4, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(4 * sizeof(GLfloat)));
 
 			// Set index data and render.
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
 			glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, nullptr);
 
 			// Disable vertex attributes.
-			glDisableVertexAttribArray(vs_attr_position());
-			glDisableVertexAttribArray(vs_attr_texture_coords());
-			glDisableVertexAttribArray(vs_attr_color_factor());
-
-			// Unbind program.
-			glUseProgram(NULL);
+			glDisableVertexAttribArray(shader_program.vs_attr_position());
+			glDisableVertexAttribArray(shader_program.vs_attr_texture_coords());
+			glDisableVertexAttribArray(shader_program.vs_attr_color_factor());
 		}
 	}
 
@@ -355,13 +354,14 @@ namespace sdl
 		, double vertical_scale
 		, units::GameSpace::Radians angle
 		, std::optional<TextureSpace::Box> const& src_rect
+		, ShaderProgram const& shader_program
 		) const
 	{
-		int width = static_cast<int>(horizontal_scale * (src_rect ? src_rect->width() : _width));
-		int height = static_cast<int>(vertical_scale * (src_rect ? src_rect->height() : _height));
+		int width = static_cast<int>(horizontal_scale * (src_rect ? units::width(*src_rect) : _width));
+		int height = static_cast<int>(vertical_scale * (src_rect ? units::height(*src_rect) : _height));
 		SDL_Rect sdl_dst_rect
-			{ static_cast<int>(position.x() - (origin ? origin->x() : width / 2))
-			, static_cast<int>(position.y() - (origin ? origin->y() : height / 2))
+			{ static_cast<int>(position.x() - (origin ? origin->u() : width / 2))
+			, static_cast<int>(position.y() - (origin ? origin->v() : height / 2))
 			, width
 			, height
 			};
@@ -406,5 +406,58 @@ namespace sdl
 			glEnd();
 			glDisable(GL_TEXTURE_2D);
 		}
+	}
+
+	GLuint Texture::as_target_prologue(ShaderProgram const& shader_program)
+	{
+		static GLint viewport_size_uniform = glGetUniformLocation(shader_program.opengl_program_handle(), "viewport_size");
+
+		glUseProgram(shader_program.opengl_program_handle());
+
+		// Set viewport size to texture size.
+		//glUniform2f(viewport_size_uniform, static_cast<float>(_width), static_cast<float>(_height));
+
+		GLuint fbo;
+		glGenFramebuffers(1, &fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+		// Bind the texture.
+		glBindTexture(GL_TEXTURE_2D, _texture);
+
+		// Set filtering to nearest (only do interpolation once at most).
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+		// Attach texture to frame buffer.
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, _texture, 0);
+
+		// Set draw buffer.
+		GLenum draw_buffer = GL_COLOR_ATTACHMENT0;
+		glDrawBuffers(1, &draw_buffer);
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+			throw std::runtime_error{"Frame buffer error."};
+		}
+
+		// Render to the frame buffer.
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+		return fbo;
+	}
+
+	void Texture::as_target_epilogue(GLuint fbo, ShaderProgram const& shader_program)
+	{
+		static GLint viewport_size_uniform = glGetUniformLocation(shader_program.opengl_program_handle(), "viewport_size");
+
+		// Reset minification and magnification filters.
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		// Render to the screen buffer again.
+		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+
+		glDeleteFramebuffers(1, &fbo);
+
+		// Reset viewport size.
+		//glUniform2f(viewport_size_uniform, static_cast<float>(window().width()), static_cast<float>(window().height()));
 	}
 }

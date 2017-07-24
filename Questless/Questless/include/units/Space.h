@@ -534,30 +534,6 @@ namespace units
 			//! The size or extent of this box.
 			Vector size;
 
-			//! The x-coordinate of this box's position.
-			scalar_t& x() & { return position.x(); }
-			//! The x-coordinate of this box's position.
-			constexpr scalar_t const& x() const& { return position.x(); }
-
-			//! The y-coordinate of this box's position.
-			scalar_t& y() & { return position.y(); }
-			//! The y-coordinate of this box's position.
-			constexpr scalar_t const& y() const& { return position.y(); }
-
-			//! The z-coordinate of this box's position.
-			scalar_t& z() & { return origin.z(); }
-			//! The z-coordinate of this box's position.
-			constexpr scalar_t const& z() const& { return origin.z(); }
-
-			scalar_t& width() & { return size.x(); }
-			constexpr scalar_t const& width() const& { return size.x(); }
-
-			scalar_t& height() & { return size.y(); }
-			constexpr scalar_t const& height() const& { return size.y(); }
-
-			scalar_t& depth() & { return size.z(); }
-			constexpr scalar_t const& depth() const& { return size.z(); }
-
 			constexpr Box() = default;
 			constexpr Box(Box const&) = default;
 			constexpr Box(Box&&) = default;
@@ -605,11 +581,9 @@ namespace units
 				return left.origin != right.origin || left.size != right.size;
 			}
 
-			constexpr scalar_t right() const { return x() + width(); } //! @todo This is space-dependent.
-			constexpr scalar_t bottom() const { return y() + height(); } //! @todo This is space-dependent.
-
 			constexpr bool contains(Point const& point) const
 			{
+				//! @todo Rigorously define what containment means for generic spaces (inclusive vs. exclusive bounds).
 				for (int i = 0; i < dimension_count; ++i) {
 					if (point[i] < position[i] || point[i] > position[i] + size[i]) {
 						return false;

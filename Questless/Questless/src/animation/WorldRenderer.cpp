@@ -233,7 +233,7 @@ namespace questless
 		}
 		_terrain_bounds = *opt_bounds;
 		
-		_terrain_texture = make_unique<Texture>(lround(_terrain_bounds.width()), lround(_terrain_bounds.height()));
+		_terrain_texture = make_unique<Texture>(lround(width(_terrain_bounds)), lround(height(_terrain_bounds)));
 		_terrain_texture->as_target([&] {
 			renderer().clear(colors::clear());
 			for (auto const& section_view : _world_view->section_views()) {
@@ -250,7 +250,7 @@ namespace questless
 								GameSpace::Point const terrain_game_point = _terrain_bounds.position;
 								ScreenSpace::Point const tile_screen_point
 									{ lround(tile_game_point.x() - terrain_game_point.x())
-									, lround(terrain_game_point.y() - tile_game_point.y() + _terrain_bounds.height() - 1)
+									, lround(terrain_game_point.y() - tile_game_point.y() + height(_terrain_bounds) - 1)
 									};
 
 								// Get the current tile.

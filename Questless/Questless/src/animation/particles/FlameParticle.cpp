@@ -21,10 +21,10 @@ namespace questless
 
 		// Fade from yellow to red to black.
 		if (percent_left > 0.5) {
-			_color_factor[1] = 2.0f * (percent_left - 0.5f);
+			_color_factor.green() = 2.0f * (percent_left - 0.5f);
 		} else {
-			_color_factor[1] = 0.0f;
-			_color_factor[0] = 2.0f * percent_left;
+			_color_factor.red() = 2.0f * percent_left;
+			_color_factor.green() = 0.0f;
 		}
 	}
 

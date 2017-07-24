@@ -25,4 +25,20 @@ namespace units
 	}
 
 	using GameSpace = Space<struct GameSpaceTag, double, 2, detail::GameSpaceBuffer>;
+
+	inline double& width(GameSpace::Box& box) { return box.size.x(); }
+	inline double width(GameSpace::Box const& box) { return box.size.x(); }
+
+	inline double& height(GameSpace::Box& box) { return box.size.y(); }
+	inline double height(GameSpace::Box const& box) { return box.size.y(); }
+
+	inline double& left(GameSpace::Box& box) { return box.position.x(); }
+	inline double left(GameSpace::Box const& box) { return box.position.x(); }
+
+	inline double& top(GameSpace::Box& box) { return box.position.y(); }
+	inline double top(GameSpace::Box const& box) { return box.position.y(); }
+
+	inline double right(GameSpace::Box const& box) { return box.position.x() + box.size.x(); }
+
+	inline double bottom(GameSpace::Box const& box) { return box.position.y() + box.size.y(); }
 }

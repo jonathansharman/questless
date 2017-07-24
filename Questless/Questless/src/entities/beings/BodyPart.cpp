@@ -37,16 +37,16 @@ namespace questless
 	{
 		health.set_mutator(health_mutator(), false);
 		for (auto& region : _regions) {
-			region.x() *= 5;
-			region.y() *= 5;
+			left(region) *= 5;
+			top(region) *= 5;
 			
-			region.y() = -region.y();
+			top(region) = -top(region);
 
-			region.width() *= 5;
-			region.height() *= 5;
+			width(region) *= 5;
+			height(region) *= 5;
 
-			++region.width();
-			++region.height();
+			++width(region);
+			++height(region);
 		}
 	}
 

@@ -149,7 +149,7 @@ namespace questless
 			TextureSpace::Vector texture_size = _page_views[_page_index].option_textures[i].size();
 			ScreenSpace::Box box = ScreenSpace::Box
 				{ ScreenSpace::Point{position.x(), position.y()}
-				, ScreenSpace::Vector{texture_size.x(), texture_size.y()}
+				, ScreenSpace::Vector{texture_size.u(), texture_size.v()}
 				};
 			ScreenSpace::Point point = input().mouse_position();
 			if (box.contains(point)) {
@@ -289,12 +289,12 @@ namespace questless
 			_page_views.emplace_back(font_manager()[_title_font_handle].render(_pages[i].title.c_str(), _title_color), std::move(option_textures));
 		}
 
-		int width_remainder = _content_width % _tile_width;
+		int const width_remainder = _content_width % _tile_width;
 		if (width_remainder > 0) {
 			_content_width += _tile_width - width_remainder;
 		}
 
-		int height_remainder = _content_height % _tile_height;
+		int const height_remainder = _content_height % _tile_height;
 		if (height_remainder > 0) {
 			_content_height += _tile_height - height_remainder;
 		}
@@ -306,31 +306,91 @@ namespace questless
 			, _content_height + _top_margin + _bottom_margin
 			);
 		_background->as_target([&] {
-			// Clear background texture with transparent color.
-			renderer().clear(colors::clear());
-			
 			// Interior
 			for (int x = 0; x < _content_width / _tile_width; ++x) {
 				for (int y = 0; y < _content_height / _tile_height; ++y) {
-					texture_manager()[_tile_handle].draw(ScreenSpace::Point{_left_margin + _tile_width * x, _top_margin + _tile_height * y});
+					texture_manager()[_tile_handle].draw
+						( ScreenSpace::Point{_left_margin + _tile_width * x, _top_margin + _tile_height * y}
+						, HAlign::left
+						, VAlign::top
+						, colors::white_factor()
+						, std::nullopt
+						, texture_program()
+						);
 				}
 			}
 			// Top and bottom margins
 			for (int x = 0; x < _content_width / _tile_width; ++x) {
-				texture_manager()[_u_handle].draw(ScreenSpace::Point{_left_margin + _tile_width * x, 0});
-				texture_manager()[_d_handle].draw(ScreenSpace::Point{_left_margin + _tile_width * x, _top_margin + _content_height});
+				texture_manager()[_u_handle].draw
+					( ScreenSpace::Point{_left_margin + _tile_width * x, 0}
+					, HAlign::left
+					, VAlign::top
+					, colors::white_factor()
+					, std::nullopt
+					, texture_program()
+					);
+				texture_manager()[_d_handle].draw
+					( ScreenSpace::Point{_left_margin + _tile_width * x, _top_margin + _content_height}
+					, HAlign::left
+					, VAlign::top
+					, colors::white_factor()
+					, std::nullopt
+					, texture_program()
+					);
 			}
 			// Left and right margins
 			for (int y = 0; y < _content_height / _tile_height; ++y) {
-				texture_manager()[_l_handle].draw(ScreenSpace::Point{0, _top_margin + _tile_width * y});
-				texture_manager()[_r_handle].draw(ScreenSpace::Point{_left_margin + _content_width, _top_margin + _tile_width * y});
+				texture_manager()[_l_handle].draw
+					( ScreenSpace::Point{0, _top_margin + _tile_width * y}
+					, HAlign::left
+					, VAlign::top
+					, colors::white_factor()
+					, std::nullopt
+					, texture_program()
+					);
+				texture_manager()[_r_handle].draw
+					( ScreenSpace::Point{_left_margin + _content_width, _top_margin + _tile_width * y}
+					, HAlign::left
+					, VAlign::top
+					, colors::white_factor()
+					, std::nullopt
+					, texture_program()
+					);
 			}
 			// Corners
-			texture_manager()[_ul_handle].draw(ScreenSpace::Point{0, 0});
-			texture_manager()[_ur_handle].draw(ScreenSpace::Point{_left_margin + _content_width, 0});
-			texture_manager()[_dl_handle].draw(ScreenSpace::Point{0, _top_margin + _content_height});
-			texture_manager()[_dr_handle].draw(ScreenSpace::Point{_left_margin + _content_width, _top_margin + _content_height});
-		});
+			texture_manager()[_ul_handle].draw
+				( ScreenSpace::Point{0, 0}
+				, HAlign::left
+				, VAlign::top
+				, colors::white_factor()
+				, std::nullopt
+				, texture_program()
+				);
+			texture_manager()[_ur_handle].draw
+				( ScreenSpace::Point{_left_margin + _content_width, 0}
+				, HAlign::left
+				, VAlign::top
+				, colors::white_factor()
+				, std::nullopt
+				, texture_program()
+				);
+			texture_manager()[_dl_handle].draw
+				( ScreenSpace::Point{0, _top_margin + _content_height}
+				, HAlign::left
+				, VAlign::top
+				, colors::white_factor()
+				, std::nullopt
+				, texture_program()
+				);
+			texture_manager()[_dr_handle].draw
+				( ScreenSpace::Point{_left_margin + _content_width, _top_margin + _content_height}
+				, HAlign::left
+				, VAlign::top
+				, colors::white_factor()
+				, std::nullopt
+				, texture_program()
+				);
+		}, texture_program());
 
 		_render_is_current = true;
 	}

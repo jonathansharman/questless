@@ -23,4 +23,20 @@ namespace units
 	}
 
 	using SpriteSheetSpace = Space<struct SpriteSheetSpaceTag, int, 2, detail::SpriteSheetSpaceBuffer>;
+
+	inline int& width(SpriteSheetSpace::Box& box) { return box.size.x(); }
+	inline int width(SpriteSheetSpace::Box const& box) { return box.size.x(); }
+
+	inline int& height(SpriteSheetSpace::Box& box) { return box.size.y(); }
+	inline int height(SpriteSheetSpace::Box const& box) { return box.size.y(); }
+
+	inline int& left(SpriteSheetSpace::Box& box) { return box.position.x(); }
+	inline int left(SpriteSheetSpace::Box const& box) { return box.position.x(); }
+
+	inline int& top(SpriteSheetSpace::Box& box) { return box.position.y(); }
+	inline int top(SpriteSheetSpace::Box const& box) { return box.position.y(); }
+
+	inline int right(SpriteSheetSpace::Box const& box) { return box.position.x() + box.size.x(); }
+
+	inline int bottom(SpriteSheetSpace::Box const& box) { return box.position.y() + box.size.y(); }
 }

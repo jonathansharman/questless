@@ -134,7 +134,7 @@ namespace questless
 
 		// Textures
 
-		uptr<sdl::Texture> _txt_test; //!< A placeholder texture used for testing.
+		uptr<sdl::Texture> _txt_test1;
 		uptr<sdl::Texture> _txt_test2;
 		uptr<sdl::Texture> _txt_test3;
 
@@ -163,8 +163,6 @@ namespace questless
 
 		std::optional<Id<Being>> _player_being_id;
 		Player* _player;
-
-		bool _game_over;
 
 		bool _splash_sound_played;
 		std::vector<units::ScreenSpace::Point> _splash_flame_positions;
@@ -196,18 +194,20 @@ namespace questless
 
 		void load_textures();
 
-		void game_loop();
-
 		// Update methods
 
-		void update_splash();
-		void update_menu();
-		void update_playing();
+		enum class UpdateResult { continue_game, game_over };
+
+		UpdateResult update(units::GameSeconds& accrued_time, clock::time_point& last_update_time);
+		UpdateResult update_splash();
+		UpdateResult update_menu();
+		UpdateResult update_playing();
 
 		void update_player_view();
 
 		// Render methods
 
+		void render();
 		void render_splash();
 		void render_menu();
 		void render_playing();

@@ -7,27 +7,37 @@
 
 #include <memory>
 
-#include "ResourceManager.h"
-#include "Renderer.h"
-#include "Window.h"
-#include "Input.h"
-#include "Texture.h"
+#include "ShaderProgram.h"
 #include "Font.h"
+#include "Input.h"
+#include "Renderer.h"
+#include "ResourceManager.h"
 #include "Sound.h"
+#include "Texture.h"
+#include "Window.h"
 
 namespace sdl
 {
 	//! The default OpenGL program, using basic shaders.
-	GLuint& dflt_program();
+	ShaderProgram& dflt_program();
+
+	//! Sets the default shader program to the given value.
+	void dflt_program(std::unique_ptr<ShaderProgram> shader_program);
+
+	//! The OpenGL program for rendering to texture targets.
+	ShaderProgram& texture_program();
+
+	//! Sets the texture shader program to the given value.
+	void texture_program(std::unique_ptr<ShaderProgram> shader_program);
 
 	//! The ID of the position attribute in the vertex shader.
-	GLint vs_attr_position();
+	GLint vs_attr_position(ShaderProgram const& shader_program);
 
 	//! The ID of the texture_coords attribute in the vertex shader.
-	GLint vs_attr_texture_coords();
+	GLint vs_attr_texture_coords(ShaderProgram const& shader_program);
 
 	//! The ID of the color_factor attribute in the vertex shader.
-	GLint vs_attr_color_factor();
+	GLint vs_attr_color_factor(ShaderProgram const& shader_program);
 
 	//! The renderer.
 	Renderer& renderer();

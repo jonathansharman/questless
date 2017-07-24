@@ -74,20 +74,20 @@ namespace questless
 
 			{ // Draw highlight.
 				units::ScreenSpace::Box bounds
-					{ units::ScreenSpace::Point{_bounds.x() + _x_padding, _bounds.y() + _y_padding + _title_height + _selection * _option_height}
-					, units::ScreenSpace::Vector{_bounds.width() - 2 * _x_padding, _option_height}
+					{ units::ScreenSpace::Point{left(_bounds) + _x_padding, top(_bounds) + _y_padding + _title_height + _selection * _option_height}
+					, units::ScreenSpace::Vector{width(_bounds) - 2 * _x_padding, _option_height}
 					};
 				sdl::renderer().draw_box(bounds, units::colors::white(), true);
 			}
 
 			// Draw title.
-			_txt_title->draw(units::ScreenSpace::Point{_bounds.x() + _x_padding, _bounds.y() + _y_padding});
+			_txt_title->draw(units::ScreenSpace::Point{left(_bounds) + _x_padding, top(_bounds) + _y_padding});
 
 			// Draw options.
 			for (size_t i = 0; i < _options.size(); ++i) {
 				_txt_options[i].draw(units::ScreenSpace::Point
-					{ _bounds.x() + _x_padding
-					, _bounds.y() + _y_padding + _title_height + static_cast<int>(i) * _option_height
+					{ left(_bounds) + _x_padding
+					, top(_bounds) + _y_padding + _title_height + static_cast<int>(i) * _option_height
 					});
 			}
 		}
@@ -114,21 +114,21 @@ namespace questless
 			static auto list_option_font_handle = sdl::font_manager().add("resources/fonts/dumbledor1.ttf", 20);
 
 			_txt_title = make_title(_title.c_str(), units::colors::black());
-			_bounds.width() = _txt_title->width();
+			width(_bounds) = _txt_title->width();
 			_txt_options.clear();
 			for (auto const& option : _options) {
 				_txt_options.push_back(sdl::font_manager()[list_option_font_handle].render(option.c_str(), units::colors::black()));
-				_bounds.width() = std::max(_bounds.width(), _txt_options.back().width());
+				width(_bounds) = std::max(width(_bounds), _txt_options.back().width());
 			}
-			_bounds.width() += 2 * _x_padding;
-			_bounds.height() = _title_height + static_cast<int>(_options.size() * _option_height) + 2 * _y_padding;
+			width(_bounds) += 2 * _x_padding;
+			height(_bounds) = _title_height + static_cast<int>(_options.size() * _option_height) + 2 * _y_padding;
 
 			// Confine bounds to window.
-			if (_bounds.x() + _bounds.width() > sdl::window().width()) {
-				_bounds.x() -= _bounds.width();
+			if (left(_bounds) + width(_bounds) > sdl::window().width()) {
+				left(_bounds) -= width(_bounds);
 			}
-			if (_bounds.y() + _bounds.height() > sdl::window().height()) {
-				_bounds.y() -= _bounds.height();
+			if (top(_bounds) + height(_bounds) > sdl::window().height()) {
+				top(_bounds) -= height(_bounds);
 			}
 		}
 	};

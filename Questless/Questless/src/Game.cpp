@@ -7,9 +7,6 @@
 #include <sstream>
 #include <thread>
 
-#include <glew.h>
-#include <gl/GL.h>
-#include <gl/GLU.h>
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
@@ -29,6 +26,7 @@
 #include "items/weapons/Bow.h"
 #include "items/weapons/Quarterstaff.h"
 #include "items/weapons/Quiver.h"
+#include "sdl/ShaderProgram.h"
 #include "spell/EagleEye.h"
 #include "spell/Heal.h"
 #include "spell/LightningBolt.h"
@@ -54,7 +52,6 @@ namespace questless
 
 	Game::Game(bool fullscreen)
 		: _player_being_id{std::nullopt}
-		, _game_over{false}
 		, _splash_sound_played{false}
 		, _state{State::splash}
 		, _main_menu{480, 640}
@@ -97,58 +94,105 @@ namespace questless
 				}
 			}
 
-			// Generate default OpenGL program.
-			dflt_program() = glCreateProgram();
+			// Generate GLSL programs.
+			dflt_program(std::make_unique<ShaderProgram>());
+			texture_program(std::make_unique<ShaderProgram>());
 
-			// Create vertex shader
-			GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+			// Create vertex shaders.
+			GLuint dflt_vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+			GLuint texture_vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 
-			{ // Define vertex shader.
+			{ // Define default vertex shader.
 				auto source = contents_of_file("resources/shaders/dflt.vert");
 				auto source_c_str = source.c_str();
-				glShaderSource(vertex_shader, 1, &source_c_str, nullptr);
+				glShaderSource(dflt_vertex_shader, 1, &source_c_str, nullptr);
+			}
+			{ // Define texture vertex shader.
+				auto source = contents_of_file("resources/shaders/texture.vert");
+				auto source_c_str = source.c_str();
+				glShaderSource(texture_vertex_shader, 1, &source_c_str, nullptr);
 			}
 
-			// Compile vertex shader source.
-			glCompileShader(vertex_shader);
+			// Compile default vertex shader source.
+			glCompileShader(dflt_vertex_shader);
 			{ // Check vertex shader for errors.
 				GLint success = GL_FALSE;
-				glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
+				glGetShaderiv(dflt_vertex_shader, GL_COMPILE_STATUS, &success);
+				if (success != GL_TRUE) {
+					throw std::runtime_error{"Unable to compile vertex shader."};
+				}
+			}
+			// Compile texture vertex shader source.
+			glCompileShader(texture_vertex_shader);
+			{ // Check vertex shader for errors.
+				GLint success = GL_FALSE;
+				glGetShaderiv(texture_vertex_shader, GL_COMPILE_STATUS, &success);
 				if (success != GL_TRUE) {
 					throw std::runtime_error{"Unable to compile vertex shader."};
 				}
 			}
 
-			// Attach vertex shader to program.
-			glAttachShader(dflt_program(), vertex_shader);
+			// Attach default vertex shader to default program.
+			glAttachShader(dflt_program().opengl_program_handle(), dflt_vertex_shader);
 
-			// Create fragment shader.
-			GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+			// Attach texture vertex shader to texture program.
+			glAttachShader(texture_program().opengl_program_handle(), texture_vertex_shader);
 
-			{ // Define fragment shader.
+			// Create fragment shaders.
+			GLuint dflt_fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+			GLuint texture_fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+			{ // Create default fragment shader.
 				auto source = contents_of_file("resources/shaders/dflt.frag");
 				auto source_c_str = source.c_str();
-				glShaderSource(fragment_shader, 1, &source_c_str, nullptr);
+				glShaderSource(dflt_fragment_shader, 1, &source_c_str, nullptr);
+			}
+			{ // Create texture fragment shader.
+				auto source = contents_of_file("resources/shaders/texture.frag");
+				auto source_c_str = source.c_str();
+				glShaderSource(texture_fragment_shader, 1, &source_c_str, nullptr);
 			}
 
-			// Compile fragment shader source.
-			glCompileShader(fragment_shader);
+			// Compile default fragment shader.
+			glCompileShader(dflt_fragment_shader);
 			{ // Check fragment shader for errors.
 				GLint success = GL_FALSE;
-				glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
+				glGetShaderiv(dflt_fragment_shader, GL_COMPILE_STATUS, &success);
+				if (success != GL_TRUE) {
+					throw std::runtime_error{"Unable to compile fragment shader."};
+				}
+			}
+			// Compile texture fragment shader.
+			glCompileShader(texture_fragment_shader);
+			{ // Check fragment shader for errors.
+				GLint success = GL_FALSE;
+				glGetShaderiv(texture_fragment_shader, GL_COMPILE_STATUS, &success);
 				if (success != GL_TRUE) {
 					throw std::runtime_error{"Unable to compile fragment shader."};
 				}
 			}
 
-			// Attach fragment shader to program.
-			glAttachShader(dflt_program(), fragment_shader);
+			// Attach default fragment shader to default program.
+			glAttachShader(dflt_program().opengl_program_handle(), dflt_fragment_shader);
 
-			// Link program.
-			glLinkProgram(dflt_program());
+			// Attach texture fragment shader to texture program.
+			glAttachShader(texture_program().opengl_program_handle(), texture_fragment_shader);
+
+			// Link default program.
+			glLinkProgram(dflt_program().opengl_program_handle());
 			{ // Check for link errors.
 				GLint success = GL_TRUE;
-				glGetProgramiv(dflt_program(), GL_LINK_STATUS, &success);
+				glGetProgramiv(dflt_program().opengl_program_handle(), GL_LINK_STATUS, &success);
+				if (success != GL_TRUE) {
+					throw std::runtime_error{"Error linking OpenGL program."};
+				}
+			}
+
+			// Link texture program.
+			glLinkProgram(texture_program().opengl_program_handle());
+			{ // Check for link errors.
+				GLint success = GL_TRUE;
+				glGetProgramiv(texture_program().opengl_program_handle(), GL_LINK_STATUS, &success);
 				if (success != GL_TRUE) {
 					throw std::runtime_error{"Error linking OpenGL program."};
 				}
@@ -157,13 +201,19 @@ namespace questless
 			// Set clear color.
 			glClearColor(0.0, 0.0, 0.0, 1.0);
 
-			{ // Set uniforms.
-				glUseProgram(dflt_program());
-				GLint window_size_uniform = glGetUniformLocation(dflt_program(), "window_size");
+			{ // Set default program uniforms.
+				glUseProgram(dflt_program().opengl_program_handle());
+				GLint viewport_size_uniform = glGetUniformLocation(dflt_program().opengl_program_handle(), "viewport_size");
 				int window_width = window().width();
 				int window_height = window().height();
-				glUniform2f(window_size_uniform, static_cast<float>(window_width), static_cast<float>(window_height));
-				glUseProgram(NULL);
+				glUniform2f(viewport_size_uniform, static_cast<float>(window_width), static_cast<float>(window_height));
+			}
+			{ // Set texture program uniforms.
+				glUseProgram(texture_program().opengl_program_handle());
+				GLint viewport_size_uniform = glGetUniformLocation(texture_program().opengl_program_handle(), "viewport_size");
+				int window_width = window().width();
+				int window_height = window().height();
+				glUniform2f(viewport_size_uniform, static_cast<float>(window_width), static_cast<float>(window_height));
 			}
 
 			//! @todo Are the following necessary when using shaders?
@@ -261,7 +311,7 @@ namespace questless
 
 	void Game::load_textures()
 	{
-		_txt_test = make_unique<Texture>("resources/textures/test.png");
+		_txt_test1 = make_unique<Texture>("resources/textures/test1.png");
 		_txt_test2 = make_unique<Texture>("resources/textures/test2.png");
 		_txt_test3 = make_unique<Texture>("resources/textures/test3.png");
 
@@ -313,112 +363,116 @@ namespace questless
 
 	void Game::run()
 	{
-		game_loop();
+		GameSeconds accrued_time = GameSeconds::zero();
+		clock::time_point last_update_time = clock::now();
+		while (update(accrued_time, last_update_time) == UpdateResult::continue_game) {
+			render();
+		}
 		if (_region) {
 			_region->save("Slot1");
 		}
 	}
 
-	void Game::game_loop()
+	Game::UpdateResult Game::update(GameSeconds& accrued_time, clock::time_point& last_update_time)
 	{
-		GameSeconds accrued_time = GameSeconds::zero();
-		clock::time_point last_update_time = clock::now();
-		for (;;) {
-			// Update
+		input().update();
 
-			input().update();
+		if (input().quit() || input().alt() && input().presses(SDLK_F4)) {
+			return UpdateResult::game_over;
+		}
 
-			if (input().quit() || input().alt() && input().presses(SDLK_F4)) {
-				_game_over = true;
-				return;
-			}
+		//! @todo Sometimes resizing the window causes a crash.
+		if (input().window_restored()) {
+			//! @todo Save previous window size and restore it here.
+		}
+		if (input().window_resized()) {
+			window().recreate();
+			renderer(make_unique<Renderer>(window(), window().width(), window().height()));
+		}
 
-			//! @todo Sometimes resizing the window causes a crash.
-			if (input().window_restored()) {
-				//! @todo Save previous window size and restore it here.
-			}
-			if (input().window_resized()) {
-				window().recreate();
-				renderer(make_unique<Renderer>(window(), window().width(), window().height()));
-			}
-
+		{ // Perform state-specific updates.
+			UpdateResult result;
 			switch (_state) {
 				case State::splash:
-					update_splash();
+					result = update_splash();
 					break;
 				case State::menu:
-					update_menu();
+					result = update_menu();
 					break;
 				case State::playing:
-					update_playing();
+					result = update_playing();
 					break;
 				default:
 					break;
 			}
-
-			if (_game_over) {
-				break;
-			}
-
-			// Timekeeping
-
-			auto frame_time = clock::now() - last_update_time;
-			last_update_time = clock::now();
-			accrued_time += frame_time;
-
-			std::this_thread::sleep_for(duration_cast<milliseconds>(frame_duration - accrued_time));
-
-			accrued_time -= frame_duration;
-			if (accrued_time > _max_accrued_update_time) {
-				accrued_time = _max_accrued_update_time;
-			}
-
-			// Update FPS.
-
-			auto frame_ms = duration_cast<milliseconds>(frame_time).count();
-			if (frame_ms != 0) {
-				_fps_buffer.push_back(1000.0 / frame_ms);
-			}
-			if (_fps_buffer.size() > _max_fps_buffer_size) {
-				_fps_buffer.pop_front();
-			}
-
-			// Render
-
-			switch (_state) {
-				case State::splash:
-					glClear(GL_COLOR_BUFFER_BIT);
-					render_splash();
-					break;
-				case State::menu:
-					glClear(GL_COLOR_BUFFER_BIT);
-					render_menu();
-					break;
-				case State::playing:
-					glClear(GL_COLOR_BUFFER_BIT);
-					render_playing();
-					break;
-			}
-
-			// Draw FPS counter.
-
-			double fps_buffer_sum = 0.0;
-			for (double fps : _fps_buffer) {
-				fps_buffer_sum += fps;
-			}
-			std::ostringstream oss_fps;
-			oss_fps.setf(std::ios::fixed);
-			oss_fps.precision(2);
-			oss_fps << fps_buffer_sum / _fps_buffer.size();
-			Texture txt_fps = _fnt_20pt->render(oss_fps.str().c_str(), colors::white());
-			txt_fps.draw(ScreenSpace::Point(window().width() - 1, window().height() - 1), HAlign::right, VAlign::bottom);
-
-			// Swap buffers to update the screen.
-			SDL_GL_SwapWindow(window().sdl_ptr());
+			if (result == UpdateResult::game_over) return UpdateResult::game_over;
 		}
+
+		// Timekeeping
+
+		auto frame_time = clock::now() - last_update_time;
+		last_update_time = clock::now();
+		accrued_time += frame_time;
+
+		std::this_thread::sleep_for(duration_cast<milliseconds>(frame_duration - accrued_time));
+
+		accrued_time -= frame_duration;
+		if (accrued_time > _max_accrued_update_time) {
+			accrued_time = _max_accrued_update_time;
+		}
+
+		// Update FPS.
+
+		auto frame_ms = duration_cast<milliseconds>(frame_time).count();
+		if (frame_ms != 0) {
+			_fps_buffer.push_back(1000.0 / frame_ms);
+		}
+		if (_fps_buffer.size() > _max_fps_buffer_size) {
+			_fps_buffer.pop_front();
+		}
+
+		return UpdateResult::continue_game;
 	}
 
-	void Game::update_splash()
+	void Game::render()
+	{
+		////////////
+		// Render //
+		////////////
+
+		switch (_state) {
+			case State::splash:
+				glClear(GL_COLOR_BUFFER_BIT);
+				render_splash();
+				break;
+			case State::menu:
+				glClear(GL_COLOR_BUFFER_BIT);
+				render_menu();
+				break;
+			case State::playing:
+				glClear(GL_COLOR_BUFFER_BIT);
+				render_playing();
+				break;
+		}
+
+		// Draw FPS counter.
+
+		double fps_buffer_sum = 0.0;
+		for (double fps : _fps_buffer) {
+			fps_buffer_sum += fps;
+		}
+		std::ostringstream oss_fps;
+		oss_fps.setf(std::ios::fixed);
+		oss_fps.precision(2);
+		oss_fps << fps_buffer_sum / _fps_buffer.size();
+		//Texture txt_fps = _fnt_20pt->render(oss_fps.str().c_str(), colors::white());
+		//txt_fps.draw(ScreenSpace::Point(window().width() - 1, window().height() - 1), HAlign::right, VAlign::bottom);
+
+		// Swap buffers to update the screen.
+		SDL_GL_SwapWindow(window().sdl_ptr());
+	}
+
+	Game::UpdateResult Game::update_splash()
 	{
 		if (!_splash_sound_played) {
 			_splash_sound_played = true;
@@ -457,6 +511,7 @@ namespace questless
 			_time_last_state_change = clock::now();
 			_state = State::menu;
 		}
+		return UpdateResult::continue_game;
 	}
 	
 	void Game::render_splash()
@@ -478,7 +533,7 @@ namespace questless
 		}
 	}
 
-	void Game::update_menu()
+	Game::UpdateResult Game::update_menu()
 	{
 		_main_menu.update();
 		for (auto const& option : _main_menu.poll_selections()) {
@@ -519,11 +574,11 @@ namespace questless
 					_time_last_state_change = clock::now();
 					_state = State::playing;
 				} else if (option.second  == "Quit") {
-					_game_over = true;
-					return;
+					return UpdateResult::game_over;
 				}
 			}
 		}
+		return UpdateResult::continue_game;
 	}
 
 	void Game::render_menu()
@@ -558,15 +613,15 @@ namespace questless
 			ss_cam_coords.precision(2);
 			ss_cam_coords << "Cam: ((" << _camera->position().x() << ", " << _camera->position().y() << "), ";
 			ss_cam_coords << _camera->angle().count() << ", " << _camera->zoom() << ")";
-			Texture txt_cam_coords = _fnt_20pt->render(ss_cam_coords.str().c_str(), colors::white());
-			txt_cam_coords.draw(ScreenSpace::Point{0, 0});
+			//Texture txt_cam_coords = _fnt_20pt->render(ss_cam_coords.str().c_str(), colors::white());
+			//txt_cam_coords.draw(ScreenSpace::Point{0, 0});
 		}
 		{
 			auto cam_hex_coords = Layout::dflt().to_hex_coords<RegionTile::Point>(_camera->position());
 			std::ostringstream ss_cam_hex_coords;
 			ss_cam_hex_coords << "Cam hex: (" << cam_hex_coords.q << ", " << cam_hex_coords.r << ")";
-			Texture txt_cam_hex_coords = _fnt_20pt->render(ss_cam_hex_coords.str().c_str(), colors::white());
-			txt_cam_hex_coords.draw(ScreenSpace::Point{0, 25});
+			//Texture txt_cam_hex_coords = _fnt_20pt->render(ss_cam_hex_coords.str().c_str(), colors::white());
+			//txt_cam_hex_coords.draw(ScreenSpace::Point{0, 25});
 		}
 		{
 			std::ostringstream ss_time;
@@ -592,9 +647,9 @@ namespace questless
 					time_name = "Dawn";
 					break;
 			}
-			ss_time << "Time: " << _region->time() << " (" << time_of_day << ", " << time_name << ')';
-			Texture txt_turn = _fnt_20pt->render(ss_time.str().c_str(), colors::white());
-			txt_turn.draw(ScreenSpace::Point{0, 50});
+			//ss_time << "Time: " << _region->time() << " (" << time_of_day << ", " << time_name << ')';
+			//Texture txt_turn = _fnt_20pt->render(ss_time.str().c_str(), colors::white());
+			//txt_turn.draw(ScreenSpace::Point{0, 50});
 		}
 
 		// Draw q- and r-axes.
@@ -605,7 +660,7 @@ namespace questless
 		camera().draw_lines({Layout::dflt().to_world(origin), Layout::dflt().to_world(r_axis)}, colors::red());
 	}
 
-	void Game::update_playing()
+	Game::UpdateResult Game::update_playing()
 	{
 		// Update camera.
 		_camera->update();
@@ -716,6 +771,7 @@ namespace questless
 				}
 			}
 		}
+		return UpdateResult::continue_game;
 	}
 
 	void Game::update_player_view()

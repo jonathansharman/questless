@@ -330,6 +330,7 @@
     <ClInclude Include="include\sdl\Renderer.h" />
     <ClInclude Include="include\sdl\ResourceManager.h" />
     <ClInclude Include="include\sdl\resources.h" />
+    <ClInclude Include="include\sdl\ShaderProgram.h" />
     <ClInclude Include="include\sdl\Sound.h" />
     <ClInclude Include="include\sdl\Texture.h" />
     <ClInclude Include="include\sdl\Window.h" />

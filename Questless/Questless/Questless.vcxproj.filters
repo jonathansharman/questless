@@ -486,9 +486,6 @@
     <ClInclude Include="include\sdl\Sound.h">
       <Filter>include\sdl</Filter>
     </ClInclude>
-    <ClInclude Include="include\sdl\Texture.h">
-      <Filter>include\sdl</Filter>
-    </ClInclude>
     <ClInclude Include="include\sdl\Window.h">
       <Filter>include\sdl</Filter>
     </ClInclude>
@@ -620,6 +617,15 @@
     </ClInclude>
     <ClInclude Include="include\units\colors.h">
       <Filter>include\units</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sdl\Texture.h">
+      <Filter>include\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sdl\Texture.h">
+      <Filter>include\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sdl\GraphicsProgram.h">
+      <Filter>include\sdl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
