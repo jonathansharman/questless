@@ -1,20 +1,18 @@
 #version 450
 
 uniform vec2 viewport_size;
+uniform bool flip_y;
 
 in vec2 position;
 in vec2 texture_coords;
-in vec4 color_factor;
 
 out vec2 frag_texture_coords;
-out vec4 frag_color_factor;
 
 void main() {
 	frag_texture_coords = texture_coords;
-	frag_color_factor = color_factor;
-
-	float t = 0.0;
-	float b = viewport_size.y;
+	
+	float t = flip_y ? viewport_size.y : 0.0;
+	float b = flip_y ? 0.0 : viewport_size.y;
 	float l = 0.0;
 	float r = viewport_size.x;
 	float f = -1.0;

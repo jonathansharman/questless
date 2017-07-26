@@ -24,21 +24,6 @@ namespace sdl
 	//! Sets the default shader program to the given value.
 	void dflt_program(std::unique_ptr<ShaderProgram> shader_program);
 
-	//! The OpenGL program for rendering to texture targets.
-	ShaderProgram& texture_program();
-
-	//! Sets the texture shader program to the given value.
-	void texture_program(std::unique_ptr<ShaderProgram> shader_program);
-
-	//! The ID of the position attribute in the vertex shader.
-	GLint vs_attr_position(ShaderProgram const& shader_program);
-
-	//! The ID of the texture_coords attribute in the vertex shader.
-	GLint vs_attr_texture_coords(ShaderProgram const& shader_program);
-
-	//! The ID of the color_factor attribute in the vertex shader.
-	GLint vs_attr_color_factor(ShaderProgram const& shader_program);
-
 	//! The renderer.
 	Renderer& renderer();
 

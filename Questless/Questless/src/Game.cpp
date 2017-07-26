@@ -96,8 +96,7 @@ namespace questless
 
 			// Generate GLSL programs.
 			dflt_program(std::make_unique<ShaderProgram>());
-			texture_program(std::make_unique<ShaderProgram>());
-
+			
 			// Create vertex shaders.
 			GLuint dflt_vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 			GLuint texture_vertex_shader = glCreateShader(GL_VERTEX_SHADER);
@@ -135,22 +134,13 @@ namespace questless
 			// Attach default vertex shader to default program.
 			glAttachShader(dflt_program().opengl_program_handle(), dflt_vertex_shader);
 
-			// Attach texture vertex shader to texture program.
-			glAttachShader(texture_program().opengl_program_handle(), texture_vertex_shader);
-
 			// Create fragment shaders.
 			GLuint dflt_fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-			GLuint texture_fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 
 			{ // Create default fragment shader.
 				auto source = contents_of_file("resources/shaders/dflt.frag");
 				auto source_c_str = source.c_str();
 				glShaderSource(dflt_fragment_shader, 1, &source_c_str, nullptr);
-			}
-			{ // Create texture fragment shader.
-				auto source = contents_of_file("resources/shaders/texture.frag");
-				auto source_c_str = source.c_str();
-				glShaderSource(texture_fragment_shader, 1, &source_c_str, nullptr);
 			}
 
 			// Compile default fragment shader.
@@ -162,21 +152,9 @@ namespace questless
 					throw std::runtime_error{"Unable to compile fragment shader."};
 				}
 			}
-			// Compile texture fragment shader.
-			glCompileShader(texture_fragment_shader);
-			{ // Check fragment shader for errors.
-				GLint success = GL_FALSE;
-				glGetShaderiv(texture_fragment_shader, GL_COMPILE_STATUS, &success);
-				if (success != GL_TRUE) {
-					throw std::runtime_error{"Unable to compile fragment shader."};
-				}
-			}
 
 			// Attach default fragment shader to default program.
 			glAttachShader(dflt_program().opengl_program_handle(), dflt_fragment_shader);
-
-			// Attach texture fragment shader to texture program.
-			glAttachShader(texture_program().opengl_program_handle(), texture_fragment_shader);
 
 			// Link default program.
 			glLinkProgram(dflt_program().opengl_program_handle());
@@ -188,29 +166,12 @@ namespace questless
 				}
 			}
 
-			// Link texture program.
-			glLinkProgram(texture_program().opengl_program_handle());
-			{ // Check for link errors.
-				GLint success = GL_TRUE;
-				glGetProgramiv(texture_program().opengl_program_handle(), GL_LINK_STATUS, &success);
-				if (success != GL_TRUE) {
-					throw std::runtime_error{"Error linking OpenGL program."};
-				}
-			}
-
 			// Set clear color.
 			glClearColor(0.0, 0.0, 0.0, 1.0);
 
 			{ // Set default program uniforms.
 				glUseProgram(dflt_program().opengl_program_handle());
 				GLint viewport_size_uniform = glGetUniformLocation(dflt_program().opengl_program_handle(), "viewport_size");
-				int window_width = window().width();
-				int window_height = window().height();
-				glUniform2f(viewport_size_uniform, static_cast<float>(window_width), static_cast<float>(window_height));
-			}
-			{ // Set texture program uniforms.
-				glUseProgram(texture_program().opengl_program_handle());
-				GLint viewport_size_uniform = glGetUniformLocation(texture_program().opengl_program_handle(), "viewport_size");
 				int window_width = window().width();
 				int window_height = window().height();
 				glUniform2f(viewport_size_uniform, static_cast<float>(window_width), static_cast<float>(window_height));

@@ -313,9 +313,6 @@ namespace questless
 						( ScreenSpace::Point{_left_margin + _tile_width * x, _top_margin + _tile_height * y}
 						, HAlign::left
 						, VAlign::top
-						, colors::white_factor()
-						, std::nullopt
-						, texture_program()
 						);
 				}
 			}
@@ -325,17 +322,11 @@ namespace questless
 					( ScreenSpace::Point{_left_margin + _tile_width * x, 0}
 					, HAlign::left
 					, VAlign::top
-					, colors::white_factor()
-					, std::nullopt
-					, texture_program()
 					);
 				texture_manager()[_d_handle].draw
 					( ScreenSpace::Point{_left_margin + _tile_width * x, _top_margin + _content_height}
 					, HAlign::left
 					, VAlign::top
-					, colors::white_factor()
-					, std::nullopt
-					, texture_program()
 					);
 			}
 			// Left and right margins
@@ -344,17 +335,11 @@ namespace questless
 					( ScreenSpace::Point{0, _top_margin + _tile_width * y}
 					, HAlign::left
 					, VAlign::top
-					, colors::white_factor()
-					, std::nullopt
-					, texture_program()
 					);
 				texture_manager()[_r_handle].draw
 					( ScreenSpace::Point{_left_margin + _content_width, _top_margin + _tile_width * y}
 					, HAlign::left
 					, VAlign::top
-					, colors::white_factor()
-					, std::nullopt
-					, texture_program()
 					);
 			}
 			// Corners
@@ -362,35 +347,23 @@ namespace questless
 				( ScreenSpace::Point{0, 0}
 				, HAlign::left
 				, VAlign::top
-				, colors::white_factor()
-				, std::nullopt
-				, texture_program()
 				);
 			texture_manager()[_ur_handle].draw
 				( ScreenSpace::Point{_left_margin + _content_width, 0}
 				, HAlign::left
 				, VAlign::top
-				, colors::white_factor()
-				, std::nullopt
-				, texture_program()
 				);
 			texture_manager()[_dl_handle].draw
 				( ScreenSpace::Point{0, _top_margin + _content_height}
 				, HAlign::left
 				, VAlign::top
-				, colors::white_factor()
-				, std::nullopt
-				, texture_program()
 				);
 			texture_manager()[_dr_handle].draw
 				( ScreenSpace::Point{_left_margin + _content_width, _top_margin + _content_height}
 				, HAlign::left
 				, VAlign::top
-				, colors::white_factor()
-				, std::nullopt
-				, texture_program()
 				);
-		}, texture_program());
+		});
 
 		_render_is_current = true;
 	}

@@ -194,7 +194,6 @@ namespace sdl
 			// Enable vertex attributes.
 			glEnableVertexAttribArray(shader_program.vs_attr_position());
 			glEnableVertexAttribArray(shader_program.vs_attr_texture_coords());
-			glEnableVertexAttribArray(shader_program.vs_attr_color_factor());
 
 			// Calculate texture coordinates.
 			float u0, u1, v0, v1;
@@ -210,26 +209,24 @@ namespace sdl
 				v1 = 1.0f;
 			}
 
+			// Set color factor.
+			glUniform4f(shader_program.color_factor(), color_factor.red(), color_factor.green(), color_factor.blue(), color_factor.alpha());
+
 			// Set vertex data.
 			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 			float x0 = static_cast<float>(left(dst_rect));
 			float y0 = static_cast<float>(top(dst_rect));
 			float x1 = static_cast<float>(right(dst_rect));
 			float y1 = static_cast<float>(bottom(dst_rect));
-			float r = color_factor.red();
-			float g = color_factor.green();
-			float b = color_factor.blue();
-			float a = color_factor.alpha();
 			GLfloat vertex_data[] =
-				{ x0, y0, u0, v0, r, g, b, a
-				, x1, y0, u1, v0, r, g, b, a
-				, x1, y1, u1, v1, r, g, b, a
-				, x0, y1, u0, v1, r, g, b, a
+				{ x0, y0, u0, v0
+				, x1, y0, u1, v0
+				, x1, y1, u1, v1
+				, x0, y1, u0, v1
 				};
-			glBufferData(GL_ARRAY_BUFFER, 4 * 8 * sizeof(GLfloat), vertex_data, GL_DYNAMIC_DRAW);
-			glVertexAttribPointer(shader_program.vs_attr_position(), 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), 0);
-			glVertexAttribPointer(shader_program.vs_attr_texture_coords(), 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
-			glVertexAttribPointer(shader_program.vs_attr_color_factor(), 4, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(4 * sizeof(GLfloat)));
+			glBufferData(GL_ARRAY_BUFFER, 4 * 4 * sizeof(GLfloat), vertex_data, GL_DYNAMIC_DRAW);
+			glVertexAttribPointer(shader_program.vs_attr_position(), 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+			glVertexAttribPointer(shader_program.vs_attr_texture_coords(), 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
 
 			// Set index data and render.
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
@@ -238,7 +235,6 @@ namespace sdl
 			// Disable vertex attributes.
 			glDisableVertexAttribArray(shader_program.vs_attr_position());
 			glDisableVertexAttribArray(shader_program.vs_attr_texture_coords());
-			glDisableVertexAttribArray(shader_program.vs_attr_color_factor());
 		}
 	}
 
@@ -307,11 +303,13 @@ namespace sdl
 			// Enable vertex attributes.
 			glEnableVertexAttribArray(shader_program.vs_attr_position());
 			glEnableVertexAttribArray(shader_program.vs_attr_texture_coords());
-			glEnableVertexAttribArray(shader_program.vs_attr_color_factor());
 
 			// Bind texture.
 			glBindTexture(GL_TEXTURE_2D, _texture);
 			glEnable(GL_TEXTURE_2D);
+
+			// Set color factor.
+			glUniform4f(shader_program.color_factor(), color_factor.red(), color_factor.green(), color_factor.blue(), color_factor.alpha());
 
 			//! @todo Account for src_rect.
 			// Set vertex data.
@@ -320,20 +318,15 @@ namespace sdl
 			float y0 = static_cast<float>(position.y());
 			float x1 = static_cast<float>(position.x() + _width);
 			float y1 = static_cast<float>(position.y() + _height);
-			float r = color_factor.red();
-			float g = color_factor.green();
-			float b = color_factor.blue();
-			float a = color_factor.alpha();
 			GLfloat vertex_data[] =
-				{ x0, y0, 0.0f, 0.0f, r, g, b, a
-				, x1, y0, 1.0f, 0.0f, r, g, b, a
-				, x1, y1, 1.0f, 1.0f, r, g, b, a
-				, x0, y1, 0.0f, 1.0f, r, g, b, a
+				{ x0, y0, 0.0f, 0.0f
+				, x1, y0, 1.0f, 0.0f
+				, x1, y1, 1.0f, 1.0f
+				, x0, y1, 0.0f, 1.0f
 				};
-			glBufferData(GL_ARRAY_BUFFER, 4 * 8 * sizeof(GLfloat), vertex_data, GL_DYNAMIC_DRAW);
-			glVertexAttribPointer(shader_program.vs_attr_position(), 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), 0);
-			glVertexAttribPointer(shader_program.vs_attr_texture_coords(), 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
-			glVertexAttribPointer(shader_program.vs_attr_color_factor(), 4, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(4 * sizeof(GLfloat)));
+			glBufferData(GL_ARRAY_BUFFER, 4 * 4 * sizeof(GLfloat), vertex_data, GL_DYNAMIC_DRAW);
+			glVertexAttribPointer(shader_program.vs_attr_position(), 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+			glVertexAttribPointer(shader_program.vs_attr_texture_coords(), 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
 
 			// Set index data and render.
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
@@ -342,7 +335,6 @@ namespace sdl
 			// Disable vertex attributes.
 			glDisableVertexAttribArray(shader_program.vs_attr_position());
 			glDisableVertexAttribArray(shader_program.vs_attr_texture_coords());
-			glDisableVertexAttribArray(shader_program.vs_attr_color_factor());
 		}
 	}
 
@@ -410,13 +402,14 @@ namespace sdl
 
 	GLuint Texture::as_target_prologue(ShaderProgram const& shader_program)
 	{
-		static GLint viewport_size_uniform = glGetUniformLocation(shader_program.opengl_program_handle(), "viewport_size");
+		static GLint flip_y_uniform = glGetUniformLocation(shader_program.opengl_program_handle(), "flip_y");
 
 		glUseProgram(shader_program.opengl_program_handle());
 
-		// Set viewport size to texture size.
-		//glUniform2f(viewport_size_uniform, static_cast<float>(_width), static_cast<float>(_height));
+		// Turn on y-flipping.
+		glUniform1i(flip_y_uniform, GL_TRUE);
 
+		// Create frame buffer object.
 		GLuint fbo;
 		glGenFramebuffers(1, &fbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -446,7 +439,7 @@ namespace sdl
 
 	void Texture::as_target_epilogue(GLuint fbo, ShaderProgram const& shader_program)
 	{
-		static GLint viewport_size_uniform = glGetUniformLocation(shader_program.opengl_program_handle(), "viewport_size");
+		static GLint flip_y_uniform = glGetUniformLocation(shader_program.opengl_program_handle(), "flip_y");
 
 		// Reset minification and magnification filters.
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -455,9 +448,9 @@ namespace sdl
 		// Render to the screen buffer again.
 		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 
-		glDeleteFramebuffers(1, &fbo);
+		// Turn off y-flipping.
+		glUniform1i(flip_y_uniform, GL_FALSE);
 
-		// Reset viewport size.
-		//glUniform2f(viewport_size_uniform, static_cast<float>(window().width()), static_cast<float>(window().height()));
+		glDeleteFramebuffers(1, &fbo);
 	}
 }

@@ -19,51 +19,44 @@ namespace sdl
 
 		GLuint opengl_program_handle() const { return _program; }
 
-		//! The ID of the position attribute in the vertex shader.
+		//! The handle of the position attribute in the vertex shader.
 		GLint vs_attr_position() const
 		{
-			static bool first_call = true;
-			static GLint result = -1;
-			if (first_call) {
-				result = glGetAttribLocation(_program, "position");
-				if (result == -1) {
-					throw std::runtime_error{"\"position\" is not a valid GLSL program variable."};
-				}
-				first_call = false;
-			}
+			static GLint result = attribute_handle("position");
 			return result;
 		}
 
-		//! The ID of the texture_coords attribute in the vertex shader.
+		//! The handle of the texture_coords attribute in the vertex shader.
 		GLint vs_attr_texture_coords() const
 		{
-			static bool first_call = true;
-			static GLint result = -1;
-			if (first_call) {
-				result = glGetAttribLocation(_program, "texture_coords");
-				if (result == -1) {
-					throw std::runtime_error{"\"texture_coords\" is not a valid GLSL program variable."};
-				}
-				first_call = false;
-			}
+			static GLint result = attribute_handle("texture_coords");
 			return result;
 		}
 
-		//! The ID of the color_factor attribute in the vertex shader.
-		GLint vs_attr_color_factor() const
+		//! The handle of the color_factor uniform in the fragment shader.
+		GLint color_factor() const
 		{
-			static bool first_call = true;
-			static GLint result = -1;
-			if (first_call) {
-				result = glGetAttribLocation(_program, "color_factor");
-				if (result == -1) {
-					throw std::runtime_error{"\"color_factor\" is not a valid GLSL program variable."};
-				}
-				first_call = false;
-			}
+			static GLint result = uniform_handle("color_factor");
 			return result;
 		}
 	private:
 		GLuint _program;
+
+		GLint attribute_handle(std::string const& attribute_name) const
+		{
+			GLint result = glGetAttribLocation(_program, attribute_name.c_str());
+			if (result == -1) {
+				throw std::runtime_error{'\"' + attribute_name + "\" GLSL program attribute not found."};
+			}
+			return result;
+		}
+		GLint uniform_handle(std::string const& uniform_name) const
+		{
+			GLint result = glGetUniformLocation(_program, uniform_name.c_str());
+			if (result == -1) {
+				throw std::runtime_error{'\"' + uniform_name + "\" GLSL program uniform not found."};
+			}
+			return result;
+		}
 	};
 }
