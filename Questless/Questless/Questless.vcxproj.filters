@@ -624,9 +624,7 @@
     <ClInclude Include="include\sdl\Texture.h">
       <Filter>include\sdl</Filter>
     </ClInclude>
-    <ClInclude Include="include\sdl\GraphicsProgram.h">
-      <Filter>include\sdl</Filter>
-    </ClInclude>
+    <ClInclude Include="include\sdl\ShaderProgram.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\world\Region.cpp">

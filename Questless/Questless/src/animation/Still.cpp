@@ -20,8 +20,8 @@ namespace questless
 	{
 		camera.draw
 			( texture_manager()[_texture_handle]
-			, units::GameSpace::Point{position - GameSpace::Vector{static_cast<double>(_origin.u()), static_cast<double>(-_origin.v())}} //! @todo Uncouth point casting here.
-			, Origin{std::nullopt}
+			, units::GameSpace::Point{position}
+			, Origin{_origin}
 			, color
 			, HScale{1.0}
 			, VScale{1.0}

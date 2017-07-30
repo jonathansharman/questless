@@ -33,6 +33,20 @@ namespace sdl
 			return result;
 		}
 
+		//! The handle of the model_matrix uniform in the vertex shader.
+		GLint model_matrix() const
+		{
+			static GLint result = uniform_handle("model_matrix");
+			return result;
+		}
+
+		//! The handle of the flip_y uniform in the vertex shader.
+		GLint flip_y() const
+		{
+			static GLint result = uniform_handle("flip_y");
+			return result;
+		}
+
 		//! The handle of the color_factor uniform in the fragment shader.
 		GLint color_factor() const
 		{

@@ -55,12 +55,9 @@ namespace questless
 		, SrcRect const& src_rect
 		) const
 	{
-		if (origin.value) {
-			position += GameSpace::Vector{texture.width() / 2 - origin.value->x(), texture.height() / 2 - origin.value->y()};
-		}
 		texture.draw_transformed
 			( screen_point(position)
-			, std::nullopt
+			, origin
 			, draw_color_factor * color_factor
 			, _zoom * horizontal_scale
 			, _zoom * vertical_scale

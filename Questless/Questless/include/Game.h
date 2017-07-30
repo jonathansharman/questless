@@ -137,6 +137,7 @@ namespace questless
 		uptr<sdl::Texture> _txt_test1;
 		uptr<sdl::Texture> _txt_test2;
 		uptr<sdl::Texture> _txt_test3;
+		uptr<sdl::Texture> _txt_test_even;
 
 		uptr<sdl::Texture> _txt_splash_logo;
 		uptr<sdl::Texture> _txt_splash_flame;

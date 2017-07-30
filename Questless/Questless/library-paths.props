@@ -9,6 +9,7 @@
     <BOOST_PATH>D:\vc-libs\boost_1_64_0\</BOOST_PATH>
     <DOCTEST_PATH>D:\vc-libs\doctest\</DOCTEST_PATH>
     <GLEW_PATH>D:\vc-libs\glew-2.0.0\</GLEW_PATH>
+    <GLM_PATH>D:\vc-libs\glm\</GLM_PATH>
   </PropertyGroup>
   <PropertyGroup />
   <ItemDefinitionGroup />
@@ -40,6 +41,9 @@
     <BuildMacro Include="GLEW_PATH">
       <Value>$(GLEW_PATH)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="GLM_PATH">
+      <Value>$(GLM_PATH)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>

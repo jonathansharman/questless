@@ -16,7 +16,7 @@ namespace questless
 	public:
 		//! @param texture_handle A handle to the texture to use for this still.
 		//! @param origin The origin of this still's texture, relative to its center.
-		Still(sdl::TextureHandle texture_handle, units::TextureSpace::Point origin)
+		Still(sdl::TextureHandle texture_handle, units::TextureSpace::Vector origin)
 			: _texture_handle{texture_handle}, _origin{origin}
 		{}
 
@@ -26,7 +26,7 @@ namespace questless
 	private:
 		sdl::TextureHandle _texture_handle;
 
-		units::TextureSpace::Point _origin;
+		units::TextureSpace::Vector _origin;
 
 		void animation_subupdate() final {}
 	};

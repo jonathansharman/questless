@@ -2,6 +2,7 @@
 
 uniform vec2 viewport_size;
 uniform bool flip_y;
+uniform mat4 model_matrix;
 
 in vec2 position;
 in vec2 texture_coords;
@@ -23,5 +24,5 @@ void main() {
 		, vec4(0.0, 0.0, -2.0 / (f - n), 0.0)
 		, vec4(-(r + l) / (r - l), -(t + b) / (t - b), -(f + n) / (f - n), 1.0)
 		);
-	gl_Position = projection_matrix * vec4(position.x, position.y, 0, 1);
+	gl_Position = projection_matrix * model_matrix * vec4(position.x, position.y, 0, 1);
 }

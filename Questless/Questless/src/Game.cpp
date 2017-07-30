@@ -275,6 +275,7 @@ namespace questless
 		_txt_test1 = make_unique<Texture>("resources/textures/test1.png");
 		_txt_test2 = make_unique<Texture>("resources/textures/test2.png");
 		_txt_test3 = make_unique<Texture>("resources/textures/test3.png");
+		_txt_test_even = make_unique<Texture>("resources/textures/test-even.png");
 
 		_txt_splash_logo = make_unique<Texture>("resources/textures/splash/logo.png");
 
@@ -554,7 +555,7 @@ namespace questless
 		if (input().pressed(MouseButton::right)) {
 			_point_clicked_rounded = Layout::dflt().to_world(_camera->tile_hovered());
 		}
-		_camera->draw(*_txt_hex_highlight, Layout::dflt().to_world(_camera->tile_hovered()), Origin{std::nullopt}, colors::white_factor(0.5f));
+		_camera->draw(*_txt_hex_highlight, Layout::dflt().to_world(_camera->tile_hovered()), Origin{TextureSpace::Vector::zero()}, colors::white_factor(0.5f));
 		_camera->draw(*_txt_hex_circle, _point_clicked_rounded);
 
 		_world_renderer->draw_entities();
@@ -619,6 +620,9 @@ namespace questless
 		RegionTile::Point r_axis{0, 5};
 		camera().draw_lines({Layout::dflt().to_world(origin), Layout::dflt().to_world(q_axis)}, colors::green());
 		camera().draw_lines({Layout::dflt().to_world(origin), Layout::dflt().to_world(r_axis)}, colors::red());
+
+		_txt_test1->draw(ScreenSpace::Point{0, 0});
+		_txt_test_even->draw(ScreenSpace::Point{0, 16});
 	}
 
 	Game::UpdateResult Game::update_playing()

@@ -13,7 +13,7 @@
 
 namespace questless
 {
-	struct Origin : TaggedType<std::optional<units::GameSpace::Point>> { using TaggedType::TaggedType; };
+	struct Origin : TaggedType<units::TextureSpace::Vector> { using TaggedType::TaggedType; };
 	struct HScale : TaggedType<double> { using TaggedType::TaggedType; };
 	struct VScale : TaggedType<double> { using TaggedType::TaggedType; };
 	struct SrcRect : TaggedType<std::optional<units::TextureSpace::Box>> { using TaggedType::TaggedType; };
@@ -84,7 +84,7 @@ namespace questless
 		//! Draws all or part of the provided texture with respect to the camera.
 		//! @param texture The texture to be drawn.
 		//! @param position The in-game coordinates of the texture.
-		//! @param origin The origin point within the texture. If nullopt, the texture's center is used.
+		//! @param origin The offset from the texture's center to its origin point.
 		//! @param color An additional color factor, applied on top of the camera's color factor.
 		//! @param horizontal_scale The horizontal scale of the texture.
 		//! @param vertical_scale The vertical scale of the texture.
@@ -93,7 +93,7 @@ namespace questless
 		void draw
 			( sdl::Texture const& texture
 			, units::GameSpace::Point position
-			, Origin origin = Origin{std::nullopt}
+			, Origin origin = Origin{units::TextureSpace::Vector::zero()}
 			, units::colors::ColorFactor color_factor = units::colors::white_factor()
 			, HScale horizontal_scale = HScale{1.0}
 			, VScale vertical_scale = VScale{1.0}

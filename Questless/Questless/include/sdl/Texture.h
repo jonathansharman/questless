@@ -91,7 +91,7 @@ namespace sdl
 
 		//! Copies all or part the texture to the current render target, applying the provided transformations.
 		//! @param position The coordinates of the texture on the screen.
-		//! @param origin The origin point within the texture. If nullopt, the texture's center is used.
+		//! @param origin The offset from the texture's center to its origin point.
 		//! @param color_factor An color factor to apply to each texel's color.
 		//! @param horizontal_scale The horizontal scale of the texture.
 		//! @param vertical_scale The vertical scale of the texture.
@@ -100,10 +100,10 @@ namespace sdl
 		//! @param shader_program The shader program with which to draw the texture.
 		void draw_transformed
 			( units::ScreenSpace::Point position
-			, std::optional<units::TextureSpace::Point> origin = std::nullopt
+			, units::TextureSpace::Vector origin = units::TextureSpace::Vector::zero()
 			, units::colors::ColorFactor color_factor = units::colors::white_factor()
-			, double horizontal_scale = 1.0
-			, double vertical_scale = 1.0
+			, float horizontal_scale = 1.0f
+			, float vertical_scale = 1.0f
 			, units::GameSpace::Radians angle = units::GameSpace::Radians::zero() //! @todo This should use screen space radians.
 			, std::optional<units::TextureSpace::Box> const& src_rect = std::nullopt
 			, ShaderProgram const& shader_program = dflt_program()

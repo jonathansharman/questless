@@ -67,9 +67,9 @@ namespace questless
 		{
 			units::GameSeconds duration;
 			units::SpriteSheetSpace::Point coords; //!< The cel coordinates within the sprite sheet.
-			units::TextureSpace::Point origin; //!< The origin of the frame's texture relative to the animation origin.
+			units::TextureSpace::Vector origin; //!< The origin of the frame's texture relative to its center.
 
-			Frame(units::GameSeconds duration, units::SpriteSheetSpace::Point coords, units::TextureSpace::Point origin)
+			Frame(units::GameSeconds duration, units::SpriteSheetSpace::Point coords, units::TextureSpace::Vector origin)
 				: duration{duration}, coords{coords}, origin{origin}
 			{}
 		};

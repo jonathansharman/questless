@@ -22,9 +22,10 @@ namespace questless
 
 	void SpriteAnimation::draw(units::ScreenSpace::Point position) const
 	{
+		//! @todo What is the default center in this case, and what should it be?
 		SpriteAnimation::Frame const& frame = _frames[_frame_index];
 		ScreenSpace::Box dst_rect
-			{ ScreenSpace::Point{position.x() - frame.origin.u(), position.y() - frame.origin.v()}
+			{ ScreenSpace::Point{position.x() - frame.origin.u(), position.y() - frame.origin.v()} //! @todo Uncouth point casting here.
 			, ScreenSpace::Vector{_sprite_sheet->cel_width(), _sprite_sheet->cel_height()}
 			};
 		TextureSpace::Box src_rect
@@ -39,8 +40,8 @@ namespace questless
 		SpriteAnimation::Frame const& frame = _frames[_frame_index];
 		camera.draw
 			( texture_manager()[_sprite_sheet->texture_handle]
-			, GameSpace::Point{position - GameSpace::Vector{static_cast<double>(frame.origin.u()), static_cast<double>(-frame.origin.v())}} //! @todo Uncouth point casting here.
-			, Origin{std::nullopt}
+			, GameSpace::Point{position}
+			, Origin{frame.origin}
 			, color_factor
 			, HScale{1.0}
 			, VScale{1.0}

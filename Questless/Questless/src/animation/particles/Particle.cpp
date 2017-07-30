@@ -48,7 +48,7 @@ namespace questless
 		camera.draw
 			( texture()
 			, position + _displacement
-			, Origin{std::nullopt}
+			, Origin{TextureSpace::Vector::zero()}
 			, color_factor
 			, HScale{_scale}
 			, VScale{_scale}

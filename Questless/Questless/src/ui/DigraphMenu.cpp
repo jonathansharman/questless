@@ -309,60 +309,24 @@ namespace questless
 			// Interior
 			for (int x = 0; x < _content_width / _tile_width; ++x) {
 				for (int y = 0; y < _content_height / _tile_height; ++y) {
-					texture_manager()[_tile_handle].draw
-						( ScreenSpace::Point{_left_margin + _tile_width * x, _top_margin + _tile_height * y}
-						, HAlign::left
-						, VAlign::top
-						);
+					texture_manager()[_tile_handle].draw(ScreenSpace::Point{_left_margin + _tile_width * x, _top_margin + _tile_height * y});
 				}
 			}
 			// Top and bottom margins
 			for (int x = 0; x < _content_width / _tile_width; ++x) {
-				texture_manager()[_u_handle].draw
-					( ScreenSpace::Point{_left_margin + _tile_width * x, 0}
-					, HAlign::left
-					, VAlign::top
-					);
-				texture_manager()[_d_handle].draw
-					( ScreenSpace::Point{_left_margin + _tile_width * x, _top_margin + _content_height}
-					, HAlign::left
-					, VAlign::top
-					);
+				texture_manager()[_u_handle].draw(ScreenSpace::Point{_left_margin + _tile_width * x, 0});
+				texture_manager()[_d_handle].draw(ScreenSpace::Point{_left_margin + _tile_width * x, _top_margin + _content_height});
 			}
 			// Left and right margins
 			for (int y = 0; y < _content_height / _tile_height; ++y) {
-				texture_manager()[_l_handle].draw
-					( ScreenSpace::Point{0, _top_margin + _tile_width * y}
-					, HAlign::left
-					, VAlign::top
-					);
-				texture_manager()[_r_handle].draw
-					( ScreenSpace::Point{_left_margin + _content_width, _top_margin + _tile_width * y}
-					, HAlign::left
-					, VAlign::top
-					);
+				texture_manager()[_l_handle].draw(ScreenSpace::Point{0, _top_margin + _tile_width * y});
+				texture_manager()[_r_handle].draw(ScreenSpace::Point{_left_margin + _content_width, _top_margin + _tile_width * y});
 			}
 			// Corners
-			texture_manager()[_ul_handle].draw
-				( ScreenSpace::Point{0, 0}
-				, HAlign::left
-				, VAlign::top
-				);
-			texture_manager()[_ur_handle].draw
-				( ScreenSpace::Point{_left_margin + _content_width, 0}
-				, HAlign::left
-				, VAlign::top
-				);
-			texture_manager()[_dl_handle].draw
-				( ScreenSpace::Point{0, _top_margin + _content_height}
-				, HAlign::left
-				, VAlign::top
-				);
-			texture_manager()[_dr_handle].draw
-				( ScreenSpace::Point{_left_margin + _content_width, _top_margin + _content_height}
-				, HAlign::left
-				, VAlign::top
-				);
+			texture_manager()[_ul_handle].draw(ScreenSpace::Point{0, 0});
+			texture_manager()[_ur_handle].draw(ScreenSpace::Point{_left_margin + _content_width, 0});
+			texture_manager()[_dl_handle].draw(ScreenSpace::Point{0, _top_margin + _content_height});
+			texture_manager()[_dr_handle].draw(ScreenSpace::Point{_left_margin + _content_width, _top_margin + _content_height});
 		});
 
 		_render_is_current = true;

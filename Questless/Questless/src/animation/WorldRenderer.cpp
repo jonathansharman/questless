@@ -27,7 +27,7 @@ namespace questless
 	void WorldRenderer::initialize()
 	{
 		auto unknown_entity_animation_ss = texture_manager().add("resources/textures/entities/unknown.png");
-		_unknown_entity_animation = Still{unknown_entity_animation_ss, TextureSpace::Point{0, 0}};
+		_unknown_entity_animation = Still{unknown_entity_animation_ss, TextureSpace::Vector{0, 0}};
 	}
 
 	auto WorldRenderer::get_entity_id_var(entity_cref_var_t entity) -> entity_id_var_t
@@ -99,7 +99,7 @@ namespace questless
 			_terrain_render_is_current = true;
 		}
 		if (_terrain_texture) {
-			game().camera().draw(*_terrain_texture, GameSpace::Point{_terrain_bounds.position}, Origin{GameSpace::Point{0.0, 0.0}});
+			game().camera().draw(*_terrain_texture, GameSpace::Point{_terrain_bounds.position}, Origin{TextureSpace::Vector{0, 0}});
 		}
 	}
 
@@ -271,7 +271,7 @@ namespace questless
 
 								tile_texture.draw_transformed
 									( tile_screen_point
-									, std::nullopt // origin
+									, TextureSpace::Vector::zero()
 									, colors::ColorFactor{intensity, intensity, intensity, 1.0f}
 									);
 							}
