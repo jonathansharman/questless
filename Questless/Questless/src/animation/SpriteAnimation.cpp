@@ -24,15 +24,29 @@ namespace questless
 	{
 		//! @todo What is the default center in this case, and what should it be?
 		SpriteAnimation::Frame const& frame = _frames[_frame_index];
-		ScreenSpace::Box dst_rect
-			{ ScreenSpace::Point{position.x() - frame.origin.u(), position.y() - frame.origin.v()} //! @todo Uncouth point casting here.
-			, ScreenSpace::Vector{_sprite_sheet->cel_width(), _sprite_sheet->cel_height()}
-			};
 		TextureSpace::Box src_rect
 			{ TextureSpace::Point{_sprite_sheet->cel_width() * frame.coords.x(), _sprite_sheet->cel_height() * frame.coords.y()}
 			, TextureSpace::Vector{_sprite_sheet->cel_width(), _sprite_sheet->cel_height()}
 			};
-		texture_manager()[_sprite_sheet->texture_handle].draw(dst_rect, colors::white_factor(), src_rect);
+		//texture_manager()[_sprite_sheet->texture_handle].draw
+		//	( ScreenSpace::Point{position.x() - frame.origin.u(), position.y() + frame.origin.v()} //! @todo Uncouth point casting here.
+		//	, HAlign::center
+		//	, VAlign::middle
+		//	, colors::white_factor()
+		//	, src_rect
+		//	);
+		texture_manager()[_sprite_sheet->texture_handle].draw_transformed
+			( position
+			, frame.origin
+			, colors::white_factor()
+			, 1.0f
+			, 1.0f
+			, GameSpace::Radians{0.0}
+			, SrcRect{TextureSpace::Box
+				{ TextureSpace::Point{_sprite_sheet->cel_width() * frame.coords.x(), _sprite_sheet->cel_height() * frame.coords.y()}
+				, TextureSpace::Vector{_sprite_sheet->cel_width(), _sprite_sheet->cel_height()}
+				}}
+			);
 	}
 
 	void SpriteAnimation::draw(units::GameSpace::Point position, Camera const& camera, colors::ColorFactor color_factor) const

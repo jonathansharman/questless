@@ -41,4 +41,6 @@ namespace units
 	inline double right(GameSpace::Box const& box) { return box.position.x() + box.size.x(); }
 
 	inline double bottom(GameSpace::Box const& box) { return box.position.y() + box.size.y(); }
+
+	inline GameSpace::Point center(GameSpace::Box const& box) { return box.position + box.size / 2.0; }
 }

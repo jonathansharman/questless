@@ -39,4 +39,6 @@ namespace units
 	inline int right(SpriteSheetSpace::Box const& box) { return box.position.x() + box.size.x(); }
 
 	inline int bottom(SpriteSheetSpace::Box const& box) { return box.position.y() + box.size.y(); }
+
+	inline SpriteSheetSpace::Point center(SpriteSheetSpace::Box const& box) { return box.position + box.size / 2; }
 }

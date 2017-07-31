@@ -99,7 +99,7 @@ namespace questless
 			_terrain_render_is_current = true;
 		}
 		if (_terrain_texture) {
-			game().camera().draw(*_terrain_texture, GameSpace::Point{_terrain_bounds.position}, Origin{TextureSpace::Vector{0, 0}});
+			game().camera().draw(*_terrain_texture, GameSpace::Point{center(_terrain_bounds)});
 		}
 	}
 

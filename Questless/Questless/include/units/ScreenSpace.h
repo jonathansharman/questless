@@ -41,4 +41,6 @@ namespace units
 	inline int right(ScreenSpace::Box const& box) { return box.position.x() + box.size.x(); }
 
 	inline int bottom(ScreenSpace::Box const& box) { return box.position.y() + box.size.y(); }
+
+	inline ScreenSpace::Point center(ScreenSpace::Box const& box) { return box.position + box.size / 2; }
 }

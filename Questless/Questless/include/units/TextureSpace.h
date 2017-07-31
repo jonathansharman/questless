@@ -39,4 +39,6 @@ namespace units
 	inline int right(TextureSpace::Box const& box) { return box.position.u() + box.size.u(); }
 
 	inline int bottom(TextureSpace::Box const& box) { return box.position.v() + box.size.v(); }
+
+	inline TextureSpace::Point center(TextureSpace::Box const& box) { return box.position + box.size / 2; }
 }

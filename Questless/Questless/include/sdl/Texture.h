@@ -62,18 +62,6 @@ namespace sdl
 		units::TextureSpace::Vector size() const { return units::TextureSpace::Vector{_width, _height}; }
 
 		//! Copies all or part of the texture to the current render target.
-		//! @param dst_rect The portion of the screen to which the texture should be copied.
-		//! @param color_factor A factor to be applied component-wise to the texture's color.
-		//! @param src_rect An optional Rect specifying the portion of the texture to be copied. If nullopt, the entire texture is used.
-		//! @param shader_program The shader program with which to draw the texture.
-		void draw
-			( units::ScreenSpace::Box const& dst_rect
-			, units::colors::ColorFactor color_factor = units::colors::white_factor()
-			, std::optional<units::TextureSpace::Box> const& src_rect = std::nullopt
-			, ShaderProgram const& shader_program = dflt_program()
-			) const;
-	
-		//! Copies all or part of the texture to the current render target.
 		//! @param position The coordinates of the texture on the screen.
 		//! @param horizontal_alignment The horizontal alignment of the texture.
 		//! @param vertical_alignment The vertical alignment of the texture.

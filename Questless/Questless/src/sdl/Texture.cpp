@@ -184,67 +184,6 @@ namespace sdl
 	}
 
 	void Texture::draw
-		( ScreenSpace::Box const& dst_rect
-		, ColorFactor color_factor
-		, std::optional<TextureSpace::Box> const& src_rect
-		, ShaderProgram const& shader_program
-		) const
-	{
-		// Bind program.
-		glUseProgram(shader_program.opengl_program_handle());
-
-		// Enable vertex attributes.
-		glEnableVertexAttribArray(shader_program.vs_attr_position());
-		glEnableVertexAttribArray(shader_program.vs_attr_texture_coords());
-
-		// Calculate texture coordinates.
-		float u0, u1, v0, v1;
-		if (src_rect) {
-			u0 = static_cast<float>(src_rect->position.u()) / src_rect->size.u();
-			u1 = static_cast<float>(src_rect->position.u() + src_rect->size.u()) / src_rect->size.u();
-			v0 = static_cast<float>(src_rect->position.v()) / src_rect->size.v();
-			v1 = static_cast<float>(src_rect->position.v() + src_rect->size.v()) / src_rect->size.v();
-		} else {
-			u0 = 0.0f;
-			u1 = 1.0f;
-			v0 = 0.0f;
-			v1 = 1.0f;
-		}
-
-		// Set color factor.
-		glUniform4f(shader_program.color_factor(), color_factor.red(), color_factor.green(), color_factor.blue(), color_factor.alpha());
-
-		{ // Set model matrix.
-			glm::mat4 model_matrix;
-			glUniformMatrix4fv(shader_program.model_matrix(), 1, GL_FALSE, glm::value_ptr(model_matrix));
-		}
-
-		// Set vertex data.
-		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-		float x0 = static_cast<float>(left(dst_rect));
-		float y0 = static_cast<float>(top(dst_rect));
-		float x1 = static_cast<float>(right(dst_rect));
-		float y1 = static_cast<float>(bottom(dst_rect));
-		GLfloat vertex_data[] =
-			{ x0, y0, u0, v0
-			, x1, y0, u1, v0
-			, x1, y1, u1, v1
-			, x0, y1, u0, v1
-			};
-		glBufferData(GL_ARRAY_BUFFER, 4 * 4 * sizeof(GLfloat), vertex_data, GL_DYNAMIC_DRAW);
-		glVertexAttribPointer(shader_program.vs_attr_position(), 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
-		glVertexAttribPointer(shader_program.vs_attr_texture_coords(), 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
-
-		// Set index data and render.
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
-		glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, nullptr);
-
-		// Disable vertex attributes.
-		glDisableVertexAttribArray(shader_program.vs_attr_position());
-		glDisableVertexAttribArray(shader_program.vs_attr_texture_coords());
-	}
-
-	void Texture::draw
 		( ScreenSpace::Point position
 		, HAlign horizontal_alignment
 		, VAlign vertical_alignment
@@ -292,6 +231,7 @@ namespace sdl
 			int const width = src_rect ? units::width(*src_rect) : _width;
 			int const height = src_rect ? units::height(*src_rect) : _height;
 
+			// Correct for odd width/height by nudging position by half a pixel.
 			float const x = (width & 1) ? position.x() + 0.5f : position.x();
 			float const y = (height & 1) ? position.y() + 0.5f : position.y();
 			glm::mat4 model_matrix = glm::scale
@@ -367,7 +307,7 @@ namespace sdl
 			int const height = src_rect ? units::height(*src_rect) : _height;
 
 			glm::mat4 model_matrix;
-			// Position
+			// Position. Correct for odd width/height by nudging position by half a pixel.
 			float const x = (width & 1) ? position.x() + 0.5f : position.x();
 			float const y = (width & 1) ? position.y() + 0.5f : position.y();
 			model_matrix = glm::translate(model_matrix, glm::vec3{x, y, 0.0f});
