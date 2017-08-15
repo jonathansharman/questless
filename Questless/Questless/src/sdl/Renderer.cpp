@@ -4,6 +4,16 @@
 
 #include "sdl/Renderer.h"
 
+#include <numeric>
+
+#include <gl/GL.h>
+#include <gl/GLU.h>
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
+
+#include "sdl/resources.h"
+
 using std::vector;
 using std::runtime_error;
 using namespace std::string_literals;
@@ -29,6 +39,16 @@ namespace sdl
 
 		if (SDL_GetRendererInfo(_renderer, &_info)) {
 			throw runtime_error{"Failed to get renderer info."};
+		}
+
+		// Create VBO.
+		glGenBuffers(1, &_vbo);
+
+		{ // Create IBO.
+			GLuint index_data[]{0, 1, 2, 3};
+			glGenBuffers(1, &_quad_ibo);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _quad_ibo);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), index_data, GL_DYNAMIC_DRAW);
 		}
 	}
 
@@ -59,40 +79,162 @@ namespace sdl
 
 	void Renderer::draw_lines(vector<ScreenSpace::Point> points, colors::Color color)
 	{
-		return; //! @todo Remove.
-		set_draw_color(color);
-		// This reinterpret_cast is safe because SDL_Point and ScreenSpace::Point have the same data structure.
-		SDL_RenderDrawLines(_renderer, reinterpret_cast<SDL_Point const*>(&points[0]), points.size());
+		// Bind program.
+		solid_program().use();
+
+		// Enable vertex attributes.
+		static GLuint position_attribute = solid_program().get_attribute_handle("position");
+		glEnableVertexAttribArray(position_attribute);
+
+		{ // Set model matrix to identity.
+			glm::mat4 model_matrix;
+			static GLuint model_matrix_uniform = solid_program().get_uniform_handle("model_matrix");
+			glUniformMatrix4fv(model_matrix_uniform, 1, GL_FALSE, glm::value_ptr(model_matrix));
+		}
+
+		// Set vertex data.
+		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+		std::vector<GLfloat> vertex_data;
+		vertex_data.reserve(2 * points.size());
+		for (auto point : points) {
+			vertex_data.push_back(static_cast<GLfloat>(point.x()));
+			vertex_data.push_back(static_cast<GLfloat>(point.y()));
+		}
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data.data()), vertex_data.data(), GL_DYNAMIC_DRAW);
+		glVertexAttribPointer(position_attribute, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
+
+		GLuint lines_ibo;
+		{ // Create IBO.
+			std::vector<GLuint> index_data(points.size());
+			std::iota(index_data.begin(), index_data.end(), 0);
+			glGenBuffers(1, &lines_ibo);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, lines_ibo);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(index_data), index_data.data(), GL_DYNAMIC_DRAW);
+		}
+
+		// Set color uniform.
+		static GLuint color_uniform = solid_program().get_uniform_handle("color");
+		glUniform4f(color_uniform, color.red(), color.green(), color.blue(), color.alpha());
+
+		// Render.
+		//glDrawElements(GL_LINE_STRIP, points.size(), GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, nullptr);
+
+		// Disable vertex attributes.
+		glDisableVertexAttribArray(position_attribute);
+
+		// Delete IBO.
+		glDeleteBuffers(1, &lines_ibo);
 	}
 
-	void Renderer::draw_box(ScreenSpace::Box const& box, colors::Color color, bool filled)
+	void Renderer::draw_box(ScreenSpace::Box const& box, colors::Color color, Fill fill)
 	{
-		return; //! @todo Remove.
-		set_draw_color(color);
+		// Bind program.
+		solid_program().use();
 
-		// This reinterpret_cast is safe because SDL_Rect and ScreenSpace::Box have the same data structure.
-		SDL_Rect const* sdl_rect = reinterpret_cast<const SDL_Rect*>(&box);
+		// Enable vertex attributes.
+		static GLuint position_attribute = solid_program().get_attribute_handle("position");
+		glEnableVertexAttribArray(position_attribute);
 
-		if (filled) {
-			SDL_RenderFillRect(_renderer, sdl_rect);
-		} else {
-			SDL_RenderDrawRect(_renderer, sdl_rect);
+		{ // Set model matrix to identity.
+			glm::mat4 model_matrix;
+			static GLuint model_matrix_uniform = solid_program().get_uniform_handle("model_matrix");
+			glUniformMatrix4fv(model_matrix_uniform, 1, GL_FALSE, glm::value_ptr(model_matrix));
 		}
+
+		{ // Set vertex data.
+			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+			//const float offset = fill == Fill::solid ? 0.0f : 0.5f;
+			const float offset = fill == Fill::solid ? 0.0f : 0.375f;
+			GLfloat vertex_data[] =
+				{ left(box) + offset, top(box) + offset
+				, right(box) - offset, top(box) + offset
+				, right(box) - offset, bottom(box) - offset
+				, left(box) + offset, bottom(box) - offset
+				};
+			glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_DYNAMIC_DRAW);
+			glVertexAttribPointer(position_attribute, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
+		}
+
+		// Set index data.
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _quad_ibo);
+
+		// Set color uniform.
+		static GLuint color_uniform = solid_program().get_uniform_handle("color");
+		glUniform4f(color_uniform, color.red(), color.green(), color.blue(), color.alpha());
+
+		// Render.
+		switch (fill) {
+			case Fill::solid:
+				glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, nullptr);
+				break;
+			case Fill::outline:
+				glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, nullptr);
+				break;
+		}
+
+		// Disable vertex attributes.
+		glDisableVertexAttribArray(position_attribute);
 	}
 
 	void Renderer::draw_box(ScreenSpace::Box const& box, colors::Color border_color, colors::Color fill_color)
 	{
-		return; //! @todo Remove.
-		SDL_Rect sdl_rect{left(box), top(box), units::width(box), units::height(box)};
+		// Bind program.
+		solid_program().use();
 
-		set_draw_color(border_color);
-		SDL_RenderDrawRect(_renderer, &sdl_rect);
-		set_draw_color(fill_color);
-		sdl_rect.w -= 2;
-		sdl_rect.h -= 2;
-		++sdl_rect.x;
-		++sdl_rect.y;
-		SDL_RenderFillRect(_renderer, &sdl_rect);
+		// Enable vertex attributes.
+		static GLuint position_attribute = solid_program().get_attribute_handle("position");
+		glEnableVertexAttribArray(position_attribute);
+
+		{ // Set model matrix to identity.
+			glm::mat4 model_matrix;
+			static GLuint model_matrix_uniform = solid_program().get_uniform_handle("model_matrix");
+			glUniformMatrix4fv(model_matrix_uniform, 1, GL_FALSE, glm::value_ptr(model_matrix));
+		}
+
+		// Set index data.
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _quad_ibo);
+
+		{ // Set fill box vertex data.
+			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+			GLfloat vertex_data[] =
+				{ left(box), top(box)
+				, right(box), top(box)
+				, right(box), bottom(box)
+				, left(box), bottom(box)
+				};
+			glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_DYNAMIC_DRAW);
+			glVertexAttribPointer(position_attribute, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
+		}
+
+		// Set color uniform to fill color.
+		static GLuint color_uniform = solid_program().get_uniform_handle("color");
+		glUniform4f(color_uniform, fill_color.red(), fill_color.green(), fill_color.blue(), fill_color.alpha());
+
+		// Render fill color.
+		glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, nullptr);
+
+		{ // Set border box vertex data.
+			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+			constexpr float offset = 0.375f;
+			GLfloat vertex_data[] =
+				{ left(box) + offset, top(box) + offset
+				, right(box) - offset, top(box) + offset
+				, right(box) - offset, bottom(box) - offset
+				, left(box) + offset, bottom(box) - offset
+				};
+			glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_DYNAMIC_DRAW);
+			glVertexAttribPointer(position_attribute, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
+		}
+
+		// Set color uniform to border color.
+		glUniform4f(color_uniform, border_color.red(), border_color.green(), border_color.blue(), border_color.alpha());
+
+		// Render border color.
+		glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, nullptr);
+
+		// Disable vertex attributes.
+		glDisableVertexAttribArray(position_attribute);
 	}
 
 	void Renderer::set_draw_color(colors::Color color)

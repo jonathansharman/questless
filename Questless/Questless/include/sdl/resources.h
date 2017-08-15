@@ -24,6 +24,12 @@ namespace sdl
 	//! Sets the default shader program to the given value.
 	void dflt_program(std::unique_ptr<ShaderProgram> shader_program);
 
+	//! The solid OpenGL program, using shaders for solids.
+	ShaderProgram& solid_program();
+
+	//! Sets the solid shader program to the given value.
+	void solid_program(std::unique_ptr<ShaderProgram> shader_program);
+
 	//! The renderer.
 	Renderer& renderer();
 

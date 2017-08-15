@@ -7,6 +7,8 @@
 #include <vector>
 #include <stdexcept>
 
+#include <glew.h>
+
 #include <SDL.h>
 
 #include "Window.h"
@@ -15,6 +17,11 @@
 
 namespace sdl
 {
+	//! @todo Where should Fill go? Inside Renderer?
+
+	//! The fill of a drawn shape, either a filled solid or an empty outline.
+	enum class Fill : bool { solid, outline };
+
 	//! A simple wrapper around SDL_Renderer.
 	class Renderer
 	{
@@ -66,8 +73,8 @@ namespace sdl
 		//! Draws a box. Can be filled or just outlined.
 		//! @param box The rectangle to be drawn.
 		//! @param color The color of the rectangle.
-		//! @param filled If true, a filled rectangle is drawn. Otherwise, only its outline is drawn.
-		void draw_box(units::ScreenSpace::Box const& box, units::colors::Color color, bool filled);
+		//! @param fill Whether to draw a solid box or an outline.
+		void draw_box(units::ScreenSpace::Box const& box, units::colors::Color color, Fill fill);
 
 		//! Draws a filled box with a border.
 		//! @param box The rectangle to be drawn.
@@ -80,6 +87,9 @@ namespace sdl
 		int _h;
 		SDL_RendererInfo _info;
 		SDL_Texture* _target;
+
+		GLuint _vbo;
+		GLuint _quad_ibo;
 
 		void set_draw_color(units::colors::Color color);
 	};

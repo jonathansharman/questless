@@ -885,5 +885,8 @@
     <ClCompile Include="src\ui\VectorDialog.cpp">
       <Filter>src\ui</Filter>
     </ClCompile>
+    <ClCompile Include="src\sdl\ShaderProgram.cpp">
+      <Filter>src\sdl</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

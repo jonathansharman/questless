@@ -189,92 +189,29 @@ namespace sdl
 		, VAlign vertical_alignment
 		, ColorFactor color_factor
 		, std::optional<TextureSpace::Box> const& src_rect
-		, ShaderProgram const& shader_program
 		) const
 	{
 		switch (horizontal_alignment) {
 			case HAlign::left:
-				position.x() += (_width - 1) / 2;
+				position.x() += _width / 2;
 				break;
 			case HAlign::center:
 				break;
 			case HAlign::right:
-				position.x() -= (_width - 1) / 2;
+				position.x() -= _width / 2;
 				break;
 		}
 		switch (vertical_alignment) {
 			case VAlign::top:
-				position.y() += (_height - 1) / 2;
+				position.y() += _height / 2;
 				break;
 			case VAlign::middle:
 				break;
 			case VAlign::bottom:
-				position.y() -= (_height - 1) / 2;
+				position.y() -= _height / 2;
 				break;
 		}
-
-		// Bind program.
-		glUseProgram(shader_program.opengl_program_handle());
-
-		// Enable vertex attributes.
-		glEnableVertexAttribArray(shader_program.vs_attr_position());
-		glEnableVertexAttribArray(shader_program.vs_attr_texture_coords());
-
-		// Bind texture.
-		glBindTexture(GL_TEXTURE_2D, _texture);
-		glEnable(GL_TEXTURE_2D);
-
-		// Set color factor.
-		glUniform4f(shader_program.color_factor(), color_factor.red(), color_factor.green(), color_factor.blue(), color_factor.alpha());
-
-		{ // Set model matrix.
-			int const width = src_rect ? units::width(*src_rect) : _width;
-			int const height = src_rect ? units::height(*src_rect) : _height;
-
-			// Correct for odd width/height by nudging position by half a pixel.
-			float const x = (width & 1) ? position.x() + 0.5f : position.x();
-			float const y = (height & 1) ? position.y() + 0.5f : position.y();
-			glm::mat4 model_matrix = glm::scale
-				( glm::translate
-					( glm::mat4{}
-					, glm::vec3{x, y, 0.0f}
-					)
-				, glm::vec3{width, height, 1.0f}
-				);
-			glUniformMatrix4fv(shader_program.model_matrix(), 1, GL_FALSE, glm::value_ptr(model_matrix));
-		}
-
-		// Get texture coordinates.
-		float u0 = 0.0f;
-		float v0 = 0.0f;
-		float u1 = 1.0f;
-		float v1 = 1.0f;
-		if (src_rect) {
-			u0 = static_cast<float>(left(*src_rect)) / (_width - 1);
-			u1 = static_cast<float>(right(*src_rect)) / (_width - 1);
-			v0 = static_cast<float>(top(*src_rect)) / (_height - 1);
-			v1 = static_cast<float>(bottom(*src_rect)) / (_height - 1);
-		}
-
-		// Set vertex data.
-		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-		GLfloat vertex_data[] =
-			{ -0.5f, -0.5f, u0, v0
-			,  0.5f, -0.5f, u1, v0
-			,  0.5f,  0.5f, u1, v1
-			, -0.5f,  0.5f, u0, v1
-			};
-		glBufferData(GL_ARRAY_BUFFER, 4 * 4 * sizeof(GLfloat), vertex_data, GL_DYNAMIC_DRAW);
-		glVertexAttribPointer(shader_program.vs_attr_position(), 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
-		glVertexAttribPointer(shader_program.vs_attr_texture_coords(), 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
-
-		// Set index data and render.
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
-		glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, nullptr);
-
-		// Disable vertex attributes.
-		glDisableVertexAttribArray(shader_program.vs_attr_position());
-		glDisableVertexAttribArray(shader_program.vs_attr_texture_coords());
+		draw_transformed(position, TextureSpace::Vector::zero(), color_factor, 1.0f, 1.0f, GameSpace::Radians::zero(), src_rect);
 	}
 
 	void Texture::draw_transformed
@@ -285,22 +222,25 @@ namespace sdl
 		, float vertical_scale
 		, units::GameSpace::Radians angle
 		, std::optional<TextureSpace::Box> const& src_rect
-		, ShaderProgram const& shader_program
 		) const
 	{
 		// Bind program.
-		glUseProgram(shader_program.opengl_program_handle());
+		dflt_program().use();
 
 		// Enable vertex attributes.
-		glEnableVertexAttribArray(shader_program.vs_attr_position());
-		glEnableVertexAttribArray(shader_program.vs_attr_texture_coords());
+		static GLuint position_attribute = dflt_program().get_attribute_handle("position");
+		glEnableVertexAttribArray(position_attribute);
+		static GLuint texture_coords_attribute = dflt_program().get_attribute_handle("texture_coords");
+		glEnableVertexAttribArray(texture_coords_attribute);
 
 		// Bind texture.
 		glBindTexture(GL_TEXTURE_2D, _texture);
 		glEnable(GL_TEXTURE_2D);
 
-		// Set color factor.
-		glUniform4f(shader_program.color_factor(), color_factor.red(), color_factor.green(), color_factor.blue(), color_factor.alpha());
+		{ // Set color factor.
+			static GLuint color_factor_uniform = dflt_program().get_uniform_handle("color_factor");
+			glUniform4f(color_factor_uniform, color_factor.red(), color_factor.green(), color_factor.blue(), color_factor.alpha());
+		}
 
 		{ // Set model matrix.
 			int const width = src_rect ? units::width(*src_rect) : _width;
@@ -309,7 +249,7 @@ namespace sdl
 			glm::mat4 model_matrix;
 			// Position. Correct for odd width/height by nudging position by half a pixel.
 			float const x = (width & 1) ? position.x() + 0.5f : position.x();
-			float const y = (width & 1) ? position.y() + 0.5f : position.y();
+			float const y = (height & 1) ? position.y() + 0.5f : position.y();
 			model_matrix = glm::translate(model_matrix, glm::vec3{x, y, 0.0f});
 			// Orientation
 			model_matrix = glm::rotate
@@ -322,20 +262,15 @@ namespace sdl
 			// Origin
 			model_matrix = glm::translate(model_matrix, glm::vec3{-2.0f * origin.u() / width, -2.0f * origin.v() / height, 0.0f});
 
-			glUniformMatrix4fv(shader_program.model_matrix(), 1, GL_FALSE, glm::value_ptr(model_matrix));
+			static GLuint model_matrix_uniform = dflt_program().get_uniform_handle("model_matrix");
+			glUniformMatrix4fv(model_matrix_uniform, 1, GL_FALSE, glm::value_ptr(model_matrix));
 		}
 
 		// Get texture coordinates.
-		float u0 = 0.0f;
-		float v0 = 0.0f;
-		float u1 = 1.0f;
-		float v1 = 1.0f;
-		if (src_rect) {
-			u0 = static_cast<float>(left(*src_rect)) / (_width - 1);
-			u1 = static_cast<float>(right(*src_rect)) / (_width - 1);
-			v0 = static_cast<float>(top(*src_rect)) / (_height - 1);
-			v1 = static_cast<float>(bottom(*src_rect)) / (_height - 1);
-		}
+		float const u0 = src_rect ? static_cast<float>(left(*src_rect)) / _width : 0.0f;
+		float const u1 = src_rect ? static_cast<float>(right(*src_rect)) / _width : 1.0f;
+		float const v0 = src_rect ? static_cast<float>(top(*src_rect)) / _height : 0.0f;
+		float const v1 = src_rect ? static_cast<float>(bottom(*src_rect)) / _height : 1.0f;
 
 		// Set vertex data.
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
@@ -345,25 +280,26 @@ namespace sdl
 			,  0.5f,  0.5f, u1, v1
 			, -0.5f,  0.5f, u0, v1
 			};
-		glBufferData(GL_ARRAY_BUFFER, 4 * 4 * sizeof(GLfloat), vertex_data, GL_DYNAMIC_DRAW);
-		glVertexAttribPointer(shader_program.vs_attr_position(), 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
-		glVertexAttribPointer(shader_program.vs_attr_texture_coords(), 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_DYNAMIC_DRAW);
+		glVertexAttribPointer(position_attribute, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+		glVertexAttribPointer(texture_coords_attribute, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
 
 		// Set index data and render.
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
 		glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, nullptr);
 
 		// Disable vertex attributes.
-		glDisableVertexAttribArray(shader_program.vs_attr_position());
-		glDisableVertexAttribArray(shader_program.vs_attr_texture_coords());
+		glDisableVertexAttribArray(position_attribute);
+		glDisableVertexAttribArray(texture_coords_attribute);
 	}
 
 	GLuint Texture::as_target_prologue(ShaderProgram const& shader_program)
 	{
-		glUseProgram(shader_program.opengl_program_handle());
+		shader_program.use();
 
 		// Turn on y-flipping.
-		glUniform1i(shader_program.flip_y(), GL_TRUE);
+		GLuint flip_y_uniform = shader_program.get_uniform_handle("flip_y");
+		glUniform1i(flip_y_uniform, GL_TRUE);
 
 		// Create frame buffer object.
 		GLuint fbo;
@@ -395,6 +331,8 @@ namespace sdl
 
 	void Texture::as_target_epilogue(GLuint fbo, ShaderProgram const& shader_program)
 	{
+		shader_program.use();
+
 		// Reset minification and magnification filters.
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -403,7 +341,8 @@ namespace sdl
 		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 
 		// Turn off y-flipping.
-		glUniform1i(shader_program.flip_y(), GL_FALSE);
+		GLuint flip_y_uniform = shader_program.get_uniform_handle("flip_y");
+		glUniform1i(flip_y_uniform, GL_FALSE);
 
 		glDeleteFramebuffers(1, &fbo);
 	}

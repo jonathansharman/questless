@@ -278,6 +278,7 @@ Utility
 Weapons
 	Melee
 		Blades
+			Remember that pistol-grips are good for thrusting, bad for parrying
 			(Look up types of swords)
 				Include half-swording form for appropriate swords
 			Broadsword

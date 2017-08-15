@@ -77,7 +77,7 @@ namespace questless
 					{ units::ScreenSpace::Point{left(_bounds) + _x_padding, top(_bounds) + _y_padding + _title_height + _selection * _option_height}
 					, units::ScreenSpace::Vector{width(_bounds) - 2 * _x_padding, _option_height}
 					};
-				sdl::renderer().draw_box(bounds, units::colors::white(), true);
+				sdl::renderer().draw_box(bounds, units::colors::white(), sdl::Fill::solid);
 			}
 
 			// Draw title.

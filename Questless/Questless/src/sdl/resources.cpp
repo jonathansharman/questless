@@ -10,12 +10,16 @@ namespace sdl
 	namespace
 	{
 		std::unique_ptr<ShaderProgram> _dflt_program;
+		std::unique_ptr<ShaderProgram> _solid_program;
 		std::unique_ptr<Renderer> _renderer = nullptr;
 		std::unique_ptr<Window> _window = nullptr;
 	}
 
 	ShaderProgram& dflt_program() { return *_dflt_program; }
 	void dflt_program(std::unique_ptr<ShaderProgram> shader_program) { _dflt_program = std::move(shader_program); }
+
+	ShaderProgram& solid_program() { return *_solid_program; }
+	void solid_program(std::unique_ptr<ShaderProgram> shader_program) { _solid_program = std::move(shader_program); }
 
 	Renderer& renderer() { return *_renderer; }
 	void renderer(std::unique_ptr<Renderer> renderer)

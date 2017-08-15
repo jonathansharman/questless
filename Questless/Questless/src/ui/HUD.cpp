@@ -116,7 +116,7 @@ namespace questless
 						, { ScreenSpace::Box::Align::close, ScreenSpace::Box::Align::far }
 						}
 					, colors::black()
-					, true
+					, sdl::Fill::solid
 					);
 				// Health
 				int health_bar_height = lround(_condition_bar_height * player_being->health / player_being->stats.vitality);
@@ -127,7 +127,7 @@ namespace questless
 						, { ScreenSpace::Box::Align::close, ScreenSpace::Box::Align::far }
 						}
 					, colors::red()
-					, true
+					, sdl::Fill::solid
 					);
 				left += _condition_bar_width;
 				// Mana
@@ -139,7 +139,7 @@ namespace questless
 						, { ScreenSpace::Box::Align::close, ScreenSpace::Box::Align::far }
 						}
 					, colors::blue()
-					, true
+					, sdl::Fill::solid
 					);
 				left += _condition_bar_width;
 				// Energy
@@ -151,7 +151,7 @@ namespace questless
 						, { ScreenSpace::Box::Align::close, ScreenSpace::Box::Align::far }
 						}
 					, colors::cyan()
-					, true
+					, sdl::Fill::solid
 					);
 				left += _condition_bar_width;
 				// Satiety
@@ -163,7 +163,7 @@ namespace questless
 						, { ScreenSpace::Box::Align::close, ScreenSpace::Box::Align::far }
 						}
 					, colors::brown()
-					, true
+					, sdl::Fill::solid
 					);
 				left += _condition_bar_width;
 				// Alertness
@@ -175,7 +175,7 @@ namespace questless
 						, { ScreenSpace::Box::Align::close, ScreenSpace::Box::Align::far }
 						}
 					, colors::yellow()
-					, true
+					, sdl::Fill::solid
 					);
 				left += _condition_bar_width;
 			}

@@ -61,31 +61,28 @@ namespace sdl
 		//! The width and height of the texture, respectively.
 		units::TextureSpace::Vector size() const { return units::TextureSpace::Vector{_width, _height}; }
 
-		//! Copies all or part of the texture to the current render target.
+		//! Draws all or part of the texture to the screen (or current frame buffer).
 		//! @param position The coordinates of the texture on the screen.
 		//! @param horizontal_alignment The horizontal alignment of the texture.
 		//! @param vertical_alignment The vertical alignment of the texture.
 		//! @param color_factor A factor to be applied component-wise to the texture's color.
-		//! @param src_rect An optional portion of the texture to be copied. If nullopt, the entire texture is used.
-		//! @param shader_program The shader program with which to draw the texture.
+		//! @param src_rect The section of the texture to be drawn. If nullopt, the entire texture is used.
 		void draw
 			( units::ScreenSpace::Point position
 			, HAlign horizontal_alignment = HAlign::left
 			, VAlign vertical_alignment = VAlign::top
 			, units::colors::ColorFactor color_factor = units::colors::white_factor()
 			, std::optional<units::TextureSpace::Box> const& src_rect = std::nullopt
-			, ShaderProgram const& shader_program = dflt_program()
 			) const;
 
-		//! Copies all or part the texture to the current render target, applying the provided transformations.
+		//! Draws all or part the texture to the screen (or current frame buffer), using the provided transformations.
 		//! @param position The coordinates of the texture on the screen.
 		//! @param origin The offset from the texture's center to its origin point.
-		//! @param color_factor An color factor to apply to each texel's color.
+		//! @param color_factor A factor to be applied component-wise to the texture's color.
 		//! @param horizontal_scale The horizontal scale of the texture.
 		//! @param vertical_scale The vertical scale of the texture.
 		//! @param angle The counter-clockwise rotation of the the texture around the origin, in radians.
-		//! @param src_rect An optional Rect specifying the portion of the texture to be copied. If nullopt, the entire texture is used.
-		//! @param shader_program The shader program with which to draw the texture.
+		//! @param src_rect The section of the texture to be drawn. If nullopt, the entire texture is used.
 		void draw_transformed
 			( units::ScreenSpace::Point position
 			, units::TextureSpace::Vector origin = units::TextureSpace::Vector::zero()
@@ -94,7 +91,6 @@ namespace sdl
 			, float vertical_scale = 1.0f
 			, units::GameSpace::Radians angle = units::GameSpace::Radians::zero() //! @todo This should use screen space radians.
 			, std::optional<units::TextureSpace::Box> const& src_rect = std::nullopt
-			, ShaderProgram const& shader_program = dflt_program()
 			) const;
 
 		//! Executes the given code with this texture as the render target so that draw operations will affect this texture instead of the screen buffer.

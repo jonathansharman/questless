@@ -95,98 +95,40 @@ namespace questless
 			}
 
 			// Generate GLSL programs.
-			dflt_program(std::make_unique<ShaderProgram>());
+			dflt_program(std::make_unique<ShaderProgram>
+				( contents_of_file("resources/shaders/dflt.vert").c_str()
+				, contents_of_file("resources/shaders/dflt.frag").c_str()
+				));
+			solid_program(std::make_unique<ShaderProgram>
+				( contents_of_file("resources/shaders/solid.vert").c_str()
+				, contents_of_file("resources/shaders/solid.frag").c_str()
+				));
 			
-			// Create vertex shaders.
-			GLuint dflt_vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-			GLuint texture_vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-
-			{ // Define default vertex shader.
-				auto source = contents_of_file("resources/shaders/dflt.vert");
-				auto source_c_str = source.c_str();
-				glShaderSource(dflt_vertex_shader, 1, &source_c_str, nullptr);
-			}
-			{ // Define texture vertex shader.
-				auto source = contents_of_file("resources/shaders/texture.vert");
-				auto source_c_str = source.c_str();
-				glShaderSource(texture_vertex_shader, 1, &source_c_str, nullptr);
-			}
-
-			// Compile default vertex shader source.
-			glCompileShader(dflt_vertex_shader);
-			{ // Check vertex shader for errors.
-				GLint success = GL_FALSE;
-				glGetShaderiv(dflt_vertex_shader, GL_COMPILE_STATUS, &success);
-				if (success != GL_TRUE) {
-					throw std::runtime_error{"Unable to compile vertex shader."};
-				}
-			}
-			// Compile texture vertex shader source.
-			glCompileShader(texture_vertex_shader);
-			{ // Check vertex shader for errors.
-				GLint success = GL_FALSE;
-				glGetShaderiv(texture_vertex_shader, GL_COMPILE_STATUS, &success);
-				if (success != GL_TRUE) {
-					throw std::runtime_error{"Unable to compile vertex shader."};
-				}
-			}
-
-			// Attach default vertex shader to default program.
-			glAttachShader(dflt_program().opengl_program_handle(), dflt_vertex_shader);
-
-			// Create fragment shaders.
-			GLuint dflt_fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-
-			{ // Create default fragment shader.
-				auto source = contents_of_file("resources/shaders/dflt.frag");
-				auto source_c_str = source.c_str();
-				glShaderSource(dflt_fragment_shader, 1, &source_c_str, nullptr);
-			}
-
-			// Compile default fragment shader.
-			glCompileShader(dflt_fragment_shader);
-			{ // Check fragment shader for errors.
-				GLint success = GL_FALSE;
-				glGetShaderiv(dflt_fragment_shader, GL_COMPILE_STATUS, &success);
-				if (success != GL_TRUE) {
-					throw std::runtime_error{"Unable to compile fragment shader."};
-				}
-			}
-
-			// Attach default fragment shader to default program.
-			glAttachShader(dflt_program().opengl_program_handle(), dflt_fragment_shader);
-
-			// Link default program.
-			glLinkProgram(dflt_program().opengl_program_handle());
-			{ // Check for link errors.
-				GLint success = GL_TRUE;
-				glGetProgramiv(dflt_program().opengl_program_handle(), GL_LINK_STATUS, &success);
-				if (success != GL_TRUE) {
-					throw std::runtime_error{"Error linking OpenGL program."};
-				}
-			}
-
 			// Set clear color.
-			glClearColor(0.0, 0.0, 0.0, 1.0);
+			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 			{ // Set default program uniforms.
-				glUseProgram(dflt_program().opengl_program_handle());
-				GLint viewport_size_uniform = glGetUniformLocation(dflt_program().opengl_program_handle(), "viewport_size");
+				dflt_program().use();
+
+				GLint viewport_size_uniform = dflt_program().get_uniform_handle("viewport_size");
 				int window_width = window().width();
 				int window_height = window().height();
 				glUniform2f(viewport_size_uniform, static_cast<float>(window_width), static_cast<float>(window_height));
+
+				GLint flip_y_uniform = dflt_program().get_uniform_handle("flip_y");
+				glUniform1i(flip_y_uniform, GL_FALSE);
 			}
+			{ // Set solid program uniforms.
+				solid_program().use();
 
-			//! @todo Are the following necessary when using shaders?
+				GLint viewport_size_uniform = solid_program().get_uniform_handle("viewport_size");
+				int window_width = window().width();
+				int window_height = window().height();
+				glUniform2f(viewport_size_uniform, static_cast<float>(window_width), static_cast<float>(window_height));
 
-			// Set projection matrix.
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			gluOrtho2D(0.0, window().width(), window().height(), 0.0);
-
-			// Set model view matrix.
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
+				GLint flip_y_uniform = dflt_program().get_uniform_handle("flip_y");
+				glUniform1i(flip_y_uniform, GL_FALSE);
+			}
 
 			// Set blend function.
 			glEnable(GL_BLEND);
@@ -197,10 +139,6 @@ namespace questless
 		renderer(make_unique<Renderer>(window(), window().width(), window().height()));
 
 		_camera = make_unique<Camera>(GameSpace::Point{0.0, 0.0});
-
-		//! @todo Make render quality a game setting.
-		//SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
 
 		if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
 			throw std::runtime_error("Failed to initialize IMG. SDL Error: " + string{SDL_GetError()});
@@ -353,7 +291,7 @@ namespace questless
 		}
 
 		{ // Perform state-specific updates.
-			UpdateResult result;
+			UpdateResult result = UpdateResult::game_over;
 			switch (_state) {
 				case State::splash:
 					result = update_splash();
@@ -427,8 +365,8 @@ namespace questless
 		oss_fps.setf(std::ios::fixed);
 		oss_fps.precision(2);
 		oss_fps << fps_buffer_sum / _fps_buffer.size();
-		//Texture txt_fps = _fnt_20pt->render(oss_fps.str().c_str(), colors::white());
-		//txt_fps.draw(ScreenSpace::Point(window().width() - 1, window().height() - 1), HAlign::right, VAlign::bottom);
+		Texture txt_fps = _fnt_20pt->render(oss_fps.str().c_str(), colors::white());
+		txt_fps.draw(ScreenSpace::Point(window().width() - 1, window().height() - 1), HAlign::right, VAlign::bottom);
 
 		// Swap buffers to update the screen.
 		SDL_GL_SwapWindow(window().sdl_ptr());
@@ -575,15 +513,15 @@ namespace questless
 			ss_cam_coords.precision(2);
 			ss_cam_coords << "Cam: ((" << _camera->position().x() << ", " << _camera->position().y() << "), ";
 			ss_cam_coords << _camera->angle().count() << ", " << _camera->zoom() << ")";
-			//Texture txt_cam_coords = _fnt_20pt->render(ss_cam_coords.str().c_str(), colors::white());
-			//txt_cam_coords.draw(ScreenSpace::Point{0, 0});
+			Texture txt_cam_coords = _fnt_20pt->render(ss_cam_coords.str().c_str(), colors::white());
+			txt_cam_coords.draw(ScreenSpace::Point{0, 0});
 		}
 		{
 			auto cam_hex_coords = Layout::dflt().to_hex_coords<RegionTile::Point>(_camera->position());
 			std::ostringstream ss_cam_hex_coords;
 			ss_cam_hex_coords << "Cam hex: (" << cam_hex_coords.q << ", " << cam_hex_coords.r << ")";
-			//Texture txt_cam_hex_coords = _fnt_20pt->render(ss_cam_hex_coords.str().c_str(), colors::white());
-			//txt_cam_hex_coords.draw(ScreenSpace::Point{0, 25});
+			Texture txt_cam_hex_coords = _fnt_20pt->render(ss_cam_hex_coords.str().c_str(), colors::white());
+			txt_cam_hex_coords.draw(ScreenSpace::Point{0, 25});
 		}
 		{
 			std::ostringstream ss_time;
@@ -609,9 +547,9 @@ namespace questless
 					time_name = "Dawn";
 					break;
 			}
-			//ss_time << "Time: " << _region->time() << " (" << time_of_day << ", " << time_name << ')';
-			//Texture txt_turn = _fnt_20pt->render(ss_time.str().c_str(), colors::white());
-			//txt_turn.draw(ScreenSpace::Point{0, 50});
+			ss_time << "Time: " << _region->time() << " (" << time_of_day << ", " << time_name << ')';
+			Texture txt_turn = _fnt_20pt->render(ss_time.str().c_str(), colors::white());
+			txt_turn.draw(ScreenSpace::Point{0, 50});
 		}
 
 		// Draw q- and r-axes.
@@ -622,7 +560,31 @@ namespace questless
 		camera().draw_lines({Layout::dflt().to_world(origin), Layout::dflt().to_world(r_axis)}, colors::red());
 
 		_txt_test1->draw(ScreenSpace::Point{0, 0});
-		_txt_test_even->draw(ScreenSpace::Point{0, 16});
+		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{0, 0}, ScreenSpace::Vector{15, 15}}, colors::blue(), Fill::outline);
+
+		Texture{3, 3, colors::red()}.draw(ScreenSpace::Point{500, 500});
+		Texture{2, 2, colors::green()}.draw(ScreenSpace::Point{500, 500});
+		Texture{1, 1, colors::blue()}.draw(ScreenSpace::Point{500, 500});
+
+		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{504, 500}, ScreenSpace::Vector{3, 3}}, colors::cyan(), Fill::solid);
+		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{504, 500}, ScreenSpace::Vector{2, 2}}, colors::yellow(), Fill::solid);
+		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{504, 500}, ScreenSpace::Vector{1, 1}}, colors::magenta(), Fill::solid);
+
+		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{508, 500}, ScreenSpace::Vector{3, 3}}, colors::red(), Fill::outline);
+		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{508, 500}, ScreenSpace::Vector{2, 2}}, colors::green(), Fill::outline);
+		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{508, 500}, ScreenSpace::Vector{1, 1}}, colors::blue(), Fill::outline);
+
+		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{500, 504}, ScreenSpace::Vector{4, 4}}, colors::red(), Fill::outline);
+		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{505, 504}, ScreenSpace::Vector{3, 3}}, colors::red(), Fill::outline);
+		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{509, 504}, ScreenSpace::Vector{2, 2}}, colors::red(), Fill::outline);
+		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{512, 504}, ScreenSpace::Vector{1, 1}}, colors::red(), Fill::outline);
+		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{514, 504}, ScreenSpace::Vector{0, 0}}, colors::red(), Fill::outline);
+
+		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{500, 509}, ScreenSpace::Vector{4, 4}}, colors::green(), Fill::solid);
+		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{505, 509}, ScreenSpace::Vector{3, 3}}, colors::green(), Fill::solid);
+		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{509, 509}, ScreenSpace::Vector{2, 2}}, colors::green(), Fill::solid);
+		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{512, 509}, ScreenSpace::Vector{1, 1}}, colors::green(), Fill::solid);
+		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{514, 509}, ScreenSpace::Vector{0, 0}}, colors::green(), Fill::solid);
 	}
 
 	Game::UpdateResult Game::update_playing()

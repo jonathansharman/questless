@@ -265,7 +265,7 @@ namespace questless
 								// Apply highlights.
 								if (_highlight_predicate) {
 									if ((*_highlight_predicate)(region_tile_coords)) {
-										intensity = 1.0f;
+										intensity = 1.5f;
 									}
 								}
 

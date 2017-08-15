@@ -21,15 +21,14 @@ namespace questless
 	{
 		ScreenSpace::Box bounds = body.bounds();
 
-		_texture = std::make_unique<Texture>(width(bounds), height(bounds));
+		_texture = std::make_unique<Texture>(width(bounds), height(bounds), colors::Color{0.0f, 1.0f, 1.0f, 0.5f});
 		_texture->as_target([this, &body] {
-			renderer().clear(colors::clear());
 			{ // Draw outline.
 				ScreenSpace::Box outline
 					{ ScreenSpace::Point{0, 0}
 					, ScreenSpace::Vector{_texture->width(), _texture->height()}
 					};
-				renderer().draw_box(outline, colors::red(), false);
+				renderer().draw_box(outline, colors::red(), sdl::Fill::outline);
 			}
 
 			for (BodyPart const& part : body) {
@@ -50,6 +49,6 @@ namespace questless
 					renderer().draw_box(region.translated(body.offset_to_center()), colors::black(), color);
 				}
 			}
-		});
+		}, solid_program());
 	}
 }

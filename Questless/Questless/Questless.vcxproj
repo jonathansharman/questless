@@ -458,6 +458,7 @@
     <ClCompile Include="src\sdl\Renderable.cpp" />
     <ClCompile Include="src\sdl\Renderer.cpp" />
     <ClCompile Include="src\sdl\resources.cpp" />
+    <ClCompile Include="src\sdl\ShaderProgram.cpp" />
     <ClCompile Include="src\sdl\Sound.cpp" />
     <ClCompile Include="src\sdl\Texture.cpp" />
     <ClCompile Include="src\sdl\Window.cpp" />

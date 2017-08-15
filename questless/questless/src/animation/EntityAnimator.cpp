@@ -20,16 +20,16 @@ namespace questless
 	void EntityAnimator::visit(Human const&)
 	{
 		static auto sprite_sheet = std::make_shared<SpriteSheet>
-			(texture_manager().add("resources/textures/human-animation.png")
-				, SpriteSheetSpace::Vector{3, 1}
-		);
+			( texture_manager().add("resources/textures/human-animation.png")
+			, SpriteSheetSpace::Vector{3, 1}
+			);
 		auto sprite_animation = std::make_unique<SpriteAnimation>
 			( sprite_sheet
 			, std::vector<SpriteAnimation::Frame>
-				{ {GameSeconds{0.2}, SpriteSheetSpace::Point{0, 0}, TextureSpace::Vector{0, 10}}
-				, {GameSeconds{0.2}, SpriteSheetSpace::Point{1, 0}, TextureSpace::Vector{0, 10}}
-				, {GameSeconds{0.2}, SpriteSheetSpace::Point{2, 0}, TextureSpace::Vector{0, 10}}
-				, {GameSeconds{0.2}, SpriteSheetSpace::Point{1, 0}, TextureSpace::Vector{0, 10}}
+				{ {GameSeconds{0.2}, SpriteSheetSpace::Point{0, 0}, TextureSpace::Vector{0, 6}}
+				, {GameSeconds{0.2}, SpriteSheetSpace::Point{1, 0}, TextureSpace::Vector{0, 6}}
+				, {GameSeconds{0.2}, SpriteSheetSpace::Point{2, 0}, TextureSpace::Vector{0, 6}}
+				, {GameSeconds{0.2}, SpriteSheetSpace::Point{1, 0}, TextureSpace::Vector{0, 6}}
 				}
 			, Looping{true}
 			);
@@ -45,10 +45,10 @@ namespace questless
 		auto sprite_animation = std::make_unique<SpriteAnimation>
 			( sprite_sheet
 			, std::vector<SpriteAnimation::Frame>
-				{ {GameSeconds{0.2}, SpriteSheetSpace::Point{0, 0}, TextureSpace::Vector{0, 10}}
-				, {GameSeconds{0.2}, SpriteSheetSpace::Point{1, 0}, TextureSpace::Vector{0, 10}}
-				, {GameSeconds{0.2}, SpriteSheetSpace::Point{2, 0}, TextureSpace::Vector{0, 10}}
-				, {GameSeconds{0.2}, SpriteSheetSpace::Point{1, 0}, TextureSpace::Vector{0, 10}}
+				{ {GameSeconds{0.2}, SpriteSheetSpace::Point{0, 0}, TextureSpace::Vector{0, 6}}
+				, {GameSeconds{0.2}, SpriteSheetSpace::Point{1, 0}, TextureSpace::Vector{0, 6}}
+				, {GameSeconds{0.2}, SpriteSheetSpace::Point{2, 0}, TextureSpace::Vector{0, 6}}
+				, {GameSeconds{0.2}, SpriteSheetSpace::Point{1, 0}, TextureSpace::Vector{0, 6}}
 				}
 			, Looping{true}
 			);
@@ -69,7 +69,7 @@ namespace questless
 	void EntityAnimator::visit(Corpse const&)
 	{
 		static auto texture_handle = texture_manager().add("resources/textures/entities/objects/grave.png");
-		_animation = std::make_unique<Still>(texture_handle, TextureSpace::Vector{0, 10});
+		_animation = std::make_unique<Still>(texture_handle, TextureSpace::Vector{0, 6});
 	}
 	void EntityAnimator::visit(ItemBox const&)
 	{
