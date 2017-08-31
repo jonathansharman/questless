@@ -32,7 +32,7 @@ namespace questless
 		//! Performs the action.
 		//! @param actor The being that is performing the action.
 		//! @param cont The continuation function to call once the action completes.
-		//! @return A Complete object.
+		//! @warning Beware of side-effects when calling @p perform more than once.
 		virtual Complete perform(Being& actor, cont_t cont) = 0;
 
 		//! @todo Do these belong here?

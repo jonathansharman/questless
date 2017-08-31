@@ -12,26 +12,20 @@ namespace questless::spell
 	class Heal : public SpellBase<Heal>
 	{
 	public:
-		Heal() : SpellBase<Heal>{10} {}
-
 		std::string name() const final { return "Heal"; }
 
 		Color color() const final { return Color::white; }
 
-		std::optional<int> max_charges() const final { return 10; }
-
-		double cast_time() const final { return 1.0; }
-
-		double incant_time() const final { return 10.0; }
-
-		double discharge_time() const final { return 1.0; }
-
 		double cooldown() const final { return 5.0; }
-	protected:
-		Complete perform_cast(Being& caster, Action::cont_t cont) final;
+
+		double required_gatestone_mana() const final { return 10.0; }
 	private:
 		static constexpr double _cost_factor = 1.0;
 		static constexpr double _cost_log = 2.0;
 		static constexpr int _range = 10;
+
+		Complete perform_cast(Being& caster, Action::cont_t cont) final;
+
+		double base_incant_time() const final { return 10.0; }
 	};
 }

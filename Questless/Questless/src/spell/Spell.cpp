@@ -8,75 +8,23 @@
 
 namespace questless::spell
 {
-	Complete Spell::Cast::perform(Being& actor, cont_t cont)
+	uptr<Action> Spell::cast(uptr<Spell> spell)
 	{
-		class CompleteCast : public Action
+		class Cast : public Action
 		{
 		public:
-			CompleteCast(Spell& spell) : _spell{spell} {}
-			static auto make(Spell& spell) { return std::make_unique<CompleteCast>(spell); }
-			std::string name() const final { return ""; }
-			Complete perform(Being& actor, cont_t cont) final { return _spell.perform_cast(actor, cont); }
+			Cast(uptr<Spell> spell) : _spell{std::move(spell)} {}
+			std::string name() const final { return "Cast " + _spell->name(); }
+			Complete perform(Being& actor, cont_t cont) final { return _spell->perform_cast(actor, cont); }
 		private:
-			Spell& _spell;
+			uptr<Spell> _spell;
 		};
 
-		if (_spell.active_cooldown() > 0.0) {
-			return actor.agent().send_message(std::make_unique<MessageSpellOnCooldown>(_spell.active_cooldown()), [cont] { return cont(Action::Result::aborted); });
-		}
-		if (_spell.charges() <= 0) {
-			return actor.agent().send_message(std::make_unique<MessageSpellNotEnoughCharges>(), [cont] { return cont(Action::Result::aborted); });
-		}
-		actor.add_delayed_action(_spell.cast_time() / (1.0 + Being::intellect_factor * actor.stats.intellect), cont, CompleteCast::make(_spell));
-		return Complete{};
+		return std::make_unique<Cast>(std::move(spell));
 	}
-
-	Complete Spell::Incant::perform(Being& actor, cont_t cont)
+	
+	double Spell::incant_time(Being& caster) const
 	{
-		if (actor.stats.mute) {
-			return actor.agent().send_message(std::make_unique<MessageIncantFailedMute>(), [cont] { return cont(Action::Result::aborted); });
-		}
-		actor.busy_time += _spell.incant_time() / (1.0 + Being::intellect_factor * actor.stats.intellect);
-		_spell.gain_charge(1);
-		return cont(Result::success);
-	}
-
-	Complete Spell::Discharge::perform(Being& actor, cont_t cont)
-	{
-		actor.busy_time += _spell.discharge_time() / (1.0 + Being::intellect_factor * actor.stats.intellect);
-		_spell.lose_charge(1);
-		return cont(Result::success);
-	}
-
-	//! @todo I don't like these optional things... There has to be a better way. Also, make these properties.
-
-	void Spell::gain_charge(int amount)
-	{
-		if (std::optional<int> max = max_charges()) {
-			_charges += amount;
-			if (_charges > *max) {
-				_charges = *max;
-			} else if (_charges < 0) {
-				_charges = 0;
-			}
-		}
-	}
-
-	void Spell::lose_charge(int amount)
-	{
-		if (max_charges()) {
-			_charges -= amount;
-			if (_charges < 0) {
-				_charges = 0;
-			}
-		}
-	}
-
-	void Spell::update()
-	{
-		_active_cooldown -= 1.0;
-		if (_active_cooldown < 0.0) {
-			_active_cooldown = 0.0;
-		}
+		return base_incant_time() / (1.0 + Being::intellect_factor * caster.stats.intellect);
 	}
 }

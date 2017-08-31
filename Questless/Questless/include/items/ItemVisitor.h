@@ -10,6 +10,7 @@ namespace questless
 {
 	class Arrow;
 	class Bow;
+	class Gatestone;
 	class Quarterstaff;
 	class Quiver;
 	class Scroll;
@@ -17,6 +18,7 @@ namespace questless
 	using ItemSubtypeList = type_list::of_t
 		< Arrow
 		, Bow
+		, Gatestone
 		, Quarterstaff
 		, Quiver
 		, Scroll

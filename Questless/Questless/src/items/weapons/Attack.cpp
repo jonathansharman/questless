@@ -23,8 +23,7 @@ namespace questless
 					if (opt_vector) {
 						auto& weapon = game().items.cref_as<Weapon>(attack->weapon_id);
 						double delay = weapon.active_cooldown + attack->wind_up();
-						actor.add_delayed_action(delay, std::move(cont), std::make_unique<Finish>(attack, *opt_vector));
-						return cont(Result::success);
+						return actor.add_delayed_action(delay, std::move(cont), std::make_unique<Finish>(attack, *opt_vector));
 					} else {
 						return cont(Result::aborted);
 					}
@@ -68,8 +67,7 @@ namespace questless
 		return _attack->cost().check(actor, [&] {
 			Weapon const& weapon = game().items.cref_as<Weapon>(_attack->weapon_id);
 			double delay = weapon.active_cooldown + _attack->wind_up();
-			actor.add_delayed_action(delay, std::move(cont), std::make_unique<Finish>(_attack));
-			return Complete{};
+			return actor.add_delayed_action(delay, std::move(cont), std::make_unique<Finish>(_attack));
 		});
 	}
 

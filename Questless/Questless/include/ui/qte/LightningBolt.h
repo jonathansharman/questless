@@ -38,7 +38,7 @@ namespace questless::qte
 			units::GameVelocity velocity;
 		};
 
-		static sdl::TextureHandle LightningBolt::_point_charge_texture_handle;
+		static sdl::TextureHandle _point_charge_texture_handle;
 
 		units::GameSpace::Point _target_point;
 		Continuation<double> _cont;

@@ -3,6 +3,7 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "agents/Player.h"
+
 #include "Game.h"
 #include "sdl/resources.h"
 #include "ui/CountDialog.h"
@@ -12,6 +13,7 @@
 #include "ui/TileDialog.h"
 #include "ui/VectorDialog.h"
 
+#include "ui/qte/Incant.h"
 #include "ui/qte/LightningBolt.h"
 
 using std::function;
@@ -133,11 +135,10 @@ namespace questless
 			void visit(MessageCannotEquip const&) final { title = "Cannot Equip"; }
 			void visit(MessageEntityInTheWay const&) final { title = "Obstruction"; }
 			void visit(MessageIncantFailedMute const&) final { title = "Incantation"; }
+			void visit(MessageIncantGatestoneNotEnoughMana const&) final { title = "Incantation"; }
 			void visit(MessageMeleeMiss const&) final { title = "Melee Attack"; }
 			void visit(MessageNotEnoughAmmo const&) final { title = "Attack"; }
 			void visit(MessageNotEnoughMana const&) final { title = "Spell Cast"; }
-			void visit(MessageSpellNotEnoughCharges const&) final { title = "Spell Cast"; }
-			void visit(MessageSpellOnCooldown const&) final { title = "Spell Cast"; }
 		};
 		struct MessagePrompter : MessageConstVisitor
 		{
@@ -146,16 +147,15 @@ namespace questless
 			void visit(MessageCannotEquip const&) final { prompt = "You don't have the requisite free body parts to equip this."; }
 			void visit(MessageEntityInTheWay const&) final { prompt = "There's something in the way!"; }
 			void visit(MessageIncantFailedMute const&) final { prompt = "You can't perform an incantation while mute!"; }
+			void visit(MessageIncantGatestoneNotEnoughMana const& m) final
+			{
+				prompt = "Not enough gatestone mana! Your gatestone needs " + std::to_string(m.mana_deficit) + " more mana for you to incant this.";
+			}
 			void visit(MessageMeleeMiss const&) final { prompt = "Miss!"; }
 			void visit(MessageNotEnoughAmmo const&) final { prompt = "Not enough ammo!"; }
 			void visit(MessageNotEnoughMana const& m) final
 			{
 				prompt = "Not enough mana! You need " + std::to_string(m.mana_deficit) + " more mana to cast this.";
-			}
-			void visit(MessageSpellNotEnoughCharges const&) final { prompt = "This spell doesn't have enough charges! You need to incant it first."; }
-			void visit(MessageSpellOnCooldown const& m) final
-			{
-				prompt = "This spell on cooldown! It will be ready in " + std::to_string(m.active_cooldown) + ".";
 			}
 		};
 
@@ -334,6 +334,12 @@ namespace questless
 	Complete Player::get_lightning_bolt_quality(RegionTile::Point target_coords, std::function<Complete(double)> cont) const
 	{
 		auto dialog = std::make_unique<qte::LightningBolt>(target_coords, std::move(cont));
+		return game().add_dialog(std::move(dialog));
+	}
+
+	Complete Player::incant(Gatestone& gatestone, std::function<Complete(uptr<spell::Spell>)> cont) const
+	{
+		auto dialog = std::make_unique<qte::Incant>(gatestone, std::move(cont));
 		return game().add_dialog(std::move(dialog));
 	}
 }

@@ -24,7 +24,6 @@ namespace questless
 		//! Checks that the actor is able to pay the cost and executes the continuation if so.
 		//! @param actor The being that is performing the action.
 		//! @param cont The continuation function to call if the cost is satisfied.
-		//! @return A Complete object.
 		virtual Complete check(Being& actor, cont_t cont) const = 0;
 		
 		//! Incurs the cost on the given actor.

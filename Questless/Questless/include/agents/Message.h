@@ -14,11 +14,10 @@ namespace questless
 	struct MessageCannotEquip;
 	struct MessageEntityInTheWay;
 	struct MessageIncantFailedMute;
+	struct MessageIncantGatestoneNotEnoughMana;
 	struct MessageMeleeMiss;
 	struct MessageNotEnoughAmmo;
 	struct MessageNotEnoughMana;
-	struct MessageSpellNotEnoughCharges;
-	struct MessageSpellOnCooldown;
 
 	using MessageSubtypeList = type_list::of_t
 		< MessageArrowMiss
@@ -27,11 +26,10 @@ namespace questless
 		, MessageCannotEquip
 		, MessageEntityInTheWay
 		, MessageIncantFailedMute
+		, MessageIncantGatestoneNotEnoughMana
 		, MessageMeleeMiss
 		, MessageNotEnoughAmmo
 		, MessageNotEnoughMana
-		, MessageSpellNotEnoughCharges
-		, MessageSpellOnCooldown
 		>;
 
 	DEFINE_VISITORS(Message, MessageSubtypeList)
@@ -48,17 +46,16 @@ namespace questless
 	struct MessageCannotEquip : MessageBase<MessageCannotEquip> {};
 	struct MessageEntityInTheWay : MessageBase<MessageEntityInTheWay> {};
 	struct MessageIncantFailedMute : MessageBase<MessageIncantFailedMute> {};
+	struct MessageIncantGatestoneNotEnoughMana : MessageBase<MessageIncantGatestoneNotEnoughMana>
+	{
+		double mana_deficit;
+		MessageIncantGatestoneNotEnoughMana(double mana_deficit) : mana_deficit{mana_deficit} {}
+	};
 	struct MessageMeleeMiss : MessageBase<MessageMeleeMiss> {};
 	struct MessageNotEnoughAmmo : MessageBase<MessageNotEnoughAmmo> {};
 	struct MessageNotEnoughMana : MessageBase<MessageNotEnoughMana>
 	{
 		double mana_deficit;
 		MessageNotEnoughMana(double mana_deficit) : mana_deficit{mana_deficit} {}
-	};
-	struct MessageSpellNotEnoughCharges : MessageBase<MessageSpellNotEnoughCharges> {};
-	struct MessageSpellOnCooldown : MessageBase<MessageSpellOnCooldown>
-	{
-		double active_cooldown;
-		MessageSpellOnCooldown(double active_cooldown) : active_cooldown{active_cooldown} {}
 	};
 }

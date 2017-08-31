@@ -9,51 +9,42 @@
 
 namespace questless
 {
-	namespace detail
-	{
-		template <typename NumericType>
-		struct Maximum {};
-
-		template <>
-		struct Maximum<int>
-		{
-			static constexpr int value = ::std::numeric_limits<int>::max();
-		};
-		template <>
-		struct Maximum<double>
-		{
-			static constexpr double value = ::std::numeric_limits<double>::max();
-		};
-	}
-
 	//! Represents an inclusive, bounded range of numeric values, clamping values outside the range to the nearest valid value.
 	//! @tparam NumericType A numeric type, supporting arithmetic operations.
-	//! @tparam LowerBound The minimum value in the range (inclusive).
-	//! @tparam UpperBound The maximum value in the range (inclusive).
-	template
-		< typename NumericType
-		, typename NumericType const& LowerBound
-		, typename NumericType const& UpperBound = detail::Maximum<NumericType>::value
-		>
-	class Bounded
+	//! @tparam lower_bound The minimum value in the range (inclusive).
+	//! @tparam upper_bound The maximum value in the range (inclusive).
+	template <typename NumericType>
+	class DynamicBounded
 	{
 	public:
 		using numeric_t = NumericType;
 
 		//! The minimum value in the range (inclusive).
-		static constexpr numeric_t lower_bound = LowerBound;
+		numeric_t const lower_bound;
 
 		//! The maximum value in the range (inclusive).
-		static constexpr numeric_t upper_bound = UpperBound;
+		numeric_t const upper_bound;
 
 		// Constructors
 
-		constexpr Bounded() = default;
+		constexpr DynamicBounded(numeric_t lower_bound, numeric_t upper_bound)
+			: lower_bound{lower_bound}
+			, upper_bound{upper_bound}
+		{}
 
-		constexpr Bounded(Bounded const&) = default;
-		constexpr Bounded(Bounded&&) = default;
+		constexpr DynamicBounded(DynamicBounded const&) = default;
 
-		constexpr Bounded(numeric_t value) : _number{std::clamp(value, lower_bound, upper_bound)} {}
+		constexpr DynamicBounded(DynamicBounded&& other)
+			: lower_bound{lower_bound}
+			, upper_bound{upper_bound}
+			, _number{bounded._number}
+		{}
+
+		constexpr DynamicBounded(numeric_t value, numeric_t lower_bound, numeric_t upper_bound)
+			: lower_bound{lower_bound}
+			, upper_bound{upper_bound}
+			, _number{std::clamp(value, lower_bound, upper_bound)}
+		{}
 
 		// Accessors and Mutators
 
@@ -72,12 +63,12 @@ namespace questless
 
 		// Asignment
 
-		Bounded& operator =(Bounded const& bounded)
+		DynamicBounded& operator =(DynamicBounded const& bounded)
 		{
 			set(bounded._number);
 			return *this;
 		}
-		Bounded& operator =(numeric_t value)
+		DynamicBounded& operator =(numeric_t value)
 		{
 			set(value);
 			return *this;
@@ -86,31 +77,31 @@ namespace questless
 		// Arithmetic Assignment Operators
 
 		template <typename T>
-		Bounded& operator +=(T const& that)
+		DynamicBounded& operator +=(T const& that)
 		{
 			set(_number + that);
 			return *this;
 		}
 		template <typename T>
-		Bounded& operator -=(T const& that)
+		DynamicBounded& operator -=(T const& that)
 		{
 			set(_number - that);
 			return *this;
 		}
 		template <typename T>
-		Bounded& operator *=(T const& that)
+		DynamicBounded& operator *=(T const& that)
 		{
 			set(_number * that);
 			return *this;
 		}
 		template <typename T>
-		Bounded& operator /=(T const& that)
+		DynamicBounded& operator /=(T const& that)
 		{
 			set(_number / that);
 			return *this;
 		}
 		template <typename T>
-		Bounded& operator %=(T const& that)
+		DynamicBounded& operator %=(T const& that)
 		{
 			set(_number % that);
 			return *this;
@@ -118,23 +109,23 @@ namespace questless
 
 		// Increment/decrement Operators
 
-		Bounded& operator ++()
+		DynamicBounded& operator ++()
 		{
 			set(_number + 1);
 			return *this;
 		}
-		Bounded& operator --()
+		DynamicBounded& operator --()
 		{
 			set(_number - 1);
 			return *this;
 		}
-		Bounded operator ++(int)
+		DynamicBounded operator ++(int)
 		{
 			numeric_t value = _number;
 			set(_number + 1);
 			return value;
 		}
-		Bounded operator --(int)
+		DynamicBounded operator --(int)
 		{
 			numeric_t value = _number;
 			set(_number - 1);
@@ -143,7 +134,7 @@ namespace questless
 
 		// Stream Extraction Operator
 
-		friend std::istream& operator >>(std::istream& in, Bounded& bounded)
+		friend std::istream& operator >>(std::istream& in, DynamicBounded& bounded)
 		{
 			numeric_t value;
 			in >> value;

@@ -11,5 +11,5 @@ namespace questless
 	//! to enforce either (1) calling the callback at the end of the function or (2) effectively documenting
 	//! the decision not to do so in that return path. When returning void form a function with a callback,
 	//! it's too easy to simply forget to invoke the callback or to invoke it without returning.
-	struct Complete {};
+	struct [[nodiscard]] Complete {};
 }

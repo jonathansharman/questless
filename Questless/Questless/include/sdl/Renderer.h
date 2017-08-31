@@ -17,7 +17,7 @@
 
 namespace sdl
 {
-	//! @todo Where should Fill go? Inside Renderer?
+	//! @todo Where should Fill go? Inside Renderer?d
 
 	//! The fill of a drawn shape, either a filled solid or an empty outline.
 	enum class Fill : bool { solid, outline };

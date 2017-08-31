@@ -37,8 +37,6 @@ namespace questless::spell
 								);
 						}
 						return caster.agent().get_lightning_bolt_quality(tile_coords, [this, &caster, cont, tile_coords, magnitude, cost](double quality) {
-							active_cooldown(cooldown());
-							discharge();
 							caster.mana -= cost;
 							game().add_effect(std::make_shared<LightningBoltEffect>(tile_coords));
 							if (Being* target = caster.region->being(tile_coords)) {

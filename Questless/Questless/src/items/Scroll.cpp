@@ -10,18 +10,8 @@ namespace questless
 	std::vector<uptr<Action>> Scroll::actions()
 	{
 		std::vector<uptr<Action>> actions;
-		if (!blank()) {
-			if (_spell->charges() > 0) {
-				actions.push_back(_spell->cast());
-			}
-			if (auto max_charges = _spell->max_charges()) {
-				if (_spell->charges() < *max_charges) {
-					actions.push_back(_spell->incant());
-				}
-			}
-			if (_spell->charges() > 0) {
-				actions.push_back(_spell->discharge());
-			}
+		if (blank()) {
+			//! @todo Write?
 		}
 		actions.push_back(Drop::make(*this));
 		actions.push_back(Throw::make(*this));

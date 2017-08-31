@@ -43,11 +43,8 @@ namespace questless
 		{
 		public:
 			Drop(Item& item) : _item{item} {}
-
 			static auto make(Item& item) { return std::make_unique<Drop>(item); }
-
 			std::string name() const final { return "Drop"; }
-
 			Complete perform(Being& actor, cont_t cont) final;
 		private:
 			Item& _item;
@@ -57,11 +54,8 @@ namespace questless
 		{
 		public:
 			Throw(Item& item) : _item{item} {}
-
 			static auto make(Item& item) { return std::make_unique<Throw>(item); }
-
 			std::string name() const final { return "Throw"; }
-
 			Complete perform(Being& actor, cont_t cont) final;
 		private:
 			Item& _item;

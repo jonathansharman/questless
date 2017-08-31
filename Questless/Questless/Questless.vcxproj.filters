@@ -124,6 +124,12 @@
     <Filter Include="src\entities\beings\stats">
       <UniqueIdentifier>{0d52b999-0390-4620-a144-cc22ec627c51}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\items\magic">
+      <UniqueIdentifier>{8c53baea-9eaa-4345-b2f8-a163e2579fc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\items\magic">
+      <UniqueIdentifier>{3775dc03-2999-4d86-adfc-a99c1e7a23db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h">
@@ -625,6 +631,18 @@
       <Filter>include\sdl</Filter>
     </ClInclude>
     <ClInclude Include="include\sdl\ShaderProgram.h" />
+    <ClInclude Include="include\utility\DynamicBounded.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\qte\Incant.h">
+      <Filter>include\ui\qte</Filter>
+    </ClInclude>
+    <ClInclude Include="include\spell\all-spells.h">
+      <Filter>include\spell</Filter>
+    </ClInclude>
+    <ClInclude Include="include\items\magic\Gatestone.h">
+      <Filter>include\items\magic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\world\Region.cpp">
@@ -887,6 +905,12 @@
     </ClCompile>
     <ClCompile Include="src\sdl\ShaderProgram.cpp">
       <Filter>src\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\qte\Incant.cpp">
+      <Filter>src\ui\qte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\items\magic\Gatestone.cpp">
+      <Filter>src\items\magic</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

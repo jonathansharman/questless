@@ -12,24 +12,18 @@ namespace questless::spell
 	class EagleEye : public SpellBase<EagleEye>
 	{
 	public:
-		EagleEye() : SpellBase<EagleEye>{10} {}
-
 		std::string name() const final { return "Eagle Eye"; }
 
 		Color color() const final { return Color::green; }
 
-		std::optional<int> max_charges() const final { return 10; }
-
-		double cast_time() const final { return 1.0; }
-
-		double incant_time() const final { return 10.0; }
-
-		double discharge_time() const final { return 1.0; }
-
 		double cooldown() const final { return 50.0; }
-	protected:
-		Complete perform_cast(Being& caster, Action::cont_t cont) final;
+
+		double required_gatestone_mana() const final { return 10.0; }
 	private:
 		static constexpr double _cost = 10.0;
+
+		Complete perform_cast(Being& caster, Action::cont_t cont) final;
+
+		double base_incant_time() const final { return 10.0; }
 	};
 }

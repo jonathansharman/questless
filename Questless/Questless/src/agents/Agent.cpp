@@ -15,6 +15,11 @@ namespace questless
 		return cont(1.0);
 	}
 
+	Complete Agent::incant(Gatestone& /*gatestone*/, std::function<Complete(uptr<spell::Spell>)> cont) const
+	{
+		return cont(nullptr);
+	}
+
 	// Actions
 
 	Complete Agent::idle(Action::cont_t cont)

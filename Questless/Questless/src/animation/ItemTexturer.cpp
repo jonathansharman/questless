@@ -9,6 +9,7 @@
 #include "animation/ItemTexturer.h"
 #include "animation/SpellTexturer.h"
 #include "sdl/resources.h"
+#include "items/magic/Gatestone.h"
 #include "items/Scroll.h"
 
 using namespace sdl;
@@ -46,13 +47,9 @@ namespace questless
 			static auto texture_handle = texture_manager().add("resources/textures/items/blank-scroll.png");
 			_texture_handle = texture_handle;
 		} else {
-			static auto uncharged_handle = texture_manager().add("resources/textures/items/uncharged-scroll.png");
-			static auto charged_handle = texture_manager().add("resources/textures/items/charged-scroll.png");
+			static auto scroll_handle = texture_manager().add("resources/textures/items/uncharged-scroll.png");
 
 			spell::Spell const& spell = scroll.spell();
-
-			// Get the underlying scroll texture.
-			auto scroll_handle = spell.max_charges() && spell.charges() > 0 ? charged_handle : uncharged_handle;
 
 			// Get the spell texture.
 			SpellTexturer spell_texturer;
@@ -86,6 +83,53 @@ namespace questless
 				// Cache and return the resulting handle.
 				handle_cache.insert(std::make_pair(scroll_and_spell_handle, texture_handle));
 				_texture_handle = texture_handle;
+			}
+		}
+	}
+
+	void ItemTexturer::visit(Gatestone const& gatestone)
+	{
+		if (gatestone.mana == 0.0) {
+			static auto texture_handle = texture_manager().add("resources/textures/items/soul-gem-empty.png");
+			_texture_handle = texture_handle;
+		} else {
+			switch (gatestone.color()) {
+				case spell::Color::white:
+				{
+					static auto texture_handle = texture_manager().add("resources/textures/items/soul-gem-white.png");
+					_texture_handle = texture_handle;
+					break;
+				}
+				case spell::Color::black:
+				{
+					static auto texture_handle = texture_manager().add("resources/textures/items/soul-gem-black.png");
+					_texture_handle = texture_handle;
+					break;
+				}
+				case spell::Color::green:
+				{
+					static auto texture_handle = texture_manager().add("resources/textures/items/soul-gem-green.png");
+					_texture_handle = texture_handle;
+					break;
+				}
+				case spell::Color::red:
+				{
+					static auto texture_handle = texture_manager().add("resources/textures/items/soul-gem-red.png");
+					_texture_handle = texture_handle;
+					break;
+				}
+				case spell::Color::blue:
+				{
+					static auto texture_handle = texture_manager().add("resources/textures/items/soul-gem-blue.png");
+					_texture_handle = texture_handle;
+					break;
+				}
+				case spell::Color::yellow:
+				{
+					static auto texture_handle = texture_manager().add("resources/textures/items/soul-gem-yellow.png");
+					_texture_handle = texture_handle;
+					break;
+				}
 			}
 		}
 	}

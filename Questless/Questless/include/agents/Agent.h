@@ -22,6 +22,8 @@
 
 namespace questless
 {
+	class Gatestone;
+
 	//! Facilitates control of a being. Includes AIs and the player.
 	class Agent
 	{
@@ -104,6 +106,8 @@ namespace questless
 		// Quick Time Events
 
 		virtual Complete get_lightning_bolt_quality(RegionTile::Point target_coords, std::function<Complete(double)> cont) const;
+
+		virtual Complete incant(Gatestone& gatestone, std::function<Complete(uptr<spell::Spell>)> cont) const;
 	protected:
 		Complete idle(Action::cont_t cont);
 		Complete idle(double duration);

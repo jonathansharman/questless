@@ -27,8 +27,6 @@ namespace questless
 		spell::Spell const& spell() const { return *_spell; }
 
 		std::vector<uptr<Action>> actions() final;
-
-		void update() final { _spell->update(); }
 	private:
 		uptr<spell::Spell> _spell;
 	};

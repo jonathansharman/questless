@@ -19,6 +19,7 @@ namespace questless
 		void visit(Quarterstaff const&) final;
 		void visit(Quiver const&) final;
 		void visit(Scroll const&) final;
+		void visit(Gatestone const&) final;
 
 		//! A handle to the texture of the last visited item.
 		auto texture_handle() const { return _texture_handle; }

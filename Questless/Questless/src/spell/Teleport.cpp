@@ -21,8 +21,6 @@ namespace questless::spell
 				if (caster.mana < cost) {
 					return caster.agent().send_message(std::make_unique<MessageNotEnoughMana>(cost - caster.mana), [cont] { return cont(Action::Result::aborted); });
 				}
-				active_cooldown(cooldown());
-				discharge();
 				caster.mana -= cost;
 				game().add_effect(std::make_shared<LightningBoltEffect>(caster.coords));
 				game().add_effect(std::make_shared<LightningBoltEffect>(tile_coords));

@@ -315,6 +315,7 @@
     <ClInclude Include="include\items\Inventory.h" />
     <ClInclude Include="include\items\Item.h" />
     <ClInclude Include="include\items\ItemVisitor.h" />
+    <ClInclude Include="include\items\magic\Gatestone.h" />
     <ClInclude Include="include\items\potions\Potion.h" />
     <ClInclude Include="include\items\Scroll.h" />
     <ClInclude Include="include\items\weapons\Arrow.h" />
@@ -334,6 +335,7 @@
     <ClInclude Include="include\sdl\Sound.h" />
     <ClInclude Include="include\sdl\Texture.h" />
     <ClInclude Include="include\sdl\Window.h" />
+    <ClInclude Include="include\spell\all-spells.h" />
     <ClInclude Include="include\spell\EagleEye.h" />
     <ClInclude Include="include\spell\Heal.h" />
     <ClInclude Include="include\spell\LightningBolt.h" />
@@ -350,6 +352,7 @@
     <ClInclude Include="include\ui\MagnitudeDialog.h" />
     <ClInclude Include="include\ui\MessageDialog.h" />
     <ClInclude Include="include\ui\PlayerActionDialog.h" />
+    <ClInclude Include="include\ui\qte\Incant.h" />
     <ClInclude Include="include\ui\qte\LightningBolt.h" />
     <ClInclude Include="include\ui\TileDialog.h" />
     <ClInclude Include="include\ui\VectorDialog.h" />
@@ -379,6 +382,7 @@
     <ClInclude Include="include\utility\Complete.h" />
     <ClInclude Include="include\utility\ContainerView.h" />
     <ClInclude Include="include\utility\Delegate.h" />
+    <ClInclude Include="include\utility\DynamicBounded.h" />
     <ClInclude Include="include\utility\DynamicProperty.h" />
     <ClInclude Include="include\utility\Event.h" />
     <ClInclude Include="include\utility\Id.h" />
@@ -448,6 +452,7 @@
     <ClCompile Include="src\items\Equipment.cpp" />
     <ClCompile Include="src\items\Inventory.cpp" />
     <ClCompile Include="src\items\Item.cpp" />
+    <ClCompile Include="src\items\magic\Gatestone.cpp" />
     <ClCompile Include="src\items\Scroll.cpp" />
     <ClCompile Include="src\items\weapons\Attack.cpp" />
     <ClCompile Include="src\items\weapons\Bow.cpp" />
@@ -476,6 +481,7 @@
     <ClCompile Include="src\ui\MagnitudeDialog.cpp" />
     <ClCompile Include="src\ui\MessageDialog.cpp" />
     <ClCompile Include="src\ui\PlayerActionDialog.cpp" />
+    <ClCompile Include="src\ui\qte\Incant.cpp" />
     <ClCompile Include="src\ui\qte\LightningBolt.cpp" />
     <ClCompile Include="src\ui\TileDialog.cpp" />
     <ClCompile Include="src\ui\VectorDialog.cpp" />

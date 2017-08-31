@@ -169,7 +169,7 @@ namespace questless
 		//! @param delay The delay before the action is performed.
 		//! @param cont The continuation function to call once the action completes.
 		//! @param action The action to perform after the delay.
-		void add_delayed_action(double delay, Action::cont_t cont, uptr<Action> action);
+		Complete add_delayed_action(double delay, Action::cont_t cont, uptr<Action> action);
 
 		//! Clears the being's delayed actions queue.
 		void clear_delayed_actions();

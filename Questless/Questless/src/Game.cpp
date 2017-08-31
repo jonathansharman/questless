@@ -19,6 +19,7 @@
 //! @todo The following are needed only for player spawning. Perhaps this should be the responsibility of a different class.
 #include "agents/Agent.h"
 #include "agents/Player.h"
+#include "items/magic/Gatestone.h"
 #include "entities/beings/goblinoids/Goblin.h"
 #include "entities/beings/Human.h"
 #include "items/Scroll.h"
@@ -27,10 +28,7 @@
 #include "items/weapons/Quarterstaff.h"
 #include "items/weapons/Quiver.h"
 #include "sdl/ShaderProgram.h"
-#include "spell/EagleEye.h"
-#include "spell/Heal.h"
-#include "spell/LightningBolt.h"
-#include "spell/Teleport.h"
+#include "spell/all-spells.h"
 
 using std::move;
 using std::make_unique;
@@ -460,6 +458,7 @@ namespace questless
 							}
 							player_being->inventory.add(items.add(make_unique<Quiver>(std::move(inventory))).id);
 						}
+						player_being->inventory.add(items.add(make_unique<Gatestone>(100.0, 100.0, 0.0, spell::Color::green)).id);
 						_region->spawn_player(move(player_being));
 					}
 					// Pass the player's being ID to the HUD.
@@ -561,30 +560,6 @@ namespace questless
 
 		_txt_test1->draw(ScreenSpace::Point{0, 0});
 		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{0, 0}, ScreenSpace::Vector{15, 15}}, colors::blue(), Fill::outline);
-
-		Texture{3, 3, colors::red()}.draw(ScreenSpace::Point{500, 500});
-		Texture{2, 2, colors::green()}.draw(ScreenSpace::Point{500, 500});
-		Texture{1, 1, colors::blue()}.draw(ScreenSpace::Point{500, 500});
-
-		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{504, 500}, ScreenSpace::Vector{3, 3}}, colors::cyan(), Fill::solid);
-		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{504, 500}, ScreenSpace::Vector{2, 2}}, colors::yellow(), Fill::solid);
-		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{504, 500}, ScreenSpace::Vector{1, 1}}, colors::magenta(), Fill::solid);
-
-		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{508, 500}, ScreenSpace::Vector{3, 3}}, colors::red(), Fill::outline);
-		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{508, 500}, ScreenSpace::Vector{2, 2}}, colors::green(), Fill::outline);
-		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{508, 500}, ScreenSpace::Vector{1, 1}}, colors::blue(), Fill::outline);
-
-		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{500, 504}, ScreenSpace::Vector{4, 4}}, colors::red(), Fill::outline);
-		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{505, 504}, ScreenSpace::Vector{3, 3}}, colors::red(), Fill::outline);
-		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{509, 504}, ScreenSpace::Vector{2, 2}}, colors::red(), Fill::outline);
-		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{512, 504}, ScreenSpace::Vector{1, 1}}, colors::red(), Fill::outline);
-		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{514, 504}, ScreenSpace::Vector{0, 0}}, colors::red(), Fill::outline);
-
-		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{500, 509}, ScreenSpace::Vector{4, 4}}, colors::green(), Fill::solid);
-		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{505, 509}, ScreenSpace::Vector{3, 3}}, colors::green(), Fill::solid);
-		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{509, 509}, ScreenSpace::Vector{2, 2}}, colors::green(), Fill::solid);
-		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{512, 509}, ScreenSpace::Vector{1, 1}}, colors::green(), Fill::solid);
-		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{514, 509}, ScreenSpace::Vector{0, 0}}, colors::green(), Fill::solid);
 	}
 
 	Game::UpdateResult Game::update_playing()

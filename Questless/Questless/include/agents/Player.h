@@ -88,6 +88,8 @@ namespace questless
 		// Quick Time Events
 
 		Complete get_lightning_bolt_quality(RegionTile::Point target_coords, std::function<Complete(double)> cont) const final;
+
+		Complete incant(Gatestone& gatestone, std::function<Complete(uptr<spell::Spell>)> cont) const final;
 	private:
 		uptr<WorldView> _world_view;
 

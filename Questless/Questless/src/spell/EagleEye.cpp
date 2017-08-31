@@ -19,8 +19,6 @@ namespace questless::spell
 				, [cont] { return cont(Action::Result::aborted); }
 				);
 		}
-		active_cooldown(cooldown());
-		discharge();
 		caster.mana -= _cost;
 		caster.add_status(std::make_unique<EagleEyed>(caster.stats.vision.acuity, 50, caster.id)); //! @todo Get duration.
 		game().add_effect(std::make_shared<EagleEyeEffect>(caster.coords, caster.id));

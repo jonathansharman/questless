@@ -132,7 +132,7 @@ namespace questless
 		}
 	}
 
-	void Being::add_delayed_action(double delay, Action::cont_t cont, uptr<Action> action)
+	Complete Being::add_delayed_action(double delay, Action::cont_t cont, uptr<Action> action)
 	{
 		// If there are no enqueued delayed actions, just incur the delay immediately instead of enqueueing it.
 		if (_delayed_actions.empty()) {
@@ -142,6 +142,7 @@ namespace questless
 		}
 		_delayed_actions.push_back(std::move(action));
 		_delayed_action_conts.push_back(std::move(cont));
+		return Complete{};
 	}
 
 	void Being::clear_delayed_actions()
