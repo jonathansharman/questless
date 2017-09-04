@@ -10,7 +10,7 @@ namespace questless
 {
 	// Quick Time Events
 
-	Complete Agent::get_lightning_bolt_quality(RegionTile::Point /*target_coords*/, std::function<Complete(double)> cont) const
+	Complete Agent::get_shock_quality(RegionTile::Point /*target_coords*/, std::function<Complete(double)> cont) const
 	{
 		return cont(1.0);
 	}

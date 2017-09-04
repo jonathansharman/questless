@@ -14,7 +14,7 @@
 #include "ui/VectorDialog.h"
 
 #include "ui/qte/Incant.h"
-#include "ui/qte/LightningBolt.h"
+#include "ui/qte/Shock.h"
 
 using std::function;
 
@@ -204,14 +204,14 @@ namespace questless
 		{
 			std::string title;
 			void visit(MagnitudeQueryHeal const&) final { title = "Heal Amount"; }
-			void visit(MagnitudeQueryLightningBolt const&) final { title = "Lightning Bolt Strength"; }
+			void visit(MagnitudeQueryShock const&) final { title = "Lightning Bolt Strength"; }
 			void visit(MagnitudeQueryWaitTime const&) final { title = "Wait"; }
 		};
 		struct MagnitudeQueryPrompter : MagnitudeQueryConstVisitor
 		{
 			std::string prompt;
 			void visit(MagnitudeQueryHeal const&) final { prompt = "Choose how much health to restore."; }
-			void visit(MagnitudeQueryLightningBolt const&) final { prompt = "Choose how strong to make the lightning bolt."; }
+			void visit(MagnitudeQueryShock const&) final { prompt = "Choose how strong to make the lightning bolt."; }
 			void visit(MagnitudeQueryWaitTime const&) final { prompt = "Enter wait time."; }
 		};
 
@@ -233,15 +233,15 @@ namespace questless
 		struct TileQueryTitler : TileQueryConstVisitor
 		{
 			std::string title;
-			void visit(TileQueryLightningBoltTarget const&) final { title = "Lightning Bolt Target"; }
 			void visit(TileQueryRangedAttackTarget const&) final { title = "Ranged Attack"; }
+			void visit(TileQueryShockTarget const&) final { title = "Shock Target"; }
 			void visit(TileQueryTeleportTarget const&) final { title = "Teleport Target"; }
 		};
 		struct TileQueryPrompter : TileQueryConstVisitor
 		{
 			std::string prompt;
-			void visit(TileQueryLightningBoltTarget const&) final { prompt = "Select a tile to be zapped with a lightning bolt."; }
 			void visit(TileQueryRangedAttackTarget const&) final { prompt = "Choose attack target."; }
+			void visit(TileQueryShockTarget const&) final { prompt = "Select a tile to be zapped with an electric discharge."; }
 			void visit(TileQueryTeleportTarget const&) final { prompt = "Select a tile to teleport to."; }
 		};
 
@@ -331,9 +331,9 @@ namespace questless
 
 	// Quick Time Events
 
-	Complete Player::get_lightning_bolt_quality(RegionTile::Point target_coords, std::function<Complete(double)> cont) const
+	Complete Player::get_shock_quality(RegionTile::Point target_coords, std::function<Complete(double)> cont) const
 	{
-		auto dialog = std::make_unique<qte::LightningBolt>(target_coords, std::move(cont));
+		auto dialog = std::make_unique<qte::Shock>(target_coords, std::move(cont));
 		return game().add_dialog(std::move(dialog));
 	}
 

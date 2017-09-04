@@ -5,7 +5,7 @@
 #include "ui/HUD.h"
 #include "Game.h"
 #include "entities/beings/Being.h"
-#include "animation/ItemTexturer.h"
+#include "animation/ItemRenderer.h"
 #include "animation/BodyTexturer.h"
 
 using namespace sdl;
@@ -113,7 +113,7 @@ namespace questless
 					( ScreenSpace::Box
 						{ ScreenSpace::Point{left, _screen_bottom}
 						, ScreenSpace::Vector{_condition_bar_width * _conditions_count, _condition_bar_height}
-						, { ScreenSpace::Box::Align::close, ScreenSpace::Box::Align::far }
+						, { ScreenSpace::align_left, ScreenSpace::align_bottom }
 						}
 					, colors::black()
 					, sdl::Fill::solid
@@ -124,7 +124,7 @@ namespace questless
 					( ScreenSpace::Box
 						{ ScreenSpace::Point{left + 1, _screen_bottom}
 						, ScreenSpace::Vector{_condition_bar_width - 2, health_bar_height - 1}
-						, { ScreenSpace::Box::Align::close, ScreenSpace::Box::Align::far }
+						, { ScreenSpace::align_left, ScreenSpace::align_bottom }
 						}
 					, colors::red()
 					, sdl::Fill::solid
@@ -136,7 +136,7 @@ namespace questless
 					( ScreenSpace::Box
 						{ ScreenSpace::Point{left + 1, _screen_bottom}
 						, ScreenSpace::Vector{_condition_bar_width - 2, mana_bar_height - 1}
-						, { ScreenSpace::Box::Align::close, ScreenSpace::Box::Align::far }
+						, { ScreenSpace::align_left, ScreenSpace::align_bottom }
 						}
 					, colors::blue()
 					, sdl::Fill::solid
@@ -148,7 +148,7 @@ namespace questless
 					( ScreenSpace::Box
 						{ ScreenSpace::Point{left + 1, _screen_bottom}
 						, ScreenSpace::Vector{_condition_bar_width - 2, energy_bar_height - 1}
-						, { ScreenSpace::Box::Align::close, ScreenSpace::Box::Align::far }
+						, { ScreenSpace::align_left, ScreenSpace::align_bottom }
 						}
 					, colors::cyan()
 					, sdl::Fill::solid
@@ -160,7 +160,7 @@ namespace questless
 					( ScreenSpace::Box
 						{ ScreenSpace::Point{left + 1, _screen_bottom}
 						, ScreenSpace::Vector{_condition_bar_width - 2, satiety_bar_height - 1}
-						, { ScreenSpace::Box::Align::close, ScreenSpace::Box::Align::far }
+						, { ScreenSpace::align_left, ScreenSpace::align_bottom }
 						}
 					, colors::brown()
 					, sdl::Fill::solid
@@ -172,7 +172,7 @@ namespace questless
 					( ScreenSpace::Box
 						{ ScreenSpace::Point{left + 1, _screen_bottom}
 						, ScreenSpace::Vector{_condition_bar_width - 2, alertness_bar_height - 1}
-						, { ScreenSpace::Box::Align::close, ScreenSpace::Box::Align::far }
+						, { ScreenSpace::align_left, ScreenSpace::align_bottom }
 						}
 					, colors::yellow()
 					, sdl::Fill::solid
@@ -184,23 +184,18 @@ namespace questless
 				BodyTexturer texturer;
 				texturer.visit(player_being->body);
 				uptr<Texture> texture = texturer.texture();
-				texture->draw(ScreenSpace::Point{0, _screen_bottom - _condition_bar_height}, HAlign::left, VAlign::bottom);
+				texture->draw(ScreenSpace::Point{0, _screen_bottom - _condition_bar_height}, TextureSpace::align_left, TextureSpace::align_bottom);
 			}
 
 			{ // Draw hotbar items.
-				ItemTexturer texturer;
 				for (int i = 0; i < _hotbar_size; ++i) {
 					int x = _hotbar_x_start + (_hotbar_slot_width + _hotbar_interslot_gap) * i;
 					int y = _screen_bottom - _hotbar_bottom_gap;
-					_hotbar_slot_texture->draw(ScreenSpace::Point{x, y}, HAlign::left, VAlign::bottom);
+					_hotbar_slot_texture->draw(ScreenSpace::Point{x, y}, TextureSpace::align_left, TextureSpace::align_bottom);
 					if (std::optional<Id<Item>> opt_item_id = _hotbar[i]) {
 						Item const& item = game().items.cref(*opt_item_id);
-						item.accept(texturer);
-						texture_manager()[texturer.texture_handle()].draw
-							( ScreenSpace::Point{x + _hotbar_slot_h_padding, y - _hotbar_slot_v_padding}
-							, HAlign::left
-							, VAlign::bottom
-							);
+						ItemRenderer item_renderer{ScreenSpace::Point{x + _hotbar_slot_h_padding, y - _hotbar_slot_v_padding - 55}}; //! @todo Remove magic number or add alignment back in. 55 is the height of item textures.
+						item.accept(item_renderer);
 					}
 				}
 			}
@@ -215,7 +210,6 @@ namespace questless
 					, colors::black()
 					, colors::gray()
 					);
-				ItemTexturer texturer;
 
 				{ // Draw selection.
 					int x_mouse = input().x_mouse();
@@ -238,10 +232,10 @@ namespace questless
 
 				// Draw item icons.
 				for (size_t i = 0; i < _displayed_items.size(); ++i) {
-					_displayed_items[i].get().accept(texturer);
 					int row = i / _inv_column_count;
 					int column = i % _inv_column_count;
-					texture_manager()[texturer.texture_handle()].draw(ScreenSpace::Point{_inv_left + column * _item_icon_width, _inv_top + row * _item_icon_height });
+					ItemRenderer texturer{ScreenSpace::Point{_inv_left + column * _item_icon_width, _inv_top + row * _item_icon_height}};
+					_displayed_items[i].get().accept(texturer);
 				}
 			}
 		}

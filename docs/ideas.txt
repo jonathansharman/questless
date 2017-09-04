@@ -21,8 +21,14 @@ Stasis
 	Contains no energy
 	Everything within it is eternal, unchanging
 	Inhospitable, except for the preservers
+Harmony
+	The realm of peace and harmony
+	Home to the peacekeepers
+Discord
+	The realm of perpetual war and strife
+	Home to the provokers
 The World
-	The intersection of the six other realms, where good meets evil, light meets shadow, chaos meets order, space meets time, and nature meets technology.
+	The intersection of the other realms, where good meets evil, nature meets technology, chaos meets order, and peace meets war.
 
 ================================================================================
 Potion brewing
@@ -48,14 +54,7 @@ Spellcasting
 Player acquires new spells through various means along the way
 	Spells may be discovered by entering a trance - a color-dependent mini-game
 		Different type of trance for each color
-			White
-			Black
-			Green
-			Red
-			Blue
-			Yellow
-		At the conclusion, power and/or resistance for that color improve, and a new spell may be obtained, if a scroll is available
-			Rewards are semi-random
+		At the conclusion, a new spell may be obtained, if a scroll is available
 	Spells may be bought or traded for
 	Spells may be stolen or looted from corpses, found lying around, etc.
 Must be written on magic scrolls or in a grimoire (both reusable) and recited to take effect
@@ -66,14 +65,6 @@ Must be written on magic scrolls or in a grimoire (both reusable) and recited to
 	Player may acquire a notebook (possibly given at the start) to write/rewrite freely in
 NPCs may use spells, but only if they are not mute (beasts are mute)
 	The game will play the sound effect of the spell, allowing the player to copy it if he/she can discern what is said (still doing this?)
-Incantation
-	Before a spell can be cast, its incantation must be performed on one's soul or a soul gem
-	Takes a significant amount of time, varies by spell
-	Once the incantation is complete, the spell is charged within the soul/soul gem
-	Charged spells may be cast very quickly (maybe instantly?)
-	Some spells may be incanted multiple times to build up more charges
-		Each charge requires a certain amount of spirit
-	Mana cost is not incurred until the spell is actually cast
 When casting a spell, the caster may choose the magnitude and duration of the spell, if applicable. The cost of the casting is typically linear with the duration and quasilinear (n log n) with the magnitude.
 
 ================================================================================
@@ -158,7 +149,6 @@ World Mechanics
 Travel from one tile to the next requires a certain number of turns
 	Dependent on factors like agility and tile material
 Flying beings can traverse tiles that others cannot
-Agent perception and knowledge about the world TODO
 
 ================================================================================
 Combat Mechanics
@@ -250,7 +240,7 @@ Requires souls? Blood?
 	Obtained from slain enemies and stored, somehow
 		Bottles? Gems? Crystals?
 	This sounds kind of evil. Maybe enchantment should be more morally neutral.
-Uses red magic
+Uses orange magic
 Weapon Enchantments
 	Lifesteal - Restores health to the attacker in proportion to damage dealt
 Armor Enchantments
@@ -446,16 +436,8 @@ Green - matter - nature
 			Summon storm elemental
 Red - energy - technology
 	Specializations
-		Battle mage
 		Technomage
 		Power mage
-	Battle Runes
-		Battle Cry - Temporarily empowers strength and endurance.
-		Duel - A target being and the caster temporarily become immune to weapon-based attacks from all other beings except each other and unable to deal damage to other beings.
-			Exploitable with allies?
-				How about, "when it expires, the one with the lowest health percentage dies"?
-		Rampage - The caster's next x actions do not incur cooldown.
-		Weapon and armor enchantments
 	Power Runes
 		Charge - Gain mana over time. Total mana restored is equal to casting cost plus spell duration times a constant factor.
 			E.g., spend 100 mana to recover 100 mana over 0 turns. Or spend 100 mana to recover 200 mana over, say, 25 turns.
@@ -469,26 +451,17 @@ Red - energy - technology
 	Mech Runes
 		Repair - Restores health to target machine.
 		Summon machines
-Blue - order - time - ice
+Blue - stasis - time
 	Specializations
-		Peacekeeper
-		Avenger?
 		Chronomancer
-	Peace Runes
-		Imprison - For a certain duration, prevent target from moving or using melee attacks.
-		Silence - Cause muteness in target being for a certain duration.
-		Disarmament - Unequip all weapons (including caster's weapons) within a certain range. Unequip times are not incurred; the effect is immediate. Any weapons being readied will not connect with their targets. Recovery times from weapons used prior to casting are unaffected.
-		Pacify - For a certain duration, cause the target to become passive. Passive beings cannot perform any actions.
-		Ward - Equip a low-durability passive shield.
 	Stasis Runes
 		Summon preservers from the stasis
-	Vengeance Runes
-		Retribution - Gives target being retribution status. Next time that target deals damage to another being, it also deals that damage to itself.
 	Time Runes
 Yellow - chaos - space
 	Specializations
 		Chaos mage
-	Chaos Runes - RENAME
+		Space mage...?
+	Chaos Runes
 		Revolt - Swaps a stat of two beings.
 		Confuse - Reduces the target being's intellect.
 		Madden - Causes the target being to become insane for a certain duration. While insane, the target behaves erratically and often self-destructively.
@@ -503,12 +476,32 @@ Yellow - chaos - space
 			...
 		Mirage - Cause a being to perceive something that's not there.
 		Transmute - ???
-	Void Runes - RENAME
+	Space Runes
 		Interport - Swap positions of two beings.
 		Teleport - Teleport within a certain distance.
 		Banish - Banish target being to the chaos for a certain duration. While banished, an impassable and indestructible chaos portal appears in its place. During banishment, the being cannot be interacted with and does not update its state.
 		Open portal - ???
 		Summon shifters from the chaos
+Violet - peace - order
+	Specializations
+		Peacekeeper
+	Peace Runes
+		Imprison - For a certain duration, prevent target from moving or using melee attacks.
+		Silence - Cause muteness in target being for a certain duration.
+		Disarmament - Unequip all weapons (including caster's weapons) within a certain range. Unequip times are not incurred; the effect is immediate. Any weapons being readied will not connect with their targets. Recovery times from weapons used prior to casting are unaffected.
+		Pacify - For a certain duration, cause the target to become passive. Passive beings cannot perform any actions.
+		Ward - Equip a low-durability passive shield.
+		Retribution - Gives target being retribution status. Next time that target deals damage to another being, it also deals that damage to itself.
+Orange - war - strife
+	Specializations
+		Battle mage
+	Battle Runes
+		Battle Cry - Temporarily empowers strength and endurance.
+		Duel - A target being and the caster temporarily become immune to weapon-based attacks from all other beings except each other and unable to deal damage to other beings.
+			Exploitable with allies?
+				How about, "when it expires, the one with the lowest health percentage dies"?
+		Rampage - The caster's next x actions do not incur cooldown.
+		Weapon and armor enchantments
 
 ================================================================================
 Real-time Events for Spells

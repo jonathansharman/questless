@@ -63,7 +63,11 @@ namespace questless
 		//! @param origin The origin point of the menu on the screen.
 		//! @param horizontal_alignment The horizontal alignment of the menu relative to the origin point.
 		//! @param vertical_alignment The vertical alignment of the menu relative to the origin point.
-		void draw(units::ScreenSpace::Point origin, sdl::HAlign horizontal_alignment = sdl::HAlign::left, sdl::VAlign vertical_alignment = sdl::VAlign::top);
+		void draw
+			( units::ScreenSpace::Point origin
+			, units::ScreenSpace::HAlign horizontal_alignment = units::ScreenSpace::align_left
+			, units::ScreenSpace::VAlign vertical_alignment = units::ScreenSpace::align_top
+			);
 	private:
 		struct Page
 		{

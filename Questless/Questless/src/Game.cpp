@@ -364,7 +364,7 @@ namespace questless
 		oss_fps.precision(2);
 		oss_fps << fps_buffer_sum / _fps_buffer.size();
 		Texture txt_fps = _fnt_20pt->render(oss_fps.str().c_str(), colors::white());
-		txt_fps.draw(ScreenSpace::Point(window().width() - 1, window().height() - 1), HAlign::right, VAlign::bottom);
+		txt_fps.draw(ScreenSpace::Point(window().width() - 1, window().height() - 1), TextureSpace::align_right, TextureSpace::align_bottom);
 
 		// Swap buffers to update the screen.
 		SDL_GL_SwapWindow(window().sdl_ptr());
@@ -424,10 +424,10 @@ namespace questless
 		}
 
 		ScreenSpace::Point logo_position = window().center() + ScreenSpace::Vector{uniform(-_splash_logo_jiggle, _splash_logo_jiggle), uniform(-_splash_logo_jiggle, _splash_logo_jiggle)};
-		_txt_splash_logo->draw(logo_position, HAlign::center, VAlign::middle, colors::ColorFactor{intensity, intensity, intensity, 1.0f});
+		_txt_splash_logo->draw(logo_position, TextureSpace::align_center, TextureSpace::align_middle, colors::ColorFactor{intensity, intensity, intensity, 1.0f});
 
 		for (ScreenSpace::Point position : _splash_flame_positions) {
-			_txt_splash_flame->draw(position, HAlign::center, VAlign::bottom, colors::ColorFactor{intensity, intensity, intensity, 1.0f});
+			_txt_splash_flame->draw(position, TextureSpace::align_center, TextureSpace::align_bottom, colors::ColorFactor{intensity, intensity, intensity, 1.0f});
 		}
 	}
 
@@ -444,7 +444,7 @@ namespace questless
 						auto player_being = make_unique<Human>(Agent::make<Player>);
 						_player = dynamic_cast<Player*>(&player_being->agent());
 						_player_being_id = player_being->id;
-						player_being->inventory.add(items.add(make_unique<Scroll>(make_unique<spell::LightningBolt>())).id);
+						player_being->inventory.add(items.add(make_unique<Scroll>(make_unique<spell::Shock>())).id);
 						player_being->inventory.add(items.add(make_unique<Scroll>(make_unique<spell::Heal>())).id);
 						player_being->inventory.add(items.add(make_unique<Scroll>(make_unique<spell::Teleport>())).id);
 						player_being->inventory.add(items.add(make_unique<Scroll>(make_unique<spell::EagleEye>())).id);
@@ -482,7 +482,7 @@ namespace questless
 
 	void Game::render_menu()
 	{
-		_main_menu.draw(window().center(), HAlign::center, VAlign::middle);
+		_main_menu.draw(window().center(), ScreenSpace::align_center, ScreenSpace::align_middle);
 	}
 
 	void Game::render_playing()

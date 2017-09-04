@@ -249,9 +249,6 @@
     <ClInclude Include="include\entities\beings\Human.h">
       <Filter>include\entities\beings</Filter>
     </ClInclude>
-    <ClInclude Include="include\animation\ItemTexturer.h">
-      <Filter>include\animation</Filter>
-    </ClInclude>
     <ClInclude Include="include\ui\CountDialog.h">
       <Filter>include\ui</Filter>
     </ClInclude>
@@ -333,13 +330,7 @@
     <ClInclude Include="include\effects\EffectVisitor.h">
       <Filter>include\effects</Filter>
     </ClInclude>
-    <ClInclude Include="include\ui\qte\LightningBolt.h">
-      <Filter>include\ui\qte</Filter>
-    </ClInclude>
     <ClInclude Include="include\spell\Heal.h">
-      <Filter>include\spell</Filter>
-    </ClInclude>
-    <ClInclude Include="include\spell\LightningBolt.h">
       <Filter>include\spell</Filter>
     </ClInclude>
     <ClInclude Include="include\spell\Teleport.h">
@@ -643,6 +634,15 @@
     <ClInclude Include="include\items\magic\Gatestone.h">
       <Filter>include\items\magic</Filter>
     </ClInclude>
+    <ClInclude Include="include\animation\ItemRenderer.h">
+      <Filter>include\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\spell\Shock.h">
+      <Filter>include\spell</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\qte\Shock.h">
+      <Filter>include\ui\qte</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\world\Region.cpp">
@@ -680,9 +680,6 @@
     </ClCompile>
     <ClCompile Include="src\entities\beings\Human.cpp">
       <Filter>src\entities\beings</Filter>
-    </ClCompile>
-    <ClCompile Include="src\animation\ItemTexturer.cpp">
-      <Filter>src\animation</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\Dialog.cpp">
       <Filter>src\ui</Filter>
@@ -749,12 +746,6 @@
     </ClCompile>
     <ClCompile Include="src\agents\BasicAI.cpp">
       <Filter>src\agents</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\qte\LightningBolt.cpp">
-      <Filter>src\ui\qte</Filter>
-    </ClCompile>
-    <ClCompile Include="src\spell\LightningBolt.cpp">
-      <Filter>src\spell</Filter>
     </ClCompile>
     <ClCompile Include="src\spell\Spell.cpp">
       <Filter>src\spell</Filter>
@@ -911,6 +902,15 @@
     </ClCompile>
     <ClCompile Include="src\items\magic\Gatestone.cpp">
       <Filter>src\items\magic</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\ItemRenderer.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\spell\Shock.cpp">
+      <Filter>src\spell</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\qte\Shock.cpp">
+      <Filter>src\ui\qte</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

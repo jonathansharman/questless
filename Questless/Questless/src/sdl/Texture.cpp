@@ -185,29 +185,29 @@ namespace sdl
 
 	void Texture::draw
 		( ScreenSpace::Point position
-		, HAlign horizontal_alignment
-		, VAlign vertical_alignment
+		, TextureSpace::HAlign horizontal_alignment
+		, TextureSpace::VAlign vertical_alignment
 		, ColorFactor color_factor
 		, std::optional<TextureSpace::Box> const& src_rect
 		) const
 	{
 		switch (horizontal_alignment) {
-			case HAlign::left:
+			case TextureSpace::align_left:
 				position.x() += _width / 2;
 				break;
-			case HAlign::center:
+			case TextureSpace::align_center:
 				break;
-			case HAlign::right:
+			case TextureSpace::align_right:
 				position.x() -= _width / 2;
 				break;
 		}
 		switch (vertical_alignment) {
-			case VAlign::top:
+			case TextureSpace::align_top:
 				position.y() += _height / 2;
 				break;
-			case VAlign::middle:
+			case TextureSpace::align_middle:
 				break;
-			case VAlign::bottom:
+			case TextureSpace::align_bottom:
 				position.y() -= _height / 2;
 				break;
 		}

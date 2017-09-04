@@ -23,9 +23,9 @@ namespace questless
 		_texture_handle = texture_handle;
 	}
 
-	void SpellTexturer::visit(spell::LightningBolt const&)
+	void SpellTexturer::visit(spell::Shock const&)
 	{
-		static auto texture_handle = texture_manager().add("resources/textures/spells/lightning-bolt.png");
+		static auto texture_handle = texture_manager().add("resources/textures/spells/shock.png");
 		_texture_handle = texture_handle;
 	}
 

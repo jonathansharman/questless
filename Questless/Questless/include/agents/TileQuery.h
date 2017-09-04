@@ -8,13 +8,13 @@
 
 namespace questless
 {
-	struct TileQueryLightningBoltTarget;
 	struct TileQueryRangedAttackTarget;
+	struct TileQueryShockTarget;
 	struct TileQueryTeleportTarget;
 
 	using TileQuerySubtypeList = type_list::of_t
-		< TileQueryLightningBoltTarget
-		, TileQueryRangedAttackTarget
+		< TileQueryRangedAttackTarget
+		, TileQueryShockTarget
 		, TileQueryTeleportTarget
 		>;
 
@@ -28,11 +28,11 @@ namespace questless
 
 	DEFINE_ELEMENT_BASE(TileQuery, TileQuery)
 
-	struct TileQueryLightningBoltTarget : TileQueryBase<TileQueryLightningBoltTarget> {};
 	struct TileQueryRangedAttackTarget : TileQueryBase<TileQueryRangedAttackTarget>
 	{
 		int range;
 		TileQueryRangedAttackTarget(int range) : range{ range } {}
 	};
+	struct TileQueryShockTarget : TileQueryBase<TileQueryShockTarget> {};
 	struct TileQueryTeleportTarget : TileQueryBase<TileQueryTeleportTarget> {};
 }

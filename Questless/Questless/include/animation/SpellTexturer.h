@@ -16,7 +16,7 @@ namespace questless
 	public:
 		void visit(spell::EagleEye const&) final;
 		void visit(spell::Heal const&) final;
-		void visit(spell::LightningBolt const&) final;
+		void visit(spell::Shock const&) final;
 		void visit(spell::Teleport const&) final;
 
 		//! A handle to the texture of the last visited item.

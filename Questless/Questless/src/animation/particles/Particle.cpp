@@ -34,7 +34,7 @@ namespace questless
 
 	void Particle::draw(units::ScreenSpace::Point position) const
 	{
-		texture().draw(position, HAlign::center, VAlign::middle);
+		texture().draw(position, TextureSpace::align_center, TextureSpace::align_middle);
 	}
 
 	void Particle::draw(units::GameSpace::Point position, Camera const& camera, colors::ColorFactor color_factor) const

@@ -24,9 +24,6 @@ namespace sdl
 	// Forward-declare default shader accessor.
 	ShaderProgram& dflt_program();
 
-	enum class HAlign { left, center, right };
-	enum class VAlign { top, middle, bottom };
-
 	//! A simple wrapper around SDL_Texture.
 	class Texture
 	{
@@ -69,8 +66,8 @@ namespace sdl
 		//! @param src_rect The section of the texture to be drawn. If nullopt, the entire texture is used.
 		void draw
 			( units::ScreenSpace::Point position
-			, HAlign horizontal_alignment = HAlign::left
-			, VAlign vertical_alignment = VAlign::top
+			, units::TextureSpace::HAlign horizontal_alignment = units::TextureSpace::align_left
+			, units::TextureSpace::VAlign vertical_alignment = units::TextureSpace::align_top
 			, units::colors::ColorFactor color_factor = units::colors::white_factor()
 			, std::optional<units::TextureSpace::Box> const& src_rect = std::nullopt
 			) const;

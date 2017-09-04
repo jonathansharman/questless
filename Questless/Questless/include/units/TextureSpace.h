@@ -22,7 +22,19 @@ namespace units
 		};
 	}
 
-	using TextureSpace = Space<struct TextureSpaceTag, int, 2, detail::TextureSpaceBuffer>;
+	struct TextureSpace : Space<struct TextureSpaceTag, int, 2, detail::TextureSpaceBuffer>
+	{
+		using HAlign = Axis<0>::Alignment;
+		using VAlign = Axis<1>::Alignment;
+
+		static constexpr auto align_left = HAlign::near;
+		static constexpr auto align_center = HAlign::mid;
+		static constexpr auto align_right = HAlign::far;
+
+		static constexpr auto align_top = VAlign::near;
+		static constexpr auto align_middle = VAlign::mid;
+		static constexpr auto align_bottom = VAlign::far;
+	};
 
 	inline int& width(TextureSpace::Box& box) { return box.size.u(); }
 	inline int width(TextureSpace::Box const& box) { return box.size.u(); }

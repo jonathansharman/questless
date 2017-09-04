@@ -44,10 +44,30 @@ namespace units
 	template <typename Tag, typename ScalarType, int DimensionCount, typename Buffer = BaseBuffer<ScalarType, DimensionCount>>
 	struct Space
 	{
+	private:
+		//! @todo Is there a way to generate the type for the alignment tuple without using a dummy function?
+
+		template <int... DimensionIndices>
+		static decltype(auto) align_dummy(std::integer_sequence<int, DimensionIndices...>)
+		{
+			return std::tuple<typename Axis<DimensionIndices>::Alignment...>{};
+		}
+	public:
 		using scalar_t = ScalarType;
 		static constexpr int dimension_count = DimensionCount;
 
 		static_assert(dimension_count >= 0, "Number of dimensions must be non-negative.");
+
+		//! Represents the axis along the dimension with index @p dimension.
+		template <int dimension>
+		struct Axis
+		{
+			//! Alignment along this axis.
+			enum class Alignment { near, mid, far };
+		};
+
+		//! The alignment along every axis in this space.
+		using Alignment = decltype(align_dummy(std::make_integer_sequence<int, dimension_count>{}));
 
 		//! An angle in this space, with @p UnitsPerCircle angle units per full circle, as a std::ratio.
 		template <typename UnitsPerCircle>
@@ -523,11 +543,10 @@ namespace units
 			}
 		};
 
-		//! A box in this space.
-		struct Box
+		//! A rectangular, orthogonal volume in this space.
+		class Box
 		{
-			enum class Align { close, mid, far };
-
+		public:
 			//! The position of the minimal corner of this box.
 			Point position;
 
@@ -544,24 +563,14 @@ namespace units
 				, size{std::move(size)}
 			{}
 
-			explicit constexpr Box(Point position, Vector size, std::array<Align, dimension_count> alignment)
-				: position{std::move(position)}
+			//! A box of size @p size at @p position with alignment @p alignment.
+			//! @param position The position of this box relative to its origin.
+			//! @param size The size of this box.
+			//! @param alignment The alignment of each of this box's axes, which determines where the origin is.
+			explicit constexpr Box(Point position, Vector size, Alignment const& alignment)
+				: position{aligned_position(position, size, alignment)}
 				, size{std::move(size)}
-			{
-				//! @todo Specialize these adjustments for integers and floats?
-				for (int i = 0; i < dimension_count; ++i) {
-					switch (alignment[i]) {
-						case Align::close:
-							break;
-						case Align::mid:
-							this->position[i] -= size[i] / 2 - 1;
-							break;
-						case Align::far:
-							this->position[i] -= size[i] - 1;
-							break;
-					}
-				}
-			}
+			{}
 
 			Box& operator =(Box const&) & = default;
 			Box& operator =(Box&&) & = default;
@@ -615,6 +624,36 @@ namespace units
 						size[i] = point[i] - position[i];
 					}
 				}
+			}
+		private:
+			static constexpr Point aligned_position(Point position, Vector size, Alignment const& alignment)
+			{
+				return apply_alignment<0>(position, size, alignment);
+			}
+
+			template <int index>
+			static constexpr Point apply_alignment(Point position, Vector size, Alignment const& alignment)
+			{
+				//! @todo Can use constexpr-if for base case here, when supported.
+
+				//! @todo Specialize these adjustments for integers and floats?
+				switch (std::get<index>(alignment)) {
+					case Axis<index>::Alignment::near:
+						break;
+					case Axis<index>::Alignment::mid:
+						position[index] -= size[index] / 2 - 1;
+						break;
+					case Axis<index>::Alignment::far:
+						position[index] -= size[index] - 1;
+						break;
+				}
+				return apply_alignment<index + 1>(position, size, alignment);
+			}
+
+			template <>
+			static constexpr Point apply_alignment<dimension_count>(Point position, Vector size, Alignment const& alignment)
+			{
+				return position;
 			}
 		};
 	};

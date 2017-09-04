@@ -16,13 +16,13 @@
 
 namespace questless::qte
 {
-	//! Quick time event for determining lightning bolt strength.
-	class LightningBolt : public Dialog
+	//! Quick time event for determining shock strength.
+	class Shock : public Dialog
 	{
 	public:
 		//! @param target_coords The target strike coordinates.
 		//! @param cont The dialog continuation function.
-		LightningBolt(RegionTile::Point target_coords, std::function<void(double)> cont);
+		Shock(RegionTile::Point target_coords, std::function<void(double)> cont);
 
 		State update() final;
 

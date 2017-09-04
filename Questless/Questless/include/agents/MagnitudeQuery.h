@@ -9,12 +9,12 @@
 namespace questless
 {
 	struct MagnitudeQueryHeal;
-	struct MagnitudeQueryLightningBolt;
+	struct MagnitudeQueryShock;
 	struct MagnitudeQueryWaitTime;
 
 	using MagnitudeQuerySubtypeList = type_list::of_t
 		< MagnitudeQueryHeal
-		, MagnitudeQueryLightningBolt
+		, MagnitudeQueryShock
 		, MagnitudeQueryWaitTime
 		>;
 
@@ -29,6 +29,6 @@ namespace questless
 	DEFINE_ELEMENT_BASE(MagnitudeQuery, MagnitudeQuery)
 
 	struct MagnitudeQueryHeal : MagnitudeQueryBase<MagnitudeQueryHeal> {};
-	struct MagnitudeQueryLightningBolt : MagnitudeQueryBase<MagnitudeQueryLightningBolt> {};
+	struct MagnitudeQueryShock : MagnitudeQueryBase<MagnitudeQueryShock> {};
 	struct MagnitudeQueryWaitTime : MagnitudeQueryBase<MagnitudeQueryWaitTime> {};
 }

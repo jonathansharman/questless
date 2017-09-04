@@ -7,5 +7,5 @@
 
 #include "EagleEye.h"
 #include "Heal.h"
-#include "LightningBolt.h"
+#include "Shock.h"
 #include "Teleport.h"

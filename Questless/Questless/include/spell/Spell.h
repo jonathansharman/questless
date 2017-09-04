@@ -13,7 +13,16 @@
 
 namespace questless::spell
 {
-	enum class Color { white, black, green, red, blue, yellow };
+	enum class Color
+		{ white
+		, black
+		, green
+		, red
+		, blue
+		, yellow
+		, violet
+		, orange
+		};
 
 	//! A magical spell that can be cast by a being.
 	class Spell : public Element<SpellSubtypeList>

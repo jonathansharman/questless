@@ -2,7 +2,8 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "spell/LightningBolt.h"
+#include "spell/Shock.h"
+
 #include "Game.h"
 #include "entities/beings/Being.h"
 #include "effects/Effect.h"
@@ -15,15 +16,15 @@
 
 namespace questless::spell
 {
-	Complete LightningBolt::perform_cast(Being& caster, Action::cont_t cont)
+	Complete Shock::perform_cast(Being& caster, Action::cont_t cont)
 	{
-		return caster.agent().query_tile(std::make_unique<TileQueryLightningBoltTarget>(), caster.coords, Action::tile_in_range_predicate(caster, _range),
+		return caster.agent().query_tile(std::make_unique<TileQueryShockTarget>(), caster.coords, Action::tile_in_range_predicate(caster, _range),
 			[this, &caster, cont](std::optional<RegionTile::Point> opt_tile_coords) {
 				if (!opt_tile_coords) {
 					return cont(Action::Result::aborted);
 				}
 				RegionTile::Point tile_coords = *opt_tile_coords;
-				return caster.agent().query_magnitude(std::make_unique<MagnitudeQueryLightningBolt>(), 20.0, 0.0, std::nullopt,
+				return caster.agent().query_magnitude(std::make_unique<MagnitudeQueryShock>(), 20.0, 0.0, std::nullopt,
 					[this, &caster, cont, tile_coords](std::optional<double> opt_magnitude) {
 						if (!opt_magnitude) {
 							return cont(Action::Result::aborted);
@@ -36,7 +37,7 @@ namespace questless::spell
 								, [cont] { return cont(Action::Result::aborted); }
 								);
 						}
-						return caster.agent().get_lightning_bolt_quality(tile_coords, [this, &caster, cont, tile_coords, magnitude, cost](double quality) {
+						return caster.agent().get_shock_quality(tile_coords, [this, &caster, cont, tile_coords, magnitude, cost](double quality) {
 							caster.mana -= cost;
 							game().add_effect(std::make_shared<LightningBoltEffect>(tile_coords));
 							if (Being* target = caster.region->being(tile_coords)) {

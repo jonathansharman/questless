@@ -60,7 +60,7 @@ namespace questless::qte
 					if (_notes.front() == Note::left) {
 						spell = std::make_unique<spell::Heal>();
 					} else if (_notes.front() == Note::right) {
-						spell = std::make_unique<spell::LightningBolt>();
+						spell = std::make_unique<spell::Shock>();
 					} else if (_notes.front() == Note::up) {
 						spell = std::make_unique<spell::Teleport>();
 					} else if (_notes.front() == Note::down) {

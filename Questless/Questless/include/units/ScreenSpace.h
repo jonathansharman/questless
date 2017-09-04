@@ -24,7 +24,19 @@ namespace units
 		};
 	}
 
-	using ScreenSpace = Space<struct ScreenSpaceTag, int, 2, detail::ScreenSpaceBuffer>;
+	struct ScreenSpace : Space<struct ScreenSpaceTag, int, 2, detail::ScreenSpaceBuffer>
+	{
+		using HAlign = Axis<0>::Alignment;
+		using VAlign = Axis<1>::Alignment;
+
+		static constexpr HAlign align_left = HAlign::near;
+		static constexpr HAlign align_center = HAlign::mid;
+		static constexpr HAlign align_right = HAlign::far;
+
+		static constexpr auto align_top = VAlign::near;
+		static constexpr auto align_middle = VAlign::mid;
+		static constexpr auto align_bottom = VAlign::far;
+	};
 
 	inline int& width(ScreenSpace::Box& box) { return box.size.x(); }
 	inline int width(ScreenSpace::Box const& box) { return box.size.x(); }

@@ -10,13 +10,13 @@ namespace questless::spell
 {
 	class EagleEye;
 	class Heal;
-	class LightningBolt;
+	class Shock;
 	class Teleport;
 
 	using SpellSubtypeList = type_list::of_t
 		< EagleEye
 		, Heal
-		, LightningBolt
+		, Shock
 		, Teleport
 		>;
 

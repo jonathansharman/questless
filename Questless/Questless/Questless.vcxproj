@@ -249,7 +249,7 @@
     <ClInclude Include="include\animation\Camera.h" />
     <ClInclude Include="include\animation\EntityAnimator.h" />
     <ClInclude Include="include\animation\Flame.h" />
-    <ClInclude Include="include\animation\ItemTexturer.h" />
+    <ClInclude Include="include\animation\ItemRenderer.h" />
     <ClInclude Include="include\animation\ParticleAnimation.h" />
     <ClInclude Include="include\animation\particles\BlackMagicParticle.h" />
     <ClInclude Include="include\animation\particles\BloodParticle.h" />
@@ -338,8 +338,8 @@
     <ClInclude Include="include\spell\all-spells.h" />
     <ClInclude Include="include\spell\EagleEye.h" />
     <ClInclude Include="include\spell\Heal.h" />
-    <ClInclude Include="include\spell\LightningBolt.h" />
     <ClInclude Include="include\spell\ManaCost.h" />
+    <ClInclude Include="include\spell\Shock.h" />
     <ClInclude Include="include\spell\Spell.h" />
     <ClInclude Include="include\spell\SpellVisitor.h" />
     <ClInclude Include="include\spell\Teleport.h" />
@@ -353,7 +353,7 @@
     <ClInclude Include="include\ui\MessageDialog.h" />
     <ClInclude Include="include\ui\PlayerActionDialog.h" />
     <ClInclude Include="include\ui\qte\Incant.h" />
-    <ClInclude Include="include\ui\qte\LightningBolt.h" />
+    <ClInclude Include="include\ui\qte\Shock.h" />
     <ClInclude Include="include\ui\TileDialog.h" />
     <ClInclude Include="include\ui\VectorDialog.h" />
     <ClInclude Include="include\units\Angle.h" />
@@ -409,7 +409,7 @@
     <ClCompile Include="src\animation\BodyTexturer.cpp" />
     <ClCompile Include="src\animation\Camera.cpp" />
     <ClCompile Include="src\animation\EntityAnimator.cpp" />
-    <ClCompile Include="src\animation\ItemTexturer.cpp" />
+    <ClCompile Include="src\animation\ItemRenderer.cpp" />
     <ClCompile Include="src\animation\ParticleAnimation.cpp" />
     <ClCompile Include="src\animation\particles\BlackMagicParticle.cpp" />
     <ClCompile Include="src\animation\particles\BloodParticle.cpp" />
@@ -469,8 +469,8 @@
     <ClCompile Include="src\sdl\Window.cpp" />
     <ClCompile Include="src\spell\EagleEye.cpp" />
     <ClCompile Include="src\spell\Heal.cpp" />
-    <ClCompile Include="src\spell\LightningBolt.cpp" />
     <ClCompile Include="src\spell\ManaCost.cpp" />
+    <ClCompile Include="src\spell\Shock.cpp" />
     <ClCompile Include="src\spell\Spell.cpp" />
     <ClCompile Include="src\spell\Teleport.cpp" />
     <ClCompile Include="src\ui\CountDialog.cpp" />
@@ -482,7 +482,7 @@
     <ClCompile Include="src\ui\MessageDialog.cpp" />
     <ClCompile Include="src\ui\PlayerActionDialog.cpp" />
     <ClCompile Include="src\ui\qte\Incant.cpp" />
-    <ClCompile Include="src\ui\qte\LightningBolt.cpp" />
+    <ClCompile Include="src\ui\qte\Shock.cpp" />
     <ClCompile Include="src\ui\TileDialog.cpp" />
     <ClCompile Include="src\ui\VectorDialog.cpp" />
     <ClCompile Include="src\utility\utility.cpp" />

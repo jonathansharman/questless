@@ -164,7 +164,7 @@ namespace questless
 			{
 				cont(default);
 			}
-			void visit(MagnitudeQueryLightningBolt const&) final
+			void visit(MagnitudeQueryShock const&) final
 			{
 				cont(default);
 			}
@@ -217,7 +217,7 @@ namespace questless
 				}
 				cont(std::nullopt);
 			}
-			void visit(TileQueryLightningBoltTarget const&) final
+			void visit(TileQueryShockTarget const&) final
 			{
 				cont(std::nullopt);
 			}

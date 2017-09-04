@@ -41,7 +41,7 @@ namespace questless
 			, colors::black(0.5f)
 			, sdl::Fill::solid
 			);
-		title.draw(ScreenSpace::Point{x_center, 0}, HAlign::center);
+		title.draw(ScreenSpace::Point{x_center, 0}, TextureSpace::align_center);
 	}
 	void Dialog::draw_prompt(Texture const& prompt)
 	{
@@ -54,7 +54,7 @@ namespace questless
 			, colors::black(0.5f)
 			, sdl::Fill::solid
 			);
-		prompt.draw(ScreenSpace::Point{x_center, _prompt_top}, HAlign::center);
+		prompt.draw(ScreenSpace::Point{x_center, _prompt_top}, TextureSpace::align_center);
 	}
 	void Dialog::draw_selector(Texture const& selector)
 	{
@@ -67,6 +67,6 @@ namespace questless
 			, colors::black(0.5f)
 			, sdl::Fill::solid
 			);
-		selector.draw(ScreenSpace::Point{x_center, _selector_top}, HAlign::center);
+		selector.draw(ScreenSpace::Point{x_center, _selector_top}, TextureSpace::align_center);
 	}
 }

@@ -203,7 +203,7 @@ namespace questless
 		return selections;
 	}
 
-	void DigraphMenu::draw(ScreenSpace::Point origin, HAlign horizontal_alignment, VAlign vertical_alignment)
+	void DigraphMenu::draw(ScreenSpace::Point origin, ScreenSpace::HAlign horizontal_alignment, ScreenSpace::VAlign vertical_alignment)
 	{
 		if (!_render_is_current) {
 			render();
@@ -211,24 +211,24 @@ namespace questless
 
 		_content_position = origin;
 		switch (horizontal_alignment) {
-		case HAlign::left:
-			break;
-		case HAlign::center:
-			_content_position.x() -= _content_width / 2;
-			break;
-		case HAlign::right:
-			_content_position.x() -= _content_width;
-			break;
+			case ScreenSpace::align_left:
+				break;
+			case ScreenSpace::align_center:
+				_content_position.x() -= _content_width / 2;
+				break;
+			case ScreenSpace::align_right:
+				_content_position.x() -= _content_width;
+				break;
 		}
 		switch (vertical_alignment) {
-		case VAlign::top:
-			break;
-		case VAlign::middle:
-			_content_position.y() -= _content_height / 2;
-			break;
-		case VAlign::bottom:
-			_content_position.y() -= _content_height;
-			break;
+			case ScreenSpace::align_top:
+				break;
+			case ScreenSpace::align_middle:
+				_content_position.y() -= _content_height / 2;
+				break;
+			case ScreenSpace::align_bottom:
+				_content_position.y() -= _content_height;
+				break;
 		}
 
 		// Draw background.
@@ -243,7 +243,7 @@ namespace questless
 			colors::ColorFactor option_color_factor = _pages[_page_index].option_index == i ? _selected_color_factor : _unselected_color_factor;
 
 			ScreenSpace::Point option_position{_content_position.x(), _content_position.y() + title_height + i * option_height};
-			_page_views[_page_index].option_textures[i].draw(option_position, HAlign::left, VAlign::top, option_color_factor);
+			_page_views[_page_index].option_textures[i].draw(option_position, TextureSpace::align_left, TextureSpace::align_top, option_color_factor);
 		}
 	}
 

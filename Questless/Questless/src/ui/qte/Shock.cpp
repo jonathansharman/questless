@@ -2,7 +2,8 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "ui/qte/LightningBolt.h"
+#include "ui/qte/Shock.h"
+
 #include "Game.h"
 #include "units/math.h"
 #include "utility/utility.h"
@@ -13,14 +14,14 @@ using namespace units::math;
 
 namespace questless::qte
 {
-	LightningBolt::LightningBolt(RegionTile::Point target_coords, std::function<void(double)> cont)
+	Shock::Shock(RegionTile::Point target_coords, std::function<void(double)> cont)
 		: _target_point{units::Layout::dflt().to_world(target_coords)}
 		, _cont{std::move(cont)}
 	{
 		load_textures();
 	}
 
-	Dialog::State LightningBolt::update()
+	Dialog::State Shock::update()
 	{
 		_elapsed_time += Game::frame_duration;
 		if (_elapsed_time > _time_limit) {
@@ -90,7 +91,7 @@ namespace questless::qte
 		return State::open;
 	}
 
-	void LightningBolt::draw() const
+	void Shock::draw() const
 	{
 		//! @todo Refactor point charge to use a particle animation?
 
@@ -114,7 +115,7 @@ namespace questless::qte
 		draw_prompt(*_txt_prompt);
 	}
 
-	void LightningBolt::load_textures()
+	void Shock::load_textures()
 	{
 		_txt_title = make_title("Build up a charge!");
 		_txt_prompt = make_prompt("Circle the target counter-clockwise as fast as you can!");

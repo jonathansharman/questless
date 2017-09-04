@@ -8,13 +8,13 @@
 
 namespace questless::spell
 {
-	//! Summons a lightning bolt to strike a tile.
-	class LightningBolt : public SpellBase<LightningBolt>
+	//! Discharges a bolt of electricity to strike a tile.
+	class Shock : public SpellBase<Shock>
 	{
 	public:
 		std::string name() const final { return "Lightning Bolt"; }
 
-		Color color() const final { return Color::yellow; }
+		Color color() const final { return Color::red; }
 
 		double cooldown() const final { return 5.0; }
 
