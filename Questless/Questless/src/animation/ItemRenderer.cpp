@@ -93,56 +93,40 @@ namespace questless
 			static auto texture_handle = texture_manager().add("resources/textures/items/soul-gem-empty.png");
 			texture_manager()[texture_handle].draw(_position);
 		} else {
+			static auto texture_handle = texture_manager().add("resources/textures/items/soul-gem-white.png");
+			colors::ColorFactor draw_color_factor;
 			switch (gatestone.color()) {
 				case spell::Color::white:
-				{
-					static auto texture_handle = texture_manager().add("resources/textures/items/soul-gem-white.png");
-					texture_manager()[texture_handle].draw(_position);
+					draw_color_factor = colors::white_factor();
 					break;
-				}
 				case spell::Color::black:
-				{
-					static auto texture_handle = texture_manager().add("resources/textures/items/soul-gem-black.png");
-					texture_manager()[texture_handle].draw(_position);
+					draw_color_factor = colors::ColorFactor{0.2f, 0.2f, 0.2f, 1.0f};
 					break;
-				}
 				case spell::Color::green:
-				{
-					static auto texture_handle = texture_manager().add("resources/textures/items/soul-gem-green.png");
-					texture_manager()[texture_handle].draw(_position);
+					draw_color_factor = colors::green_factor();
 					break;
-				}
 				case spell::Color::red:
-				{
-					static auto texture_handle = texture_manager().add("resources/textures/items/soul-gem-red.png");
-					texture_manager()[texture_handle].draw(_position);
+					draw_color_factor = colors::red_factor();
 					break;
-				}
 				case spell::Color::blue:
-				{
-					static auto texture_handle = texture_manager().add("resources/textures/items/soul-gem-blue.png");
-					texture_manager()[texture_handle].draw(_position);
+					draw_color_factor = colors::blue_factor();
 					break;
-				}
 				case spell::Color::yellow:
-				{
-					static auto texture_handle = texture_manager().add("resources/textures/items/soul-gem-yellow.png");
-					texture_manager()[texture_handle].draw(_position);
+					draw_color_factor = colors::yellow_factor();
 					break;
-				}
 				case spell::Color::violet:
-				{
-					static auto texture_handle = texture_manager().add("resources/textures/items/soul-gem-violet.png");
-					texture_manager()[texture_handle].draw(_position);
+					draw_color_factor = colors::purple_factor();
 					break;
-				}
 				case spell::Color::orange:
-				{
-					static auto texture_handle = texture_manager().add("resources/textures/items/soul-gem-orange.png");
-					texture_manager()[texture_handle].draw(_position);
+					draw_color_factor = colors::orange_factor();
 					break;
-				}
 			}
+			texture_manager()[texture_handle].draw(_position, TextureSpace::align_left, TextureSpace::align_top, draw_color_factor);
+			colors::Color fill_color{draw_color_factor.red(), draw_color_factor.green(), draw_color_factor.blue(), draw_color_factor.alpha()};
+			renderer().draw_box(ScreenSpace::Box{_position, ScreenSpace::Vector{6, 55}}, colors::black(), sdl::Fill::solid);
+			renderer().draw_box(ScreenSpace::Box{_position, ScreenSpace::Vector{6, static_cast<int>(55 * gatestone.mana / gatestone.capacity())}}, colors::black(), fill_color);
+
+			//! @todo Clean this up. Remove magic numbers.
 		}
 	}
 }
