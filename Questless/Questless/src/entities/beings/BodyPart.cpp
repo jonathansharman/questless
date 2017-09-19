@@ -17,9 +17,9 @@ namespace questless
 		, std::string name
 		, Vitality vitality
 		, Weight weight
-		, Protection protection
-		, Resistance resistance
-		, Vulnerability vulnerability
+		, dmg::Protect protection
+		, dmg::Resist resistance
+		, dmg::Vuln vulnerability
 		, std::vector<ScreenSpace::Box> regions
 		, Id<BodyPart> id
 		)
@@ -55,7 +55,7 @@ namespace questless
 		health += _owner.stats.health_regen * _vitality / _owner.stats.vitality;
 	}
 
-	void BodyPart::take_damage(Damage& damage, std::optional<Id<Being>> source_id)
+	void BodyPart::take_damage(dmg::Group& damage, std::optional<Id<Being>> source_id)
 	{
 		_owner.take_damage(damage, this, source_id);
 	}

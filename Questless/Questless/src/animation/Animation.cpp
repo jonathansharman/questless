@@ -12,6 +12,6 @@ namespace questless
 {
 	GameSeconds Animation::elapsed_time() const
 	{
-		return Game::frame_duration * time_scale;
+		return Game::frame_duration * time_scale.get();
 	}
 }

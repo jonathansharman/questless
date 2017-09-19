@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "BodyPartVisitor.h"
-#include "Damage.h"
+#include "damage/Group.h"
 #include "items/Item.h"
 #include "stats/Modifier.h"
 #include "units/ScreenSpace.h"
@@ -65,18 +65,18 @@ namespace questless
 		double weight() const { return _weight; }
 
 		//! The body part's protection stat.
-		Protection const& protection() const { return _protection; }
+		dmg::Protect const& protection() const { return _protection; }
 
 		//! The body part's resistance stat.
-		Resistance const& resistance() const { return _resistance; }
+		dmg::Resist const& resistance() const { return _resistance; }
 
 		//! The body part's vulnerability stat.
-		Vulnerability const& vulnerability() const { return _vulnerability; }
+		dmg::Vuln const& vulnerability() const { return _vulnerability; }
 
 		//! Causes the body part to take damage from the specified source being.
-		//! @param damage Damage to be applied to this being.
+		//! @param damage Damage group to be applied to this being.
 		//! @param source_id The ID of the being which caused the damage, if any.
-		void take_damage(Damage& damage, std::optional<Id<Being>> source_id);
+		void take_damage(dmg::Group& damage, std::optional<Id<Being>> source_id);
 	protected:
 		//! @param owner The being that owns this body.
 		//! @param name The name of the body part.
@@ -92,9 +92,9 @@ namespace questless
 			, std::string name
 			, Vitality vitality
 			, Weight weight
-			, Protection protection
-			, Resistance resistance
-			, Vulnerability vulnerability
+			, dmg::Protect protection
+			, dmg::Resist resistance
+			, dmg::Vuln vulnerability
 			, std::vector<units::ScreenSpace::Box> regions
 			, Id<BodyPart> id = Id<BodyPart>::make()
 			);
@@ -108,9 +108,9 @@ namespace questless
 		bool _enabled;
 		double _vitality;
 		double _weight;
-		Protection _protection;
-		Resistance _resistance;
-		Vulnerability _vulnerability;
+		dmg::Protect _protection;
+		dmg::Resist _resistance;
+		dmg::Vuln _vulnerability;
 
 		std::function<void(double&, double const&)> health_mutator();
 	};
@@ -129,9 +129,9 @@ namespace questless
 			, Weight weight
 			, Intellect intellect
 			, Spirit spirit
-			, Protection protection
-			, Resistance resistance
-			, Vulnerability vulnerability
+			, dmg::Protect protection
+			, dmg::Resist resistance
+			, dmg::Vuln vulnerability
 			, std::vector<units::ScreenSpace::Box> regions
 			)
 			: BodyPartBase<Head>
@@ -175,9 +175,9 @@ namespace questless
 			, Vitality vitality
 			, Weight weight
 			, Strength strength
-			, Protection protection
-			, Resistance resistance
-			, Vulnerability vulnerability
+			, dmg::Protect protection
+			, dmg::Resist resistance
+			, dmg::Vuln vulnerability
 			, std::vector<units::ScreenSpace::Box> regions
 			)
 			: BodyPartBase<Torso>
@@ -219,9 +219,9 @@ namespace questless
 			, Vitality vitality
 			, Weight weight
 			, Strength strength
-			, Protection protection
-			, Resistance resistance
-			, Vulnerability vulnerability
+			, dmg::Protect protection
+			, dmg::Resist resistance
+			, dmg::Vuln vulnerability
 			, std::vector<units::ScreenSpace::Box> regions
 			)
 			: BodyPartBase<Arm>
@@ -263,9 +263,9 @@ namespace questless
 			, Vitality vitality
 			, Weight weight
 			, Dexterity dexterity
-			, Protection protection
-			, Resistance resistance
-			, Vulnerability vulnerability
+			, dmg::Protect protection
+			, dmg::Resist resistance
+			, dmg::Vuln vulnerability
 			, std::vector<units::ScreenSpace::Box> regions
 			)
 			: BodyPartBase<Hand>
@@ -308,9 +308,9 @@ namespace questless
 			, Weight weight
 			, Agility agility
 			, Strength strength
-			, Protection protection
-			, Resistance resistance
-			, Vulnerability vulnerability
+			, dmg::Protect protection
+			, dmg::Resist resistance
+			, dmg::Vuln vulnerability
 			, std::vector<units::ScreenSpace::Box> regions
 			)
 			: BodyPartBase<Leg>
@@ -356,9 +356,9 @@ namespace questless
 			, Vitality vitality
 			, Weight weight
 			, Agility agility
-			, Protection protection
-			, Resistance resistance
-			, Vulnerability vulnerability
+			, dmg::Protect protection
+			, dmg::Resist resistance
+			, dmg::Vuln vulnerability
 			, std::vector<units::ScreenSpace::Box> regions
 			)
 			: BodyPartBase<Foot>
@@ -399,9 +399,9 @@ namespace questless
 			, std::string name
 			, Vitality vitality
 			, Weight weight
-			, Protection protection
-			, Resistance resistance
-			, Vulnerability vulnerability
+			, dmg::Protect protection
+			, dmg::Resist resistance
+			, dmg::Vuln vulnerability
 			, std::vector<units::ScreenSpace::Box> regions
 			)
 			: BodyPartBase<Wing>

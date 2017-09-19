@@ -130,6 +130,12 @@
     <Filter Include="src\items\magic">
       <UniqueIdentifier>{3775dc03-2999-4d86-adfc-a99c1e7a23db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\damage">
+      <UniqueIdentifier>{4307ad00-cd36-43e2-94ef-fae19ff0c405}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\damage">
+      <UniqueIdentifier>{2d7f1793-4278-4c59-91af-3301e9b625ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h">
@@ -319,9 +325,6 @@
       <Filter>include\agents</Filter>
     </ClInclude>
     <ClInclude Include="include\entities\beings\BodyPartVisitor.h">
-      <Filter>include\entities\beings</Filter>
-    </ClInclude>
-    <ClInclude Include="include\entities\beings\DamageMultiplier.h">
       <Filter>include\entities\beings</Filter>
     </ClInclude>
     <ClInclude Include="include\effects\Effect.h">
@@ -643,6 +646,18 @@
     <ClInclude Include="include\ui\qte\Shock.h">
       <Filter>include\ui\qte</Filter>
     </ClInclude>
+    <ClInclude Include="include\damage\Damage.h">
+      <Filter>include\damage</Filter>
+    </ClInclude>
+    <ClInclude Include="include\damage\Group.h">
+      <Filter>include\damage</Filter>
+    </ClInclude>
+    <ClInclude Include="include\damage\Multiplier.h">
+      <Filter>include\damage</Filter>
+    </ClInclude>
+    <ClInclude Include="include\damage\Protect.h">
+      <Filter>include\damage</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\world\Region.cpp">
@@ -846,9 +861,6 @@
     <ClCompile Include="src\agents\Action.cpp">
       <Filter>src\agents</Filter>
     </ClCompile>
-    <ClCompile Include="src\entities\beings\Damage.cpp">
-      <Filter>src\entities\beings</Filter>
-    </ClCompile>
     <ClCompile Include="src\ui\DirectionDialog.cpp">
       <Filter>src\ui</Filter>
     </ClCompile>
@@ -911,6 +923,12 @@
     </ClCompile>
     <ClCompile Include="src\ui\qte\Shock.cpp">
       <Filter>src\ui\qte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\damage\Damage.cpp">
+      <Filter>src\damage</Filter>
+    </ClCompile>
+    <ClCompile Include="src\damage\Group.cpp">
+      <Filter>src\damage</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

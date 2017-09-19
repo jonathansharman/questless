@@ -6,14 +6,14 @@
 
 namespace questless
 {
-	void Armor::apply(Damage& damage)
+	void Armor::apply(dmg::Group& damage)
 	{
 		// Broken armor has no effect.
 		if (!broken()) {
 			// Calcuate reduced damage by first applying protection and then applying resistance.
-			Damage const reduced_damage = damage
+			dmg::Group const reduced_damage = damage
 				.with(protection()) // First apply protection.
-				.with(resistance(), Vulnerability::zero()); // Then apply resistance.
+				.with(resistance(), dmg::Vuln::zero()); // Then apply resistance.
 
 			// Calculate the armor's total effective damage reduction.
 			double const effective_reduction = damage.total() - reduced_damage.total();

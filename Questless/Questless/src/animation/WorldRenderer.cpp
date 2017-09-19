@@ -308,55 +308,77 @@ namespace questless
 
 		GameSpace::Point position = Layout::dflt().to_world(e.origin());
 
-		Damage const& damage = e.damage;
+		dmg::Group const& damage = e.damage;
 
-		auto spawn_blood = [&](double const lost_health) {
-			int const n = static_cast<int>(lost_health / target_vitality * 100.0); // 100 is an arbitrary scaling factor.
-			for (int i = 0; i < n; ++i) {
-				_animations.push_back(std::make_pair(make_unique<BloodParticle>(), position));
-			}
-		};
-		for (Damage::Part const& part : damage.parts()) {
-			switch (part.type) {
-				case Damage::Part::Type::slash:
-					[[fallthrough]];
-				case Damage::Part::Type::pierce:
-					spawn_blood(part.amount);
-					_animations.push_back(std::make_pair
-						( make_unique<TextParticle>(std::to_string(lround(part.amount)), colors::white())
+		for (auto const& part : damage.parts()) {
+			struct DamageRenderer
+			{
+				std::vector<std::pair<uptr<Animation>, units::GameSpace::Point>>& animations;
+				GameSpace::Point const position;
+				double const target_vitality;
+
+				void spawn_blood(double const lost_health)
+				{
+					int const n = static_cast<int>(lost_health / target_vitality * 100.0); // 100 is an arbitrary scaling factor.
+					for (int i = 0; i < n; ++i) {
+						animations.push_back(std::make_pair(make_unique<BloodParticle>(), position));
+					}
+				};
+
+				void render_slash_or_pierce(double const amount)
+				{
+					spawn_blood(amount);
+					animations.push_back(std::make_pair
+						( make_unique<TextParticle>(std::to_string(lround(amount)), colors::white())
 						, position
 						));
 					sound_manager()[pierce_sound_handle].play();
-					break;
-				case Damage::Part::Type::cleave:
-					[[fallthrough]];
-				case Damage::Part::Type::bludgeon:
-					spawn_blood(part.amount);
-					_animations.push_back(std::make_pair
-						( make_unique<TextParticle>(std::to_string(lround(part.amount)), colors::white())
+				}
+
+				void render_cleave_or_bludgeon(double const amount)
+				{
+					spawn_blood(amount);
+					animations.push_back(std::make_pair
+						( make_unique<TextParticle>(std::to_string(lround(amount)), colors::white())
 						, position
 						));
 					sound_manager()[hit_sound_handle].play();
-					break;
-				case Damage::Part::Type::burn:
-					_animations.push_back(std::make_pair
-						( make_unique<TextParticle>(std::to_string(lround(part.amount)), colors::orange())
+				}
+
+				void operator ()(dmg::Slash const& slash) { render_slash_or_pierce(slash); }
+				void operator ()(dmg::Pierce const& pierce) { render_slash_or_pierce(pierce); }
+				void operator ()(dmg::Cleave const& cleave) { render_cleave_or_bludgeon(cleave); }
+				void operator ()(dmg::Bludgeon const& bludgeon) { render_cleave_or_bludgeon(bludgeon); }
+				void operator ()(dmg::Burn const& burn)
+				{
+					animations.push_back(std::make_pair
+						( make_unique<TextParticle>(std::to_string(lround(burn)), colors::orange())
 						, position
 						));
-					break;
-				case Damage::Part::Type::freeze:
-					_animations.push_back(std::make_pair
-						( make_unique<TextParticle>(std::to_string(lround(part.amount)), colors::cyan())
+				}
+				void operator ()(dmg::Freeze const& freeze)
+				{
+					animations.push_back(std::make_pair
+						( make_unique<TextParticle>(std::to_string(lround(freeze)), colors::cyan())
 						, position
 						));
-					break;
-				case Damage::Part::Type::blight:
-					_animations.push_back(std::make_pair
-						( make_unique<TextParticle>(std::to_string(lround(part.amount)), colors::black())
+				}
+				void operator ()(dmg::Blight const& blight)
+				{
+					animations.push_back(std::make_pair
+						( make_unique<TextParticle>(std::to_string(lround(blight)), colors::black())
 						, position
 						));
-					break;
-			}
+				}
+				void operator ()(dmg::Poison const& poison)
+				{
+					animations.push_back(std::make_pair
+						( make_unique<TextParticle>(std::to_string(lround(poison)), colors::purple())
+						, position
+						));
+				}
+			};
+			std::visit(DamageRenderer{_animations, position, target_vitality}, part);
 		}
 	}
 

@@ -190,10 +190,10 @@ namespace questless
 		// Handle temperature damage.
 		double temp = region->temperature(coords);
 		if (temp > stats.max_temp) {
-			Damage burn{Burn{(temp - stats.max_temp) / (stats.max_temp - stats.min_temp) * temperature_damage_factor}};
+			dmg::Group burn = dmg::Burn{(temp - stats.max_temp) / (stats.max_temp - stats.min_temp) * temperature_damage_factor};
 			take_damage(burn, nullptr, std::nullopt);
 		} else if (temp < stats.min_temp) {
-			Damage freeze{Freeze{(stats.min_temp - temp) / (stats.max_temp - stats.min_temp) * temperature_damage_factor}};
+			dmg::Group freeze = dmg::Freeze{(stats.min_temp - temp) / (stats.max_temp - stats.min_temp) * temperature_damage_factor};
 			take_damage(freeze, nullptr, std::nullopt);
 		}
 
@@ -203,7 +203,7 @@ namespace questless
 		}
 	}
 
-	void Being::take_damage(Damage& damage, BodyPart* part, std::optional<Id<Being>> opt_source_id)
+	void Being::take_damage(dmg::Group& damage, BodyPart* part, std::optional<Id<Being>> opt_source_id)
 	{
 		// Store whether the being was already dead upon taking this damage.
 		bool was_already_dead = dead;
@@ -235,8 +235,8 @@ namespace questless
 					damage = damage.with(part->protection() + stats.protection);
 
 					// Resistance and vulnerability are the sum of the being's overall values and those of the target part.
-					Resistance total_resistance = stats.resistance + part->resistance();
-					Vulnerability total_vulnerability = stats.vulnerability + part->vulnerability();
+					dmg::Resist total_resistance = stats.resistance + part->resistance();
+					dmg::Vuln total_vulnerability = stats.vulnerability + part->vulnerability();
 
 					// Part and being lose health.
 					double health_lost = damage.with(total_resistance, total_vulnerability).total() / (1.0 + endurance_factor * stats.endurance);

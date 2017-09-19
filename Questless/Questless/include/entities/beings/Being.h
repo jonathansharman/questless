@@ -126,11 +126,11 @@ namespace questless
 
 		// Event Handlers
 
-		Event<Damage&, BodyPart*, std::optional<Id<Being>>> before_take_damage;
-		Event<Damage&, BodyPart*, std::optional<Id<Being>>> after_take_damage;
+		Event<dmg::Group&, BodyPart*, std::optional<Id<Being>>> before_take_damage;
+		Event<dmg::Group&, BodyPart*, std::optional<Id<Being>>> after_take_damage;
 
-		Event<Damage&, BodyPart*, Id<Being>> before_deal_damage;
-		Event<Damage&, BodyPart*, Id<Being>> after_deal_damage;
+		Event<dmg::Group&, BodyPart*, Id<Being>> before_deal_damage;
+		Event<dmg::Group&, BodyPart*, Id<Being>> after_deal_damage;
 
 		Event<double&, BodyPart*, std::optional<Id<Being>>> before_receive_heal;
 		Event<double&, BodyPart*, std::optional<Id<Being>>> after_receive_heal;
@@ -187,7 +187,7 @@ namespace questless
 		//! @param damage Damage to be applied to this being.
 		//! @param part The body part to damage, or nullptr if the damage should be applied directly to the being.
 		//! @param opt_source_id The ID of the being which caused the damage, if any.
-		void take_damage(Damage& damage, BodyPart* part, std::optional<Id<Being>> opt_source_id);
+		void take_damage(dmg::Group& damage, BodyPart* part, std::optional<Id<Being>> opt_source_id);
 
 		//! Causes the being to be healed by the specified source being.
 		//! @param amount Health to be restored to this being.

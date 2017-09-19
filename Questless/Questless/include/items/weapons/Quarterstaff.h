@@ -61,7 +61,7 @@ namespace questless
 			public:
 				using MeleeAttack::MeleeAttack;
 				std::string name() const final { return "Strike"; }
-				Damage base_damage() const final { return Bludgeon{24.0}; }
+				dmg::Group base_damage() const final { return dmg::Bludgeon{24.0}; }
 				double wind_up() const final { return 1.0; }
 				double follow_through() const final { return 1.0; }
 				double cooldown() const final { return 2.0; }
@@ -72,7 +72,7 @@ namespace questless
 			public:
 				using MeleeAttack::MeleeAttack;
 				std::string name() const final { return "Jab"; }
-				Damage base_damage() const final { return Bludgeon{12.0}; }
+				dmg::Group base_damage() const final { return dmg::Bludgeon{12.0}; }
 				double wind_up() const final { return 0.2; }
 				double follow_through() const final { return 0.8; }
 				double cooldown() const final { return 1.3; }
@@ -115,7 +115,13 @@ namespace questless
 			public:
 				using MeleeAttack::MeleeAttack;
 				std::string name() const final { return "Strike"; }
-				Damage base_damage() const final { return Damage{Bludgeon{18.0}, Protection{Pad{6.0}} + Protection{Deflect{6.0}}}; }
+				dmg::Group base_damage() const final
+				{
+					return dmg::Group
+						{ dmg::Bludgeon{18.0}
+						, dmg::Protect{dmg::Pad{6.0}} + dmg::Protect{dmg::Deflect{6.0}}
+						};
+				}
 				double wind_up() const final { return 0.8; }
 				double follow_through() const final { return 0.8; }
 				double cooldown() const final { return 1.6; }
@@ -126,7 +132,7 @@ namespace questless
 			public:
 				using MeleeAttack::MeleeAttack;
 				std::string name() const final { return "Jab"; }
-				Damage base_damage() const final { return Damage{Bludgeon{9.0}, Protection{Pad{6.0}} + Protection{Deflect{6.0}}}; }
+				dmg::Group base_damage() const final { return dmg::Group{dmg::Bludgeon{9.0}, dmg::Protect{dmg::Pad{6.0}} + dmg::Protect{dmg::Deflect{6.0}}}; }
 				double wind_up() const final { return 0.16; }
 				double follow_through() const final { return 0.64; }
 				double cooldown() const final { return 1.04; }

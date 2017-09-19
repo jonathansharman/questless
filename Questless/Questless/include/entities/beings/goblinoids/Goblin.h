@@ -34,9 +34,9 @@ namespace questless
 			, MinTemp{-100.0}
 			, MaxTemp{100.0}
 			, Mute{true}
-			, Protection::zero()
-			, Resistance::zero()
-			, Vulnerability::zero()
+			, dmg::Protect::zero()
+			, dmg::Resist::zero()
+			, dmg::Vuln::zero()
 			, Magic
 				{ Magic::White{100.0}
 				, Magic::Black{100.0}

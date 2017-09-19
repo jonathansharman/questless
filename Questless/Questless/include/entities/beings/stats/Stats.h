@@ -9,8 +9,8 @@
 
 #include "Vision.h"
 #include "MagicStats.h"
-#include "entities/beings/Protection.h"
-#include "entities/beings/DamageMultiplier.h"
+#include "damage/Protect.h"
+#include "damage/Multiplier.h"
 #include "utility/Bounded.h"
 
 namespace questless
@@ -55,9 +55,9 @@ namespace questless
 		Bounded<double, minimum_value> max_temp = 0.0;
 		bool mute = false;
 
-		Protection protection = Protection::zero();
-		Resistance resistance = Resistance::zero();
-		Vulnerability vulnerability = Vulnerability::zero();
+		dmg::Protect protection = dmg::Protect::zero();
+		dmg::Resist resistance = dmg::Resist::zero();
+		dmg::Vuln vulnerability = dmg::Vuln::zero();
 
 		Magic magic = Magic::zero();
 		Antimagic antimagic = Antimagic::zero();
@@ -82,9 +82,9 @@ namespace questless
 			, MinTemp min_temp
 			, MaxTemp max_temp
 			, Mute mute
-			, Protection protection
-			, Resistance resistance
-			, Vulnerability vulnerability
+			, dmg::Protect protection
+			, dmg::Resist resistance
+			, dmg::Vuln vulnerability
 			, Magic magic
 			, Antimagic antimagic
 			)

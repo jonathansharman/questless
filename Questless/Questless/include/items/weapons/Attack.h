@@ -8,7 +8,7 @@
 
 #include "agents/Action.h"
 #include "agents/Cost.h"
-#include "entities/beings/Damage.h"
+#include "damage/Group.h"
 #include "utility/Id.h"
 #include "utility/reference.h"
 
@@ -30,10 +30,10 @@ namespace questless
 		virtual std::string name() const = 0;
 
 		//! The attack's effective damage per hit, accounting for its weapon's integrity.
-		Damage damage() const;
+		dmg::Group damage() const;
 
 		//! The attack's base damage per hit.
-		virtual Damage base_damage() const = 0;
+		virtual dmg::Group base_damage() const = 0;
 
 		//! Busy time incurred before the attack connects.
 		virtual double wind_up() const = 0;

@@ -53,7 +53,7 @@ namespace questless::spell
 									struck_parts.push_back(part);
 								}
 								for (auto struck_part : struck_parts) {
-									Damage burn = Burn{burn_magnitude * uniform(0.5, 1.5) * part->vitality() / (4.0 * struck_parts.size())};
+									dmg::Group burn = dmg::Burn{burn_magnitude * uniform(0.5, 1.5) * part->vitality() / (4.0 * struck_parts.size())};
 									struck_part->take_damage(burn, caster.id);
 								}
 							}

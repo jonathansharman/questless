@@ -5,7 +5,7 @@
 #pragma once
 
 #include "EffectVisitor.h"
-#include "entities/beings/Damage.h"
+#include "damage/Group.h"
 #include "utility/Id.h"
 #include "world/coordinates.h"
 
@@ -51,7 +51,7 @@ namespace questless
 	class InjuryEffect : public EffectBase<InjuryEffect>
 	{
 	public:
-		Damage const damage;
+		dmg::Group const damage;
 		Id<Being> target_id;
 		std::optional<Id<Being>> opt_source_id;
 
@@ -59,7 +59,7 @@ namespace questless
 		//! @param damage The damage dealt.
 		//! @param target_id The ID of the injured being.
 		//! @param opt_source_id The ID of the being who caused the injury or nullopt if there is none.
-		InjuryEffect(RegionTile::Point origin, Damage damage, Id<Being> target_id, std::optional<Id<Being>> opt_source_id)
+		InjuryEffect(RegionTile::Point origin, dmg::Group damage, Id<Being> target_id, std::optional<Id<Being>> opt_source_id)
 			: EffectBase<InjuryEffect>{origin}, damage{damage}, target_id{target_id}, opt_source_id{opt_source_id}
 		{}
 

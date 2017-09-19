@@ -46,7 +46,7 @@ namespace questless
 		public:
 			Fire(Id<Item> weapon_id) : RangedAttack{weapon_id} {}
 			std::string name() const final { return "Fire"; }
-			Damage base_damage() const final { return Pierce{30.0}; }
+			dmg::Group base_damage() const final { return dmg::Pierce{30.0}; }
 			double wind_up() const final { return 5.0; }
 			double follow_through() const final { return 0.5; }
 			double cooldown() const final { return 1.0; }

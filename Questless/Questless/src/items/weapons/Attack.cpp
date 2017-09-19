@@ -9,7 +9,7 @@
 
 namespace questless
 {
-	Damage Attack::damage() const
+	dmg::Group Attack::damage() const
 	{
 		auto& weapon = game().items.cref_as<Weapon>(weapon_id);
 		return base_damage() * (0.5 + weapon.integrity / weapon.durability() / 2.0);
@@ -43,7 +43,7 @@ namespace questless
 				if (Being* target = actor.region->being(coords)) {
 					// Reduce damage based on difference between direction faced and direction attacked.
 					constexpr double penalty_per_turn = 0.25;
-					Damage damage = _attack->damage();
+					dmg::Group damage = _attack->damage();
 					damage *= 1.0 - penalty_per_turn * RegionTile::distance(actor.direction, _vector.direction());
 
 					weapon->integrity -= _attack->wear_ratio() * damage.total();
@@ -85,7 +85,7 @@ namespace questless
 								actor.busy_time += attack->follow_through();
 								weapon.active_cooldown = attack->cooldown();
 								if (Being* target = actor.region->being(*opt_coords)) {
-									Damage damage = attack->damage();
+									dmg::Group damage = attack->damage();
 									weapon.integrity -= attack->wear_ratio() * damage.total();
 									target->take_damage(damage, nullptr, actor.id); //! @todo Part targeting
 									return cont(Result::success);

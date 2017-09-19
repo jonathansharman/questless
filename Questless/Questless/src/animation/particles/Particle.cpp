@@ -3,6 +3,7 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "animation/particles/Particle.h"
+
 #include "Game.h"
 
 using namespace sdl;
