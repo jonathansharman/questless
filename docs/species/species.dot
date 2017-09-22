@@ -1,65 +1,65 @@
-digraph {
-	node [rx=5 ry=5 labelStyle="font: 300 14px 'Helvetica Neue', Helvetica"]
-	nexus_native [label="Nexu Native"]
+graph {
+	node [shape=box style="rounded" fontname="helvetica" fontsize=12]
+	nexus_native [label="Nexus Native" href="http://www.uk.com"]
 	polypod [label="Polypod"]
-	nexus_native -> polypod
+	nexus_native -- polypod
 	kraken [label="Kraken"]
-	polypod -> kraken
+	polypod -- kraken
 	A [label=""]
-	polypod -> A
+	polypod -- A
 	crab_people [label="Crab People"]
-	A -> crab_people
+	A -- crab_people
 	squid_people [label="Squid People"]
-	A -> squid_people
+	A -- squid_people
 	vertebrate [label="Vertebrate"]
-	nexus_native -> vertebrate
+	nexus_native -- vertebrate
 	balaka [label="Balaka"]
-	vertebrate -> balaka
+	vertebrate -- balaka
 	B [label=""]
-	vertebrate -> B
+	vertebrate -- B
 	hexapod [label="Hexapod"]
-	B -> hexapod
+	B -- hexapod
 	warm_hexapod [label="Warm-blooded"]
-	hexapod -> warm_hexapod
+	hexapod -- warm_hexapod
 	behemoth [label="Behemoth"]
-	warm_hexapod -> behemoth
+	warm_hexapod -- behemoth
 	C [label=""]
-	warm_hexapod -> C
+	warm_hexapod -- C
 	centaur [label="Centaur"]
-	C -> centaur
+	C -- centaur
 	four_arm [label="Four-armed Dude"]
-	C -> four_arm
+	C -- four_arm
 	cold_hexapod [label="Cold-blooded"]
-	hexapod -> cold_hexapod
+	hexapod -- cold_hexapod
 	dragon [label="Dragon"]
-	cold_hexapod -> dragon
+	cold_hexapod -- dragon
 	tetrapod [label="Tetrapod"]
-	B -> tetrapod
+	B -- tetrapod
 	warm_tetrapod [label="Warm-blooded"]
-	tetrapod-> warm_tetrapod
-	wyvern [label="Wyvern"]
-	warm_tetrapod -> wyvern
-	D [label=""]
-	warm_tetrapod -> D
+	tetrapod-- warm_tetrapod
 	ostrich_thing [label="Ostrich Mount"]
-	D -> ostrich_thing
+	warm_tetrapod -- ostrich_thing
+	D [label=""]
+	warm_tetrapod -- D
+	wyvern [label="Wyvern"]
+	D -- wyvern
 	bird_people [label="Bird People"]
-	D -> bird_people
+	D -- bird_people
 	behemoth [label="Behemoth"]
 	cold_tetrapod [label="Cold-blooded"]
-	tetrapod -> cold_tetrapod
+	tetrapod -- cold_tetrapod
 	lizard_people [label="Lizard People"]
-	cold_tetrapod -> lizard_people
+	cold_tetrapod -- lizard_people
 	leviathan [label="Leviathan"]
-	cold_tetrapod -> leviathan
+	cold_tetrapod -- leviathan
 
 	heaven_native [label="Heaven Native"]
 	angel [label="Angel"]
-	heaven_native -> angel
+	heaven_native -- angel
 
 	abyss_native [label="Abyss Native "]
 	demon [label="Demon "]
-	abyss_native -> demon
+	abyss_native -- demon
 	devil [label="Devil"]
-	abyss_native -> devil
+	abyss_native -- devil
 }
