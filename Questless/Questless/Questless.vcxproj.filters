@@ -930,5 +930,8 @@
     <ClCompile Include="src\damage\Group.cpp">
       <Filter>src\damage</Filter>
     </ClCompile>
+    <ClCompile Include="src\agents\LazyAI.cpp">
+      <Filter>src\agents</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

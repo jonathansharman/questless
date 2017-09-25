@@ -407,6 +407,7 @@
     <ClCompile Include="src\agents\Action.cpp" />
     <ClCompile Include="src\agents\Agent.cpp" />
     <ClCompile Include="src\agents\BasicAI.cpp" />
+    <ClCompile Include="src\agents\LazyAI.cpp" />
     <ClCompile Include="src\agents\Player.cpp" />
     <ClCompile Include="src\animation\Animation.cpp" />
     <ClCompile Include="src\animation\BodyTexturer.cpp" />

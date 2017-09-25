@@ -3,6 +3,7 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "agents/BasicAI.h"
+
 #include "Game.h"
 
 using std::function;
@@ -310,5 +311,17 @@ namespace questless
 		) const
 	{
 		return cont(std::nullopt);
+	}
+
+	////////////////////////////
+	// Effect Visitor Methods //
+	////////////////////////////
+
+	void BasicAI::visit(InjuryEffect const& effect)
+	{
+		// Retaliate against injuries.
+		if (effect.opt_source_id && effect.target_id == being.id) {
+			_state = std::make_unique<AttackState>(*effect.opt_source_id);
+		}
 	}
 }

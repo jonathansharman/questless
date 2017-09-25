@@ -11,7 +11,7 @@
 #include "CountQuery.h"
 #include "DirectionQuery.h"
 #include "effects/Effect.h"
-#include "entities/beings/Being.h"
+//#include "entities/beings/Being.h"
 #include "entities/beings/WorldView.h"
 #include "ItemQuery.h"
 #include "items/Item.h"
@@ -22,7 +22,12 @@
 
 namespace questless
 {
+	class Being;
 	class Gatestone;
+	namespace spell
+	{
+		class Spell;
+	}
 
 	//! Facilitates control of a being. Includes AIs and the player.
 	class Agent

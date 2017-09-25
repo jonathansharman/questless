@@ -16,7 +16,7 @@ namespace questless
 	public:
 		LazyAI(Being& being) : Agent{being} {}
 
-		void act() final { being.busy_time += uniform(1.0, 2.0); }
+		void act() final;
 
 		void perceive(sptr<Effect> const&) final {}
 

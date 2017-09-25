@@ -78,13 +78,7 @@ namespace questless
 		////////////////////////////
 
 		void visit(EagleEyeEffect const&) override {} // Ignore.
-		void visit(InjuryEffect const& effect) override
-		{
-			// Retaliate against injuries.
-			if (effect.opt_source_id && effect.target_id == being.id) {
-				_state = std::make_unique<AttackState>(*effect.opt_source_id);
-			}
-		}
+		void visit(InjuryEffect const& effect) override;
 		void visit(LightningBoltEffect const&) override {} // Ignore.
 	private:
 		friend class State;
