@@ -373,7 +373,14 @@ namespace questless
 				void operator ()(dmg::Poison const& poison)
 				{
 					animations.push_back(std::make_pair
-						( make_unique<TextParticle>(std::to_string(lround(poison)), colors::purple())
+					(make_unique<TextParticle>(std::to_string(lround(poison)), colors::purple())
+						, position
+					));
+				}
+				void operator ()(dmg::Shock const& shock)
+				{
+					animations.push_back(std::make_pair
+						( make_unique<TextParticle>(std::to_string(lround(shock)), colors::yellow())
 						, position
 						));
 				}

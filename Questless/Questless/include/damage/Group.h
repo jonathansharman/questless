@@ -31,9 +31,11 @@ namespace questless::dmg
 		static constexpr double percent_fireproof_to_burn = 1.00;
 		static constexpr double percent_frostproof_to_freeze = 1.00;
 
-		static constexpr double percent_cleanse_to_blight = 1.00;
+		static constexpr double percent_fortify_to_blight = 1.00;
 
 		static constexpr double percent_immunize_to_poison = 1.00;
+
+		static constexpr double percent_insulate_to_shock = 1.00;
 
 		Group() = default;
 

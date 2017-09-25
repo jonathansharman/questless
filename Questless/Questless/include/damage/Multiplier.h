@@ -26,6 +26,7 @@ namespace questless::dmg
 			, FreezeFactor freeze
 			, BlightFactor blight
 			, PoisonFactor poison
+			, ShockFactor shock
 			)
 			: _slash{slash}
 			, _pierce{pierce}
@@ -35,6 +36,7 @@ namespace questless::dmg
 			, _freeze{freeze}
 			, _blight{blight}
 			, _poison{poison}
+			, _shock{shock}
 		{}
 
 		constexpr Multiplier(Factor factor)
@@ -51,6 +53,7 @@ namespace questless::dmg
 				void operator ()(FreezeFactor freeze_factor) { multiplier._freeze = freeze_factor; }
 				void operator ()(BlightFactor blight_factor) { multiplier._blight = blight_factor; }
 				void operator ()(PoisonFactor poison_factor) { multiplier._poison = poison_factor; }
+				void operator ()(ShockFactor shock_factor) { multiplier._shock = shock_factor; }
 			};
 			std::visit(PartFactorAssigner{*this}, factor);
 		}
@@ -68,6 +71,7 @@ namespace questless::dmg
 				, FreezeFactor{d1._freeze + d2._freeze}
 				, BlightFactor{d1._blight + d2._blight}
 				, PoisonFactor{d1._poison + d2._poison}
+				, ShockFactor{d1._shock + d2._shock}
 				};
 		}
 		friend constexpr Derived operator -(Derived const& d1, Derived const& d2)
@@ -81,19 +85,21 @@ namespace questless::dmg
 			difference.freeze = d1._freeze - d2._freeze;
 			difference.blight = d1._blight - d2._blight;
 			difference.poison = d1._poison - d2._poison;
+			difference.shock = d1._shock - d2._shock;
 			return difference;
 		}
 		friend constexpr Derived operator *(Derived const& d, double k)
 		{
 			return Derived
-				{ SlashFactor{k * d._slash}
-				, PierceFactor{k * d._pierce}
-				, CleaveFactor{k * d._cleave}
-				, BludgeonFactor{k * d._bludgeon}
-				, BurnFactor{k * d._burn}
-				, FreezeFactor{k * d._freeze}
-				, BlightFactor{k * d._blight}
-				, PoisonFactor{k * d._poison}
+				{ SlashFactor{d._slash * k}
+				, PierceFactor{d._pierce * k}
+				, CleaveFactor{d._cleave * k}
+				, BludgeonFactor{d._bludgeon * k}
+				, BurnFactor{d._burn * k}
+				, FreezeFactor{d._freeze * k}
+				, BlightFactor{d._blight * k}
+				, PoisonFactor{d._poison * k}
+				, ShockFactor{d._shock * k}
 				};
 		}
 		friend constexpr Derived operator *(double k, Derived const& d)
@@ -107,6 +113,7 @@ namespace questless::dmg
 				, FreezeFactor{k * d._freeze}
 				, BlightFactor{k * d._blight}
 				, PoisonFactor{k * d._poison}
+				, ShockFactor{k * d._shock}
 				};
 		}
 		friend constexpr Derived operator /(Derived const& d, double k)
@@ -120,6 +127,7 @@ namespace questless::dmg
 				, d._freeze / k
 				, d._blight / k
 				, d._poison / k
+				, d._shock / k
 				};
 		}
 
@@ -133,6 +141,7 @@ namespace questless::dmg
 			_freeze += addend._freeze;
 			_blight += addend._blight;
 			_poison += addend._poison;
+			_shock += addend._shock;
 			return static_cast<Derived&>(*this);
 		}
 		Derived& operator -=(Derived const& d)
@@ -145,6 +154,7 @@ namespace questless::dmg
 			_freeze -= d._freeze;
 			_blight -= d._blight;
 			_poison -= d._poison;
+			_shock -= d._shock;
 			return static_cast<Derived&>(*this);
 		}
 		Derived& operator *=(double k)
@@ -157,6 +167,7 @@ namespace questless::dmg
 			_freeze *= k;
 			_blight *= k;
 			_poison *= k;
+			_shock *= k;
 			return static_cast<Derived&>(*this);
 		}
 
@@ -168,6 +179,7 @@ namespace questless::dmg
 		constexpr FreezeFactor freeze() const { return _freeze; }
 		constexpr BlightFactor blight() const { return _blight; }
 		constexpr PoisonFactor poison() const { return _poison; }
+		constexpr ShockFactor shock() const { return _shock; }
 	private:
 		SlashFactor _slash{0.0};
 		PierceFactor _pierce{0.0};
@@ -177,6 +189,7 @@ namespace questless::dmg
 		FreezeFactor _freeze{0.0};
 		BlightFactor _blight{0.0};
 		PoisonFactor _poison{0.0};
+		ShockFactor _shock{0.0};
 	};
 
 	//! Reduces the percentage damage taken

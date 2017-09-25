@@ -34,6 +34,7 @@ namespace questless::dmg
 	struct Freeze : detail::Type { using detail::Type::Type; };
 	struct Blight : detail::Type { using detail::Type::Type; };
 	struct Poison : detail::Type { using detail::Type::Type; };
+	struct Shock : detail::Type { using detail::Type::Type; };
 
 	struct SlashFactor : detail::FactorType { using detail::FactorType::FactorType; };
 	struct PierceFactor : detail::FactorType { using detail::FactorType::FactorType; };
@@ -43,6 +44,7 @@ namespace questless::dmg
 	struct FreezeFactor : detail::FactorType { using detail::FactorType::FactorType; };
 	struct BlightFactor : detail::FactorType { using detail::FactorType::FactorType; };
 	struct PoisonFactor : detail::FactorType { using detail::FactorType::FactorType; };
+	struct ShockFactor : detail::FactorType { using detail::FactorType::FactorType; };
 
 	using Damage = std::variant
 		< Slash
@@ -53,6 +55,7 @@ namespace questless::dmg
 		, Freeze
 		, Blight
 		, Poison
+		, Shock
 		>;
 
 	using Factor = std::variant
@@ -64,5 +67,6 @@ namespace questless::dmg
 		, FreezeFactor
 		, BlightFactor
 		, PoisonFactor
+		, ShockFactor
 		>;
 }

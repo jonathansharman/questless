@@ -48,11 +48,15 @@ namespace questless::dmg
 				}
 				void operator ()(Blight& blight) const
 				{
-					blight -= reduced_protection.cleanse() * percent_cleanse_to_blight;
+					blight -= reduced_protection.fortify() * percent_fortify_to_blight;
 				}
 				void operator ()(Poison& poison) const
 				{
 					poison -= reduced_protection.immunize() * percent_immunize_to_poison;
+				}
+				void operator ()(Shock& shock) const
+				{
+					shock -= reduced_protection.insulate() * percent_insulate_to_shock;
 				}
 			};
 			std::visit(ProtectionApplier{reduced_protection}, part);
@@ -100,6 +104,10 @@ namespace questless::dmg
 				void operator ()(Poison& poison) const
 				{
 					poison = Poison{std::max(0.0, poison * (1.0 + (vulnerability.poison() - resistance.poison()) / 100.0))};
+				}
+				void operator ()(Shock& shock) const
+				{
+					shock = Shock{std::max(0.0, shock * (1.0 + (vulnerability.shock() - resistance.shock()) / 100.0))};
 				}
 			};
 			std::visit(DamageMultiplierApplier{resistance, vulnerability}, part);

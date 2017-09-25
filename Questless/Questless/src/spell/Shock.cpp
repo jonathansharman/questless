@@ -41,7 +41,7 @@ namespace questless::spell
 							caster.mana -= cost;
 							game().add_effect(std::make_shared<LightningBoltEffect>(tile_coords));
 							if (Being* target = caster.region->being(tile_coords)) {
-								double burn_magnitude = magnitude * quality * caster.stats.magic.yellow / target->stats.antimagic.yellow;
+								double shock_magnitude = magnitude * quality * caster.stats.magic.yellow / target->stats.antimagic.yellow;
 
 								//! @todo Experimental body part stuff here... Delete or fix.
 
@@ -53,8 +53,8 @@ namespace questless::spell
 									struck_parts.push_back(part);
 								}
 								for (auto struck_part : struck_parts) {
-									dmg::Group burn = dmg::Burn{burn_magnitude * uniform(0.5, 1.5) * part->vitality() / (4.0 * struck_parts.size())};
-									struck_part->take_damage(burn, caster.id);
+									dmg::Group shock = dmg::Shock{shock_magnitude * uniform(0.5, 1.5) * part->vitality() / (4.0 * struck_parts.size())};
+									struck_part->take_damage(shock, caster.id);
 								}
 							}
 							return cont(Action::Result::success);
