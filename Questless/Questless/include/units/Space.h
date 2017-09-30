@@ -50,7 +50,7 @@ namespace units
 		template <int... DimensionIndices>
 		static decltype(auto) align_dummy(std::integer_sequence<int, DimensionIndices...>)
 		{
-			return std::tuple<typename Axis<DimensionIndices>::Alignment...>{};
+			return std::tuple<typename Axis<DimensionIndices>::Align...>{};
 		}
 	public:
 		using scalar_t = ScalarType;
@@ -62,8 +62,10 @@ namespace units
 		template <int dimension>
 		struct Axis
 		{
+			static_assert(0 <= dimension && dimension < dimension_count, "Axis index out of bounds.");
+
 			//! Alignment along this axis.
-			enum class Alignment { near, mid, far };
+			enum class Align { near, mid, far };
 		};
 
 		//! The alignment along every axis in this space.
@@ -207,7 +209,7 @@ namespace units
 					, static_cast<scalar_t>(r * sin(theta.count()))
 					}
 			{
-				static_assert(std::is_floating_point_v<scalar_t> && dimension_count == 2, "Requires two-dimensional floating-point space.");
+				static_assert(dimension_count == 2, "Requires two-dimensional space.");
 			}
 
 			Vector& operator =(Vector const&) & = default;
@@ -323,6 +325,7 @@ namespace units
 			void rotate(Angle<UnitsPerCircle> const& dtheta) &
 			{
 				static_assert(std::is_floating_point_v<scalar_t> && dimension_count == 2, "Requires two-dimensional floating-point space.");
+
 				scalar_t const dtheta_radians = angle_cast<Radians>(dtheta).count();
 				auto const cos_dtheta = static_cast<scalar_t>(cos(dtheta_radians));
 				auto const sin_dtheta = static_cast<scalar_t>(sin(dtheta_radians));
@@ -334,9 +337,11 @@ namespace units
 
 			//! Creates a rotated copy of the vector.
 			//! @param dtheta The counter-clockwise rotation to apply, in radians.
-			template <typename UnitsPerCircle, typename = std::enable_if_t<(std::is_floating_point_v<scalar_t> && dimension_count == 2)>>
+			template <typename UnitsPerCircle>
 			Vector rotated(Angle<UnitsPerCircle> const& dtheta) const //! @todo Cannot be constexpr because of cos() and sin(). Implement constexpr trig functions in units::math to enable.
 			{
+				static_assert(std::is_floating_point_v<scalar_t> && dimension_count == 2, "Requires two-dimensional floating-point space.");
+
 				scalar_t const dtheta_radians = angle_cast<Radians>(dtheta).count();
 				auto const cos_dtheta = static_cast<scalar_t>(cos(dtheta_radians));
 				auto const sin_dtheta = static_cast<scalar_t>(sin(dtheta_radians));
@@ -370,7 +375,7 @@ namespace units
 			template <typename UnitsPerCircle = Radians::units_per_circle>
 			Angle<UnitsPerCircle> angle() const  //! @todo Cannot be constexpr because of cos() and sin(). Implement constexpr trig functions in units::math to enable.
 			{
-				static_assert(std::is_floating_point_v<scalar_t> && dimension_count == 2, "Requires two-dimensional floating-point space.");
+				static_assert(dimension_count == 2, "Requires two-dimensional space.");
 				return Angle<UnitsPerCircle>{static_cast<scalar_t>(atan2(_elements[1], _elements[0]))};
 			}
 		};
@@ -511,6 +516,7 @@ namespace units
 			void rotate(Point const& origin, Angle<UnitsPerCircle> const& dtheta) &
 			{
 				static_assert(std::is_floating_point_v<scalar_t> && dimension_count == 2, "Requires two-dimensional floating-point space.");
+
 				scalar_t const dtheta_radians = angle_cast<Radians>(dtheta).count();
 				auto const cos_dtheta = static_cast<scalar_t>(cos(dtheta_radians));
 				auto const sin_dtheta = static_cast<scalar_t>(sin(dtheta_radians));
@@ -526,9 +532,11 @@ namespace units
 			//! Creates a copy of the point, rotated about another point.
 			//! @param origin The origin around which the point will be rotated.
 			//! @param theta The counter-clockwise rotation to apply, in radians.
-			template <typename UnitsPerCircle, typename = std::enable_if_t<std::is_floating_point<scalar_t>::value>>
+			template <typename UnitsPerCircle>
 			Point rotated(Point const& origin, Angle<UnitsPerCircle> const& dtheta) const //! @todo Cannot be constexpr because of cos() and sin(). Implement constexpr trig functions in units::math to enable.
 			{
+				static_assert(std::is_floating_point_v<scalar_t> && dimension_count == 2, "Requires two-dimensional floating-point space.");
+
 				scalar_t const dtheta_radians = angle_cast<Radians>(dtheta).count();
 				auto const cos_dtheta = static_cast<scalar_t>(cos(dtheta_radians));
 				auto const sin_dtheta = static_cast<scalar_t>(sin(dtheta_radians));
@@ -638,12 +646,12 @@ namespace units
 
 				//! @todo Specialize these adjustments for integers and floats?
 				switch (std::get<index>(alignment)) {
-					case Axis<index>::Alignment::near:
+					case Axis<index>::Align::near:
 						break;
-					case Axis<index>::Alignment::mid:
+					case Axis<index>::Align::mid:
 						position[index] -= size[index] / 2 - 1;
 						break;
-					case Axis<index>::Alignment::far:
+					case Axis<index>::Align::far:
 						position[index] -= size[index] - 1;
 						break;
 				}
@@ -651,7 +659,7 @@ namespace units
 			}
 
 			template <>
-			static constexpr Point apply_alignment<dimension_count>(Point position, Vector size, Alignment const& alignment)
+			static constexpr Point apply_alignment<dimension_count>(Point position, Vector, Alignment const&)
 			{
 				return position;
 			}
@@ -792,3 +800,5 @@ TEST_CASE("[Point] operations")
 		CHECK(pd[1] == doctest::Approx(pd_rot[1]));
 	}
 }
+
+//! @todo Box tests

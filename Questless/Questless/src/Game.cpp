@@ -560,6 +560,38 @@ namespace questless
 
 		_txt_test1->draw(ScreenSpace::Point{0, 0});
 		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{0, 0}, ScreenSpace::Vector{15, 15}}, colors::blue(), Fill::outline);
+
+		{ // Draw hexagon.
+			std::vector<ScreenSpace::Point> vertices;
+			for (int i = 0; i < 6; ++i) {
+				auto const angle = constants::tau / 6 * i;
+				auto const offset = ScreenSpace::Vector{static_cast<int>(cos(angle) * 50), static_cast<int>(sin(angle) * 50)};
+				vertices.push_back(ScreenSpace::Point{50, 50} + offset);
+			}
+			renderer().draw_polygon(vertices, units::colors::orange());
+		}
+		{ // Draw right triangle.
+			renderer().draw_polygon
+				(
+					{ ScreenSpace::Point{100, 0}
+					, ScreenSpace::Point{100, 100}
+					, ScreenSpace::Point{200, 0}
+					}
+				, units::colors::cyan()
+				);
+		}
+		{ // Draw non-convex polygon.
+			renderer().draw_polygon
+				(
+					{ ScreenSpace::Point{200, 0}
+					, ScreenSpace::Point{300, 0}
+					, ScreenSpace::Point{250, 50}
+					, ScreenSpace::Point{300, 100}
+					, ScreenSpace::Point{200, 100}
+					}
+				, units::colors::magenta()
+				);
+		}
 	}
 
 	Game::UpdateResult Game::update_playing()

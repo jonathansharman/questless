@@ -13,6 +13,9 @@
 
 int main(int argc, char* argv[])
 {
+	(void)argc; // Supress unused variable warning.
+	(void)argv; // Supress unused variable warning.
+
 	int result = 0;
 
 #ifdef _DEBUG

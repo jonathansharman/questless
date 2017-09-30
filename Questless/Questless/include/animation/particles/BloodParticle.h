@@ -18,7 +18,7 @@ namespace questless
 			, units::GameSpace::Vector{0.0, -600.0} / 1.0s / 1.0s
 			, random_angle()
 			, units::GameSpace::Radians{0.0} / 1.0s
-			, Scale{0.5}
+			, Scale{0.5f}
 			, units::GameScaleVelocity{Scale{0.0}}
 			, Lifetime{units::GameSeconds{uniform(0.25, 0.75)}}
 			}

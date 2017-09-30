@@ -16,7 +16,6 @@
 
 using std::vector;
 using std::runtime_error;
-using namespace std::string_literals;
 
 using namespace units;
 
@@ -45,7 +44,7 @@ namespace sdl
 		glGenBuffers(1, &_vbo);
 
 		{ // Create IBO.
-			GLuint index_data[]{0, 1, 2, 3};
+			GLuint index_data[] { 0, 1, 2, 3 };
 			glGenBuffers(1, &_quad_ibo);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _quad_ibo);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), index_data, GL_DYNAMIC_DRAW);
@@ -77,7 +76,7 @@ namespace sdl
 		SDL_RenderClear(_renderer);
 	}
 
-	void Renderer::draw_lines(vector<ScreenSpace::Point> points, colors::Color color)
+	void Renderer::draw_lines(vector<ScreenSpace::Point> vertices, colors::Color color)
 	{
 		// Bind program.
 		solid_program().use();
@@ -95,21 +94,26 @@ namespace sdl
 		// Set vertex data.
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 		std::vector<GLfloat> vertex_data;
-		vertex_data.reserve(2 * points.size());
-		for (auto point : points) {
-			vertex_data.push_back(static_cast<GLfloat>(point.x()));
-			vertex_data.push_back(static_cast<GLfloat>(point.y()));
+		vertex_data.reserve(2 * vertices.size());
+		for (auto const& vertex : vertices) {
+			vertex_data.push_back(static_cast<GLfloat>(vertex.x()));
+			vertex_data.push_back(static_cast<GLfloat>(vertex.y()));
 		}
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data.data()), vertex_data.data(), GL_DYNAMIC_DRAW);
-		glVertexAttribPointer(position_attribute, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
+		glBufferData(GL_ARRAY_BUFFER, 2 * vertices.size() * sizeof(GLfloat), vertex_data.data(), GL_DYNAMIC_DRAW);
+		{
+			GLint const component_count = 2;
+			GLsizei const stride = 2 * sizeof(GLfloat);
+			void *const pointer_offset = nullptr;
+			glVertexAttribPointer(position_attribute, component_count, GL_FLOAT, GL_FALSE, stride, pointer_offset);
+		}
 
 		GLuint lines_ibo;
 		{ // Create IBO.
-			std::vector<GLuint> index_data(points.size());
+			std::vector<GLuint> index_data(vertices.size());
 			std::iota(index_data.begin(), index_data.end(), 0);
 			glGenBuffers(1, &lines_ibo);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, lines_ibo);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(index_data), index_data.data(), GL_DYNAMIC_DRAW);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_data.size() * sizeof(GLuint), index_data.data(), GL_DYNAMIC_DRAW);
 		}
 
 		// Set color uniform.
@@ -117,14 +121,68 @@ namespace sdl
 		glUniform4f(color_uniform, color.red(), color.green(), color.blue(), color.alpha());
 
 		// Render.
-		//glDrawElements(GL_LINE_STRIP, points.size(), GL_UNSIGNED_INT, nullptr);
-		glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_LINE_STRIP, vertices.size(), GL_UNSIGNED_INT, nullptr);
 
 		// Disable vertex attributes.
 		glDisableVertexAttribArray(position_attribute);
 
 		// Delete IBO.
 		glDeleteBuffers(1, &lines_ibo);
+	}
+
+	void Renderer::draw_polygon(std::vector<units::ScreenSpace::Point> vertices, units::colors::Color color)
+	{
+		// Bind program.
+		solid_program().use();
+
+		// Enable vertex attributes.
+		static GLuint position_attribute = solid_program().get_attribute_handle("position");
+		glEnableVertexAttribArray(position_attribute);
+
+		{ // Set model matrix to identity.
+			glm::mat4 model_matrix;
+			static GLuint model_matrix_uniform = solid_program().get_uniform_handle("model_matrix");
+			glUniformMatrix4fv(model_matrix_uniform, 1, GL_FALSE, glm::value_ptr(model_matrix));
+		}
+
+		{ // Set vertex data.
+			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+			std::vector<GLfloat> vertex_data;
+			vertex_data.reserve(2 * vertices.size());
+			for (auto const& vertex : vertices) {
+				vertex_data.push_back(static_cast<GLfloat>(vertex.x()));
+				vertex_data.push_back(static_cast<GLfloat>(vertex.y()));
+			}
+			glBufferData(GL_ARRAY_BUFFER, 2 * vertices.size() * sizeof(GLfloat), vertex_data.data(), GL_DYNAMIC_DRAW);
+			{
+				GLint const component_count = 2;
+				GLsizei const stride = 2 * sizeof(GLfloat);
+				void *const pointer_offset = nullptr;
+				glVertexAttribPointer(position_attribute, component_count, GL_FLOAT, GL_FALSE, stride, pointer_offset);
+			}
+		}
+
+		GLuint polygon_ibo;
+		{ // Create IBO.
+			std::vector<GLuint> index_data(vertices.size());
+			std::iota(index_data.begin(), index_data.end(), 0);
+			glGenBuffers(1, &polygon_ibo);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, polygon_ibo);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_data.size() * sizeof(GLuint), index_data.data(), GL_DYNAMIC_DRAW);
+		}
+
+		// Set color uniform.
+		static GLuint color_uniform = solid_program().get_uniform_handle("color");
+		glUniform4f(color_uniform, color.red(), color.green(), color.blue(), color.alpha());
+
+		// Render.
+		glDrawElements(GL_POLYGON, vertices.size(), GL_UNSIGNED_INT, nullptr);
+
+		// Disable vertex attributes.
+		glDisableVertexAttribArray(position_attribute);
+
+		// Delete IBO.
+		glDeleteBuffers(1, &polygon_ibo);
 	}
 
 	void Renderer::draw_box(ScreenSpace::Box const& box, colors::Color color, Fill fill)
@@ -144,7 +202,6 @@ namespace sdl
 
 		{ // Set vertex data.
 			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-			//const float offset = fill == Fill::solid ? 0.0f : 0.5f;
 			const float offset = fill == Fill::solid ? 0.0f : 0.375f;
 			GLfloat vertex_data[] =
 				{ left(box) + offset, top(box) + offset
@@ -153,7 +210,12 @@ namespace sdl
 				, left(box) + offset, bottom(box) - offset
 				};
 			glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_DYNAMIC_DRAW);
-			glVertexAttribPointer(position_attribute, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
+			{
+				GLint const component_count = 2;
+				GLsizei const stride = 2 * sizeof(GLfloat);
+				void *const pointer_offset = nullptr;
+				glVertexAttribPointer(position_attribute, component_count, GL_FLOAT, GL_FALSE, stride, pointer_offset);
+			}
 		}
 
 		// Set index data.
@@ -198,13 +260,18 @@ namespace sdl
 		{ // Set fill box vertex data.
 			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 			GLfloat vertex_data[] =
-				{ left(box), top(box)
-				, right(box), top(box)
-				, right(box), bottom(box)
-				, left(box), bottom(box)
+				{ static_cast<float>(left(box)), static_cast<float>(top(box))
+				, static_cast<float>(right(box)), static_cast<float>(top(box))
+				, static_cast<float>(right(box)), static_cast<float>(bottom(box))
+				, static_cast<float>(left(box)), static_cast<float>(bottom(box))
 				};
 			glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_DYNAMIC_DRAW);
-			glVertexAttribPointer(position_attribute, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
+			{
+				GLint const component_count = 2;
+				GLsizei const stride = 2 * sizeof(GLfloat);
+				void *const pointer_offset = nullptr;
+				glVertexAttribPointer(position_attribute, component_count, GL_FLOAT, GL_FALSE, stride, pointer_offset);
+			}
 		}
 
 		// Set color uniform to fill color.
@@ -224,7 +291,12 @@ namespace sdl
 				, left(box) + offset, bottom(box) - offset
 				};
 			glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_DYNAMIC_DRAW);
-			glVertexAttribPointer(position_attribute, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
+			{
+				GLint const component_count = 2;
+				GLsizei const stride = 2 * sizeof(GLfloat);
+				void *const pointer_offset = nullptr;
+				glVertexAttribPointer(position_attribute, component_count, GL_FLOAT, GL_FALSE, stride, pointer_offset);
+			}
 		}
 
 		// Set color uniform to border color.
@@ -247,7 +319,7 @@ namespace sdl
 			, static_cast<uint8_t>(255 * color.alpha())
 			);
 		if (error) {
-			std::string message = "Failed to set renderer draw color. SDL error: "s + SDL_GetError();
+			std::string message = std::string{"Failed to set renderer draw color. SDL error: "} + SDL_GetError();
 			throw runtime_error{message};
 		}
 	}

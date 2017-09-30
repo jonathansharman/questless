@@ -59,8 +59,8 @@ namespace questless
 			( screen_point(position)
 			, origin
 			, draw_color_factor * color_factor
-			, _zoom * horizontal_scale
-			, _zoom * vertical_scale
+			, static_cast<float>(_zoom * horizontal_scale)
+			, static_cast<float>(_zoom * vertical_scale)
 			, angle - _angle
 			, src_rect
 			);

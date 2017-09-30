@@ -120,6 +120,8 @@ namespace questless
 				case spell::Color::orange:
 					draw_color_factor = colors::orange_factor();
 					break;
+				default:
+					throw std::logic_error{"Unknown spell color."};
 			}
 			texture_manager()[texture_handle].draw(_position, TextureSpace::align_left, TextureSpace::align_top, draw_color_factor);
 			colors::Color fill_color{draw_color_factor.red(), draw_color_factor.green(), draw_color_factor.blue(), draw_color_factor.alpha()};

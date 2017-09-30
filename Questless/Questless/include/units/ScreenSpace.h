@@ -26,12 +26,12 @@ namespace units
 
 	struct ScreenSpace : Space<struct ScreenSpaceTag, int, 2, detail::ScreenSpaceBuffer>
 	{
-		using HAlign = Axis<0>::Alignment;
-		using VAlign = Axis<1>::Alignment;
+		using HAlign = Axis<0>::Align;
+		using VAlign = Axis<1>::Align;
 
-		static constexpr HAlign align_left = HAlign::near;
-		static constexpr HAlign align_center = HAlign::mid;
-		static constexpr HAlign align_right = HAlign::far;
+		static constexpr auto align_left = HAlign::near;
+		static constexpr auto align_center = HAlign::mid;
+		static constexpr auto align_right = HAlign::far;
 
 		static constexpr auto align_top = VAlign::near;
 		static constexpr auto align_middle = VAlign::mid;

@@ -24,8 +24,8 @@ namespace units
 
 	struct TextureSpace : Space<struct TextureSpaceTag, int, 2, detail::TextureSpaceBuffer>
 	{
-		using HAlign = Axis<0>::Alignment;
-		using VAlign = Axis<1>::Alignment;
+		using HAlign = Axis<0>::Align;
+		using VAlign = Axis<1>::Align;
 
 		static constexpr auto align_left = HAlign::near;
 		static constexpr auto align_center = HAlign::mid;

@@ -24,7 +24,19 @@ namespace units
 		};
 	}
 
-	using GameSpace = Space<struct GameSpaceTag, double, 2, detail::GameSpaceBuffer>;
+	struct GameSpace : Space<struct GameSpaceTag, double, 2, detail::GameSpaceBuffer>
+	{
+		using HAlign = Axis<0>::Align;
+		using VAlign = Axis<1>::Align;
+
+		static constexpr auto align_left = HAlign::near;
+		static constexpr auto align_center = HAlign::mid;
+		static constexpr auto align_right = HAlign::far;
+
+		static constexpr auto align_top = VAlign::near;
+		static constexpr auto align_middle = VAlign::mid;
+		static constexpr auto align_bottom = VAlign::far;
+	};
 
 	inline double& width(GameSpace::Box& box) { return box.size.x(); }
 	inline double width(GameSpace::Box const& box) { return box.size.x(); }

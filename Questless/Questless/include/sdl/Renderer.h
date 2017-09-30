@@ -65,10 +65,11 @@ namespace sdl
 		//! Clears the screen with the current drawing color.
 		void clear(units::colors::Color color);
 
-		//! Draws lines connecting the series of points contained in the vector.
-		//! @param points A vector of screen points.
-		//! @param color The color of the lines.
-		void draw_lines(std::vector<units::ScreenSpace::Point> points, units::colors::Color color);
+		//! Draws lines connecting the given @p vertices, with color @p color.
+		void draw_lines(std::vector<units::ScreenSpace::Point> vertices, units::colors::Color color);
+
+		//! Draws a polygon with the given @p vertices and @p color.
+		void draw_polygon(std::vector<units::ScreenSpace::Point> vertices, units::colors::Color color);
 
 		//! Draws a box. Can be filled or just outlined.
 		//! @param box The rectangle to be drawn.
