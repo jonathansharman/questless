@@ -381,6 +381,7 @@
     <ClInclude Include="include\units\SpriteSheetSpace.h" />
     <ClInclude Include="include\units\TextureSpace.h" />
     <ClInclude Include="include\units\Velocity.h" />
+    <ClInclude Include="include\units\ViewSpace.h" />
     <ClInclude Include="include\utility\Cache.h" />
     <ClInclude Include="include\utility\Complete.h" />
     <ClInclude Include="include\utility\ContainerView.h" />

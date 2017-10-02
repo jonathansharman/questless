@@ -33,30 +33,27 @@ namespace questless
 			: texture_handle{texture_handle}, cel_dimensions{cel_dimensions}
 		{}
 
-		//! The width of a single cel.
-		int cel_width() const
+		//! The dimensions of a single cel.
+		units::ScreenSpace::Vector cel_size() const
 		{
-			if (_need_cel_width) {
-				_cel_width = sdl::texture_manager()[texture_handle].width() / cel_dimensions.x();
-				_need_cel_width = false;
+			if (_need_cel_size) {
+				_cel_size = units::ScreenSpace::Vector
+					{ sdl::texture_manager()[texture_handle].width() / cel_dimensions.x()
+					, sdl::texture_manager()[texture_handle].height() / cel_dimensions.y()
+					};
+				_need_cel_size = false;
 			}
-			return _cel_width;
+			return _cel_size;
 		}
 
-		//! The height of a single cel.
-		int cel_height() const
-		{
-			if (_need_cel_height) {
-				_cel_height = sdl::texture_manager()[texture_handle].height() / cel_dimensions.y();
-				_need_cel_height = false;
-			}
-			return _cel_height;
-		}
+		//! The width of a single cel.
+		int cel_width() const { return cel_size().x(); }
+
+		//! The width of a single cel.
+		int cel_height() const { return cel_size().y(); }
 	private:
-		bool mutable _need_cel_width = true;
-		bool mutable _need_cel_height = true;
-		int mutable _cel_width;
-		int mutable _cel_height;
+		bool mutable _need_cel_size = true;
+		units::ScreenSpace::Vector mutable _cel_size;
 	};
 
 	//! A simple 2D animation.

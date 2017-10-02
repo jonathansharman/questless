@@ -658,6 +658,9 @@
     <ClInclude Include="include\damage\Protect.h">
       <Filter>include\damage</Filter>
     </ClInclude>
+    <ClInclude Include="include\units\ViewSpace.h">
+      <Filter>include\units</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\world\Region.cpp">

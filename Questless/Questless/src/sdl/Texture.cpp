@@ -48,24 +48,22 @@ namespace
 
 namespace sdl
 {
-	Texture::Texture(int width, int height, colors::Color color)
-		: _width{width}
-		, _height{height}
+	Texture::Texture(ScreenSpace::Vector size, colors::Color color) : _size{size}
 	{
-		if (_width != 0 && _height != 0) {
+		if (width() != 0 && height() != 0) {
 			// Generate texture.
 			glGenTextures(1, &_texture);
 			// Bind texture.
 			glBindTexture(GL_TEXTURE_2D, _texture);
 			// Set texture data.
-			std::vector<GLubyte> blank_buffer(width * height * 4);
+			std::vector<GLubyte> blank_buffer(width() * height() * 4);
 			for (std::size_t i = 0; i < blank_buffer.size(); i += 4) {
 				blank_buffer[i] = static_cast<GLubyte>(255 * color.red());
 				blank_buffer[i + 1] = static_cast<GLubyte>(255 * color.green());
 				blank_buffer[i + 2] = static_cast<GLubyte>(255 * color.blue());
 				blank_buffer[i + 3] = static_cast<GLubyte>(255 * color.alpha());
 			}
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &blank_buffer[0]);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width(), height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, &blank_buffer[0]);
 			// Set minification and magnification filters.
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -93,8 +91,7 @@ namespace sdl
 		}
 
 		// Store width and height;
-		_width = surface->w;
-		_height = surface->h;
+		_size = ScreenSpace::Vector{surface->w, surface->h};
 
 		// Determine surface format.
 		GLenum format = get_gl_format(surface);
@@ -104,7 +101,7 @@ namespace sdl
 		// Bind texture.
 		glBindTexture(GL_TEXTURE_2D, _texture);
 		// Set texture data.
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, format, GL_UNSIGNED_BYTE, surface->pixels);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width(), height(), 0, format, GL_UNSIGNED_BYTE, surface->pixels);
 		// Set minification and magnification filters.
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -126,8 +123,7 @@ namespace sdl
 	Texture::Texture(SDL_Surface* surface)
 	{
 		// Store width and height;
-		_width = surface->w;
-		_height = surface->h;
+		_size = ScreenSpace::Vector{surface->w, surface->h};
 
 		// Determine surface format.
 		GLenum format = get_gl_format(surface);
@@ -137,7 +133,7 @@ namespace sdl
 		// Bind texture.
 		glBindTexture(GL_TEXTURE_2D, _texture);
 		// Set texture data.
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, format, GL_UNSIGNED_BYTE, surface->pixels);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width(), height(), 0, format, GL_UNSIGNED_BYTE, surface->pixels);
 		// Set minification and magnification filters.
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -157,8 +153,7 @@ namespace sdl
 		: _texture{that._texture}
 		, _vbo{that._vbo}
 		, _ibo{that._ibo}
-		, _width{that._width}
-		, _height{that._height}
+		, _size{that._size}
 	{
 		that._texture = NULL;
 	}
@@ -177,8 +172,7 @@ namespace sdl
 
 		_vbo = that._vbo;
 		_ibo = that._ibo;
-		_width = that._width;
-		_height = that._height;
+		_size = that._size;
 
 		return *this;
 	}
@@ -193,22 +187,22 @@ namespace sdl
 	{
 		switch (horizontal_alignment) {
 			case TextureSpace::align_left:
-				position.x() += _width / 2;
+				position.x() += width() / 2;
 				break;
 			case TextureSpace::align_center:
 				break;
 			case TextureSpace::align_right:
-				position.x() -= _width / 2;
+				position.x() -= width() / 2;
 				break;
 		}
 		switch (vertical_alignment) {
 			case TextureSpace::align_top:
-				position.y() += _height / 2;
+				position.y() += height() / 2;
 				break;
 			case TextureSpace::align_middle:
 				break;
 			case TextureSpace::align_bottom:
-				position.y() -= _height / 2;
+				position.y() -= height() / 2;
 				break;
 		}
 		draw_transformed(position, TextureSpace::Vector::zero(), color_factor, 1.0f, 1.0f, GameSpace::Radians::zero(), src_rect);
@@ -243,8 +237,8 @@ namespace sdl
 		}
 
 		{ // Set model matrix.
-			int const width = src_rect ? units::width(*src_rect) : _width;
-			int const height = src_rect ? units::height(*src_rect) : _height;
+			int const width = src_rect ? units::width(*src_rect) : _size.x();
+			int const height = src_rect ? units::height(*src_rect) : _size.y();
 
 			glm::mat4 model_matrix;
 			// Position. Correct for odd width/height by nudging position by half a pixel.
@@ -267,10 +261,10 @@ namespace sdl
 		}
 
 		// Get texture coordinates.
-		float const u0 = src_rect ? static_cast<float>(left(*src_rect)) / _width : 0.0f;
-		float const u1 = src_rect ? static_cast<float>(right(*src_rect)) / _width : 1.0f;
-		float const v0 = src_rect ? static_cast<float>(top(*src_rect)) / _height : 0.0f;
-		float const v1 = src_rect ? static_cast<float>(bottom(*src_rect)) / _height : 1.0f;
+		float const u0 = src_rect ? static_cast<float>(left(*src_rect)) / width() : 0.0f;
+		float const u1 = src_rect ? static_cast<float>(right(*src_rect)) / width() : 1.0f;
+		float const v0 = src_rect ? static_cast<float>(top(*src_rect)) / height() : 0.0f;
+		float const v1 = src_rect ? static_cast<float>(bottom(*src_rect)) / height() : 1.0f;
 
 		// Set vertex data.
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo);

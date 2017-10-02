@@ -42,11 +42,10 @@ namespace questless
 	private:
 		// Constants
 
-		static constexpr double _inv_width_percent = 0.7;
-		static constexpr double _inv_height_percent = 0.7;
+		static constexpr float _inv_width_percent = 0.7f;
+		static constexpr float _inv_height_percent = 0.7f;
 
-		static constexpr int _item_icon_width = 55;
-		static constexpr int _item_icon_height = 55;
+		static constexpr units::ScreenSpace::Vector _item_icon_size{55, 55};
 		static constexpr int _item_count_font_size = 10;
 
 		static constexpr size_t _hotbar_size = 10;
@@ -75,11 +74,8 @@ namespace questless
 		int _hotbar_width;
 		int _hotbar_x_start;
 
-		int _inv_left;
-		int _inv_top;
+		units::ScreenSpace::Box _inv_layout;
 
-		int _inv_width;
-		int _inv_height;
 		int _inv_row_count;
 		int _inv_column_count;
 

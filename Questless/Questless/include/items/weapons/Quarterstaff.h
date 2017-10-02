@@ -132,7 +132,13 @@ namespace questless
 			public:
 				using MeleeAttack::MeleeAttack;
 				std::string name() const final { return "Jab"; }
-				dmg::Group base_damage() const final { return dmg::Group{dmg::Bludgeon{9.0}, dmg::Protect{dmg::Pad{6.0}} + dmg::Protect{dmg::Deflect{6.0}}}; }
+				dmg::Group base_damage() const final
+				{
+					return dmg::Group
+						{ dmg::Bludgeon{9.0}
+						, dmg::Protect{dmg::Pad{6.0}} + dmg::Protect{dmg::Deflect{6.0}}
+						};
+				}
 				double wind_up() const final { return 0.16; }
 				double follow_through() const final { return 0.64; }
 				double cooldown() const final { return 1.04; }

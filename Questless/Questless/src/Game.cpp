@@ -562,35 +562,50 @@ namespace questless
 		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{0, 0}, ScreenSpace::Vector{15, 15}}, colors::blue(), Fill::outline);
 
 		{ // Draw hexagon.
-			std::vector<ScreenSpace::Point> vertices;
+			std::vector<ViewSpace::Point> vertices;
 			for (int i = 0; i < 6; ++i) {
 				auto const angle = constants::tau / 6 * i;
-				auto const offset = ScreenSpace::Vector{static_cast<int>(cos(angle) * 50), static_cast<int>(sin(angle) * 50)};
-				vertices.push_back(ScreenSpace::Point{50, 50} + offset);
+				auto const offset = ViewSpace::Vector{static_cast<float>(cos(angle) * 50), static_cast<float>(sin(angle) * 50)};
+				vertices.push_back(ViewSpace::Point{50.0f, 50.0f} + offset);
 			}
-			renderer().draw_polygon(vertices, units::colors::orange());
+			float border_width = static_cast<float>(10 * sin(constants::tau * duration_cast<GameSeconds>(clock::now() - _time_last_state_change).count() / 4));
+			renderer().draw_polygon(vertices, border_width, units::colors::white(), units::colors::orange());
 		}
 		{ // Draw right triangle.
 			renderer().draw_polygon
 				(
-					{ ScreenSpace::Point{100, 0}
-					, ScreenSpace::Point{100, 100}
-					, ScreenSpace::Point{200, 0}
+					{ ViewSpace::Point{100.0f, 0.0f}
+					, ViewSpace::Point{100.0f, 100.0f}
+					, ViewSpace::Point{200.0f, 0.0f}
 					}
 				, units::colors::cyan()
+				, Fill::solid
 				);
 		}
 		{ // Draw non-convex polygon.
 			renderer().draw_polygon
 				(
-					{ ScreenSpace::Point{200, 0}
-					, ScreenSpace::Point{300, 0}
-					, ScreenSpace::Point{250, 50}
-					, ScreenSpace::Point{300, 100}
-					, ScreenSpace::Point{200, 100}
+					{ ViewSpace::Point{200.0f, 0.0f}
+					, ViewSpace::Point{300.0f, 0.0f}
+					, ViewSpace::Point{250.0f, 50.0f}
+					, ViewSpace::Point{300.0f, 100.0f}
+					, ViewSpace::Point{200.0f, 100.0f}
 					}
 				, units::colors::magenta()
+				, Fill::solid
 				);
+		}
+		{ // Draw a star outline.
+			ViewSpace::Point const center{350.0f, 50.0f};
+			std::vector<ViewSpace::Point> star_vertices;
+			auto start_angle = constants::tau * duration_cast<GameSeconds>(clock::now() - _time_last_state_change).count() / 4;
+			for (int i = 0; i < 10; ++i) {
+				float const radius = i & 1 ? 20.0f : 50.0f;
+				auto const angle = constants::tau / 10 * i + start_angle;
+				auto const offset = ViewSpace::Vector{static_cast<float>(cos(angle) * radius), static_cast<float>(sin(angle) * radius)};
+				star_vertices.push_back(center + offset);
+			}
+			renderer().draw_polygon(star_vertices, units::colors::lime(), Fill::outline);
 		}
 	}
 

@@ -78,7 +78,7 @@ namespace questless::qte
 	{
 		static constexpr int metronome_width = 10;
 
-		int x_center = window().center().x();
+		int x_center = window().x_center();
 		int window_width = window().width();
 		int window_height = window().height();
 

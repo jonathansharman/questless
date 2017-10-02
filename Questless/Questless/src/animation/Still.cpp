@@ -12,7 +12,7 @@ namespace questless
 	void Still::draw(units::ScreenSpace::Point position) const
 	{
 		Texture const& texture = texture_manager()[_texture_handle];
-		ScreenSpace::Point dst_point{lround(position.x() - _origin.u()), lround(position.y() - _origin.v())};
+		ScreenSpace::Point dst_point{position.x() - _origin.u(), position.y() - _origin.v()};
 		texture.draw(dst_point);
 	}
 

@@ -27,7 +27,7 @@ namespace questless
 	void WorldRenderer::initialize()
 	{
 		auto unknown_entity_animation_ss = texture_manager().add("resources/textures/entities/unknown.png");
-		_unknown_entity_animation = Still{unknown_entity_animation_ss, TextureSpace::Vector{0, 0}};
+		_unknown_entity_animation = Still{unknown_entity_animation_ss, TextureSpace::Vector::zero()};
 	}
 
 	auto WorldRenderer::get_entity_id_var(entity_cref_var_t entity) -> entity_id_var_t
@@ -233,7 +233,7 @@ namespace questless
 		}
 		_terrain_bounds = *opt_bounds;
 		
-		_terrain_texture = make_unique<Texture>(lround(width(_terrain_bounds)), lround(height(_terrain_bounds)));
+		_terrain_texture = make_unique<Texture>(ScreenSpace::Vector{lround(width(_terrain_bounds)), lround(height(_terrain_bounds))});
 		_terrain_texture->as_target([&] {
 			renderer().clear(colors::clear());
 			for (auto const& section_view : _world_view->section_views()) {

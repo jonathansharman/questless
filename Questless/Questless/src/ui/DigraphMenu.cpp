@@ -146,10 +146,9 @@ namespace questless
 		ScreenSpace::Point position = _content_position;
 		position.y() += title_height;
 		for (size_t i = 0; i < _pages[_page_index].options.size(); ++i) {
-			TextureSpace::Vector texture_size = _page_views[_page_index].option_textures[i].size();
 			ScreenSpace::Box box = ScreenSpace::Box
 				{ ScreenSpace::Point{position.x(), position.y()}
-				, ScreenSpace::Vector{texture_size.u(), texture_size.v()}
+				, _page_views[_page_index].option_textures[i].size()
 				};
 			ScreenSpace::Point point = input().mouse_position();
 			if (box.contains(point)) {
@@ -301,10 +300,10 @@ namespace questless
 
 		// Render background.
 
-		_background = std::make_unique<Texture>
-			( _content_width + _left_margin + _right_margin
+		_background = std::make_unique<Texture>(ScreenSpace::Vector
+			{ _content_width + _left_margin + _right_margin
 			, _content_height + _top_margin + _bottom_margin
-			);
+			});
 		_background->as_target([&] {
 			// Interior
 			for (int x = 0; x < _content_width / _tile_width; ++x) {

@@ -33,12 +33,12 @@ namespace questless
 				}
 
 				if (_inv_open) {
-					int row = (input().y_mouse() - _inv_top) / _item_icon_height;
-					int column = (input().x_mouse() - _inv_left) / _item_icon_width;
+					int row = (input().y_mouse() - top(_inv_layout)) / _item_icon_size.y();
+					int column = (input().x_mouse() - left(_inv_layout)) / _item_icon_size.x();
 					int index = row * _inv_column_count + column;
 
-					bool row_in_bounds = _inv_top <= input().y_mouse() && row < _inv_row_count;
-					bool column_in_bounds = _inv_left <= input().x_mouse() && column < _inv_column_count;
+					bool row_in_bounds = top(_inv_layout) <= input().y_mouse() && row < _inv_row_count;
+					bool column_in_bounds = left(_inv_layout) <= input().x_mouse() && column < _inv_column_count;
 					bool index_in_bounds = 0 <= index && index < static_cast<int>(_displayed_items.size());
 
 					if (row_in_bounds && column_in_bounds && index_in_bounds) {
@@ -202,27 +202,18 @@ namespace questless
 
 			// Draw the inventory if it's open.
 			if (_inv_open) {
-				renderer().draw_box
-					( ScreenSpace::Box
-						{ ScreenSpace::Point{_inv_left, _inv_top}
-						, ScreenSpace::Vector{_inv_width, _inv_height}
-						}
-					, colors::black()
-					, colors::gray()
-					);
+				renderer().draw_box(_inv_layout, colors::black(), colors::gray());
 
 				{ // Draw selection.
 					int x_mouse = input().x_mouse();
 					int y_mouse = input().y_mouse();
-					int row = (y_mouse - _inv_top) / _item_icon_height;
-					int column = (x_mouse - _inv_left) / _item_icon_width;
-					if (_inv_top <= y_mouse && row < _inv_row_count && _inv_left <= x_mouse && column < _inv_column_count) {
-						int x = _inv_left + _item_icon_width * column;
-						int y = _inv_top + _item_icon_height * row;
+					int row = (y_mouse - top(_inv_layout)) / _item_icon_size.y();
+					int column = (x_mouse - left(_inv_layout)) / _item_icon_size.x();
+					if (top(_inv_layout) <= y_mouse && row < _inv_row_count && left(_inv_layout) <= x_mouse && column < _inv_column_count) {
 						renderer().draw_box
 							( ScreenSpace::Box
-								{ ScreenSpace::Point{x, y}
-								, ScreenSpace::Vector{_item_icon_width, _item_icon_height}
+								{ ScreenSpace::Point{left(_inv_layout) + _item_icon_size.x() * column, top(_inv_layout) + _item_icon_size.y() * row}
+								, _item_icon_size
 								}
 							, colors::black()
 							, colors::silver()
@@ -234,7 +225,7 @@ namespace questless
 				for (size_t i = 0; i < _displayed_items.size(); ++i) {
 					int row = i / _inv_column_count;
 					int column = i % _inv_column_count;
-					ItemRenderer texturer{ScreenSpace::Point{_inv_left + column * _item_icon_width, _inv_top + row * _item_icon_height}};
+					ItemRenderer texturer{ScreenSpace::Point{left(_inv_layout) + column * _item_icon_size.x(), top(_inv_layout) + row * _item_icon_size.y()}};
 					_displayed_items[i].get().accept(texturer);
 				}
 			}
@@ -250,19 +241,16 @@ namespace questless
 		_hotbar_width = _hotbar_slot_texture->width() * _hotbar_size + _hotbar_interslot_gap * (_hotbar_size - 1);
 		_hotbar_x_start = (window().width() - _hotbar_width) / 2;
 
-		// Calculate inventory dimensions and number of visible rows and columns.
-		_inv_height = static_cast<int>(_inv_height_percent * window().height());
-		_inv_width = static_cast<int>(_inv_width_percent * window().width());
-		_inv_row_count = std::max(1, _inv_height / _item_icon_height);
-		_inv_column_count = std::max(1, _inv_width / _item_icon_width);
+		// Calculate number of visible inventory rows and columns.
+		_inv_row_count = std::max(1l, lround(_inv_height_percent * window().height() / _item_icon_size.y()));
+		_inv_column_count = std::max(1l, lround(_inv_width_percent * window().width() / _item_icon_size.x()));
 
-		// Adjust inventory dimensions so they're multiples of the item icon dimensions.
-		_inv_height = _inv_row_count * _item_icon_height;
-		_inv_width = _inv_column_count * _item_icon_width;
-
-		// Position inventory.
-		_inv_left = (window().width() - _inv_width) / 2;
-		_inv_top = (window().height() - _inv_height) / 2;
+		// Set inventory layout.
+		_inv_layout = ScreenSpace::Box
+			{ window().center()
+			, ScreenSpace::Vector{_inv_column_count * _item_icon_size.x(), _inv_row_count * _item_icon_size.y()}
+			, { ScreenSpace::align_center, ScreenSpace::align_middle }
+			};
 	}
 
 	void HUD::update_displayed_items(Being const& player_being)

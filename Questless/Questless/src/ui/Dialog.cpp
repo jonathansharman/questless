@@ -32,7 +32,7 @@ namespace questless
 
 	void Dialog::draw_title(Texture const& title)
 	{
-		int x_center = window().center().x();
+		int x_center = window().x_center();
 		renderer().draw_box
 			( ScreenSpace::Box
 				{ ScreenSpace::Point{x_center - title.width() / 2, 0}
@@ -45,7 +45,7 @@ namespace questless
 	}
 	void Dialog::draw_prompt(Texture const& prompt)
 	{
-		int x_center = window().center().x();
+		int x_center = window().x_center();
 		renderer().draw_box
 			( ScreenSpace::Box
 				{ ScreenSpace::Point{x_center - prompt.width() / 2, _prompt_top}
@@ -58,7 +58,7 @@ namespace questless
 	}
 	void Dialog::draw_selector(Texture const& selector)
 	{
-		int x_center = window().center().x();
+		int x_center = window().x_center();
 		renderer().draw_box
 			( ScreenSpace::Box
 				{ ScreenSpace::Point{x_center - selector.width() / 2, _selector_top}

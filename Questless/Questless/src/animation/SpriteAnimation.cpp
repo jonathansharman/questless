@@ -24,10 +24,10 @@ namespace questless
 	{
 		//! @todo What is the default center in this case, and what should it be?
 		SpriteAnimation::Frame const& frame = _frames[_frame_index];
-		TextureSpace::Box src_rect
-			{ TextureSpace::Point{_sprite_sheet->cel_width() * frame.coords.x(), _sprite_sheet->cel_height() * frame.coords.y()}
-			, TextureSpace::Vector{_sprite_sheet->cel_width(), _sprite_sheet->cel_height()}
-			};
+		//ScreenSpace::Box src_rect
+		//	{ ScreenSpace::Point{_sprite_sheet->cel_width() * frame.coords.x(), _sprite_sheet->cel_height() * frame.coords.y()}
+		//	, ScreenSpace::Vector{_sprite_sheet->cel_width(), _sprite_sheet->cel_height()}
+		//	};
 		//texture_manager()[_sprite_sheet->texture_handle].draw
 		//	( ScreenSpace::Point{position.x() - frame.origin.u(), position.y() + frame.origin.v()} //! @todo Uncouth point casting here.
 		//	, HAlign::center

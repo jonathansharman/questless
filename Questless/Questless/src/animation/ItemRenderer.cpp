@@ -72,7 +72,7 @@ namespace questless
 				// Cache miss. Create handle to texture formed by pasting the spell texture on top of the scroll texture.
 				auto texture_handle = texture_manager().add_with_generator([=] {
 					Texture& scroll_texture = texture_manager()[scroll_handle];
-					auto texture = std::make_unique<Texture>(scroll_texture.width(), scroll_texture.height());
+					auto texture = std::make_unique<Texture>(scroll_texture.size());
 					texture->as_target([&] {
 						scroll_texture.draw(ScreenSpace::Point{0, 0});
 						texture_manager()[spell_handle].draw(ScreenSpace::Point{0, 0});

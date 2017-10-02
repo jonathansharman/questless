@@ -29,10 +29,9 @@ namespace sdl
 	{
 	public:
 		//! Constructs a targetable, blank texture with the specified dimensions. Useful for building textures at run time.
-		//! @param width The width of the texture.
-		//! @param height The height of the texture.
+		//! @param size The size of this texture in screen space.
 		//! @param color The initial background color for the texture. Defaults to clear black.
-		Texture(int width = 0, int height = 0, units::colors::Color color = units::colors::clear());
+		Texture(units::ScreenSpace::Vector size = units::ScreenSpace::Vector::zero(), units::colors::Color color = units::colors::clear());
 
 		//! Constructs a texture object from the specified image file.
 		//! @param filename The name of the image file.
@@ -49,14 +48,14 @@ namespace sdl
 		Texture& operator =(Texture const&) & = delete;
 		Texture& operator =(Texture&&) &;
 
-		//! The width of the texture.
-		int width() const { return _width; }
+		//! The width of this texture.
+		int width() const { return _size.x(); }
 
-		//! The height of the texture.
-		int height() const { return _height; }
+		//! The height of this texture.
+		int height() const { return _size.y(); }
 
-		//! The width and height of the texture, respectively.
-		units::TextureSpace::Vector size() const { return units::TextureSpace::Vector{_width, _height}; }
+		//! The width and height of the texture, as a screen space vector.
+		units::ScreenSpace::Vector size() const { return _size; }
 
 		//! Draws all or part of the texture to the screen (or current frame buffer).
 		//! @param position The coordinates of the texture on the screen.
@@ -104,8 +103,7 @@ namespace sdl
 		GLuint _texture;
 		GLuint _vbo = NULL;
 		GLuint _ibo = NULL;
-		int _width;
-		int _height;
+		units::ScreenSpace::Vector _size;
 
 		//! Goes before the function call in @p as_target().
 		//! @return The generated FBO.

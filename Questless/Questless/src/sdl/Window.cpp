@@ -104,9 +104,9 @@ namespace sdl
 
 	ScreenSpace::Point Window::position() const
 	{
-		ScreenSpace::Point p;
-		SDL_GetWindowPosition(_sdl_window, &p.x(), &p.y());
-		return p;
+		ScreenSpace::Point result;
+		SDL_GetWindowPosition(_sdl_window, &result.x(), &result.y());
+		return result;
 	}
 	int Window::x() const
 	{
@@ -150,5 +150,13 @@ namespace sdl
 	ScreenSpace::Point Window::center() const
 	{
 		return ScreenSpace::Point{width() / 2, height() / 2};
+	}
+	ScreenSpace::scalar_t Window::x_center() const
+	{
+		return width() / 2;
+	}
+	ScreenSpace::scalar_t Window::y_center() const
+	{
+		return height() / 2;
 	}
 }

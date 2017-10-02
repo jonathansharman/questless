@@ -88,7 +88,7 @@ namespace sdl
 		//! The y-coordinate of the window.
 		int y() const;
 
-		//! The resolution of the window, width x height.
+		//! The resolution of the window: width by height.
 		units::ScreenSpace::Vector resolution() const;
 		//! The window width.
 		int width() const;
@@ -96,6 +96,10 @@ namespace sdl
 		int height() const;
 		//! The center point of the window.
 		units::ScreenSpace::Point center() const;
+		//! The horizontal center of the window.
+		int x_center() const;
+		//! The vertical center of the window.
+		int y_center() const;
 	private:
 		SDL_Window* _sdl_window;
 		std::string _title;

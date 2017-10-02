@@ -93,7 +93,7 @@ namespace sdl
 
 		// Set vertex data.
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-		std::vector<GLfloat> vertex_data;
+		vector<GLfloat> vertex_data;
 		vertex_data.reserve(2 * vertices.size());
 		for (auto const& vertex : vertices) {
 			vertex_data.push_back(static_cast<GLfloat>(vertex.x()));
@@ -109,7 +109,7 @@ namespace sdl
 
 		GLuint lines_ibo;
 		{ // Create IBO.
-			std::vector<GLuint> index_data(vertices.size());
+			vector<GLuint> index_data(vertices.size());
 			std::iota(index_data.begin(), index_data.end(), 0);
 			glGenBuffers(1, &lines_ibo);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, lines_ibo);
@@ -130,7 +130,7 @@ namespace sdl
 		glDeleteBuffers(1, &lines_ibo);
 	}
 
-	void Renderer::draw_polygon(std::vector<units::ScreenSpace::Point> vertices, units::colors::Color color)
+	void Renderer::draw_polygon(vector<ViewSpace::Point> vertices, colors::Color color, Fill fill)
 	{
 		// Bind program.
 		solid_program().use();
@@ -147,11 +147,11 @@ namespace sdl
 
 		{ // Set vertex data.
 			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-			std::vector<GLfloat> vertex_data;
+			vector<GLfloat> vertex_data;
 			vertex_data.reserve(2 * vertices.size());
 			for (auto const& vertex : vertices) {
-				vertex_data.push_back(static_cast<GLfloat>(vertex.x()));
-				vertex_data.push_back(static_cast<GLfloat>(vertex.y()));
+				vertex_data.push_back(vertex.x());
+				vertex_data.push_back(vertex.y());
 			}
 			glBufferData(GL_ARRAY_BUFFER, 2 * vertices.size() * sizeof(GLfloat), vertex_data.data(), GL_DYNAMIC_DRAW);
 			{
@@ -164,7 +164,7 @@ namespace sdl
 
 		GLuint polygon_ibo;
 		{ // Create IBO.
-			std::vector<GLuint> index_data(vertices.size());
+			vector<GLuint> index_data(vertices.size());
 			std::iota(index_data.begin(), index_data.end(), 0);
 			glGenBuffers(1, &polygon_ibo);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, polygon_ibo);
@@ -176,13 +176,78 @@ namespace sdl
 		glUniform4f(color_uniform, color.red(), color.green(), color.blue(), color.alpha());
 
 		// Render.
-		glDrawElements(GL_POLYGON, vertices.size(), GL_UNSIGNED_INT, nullptr);
+		switch (fill) {
+			case Fill::solid:
+				glDrawElements(GL_POLYGON, vertices.size(), GL_UNSIGNED_INT, nullptr);
+				break;
+			case Fill::outline:
+				glDrawElements(GL_LINE_LOOP, vertices.size(), GL_UNSIGNED_INT, nullptr);
+				break;
+		}
 
 		// Disable vertex attributes.
 		glDisableVertexAttribArray(position_attribute);
 
 		// Delete IBO.
 		glDeleteBuffers(1, &polygon_ibo);
+	}
+	
+	void Renderer::draw_polygon
+		( vector<ViewSpace::Point> vertices
+		, ViewSpace::scalar_t border_width
+		, colors::Color border_color
+		, colors::Color fill_color
+		)
+	{
+		// Draw border.
+		draw_polygon(vertices, border_color, Fill::solid);
+
+		//! @todo Compute winding order. (Can use interior angle sum formula to check.)
+
+		vector<ViewSpace::Point> fill_vertices;
+		for (std::size_t i = 0; i < vertices.size(); ++i) {
+			auto p0 = i == 0 ? vertices.back() : vertices[i - 1];
+			auto p1 = vertices[i];
+			auto p2 = i == vertices.size() - 1 ? vertices.front() : vertices[i + 1];
+
+			// Parametric 2D line type.
+			struct Line { float x0, y0, mx, my; };
+
+			Line l1{p0.x(), p0.y(), p1.x() - p0.x(), p1.y() - p0.y()};
+			Line l2{p1.x(), p1.y(), p2.x() - p1.x(), p2.y() - p1.y()};
+
+			// If the segments are precisely parallel, we can ignore this vertex.
+			if (l1.my * l2.mx == l2.my * l1.mx) { continue; }
+
+			// Find slopes perpendicular to first line.
+			auto l1_mx_prime = -l1.my;
+			auto l1_my_prime = l1.mx;
+			// Normalize to border width.
+			auto length1 = sqrt(l1_mx_prime * l1_mx_prime + l1_my_prime * l1_my_prime);
+			l1_mx_prime = l1_mx_prime * border_width / length1;
+			l1_my_prime = l1_my_prime * border_width / length1;
+			// Offset first segment's starting point.
+			l1.x0 += l1_mx_prime;
+			l1.y0 += l1_my_prime;
+
+			// L2 perpendicular slopes
+			auto l2_mx_prime = -l2.my;
+			auto l2_my_prime = l2.mx;
+			// Normalize.
+			auto length2 = sqrt(l2_mx_prime * l2_mx_prime + l2_my_prime * l2_my_prime);
+			l2_mx_prime = l2_mx_prime * border_width / length2;
+			l2_my_prime = l2_my_prime * border_width / length2;
+			// Offset second segment's starting point.
+			l2.x0 += l2_mx_prime;
+			l2.y0 += l2_my_prime;
+
+			// Find the intersection and add it to fill vertices. (Guaranteed to be unique since we 
+			auto l2_t_intersect = ((l2.y0 - l1.y0) * l1.mx - (l2.x0 - l1.x0) * l1.my) / (l2.mx * l1.my - l2.my * l1.mx);
+			fill_vertices.push_back(ViewSpace::Point{l2.x0 + l2.mx * l2_t_intersect, l2.y0 + l2.my * l2_t_intersect});
+		}
+
+		// Draw fill color.
+		draw_polygon(fill_vertices, fill_color, Fill::solid);
 	}
 
 	void Renderer::draw_box(ScreenSpace::Box const& box, colors::Color color, Fill fill)

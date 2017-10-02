@@ -14,6 +14,7 @@
 #include "Window.h"
 #include "units/colors.h"
 #include "units/ScreenSpace.h"
+#include "units/ViewSpace.h"
 
 namespace sdl
 {
@@ -68,19 +69,34 @@ namespace sdl
 		//! Draws lines connecting the given @p vertices, with color @p color.
 		void draw_lines(std::vector<units::ScreenSpace::Point> vertices, units::colors::Color color);
 
-		//! Draws a polygon with the given @p vertices and @p color.
-		void draw_polygon(std::vector<units::ScreenSpace::Point> vertices, units::colors::Color color);
+		//! Draws a polygon. Can be filled or just outlined.
+		//! @param vertices The vertices of the polygon.
+		//! @param color The color of the polygon.
+		//! @param fill Whether to draw a solid polygon or an outline.
+		void draw_polygon(std::vector<units::ViewSpace::Point> vertices, units::colors::Color color, Fill fill);
+
+		//! Draws a filled polygon with a border.
+		//! @param vertices The vertices of the polygon.
+		//! @param border_color The color of the polygon's border.
+		//! @param fill_color The color of the polygon's interior.
+		//! @note This function assumes the width of the polygon is sufficiently greater than the border width to avoid overlapping the border with the polygon's edges. If the polygon is too narrow or contains too-sharp corners, overlap may occur.
+		void draw_polygon
+			( std::vector<units::ViewSpace::Point> vertices
+			, units::ViewSpace::scalar_t border_width
+			, units::colors::Color border_color
+			, units::colors::Color fill_color
+			);
 
 		//! Draws a box. Can be filled or just outlined.
-		//! @param box The rectangle to be drawn.
-		//! @param color The color of the rectangle.
+		//! @param box The box to be drawn.
+		//! @param color The color of the box.
 		//! @param fill Whether to draw a solid box or an outline.
 		void draw_box(units::ScreenSpace::Box const& box, units::colors::Color color, Fill fill);
 
 		//! Draws a filled box with a border.
-		//! @param box The rectangle to be drawn.
-		//! @param border_color The color of the rectangle's border.
-		//! @param fill_color The color of the rectangle's interior.
+		//! @param box The box to be drawn.
+		//! @param border_color The color of the box's border.
+		//! @param fill_color The color of the box's interior.
 		void draw_box(units::ScreenSpace::Box const& box, units::colors::Color border_color, units::colors::Color fill_color);
 	private:
 		SDL_Renderer* _renderer;

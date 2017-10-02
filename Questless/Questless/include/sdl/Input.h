@@ -91,10 +91,10 @@ namespace sdl
 		// Mouse state accessors
 		
 		bool mouse_visible() const { return SDL_ShowCursor(-1) == 1; }
-		int x_mouse() const { return _mouse_position.x(); }
-		int y_mouse() const { return _mouse_position.y(); }
-		int last_x_mouse() const { return _prev_mouse_position.x(); }
-		int last_y_mouse() const { return _prev_mouse_position.y(); }
+		auto x_mouse() const { return _mouse_position.x(); }
+		auto y_mouse() const { return _mouse_position.y(); }
+		auto last_x_mouse() const { return _prev_mouse_position.x(); }
+		auto last_y_mouse() const { return _prev_mouse_position.y(); }
 		units::ScreenSpace::Point mouse_position() const { return _mouse_position; }
 		units::ScreenSpace::Point last_mouse_position() const { return _prev_mouse_position; }
 		bool mouse_moved() const { return _mouse_position != _prev_mouse_position; }
