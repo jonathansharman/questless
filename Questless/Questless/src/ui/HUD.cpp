@@ -116,7 +116,6 @@ namespace questless
 						, { ScreenSpace::align_left, ScreenSpace::align_bottom }
 						}
 					, colors::black()
-					, sdl::Fill::solid
 					);
 				// Health
 				int health_bar_height = lround(_condition_bar_height * player_being->health / player_being->stats.vitality);
@@ -127,7 +126,6 @@ namespace questless
 						, { ScreenSpace::align_left, ScreenSpace::align_bottom }
 						}
 					, colors::red()
-					, sdl::Fill::solid
 					);
 				left += _condition_bar_width;
 				// Mana
@@ -139,7 +137,6 @@ namespace questless
 						, { ScreenSpace::align_left, ScreenSpace::align_bottom }
 						}
 					, colors::blue()
-					, sdl::Fill::solid
 					);
 				left += _condition_bar_width;
 				// Energy
@@ -151,7 +148,6 @@ namespace questless
 						, { ScreenSpace::align_left, ScreenSpace::align_bottom }
 						}
 					, colors::cyan()
-					, sdl::Fill::solid
 					);
 				left += _condition_bar_width;
 				// Satiety
@@ -163,7 +159,6 @@ namespace questless
 						, { ScreenSpace::align_left, ScreenSpace::align_bottom }
 						}
 					, colors::brown()
-					, sdl::Fill::solid
 					);
 				left += _condition_bar_width;
 				// Alertness
@@ -175,7 +170,6 @@ namespace questless
 						, { ScreenSpace::align_left, ScreenSpace::align_bottom }
 						}
 					, colors::yellow()
-					, sdl::Fill::solid
 					);
 				left += _condition_bar_width;
 			}
@@ -202,7 +196,7 @@ namespace questless
 
 			// Draw the inventory if it's open.
 			if (_inv_open) {
-				renderer().draw_box(_inv_layout, colors::black(), colors::gray());
+				renderer().draw_box(_inv_layout, 1, colors::black(), colors::gray());
 
 				{ // Draw selection.
 					int x_mouse = input().x_mouse();
@@ -215,6 +209,7 @@ namespace questless
 								{ ScreenSpace::Point{left(_inv_layout) + _item_icon_size.x() * column, top(_inv_layout) + _item_icon_size.y() * row}
 								, _item_icon_size
 								}
+							, 1
 							, colors::black()
 							, colors::silver()
 							);

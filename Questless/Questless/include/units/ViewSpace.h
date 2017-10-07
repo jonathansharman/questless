@@ -54,5 +54,10 @@ namespace units
 
 	inline auto bottom(ViewSpace::Box const& box) { return box.position.y() + box.size.y(); }
 
+	inline ViewSpace::Point top_left(ViewSpace::Box const& box) { return box.position; }
+	inline ViewSpace::Point top_right(ViewSpace::Box const& box) { return ViewSpace::Point{box.position.x() + box.size.x(), box.position.y()}; }
+	inline ViewSpace::Point bottom_left(ViewSpace::Box const& box) { return ViewSpace::Point{box.position.x(), box.position.y() + box.size.y()}; }
+	inline ViewSpace::Point bottom_right(ViewSpace::Box const& box) { return box.position + box.size; }
+
 	inline ViewSpace::Point center(ViewSpace::Box const& box) { return box.position + box.size / 2; }
 }

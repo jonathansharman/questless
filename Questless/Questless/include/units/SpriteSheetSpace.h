@@ -40,5 +40,10 @@ namespace units
 
 	inline int bottom(SpriteSheetSpace::Box const& box) { return box.position.y() + box.size.y(); }
 
+	inline SpriteSheetSpace::Point top_left(SpriteSheetSpace::Box const& box) { return box.position; }
+	inline SpriteSheetSpace::Point top_right(SpriteSheetSpace::Box const& box) { return SpriteSheetSpace::Point{box.position.x() + box.size.x(), box.position.y()}; }
+	inline SpriteSheetSpace::Point bottom_left(SpriteSheetSpace::Box const& box) { return SpriteSheetSpace::Point{box.position.x(), box.position.y() + box.size.y()}; }
+	inline SpriteSheetSpace::Point bottom_right(SpriteSheetSpace::Box const& box) { return box.position + box.size; }
+
 	inline SpriteSheetSpace::Point center(SpriteSheetSpace::Box const& box) { return box.position + box.size / 2; }
 }

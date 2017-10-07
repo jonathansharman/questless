@@ -18,11 +18,6 @@
 
 namespace sdl
 {
-	//! @todo Where should Fill go? Inside Renderer?d
-
-	//! The fill of a drawn shape, either a filled solid or an empty outline.
-	enum class Fill : bool { solid, outline };
-
 	//! A simple wrapper around SDL_Renderer.
 	class Renderer
 	{
@@ -67,37 +62,80 @@ namespace sdl
 		void clear(units::colors::Color color);
 
 		//! Draws lines connecting the given @p vertices, with color @p color.
-		void draw_lines(std::vector<units::ScreenSpace::Point> vertices, units::colors::Color color);
+		void draw_lines(std::vector<units::ViewSpace::Point> const& vertices, units::colors::Color color);
 
-		//! Draws a polygon. Can be filled or just outlined.
+		//! Draws lines connecting the given @p vertices, with color @p color.
+		void draw_lines(std::vector<units::ScreenSpace::Point> const& vertices, units::colors::Color color);
+
+		//! Draws a solid polygon.
 		//! @param vertices The vertices of the polygon.
 		//! @param color The color of the polygon.
-		//! @param fill Whether to draw a solid polygon or an outline.
-		void draw_polygon(std::vector<units::ViewSpace::Point> vertices, units::colors::Color color, Fill fill);
+		void draw_polygon(std::vector<units::ViewSpace::Point> const& vertices, units::colors::Color color);
+
+		//! Draws a solid polygon.
+		//! @param vertices The vertices of the polygon.
+		//! @param color The color of the polygon.
+		void draw_polygon(std::vector<units::ScreenSpace::Point> const& vertices, units::colors::Color color);
 
 		//! Draws a filled polygon with a border.
 		//! @param vertices The vertices of the polygon.
+		//! @param border_width The width of the polygon's border.
 		//! @param border_color The color of the polygon's border.
 		//! @param fill_color The color of the polygon's interior.
 		//! @note This function assumes the width of the polygon is sufficiently greater than the border width to avoid overlapping the border with the polygon's edges. If the polygon is too narrow or contains too-sharp corners, overlap may occur.
 		void draw_polygon
-			( std::vector<units::ViewSpace::Point> vertices
+			( std::vector<units::ViewSpace::Point> const& vertices
 			, units::ViewSpace::scalar_t border_width
 			, units::colors::Color border_color
 			, units::colors::Color fill_color
 			);
 
-		//! Draws a box. Can be filled or just outlined.
+		//! Draws a filled polygon with a border.
+		//! @param vertices The vertices of the polygon.
+		//! @param border_width The width of the polygon's border.
+		//! @param border_color The color of the polygon's border.
+		//! @param fill_color The color of the polygon's interior.
+		//! @note This function assumes the width of the polygon is sufficiently greater than the border width to avoid overlapping the border with the polygon's edges. If the polygon is too narrow or contains too-sharp corners, overlap may occur.
+		void draw_polygon
+			( std::vector<units::ScreenSpace::Point> const& vertices
+			, units::ScreenSpace::scalar_t border_width
+			, units::colors::Color border_color
+			, units::colors::Color fill_color
+			);
+
+		//! Draws a solid box.
 		//! @param box The box to be drawn.
 		//! @param color The color of the box.
-		//! @param fill Whether to draw a solid box or an outline.
-		void draw_box(units::ScreenSpace::Box const& box, units::colors::Color color, Fill fill);
+		void draw_box(units::ViewSpace::Box const& box, units::colors::Color color);
 
-		//! Draws a filled box with a border.
+		//! Draws a solid box.
 		//! @param box The box to be drawn.
+		//! @param color The color of the box.
+		void draw_box(units::ScreenSpace::Box const& box, units::colors::Color color);
+
+		//! Draws a box with a border.
+		//! @param box The box to be drawn.
+		//! @param border_width The width of the box's border.
 		//! @param border_color The color of the box's border.
 		//! @param fill_color The color of the box's interior.
-		void draw_box(units::ScreenSpace::Box const& box, units::colors::Color border_color, units::colors::Color fill_color);
+		void draw_box
+			( units::ViewSpace::Box const& box
+			, units::ViewSpace::scalar_t border_width
+			, units::colors::Color border_color
+			, units::colors::Color fill_color
+			);
+
+		//! Draws a box with a border.
+		//! @param box The box to be drawn.
+		//! @param border_width The width of the box's border.
+		//! @param border_color The color of the box's border.
+		//! @param fill_color The color of the box's interior.
+		void draw_box
+			( units::ScreenSpace::Box const& box
+			, units::ScreenSpace::scalar_t border_width
+			, units::colors::Color border_color
+			, units::colors::Color fill_color
+			);
 	private:
 		SDL_Renderer* _renderer;
 		int _w;
@@ -106,8 +144,9 @@ namespace sdl
 		SDL_Texture* _target;
 
 		GLuint _vbo;
-		GLuint _quad_ibo;
+		GLuint _ibo;
 
 		void set_draw_color(units::colors::Color color);
+		void draw_triangle_strip(std::vector<units::ViewSpace::Point> vertices, units::colors::Color color);
 	};
 }

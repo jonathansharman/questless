@@ -13,14 +13,57 @@
 #include <gtc/type_ptr.hpp>
 
 #include "sdl/resources.h"
+#include "units/math.h"
 
 using std::vector;
 using std::runtime_error;
 
 using namespace units;
 
+//! @todo Can use ranges algorithms for the various vector<ScreenSpace::Point> -> vector<ViewSpace::Point> conversions, when available.
+
 namespace sdl
 {
+	namespace
+	{
+		bool has_positive_winding_order(vector<ViewSpace::Point> const& vertices)
+		{
+			// Winding order is positive iff "winding" is positive.
+			float winding = 0.0f;
+			for (std::size_t i = 0; i < vertices.size(); ++i) {
+				auto const p1 = vertices[i];
+				auto const p2 = i == vertices.size() - 1 ? vertices.front() : vertices[i + 1];
+
+				winding += (p1.x() - p2.x()) * (p2.y() + p1.y());
+			}
+			return winding >= 0.0f;
+		}
+
+		bool is_convex(vector<ViewSpace::Point> const& vertices)
+		{
+			float last_cross_product = 0.0f;
+			for (std::size_t i = 0; i < vertices.size(); ++i) {
+				auto const p0 = i == 0 ? vertices.back() : vertices[i - 1];
+				auto const p1 = vertices[i];
+				auto const p2 = i == vertices.size() - 1 ? vertices.front() : vertices[i + 1];
+
+				float cross_product = (p1.x() - p0.x()) * p2.y() - p1.y() - p1.y() - p0.y() * p2.x() - p1.x();
+				if (last_cross_product == 0.0f) {
+					last_cross_product = cross_product;
+				} else if (last_cross_product * cross_product < 0.0f) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		std::vector<std::vector<ViewSpace::Point>> convex_components(std::vector<ViewSpace::Point> polygon)
+		{
+			//! @todo Implement.
+			return {polygon};
+		}
+	}
+
 	Renderer::Renderer(Window& window, int width, int height) : _w{width}, _h{height}, _target{nullptr}
 	{
 		_renderer = SDL_CreateRenderer(window.sdl_ptr(), -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_TARGETTEXTURE);
@@ -43,17 +86,17 @@ namespace sdl
 		// Create VBO.
 		glGenBuffers(1, &_vbo);
 
-		{ // Create IBO.
-			GLuint index_data[] { 0, 1, 2, 3 };
-			glGenBuffers(1, &_quad_ibo);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _quad_ibo);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), index_data, GL_DYNAMIC_DRAW);
-		}
+		// Create IBO.
+		glGenBuffers(1, &_ibo);
 	}
 
 	Renderer::~Renderer()
 	{
 		SDL_DestroyRenderer(_renderer);
+
+		// Delete buffer objects.
+		glDeleteBuffers(1, &_vbo);
+		glDeleteBuffers(1, &_ibo);
 	}
 
 	SDL_Texture* Renderer::target() const
@@ -76,7 +119,7 @@ namespace sdl
 		SDL_RenderClear(_renderer);
 	}
 
-	void Renderer::draw_lines(vector<ScreenSpace::Point> vertices, colors::Color color)
+	void Renderer::draw_lines(vector<ViewSpace::Point> const& vertices, colors::Color color)
 	{
 		// Bind program.
 		solid_program().use();
@@ -96,8 +139,8 @@ namespace sdl
 		vector<GLfloat> vertex_data;
 		vertex_data.reserve(2 * vertices.size());
 		for (auto const& vertex : vertices) {
-			vertex_data.push_back(static_cast<GLfloat>(vertex.x()));
-			vertex_data.push_back(static_cast<GLfloat>(vertex.y()));
+			vertex_data.push_back(vertex.x());
+			vertex_data.push_back(vertex.y());
 		}
 		glBufferData(GL_ARRAY_BUFFER, 2 * vertices.size() * sizeof(GLfloat), vertex_data.data(), GL_DYNAMIC_DRAW);
 		{
@@ -107,12 +150,10 @@ namespace sdl
 			glVertexAttribPointer(position_attribute, component_count, GL_FLOAT, GL_FALSE, stride, pointer_offset);
 		}
 
-		GLuint lines_ibo;
-		{ // Create IBO.
+		{ // Set IBO.
 			vector<GLuint> index_data(vertices.size());
 			std::iota(index_data.begin(), index_data.end(), 0);
-			glGenBuffers(1, &lines_ibo);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, lines_ibo);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_data.size() * sizeof(GLuint), index_data.data(), GL_DYNAMIC_DRAW);
 		}
 
@@ -125,12 +166,217 @@ namespace sdl
 
 		// Disable vertex attributes.
 		glDisableVertexAttribArray(position_attribute);
-
-		// Delete IBO.
-		glDeleteBuffers(1, &lines_ibo);
+	}
+	
+	void Renderer::draw_lines(vector<ScreenSpace::Point> const& vertices, colors::Color color)
+	{
+		vector<ViewSpace::Point> view_space_vertices;
+		for (auto const& vertex : vertices) {
+			view_space_vertices.push_back(to_view_space(vertex));
+		}
+		draw_lines(view_space_vertices, color);
 	}
 
-	void Renderer::draw_polygon(vector<ViewSpace::Point> vertices, colors::Color color, Fill fill)
+	void Renderer::draw_polygon(vector<ViewSpace::Point> const& vertices, colors::Color color)
+	{
+		// Don't bother rendering transparent polygons.
+		if (color.alpha() == 0.0f) { return; }
+
+		// Degenerate polygons are not visible.
+		if (vertices.size() < 3) { return; }
+
+		//! @todo Reenable after convex_components() is implemented.
+		// Break solid non-convex polygons into convex subpolygons.
+		//if (fill == Fill::solid && !is_convex(vertices)) {
+		//	for (auto const& polygon : convex_components(vertices)) {
+		//		draw_polygon(polygon, color, Fill::solid);
+		//	}
+		//	return;
+		//}
+
+		// Bind program.
+		solid_program().use();
+
+		// Enable vertex attributes.
+		static GLuint position_attribute = solid_program().get_attribute_handle("position");
+		glEnableVertexAttribArray(position_attribute);
+
+		{ // Set model matrix to identity.
+			glm::mat4 model_matrix;
+			static GLuint model_matrix_uniform = solid_program().get_uniform_handle("model_matrix");
+			glUniformMatrix4fv(model_matrix_uniform, 1, GL_FALSE, glm::value_ptr(model_matrix));
+		}
+
+		{ // Set vertex data.
+			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+			vector<GLfloat> vertex_data;
+			vertex_data.reserve(2 * vertices.size());
+			for (auto const& vertex : vertices) {
+				vertex_data.push_back(vertex.x());
+				vertex_data.push_back(vertex.y());
+			}
+			glBufferData(GL_ARRAY_BUFFER, 2 * vertices.size() * sizeof(GLfloat), vertex_data.data(), GL_DYNAMIC_DRAW);
+			{
+				GLint const component_count = 2;
+				GLsizei const stride = 2 * sizeof(GLfloat);
+				void *const pointer_offset = nullptr;
+				glVertexAttribPointer(position_attribute, component_count, GL_FLOAT, GL_FALSE, stride, pointer_offset);
+			}
+		}
+
+		{ // Set IBO.
+			vector<GLuint> index_data(vertices.size());
+			std::iota(index_data.begin(), index_data.end(), 0);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_data.size() * sizeof(GLuint), index_data.data(), GL_DYNAMIC_DRAW);
+		}
+
+		// Set color uniform.
+		static GLuint color_uniform = solid_program().get_uniform_handle("color");
+		glUniform4f(color_uniform, color.red(), color.green(), color.blue(), color.alpha());
+
+		// Render.
+		glDrawElements(GL_TRIANGLE_FAN, vertices.size(), GL_UNSIGNED_INT, nullptr);
+
+		// Disable vertex attributes.
+		glDisableVertexAttribArray(position_attribute);
+	}
+
+	void Renderer::draw_polygon(vector<ScreenSpace::Point> const& vertices, colors::Color color)
+	{
+		vector<ViewSpace::Point> view_space_vertices;
+		for (auto const& vertex : vertices) {
+			view_space_vertices.push_back(to_view_space(vertex));
+		}
+		draw_polygon(view_space_vertices, color);
+	}
+	
+	void Renderer::draw_polygon
+		( vector<ViewSpace::Point> const& vertices
+		, ViewSpace::scalar_t border_width
+		, colors::Color border_color
+		, colors::Color fill_color
+		)
+	{
+		// A polygon must have at least three vertices.
+		if (vertices.size() < 3) { return; }
+
+		// Construct fill vertices.
+		vector<ViewSpace::Point> fill_vertices;
+		bool const positive_winding_order = has_positive_winding_order(vertices);
+		for (std::size_t i = 0; i < vertices.size(); ++i) {
+			auto const p_minus_1 = i == 0 ? vertices.back() : vertices[i - 1];
+			auto const p_plus_1 = i == vertices.size() - 1 ? vertices.front() : vertices[i + 1];
+
+			// Edge direction depends on winding order.
+			auto const p0 = positive_winding_order ? p_minus_1 : p_plus_1;
+			auto const p1 = vertices[i];
+			auto const p2 = positive_winding_order ? p_plus_1 : p_minus_1;
+
+			// Parametric 2D line type.
+			struct Line { float x0, y0, mx, my; };
+
+			Line l1{p0.x(), p0.y(), p1.x() - p0.x(), p1.y() - p0.y()};
+			Line l2{p1.x(), p1.y(), p2.x() - p1.x(), p2.y() - p1.y()};
+
+			// If the segments are precisely parallel, we can ignore this vertex.
+			if (l1.my * l2.mx == l2.my * l1.mx) { continue; }
+
+			auto offset_start_point = [border_width](Line& l) {
+				// Find perpendicular slopes.
+				auto mx_prime = -l.my;
+				auto my_prime = l.mx;
+				// Normalize to border width.
+				auto length = sqrt(math::square(mx_prime) + math::square(my_prime));
+				mx_prime = mx_prime * border_width / length;
+				my_prime = my_prime * border_width / length;
+				// Offset first segment's starting point.
+				l.x0 += mx_prime;
+				l.y0 += my_prime;
+			};
+			offset_start_point(l1);
+			offset_start_point(l2);
+
+			// Find the intersection and add it to fill vertices. (Guaranteed to be unique since we ignore parallel segments.)
+			auto l2_t_intersect = ((l2.y0 - l1.y0) * l1.mx - (l2.x0 - l1.x0) * l1.my) / (l2.mx * l1.my - l2.my * l1.mx);
+			fill_vertices.push_back(ViewSpace::Point{l2.x0 + l2.mx * l2_t_intersect, l2.y0 + l2.my * l2_t_intersect});
+		}
+
+		// Draw fill color.
+		draw_polygon(fill_vertices, fill_color);
+
+		// Draw border color.
+		vector<ViewSpace::Point> border_vertices;
+		for (std::size_t i = 0; i < vertices.size(); ++i) {
+			border_vertices.push_back(vertices[i]);
+			border_vertices.push_back(fill_vertices[i]);
+		}
+		// Close the loop by repeating the first two vertices.
+		border_vertices.push_back(vertices.front());
+		border_vertices.push_back(fill_vertices.front());
+		draw_triangle_strip(border_vertices, border_color);
+	}
+	
+	void Renderer::draw_polygon
+		( vector<ScreenSpace::Point> const& vertices
+		, ScreenSpace::scalar_t border_width
+		, colors::Color border_color
+		, colors::Color fill_color
+		)
+	{
+		vector<ViewSpace::Point> view_space_vertices;
+		for (auto const& vertex : vertices) {
+			view_space_vertices.push_back(to_view_space(vertex));
+		}
+		draw_polygon(view_space_vertices, to_view_space(border_width), border_color, fill_color);
+	}
+
+	void Renderer::draw_box(ViewSpace::Box const& box, colors::Color color)
+	{
+		draw_polygon({top_left(box), top_right(box), bottom_right(box), bottom_left(box)}, color);
+	}
+
+	void Renderer::draw_box(ScreenSpace::Box const& box, colors::Color color)
+	{
+		draw_box(to_view_space(box), color);
+	}
+
+	void Renderer::draw_box
+		( ScreenSpace::Box const& box
+		, ScreenSpace::scalar_t border_width
+		, colors::Color border_color
+		, colors::Color fill_color
+		)
+	{
+		draw_box(to_view_space(box), to_view_space(border_width), border_color, fill_color);
+	}
+	
+	void Renderer::draw_box
+		( ViewSpace::Box const& box
+		, ViewSpace::scalar_t border_width
+		, colors::Color border_color
+		, colors::Color fill_color
+		)
+	{
+		draw_polygon({top_left(box), top_right(box), bottom_right(box), bottom_left(box)}, border_width, border_color, fill_color);
+	}
+
+	void Renderer::set_draw_color(colors::Color color)
+	{
+		auto error = SDL_SetRenderDrawColor
+			( _renderer
+			, static_cast<uint8_t>(255 * color.red())
+			, static_cast<uint8_t>(255 * color.green())
+			, static_cast<uint8_t>(255 * color.blue())
+			, static_cast<uint8_t>(255 * color.alpha())
+			);
+		if (error) {
+			std::string message = std::string{"Failed to set renderer draw color. SDL error: "} + SDL_GetError();
+			throw runtime_error{message};
+		}
+	}
+
+	void Renderer::draw_triangle_strip(vector<ViewSpace::Point> vertices, colors::Color color)
 	{
 		// Bind program.
 		solid_program().use();
@@ -162,12 +408,10 @@ namespace sdl
 			}
 		}
 
-		GLuint polygon_ibo;
-		{ // Create IBO.
+		{ // Set IBO.
 			vector<GLuint> index_data(vertices.size());
 			std::iota(index_data.begin(), index_data.end(), 0);
-			glGenBuffers(1, &polygon_ibo);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, polygon_ibo);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_data.size() * sizeof(GLuint), index_data.data(), GL_DYNAMIC_DRAW);
 		}
 
@@ -176,216 +420,9 @@ namespace sdl
 		glUniform4f(color_uniform, color.red(), color.green(), color.blue(), color.alpha());
 
 		// Render.
-		switch (fill) {
-			case Fill::solid:
-				glDrawElements(GL_POLYGON, vertices.size(), GL_UNSIGNED_INT, nullptr);
-				break;
-			case Fill::outline:
-				glDrawElements(GL_LINE_LOOP, vertices.size(), GL_UNSIGNED_INT, nullptr);
-				break;
-		}
+		glDrawElements(GL_TRIANGLE_STRIP, vertices.size(), GL_UNSIGNED_INT, nullptr);
 
 		// Disable vertex attributes.
 		glDisableVertexAttribArray(position_attribute);
-
-		// Delete IBO.
-		glDeleteBuffers(1, &polygon_ibo);
-	}
-	
-	void Renderer::draw_polygon
-		( vector<ViewSpace::Point> vertices
-		, ViewSpace::scalar_t border_width
-		, colors::Color border_color
-		, colors::Color fill_color
-		)
-	{
-		// Draw border.
-		draw_polygon(vertices, border_color, Fill::solid);
-
-		//! @todo Compute winding order. (Can use interior angle sum formula to check.)
-
-		vector<ViewSpace::Point> fill_vertices;
-		for (std::size_t i = 0; i < vertices.size(); ++i) {
-			auto p0 = i == 0 ? vertices.back() : vertices[i - 1];
-			auto p1 = vertices[i];
-			auto p2 = i == vertices.size() - 1 ? vertices.front() : vertices[i + 1];
-
-			// Parametric 2D line type.
-			struct Line { float x0, y0, mx, my; };
-
-			Line l1{p0.x(), p0.y(), p1.x() - p0.x(), p1.y() - p0.y()};
-			Line l2{p1.x(), p1.y(), p2.x() - p1.x(), p2.y() - p1.y()};
-
-			// If the segments are precisely parallel, we can ignore this vertex.
-			if (l1.my * l2.mx == l2.my * l1.mx) { continue; }
-
-			// Find slopes perpendicular to first line.
-			auto l1_mx_prime = -l1.my;
-			auto l1_my_prime = l1.mx;
-			// Normalize to border width.
-			auto length1 = sqrt(l1_mx_prime * l1_mx_prime + l1_my_prime * l1_my_prime);
-			l1_mx_prime = l1_mx_prime * border_width / length1;
-			l1_my_prime = l1_my_prime * border_width / length1;
-			// Offset first segment's starting point.
-			l1.x0 += l1_mx_prime;
-			l1.y0 += l1_my_prime;
-
-			// L2 perpendicular slopes
-			auto l2_mx_prime = -l2.my;
-			auto l2_my_prime = l2.mx;
-			// Normalize.
-			auto length2 = sqrt(l2_mx_prime * l2_mx_prime + l2_my_prime * l2_my_prime);
-			l2_mx_prime = l2_mx_prime * border_width / length2;
-			l2_my_prime = l2_my_prime * border_width / length2;
-			// Offset second segment's starting point.
-			l2.x0 += l2_mx_prime;
-			l2.y0 += l2_my_prime;
-
-			// Find the intersection and add it to fill vertices. (Guaranteed to be unique since we 
-			auto l2_t_intersect = ((l2.y0 - l1.y0) * l1.mx - (l2.x0 - l1.x0) * l1.my) / (l2.mx * l1.my - l2.my * l1.mx);
-			fill_vertices.push_back(ViewSpace::Point{l2.x0 + l2.mx * l2_t_intersect, l2.y0 + l2.my * l2_t_intersect});
-		}
-
-		// Draw fill color.
-		draw_polygon(fill_vertices, fill_color, Fill::solid);
-	}
-
-	void Renderer::draw_box(ScreenSpace::Box const& box, colors::Color color, Fill fill)
-	{
-		// Bind program.
-		solid_program().use();
-
-		// Enable vertex attributes.
-		static GLuint position_attribute = solid_program().get_attribute_handle("position");
-		glEnableVertexAttribArray(position_attribute);
-
-		{ // Set model matrix to identity.
-			glm::mat4 model_matrix;
-			static GLuint model_matrix_uniform = solid_program().get_uniform_handle("model_matrix");
-			glUniformMatrix4fv(model_matrix_uniform, 1, GL_FALSE, glm::value_ptr(model_matrix));
-		}
-
-		{ // Set vertex data.
-			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-			const float offset = fill == Fill::solid ? 0.0f : 0.375f;
-			GLfloat vertex_data[] =
-				{ left(box) + offset, top(box) + offset
-				, right(box) - offset, top(box) + offset
-				, right(box) - offset, bottom(box) - offset
-				, left(box) + offset, bottom(box) - offset
-				};
-			glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_DYNAMIC_DRAW);
-			{
-				GLint const component_count = 2;
-				GLsizei const stride = 2 * sizeof(GLfloat);
-				void *const pointer_offset = nullptr;
-				glVertexAttribPointer(position_attribute, component_count, GL_FLOAT, GL_FALSE, stride, pointer_offset);
-			}
-		}
-
-		// Set index data.
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _quad_ibo);
-
-		// Set color uniform.
-		static GLuint color_uniform = solid_program().get_uniform_handle("color");
-		glUniform4f(color_uniform, color.red(), color.green(), color.blue(), color.alpha());
-
-		// Render.
-		switch (fill) {
-			case Fill::solid:
-				glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, nullptr);
-				break;
-			case Fill::outline:
-				glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, nullptr);
-				break;
-		}
-
-		// Disable vertex attributes.
-		glDisableVertexAttribArray(position_attribute);
-	}
-
-	void Renderer::draw_box(ScreenSpace::Box const& box, colors::Color border_color, colors::Color fill_color)
-	{
-		// Bind program.
-		solid_program().use();
-
-		// Enable vertex attributes.
-		static GLuint position_attribute = solid_program().get_attribute_handle("position");
-		glEnableVertexAttribArray(position_attribute);
-
-		{ // Set model matrix to identity.
-			glm::mat4 model_matrix;
-			static GLuint model_matrix_uniform = solid_program().get_uniform_handle("model_matrix");
-			glUniformMatrix4fv(model_matrix_uniform, 1, GL_FALSE, glm::value_ptr(model_matrix));
-		}
-
-		// Set index data.
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _quad_ibo);
-
-		{ // Set fill box vertex data.
-			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-			GLfloat vertex_data[] =
-				{ static_cast<float>(left(box)), static_cast<float>(top(box))
-				, static_cast<float>(right(box)), static_cast<float>(top(box))
-				, static_cast<float>(right(box)), static_cast<float>(bottom(box))
-				, static_cast<float>(left(box)), static_cast<float>(bottom(box))
-				};
-			glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_DYNAMIC_DRAW);
-			{
-				GLint const component_count = 2;
-				GLsizei const stride = 2 * sizeof(GLfloat);
-				void *const pointer_offset = nullptr;
-				glVertexAttribPointer(position_attribute, component_count, GL_FLOAT, GL_FALSE, stride, pointer_offset);
-			}
-		}
-
-		// Set color uniform to fill color.
-		static GLuint color_uniform = solid_program().get_uniform_handle("color");
-		glUniform4f(color_uniform, fill_color.red(), fill_color.green(), fill_color.blue(), fill_color.alpha());
-
-		// Render fill color.
-		glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, nullptr);
-
-		{ // Set border box vertex data.
-			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-			constexpr float offset = 0.375f;
-			GLfloat vertex_data[] =
-				{ left(box) + offset, top(box) + offset
-				, right(box) - offset, top(box) + offset
-				, right(box) - offset, bottom(box) - offset
-				, left(box) + offset, bottom(box) - offset
-				};
-			glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_DYNAMIC_DRAW);
-			{
-				GLint const component_count = 2;
-				GLsizei const stride = 2 * sizeof(GLfloat);
-				void *const pointer_offset = nullptr;
-				glVertexAttribPointer(position_attribute, component_count, GL_FLOAT, GL_FALSE, stride, pointer_offset);
-			}
-		}
-
-		// Set color uniform to border color.
-		glUniform4f(color_uniform, border_color.red(), border_color.green(), border_color.blue(), border_color.alpha());
-
-		// Render border color.
-		glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, nullptr);
-
-		// Disable vertex attributes.
-		glDisableVertexAttribArray(position_attribute);
-	}
-
-	void Renderer::set_draw_color(colors::Color color)
-	{
-		auto error = SDL_SetRenderDrawColor
-			( _renderer
-			, static_cast<uint8_t>(255 * color.red())
-			, static_cast<uint8_t>(255 * color.green())
-			, static_cast<uint8_t>(255 * color.blue())
-			, static_cast<uint8_t>(255 * color.alpha())
-			);
-		if (error) {
-			std::string message = std::string{"Failed to set renderer draw color. SDL error: "} + SDL_GetError();
-			throw runtime_error{message};
-		}
 	}
 }

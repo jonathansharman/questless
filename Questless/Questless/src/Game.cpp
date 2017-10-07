@@ -559,8 +559,10 @@ namespace questless
 		camera().draw_lines({Layout::dflt().to_world(origin), Layout::dflt().to_world(r_axis)}, colors::red());
 
 		_txt_test1->draw(ScreenSpace::Point{0, 0});
-		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{0, 0}, ScreenSpace::Vector{15, 15}}, colors::blue(), Fill::outline);
+		renderer().draw_box(ScreenSpace::Box{ScreenSpace::Point{0, 0}, ScreenSpace::Vector{15, 15}}, 1, colors::blue(), colors::clear());
 
+		//! @todo Uncomment to test polygon rendering after adding support for non-convex polygons.
+#if 0
 		{ // Draw hexagon.
 			std::vector<ViewSpace::Point> vertices;
 			for (int i = 0; i < 6; ++i) {
@@ -568,21 +570,38 @@ namespace questless
 				auto const offset = ViewSpace::Vector{static_cast<float>(cos(angle) * 50), static_cast<float>(sin(angle) * 50)};
 				vertices.push_back(ViewSpace::Point{50.0f, 50.0f} + offset);
 			}
-			float border_width = static_cast<float>(10 * sin(constants::tau * duration_cast<GameSeconds>(clock::now() - _time_last_state_change).count() / 4));
-			renderer().draw_polygon(vertices, border_width, units::colors::white(), units::colors::orange());
+			float border_width = abs(static_cast<float>(10 * sin(constants::tau * duration_cast<GameSeconds>(clock::now() - _time_last_state_change).count() / 4)));
+			renderer().draw_polygon(vertices, border_width, colors::white(), colors::orange());
+
+			// Reverse hexagon and draw again. (Testing winding-order detection.)
+			auto reverse_vertices = std::vector<ViewSpace::Point>(vertices.rbegin(), vertices.rend());
+			for (auto& v : reverse_vertices) { v.y() += 100.0f; }
+			renderer().draw_polygon(reverse_vertices, border_width, colors::white(), colors::clear());
 		}
-		{ // Draw right triangle.
+		{ // Draw right triangles. (Different border widths and winding orders.)
 			renderer().draw_polygon
 				(
 					{ ViewSpace::Point{100.0f, 0.0f}
-					, ViewSpace::Point{100.0f, 100.0f}
 					, ViewSpace::Point{200.0f, 0.0f}
+					, ViewSpace::Point{100.0f, 100.0f}
 					}
-				, units::colors::cyan()
-				, Fill::solid
+				, 1.0f
+				, colors::red()
+				, colors::cyan()
+				);
+			renderer().draw_polygon
+				(
+					{ ViewSpace::Point{100.0f, 100.0f}
+					, ViewSpace::Point{100.0f, 200.0f}
+					, ViewSpace::Point{200.0f, 100.0f}
+					}
+				, 5.0f
+				, colors::cyan()
+				, colors::red()
 				);
 		}
 		{ // Draw non-convex polygon.
+			float border_width = abs(static_cast<float>(20 * sin(constants::tau * duration_cast<GameSeconds>(clock::now() - _time_last_state_change).count() / 4)));
 			renderer().draw_polygon
 				(
 					{ ViewSpace::Point{200.0f, 0.0f}
@@ -591,22 +610,27 @@ namespace questless
 					, ViewSpace::Point{300.0f, 100.0f}
 					, ViewSpace::Point{200.0f, 100.0f}
 					}
-				, units::colors::magenta()
-				, Fill::solid
+				, border_width
+				, colors::lime()
+				, colors::magenta()
 				);
 		}
 		{ // Draw a star outline.
 			ViewSpace::Point const center{350.0f, 50.0f};
 			std::vector<ViewSpace::Point> star_vertices;
-			auto start_angle = constants::tau * duration_cast<GameSeconds>(clock::now() - _time_last_state_change).count() / 4;
+			auto start_angle = 0;// constants::tau * duration_cast<GameSeconds>(clock::now() - _time_last_state_change).count() / 4;
 			for (int i = 0; i < 10; ++i) {
 				float const radius = i & 1 ? 20.0f : 50.0f;
 				auto const angle = constants::tau / 10 * i + start_angle;
 				auto const offset = ViewSpace::Vector{static_cast<float>(cos(angle) * radius), static_cast<float>(sin(angle) * radius)};
 				star_vertices.push_back(center + offset);
 			}
-			renderer().draw_polygon(star_vertices, units::colors::lime(), Fill::outline);
+			float border_width = abs(static_cast<float>(8 * sin(constants::tau * duration_cast<GameSeconds>(clock::now() - _time_last_state_change).count() / 4)));
+			//renderer().draw_polygon(star_vertices, colors::lime(), Fill::outline);
+			//renderer().draw_polygon(star_vertices, colors::lime(), Fill::solid);
+			renderer().draw_polygon(star_vertices, border_width, colors::red(0.5f), colors::blue(0.5f));
 		}
+#endif
 	}
 
 	Game::UpdateResult Game::update_playing()

@@ -52,5 +52,10 @@ namespace units
 
 	inline int bottom(TextureSpace::Box const& box) { return box.position.v() + box.size.v(); }
 
+	inline TextureSpace::Point top_left(TextureSpace::Box const& box) { return box.position; }
+	inline TextureSpace::Point top_right(TextureSpace::Box const& box) { return TextureSpace::Point{box.position.u() + box.size.u(), box.position.v()}; }
+	inline TextureSpace::Point bottom_left(TextureSpace::Box const& box) { return TextureSpace::Point{box.position.u(), box.position.v() + box.size.v()}; }
+	inline TextureSpace::Point bottom_right(TextureSpace::Box const& box) { return box.position + box.size; }
+
 	inline TextureSpace::Point center(TextureSpace::Box const& box) { return box.position + box.size / 2; }
 }

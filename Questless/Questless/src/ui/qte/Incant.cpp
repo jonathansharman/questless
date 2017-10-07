@@ -89,7 +89,6 @@ namespace questless::qte
 				, ScreenSpace::Vector{metronome_width, window_height}
 				}
 			, _tick ? colors::red() : colors::white()
-			, Fill::solid
 			);
 
 		draw_title(*_txt_title);

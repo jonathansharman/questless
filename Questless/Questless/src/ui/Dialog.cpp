@@ -39,7 +39,6 @@ namespace questless
 				, ScreenSpace::Vector{title.width(), title.height()}
 				}
 			, colors::black(0.5f)
-			, sdl::Fill::solid
 			);
 		title.draw(ScreenSpace::Point{x_center, 0}, TextureSpace::align_center);
 	}
@@ -52,7 +51,6 @@ namespace questless
 				, ScreenSpace::Vector{prompt.width(), prompt.height()}
 				}
 			, colors::black(0.5f)
-			, sdl::Fill::solid
 			);
 		prompt.draw(ScreenSpace::Point{x_center, _prompt_top}, TextureSpace::align_center);
 	}
@@ -65,7 +63,6 @@ namespace questless
 				, ScreenSpace::Vector{selector.width(), selector.height()}
 				}
 			, colors::black(0.5f)
-			, sdl::Fill::solid
 			);
 		selector.draw(ScreenSpace::Point{x_center, _selector_top}, TextureSpace::align_center);
 	}

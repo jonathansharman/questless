@@ -28,7 +28,7 @@ namespace questless
 					{ ScreenSpace::Point{0, 0}
 					, ScreenSpace::Vector{_texture->width(), _texture->height()}
 					};
-				renderer().draw_box(outline, colors::red(), sdl::Fill::outline);
+				renderer().draw_box(outline, 1, colors::red(), colors::clear());
 			}
 
 			for (BodyPart const& part : body) {
@@ -46,7 +46,7 @@ namespace questless
 						green = 1.0f;
 					}
 					colors::Color color{red, green, 0.0f, 1.0f};
-					renderer().draw_box(region.translated(body.offset_to_center()), colors::black(), color);
+					renderer().draw_box(region.translated(body.offset_to_center()), 1, colors::black(), color);
 				}
 			}
 		}, solid_program());

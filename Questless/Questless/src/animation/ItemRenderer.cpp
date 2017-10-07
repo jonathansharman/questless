@@ -125,8 +125,8 @@ namespace questless
 			}
 			texture_manager()[texture_handle].draw(_position, TextureSpace::align_left, TextureSpace::align_top, draw_color_factor);
 			colors::Color fill_color{draw_color_factor.red(), draw_color_factor.green(), draw_color_factor.blue(), draw_color_factor.alpha()};
-			renderer().draw_box(ScreenSpace::Box{_position, ScreenSpace::Vector{6, 55}}, colors::black(), sdl::Fill::solid);
-			renderer().draw_box(ScreenSpace::Box{_position, ScreenSpace::Vector{6, static_cast<int>(55 * gatestone.mana / gatestone.capacity())}}, colors::black(), fill_color);
+			renderer().draw_box(ScreenSpace::Box{_position, ScreenSpace::Vector{6, 55}}, colors::black());
+			renderer().draw_box(ScreenSpace::Box{_position, ScreenSpace::Vector{6, static_cast<int>(55 * gatestone.mana / gatestone.capacity())}}, 1, colors::black(), fill_color);
 
 			//! @todo Clean this up. Remove magic numbers.
 		}

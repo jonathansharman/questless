@@ -52,6 +52,9 @@ namespace units
 		{
 			return std::tuple<typename Axis<DimensionIndices>::Align...>{};
 		}
+
+		// Private constructor to prevent instantiation.
+		Space() = default;
 	public:
 		using scalar_t = ScalarType;
 		static constexpr int dimension_count = DimensionCount;
