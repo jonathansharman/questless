@@ -5,46 +5,46 @@
 
 #pragma once
 
-#include "ColorSpace.h"
+#include "color_space.h"
 
 namespace units::colors
 {
-	using Color = units::ColorSpace::Point;
-	using ColorFactor = units::ColorSpace::Vector;
+	using color = units::color_space::point;
+	using color_factor = units::color_space::vector;
 
-	constexpr Color clear(float red = 0.0, float green = 0.0, float blue = 0.0) { return Color{red, green, blue, 0.0f}; }
-	constexpr Color white(float alpha = 1.0) { return Color{1.0f, 1.0f, 1.0f, alpha}; }
-	constexpr Color silver(float alpha = 1.0) { return Color{0.75f, 0.75f, 0.75f, alpha}; }
-	constexpr Color gray(float alpha = 1.0) { return Color{0.5f, 0.5f, 0.5f, alpha}; }
-	constexpr Color black(float alpha = 1.0) { return Color{0.0f, 0.0f, 0.0f, alpha}; }
-	constexpr Color red(float alpha = 1.0) { return Color{1.0f, 0.0f, 0.0f, alpha}; }
-	constexpr Color lime(float alpha = 1.0) { return Color{0.0f, 1.0f, 0.0f, alpha}; }
-	constexpr Color green(float alpha = 1.0) { return Color{0.0f, 0.75f, 0.0f, alpha}; }
-	constexpr Color blue(float alpha = 1.0) { return Color{0.0f, 0.0f, 1.0f, alpha}; }
-	constexpr Color cyan(float alpha = 1.0) { return Color{0.0f, 1.0f, 1.0f, alpha}; }
-	constexpr Color yellow(float alpha = 1.0) { return Color{1.0f, 1.0f, 0.0f, alpha}; }
-	constexpr Color magenta(float alpha = 1.0) { return Color{1.0f, 0.0f, 1.0f, alpha}; }
-	constexpr Color orange(float alpha = 1.0) { return Color{1.0f, 0.5f, 0.0f, alpha}; }
-	constexpr Color purple(float alpha = 1.0) { return Color{0.5f, 0.0f, 0.5f, alpha}; }
-	constexpr Color teal(float alpha = 1.0) { return Color{0.0f, 0.5f, 0.5f, alpha}; }
-	constexpr Color tan(float alpha = 1.0) { return Color{0.75f, 0.625f, 0.5f, alpha}; }
-	constexpr Color brown(float alpha = 1.0) { return Color{0.5f, 0.25f, 0.0f, alpha}; }
+	constexpr color clear(float red = 0.0, float green = 0.0, float blue = 0.0) { return color{red, green, blue, 0.0f}; }
+	constexpr color white(float alpha = 1.0) { return color{1.0f, 1.0f, 1.0f, alpha}; }
+	constexpr color silver(float alpha = 1.0) { return color{0.75f, 0.75f, 0.75f, alpha}; }
+	constexpr color gray(float alpha = 1.0) { return color{0.5f, 0.5f, 0.5f, alpha}; }
+	constexpr color black(float alpha = 1.0) { return color{0.0f, 0.0f, 0.0f, alpha}; }
+	constexpr color red(float alpha = 1.0) { return color{1.0f, 0.0f, 0.0f, alpha}; }
+	constexpr color lime(float alpha = 1.0) { return color{0.0f, 1.0f, 0.0f, alpha}; }
+	constexpr color green(float alpha = 1.0) { return color{0.0f, 0.75f, 0.0f, alpha}; }
+	constexpr color blue(float alpha = 1.0) { return color{0.0f, 0.0f, 1.0f, alpha}; }
+	constexpr color cyan(float alpha = 1.0) { return color{0.0f, 1.0f, 1.0f, alpha}; }
+	constexpr color yellow(float alpha = 1.0) { return color{1.0f, 1.0f, 0.0f, alpha}; }
+	constexpr color magenta(float alpha = 1.0) { return color{1.0f, 0.0f, 1.0f, alpha}; }
+	constexpr color orange(float alpha = 1.0) { return color{1.0f, 0.5f, 0.0f, alpha}; }
+	constexpr color purple(float alpha = 1.0) { return color{0.5f, 0.0f, 0.5f, alpha}; }
+	constexpr color teal(float alpha = 1.0) { return color{0.0f, 0.5f, 0.5f, alpha}; }
+	constexpr color tan(float alpha = 1.0) { return color{0.75f, 0.625f, 0.5f, alpha}; }
+	constexpr color brown(float alpha = 1.0) { return color{0.5f, 0.25f, 0.0f, alpha}; }
 
-	constexpr ColorFactor clear_factor(float alpha) { return ColorFactor{1.0f, 1.0f, 1.0f, alpha}; }
-	constexpr ColorFactor white_factor(float alpha = 1.0) { return ColorFactor{1.0f, 1.0f, 1.0f, alpha}; }
-	constexpr ColorFactor silver_factor(float alpha = 1.0) { return ColorFactor{0.75f, 0.75f, 0.75f, alpha}; }
-	constexpr ColorFactor gray_factor(float alpha = 1.0) { return ColorFactor{0.5f, 0.5f, 0.5f, alpha}; }
-	constexpr ColorFactor black_factor(float alpha = 1.0) { return ColorFactor{0.0f, 0.0f, 0.0f, alpha}; }
-	constexpr ColorFactor red_factor(float alpha = 1.0) { return ColorFactor{1.0f, 0.0f, 0.0f, alpha}; }
-	constexpr ColorFactor lime_factor(float alpha = 1.0) { return ColorFactor{0.0f, 1.0f, 0.0f, alpha}; }
-	constexpr ColorFactor green_factor(float alpha = 1.0) { return ColorFactor{0.0f, 0.75f, 0.0f, alpha}; }
-	constexpr ColorFactor blue_factor(float alpha = 1.0) { return ColorFactor{0.0f, 0.0f, 1.0f, alpha}; }
-	constexpr ColorFactor cyan_factor(float alpha = 1.0) { return ColorFactor{0.0f, 1.0f, 1.0f, alpha}; }
-	constexpr ColorFactor yellow_factor(float alpha = 1.0) { return ColorFactor{1.0f, 1.0f, 0.0f, alpha}; }
-	constexpr ColorFactor magenta_factor(float alpha = 1.0) { return ColorFactor{1.0f, 0.0f, 1.0f, alpha}; }
-	constexpr ColorFactor orange_factor(float alpha = 1.0) { return ColorFactor{1.0f, 0.5f, 0.0f, alpha}; }
-	constexpr ColorFactor purple_factor(float alpha = 1.0) { return ColorFactor{0.5f, 0.0f, 0.5f, alpha}; }
-	constexpr ColorFactor teal_factor(float alpha = 1.0) { return ColorFactor{0.0f, 0.5f, 0.5f, alpha}; }
-	constexpr ColorFactor tan_factor(float alpha = 1.0) { return ColorFactor{0.75f, 0.625f, 0.5f, alpha}; }
-	constexpr ColorFactor brown_factor(float alpha = 1.0) { return ColorFactor{0.5f, 0.25f, 0.0f, alpha}; }
+	constexpr color_factor clear_factor(float alpha) { return color_factor{1.0f, 1.0f, 1.0f, alpha}; }
+	constexpr color_factor white_factor(float alpha = 1.0) { return color_factor{1.0f, 1.0f, 1.0f, alpha}; }
+	constexpr color_factor silver_factor(float alpha = 1.0) { return color_factor{0.75f, 0.75f, 0.75f, alpha}; }
+	constexpr color_factor gray_factor(float alpha = 1.0) { return color_factor{0.5f, 0.5f, 0.5f, alpha}; }
+	constexpr color_factor black_factor(float alpha = 1.0) { return color_factor{0.0f, 0.0f, 0.0f, alpha}; }
+	constexpr color_factor red_factor(float alpha = 1.0) { return color_factor{1.0f, 0.0f, 0.0f, alpha}; }
+	constexpr color_factor lime_factor(float alpha = 1.0) { return color_factor{0.0f, 1.0f, 0.0f, alpha}; }
+	constexpr color_factor green_factor(float alpha = 1.0) { return color_factor{0.0f, 0.75f, 0.0f, alpha}; }
+	constexpr color_factor blue_factor(float alpha = 1.0) { return color_factor{0.0f, 0.0f, 1.0f, alpha}; }
+	constexpr color_factor cyan_factor(float alpha = 1.0) { return color_factor{0.0f, 1.0f, 1.0f, alpha}; }
+	constexpr color_factor yellow_factor(float alpha = 1.0) { return color_factor{1.0f, 1.0f, 0.0f, alpha}; }
+	constexpr color_factor magenta_factor(float alpha = 1.0) { return color_factor{1.0f, 0.0f, 1.0f, alpha}; }
+	constexpr color_factor orange_factor(float alpha = 1.0) { return color_factor{1.0f, 0.5f, 0.0f, alpha}; }
+	constexpr color_factor purple_factor(float alpha = 1.0) { return color_factor{0.5f, 0.0f, 0.5f, alpha}; }
+	constexpr color_factor teal_factor(float alpha = 1.0) { return color_factor{0.0f, 0.5f, 0.5f, alpha}; }
+	constexpr color_factor tan_factor(float alpha = 1.0) { return color_factor{0.75f, 0.625f, 0.5f, alpha}; }
+	constexpr color_factor brown_factor(float alpha = 1.0) { return color_factor{0.5f, 0.25f, 0.0f, alpha}; }
 }

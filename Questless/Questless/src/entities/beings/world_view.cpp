@@ -1,0 +1,111 @@
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
+
+#include "entities/beings/world_view.h"
+
+#include <set>
+#include <limits.h>
+
+#include "game.h"
+#include "entities/beings/being.h"
+#include "entities/objects/object.h"
+#include "units/hex_coords.h"
+
+using namespace sdl;
+using namespace units;
+
+namespace ql
+{
+	world_view::world_view(being const& being, bool find_bounds)
+		: _region{*being.region}
+		, _bounds{std::nullopt}
+	{
+		ql::region const& region = _region;
+		vision vision = being.stats.vision;
+		int visual_range = vision.max_range();
+
+		// Find the set of coordinates of sections plausibly visible to the being.
+		std::set<region_section::point> section_coords_set;
+		for (int q = -visual_range; q <= visual_range; ++q) {
+			for (int r = -visual_range; r <= visual_range; ++r) {
+				region_tile::vector offset{q, r};
+				if (offset.length() <= visual_range) {
+					if (section const* section = region.containing_section(being.coords + offset)) {
+						section_coords_set.insert(section->coords());
+					}
+				}
+			}
+		}
+
+		// Calculate tile visibilities for each section.
+		for (region_section::point section_coords : section_coords_set) {
+			section_view section_view;
+			section_view.coords = section_coords;
+
+			for (int q = 0; q < section::diameter; ++q) {
+				for (int r = 0; r < section::diameter; ++r) {
+					auto region_tile_coords = section::region_tile_coords(section_coords, section_tile::point{q, r});
+
+					perception tile_perception = being.perception_of(region_tile_coords);
+
+					if (find_bounds && tile_perception.level > 0.0) {
+						// Update bounding rectangle.
+						game_space::point tile_game_point = layout::dflt().to_world(region_tile_coords);
+						if (!_bounds) {
+							_bounds = game_space::box{game_space::point{tile_game_point.x(), tile_game_point.y()}, game_space::vector::zero()};
+						} else {
+							_bounds->extend(tile_game_point);
+						}	
+					}
+					section_view.tile_perceptions[q][r] = tile_perception;
+				}
+			}
+
+			_section_views.push_back(std::move(section_view));
+
+			// Calculate being visibilities.
+			for (ql::being const& other_being : region.section_at(section_coords)->beings) {
+				if (other_being.id == being.id) {
+					// Can always perceive self fully.
+					_entity_views.emplace_back(other_being.id, perception::maximum());
+				} else {
+					region_tile::point other_coords = other_being.coords;
+					if ((being.coords - other_coords).length() <= visual_range) {
+						section_tile::point other_section_coords = section::section_tile_coords(other_coords);
+						perception tile_perception = section_view.tile_perceptions[other_section_coords.q][other_section_coords.r];
+
+						_entity_views.emplace_back(other_being.id, tile_perception);
+					}
+				}
+			}
+
+			// Calculate object visibilities.
+			for (object const& object : region.section_at(section_coords)->objects) {
+				region_tile::point other_coords = object.coords;
+				if ((being.coords - other_coords).length() <= visual_range) {
+					section_tile::point other_section_coords = section::section_tile_coords(other_coords);
+					perception tile_perception = section_view.tile_perceptions[other_section_coords.q][other_section_coords.r];
+					_entity_views.emplace_back(object.id, tile_perception);
+				}
+			}
+		}
+		if (_bounds) {
+			//! @todo Figure out the correct way to compute these adjustments.
+
+			//point size = layout::dflt().size.to_point();
+			//point double_size = (2 * layout::dflt().size).to_point();
+			//_bounds->x -= size.x;
+			//_bounds->y -= size.y;
+			//_bounds->w += double_size.x;
+			//_bounds->h += double_size.y;
+
+			game_space::vector size = layout::dflt().size;
+			game_space::vector double_size = 2 * layout::dflt().size;
+			left(*_bounds) -= 31.0;
+			top(*_bounds) -= 19.0;
+			width(*_bounds) += 62.0;
+			height(*_bounds) += 39.0;
+		}
+	}
+}

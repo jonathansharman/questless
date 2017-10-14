@@ -1,0 +1,402 @@
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
+
+#include "animation/world_renderer.h"
+
+#include "animation/entity_animator.h"
+#include "animation/particles/blood_particle.h"
+#include "animation/particles/green_magic_particle.h"
+#include "animation/particles/text_particle.h"
+#include "animation/particles/yellow_magic_particle.h"
+#include "animation/tile_texturer.h"
+#include "game.h"
+#include "utility/utility.h"
+#include "world/region.h"
+
+using std::make_unique;
+
+using namespace sdl;
+using namespace units;
+
+namespace ql
+{
+	std::optional<still> world_renderer::_unknown_entity_animation;
+
+	initializer<world_renderer> _initializer;
+	void world_renderer::initialize()
+	{
+		auto unknown_entity_animation_ss = the_texture_manager().add("resources/textures/entities/unknown.png");
+		_unknown_entity_animation = still{unknown_entity_animation_ss, texture_space::vector::zero()};
+	}
+
+	auto world_renderer::get_entity_id_var(entity_cref_var_t entity) -> entity_id_var_t
+	{
+		struct visitor
+		{
+			entity_id_var_t operator ()(being const& being) { return being.id; }
+			entity_id_var_t operator ()(object const& object) { return object.id; }
+		};
+		return std::visit(visitor{}, entity);
+	}
+
+	auto world_renderer::get_entity_cref_var(entity_id_var_t id) -> entity_cref_var_t
+	{
+		struct visitor
+		{
+			entity_cref_var_t operator ()(ql::id<being> being_id) { return the_game().beings.cref(being_id); }
+			entity_cref_var_t operator ()(ql::id<object> object_id) { return the_game().objects.cref(object_id); }
+		};
+		return std::visit(visitor{}, id);
+	}
+
+	entity const* world_renderer::get_entity_cptr(entity_id_var_t id)
+	{
+		struct visitor
+		{
+			entity const* operator ()(ql::id<being> id) { return the_game().beings.cptr(id); }
+			entity const* operator ()(ql::id<object> id) { return the_game().objects.cptr(id); }
+		};
+		return std::visit(visitor{}, id);
+	}
+
+	void world_renderer::update_view(world_view const& world_view, std::vector<sptr<effect>> effects)
+	{
+		_world_view = &world_view;
+		_terrain_render_is_current = false;
+
+		for (auto const& effect : effects) {
+			effect->accept(*this);
+		}
+
+		//! @todo Should the tile texture and entity animation caches ever be cleaned out? If so, when and how? Consider tracking how long since a texture was last used and purging it after a set time.
+	}
+
+	void world_renderer::update()
+	{
+		// Update cached entity animations.
+
+		for (auto& id_and_animation : _entity_animation_map) {
+			id_and_animation.second->update();
+		}
+
+		// Update effect sounds and animations.
+
+		for (std::size_t i = 0; i < _animations.size();) {
+			_animations[i].first->update();
+			if (_animations[i].first->over()) {
+				_animations.erase(_animations.begin() + i);
+			} else {
+				++i;
+			}
+		}
+	}
+
+	void world_renderer::draw_terrain()
+	{
+		if (!_terrain_render_is_current) {
+			render_terrain();
+			_terrain_render_is_current = true;
+		}
+		if (_terrain_texture) {
+			the_game().camera().draw(*_terrain_texture, game_space::point{center(_terrain_bounds)});
+		}
+	}
+
+	void world_renderer::draw_entities()
+	{
+		for (auto const& entity_view : _world_view->entity_views()) {
+			// Attempt to load the entity.
+			if (entity const* entity = get_entity_cptr(entity_view.id)) {
+				auto entity_var_ref = get_entity_cref_var(entity_view.id);
+
+				auto& entity_animation = get_animation(entity_view.id);
+
+				float intensity = static_cast<float>((entity_view.perception.level - perception::minimum_level) / (perception::maximum_level - perception::minimum_level));
+				switch (entity_view.perception.category()) {
+					case perception::category::none:
+						break;
+					case perception::category::low:
+						_unknown_entity_animation->draw
+							( layout::dflt().to_world(entity->coords)
+							, the_game().camera()
+							, colors::color_factor{intensity, intensity, intensity, 1.0f}
+							);
+						break;
+					case perception::category::medium:
+					case perception::category::high:
+					case perception::category::full:
+					{
+						// Draw heading.
+						struct heading_drawer
+						{
+							void operator ()(being const& being)
+							{
+								game_space::point start = layout::dflt().to_world(being.coords);
+								game_space::point end = layout::dflt().to_world(being.coords.neighbor(being.direction));
+								the_game().camera().draw_lines({start, end}, colors::magenta());
+							}
+							void operator ()(object const&) {}
+						};
+						std::visit(heading_drawer{}, entity_var_ref);
+
+						//! @todo Use the following if the overload helpers in utility.h can be repaired.
+						//std::visit
+						//	( overload
+						//		( [](being const& being)
+						//			{
+						//				game_space::point start = layout::dflt().to_world(being.coords);
+						//				game_space::point end = layout::dflt().to_world(being.coords.neighbor(being.direction));
+						//				the_game().camera().draw_lines({start, end}, color::magenta());
+						//			}
+						//		, [](object const&) {}
+						//		)
+						//	, entity_var_ref
+						//	);
+
+						entity_animation.draw
+							( layout::dflt().to_world(entity->coords)
+							, the_game().camera()
+							, colors::color_factor{intensity, intensity, intensity, 1.0f}
+							);
+						break;
+					}
+					default:
+						throw std::logic_error{"Invalid perception category."};
+				}
+			} else {
+				// Remove the being from the animation cache if it doesn't exist anymore.
+				_entity_animation_map.erase(entity_view.id);
+			}
+		}
+	}
+
+	void world_renderer::draw_effects()
+	{
+		for (auto& animation_and_coords : _animations) {
+			auto const& animation = *animation_and_coords.first;
+			animation.draw(animation_and_coords.second, the_game().camera());
+		}
+	}
+
+	void world_renderer::set_highlight_predicate(std::function<bool(region_tile::point)> predicate)
+	{
+		_highlight_predicate = std::move(predicate);
+		_terrain_render_is_current = false;
+	}
+
+	void world_renderer::clear_highlight_predicate()
+	{
+		_highlight_predicate = std::nullopt;
+		_terrain_render_is_current = false;
+	}
+
+	void world_renderer::refresh()
+	{
+		_tile_textures.clear();
+		_terrain_render_is_current = false;
+	}
+
+	texture& world_renderer::cache_tile_texture(tile const& tile)
+	{
+		tile_texturer tile_texturer;
+		tile.accept(tile_texturer);
+		_tile_textures[tile.subtype()] = tile_texturer.texture();
+		return *_tile_textures[tile.subtype()];
+	};
+
+	animation& world_renderer::cache_animation(entity_id_var_t entity_id)
+	{
+		entity_animator entity_animator;
+		get_entity_cptr(entity_id)->accept(entity_animator);
+
+		auto result = _entity_animation_map.insert(std::make_pair(entity_id, std::move(entity_animator.animation())));
+		return *result.first->second;
+	};
+
+	animation& world_renderer::get_animation(entity_id_var_t entity_id)
+	{
+		// Search for the entity's animation in the cache.
+		auto it = _entity_animation_map.find(entity_id);
+		// If it's there, use it. Otherwise, create and cache the animation.
+		return it != _entity_animation_map.end()
+			? *it->second
+			: cache_animation(entity_id);
+	}
+
+	void world_renderer::render_terrain()
+	{
+		std::optional<game_space::box> opt_bounds = _world_view->bounds();
+		if (!opt_bounds) {
+			_terrain_texture = nullptr;
+			return;
+		}
+		_terrain_bounds = *opt_bounds;
+		
+		_terrain_texture = make_unique<texture>(screen_space::vector{lround(width(_terrain_bounds)), lround(height(_terrain_bounds))});
+		_terrain_texture->as_target([&] {
+			the_renderer().clear(colors::clear());
+			for (auto const& section_view : _world_view->section_views()) {
+				auto opt_section = _world_view->region().section_at(section_view.coords);
+				if (opt_section) {
+					ql::section const& section = *opt_section;
+					for (int q = 0; q < section::diameter; ++q) {
+						for (int r = 0; r < section::diameter; ++r) {
+							section_tile::point section_tile_coords{q, r};
+							perception tile_perception = section_view.tile_perceptions[section_tile_coords.q][section_tile_coords.r];
+							if (tile_perception.category() != perception::category::none) {
+								region_tile::point const region_tile_coords = section.region_tile_coords(section_tile_coords);
+								game_space::point const tile_game_point = layout::dflt().to_world(region_tile_coords);
+								game_space::point const terrain_game_point = _terrain_bounds.position;
+								screen_space::point const tile_screen_point
+									{ lround(tile_game_point.x() - terrain_game_point.x())
+									, lround(terrain_game_point.y() - tile_game_point.y() + height(_terrain_bounds) - 1)
+									};
+
+								// Get the current tile.
+								tile const& tile = section.tile_at(section_tile_coords);
+								// Search for its texture in the cache.
+								auto it = _tile_textures.find(tile.subtype());
+								// If it's there, use it. Otherwise, create the texture and cache it.
+								texture& tile_texture = it != _tile_textures.end() ? *it->second : cache_tile_texture(tile);
+
+								float intensity = static_cast<float>((tile_perception.level - perception::minimum_level) / (perception::maximum_level - perception::minimum_level));
+
+								// Apply highlights.
+								if (_highlight_predicate) {
+									if ((*_highlight_predicate)(region_tile_coords)) {
+										intensity = 1.5f;
+									}
+								}
+
+								tile_texture.draw_transformed
+									( tile_screen_point
+									, texture_space::vector::zero()
+									, colors::color_factor{intensity, intensity, intensity, 1.0f}
+									);
+							}
+						}
+					}
+				}
+			}
+		});
+	}
+
+	//////////////////////////////
+	// Effect Visitor Functions //
+	//////////////////////////////
+
+	void world_renderer::visit(eagle_eye_effect const& e)
+	{
+		static auto eagle_eye_sound_handle = the_sound_manager().add("resources/sounds/spells/eagle-eye.wav");
+
+		game_space::point position = layout::dflt().to_world(e.origin());
+		for (int i = 0; i < 50; ++i) {
+			_animations.push_back(std::make_pair(make_unique<green_magic_particle>(), position));
+		}
+		the_sound_manager()[eagle_eye_sound_handle].play();
+	}
+
+	void world_renderer::visit(injury_effect const& e)
+	{
+		static auto pierce_sound_handle = the_sound_manager().add("resources/sounds/weapons/pierce.wav");
+		static auto hit_sound_handle = the_sound_manager().add("resources/sounds/weapons/hit.wav");
+
+		being const* target = the_game().beings.cptr(e.target_id);
+		double const target_vitality = target ? target->stats.vitality.get() : 100.0; // Assume vitality = 100 if being no longer exists to check.
+		//! @todo Pass along the vitality in the event object if it's needed here.
+
+		game_space::point position = layout::dflt().to_world(e.origin());
+
+		dmg::group const& damage = e.damage;
+
+		for (auto const& part : damage.parts()) {
+			struct damage_renderer
+			{
+				std::vector<std::pair<uptr<animation>, units::game_space::point>>& animations;
+				game_space::point const position;
+				double const target_vitality;
+
+				void spawn_blood(double const lost_health)
+				{
+					int const n = static_cast<int>(lost_health / target_vitality * 100.0); // 100 is an arbitrary scaling factor.
+					for (int i = 0; i < n; ++i) {
+						animations.push_back(std::make_pair(make_unique<blood_particle>(), position));
+					}
+				};
+
+				void render_slash_or_pierce(double const amount)
+				{
+					spawn_blood(amount);
+					animations.push_back(std::make_pair
+						( make_unique<text_particle>(std::to_string(lround(amount)), colors::white())
+						, position
+						));
+					the_sound_manager()[pierce_sound_handle].play();
+				}
+
+				void render_cleave_or_bludgeon(double const amount)
+				{
+					spawn_blood(amount);
+					animations.push_back(std::make_pair
+						( make_unique<text_particle>(std::to_string(lround(amount)), colors::white())
+						, position
+						));
+					the_sound_manager()[hit_sound_handle].play();
+				}
+
+				void operator ()(dmg::slash const& slash) { render_slash_or_pierce(slash); }
+				void operator ()(dmg::pierce const& pierce) { render_slash_or_pierce(pierce); }
+				void operator ()(dmg::cleave const& cleave) { render_cleave_or_bludgeon(cleave); }
+				void operator ()(dmg::bludgeon const& bludgeon) { render_cleave_or_bludgeon(bludgeon); }
+				void operator ()(dmg::burn const& burn)
+				{
+					animations.push_back(std::make_pair
+						( make_unique<text_particle>(std::to_string(lround(burn)), colors::orange())
+						, position
+						));
+				}
+				void operator ()(dmg::freeze const& freeze)
+				{
+					animations.push_back(std::make_pair
+						( make_unique<text_particle>(std::to_string(lround(freeze)), colors::cyan())
+						, position
+						));
+				}
+				void operator ()(dmg::blight const& blight)
+				{
+					animations.push_back(std::make_pair
+						( make_unique<text_particle>(std::to_string(lround(blight)), colors::black())
+						, position
+						));
+				}
+				void operator ()(dmg::poison const& poison)
+				{
+					animations.push_back(std::make_pair
+					(make_unique<text_particle>(std::to_string(lround(poison)), colors::purple())
+						, position
+					));
+				}
+				void operator ()(dmg::shock const& shock)
+				{
+					animations.push_back(std::make_pair
+						( make_unique<text_particle>(std::to_string(lround(shock)), colors::yellow())
+						, position
+						));
+				}
+			};
+			std::visit(damage_renderer{_animations, position, target_vitality}, part);
+		}
+	}
+
+	void world_renderer::visit(lightning_bolt_effect const& e)
+	{
+		static auto lightning_bolt_sound_handle = the_sound_manager().add("resources/sounds/spells/lightning-bolt.wav");
+
+		game_space::point position = layout::dflt().to_world(e.origin());
+		for (int i = 0; i < 35; ++i) {
+			_animations.push_back(std::make_pair(make_unique<yellow_magic_particle>(), position));
+		}
+		the_sound_manager()[lightning_bolt_sound_handle].play();
+	}
+}

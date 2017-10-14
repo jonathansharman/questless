@@ -2,19 +2,19 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "entities/beings/Body.h"
+#include "entities/beings/body.h"
 
 #include <deque>
 #include <algorithm>
 #include <memory>
 
-#include "entities/beings/BodyPart.h"
+#include "entities/beings/body_part.h"
 
 using namespace units;
 
-namespace questless
+namespace ql
 {
-	Body::Body(Being& owner, uptr<BodyPart> root) : _owner{owner}, _root{std::move(root)}
+	body::body(being& owner, uptr<body_part> root) : _owner{owner}, _root{std::move(root)}
 	{
 		int x_min = 0;
 		int y_min = 0;
@@ -22,15 +22,15 @@ namespace questless
 		int y_max = 0;
 
 		// Walk the parts tree to build the parts lists and compute bounds.
-		std::deque<ref<BodyPart>> work_list;
+		std::deque<ref<body_part>> work_list;
 		work_list.push_back(*_root);
 		while (!work_list.empty()) {
-			BodyPart& part = work_list.front();
+			body_part& part = work_list.front();
 			_parts.push_back(part);
-			PartAttacher attacher{*this};
+			part_attacher attacher{*this};
 			part.accept(attacher);
 
-			for (ScreenSpace::Box const& region : part.regions()) {
+			for (screen_space::box const& region : part.regions()) {
 				x_min = std::min(x_min, left(region));
 				x_max = std::max(x_max, right(region));
 				y_min = std::min(y_min, top(region));
@@ -39,18 +39,18 @@ namespace questless
 
 			// Remove current part from work list and add its children.
 			work_list.pop_front();
-			for (uptr<BodyPart> const& child : part.children()) {
+			for (uptr<body_part> const& child : part.children()) {
 				work_list.push_back(*child);
 			}
 		}
 
-		_bounds = ScreenSpace::Box{ScreenSpace::Point{x_min, y_min}, ScreenSpace::Vector{x_max - x_min + 1, y_max - y_min + 1}};
-		_offset_to_center = ScreenSpace::Vector{-x_min, -y_min};
+		_bounds = screen_space::box{screen_space::point{x_min, y_min}, screen_space::vector{x_max - x_min + 1, y_max - y_min + 1}};
+		_offset_to_center = screen_space::vector{-x_min, -y_min};
 	}
 
-	BodyPart* Body::find_part(Id<BodyPart> id)
+	body_part* body::find_part(id<body_part> id)
 	{
-		for (BodyPart& part : _parts) {
+		for (body_part& part : _parts) {
 			if (part.id == id) {
 				return &part;
 			}
@@ -58,9 +58,9 @@ namespace questless
 		return nullptr;
 	}
 
-	Head* Body::find_head(Id<BodyPart> id)
+	head* body::find_head(id<body_part> id)
 	{
-		for (Head& head : _heads) {
+		for (head& head : _heads) {
 			if (head.id == id) {
 				return &head;
 			}
@@ -68,9 +68,9 @@ namespace questless
 		return nullptr;
 	}
 
-	Torso* Body::find_torso(Id<BodyPart> id)
+	torso* body::find_torso(id<body_part> id)
 	{
-		for (Torso& torso : _torsos) {
+		for (torso& torso : _torsos) {
 			if (torso.id == id) {
 				return &torso;
 			}
@@ -78,9 +78,9 @@ namespace questless
 		return nullptr;
 	}
 
-	Arm* Body::find_arm(Id<BodyPart> id)
+	arm* body::find_arm(id<body_part> id)
 	{
-		for (Arm& arm : _arms) {
+		for (arm& arm : _arms) {
 			if (arm.id == id) {
 				return &arm;
 			}
@@ -88,9 +88,9 @@ namespace questless
 		return nullptr;
 	}
 
-	Hand* Body::find_hand(Id<BodyPart> id)
+	hand* body::find_hand(id<body_part> id)
 	{
-		for (Hand& hand : _hands) {
+		for (hand& hand : _hands) {
 			if (hand.id == id) {
 				return &hand;
 			}
@@ -98,9 +98,9 @@ namespace questless
 		return nullptr;
 	}
 
-	Leg* Body::find_leg(Id<BodyPart> id)
+	leg* body::find_leg(id<body_part> id)
 	{
-		for (Leg& leg : _legs) {
+		for (leg& leg : _legs) {
 			if (leg.id == id) {
 				return &leg;
 			}
@@ -108,9 +108,9 @@ namespace questless
 		return nullptr;
 	}
 
-	Foot* Body::find_foot(Id<BodyPart> id)
+	foot* body::find_foot(id<body_part> id)
 	{
-		for (Foot& foot : _feet) {
+		for (foot& foot : _feet) {
 			if (foot.id == id) {
 				return &foot;
 			}
@@ -118,9 +118,9 @@ namespace questless
 		return nullptr;
 	}
 
-	Wing* Body::find_wing(Id<BodyPart> id)
+	wing* body::find_wing(id<body_part> id)
 	{
-		for (Wing& wing : _wings) {
+		for (wing& wing : _wings) {
 			if (wing.id == id) {
 				return &wing;
 			}
@@ -128,9 +128,9 @@ namespace questless
 		return nullptr;
 	}
 
-	Tail* Body::find_tail(Id<BodyPart> id)
+	tail* body::find_tail(id<body_part> id)
 	{
-		for (Tail& tail : _tails) {
+		for (tail& tail : _tails) {
 			if (tail.id == id) {
 				return &tail;
 			}
@@ -138,35 +138,35 @@ namespace questless
 		return nullptr;
 	}
 
-	void Body::PartAttacher::visit(Head& head)
+	void body::part_attacher::visit(head& head)
 	{
 		_body._heads.push_back(head);
 	}
-	void Body::PartAttacher::visit(Torso& torso)
+	void body::part_attacher::visit(torso& torso)
 	{
 		_body._torsos.push_back(torso);
 	}
-	void Body::PartAttacher::visit(Arm& arm)
+	void body::part_attacher::visit(arm& arm)
 	{
 		_body._arms.push_back(arm);
 	}
-	void Body::PartAttacher::visit(Hand& hand)
+	void body::part_attacher::visit(hand& hand)
 	{
 		_body._hands.push_back(hand);
 	}
-	void Body::PartAttacher::visit(Leg& leg)
+	void body::part_attacher::visit(leg& leg)
 	{
 		_body._legs.push_back(leg);
 	}
-	void Body::PartAttacher::visit(Foot& foot)
+	void body::part_attacher::visit(foot& foot)
 	{
 		_body._feet.push_back(foot);
 	}
-	void Body::PartAttacher::visit(Wing& wing)
+	void body::part_attacher::visit(wing& wing)
 	{
 		_body._wings.push_back(wing);
 	}
-	void Body::PartAttacher::visit(Tail& tail)
+	void body::part_attacher::visit(tail& tail)
 	{
 		_body._tails.push_back(tail);
 	}

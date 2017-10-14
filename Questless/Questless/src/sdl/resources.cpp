@@ -3,63 +3,63 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "sdl/resources.h"
-#include "sdl/Renderable.h"
+#include "sdl/renderable.h"
 
 namespace sdl
 {
 	namespace
 	{
-		std::unique_ptr<ShaderProgram> _dflt_program;
-		std::unique_ptr<ShaderProgram> _solid_program;
-		std::unique_ptr<Renderer> _renderer = nullptr;
-		std::unique_ptr<Window> _window = nullptr;
+		std::unique_ptr<shader_program> _dflt_program;
+		std::unique_ptr<shader_program> _solid_program;
+		std::unique_ptr<renderer> _renderer = nullptr;
+		std::unique_ptr<window> _window = nullptr;
 	}
 
-	ShaderProgram& dflt_program() { return *_dflt_program; }
-	void dflt_program(std::unique_ptr<ShaderProgram> shader_program) { _dflt_program = std::move(shader_program); }
+	shader_program& dflt_program() { return *_dflt_program; }
+	void set_dflt_program(std::unique_ptr<shader_program> shader_program) { _dflt_program = std::move(shader_program); }
 
-	ShaderProgram& solid_program() { return *_solid_program; }
-	void solid_program(std::unique_ptr<ShaderProgram> shader_program) { _solid_program = std::move(shader_program); }
+	shader_program& solid_program() { return *_solid_program; }
+	void set_solid_program(std::unique_ptr<shader_program> shader_program) { _solid_program = std::move(shader_program); }
 
-	Renderer& renderer() { return *_renderer; }
-	void renderer(std::unique_ptr<Renderer> renderer)
+	renderer& the_renderer() { return *_renderer; }
+	void set_the_renderer(std::unique_ptr<renderer> renderer)
 	{
 		bool initializing = _renderer == nullptr;
 		_renderer = std::move(renderer);
 		if (!initializing && _renderer != nullptr) {
 			// Reassigning the renderer. Need to invalidate shared textures and refresh all renderable objects.
-			texture_manager().clear_cache();
-			Renderable::refresh_all();
+			the_texture_manager().clear_cache();
+			renderable::refresh_all();
 		}
 	}
 
-	Window& window() { return *_window; }
-	void window(std::unique_ptr<Window> window)
+	window& the_window() { return *_window; }
+	void set_the_window(std::unique_ptr<window> the_window)
 	{
-		_window = std::move(window);
+		_window = std::move(the_window);
 	}
 
-	Input& input() 
+	input& the_input() 
 	{
-		static Input _input;
+		static input _input;
 		return _input;
 	}
 
-	ResourceManager<Texture>& texture_manager()
+	resource_manager<texture>& the_texture_manager()
 	{
-		static ResourceManager<Texture> _texture_manager;
+		static resource_manager<texture> _texture_manager;
 		return _texture_manager;
 	}
 
-	ResourceManager<Font>& font_manager()
+	resource_manager<font>& the_font_manager()
 	{
-		static ResourceManager<Font> _font_manager;
+		static resource_manager<font> _font_manager;
 		return _font_manager;
 	}
 
-	ResourceManager<Sound>& sound_manager()
+	resource_manager<sound>& the_sound_manager()
 	{
-		static ResourceManager<Sound> _sound_manager;
+		static resource_manager<sound> _sound_manager;
 		return _sound_manager;
 	}
 }

@@ -3,11 +3,11 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "utility/utility.h"
-#include "Game.h"
+#include "game.h"
 
 using std::function;
 
-namespace questless
+namespace ql
 {
 	///////////////
 	// Debugging //
@@ -15,9 +15,9 @@ namespace questless
 
 	std::chrono::nanoseconds time(function<void()> f)
 	{
-		auto start_time = Game::clock::now();
+		auto start_time = game::clock::now();
 		f();
-		return std::chrono::duration_cast<std::chrono::nanoseconds>(Game::clock::now() - start_time);
+		return std::chrono::duration_cast<std::chrono::nanoseconds>(game::clock::now() - start_time);
 	}
 
 	//////////////
@@ -51,5 +51,5 @@ namespace questless
 	// Random Number Generation //
 	//////////////////////////////
 
-	std::mt19937_64 rng(Game::clock::now().time_since_epoch().count());
+	std::mt19937_64 rng(game::clock::now().time_since_epoch().count());
 }

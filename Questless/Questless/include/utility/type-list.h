@@ -7,66 +7,66 @@
 
 #include <type_traits>
 
-namespace questless::type_list
+namespace ql::type_list
 {
 	//! The empty type list.
-	struct Empty
+	struct empty
 	{
-		using length_t = std::integral_constant<int, 0>;
+		using length_type = std::integral_constant<int, 0>;
 	};
 
 	//! Constructs a linked type list from @p HeadType and @p TailType.
 	template <typename HeadType, typename TailType>
-	struct Cons
+	struct cons
 	{
-		using head_t = HeadType;
-		using tail_t = TailType;
+		using head_type = HeadType;
+		using tail_type = TailType;
 
-		using length_t = std::integral_constant<int, 1 + tail_t::length_t::value>;
+		using length_type = std::integral_constant<int, 1 + tail_type::length_type::value>;
 	};
 
 	//! Constructs a type list from the given variadic list of types.
 	template <typename... Types>
-	struct Of;
+	struct of;
 
 	//! Constructs a type list from the given variadic list of types.
 	template <typename... Types>
-	using of_t = typename Of<Types...>::type;
+	using of_t = typename of<Types...>::type;
 
 	//! Constructs an empty type list.
 	template <>
-	struct Of<>
+	struct of<>
 	{
-		using type = Empty;
+		using type = empty;
 	};
 
 	//! Constructs a linked type list from @p HeadType and @p TailTypes.
 	template <typename HeadType, typename... TailTypes>
-	struct Of<HeadType, TailTypes...>
+	struct of<HeadType, TailTypes...>
 	{
-		using type = Cons<HeadType, of_t<TailTypes...>>;
+		using type = cons<HeadType, of_t<TailTypes...>>;
 	};
 
 	//! Applies @p Xform to each type in @p ListType.
 	template <template <typename> typename Xform, typename... ListType>
-	struct ApplyXform;
+	struct apply_xform;
 
 	//! Applies @p Xform to each type in @p ListType.
 	template <template <typename> typename Xform, typename... ListType>
-	using apply_xform_t = typename ApplyXform<Xform, ListType...>::type;
+	using apply_xform_t = typename apply_xform<Xform, ListType...>::type;
 
 	//! Applies @p Xform to the empty type list, which results in the empty type list again.
 	template <template <typename> typename Xform>
-	struct ApplyXform<Xform, Empty>
+	struct apply_xform<Xform, empty>
 	{
-		using type = Empty;
+		using type = empty;
 	};
 
 	//! Applies @p Xform to the linked type list with @p HeadType and @p TailType.
 	template <template <typename> typename Xform, typename HeadType, typename TailType>
-	struct ApplyXform<Xform, Cons<HeadType, TailType>>
+	struct apply_xform<Xform, cons<HeadType, TailType>>
 	{
-		using type = Cons<typename Xform<HeadType>::type, type_list::apply_xform_t<Xform, TailType>>;
+		using type = cons<typename Xform<HeadType>::type, type_list::apply_xform_t<Xform, TailType>>;
 	};
 
 	//! Const-qualifies @p ListType.

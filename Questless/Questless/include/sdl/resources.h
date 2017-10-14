@@ -7,53 +7,53 @@
 
 #include <memory>
 
-#include "ShaderProgram.h"
-#include "Font.h"
-#include "Input.h"
-#include "Renderer.h"
-#include "ResourceManager.h"
-#include "Sound.h"
-#include "Texture.h"
-#include "Window.h"
+#include "shader_program.h"
+#include "font.h"
+#include "input.h"
+#include "renderer.h"
+#include "resource_manager.h"
+#include "sound.h"
+#include "texture.h"
+#include "window.h"
 
 namespace sdl
 {
 	//! The default OpenGL program, using basic shaders.
-	ShaderProgram& dflt_program();
+	shader_program& dflt_program();
 
 	//! Sets the default shader program to the given value.
-	void dflt_program(std::unique_ptr<ShaderProgram> shader_program);
+	void set_dflt_program(std::unique_ptr<shader_program> shader_program);
 
 	//! The solid OpenGL program, using shaders for solids.
-	ShaderProgram& solid_program();
+	shader_program& solid_program();
 
 	//! Sets the solid shader program to the given value.
-	void solid_program(std::unique_ptr<ShaderProgram> shader_program);
+	void set_solid_program(std::unique_ptr<shader_program> shader_program);
 
 	//! The renderer.
-	Renderer& renderer();
+	renderer& the_renderer();
 
 	//! Sets the renderer to the given value.
-	void renderer(std::unique_ptr<Renderer> renderer);
+	void set_the_renderer(std::unique_ptr<renderer> renderer);
 
 	//! The application window.
-	Window& window();
+	window& the_window();
 
 	//! Sets the window to the given value.
-	void window(std::unique_ptr<Window> window);
+	void set_the_window(std::unique_ptr<window> the_window);
 
 	//! The input object.
-	Input& input();
+	input& the_input();
 
 	//! The texture manager.
-	ResourceManager<Texture>& texture_manager();
-	using TextureHandle = Handle<Texture>;
+	resource_manager<texture>& the_texture_manager();
+	using texture_handle = handle<texture>;
 
 	//! The font manager.
-	ResourceManager<Font>& font_manager();
-	using FontHandle = Handle<Font>;
+	resource_manager<font>& the_font_manager();
+	using font_handle = handle<font>;
 
 	//! The sound manager.
-	ResourceManager<Sound>& sound_manager();
-	using SoundHandle = Handle<Sound>;
+	resource_manager<sound>& the_sound_manager();
+	using sound_handle = handle<sound>;
 }

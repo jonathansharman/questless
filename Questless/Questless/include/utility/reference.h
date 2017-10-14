@@ -8,7 +8,7 @@
 #include <memory>
 #include <functional>
 
-namespace questless
+namespace ql
 {
 	template <typename T> using ref = std::reference_wrapper<T>;
 	template <typename T> using cref = std::reference_wrapper<T const>;

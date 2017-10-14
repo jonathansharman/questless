@@ -13,9 +13,9 @@
 #include <string>
 #include <sstream>
 
-#include "units/GameSpace.h"
+#include "units/game_space.h"
 
-namespace questless
+namespace ql
 {
 	///////////////
 	// Debugging //
@@ -101,23 +101,23 @@ namespace questless
 	}
 
 	//! A random angle in radians.
-	inline units::GameSpace::Radians random_angle()
+	inline units::game_space::radians random_angle()
 	{
-		return uniform(0.0, 1.0) * units::GameSpace::Radians::circle();
+		return uniform(0.0, 1.0) * units::game_space::radians::circle();
 	}
 
 	//! A displacement based on a uniform random distance and uniform random angle.
 	//! @param max_length The maximum possible length of the displacement.
-	inline units::GameSpace::Vector random_displacement(double max_length)
+	inline units::game_space::vector random_displacement(double max_length)
 	{
-		return units::GameSpace::Vector{random_angle(), uniform(0.0, max_length)};
+		return units::game_space::vector{random_angle(), uniform(0.0, max_length)};
 	}
 
 	//! A displacement based on a uniform random distance and uniform random angle.
 	//! @param min_length The minimum possible length of the displacement.
 	//! @param max_length The maximum possible length of the displacement.
-	inline units::GameSpace::Vector random_displacement(double min_length, double max_length)
+	inline units::game_space::vector random_displacement(double min_length, double max_length)
 	{
-		return units::GameSpace::Vector{random_angle(), uniform(min_length, max_length)};
+		return units::game_space::vector{random_angle(), uniform(min_length, max_length)};
 	}
 }

@@ -9,7 +9,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT
 #include <doctest.h>
 
-#include "Game.h"
+#include "game.h"
 
 int main(int argc, char* argv[])
 {
@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 #endif
 
 	//try {
-		questless::game().run();
+		ql::the_game().run();
 	//} catch (std::exception& ex) {
 	//	string message = ex.what();
 	//	//! @todo Try-catch for exception for last-resort error reporting. (Should log the message or something.)

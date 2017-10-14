@@ -1,0 +1,22 @@
+//! @file
+//! @author Jonathan Sharman
+//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
+
+#pragma once
+
+#include "utility/visitor_pattern.h"
+
+namespace ql
+{
+	class eagle_eye_effect;
+	class injury_effect;
+	class lightning_bolt_effect;
+
+	using effect_subtype_list = type_list::of_t
+		< eagle_eye_effect
+		, injury_effect
+		, lightning_bolt_effect
+		>;
+
+	DEFINE_VISITORS(effect, effect_subtype_list)
+}
