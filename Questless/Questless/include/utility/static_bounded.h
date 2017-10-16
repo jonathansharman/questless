@@ -11,7 +11,7 @@ namespace ql
 {
 	namespace detail
 	{
-		template <typename NumericType>
+		template <typename ArithmeticType>
 		struct maximum {};
 
 		template <>
@@ -26,131 +26,140 @@ namespace ql
 		};
 	}
 
-	//! Represents an inclusive, compile-time-bounded range of numeric values, clamping values outside the range to the nearest valid value.
-	//! @tparam NumericType A numeric type, supporting arithmetic operations.
+	//! An inclusive, statically bounded range of arithmetic values, clamping values outside the range to the nearest valid value.
+	//! @tparam ArithmeticType An arithmetic type, i.e. a type that supports arithmetic operations.
 	//! @tparam LowerBound The minimum value in the range (inclusive).
 	//! @tparam UpperBound The maximum value in the range (inclusive).
+	//! @note See also @p dynamic_bounded and @p lazy_bounded.
 	template
-		< typename NumericType
-		, typename NumericType const& LowerBound
-		, typename NumericType const& UpperBound = detail::maximum<NumericType>::value
+		< typename ArithmeticType
+		, typename ArithmeticType const& LowerBound
+		, typename ArithmeticType const& UpperBound = detail::maximum<ArithmeticType>::value
 		>
 	class static_bounded
 	{
 	public:
-		using numeric_type = NumericType;
+		using arithmetic_type = ArithmeticType;
 
 		//! The minimum value in the range (inclusive).
-		static constexpr numeric_type lower_bound = LowerBound;
+		static constexpr arithmetic_type lower_bound = LowerBound;
 
 		//! The maximum value in the range (inclusive).
-		static constexpr numeric_type upper_bound = UpperBound;
+		static constexpr arithmetic_type upper_bound = UpperBound;
 
-		// Constructors
+		//////////////////
+		// Constructors //
+		//////////////////
 
 		constexpr static_bounded() = default;
 
 		constexpr static_bounded(static_bounded const&) = default;
 		constexpr static_bounded(static_bounded&&) = default;
 
-		constexpr static_bounded(numeric_type value) : _number{std::clamp(value, lower_bound, upper_bound)} {}
+		constexpr static_bounded(arithmetic_type value) : _value{std::clamp(value, lower_bound, upper_bound)} {}
 
-		// Accessors and Mutators
+		////////////////////////////
+		// Accessors and Mutators //
+		////////////////////////////
+
+		//! The contained value.
+		constexpr operator arithmetic_type const&() const { return _value; }
+
+		//! The contained value.
+		constexpr arithmetic_type const& value() const { return _value; }
 
 		//! Sets the contained value to the given new value, clamped to the valid range.
-		void set(numeric_type const& value)
+		void set_value(arithmetic_type const& value)
 		{
 			//! @todo When constexpr-if is available, use it to avoid upper bound check if upper_bound is the maximum type value.
-			_number = std::clamp(value, lower_bound, upper_bound);
+			_value = std::clamp(value, lower_bound, upper_bound);
 		}
 
-		//! The contained value.
-		constexpr operator numeric_type const&() const { return _number; }
-
-		//! The contained value.
-		constexpr numeric_type const& get() const { return _number; }
-
-		// Asignment
+		///////////////
+		// Asignment //
+		///////////////
 
 		static_bounded& operator =(static_bounded const& bounded)
 		{
-			set(bounded._number);
+			set_value(bounded._value);
 			return *this;
 		}
-		static_bounded& operator =(numeric_type value)
+		static_bounded& operator =(arithmetic_type const& value)
 		{
-			set(value);
+			set_value(std::move(value));
 			return *this;
 		}
-
-		// Arithmetic Assignment Operators
 
 		template <typename T>
 		static_bounded& operator +=(T const& that)
 		{
-			set(_number + that);
+			set_value(_value + that);
 			return *this;
 		}
 		template <typename T>
 		static_bounded& operator -=(T const& that)
 		{
-			set(_number - that);
+			set_value(_value - that);
 			return *this;
 		}
 		template <typename T>
 		static_bounded& operator *=(T const& that)
 		{
-			set(_number * that);
+			set_value(_value * that);
 			return *this;
 		}
 		template <typename T>
 		static_bounded& operator /=(T const& that)
 		{
-			set(_number / that);
+			set_value(_value / that);
 			return *this;
 		}
 		template <typename T>
 		static_bounded& operator %=(T const& that)
 		{
-			set(_number % that);
+			set_value(_value % that);
 			return *this;
 		}
 
-		// Increment/decrement Operators
+		///////////////////////////////////
+		// Increment/decrement Operators //
+		///////////////////////////////////
 
 		static_bounded& operator ++()
 		{
-			set(_number + 1);
+			set_value(_value + 1);
 			return *this;
 		}
 		static_bounded& operator --()
 		{
-			set(_number - 1);
+			set_value(_value - 1);
 			return *this;
 		}
 		static_bounded operator ++(int)
 		{
-			numeric_type value = _number;
-			set(_number + 1);
+			arithmetic_type value = _value;
+			set_value(_value + 1);
 			return value;
 		}
 		static_bounded operator --(int)
 		{
-			numeric_type value = _number;
-			set(_number - 1);
+			arithmetic_type value = _value;
+			set_value(_value - 1);
 			return value;
 		}
 
-		// Stream Extraction Operator
+		////////////////////////////////
+		// Stream Extraction Operator //
+		////////////////////////////////
 
 		friend std::istream& operator >>(std::istream& in, static_bounded& bounded)
 		{
-			numeric_type value;
+			arithmetic_type value;
 			in >> value;
-			bounded.set(value);
+			bounded.set_value(value);
 			return in;
 		}
 	private:
-		numeric_type _number;
+		arithmetic_type _value;
 	};
 }

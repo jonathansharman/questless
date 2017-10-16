@@ -20,9 +20,9 @@ namespace ql
 		, body{std::move(body)}
 		, base_stats{make_base_stats()}
 		, stats{get_base_stats_plus_body_stats()}
-		, health{stats.vitality, health_mutator()}
-		, mana{stats.spirit, mana_mutator()}
-		, energy{stats.stamina, energy_mutator()}
+		, health{stats.vitality, [] { return 0.0; }, [this] { return stats.vitality.value(); }}
+		, mana{stats.spirit, [] { return 0.0; }, [this] { return stats.spirit.value(); }}
+		, energy{stats.stamina, [] { return 0.0; }, [this] { return stats.stamina.value(); }}
 		, satiety{max_satiety}
 		, alertness{max_alertness}
 		, busy_time{0.0}
@@ -41,9 +41,9 @@ namespace ql
 		: entity{in}
 		, id{in}
 		, body{std::move(body)}
-		, health{health_mutator()}
-		, mana{mana_mutator()}
-		, energy{energy_mutator()}
+		, health{[] { return 0.0; }, [this] { return stats.vitality.value(); }}
+		, mana{[] { return 0.0; }, [this] { return stats.spirit.value(); }}
+		, energy{[] { return 0.0; }, [this] { return stats.stamina.value(); }}
 		, busy_time{busy_time_mutator()}
 	{
 		//! @todo Read body.
@@ -382,27 +382,6 @@ namespace ql
 		return result;
 	}
 
-	std::function<void(double&, double const&)> being::health_mutator()
-	{
-		return [this](double& health, double const& new_health)
-		{
-			health = std::clamp(new_health, 0.0, stats.vitality.get());
-		};
-	}
-	std::function<void(double&, double const&)> being::mana_mutator()
-	{
-		return [this](double& mana, double const& new_mana)
-		{
-			mana = std::clamp(new_mana, 0.0, stats.spirit.get());
-		};
-	}
-	std::function<void(double&, double const&)> being::energy_mutator()
-	{
-		return [this](double& energy, double const& new_energy)
-		{
-			energy = std::clamp(new_energy, 0.0, stats.stamina.get());
-		};
-	}
 	std::function<void(double&, double const&)> being::busy_time_mutator()
 	{
 		return [this](double& busy_time, double const& new_busy_time) {

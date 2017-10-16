@@ -24,7 +24,7 @@ namespace ql
 		, ql::id<body_part> id
 		)
 		: id{id}
-		, health{vitality}
+		, health {vitality, [] { return 0.0; }, [this]() { return _vitality; }}
 		, _owner{owner}
 		, _name{std::move(name)}
 		, _enabled{true}
@@ -35,7 +35,6 @@ namespace ql
 		, _vulnerability{vulnerability}
 		, _regions{std::move(regions)}
 	{
-		health.set_mutator(health_mutator(), false);
 		for (auto& region : _regions) {
 			left(region) *= 5;
 			top(region) *= 5;

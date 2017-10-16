@@ -5,7 +5,7 @@
 #pragma once
 
 #include "items/item.h"
-#include "utility/dynamic_property.h"
+#include "utility/lazy_bounded.h"
 
 namespace ql
 {
@@ -22,13 +22,11 @@ namespace ql
 		bool broken() const { return integrity <= 0.0; }
 
 		//! The item's integrity, which ranges from zero to its durability. The item is broken if integrity is zero.
-		dynamic_property<double> integrity;
+		lazy_bounded<double> integrity;
 	protected:
-		breakable(double integrity) : integrity{integrity}
-		{
-			// Can't perform range checking yet because call to durability() will fail until the object is fully constructed.
-			this->integrity.set_mutator(integrity_mutator(), false);
-		}
+		breakable(double integrity)
+			: integrity{integrity, [] { return 0.0; }, [this]() { return durability(); }}
+		{}
 	private:
 		std::function<void(double&, double const&)> integrity_mutator();
 	};

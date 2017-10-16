@@ -47,11 +47,11 @@ namespace ql::dmg
 
 		friend std::ostream& operator <<(std::ostream& out, protect const& p)
 		{
-			out << p._pad.get() << ' '
-				<< p._deflect.get() << ' '
-				<< p._fireproof.get() << ' '
-				<< p._frostproof.get() << ' '
-				<< p._fortify.get() << ' '
+			out << p._pad.value() << ' '
+				<< p._deflect.value() << ' '
+				<< p._fireproof.value() << ' '
+				<< p._frostproof.value() << ' '
+				<< p._fortify.value() << ' '
 				<< p._immunize << ' '
 				<< p._insulate << ' ';
 			return out;

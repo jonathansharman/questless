@@ -7,7 +7,7 @@
 #include "items/item.h"
 #include "magic/spell.h"
 #include "utility/static_bounded.h"
-#include "utility/const_bounded.h"
+#include "utility/dynamic_bounded.h"
 
 namespace ql
 {
@@ -32,7 +32,7 @@ namespace ql
 		void update() final;
 
 		//! The amount of mana this gem currently holds.
-		const_bounded<double> mana;
+		dynamic_bounded<double> mana;
 
 		//! The maximum charge this gem can hold.
 		double capacity() const { return _capacity; }

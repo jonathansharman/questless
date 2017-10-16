@@ -8,7 +8,7 @@
 
 #include "agents/action.h"
 #include "spell_visitor.h"
-#include "utility/const_bounded.h"
+#include "utility/dynamic_bounded.h"
 #include "utility/reference.h"
 
 namespace ql::magic

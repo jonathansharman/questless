@@ -558,9 +558,6 @@
     <ClInclude Include="include\units\frequency.h">
       <Filter>include\units</Filter>
     </ClInclude>
-    <ClInclude Include="include\utility\const_bounded.h">
-      <Filter>include\utility</Filter>
-    </ClInclude>
     <ClInclude Include="include\utility\container_view.h">
       <Filter>include\utility</Filter>
     </ClInclude>
@@ -589,9 +586,6 @@
       <Filter>include\utility</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\tagged_type.h">
-      <Filter>include\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="include\utility\type-list.h">
       <Filter>include\utility</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\utility.h">
@@ -623,6 +617,15 @@
     </ClInclude>
     <ClInclude Include="include\game.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utility\dynamic_bounded.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utility\type_list.h">
+      <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utility\lazy_bounded.h">
+      <Filter>include\utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

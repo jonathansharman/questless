@@ -303,7 +303,7 @@ namespace ql
 		static auto hit_sound_handle = the_sound_manager().add("resources/sounds/weapons/hit.wav");
 
 		being const* target = the_game().beings.cptr(e.target_id);
-		double const target_vitality = target ? target->stats.vitality.get() : 100.0; // Assume vitality = 100 if being no longer exists to check.
+		double const target_vitality = target ? target->stats.vitality.value() : 100.0; // Assume vitality = 100 if being no longer exists to check.
 		//! @todo Pass along the vitality in the event object if it's needed here.
 
 		game_space::point position = layout::dflt().to_world(e.origin());

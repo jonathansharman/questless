@@ -12,6 +12,6 @@ namespace ql
 {
 	game_space::seconds animation::elapsed_time() const
 	{
-		return game::frame_duration * time_scale.get();
+		return game::frame_duration * time_scale.value();
 	}
 }

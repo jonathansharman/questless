@@ -14,8 +14,8 @@
 #include "items/item.h"
 #include "stats/modifier.h"
 #include "units/screen_space.h"
-#include "utility/dynamic_property.h"
 #include "utility/id.h"
+#include "utility/lazy_bounded.h"
 
 namespace ql
 {
@@ -27,7 +27,7 @@ namespace ql
 	public:
 		id<body_part> const id;
 
-		dynamic_property<double> health;
+		lazy_bounded<double> health;
 
 		//! The ID of the item equipped to this body or nullopt if none.
 		std::optional<ql::id<item>> equipped_item_id;

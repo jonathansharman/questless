@@ -21,9 +21,10 @@
 #include "items/weapons/weapon.h"
 #include "magic/spell.h"
 #include "stats/stats.h"
-#include "utility/static_bounded.h"
-#include "utility/dynamic_property.h"
 #include "utility/event.h"
+#include "utility/dynamic_property.h"
+#include "utility/lazy_bounded.h"
+#include "utility/static_bounded.h"
 #include "utility/id.h"
 #include "utility/utility.h"
 
@@ -110,9 +111,9 @@ namespace ql
 
 		// Conditions
 
-		dynamic_property<double> health;
-		dynamic_property<double> mana;
-		dynamic_property<double> energy;
+		lazy_bounded<double> health;
+		lazy_bounded<double> mana;
+		lazy_bounded<double> energy;
 		static_bounded<double, min_satiety, max_satiety> satiety;
 		static_bounded<double, min_alertness, max_alertness> alertness;
 
@@ -223,9 +224,6 @@ namespace ql
 		ql::stats get_base_stats_plus_body_stats();
 		ql::stats get_stats();
 
-		std::function<void(double&, double const&)> health_mutator();
-		std::function<void(double&, double const&)> mana_mutator();
-		std::function<void(double&, double const&)> energy_mutator();
 		std::function<void(double&, double const&)> busy_time_mutator();
 	};
 
