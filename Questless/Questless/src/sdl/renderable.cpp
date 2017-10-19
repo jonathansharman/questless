@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "sdl/renderable.h"
+#include "sdl/renderable.hpp"
 
 namespace sdl
 {

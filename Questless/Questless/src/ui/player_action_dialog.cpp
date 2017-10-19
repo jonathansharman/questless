@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "ui/player_action_dialog.h"
+#include "ui/player_action_dialog.hpp"
 
 using namespace sdl;
 

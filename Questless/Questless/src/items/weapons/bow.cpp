@@ -2,10 +2,10 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "items/weapons/bow.h"
-#include "items/weapons/arrow.h"
-#include "entities/beings/being.h"
-#include "game.h"
+#include "items/weapons/bow.hpp"
+#include "items/weapons/arrow.hpp"
+#include "entities/beings/being.hpp"
+#include "game.hpp"
 
 namespace ql
 {

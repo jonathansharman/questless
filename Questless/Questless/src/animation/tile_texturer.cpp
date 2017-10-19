@@ -2,8 +2,8 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "animation/tile_texturer.h"
-#include "sdl/resources.h"
+#include "animation/tile_texturer.hpp"
+#include "sdl/resources.hpp"
 
 using std::make_unique;
 

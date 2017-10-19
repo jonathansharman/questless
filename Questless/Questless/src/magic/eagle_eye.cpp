@@ -2,12 +2,12 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "magic/eagle_eye.h"
-#include "game.h"
-#include "entities/beings/being.h"
-#include "effects/effect.h"
-#include "magic/mana_cost.h"
-#include "entities/beings/statuses/eagle_eyed.h"
+#include "magic/eagle_eye.hpp"
+#include "game.hpp"
+#include "entities/beings/being.hpp"
+#include "effects/effect.hpp"
+#include "magic/mana_cost.hpp"
+#include "entities/beings/statuses/eagle_eyed.hpp"
 
 namespace ql::magic
 {

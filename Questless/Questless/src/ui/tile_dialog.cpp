@@ -2,8 +2,8 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "ui/tile_dialog.h"
-#include "game.h"
+#include "ui/tile_dialog.hpp"
+#include "game.hpp"
 
 using namespace sdl;
 using namespace units;

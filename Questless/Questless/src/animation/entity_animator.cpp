@@ -2,13 +2,13 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "animation/entity_animator.h"
+#include "animation/entity_animator.hpp"
 
-#include "animation/animation_stack.h"
-#include "animation/flame.h"
-#include "animation/sprite_animation.h"
-#include "animation/still.h"
-#include "entities/all_entities.h"
+#include "animation/animation_stack.hpp"
+#include "animation/flame.hpp"
+#include "animation/sprite_animation.hpp"
+#include "animation/still.hpp"
+#include "entities/all_entities.hpp"
 
 using namespace sdl;
 using namespace units;

@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include "magic/mana_cost.h"
-#include "entities/beings/being.h"
-#include "agents/agent.h"
-#include "agents/message.h"
+#include "magic/mana_cost.hpp"
+#include "entities/beings/being.hpp"
+#include "agents/agent.hpp"
+#include "agents/message.hpp"
 
 namespace ql
 {

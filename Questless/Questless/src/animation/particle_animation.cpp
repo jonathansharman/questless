@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "animation/particle_animation.h"
+#include "animation/particle_animation.hpp"
 
 using namespace sdl;
 using namespace units;

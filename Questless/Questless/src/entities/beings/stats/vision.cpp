@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "entities/beings/stats/vision.h"
+#include "entities/beings/stats/vision.hpp"
 using namespace units::math;
 
 namespace ql

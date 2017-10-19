@@ -2,8 +2,8 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "animation/particles/blood_particle.h"
-#include "sdl/resources.h"
+#include "animation/particles/blood_particle.hpp"
+#include "sdl/resources.hpp"
 
 namespace ql
 {

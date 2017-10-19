@@ -9,7 +9,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT
 #include <doctest.h>
 
-#include "game.h"
+#include "game.hpp"
 
 int main(int argc, char* argv[])
 {

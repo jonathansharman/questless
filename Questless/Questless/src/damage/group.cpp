@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "damage/group.h"
+#include "damage/group.hpp"
 
 namespace ql::dmg
 {

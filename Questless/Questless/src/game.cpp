@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "game.h"
+#include "game.hpp"
 
 #include <sstream>
 #include <thread>
@@ -12,23 +12,23 @@
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
 
-#include "animation/entity_animator.h"
-#include "world/coordinates.h"
-#include "world/light_source.h"
+#include "animation/entity_animator.hpp"
+#include "world/coordinates.hpp"
+#include "world/light_source.hpp"
 
 //! @todo The following are needed only for player spawning. Perhaps this should be the responsibility of a different class.
-#include "agents/agent.h"
-#include "agents/player.h"
-#include "items/magic/gatestone.h"
-#include "entities/beings/goblinoids/goblin.h"
-#include "entities/beings/human.h"
-#include "items/scroll.h"
-#include "items/weapons/arrow.h"
-#include "items/weapons/bow.h"
-#include "items/weapons/quarterstaff.h"
-#include "items/weapons/quiver.h"
-#include "sdl/shader_program.h"
-#include "magic/all_spells.h"
+#include "agents/agent.hpp"
+#include "agents/player.hpp"
+#include "items/magic/gatestone.hpp"
+#include "entities/beings/goblinoids/goblin.hpp"
+#include "entities/beings/human.hpp"
+#include "items/scroll.hpp"
+#include "items/weapons/arrow.hpp"
+#include "items/weapons/bow.hpp"
+#include "items/weapons/quarterstaff.hpp"
+#include "items/weapons/quiver.hpp"
+#include "sdl/shader_program.hpp"
+#include "magic/all_spells.hpp"
 
 using std::move;
 using std::make_unique;

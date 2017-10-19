@@ -2,8 +2,8 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "animation/particles/yellow_magic_particle.h"
-#include "sdl/resources.h"
+#include "animation/particles/yellow_magic_particle.hpp"
+#include "sdl/resources.hpp"
 
 namespace ql
 {

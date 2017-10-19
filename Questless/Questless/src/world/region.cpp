@@ -8,16 +8,16 @@ namespace fs = std::experimental::filesystem; //! @todo Replace this with std::f
 #include <sstream>
 #include <fstream>
 
-#include "agents/agent.h"
-#include "agents/lazy_ai.h"
-#include "agents/basic_ai.h"
-#include "entities/all_entities.h"
-#include "game.h"
-#include "items/weapons/quarterstaff.h"
-#include "units/constants.h"
-#include "utility/utility.h"
-#include "world/light_source.h"
-#include "world/region.h"
+#include "agents/agent.hpp"
+#include "agents/lazy_ai.hpp"
+#include "agents/basic_ai.hpp"
+#include "entities/all_entities.hpp"
+#include "game.hpp"
+#include "items/weapons/quarterstaff.hpp"
+#include "units/constants.hpp"
+#include "utility/utility.hpp"
+#include "world/light_source.hpp"
+#include "world/region.hpp"
 
 using std::string;
 using std::vector;

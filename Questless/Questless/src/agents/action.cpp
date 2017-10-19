@@ -2,9 +2,9 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "agents/action.h"
-#include "entities/beings/being.h"
-#include "agents/agent.h"
+#include "agents/action.hpp"
+#include "entities/beings/being.hpp"
+#include "agents/agent.hpp"
 
 using namespace std;
 

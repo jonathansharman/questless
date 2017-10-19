@@ -2,10 +2,10 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "entities/objects/campfire.h"
-#include "game.h"
-#include "world/light_source.h"
-#include "world/region.h"
+#include "entities/objects/campfire.hpp"
+#include "game.hpp"
+#include "world/light_source.hpp"
+#include "world/region.hpp"
 
 namespace ql
 {

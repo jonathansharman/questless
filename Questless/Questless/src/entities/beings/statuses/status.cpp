@@ -2,8 +2,8 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "entities/beings/statuses/status.h"
-#include "utility/id.h"
+#include "entities/beings/statuses/status.hpp"
+#include "utility/id.hpp"
 
 namespace ql
 {

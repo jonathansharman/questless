@@ -2,9 +2,9 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "animation/spell_texturer.h"
-#include "sdl/resources.h"
-#include "items/scroll.h"
+#include "animation/spell_texturer.hpp"
+#include "sdl/resources.hpp"
+#include "items/scroll.hpp"
 
 using namespace sdl;
 using namespace units;

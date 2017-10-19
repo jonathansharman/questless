@@ -2,15 +2,15 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "world/section.h"
+#include "world/section.hpp"
 
 #include <fstream>
 
-#include "game.h"
-#include "entities/beings/being.h"
-#include "entities/objects/object.h"
-#include "world/light_source.h"
-#include "world/region.h"
+#include "game.hpp"
+#include "entities/beings/being.hpp"
+#include "entities/objects/object.hpp"
+#include "world/light_source.hpp"
+#include "world/region.hpp"
 
 namespace ql
 {

@@ -2,15 +2,15 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "magic/shock.h"
+#include "magic/shock.hpp"
 
-#include "game.h"
-#include "entities/beings/being.h"
-#include "effects/effect.h"
-#include "magic/mana_cost.h"
+#include "game.hpp"
+#include "entities/beings/being.hpp"
+#include "effects/effect.hpp"
+#include "magic/mana_cost.hpp"
 
 //! @todo Body part stuff - remove if not used.
-#include "entities/beings/body_part.h"
+#include "entities/beings/body_part.hpp"
 #include <deque>
 #include <type_traits>
 

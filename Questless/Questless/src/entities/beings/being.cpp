@@ -2,13 +2,13 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "entities/beings/being.h"
-#include "entities/beings/body.h"
-#include "entities/objects/corpse.h"
-#include "game.h"
-#include "agents/agent.h"
-#include "world/section.h"
-#include "world/region.h"
+#include "entities/beings/being.hpp"
+#include "entities/beings/body.hpp"
+#include "entities/objects/corpse.hpp"
+#include "game.hpp"
+#include "agents/agent.hpp"
+#include "world/section.hpp"
+#include "world/region.hpp"
 
 using std::function;
 

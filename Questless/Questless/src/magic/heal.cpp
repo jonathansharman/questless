@@ -2,9 +2,9 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "magic/heal.h"
-#include "entities/beings/being.h"
-#include "agents/agent.h"
+#include "magic/heal.hpp"
+#include "entities/beings/being.hpp"
+#include "agents/agent.hpp"
 
 //! @todo double check all the captures to make sure they're the proper type.
 

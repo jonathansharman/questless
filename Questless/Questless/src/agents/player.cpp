@@ -2,19 +2,19 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "agents/player.h"
+#include "agents/player.hpp"
 
-#include "game.h"
-#include "sdl/resources.h"
-#include "ui/count_dialog.h"
-#include "ui/direction_dialog.h"
-#include "ui/magnitude_dialog.h"
-#include "ui/message_dialog.h"
-#include "ui/tile_dialog.h"
-#include "ui/vector_dialog.h"
+#include "game.hpp"
+#include "sdl/resources.hpp"
+#include "ui/count_dialog.hpp"
+#include "ui/direction_dialog.hpp"
+#include "ui/magnitude_dialog.hpp"
+#include "ui/message_dialog.hpp"
+#include "ui/tile_dialog.hpp"
+#include "ui/vector_dialog.hpp"
 
-#include "ui/qte/incant.h"
-#include "ui/qte/shock.h"
+#include "ui/qte/incant.hpp"
+#include "ui/qte/shock.hpp"
 
 using std::function;
 

@@ -2,17 +2,17 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "animation/world_renderer.h"
+#include "animation/world_renderer.hpp"
 
-#include "animation/entity_animator.h"
-#include "animation/particles/blood_particle.h"
-#include "animation/particles/green_magic_particle.h"
-#include "animation/particles/text_particle.h"
-#include "animation/particles/yellow_magic_particle.h"
-#include "animation/tile_texturer.h"
-#include "game.h"
-#include "utility/utility.h"
-#include "world/region.h"
+#include "animation/entity_animator.hpp"
+#include "animation/particles/blood_particle.hpp"
+#include "animation/particles/green_magic_particle.hpp"
+#include "animation/particles/text_particle.hpp"
+#include "animation/particles/yellow_magic_particle.hpp"
+#include "animation/tile_texturer.hpp"
+#include "game.hpp"
+#include "utility/utility.hpp"
+#include "world/region.hpp"
 
 using std::make_unique;
 

@@ -2,9 +2,9 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "agents/basic_ai.h"
+#include "agents/basic_ai.hpp"
 
-#include "game.h"
+#include "game.hpp"
 
 using std::function;
 

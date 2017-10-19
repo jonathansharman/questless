@@ -2,8 +2,8 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "animation/sprite_animation.h"
-#include "game.h"
+#include "animation/sprite_animation.hpp"
+#include "game.hpp"
 
 using namespace sdl;
 using namespace units;

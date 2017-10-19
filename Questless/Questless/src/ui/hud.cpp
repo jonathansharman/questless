@@ -2,11 +2,11 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "ui/hud.h"
-#include "game.h"
-#include "entities/beings/being.h"
-#include "animation/item_renderer.h"
-#include "animation/body_texturer.h"
+#include "ui/hud.hpp"
+#include "game.hpp"
+#include "entities/beings/being.hpp"
+#include "animation/item_renderer.hpp"
+#include "animation/body_texturer.hpp"
 
 using namespace sdl;
 using namespace units;

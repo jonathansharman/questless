@@ -2,11 +2,11 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "ui/digraph_menu.h"
+#include "ui/digraph_menu.hpp"
 
 #include <algorithm>
 
-#include "units/screen_space.h"
+#include "units/screen_space.hpp"
 
 using namespace sdl;
 using namespace units;

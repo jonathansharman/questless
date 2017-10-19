@@ -2,8 +2,8 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "items/scroll.h"
-#include "entities/beings/being.h"
+#include "items/scroll.hpp"
+#include "entities/beings/being.hpp"
 
 namespace ql
 {

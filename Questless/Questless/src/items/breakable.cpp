@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "items/breakable.h"
+#include "items/breakable.hpp"
 
 namespace ql
 {

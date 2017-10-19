@@ -7,10 +7,10 @@
 #include <algorithm>
 #include <utility>
 
-#include "animation/body_texturer.h"
-#include "entities/beings/body_part.h"
-#include "sdl/resources.h"
-#include "utility/utility.h"
+#include "animation/body_texturer.hpp"
+#include "entities/beings/body_part.hpp"
+#include "sdl/resources.hpp"
+#include "utility/utility.hpp"
 
 using namespace sdl;
 using namespace units;

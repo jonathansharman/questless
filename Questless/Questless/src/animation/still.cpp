@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "animation/still.h"
+#include "animation/still.hpp"
 
 using namespace sdl;
 using namespace units;

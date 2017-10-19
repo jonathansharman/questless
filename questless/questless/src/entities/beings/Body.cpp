@@ -2,13 +2,13 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "entities/beings/body.h"
+#include "entities/beings/body.hpp"
 
 #include <deque>
 #include <algorithm>
 #include <memory>
 
-#include "entities/beings/body_part.h"
+#include "entities/beings/body_part.hpp"
 
 using namespace units;
 
@@ -16,6 +16,23 @@ namespace ql
 {
 	body::body(being& owner, uptr<body_part> root) : _owner{owner}, _root{std::move(root)}
 	{
+		class part_attacher : public body_part_mutable_visitor
+		{
+		public:
+			part_attacher(body& body) : _body{body} {}
+
+			void visit(head& head) final { _body._heads.push_back(head); }
+			void visit(torso& torso) final { _body._torsos.push_back(torso); }
+			void visit(arm& arm) final { _body._arms.push_back(arm); }
+			void visit(hand& hand) final { _body._hands.push_back(hand); }
+			void visit(leg& leg) final { _body._legs.push_back(leg); }
+			void visit(foot& foot) final { _body._feet.push_back(foot); }
+			void visit(wing& wing) final { _body._wings.push_back(wing); }
+			void visit(tail& tail) final { _body._tails.push_back(tail); }
+		private:
+			body& _body;
+		};
+
 		int x_min = 0;
 		int y_min = 0;
 		int x_max = 0;
@@ -136,38 +153,5 @@ namespace ql
 			}
 		}
 		return nullptr;
-	}
-
-	void body::part_attacher::visit(head& head)
-	{
-		_body._heads.push_back(head);
-	}
-	void body::part_attacher::visit(torso& torso)
-	{
-		_body._torsos.push_back(torso);
-	}
-	void body::part_attacher::visit(arm& arm)
-	{
-		_body._arms.push_back(arm);
-	}
-	void body::part_attacher::visit(hand& hand)
-	{
-		_body._hands.push_back(hand);
-	}
-	void body::part_attacher::visit(leg& leg)
-	{
-		_body._legs.push_back(leg);
-	}
-	void body::part_attacher::visit(foot& foot)
-	{
-		_body._feet.push_back(foot);
-	}
-	void body::part_attacher::visit(wing& wing)
-	{
-		_body._wings.push_back(wing);
-	}
-	void body::part_attacher::visit(tail& tail)
-	{
-		_body._tails.push_back(tail);
 	}
 }

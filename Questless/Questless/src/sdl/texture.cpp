@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "sdl/texture.h"
+#include "sdl/texture.hpp"
 
 #include <string>
 
@@ -12,7 +12,7 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 
-#include "sdl/resources.h"
+#include "sdl/resources.hpp"
 
 using namespace units;
 using namespace units::colors;

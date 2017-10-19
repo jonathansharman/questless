@@ -2,8 +2,8 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "sdl/input.h"
-#include "sdl/resources.h"
+#include "sdl/input.hpp"
+#include "sdl/resources.hpp"
 
 namespace sdl
 {

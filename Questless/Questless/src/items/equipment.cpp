@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include "items/equipment.h"
+#include "items/equipment.hpp"
 
-#include "game.h"
-#include "entities/beings/being.h"
+#include "game.hpp"
+#include "entities/beings/being.hpp"
 
 namespace ql
 {

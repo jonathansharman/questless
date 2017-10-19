@@ -2,8 +2,8 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "entities/objects/object.h"
-#include "game.h"
+#include "entities/objects/object.hpp"
+#include "game.hpp"
 
 namespace ql
 {

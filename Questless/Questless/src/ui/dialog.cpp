@@ -2,12 +2,12 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "ui/dialog.h"
+#include "ui/dialog.hpp"
 
-#include "sdl/font.h"
-#include "sdl/resources.h"
+#include "sdl/font.hpp"
+#include "sdl/resources.hpp"
 
-#include "units/screen_space.h"
+#include "units/screen_space.hpp"
 
 using namespace sdl;
 using namespace units;

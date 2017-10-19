@@ -2,9 +2,9 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "entities/beings/goblinoids/goblin.h"
-#include "entities/beings/body.h"
-#include "entities/beings/body_part.h"
+#include "entities/beings/goblinoids/goblin.hpp"
+#include "entities/beings/body.hpp"
+#include "entities/beings/body_part.hpp"
 
 using namespace units;
 

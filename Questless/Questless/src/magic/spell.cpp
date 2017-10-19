@@ -2,9 +2,9 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "magic/spell.h"
-#include "entities/beings/being.h"
-#include "agents/agent.h"
+#include "magic/spell.hpp"
+#include "entities/beings/being.hpp"
+#include "agents/agent.hpp"
 
 namespace ql::magic
 {

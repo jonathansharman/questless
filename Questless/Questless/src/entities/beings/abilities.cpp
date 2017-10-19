@@ -2,10 +2,10 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "entities/beings/abilities.h"
-#include "entities/beings/being.h"
-#include "agents/agent.h"
-#include "world/region.h"
+#include "entities/beings/abilities.hpp"
+#include "entities/beings/being.hpp"
+#include "agents/agent.hpp"
+#include "world/region.hpp"
 
 namespace ql
 {

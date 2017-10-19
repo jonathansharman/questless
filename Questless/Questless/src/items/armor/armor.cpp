@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "items/armor/armor.h"
+#include "items/armor/armor.hpp"
 
 namespace ql
 {

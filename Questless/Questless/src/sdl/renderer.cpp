@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "sdl/renderer.h"
+#include "sdl/renderer.hpp"
 
 #include <numeric>
 
@@ -12,8 +12,8 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 
-#include "sdl/resources.h"
-#include "units/math.h"
+#include "sdl/resources.hpp"
+#include "units/math.hpp"
 
 using std::vector;
 using std::runtime_error;

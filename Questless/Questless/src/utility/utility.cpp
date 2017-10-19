@@ -2,8 +2,8 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "utility/utility.h"
-#include "game.h"
+#include "utility/utility.hpp"
+#include "game.hpp"
 
 using std::function;
 

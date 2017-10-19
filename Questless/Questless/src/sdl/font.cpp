@@ -2,8 +2,8 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "sdl/font.h"
-#include "sdl/renderable.h" //! @todo Remove after done debugging.
+#include "sdl/font.hpp"
+#include "sdl/renderable.hpp" //! @todo Remove after done debugging.
 
 using namespace units;
 

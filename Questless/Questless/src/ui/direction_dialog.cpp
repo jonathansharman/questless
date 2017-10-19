@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "ui/direction_dialog.h"
+#include "ui/direction_dialog.hpp"
 
 using namespace sdl;
 using namespace units;

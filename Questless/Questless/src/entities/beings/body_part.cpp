@@ -2,8 +2,8 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "entities/beings/body_part.h"
-#include "entities/beings/being.h"
+#include "entities/beings/body_part.hpp"
+#include "entities/beings/being.hpp"
 
 using std::string;
 using std::vector;

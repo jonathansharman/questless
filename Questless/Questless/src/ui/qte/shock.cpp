@@ -2,11 +2,11 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "ui/qte/shock.h"
+#include "ui/qte/shock.hpp"
 
-#include "game.h"
-#include "units/math.h"
-#include "utility/utility.h"
+#include "game.hpp"
+#include "units/math.hpp"
+#include "utility/utility.hpp"
 
 using namespace sdl;
 using namespace units;

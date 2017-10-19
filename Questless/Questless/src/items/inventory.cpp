@@ -2,9 +2,9 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "items/inventory.h"
+#include "items/inventory.hpp"
 
-#include "game.h"
+#include "game.hpp"
 
 namespace ql
 {

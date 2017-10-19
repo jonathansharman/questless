@@ -2,9 +2,9 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "animation/particles/text_particle.h"
+#include "animation/particles/text_particle.hpp"
 
-#include "sdl/resources.h"
+#include "sdl/resources.hpp"
 
 namespace ql
 {

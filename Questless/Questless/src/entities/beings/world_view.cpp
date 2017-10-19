@@ -2,15 +2,15 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "entities/beings/world_view.h"
+#include "entities/beings/world_view.hpp"
 
 #include <set>
 #include <limits.h>
 
-#include "game.h"
-#include "entities/beings/being.h"
-#include "entities/objects/object.h"
-#include "units/hex_coords.h"
+#include "game.hpp"
+#include "entities/beings/being.hpp"
+#include "entities/objects/object.hpp"
+#include "units/hex_coords.hpp"
 
 using namespace sdl;
 using namespace units;

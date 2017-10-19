@@ -2,11 +2,11 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "ui/qte/incant.h"
+#include "ui/qte/incant.hpp"
 
-#include "game.h"
-#include "items/magic/gatestone.h"
-#include "magic/all_spells.h"
+#include "game.hpp"
+#include "items/magic/gatestone.hpp"
+#include "magic/all_spells.hpp"
 
 using namespace sdl;
 using namespace units;

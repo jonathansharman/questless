@@ -2,9 +2,9 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "agents/agent.h"
-#include "entities/beings/being.h"
-#include "world/region.h"
+#include "agents/agent.hpp"
+#include "entities/beings/being.hpp"
+#include "world/region.hpp"
 
 namespace ql
 {

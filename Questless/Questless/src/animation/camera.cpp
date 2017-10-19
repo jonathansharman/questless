@@ -2,11 +2,11 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "animation/camera.h"
+#include "animation/camera.hpp"
 
 #include <cmath>
 
-#include "sdl/resources.h"
+#include "sdl/resources.hpp"
 
 using namespace sdl;
 using namespace units;

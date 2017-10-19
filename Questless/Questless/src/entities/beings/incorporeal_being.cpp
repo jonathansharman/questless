@@ -2,8 +2,8 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "entities/beings/incorporeal_being.h"
-#include "agents/agent.h"
+#include "entities/beings/incorporeal_being.hpp"
+#include "agents/agent.hpp"
 
 namespace ql
 {

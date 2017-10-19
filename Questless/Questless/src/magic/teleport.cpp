@@ -2,9 +2,9 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "magic/teleport.h"
-#include "game.h"
-#include "entities/beings/being.h"
+#include "magic/teleport.hpp"
+#include "game.hpp"
+#include "entities/beings/being.hpp"
 
 namespace ql::magic
 {

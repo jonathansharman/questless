@@ -2,9 +2,9 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "entities/entity.h"
-#include "world/region.h"
-#include "world/section.h"
+#include "entities/entity.hpp"
+#include "world/region.hpp"
+#include "world/section.hpp"
 
 namespace ql
 {
