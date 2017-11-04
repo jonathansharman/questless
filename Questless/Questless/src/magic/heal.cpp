@@ -29,7 +29,10 @@ namespace ql::magic
 							return caster.agent().send_message(std::make_unique<message_not_enough_mana>(cost - caster.mana), [cont] { return cont(action::result::aborted); });
 						}
 						caster.mana -= cost;
-						target->heal(magnitude, nullptr, caster.id);
+						//! @todo Part targeting. For now, just heal everything.
+						for (body_part& part : target->body) {
+							target->heal(magnitude, part, caster.id);
+						}
 						return cont(action::result::success);
 					}
 				);

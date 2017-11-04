@@ -302,11 +302,12 @@ namespace ql
 		static auto pierce_sound_handle = the_sound_manager().add("resources/sounds/weapons/pierce.wav");
 		static auto hit_sound_handle = the_sound_manager().add("resources/sounds/weapons/hit.wav");
 
-		being const* target = the_game().beings.cptr(e.target_id);
-		double const target_vitality = target ? target->stats.vitality.value() : 100.0; // Assume vitality = 100 if being no longer exists to check.
-		//! @todo Pass along the vitality in the event object if it's needed here.
+		being const* const target_being = the_game().beings.cptr(e.target_being_id);
+		body_part const* const target_part = target_being ? target_being->body.find_part(e.target_part_id) : nullptr;
+		double const target_vitality = target_part ? target_part->vitality() : 100.0; // Assume vitality = 100 if being no longer exists to check.
+		//! @todo Pass along the vitality in the event object if it's needed here (to avoid having to make up a number).
 
-		game_space::point position = layout::dflt().to_world(e.origin());
+		game_space::point const position = layout::dflt().to_world(e.origin());
 
 		dmg::group const& damage = e.damage;
 
@@ -319,7 +320,8 @@ namespace ql
 
 				void spawn_blood(double const lost_health)
 				{
-					int const n = static_cast<int>(lost_health / target_vitality * 100.0); // 100 is an arbitrary scaling factor.
+					constexpr double scaling_factor = 20.0;
+					int const n = static_cast<int>(lost_health / target_vitality * scaling_factor);
 					for (int i = 0; i < n; ++i) {
 						animations.push_back(std::make_pair(make_unique<blood_particle>(), position));
 					}

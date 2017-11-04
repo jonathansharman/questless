@@ -51,12 +51,17 @@ namespace ql
 
 	void body_part::update()
 	{
-		health += _owner.stats.health_regen * _vitality / _owner.stats.vitality;
+		health += _owner.stats.health_regen * _vitality;
 	}
 
 	void body_part::take_damage(dmg::group& damage, std::optional<ql::id<being>> source_id)
 	{
-		_owner.take_damage(damage, this, source_id);
+		_owner.take_damage(damage, *this, source_id);
+	}
+
+	void body_part::heal(double amount, std::optional<ql::id<being>> opt_source_id)
+	{
+		_owner.heal(amount, *this, opt_source_id);
 	}
 	
 	std::function<void(double&, double const&)> body_part::health_mutator()

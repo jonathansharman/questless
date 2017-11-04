@@ -21,6 +21,8 @@ namespace ql
 {
 	class being;
 
+	struct vitality : tagged_type<double> { using tagged_type::tagged_type; };
+
 	//! A being's body part.
 	class body_part : public element<body_part_subtype_list>
 	{
@@ -75,8 +77,13 @@ namespace ql
 
 		//! Causes the body part to take damage from the specified source being.
 		//! @param damage Damage group to be applied to this being.
-		//! @param source_id The ID of the being which caused the damage, if any.
-		void take_damage(dmg::group& damage, std::optional<ql::id<being>> source_id);
+		//! @param opt_source_id The ID of the being which caused the damage, if any.
+		void take_damage(dmg::group& damage, std::optional<ql::id<being>> opt_source_id);
+
+		//! Causes the body part to be healed by the specified source being.
+		//! @param amount Health to be restored to this being.
+		//! @param opt_source_id The ID of the being which caused the healing, if any.
+		void heal(double amount, std::optional<ql::id<being>> opt_source_id);
 	protected:
 		//! @param owner The being that owns this body.
 		//! @param name The name of the body part.

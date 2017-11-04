@@ -9,7 +9,9 @@ namespace ql
 {
 	void poisoned::subupdate(being& target)
 	{
-		dmg::group blight = dmg::blight{_magnitude};
-		target.take_damage(blight, nullptr, source());
+		dmg::group poison = dmg::poison{_magnitude};
+		for (body_part& part : target.body) {
+			target.take_damage(poison, part, source());
+		}
 	}
 }

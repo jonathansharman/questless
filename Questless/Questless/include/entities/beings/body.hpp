@@ -44,7 +44,8 @@ namespace ql
 		{
 			return boost::make_transform_iterator(_parts.end(), body_part_ref_to_cref);
 		}
-		
+
+		std::vector<ref<body_part>> const& parts() { return _parts; }
 		std::vector<ref<head>> const& heads() { return _heads; }
 		std::vector<ref<torso>> const& torsos() { return _torsos; }
 		std::vector<ref<arm>> const& arms() { return _arms; }
@@ -56,6 +57,8 @@ namespace ql
 
 		//! The body part on this body with the given ID or nullptr if none exists.
 		body_part* find_part(id<body_part> id);
+		//! The body part on this body with the given ID or nullptr if none exists.
+		body_part const* find_part(id<body_part> id) const;
 
 		//! The head on this body with the given ID or nullptr if none exists.
 		head* find_head(id<body_part> id);

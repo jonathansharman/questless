@@ -9,6 +9,8 @@ namespace ql
 {
 	void healing::subupdate(being& target)
 	{
-		target.heal(_magnitude, nullptr, source());
+		for (body_part& part : target.body) {
+			target.heal(_magnitude, part, source());
+		}
 	}
 }

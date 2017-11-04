@@ -320,7 +320,7 @@ namespace ql
 	void basic_ai::visit(injury_effect const& effect)
 	{
 		// Retaliate against injuries.
-		if (effect.opt_source_id && effect.target_id == being.id) {
+		if (effect.opt_source_id && effect.target_being_id == being.id) {
 			_state = std::make_unique<attack_state>(*effect.opt_source_id);
 		}
 	}

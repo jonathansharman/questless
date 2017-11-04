@@ -74,6 +74,15 @@ namespace ql
 		}
 		return nullptr;
 	}
+	body_part const* body::find_part(id<body_part> id) const
+	{
+		for (body_part& part : _parts) {
+			if (part.id == id) {
+				return &part;
+			}
+		}
+		return nullptr;
+	}
 
 	head* body::find_head(id<body_part> id)
 	{

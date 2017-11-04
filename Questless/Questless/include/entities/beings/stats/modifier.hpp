@@ -69,11 +69,6 @@ namespace ql
 	private:
 		double _magnitude;
 	};
-	struct vitality_modifier : public scalar_modifier
-	{
-		using scalar_modifier::scalar_modifier;
-		void apply(stats& stats) final { stats.vitality += magnitude(); }
-	};
 	struct spirit_modifier : public scalar_modifier
 	{
 		using scalar_modifier::scalar_modifier;

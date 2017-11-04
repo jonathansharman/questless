@@ -15,7 +15,6 @@
 
 namespace ql
 {
-	struct vitality : tagged_type<double> { using tagged_type::tagged_type; };
 	struct spirit : tagged_type<double> { using tagged_type::tagged_type; };
 	struct health_regen : tagged_type<double> { using tagged_type::tagged_type; };
 	struct mana_regen : tagged_type<double> { using tagged_type::tagged_type; };
@@ -37,7 +36,6 @@ namespace ql
 	{
 		static constexpr double minimum_value = 0.0;
 
-		static_bounded<double, minimum_value> vitality = 0.0;
 		static_bounded<double, minimum_value> spirit = 0.0;
 		static_bounded<double, minimum_value> health_regen = 0.0;
 		static_bounded<double, minimum_value> mana_regen = 0.0;
@@ -62,8 +60,7 @@ namespace ql
 		constexpr stats() {}
 
 		constexpr stats
-			( ql::vitality vitality
-			, ql::spirit spirit
+			( ql::spirit spirit
 			, ql::health_regen health_regen
 			, ql::mana_regen mana_regen
 			, ql::strength strength
@@ -83,8 +80,7 @@ namespace ql
 			, dmg::resist resistance
 			, dmg::vuln vulnerability
 			)
-			: vitality{std::move(vitality)}
-			, spirit{std::move(spirit)}
+			: spirit{std::move(spirit)}
 			, health_regen{std::move(health_regen)}
 			, mana_regen{std::move(mana_regen)}
 			, strength{std::move(strength)}
@@ -107,7 +103,7 @@ namespace ql
 
 		friend std::ostream& operator <<(std::ostream& out, stats const& a)
 		{
-			out << a.vitality << ' ' << a.spirit << ' ' << a.health_regen << ' ' << a.mana_regen << ' ' << a.strength << ' ' << a.endurance << ' '
+			out << a.spirit << ' ' << a.health_regen << ' ' << a.mana_regen << ' ' << a.strength << ' ' << a.endurance << ' '
 				<< a.stamina << ' ' << a.agility << ' ' << a.dexterity << ' ' << a.stealth << ' ' << a.vision << ' ' << a.hearing << ' '
 				<< a.intellect << ' ' << a.weight << ' ' << a.min_temp << ' ' << a.max_temp << ' ' << a.mute << ' ';
 			return out;
@@ -115,7 +111,7 @@ namespace ql
 
 		friend std::istream& operator >>(std::istream& in, stats& a)
 		{
-			in >> a.vitality >> a.spirit >> a.health_regen >> a.mana_regen >> a.strength >> a.endurance >> a.stamina >> a.agility >> a.dexterity
+			in >> a.spirit >> a.health_regen >> a.mana_regen >> a.strength >> a.endurance >> a.stamina >> a.agility >> a.dexterity
 				>> a.stealth >> a.vision >> a.hearing >> a.intellect >> a.weight >> a.min_temp >> a.max_temp >> a.mute;
 			return in;
 		}

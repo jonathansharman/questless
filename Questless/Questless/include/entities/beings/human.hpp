@@ -12,9 +12,8 @@ namespace ql
 	{
 	public:
 		static constexpr ql::stats dflt_base_stats
-			{ vitality{100.0}
-			, spirit{0.0}
-			, health_regen{0.1}
+			{ spirit{0.0}
+			, health_regen{0.001}
 			, mana_regen{1.0}
 			, strength{0.0}
 			, endurance{120.0}

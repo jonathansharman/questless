@@ -12,6 +12,7 @@
 namespace ql
 {
 	class being;
+	class body_part;
 
 	//! An in-game effect perceivable by beings, such as light and sound stimuli.
 	class effect : public element<effect_subtype_list>
@@ -52,15 +53,27 @@ namespace ql
 	{
 	public:
 		dmg::group const damage;
-		id<being> target_id;
+		id<being> target_being_id;
+		id<body_part> target_part_id;
 		std::optional<id<being>> opt_source_id;
 
 		//! @param origin The coordinates of the effect's origin.
 		//! @param damage The damage dealt.
-		//! @param target_id The ID of the injured being.
+		//! @param target_being_id The ID of the injured being.
+		//! @param target_part_id The ID of the injured part.
 		//! @param opt_source_id The ID of the being who caused the injury or nullopt if there is none.
-		injury_effect(region_tile::point origin, dmg::group damage, id<being> target_id, std::optional<id<being>> opt_source_id)
-			: effect_base<injury_effect>{origin}, damage{damage}, target_id{target_id}, opt_source_id{opt_source_id}
+		injury_effect
+			( region_tile::point origin
+			, dmg::group damage
+			, id<being> target_being_id
+			, id<body_part> target_part_id
+			, std::optional<id<being>> opt_source_id
+			)
+			: effect_base<injury_effect>{origin}
+			, damage{damage}
+			, target_being_id{target_being_id}
+			, target_part_id{target_part_id}
+			, opt_source_id{opt_source_id}
 		{}
 
 		int range() const final { return 7; }

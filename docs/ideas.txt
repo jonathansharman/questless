@@ -7,18 +7,18 @@ The Abyss
 	The abode of fiends, including the undead, demons, and devils
 Physis
 	The realm of untamed and unadulterated nature
+	Unlimited matter
 	Home to the elementals
 Techne
 	The realm of art, reason, and technology
+	Unlimited energy
 	Home to the crafters and constructs
 Chaos
 	Space is folded onto itself
-	Contains infinite energy
 	Perpetually changing
 	Inhospitable, except for the shifters
 Stasis
 	Time is folded onto itself
-	Contains no energy
 	Everything within it is eternal, unchanging
 	Inhospitable, except for the preservers
 Harmony
@@ -347,7 +347,7 @@ Armor
 Magic
 ================================================================================
 NPCs can have explicit specializations. Spells will all fit roughly into the specializations. But players need not choose an explicit specialization.
-White - good - light - heaven - revelation
+White - good - light - revelation
 	Specializations
 		Celestial mage
 		Healer
@@ -357,13 +357,12 @@ White - good - light - heaven - revelation
 		Exorcise - Empowers target's black antimagic, weaken its black magic, and removes possession from it.
 		Immortalize - Make a target being temporarily immortal.
 		Divine - Temporarily gain complete perception of a target being.
-		Raise Ladder - Can only cast while in the natural realm. Create a ladder to heaven, allowing travel between the realms.
+		Raise Ladder - Can only cast while in the Nexus or Heaven. Create a ladder from the Nexus to Heaven, allowing travel between the realms.
 		Astral Project - Temporarily project the caster's soul from its body.
 		Summon hosts
 	Restoration Runes
 		Cleanse - Remove a negative status from a target. The status power must be lower than the invocation power.
 		Immunize - Give a target a chosen amount of blight resistance for a chosen duration.
-		Inner Heal - Restore health to a being.
 		Mend - Restore health to a body part.
 		Holistic Heal - Restore a being and all its body parts to full health.
 		Resurrect - Return a target corpse to life. Health after resurrection depends on spell magnitude.
@@ -373,7 +372,7 @@ White - good - light - heaven - revelation
 		Illuminate - Increase the light level in an area around the caster for a certain duration.
 		Lumiphile - Temporarily become a lumiphile. Lumiphiles have increased agility and health regen while in bright light.
 		Dawnlight - Increase a being's alertness and prevent it from sleeping for a certain duration.
-Black - evil - darkness - hell - illusion
+Black - evil - darkness - illusion
 	Specializations
 		Demon master
 		Necromancer
@@ -385,13 +384,14 @@ Black - evil - darkness - hell - illusion
 		Damn - If the caster is alive after a certain duration, the target dies.
 		Curse - Caster chooses an item and curses it. Carrying a cursed item deals blight damage over time. When a cursed item is picked up or thrown, it explodes, dealing a large amount of blight damage.
 		Enslave Fiend - Enslave target fiend, making it loyal to the caster.
-		Open Hellmouth - Can only cast while in the natural realm. Create a hellmouth leading to hell, allowing travel between the realms.
+		Open Hellmouth - Can only cast while in the Nexus or Hell. Create a hellmouth from the Nexus to Hell, allowing travel between the realms.
 		Summon demons and devils
 	Necrotic Runes
 		Rot - Afflict target with rot, causing blight damage over time.
 		Enfeeble - Give a target a chosen amount of blight vulnerability for a chosen duration.
 		Defile?
 		Exanimate - Extract a target's soul, resulting in a corpse and a wraith under the caster's control.
+		Exsanguinate - Cause a being to bleed from all its parts.
 		Raise Dead - Raise a target corpse to undeath under the caster's control. The undead being's stats depend on the spell magnitude, and it disintegrates after the spell's duration elapses.
 		Summon spirits
 	Shadow Runes
@@ -414,10 +414,11 @@ Green - matter - nature
 		Devour - Deals blight (?) damage to a target and restores health to the caster.
 		Eagle Eye - Temporarily increases caster's visual acuity by 100%.
 		Scavenge - Destroy a target corpse and regain health in proportion to its vitality when it was alive.
+		Communicate with animals?
 		Summon animals
 	Botanic Runes
 		Regenerate - Become passive while regaining health for a chosen duration.
-		Communicate with animals/plants??
+		Communicate with plants?
 		Summon plants
 			Growth - Creates a disc of trees at target location, blocking movement.
 	Elemental Runes
@@ -429,6 +430,7 @@ Green - matter - nature
 		Water
 			Chill - Temporarily raise the target being's minimum temperature.
 			Freeze - Freeze target location, drastically lowering its temperature. The temperature returns to normal over time.
+			Flood - Create water at target tile.
 			Summon frost elemental
 		Storm
 			Change wind
@@ -436,8 +438,8 @@ Green - matter - nature
 			Summon storm elemental
 Red - energy - technology
 	Specializations
-		Technomage
 		Power mage
+		Technomage
 	Power Runes
 		Charge - Gain mana over time. Total mana restored is equal to casting cost plus spell duration times a constant factor.
 			E.g., spend 100 mana to recover 100 mana over 0 turns. Or spend 100 mana to recover 200 mana over, say, 25 turns.
@@ -476,6 +478,7 @@ Yellow - chaos - space
 			...
 		Mirage - Cause a being to perceive something that's not there.
 		Transmute - ???
+		Create Chimera - Choose two beings and randomly swap their body parts around.
 	Space Runes
 		Interport - Swap positions of two beings.
 		Teleport - Teleport within a certain distance.
@@ -501,6 +504,7 @@ Orange - war - strife
 			Exploitable with allies?
 				How about, "when it expires, the one with the lowest health percentage dies"?
 		Rampage - The caster's next x actions do not incur cooldown.
+		Amputate - Remove a target body part.
 		Weapon and armor enchantments
 
 ================================================================================

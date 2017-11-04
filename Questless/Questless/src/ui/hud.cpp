@@ -117,17 +117,6 @@ namespace ql
 						}
 					, colors::black()
 					);
-				// heal.h
-				int health_bar_height = lround(_condition_bar_height * player_being->health / player_being->stats.vitality);
-				the_renderer().draw_box
-					( screen_space::box
-						{ screen_space::point{left + 1, _screen_bottom}
-						, screen_space::vector{_condition_bar_width - 2, health_bar_height - 1}
-						, { screen_space::align_left, screen_space::align_bottom }
-						}
-					, colors::red()
-					);
-				left += _condition_bar_width;
 				// Mana
 				int mana_bar_height = lround(_condition_bar_height * player_being->mana / player_being->stats.spirit);
 				the_renderer().draw_box

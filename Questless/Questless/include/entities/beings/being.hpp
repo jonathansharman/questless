@@ -111,7 +111,6 @@ namespace ql
 
 		// Conditions
 
-		lazy_bounded<double> health;
 		lazy_bounded<double> mana;
 		lazy_bounded<double> energy;
 		static_bounded<double, min_satiety, max_satiety> satiety;
@@ -127,17 +126,17 @@ namespace ql
 
 		// Event Handlers
 
-		event<dmg::group&, body_part*, std::optional<ql::id<being>>> before_take_damage;
-		event<dmg::group&, body_part*, std::optional<ql::id<being>>> after_take_damage;
+		event<dmg::group&, body_part&, std::optional<ql::id<being>>> before_take_damage;
+		event<dmg::group&, body_part&, std::optional<ql::id<being>>> after_take_damage;
 
-		event<dmg::group&, body_part*, ql::id<being>> before_deal_damage;
-		event<dmg::group&, body_part*, ql::id<being>> after_deal_damage;
+		event<dmg::group&, body_part&, ql::id<being>> before_deal_damage;
+		event<dmg::group&, body_part&, ql::id<being>> after_deal_damage;
 
-		event<double&, body_part*, std::optional<ql::id<being>>> before_receive_heal;
-		event<double&, body_part*, std::optional<ql::id<being>>> after_receive_heal;
+		event<double&, body_part&, std::optional<ql::id<being>>> before_receive_heal;
+		event<double&, body_part&, std::optional<ql::id<being>>> after_receive_heal;
 
-		event<double&, body_part*, ql::id<being>> after_give_heal;
-		event<double&, body_part*, ql::id<being>> before_give_heal;
+		event<double&, body_part&, ql::id<being>> after_give_heal;
+		event<double&, body_part&, ql::id<being>> before_give_heal;
 
 		event<std::optional<ql::id<being>>> before_die;
 		event<std::optional<ql::id<being>>> after_die;
@@ -186,15 +185,15 @@ namespace ql
 
 		//! Causes the being to take damage from the specified source being.
 		//! @param damage Damage to be applied to this being.
-		//! @param part The body part to damage, or nullptr if the damage should be applied directly to the being.
+		//! @param part The body part to damage.
 		//! @param opt_source_id The ID of the being which caused the damage, if any.
-		void take_damage(dmg::group& damage, body_part* part, std::optional<ql::id<being>> opt_source_id);
+		void take_damage(dmg::group& damage, body_part& part, std::optional<ql::id<being>> opt_source_id);
 
 		//! Causes the being to be healed by the specified source being.
-		//! @param amount heal.h to be restored to this being.
-		//! @param part The body part to heal, or nullopt if the damage should be applied directly to the being.
+		//! @param amount Health to be restored to this being.
+		//! @param part The body part to heal.
 		//! @param opt_source_id The ID of the being which caused the healing, if any.
-		void heal(double amount, body_part* part, std::optional<ql::id<being>> opt_source_id);
+		void heal(double amount, body_part& part, std::optional<ql::id<being>> opt_source_id);
 
 		void add_status(uptr<status> status);
 	protected:

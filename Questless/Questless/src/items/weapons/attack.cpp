@@ -47,7 +47,11 @@ namespace ql
 					damage *= 1.0 - penalty_per_turn * region_tile::distance(actor.direction, _vector.direction());
 
 					weapon->integrity -= _attack->wear_ratio() * damage.total();
-					target->take_damage(damage, nullptr, actor.id); //! @todo Part targeting
+					{ //! @todo Part targeting. Apply damage to random body part for now.
+						auto it = target->body.parts().begin();
+						std::advance(it, uniform(std::size_t{0}, target->body.parts().size() - 1));
+						target->take_damage(damage, *it, actor.id);
+					}
 					return cont(result::success);
 				} else {
 					return actor.agent().send_message(std::make_unique<message_melee_miss>(), [cont] { return cont(result::success); });
@@ -87,7 +91,12 @@ namespace ql
 								if (being* target = actor.region->being_at(*opt_coords)) {
 									dmg::group damage = attack->damage();
 									weapon.integrity -= attack->wear_ratio() * damage.total();
-									target->take_damage(damage, nullptr, actor.id); //! @todo Part targeting
+
+									{ //! @todo Part targeting. Apply damage to random body part for now.
+										auto it = target->body.parts().begin();
+										std::advance(it, uniform(std::size_t{0}, target->body.parts().size() - 1));
+										target->take_damage(damage, *it, actor.id);
+									}
 									return cont(result::success);
 								} else {
 									return actor.agent().send_message(std::make_unique<message_arrow_miss>(), [cont] { return cont(result::success); });

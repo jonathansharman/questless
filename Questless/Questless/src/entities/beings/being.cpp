@@ -20,7 +20,6 @@ namespace ql
 		, body{std::move(body)}
 		, base_stats{make_base_stats()}
 		, stats{get_base_stats_plus_body_stats()}
-		, health{stats.vitality, [] { return 0.0; }, [this] { return stats.vitality.value(); }}
 		, mana{stats.spirit, [] { return 0.0; }, [this] { return stats.spirit.value(); }}
 		, energy{stats.stamina, [] { return 0.0; }, [this] { return stats.stamina.value(); }}
 		, satiety{max_satiety}
@@ -41,7 +40,6 @@ namespace ql
 		: entity{in}
 		, id{in}
 		, body{std::move(body)}
-		, health{[] { return 0.0; }, [this] { return stats.vitality.value(); }}
 		, mana{[] { return 0.0; }, [this] { return stats.spirit.value(); }}
 		, energy{[] { return 0.0; }, [this] { return stats.stamina.value(); }}
 		, busy_time{busy_time_mutator()}
@@ -51,7 +49,7 @@ namespace ql
 		in >> base_stats;
 		in >> stats;
 
-		in >> health >> mana >> energy >> satiety >> alertness >> busy_time >> dead;
+		in >> mana >> energy >> satiety >> alertness >> busy_time >> dead;
 
 		//! @todo Is there a better way to extract into an enum class?
 		int direction_int;
@@ -69,7 +67,7 @@ namespace ql
 
 		//! @todo Write body.
 
-		out << health << ' ' << mana << ' ' << energy << ' ' << satiety << ' ' << alertness << ' '
+		out << mana << ' ' << energy << ' ' << satiety << ' ' << alertness << ' '
 			<< busy_time << ' ' << dead << ' ' << static_cast<int>(direction);
 
 		out << base_stats << ' ';
@@ -172,7 +170,6 @@ namespace ql
 		}
 
 		// Update conditions.
-		health += stats.health_regen;
 		mana += stats.mana_regen;
 		satiety += satiety_rate;
 		energy += energy_rate;
@@ -188,13 +185,17 @@ namespace ql
 		abilities.update(*this);
 
 		// Handle temperature damage.
-		double temp = region->temperature(coords);
+		double const temp = region->temperature(coords);
 		if (temp > stats.max_temp) {
 			dmg::group burn = dmg::burn{(temp - stats.max_temp) / (stats.max_temp - stats.min_temp) * temperature_damage_factor};
-			take_damage(burn, nullptr, std::nullopt);
+			for (body_part& part : body) {
+				take_damage(burn, part, std::nullopt);
+			}
 		} else if (temp < stats.min_temp) {
 			dmg::group freeze = dmg::freeze{(stats.min_temp - temp) / (stats.max_temp - stats.min_temp) * temperature_damage_factor};
-			take_damage(freeze, nullptr, std::nullopt);
+			for (body_part& part : body) {
+				take_damage(freeze, part, std::nullopt);
+			}
 		}
 
 		// Update items.
@@ -203,13 +204,13 @@ namespace ql
 		}
 	}
 
-	void being::take_damage(dmg::group& damage, body_part* part, std::optional<ql::id<being>> opt_source_id)
+	void being::take_damage(dmg::group& damage, body_part& part, std::optional<ql::id<being>> opt_source_id)
 	{
 		// Store whether the being was already dead upon taking this damage.
-		bool was_already_dead = dead;
+		bool const was_already_dead = dead;
 
 		// Get source.
-		being* source = opt_source_id ? the_game().beings.ptr(*opt_source_id) : nullptr;
+		being* const source = opt_source_id ? the_game().beings.ptr(*opt_source_id) : nullptr;
 
 		// Target will take damage.
 		if (before_take_damage(damage, part, opt_source_id)) {
@@ -221,57 +222,39 @@ namespace ql
 					shield.apply(damage);
 				}
 
-				if (part) {
-					// Damage is part-targeted.
-
-					// Apply part's armor's protection and resistance.
-					if (part->equipped_item_id) {
-						if (armor* armor = the_game().items.ptr_as<ql::armor>(*part->equipped_item_id)) {
-							armor->apply(damage);
-						}
+				// Apply part's armor's protection and resistance.
+				if (part.equipped_item_id) {
+					if (armor* armor = the_game().items.ptr_as<ql::armor>(*part.equipped_item_id)) {
+						armor->apply(damage);
 					}
+				}
 
-					// Apply part's and being's protection stats.
-					damage = damage.with(part->protection() + stats.protection);
+				// Apply part's and being's protection stats.
+				damage = damage.with(part.protection() + stats.protection);
 
-					// Resistance and vulnerability are the sum of the being's overall values and those of the target part.
-					dmg::resist total_resistance = stats.resistance + part->resistance();
-					dmg::vuln total_vulnerability = stats.vulnerability + part->vulnerability();
+				// Resistance and vulnerability are the sum of the being's overall values and those of the target part.
+				dmg::resist total_resistance = stats.resistance + part.resistance();
+				dmg::vuln total_vulnerability = stats.vulnerability + part.vulnerability();
 
-					// Part and being lose health.
-					double health_lost = damage.with(total_resistance, total_vulnerability).total() / (1.0 + endurance_factor * stats.endurance);
-					part->health -= health_lost;
-					health -= health_lost;
+				// Part loses health.
+				part.health -= damage.with(total_resistance, total_vulnerability).total() / (1.0 + endurance_factor * stats.endurance);
 
-					// Check for part disability.
-					if (part->health <= 0) {
-						//! @todo Disable part.
-						if (part->vital()) {
-							dead = true;
-						}
+				// Check for part disability.
+				if (part.health <= 0) {
+					//! @todo Disable part.
+					if (part.vital()) {
+						// A vital part has been disabled. Kill target.
+						dead = true;
 					}
-				} else {
-					// Damage is non-part-targeted.
-
-					// Apply being's protection stat.
-					damage = damage.with(stats.protection);
-
-					// Being loses health.
-					double health_lost = damage.with(stats.resistance, stats.vulnerability).total() / (1.0 + endurance_factor * stats.endurance);
-					health -= health_lost;
 				}
 
 				// Add injury effect.
-				the_game().add_effect(std::make_shared<injury_effect>(coords, damage, id, opt_source_id));
+				the_game().add_effect(std::make_shared<injury_effect>(coords, damage, id, part.id, opt_source_id));
 
 				// Target has taken damage.
 				if (after_take_damage(damage, part, opt_source_id)) {
 					// Source, if present, has dealt damage.
 					if (!source || source->after_deal_damage(damage, part, id)) {
-						// If target has taken fatal damage, mark it dead.
-						if (health <= 0) {
-							dead = true;
-						}
 						// Handle death, if this damage killed the target.
 						if (!was_already_dead && dead) {
 							// Target will die.
@@ -307,7 +290,7 @@ namespace ql
 		}
 	}
 
-	void being::heal(double amount, body_part* part, std::optional<ql::id<being>> opt_source_id)
+	void being::heal(double amount, body_part& part, std::optional<ql::id<being>> opt_source_id)
 	{
 		//! @todo heal the part, if present.
 
@@ -321,7 +304,7 @@ namespace ql
 		// Target will receive healing.
 		before_receive_heal(amount, part, opt_source_id);
 		// Target gains health.
-		health += amount;
+		part.health += amount;
 		// Target has received healing.
 		after_receive_heal(amount, part, opt_source_id);
 		// Source has given healing.
