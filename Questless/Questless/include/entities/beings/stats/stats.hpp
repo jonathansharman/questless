@@ -22,7 +22,6 @@ namespace ql
 	struct endurance : tagged_type<double> { using tagged_type::tagged_type; };
 	struct stamina : tagged_type<double> { using tagged_type::tagged_type; };
 	struct agility : tagged_type<double> { using tagged_type::tagged_type; };
-	struct dexterity : tagged_type<double> { using tagged_type::tagged_type; };
 	struct stealth : tagged_type<double> { using tagged_type::tagged_type; };
 	struct hearing : tagged_type<double> { using tagged_type::tagged_type; };
 	struct intellect : tagged_type<double> { using tagged_type::tagged_type; };
@@ -43,7 +42,6 @@ namespace ql
 		static_bounded<double, minimum_value> endurance = 0.0;
 		static_bounded<double, minimum_value> stamina = 0.0;
 		static_bounded<double, minimum_value> agility = 0.0;
-		static_bounded<double, minimum_value> dexterity = 0.0;
 		static_bounded<double, minimum_value> stealth = 0.0;
 		vision vision;
 		static_bounded<double, minimum_value> hearing = 0.0;
@@ -57,7 +55,7 @@ namespace ql
 		dmg::resist resistance = dmg::resist::zero();
 		dmg::vuln vulnerability = dmg::vuln::zero();
 
-		constexpr stats() {}
+		constexpr stats() = default;
 
 		constexpr stats
 			( ql::spirit spirit
@@ -67,7 +65,6 @@ namespace ql
 			, ql::endurance endurance
 			, ql::stamina stamina
 			, ql::agility agility
-			, ql::dexterity dexterity
 			, ql::stealth stealth
 			, ql::vision vision
 			, ql::hearing hearing
@@ -87,7 +84,6 @@ namespace ql
 			, endurance{std::move(endurance)}
 			, stamina{std::move(stamina)}
 			, agility{std::move(agility)}
-			, dexterity{std::move(dexterity)}
 			, stealth{std::move(stealth)}
 			, vision{std::move(vision)}
 			, hearing{std::move(hearing)}
@@ -104,14 +100,14 @@ namespace ql
 		friend std::ostream& operator <<(std::ostream& out, stats const& a)
 		{
 			out << a.spirit << ' ' << a.health_regen << ' ' << a.mana_regen << ' ' << a.strength << ' ' << a.endurance << ' '
-				<< a.stamina << ' ' << a.agility << ' ' << a.dexterity << ' ' << a.stealth << ' ' << a.vision << ' ' << a.hearing << ' '
+				<< a.stamina << ' ' << a.agility << ' ' << a.stealth << ' ' << a.vision << ' ' << a.hearing << ' '
 				<< a.intellect << ' ' << a.weight << ' ' << a.min_temp << ' ' << a.max_temp << ' ' << a.mute << ' ';
 			return out;
 		}
 
 		friend std::istream& operator >>(std::istream& in, stats& a)
 		{
-			in >> a.spirit >> a.health_regen >> a.mana_regen >> a.strength >> a.endurance >> a.stamina >> a.agility >> a.dexterity
+			in >> a.spirit >> a.health_regen >> a.mana_regen >> a.strength >> a.endurance >> a.stamina >> a.agility
 				>> a.stealth >> a.vision >> a.hearing >> a.intellect >> a.weight >> a.min_temp >> a.max_temp >> a.mute;
 			return in;
 		}

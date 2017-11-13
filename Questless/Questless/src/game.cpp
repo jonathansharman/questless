@@ -13,6 +13,8 @@
 #include <SDL_ttf.h>
 
 #include "animation/entity_animator.hpp"
+#include "utility/io.hpp"
+#include "utility/random.hpp"
 #include "world/coordinates.hpp"
 #include "world/light_source.hpp"
 

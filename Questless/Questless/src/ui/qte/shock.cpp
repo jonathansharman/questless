@@ -6,7 +6,7 @@
 
 #include "game.hpp"
 #include "units/math.hpp"
-#include "utility/utility.hpp"
+#include "utility/random.hpp"
 
 using namespace sdl;
 using namespace units;

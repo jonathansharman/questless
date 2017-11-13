@@ -11,7 +11,7 @@ using namespace units;
 namespace ql
 {
 	goblin::goblin(const std::function<uptr<ql::agent>(being&)>& make_agent, ql::id<being> id)
-		: corporeal_being_base<goblin>{make_agent, id, make_body(), []() { return dflt_base_stats; } }
+		: corporeal_being_base<goblin>{make_agent, id, make_body(), [] { return dflt_base_stats; } }
 	{}
 
 	goblin::goblin(std::istream& in) : corporeal_being_base<goblin>{in, make_body()} {}

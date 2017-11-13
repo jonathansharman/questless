@@ -8,6 +8,7 @@
 #include "../camera.hpp"
 #include "sdl/texture.hpp"
 #include "utility/tagged_type.hpp"
+#include "utility/random.hpp"
 
 namespace ql
 {

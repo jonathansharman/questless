@@ -8,6 +8,7 @@
 #include "entities/beings/being.hpp"
 #include "effects/effect.hpp"
 #include "magic/mana_cost.hpp"
+#include "utility/random.hpp"
 
 //! @todo Body part stuff - remove if not used.
 #include "entities/beings/body_part.hpp"

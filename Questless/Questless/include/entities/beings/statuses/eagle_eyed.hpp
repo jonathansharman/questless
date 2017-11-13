@@ -18,7 +18,7 @@ namespace ql
 		eagle_eyed(double magnitude, int duration, std::optional<id<being>> source_id = std::nullopt)
 			: status("Blind", duration, source_id)
 			, _magnitude{magnitude}
-			, _modifiers{modifier::make_vector(std::make_unique<visual_acuity_modifier>(magnitude))}
+			, _modifiers{make_uptr_vector<modifier>(std::make_unique<visual_acuity_modifier>(magnitude))}
 		{}
 
 		virtual status_type type() const { return status_type::buff; }

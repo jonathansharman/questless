@@ -11,7 +11,7 @@ using namespace units;
 namespace ql
 {
 	human::human(const std::function<uptr<ql::agent>(being&)>& make_agent, ql::id<being> id)
-		: corporeal_being_base<human>{make_agent, id, make_body(), []() { return dflt_base_stats; }}
+		: corporeal_being_base<human>{make_agent, id, make_body(), [] { return dflt_base_stats; }}
 	{}
 
 	human::human(std::istream& in) : corporeal_being_base<human>{in, make_body()} {}

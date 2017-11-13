@@ -6,6 +6,7 @@
 #include "items/weapons/weapon.hpp"
 #include "entities/beings/being.hpp"
 #include "game.hpp"
+#include "utility/random.hpp"
 
 namespace ql
 {

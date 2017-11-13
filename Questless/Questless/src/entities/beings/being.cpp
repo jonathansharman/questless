@@ -7,6 +7,7 @@
 #include "entities/objects/corpse.hpp"
 #include "game.hpp"
 #include "agents/agent.hpp"
+#include "utility/random.hpp"
 #include "world/section.hpp"
 #include "world/region.hpp"
 
@@ -355,7 +356,8 @@ namespace ql
 
 		double percent_sleepy = 1.0 - alertness / max_alertness;
 		result.agility -= percent_sleepy * alertness_agility_penalty * base_stats.agility;
-		result.dexterity -= percent_sleepy * alertness_dexterity_penalty * base_stats.dexterity;
+		//! @todo How to apply sleepy penalty to body part dexterities?
+		//result.dexterity -= percent_sleepy * alertness_dexterity_penalty * base_stats.dexterity;
 		result.intellect -= percent_sleepy * alertness_intellect_penalty * base_stats.intellect;
 
 		double percent_hungry = 1.0 - satiety / max_satiety;

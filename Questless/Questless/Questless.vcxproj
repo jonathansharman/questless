@@ -372,14 +372,17 @@
     <ClInclude Include="include\utility\cache.hpp" />
     <ClInclude Include="include\utility\complete.hpp" />
     <ClInclude Include="include\utility\container_view.hpp" />
+    <ClInclude Include="include\utility\debug.hpp" />
     <ClInclude Include="include\utility\delegate.hpp" />
     <ClInclude Include="include\utility\dynamic_bounded.hpp" />
     <ClInclude Include="include\utility\dynamic_property.hpp" />
     <ClInclude Include="include\utility\event.hpp" />
     <ClInclude Include="include\utility\id.hpp" />
     <ClInclude Include="include\utility\initializer.hpp" />
+    <ClInclude Include="include\utility\io.hpp" />
     <ClInclude Include="include\utility\lazy_bounded.hpp" />
     <ClInclude Include="include\utility\property.hpp" />
+    <ClInclude Include="include\utility\random.hpp" />
     <ClInclude Include="include\utility\reference.hpp" />
     <ClInclude Include="include\utility\static_bounded.hpp" />
     <ClInclude Include="include\utility\tagged_type.hpp" />
@@ -479,6 +482,9 @@
     <ClCompile Include="src\ui\qte\shock.cpp" />
     <ClCompile Include="src\ui\tile_dialog.cpp" />
     <ClCompile Include="src\ui\vector_dialog.cpp" />
+    <ClCompile Include="src\utility\debug.cpp" />
+    <ClCompile Include="src\utility\io.cpp" />
+    <ClCompile Include="src\utility\random.cpp" />
     <ClCompile Include="src\utility\utility.cpp" />
     <ClCompile Include="src\world\light_source.cpp" />
     <ClCompile Include="src\world\region.cpp" />

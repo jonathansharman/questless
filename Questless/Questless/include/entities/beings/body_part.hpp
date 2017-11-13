@@ -16,11 +16,13 @@
 #include "units/screen_space.hpp"
 #include "utility/id.hpp"
 #include "utility/lazy_bounded.hpp"
+#include "utility/utility.hpp"
 
 namespace ql
 {
 	class being;
 
+	struct dexterity : tagged_type<double> { using tagged_type::tagged_type; };
 	struct vitality : tagged_type<double> { using tagged_type::tagged_type; };
 
 	//! A being's body part.
@@ -159,7 +161,7 @@ namespace ql
 
 		std::vector<uptr<modifier>> modifiers() const override
 		{
-			return modifier::make_vector
+			return make_uptr_vector<modifier>
 				( std::make_unique<intellect_modifier>(_intellect)
 				, std::make_unique<spirit_modifier>(_spirit)
 				, std::make_unique<mute_modifier>(false)
@@ -204,7 +206,7 @@ namespace ql
 
 		std::vector<uptr<modifier>> modifiers() const override
 		{
-			return modifier::make_vector
+			return make_uptr_vector<modifier>
 				( std::make_unique<strength_modifier>(_strength)
 				, std::make_unique<weight_modifier>(weight())
 				);
@@ -248,7 +250,7 @@ namespace ql
 
 		std::vector<uptr<modifier>> modifiers() const override
 		{
-			return modifier::make_vector
+			return make_uptr_vector<modifier>
 				( std::make_unique<strength_modifier>(_strength)
 				, std::make_unique<weight_modifier>(weight())
 				);
@@ -292,10 +294,7 @@ namespace ql
 
 		std::vector<uptr<modifier>> modifiers() const override
 		{
-			return modifier::make_vector
-				( std::make_unique<dexterity_modifier>(_dexterity)
-				, std::make_unique<weight_modifier>(weight())
-			);
+			return make_uptr_vector<modifier>(std::make_unique<weight_modifier>(weight()));
 		}
 
 		virtual std::vector<uptr<action>> abilities() const { return {}; }
@@ -338,7 +337,7 @@ namespace ql
 
 		std::vector<uptr<modifier>> modifiers() const override
 		{
-			return modifier::make_vector
+			return make_uptr_vector<modifier>
 				( std::make_unique<agility_modifier>(_agility)
 				, std::make_unique<strength_modifier>(_strength)
 				, std::make_unique<weight_modifier>(weight())
@@ -385,7 +384,7 @@ namespace ql
 
 		std::vector<uptr<modifier>> modifiers() const override
 		{
-			return modifier::make_vector
+			return make_uptr_vector<modifier>
 				( std::make_unique<agility_modifier>(_agility)
 				, std::make_unique<weight_modifier>(weight())
 				);
@@ -428,7 +427,7 @@ namespace ql
 
 		std::vector<uptr<modifier>> modifiers() const override
 		{
-			return modifier::make_vector(std::make_unique<weight_modifier>(weight()));
+			return make_uptr_vector<modifier>(std::make_unique<weight_modifier>(weight()));
 		}
 
 		virtual std::vector<uptr<action>> abilities() const { return {}; }
@@ -447,7 +446,7 @@ namespace ql
 
 		std::vector<uptr<modifier>> modifiers() const override
 		{
-			return modifier::make_vector(std::make_unique<weight_modifier>(weight()));
+			return make_uptr_vector<modifier>(std::make_unique<weight_modifier>(weight()));
 		}
 
 		virtual std::vector<uptr<action>> abilities() const { return {}; }

@@ -19,7 +19,6 @@ namespace ql
 			, endurance{120.0}
 			, stamina{120.0}
 			, agility{0.0}
-			, dexterity{0.0}
 			, stealth{100.0}
 			, vision
 				{ acuity{100.0}

@@ -7,4 +7,5 @@
 
 namespace ql
 {
+	std::mt19937_64 rng(game::clock::now().time_since_epoch().count());
 }

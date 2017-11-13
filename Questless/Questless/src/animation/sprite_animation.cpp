@@ -3,7 +3,9 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "animation/sprite_animation.hpp"
+
 #include "game.hpp"
+#include "utility/random.hpp"
 
 using namespace sdl;
 using namespace units;

@@ -138,9 +138,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\sdl\texture.h">
-      <Filter>include\sdl</Filter>
-    </ClInclude>
     <ClInclude Include="include\agents\direction_query.hpp">
       <Filter>include\agents</Filter>
     </ClInclude>
@@ -627,6 +624,15 @@
     <ClInclude Include="include\game.hpp">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\utility\io.hpp">
+      <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utility\random.hpp">
+      <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utility\debug.hpp">
+      <Filter>include\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -901,6 +907,15 @@
     </ClCompile>
     <ClCompile Include="src\agents\action.cpp">
       <Filter>src\agents</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utility\debug.cpp">
+      <Filter>src\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utility\io.cpp">
+      <Filter>src\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utility\random.cpp">
+      <Filter>src\utility</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

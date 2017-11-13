@@ -1,48 +1,15 @@
 //! @file
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
-//! @brief Miscellaneous basic utility functions for math, RNG, debugging, etc.
+//! @brief Miscellaneous utility functions.
 
 #pragma once
 
-#include <chrono>
-#include <cmath>
-#include <functional>
-#include <fstream>
-#include <random>
-#include <string>
-#include <sstream>
-
+#include "reference.hpp"
 #include "units/game_space.hpp"
 
 namespace ql
 {
-	///////////////
-	// Debugging //
-	///////////////
-
-	//! Executes and times the function @p f.
-	//! @return The time it took to execute @p f, in nanoseconds.
-	std::chrono::nanoseconds time(std::function<void()> f);
-
-	//////////////
-	// File I/O //
-	//////////////
-
-	//! The contents, as a string, of the file with filename @p filename.
-	std::string contents_of_file(char const* filename);
-
-	//////////
-	// Math //
-	//////////
-
-	//! Converts @p percent in the range [0, 1] to an 8-bit integer in the range [0, 255].
-	uint8_t percentage_to_byte(double percent);
-
-	///////////////////
-	// Miscellaneous //
-	///////////////////
-
 	//! Conditionally removes elements from a container.
 	//! @param container An iterable container.
 	//! @param predicate A predicate over elements of the container. Elements for which the predicate is true are removed.
@@ -58,6 +25,26 @@ namespace ql
 		}
 	};
 
+	//! Moves @p pointer into a new vector and returns it.
+	template <typename T, typename U>
+	static auto make_uptr_vector(uptr<U> pointer)
+	{
+		std::vector<uptr<T>> modifiers;
+		modifiers.push_back(std::move(pointer));
+		return modifiers;
+	}
+
+	//! Moves the given pointers into a new vector and returns it.
+	template <typename T, typename First, typename... Rest>
+	static auto make_uptr_vector(First first, Rest... rest)
+	{
+		std::vector<uptr<T>> modifiers;
+		modifiers.push_back(std::move(first));
+		auto rest = make_uptr_vector<T>(std::forward<Rest>(rest)...);
+		modifiers.insert(modifiers.end(), std::make_move_iterator(rest.begin()), std::make_move_iterator(rest.end()));
+		return modifiers;
+	}
+
 	//! @todo Why do the following lambda overload helpers not work?
 
 	/*template <typename... Functors>
@@ -71,53 +58,4 @@ namespace ql
 	{
 		return overloaded<Functors...>{};
 	}*/
-
-	//////////////////////////////
-	// Random Number Generation //
-	//////////////////////////////
-
-	extern std::mt19937_64 rng;
-
-	//! True or false with equal probability.
-	inline bool random_bool()
-	{
-		return std::uniform_int<int>(0, 1)(rng) == 0;
-	}
-
-	//! Generates a random integral value with a uniform distribution in [@p min, @p max].
-	template<typename Integer>
-	typename std::enable_if_t<std::is_integral<Integer>::value, Integer>
-		uniform(Integer min, Integer max)
-	{
-		return std::uniform_int_distribution<Integer>(min, max)(rng);
-	}
-
-	//! Generates a random floating-point value with a uniform distribution in [@p min, @p max].
-	template<typename Floating>
-	typename std::enable_if_t<std::is_floating_point<Floating>::value, Floating>
-		uniform(Floating min, Floating max)
-	{
-		return std::uniform_real_distribution<Floating>(min, max)(rng);
-	}
-
-	//! A random angle in radians.
-	inline units::game_space::radians random_angle()
-	{
-		return uniform(0.0, 1.0) * units::game_space::radians::circle();
-	}
-
-	//! A displacement based on a uniform random distance and uniform random angle.
-	//! @param max_length The maximum possible length of the displacement.
-	inline units::game_space::vector random_displacement(double max_length)
-	{
-		return units::game_space::vector{random_angle(), uniform(0.0, max_length)};
-	}
-
-	//! A displacement based on a uniform random distance and uniform random angle.
-	//! @param min_length The minimum possible length of the displacement.
-	//! @param max_length The maximum possible length of the displacement.
-	inline units::game_space::vector random_displacement(double min_length, double max_length)
-	{
-		return units::game_space::vector{random_angle(), uniform(min_length, max_length)};
-	}
 }

@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "stats.hpp"
+#include "utility/utility.hpp"
 #include "utility/reference.hpp"
 
 namespace ql
@@ -15,28 +16,6 @@ namespace ql
 	//! A modification to a stat of a being.
 	struct modifier
 	{
-		//! @todo make_vector probably belongs in utility.h (as make_unique_vector<T> or something).
-
-		//! Makes a vector of modifiers from the given modifier.
-		template <typename ModifierPtr>
-		static auto make_vector(ModifierPtr modifier)
-		{
-			std::vector<uptr<ql::modifier>> modifiers;
-			modifiers.push_back(std::move(modifier));
-			return modifiers;
-		}
-
-		//! Makes a vector of modifiers from the given non-empty variadic list of modifiers.
-		template <typename FirstModifierPtr, typename... RestModifierPtrs>
-		static auto make_vector(FirstModifierPtr first, RestModifierPtrs... rest)
-		{
-			std::vector<uptr<modifier>> modifiers;
-			modifiers.push_back(std::move(first));
-			auto rest = make_vector(std::forward<RestModifierPtrs>(rest)...);
-			modifiers.insert(modifiers.end(), std::make_move_iterator(rest.begin()), std::make_move_iterator(rest.end()));
-			return modifiers;
-		}
-
 		//! Modifies the stat according to the given modifiers.
 		//! @param modifiers A vector of stat modifiers.
 		static void apply_all(std::vector<uptr<modifier>> const& modifiers, stats& stats)
@@ -103,11 +82,6 @@ namespace ql
 	{
 		using scalar_modifier::scalar_modifier;
 		void apply(stats& stats) final { stats.agility += magnitude(); }
-	};
-	struct dexterity_modifier : public scalar_modifier
-	{
-		using scalar_modifier::scalar_modifier;
-		void apply(stats& stats) final { stats.dexterity += magnitude(); }
 	};
 	struct stealth_modifier : public scalar_modifier
 	{

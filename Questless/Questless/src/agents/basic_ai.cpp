@@ -5,8 +5,7 @@
 #include "agents/basic_ai.hpp"
 
 #include "game.hpp"
-
-using std::function;
+#include "utility/random.hpp"
 
 namespace ql
 {

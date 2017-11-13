@@ -65,7 +65,7 @@ namespace units
 		template <int dimension>
 		struct axis
 		{
-			//static_assert(0 <= dimension && dimension < dimension_count, "Axis index out of bounds.");
+			static_assert(0 <= dimension && dimension < dimension_count, "Axis index out of bounds.");
 
 			//! Alignment along this axis.
 			enum class align { near, mid, far };

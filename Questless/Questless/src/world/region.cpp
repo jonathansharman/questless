@@ -15,7 +15,7 @@ namespace fs = std::experimental::filesystem; //! @todo Replace this with std::f
 #include "game.hpp"
 #include "items/weapons/quarterstaff.hpp"
 #include "units/constants.hpp"
-#include "utility/utility.hpp"
+#include "utility/random.hpp"
 #include "world/light_source.hpp"
 #include "world/region.hpp"
 

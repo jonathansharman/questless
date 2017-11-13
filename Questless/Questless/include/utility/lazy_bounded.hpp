@@ -83,31 +83,31 @@ namespace ql
 		template <typename T>
 		lazy_bounded& operator +=(T const& that)
 		{
-			_value += that;
+			_value = value() + that;
 			return *this;
 		}
 		template <typename T>
 		lazy_bounded& operator -=(T const& that)
 		{
-			_value -= that;
+			_value = value() - that;
 			return *this;
 		}
 		template <typename T>
 		lazy_bounded& operator *=(T const& that)
 		{
-			_value *= that;
+			_value = value() * that;
 			return *this;
 		}
 		template <typename T>
 		lazy_bounded& operator /=(T const& that)
 		{
-			_value /= that;
+			_value = value() / that;
 			return *this;
 		}
 		template <typename T>
 		lazy_bounded& operator %=(T const& that)
 		{
-			_value %= that;
+			_value = value() % that;
 			return *this;
 		}
 
@@ -117,25 +117,25 @@ namespace ql
 
 		lazy_bounded& operator ++()
 		{
-			++_value;
+			_value = value() + 1;
 			return *this;
 		}
 		lazy_bounded& operator --()
 		{
-			--_value;
+			_value = value() - 1;
 			return *this;
 		}
 		lazy_bounded operator ++(int)
 		{
-			arithmetic_type value = _value;
-			++_value;
-			return value;
+			arithmetic_type old_value = value();
+			_value = old_value + 1;
+			return old_value;
 		}
 		lazy_bounded operator --(int)
 		{
-			arithmetic_type value = _value;
-			--_value;
-			return value;
+			arithmetic_type old_value = value();
+			_value = old_value - 1;
+			return old_value;
 		}
 
 		////////////////////////////////
@@ -151,3 +151,5 @@ namespace ql
 		arithmetic_type _value;
 	};
 }
+
+//! @todo Tests.
