@@ -8,6 +8,8 @@
 #include <functional>
 #include <memory>
 
+#include "utility.hpp"
+
 namespace ql
 {
 	//! A modifiable list of callback functions that can be invoked in order.
@@ -24,9 +26,7 @@ namespace ql
 		//! Removes any instances of the callback function @p f.
 		void remove(callback_t const& f)
 		{
-			_callbacks.erase(remove_if(_callbacks.begin(), _callbacks.end(), [&f](callback_t const& x) {
-				return x == f;
-			}), _callbacks.end());
+			_callbacks.erase_if(_callbacks, [&f](callback_t const& x) { return x == f; });
 		}
 
 		delegate& operator +=(callback_t const& f) { add(f); }

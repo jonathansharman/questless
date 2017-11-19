@@ -5,7 +5,6 @@
 #pragma once
 
 #include <algorithm>
-#include <limits>
 
 namespace ql
 {
@@ -65,7 +64,6 @@ namespace ql
 		//! Sets the contained value to the given new value, clamped to the valid range.
 		void set_value(arithmetic_type const& value)
 		{
-			//! @todo When constexpr-if is available, use it to avoid upper bound check if upper_bound is the maximum type value.
 			_value = std::clamp(value, _lower_bound, _upper_bound);
 		}
 

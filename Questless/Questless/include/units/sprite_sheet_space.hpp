@@ -46,4 +46,6 @@ namespace units
 	inline sprite_sheet_space::point bottom_right(sprite_sheet_space::box const& box) { return box.position + box.size; }
 
 	inline sprite_sheet_space::point center(sprite_sheet_space::box const& box) { return box.position + box.size / 2; }
+
+	inline sprite_sheet_space::scalar area(sprite_sheet_space::box const& box) { return width(box) * height(box); }
 }

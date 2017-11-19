@@ -74,6 +74,8 @@ namespace units
 	inline game_space::point bottom_right(game_space::box const& box) { return box.position + box.size; }
 
 	inline game_space::point center(game_space::box const& box) { return box.position + box.size / 2.0; }
+
+	inline game_space::scalar area(game_space::box const& box) { return width(box) * height(box); }
 }
 
 // Bring chrono_literals into the global namespace, for convenience when dealing with game time.

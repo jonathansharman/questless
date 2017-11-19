@@ -71,8 +71,21 @@ namespace ql
 		//! Sets the contained value to the given new value, clamped to the valid range.
 		void set_value(arithmetic_type const& value)
 		{
-			//! @todo When constexpr-if is available, use it to avoid upper bound check if upper_bound is the maximum type value.
-			_value = std::clamp(value, lower_bound, upper_bound);
+			constexpr auto min = std::numeric_limits<arithmetic_type>::min();
+			constexpr auto max = std::numeric_limits<arithmetic_type>::max();
+			if constexpr (lower_bound == min && upper_bound == max) {
+				// No checks.
+				_value = value; 
+			} else if constexpr (lower_bound != min && upper_bound == max) {
+				// Only check lower bound.
+				_value = std::max(value, lower_bound);
+			} else if constexpr (lower_bound == min && upper_bound != max) {
+				// Only check upper bound.
+				_value = std::min(value, upper_bound);
+			} else {
+				// Check both bounds.
+				_value = std::clamp(value, lower_bound, upper_bound);
+			}
 		}
 
 		///////////////

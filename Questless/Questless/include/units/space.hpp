@@ -646,8 +646,6 @@ namespace units
 			template <int index>
 			static constexpr point apply_alignment(point position, vector size, alignment const& alignment)
 			{
-				//! @todo Can use constexpr-if for base case here, when supported.
-
 				//! @todo Specialize these adjustments for integers and floats?
 				switch (std::get<index>(alignment)) {
 					case axis<index>::align::near:
@@ -659,13 +657,11 @@ namespace units
 						position[index] -= size[index] - 1;
 						break;
 				}
-				return apply_alignment<index + 1>(position, size, alignment);
-			}
-
-			template <>
-			static constexpr point apply_alignment<dimension_count>(point position, vector, alignment const&)
-			{
-				return position;
+				if constexpr (index == dimension_count - 1) {
+					return position;
+				} else {
+					return apply_alignment<index + 1>(position, size, alignment);
+				}
 			}
 		};
 	};

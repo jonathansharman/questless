@@ -118,10 +118,8 @@ namespace ql
 			agent().act();
 		} else {
 			// Pop and execute the oldest delayed action, with its continuation.
-			uptr<action> action = std::move(_delayed_actions.front());
+			auto [action, cont] = std::move(_delayed_actions.front());
 			_delayed_actions.pop_front();
-			action::cont cont = std::move(_delayed_action_conts.front());
-			_delayed_action_conts.pop_front();
 			action->perform(*this, std::move(cont));
 			// If there are additional delayed actions, pop and execute the next delay.
 			if (!_action_delays.empty()) {
@@ -139,8 +137,7 @@ namespace ql
 		} else {
 			_action_delays.push_back(delay);
 		}
-		_delayed_actions.push_back(std::move(action));
-		_delayed_action_conts.push_back(std::move(cont));
+		_delayed_actions.push_back(std::make_tuple(std::move(action), std::move(cont)));
 		return complete{};
 	}
 
@@ -148,7 +145,6 @@ namespace ql
 	{
 		_action_delays.clear();
 		_delayed_actions.clear();
-		_delayed_action_conts.clear();
 	}
 
 	void being::update()
@@ -299,18 +295,19 @@ namespace ql
 		being* source = opt_source_id ? the_game().beings.ptr(*opt_source_id) : nullptr;
 
 		// Source will give healing.
-		if (source != nullptr) {
-			source->before_give_heal(amount, part, id);
-		}
-		// Target will receive healing.
-		before_receive_heal(amount, part, opt_source_id);
-		// Target gains health.
-		part.health += amount;
-		// Target has received healing.
-		after_receive_heal(amount, part, opt_source_id);
-		// Source has given healing.
-		if (source != nullptr) {
-			source->after_give_heal(amount, part, id);
+		if (!source || source->before_give_heal(amount, part, id)) {
+			// Target will receive healing.
+			if (before_receive_heal(amount, part, opt_source_id)) {
+				// Target gains health.
+				part.health += amount;
+				// Target has received healing.
+				if (after_receive_heal(amount, part, opt_source_id)) {
+					// Source has given healing.
+					if (!source || source->after_give_heal(amount, part, id)) {
+						return;
+					}
+				}
+			}
 		}
 	}
 

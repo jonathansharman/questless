@@ -68,36 +68,36 @@ namespace sdl
 		void draw_lines(std::vector<units::screen_space::point> const& vertices, units::colors::color color);
 
 		//! Draws a solid polygon.
-		//! @param vertices The vertices of the polygon.
+		//! @param polygon The polygon to draw.
 		//! @param color The color of the polygon.
-		void draw_polygon(std::vector<units::view_space::point> const& vertices, units::colors::color color);
+		void draw_polygon(units::view_space::polygon const& polygon, units::colors::color color);
 
 		//! Draws a solid polygon.
-		//! @param vertices The vertices of the polygon.
+		//! @param polygon The polygon to draw.
 		//! @param color The color of the polygon.
-		void draw_polygon(std::vector<units::screen_space::point> const& vertices, units::colors::color color);
+		void draw_polygon(units::screen_space::polygon const& polygon, units::colors::color color);
 
 		//! Draws a filled polygon with a border.
-		//! @param vertices The vertices of the polygon.
+		//! @param polygon The polygon to draw.
 		//! @param border_width The width of the polygon's border.
 		//! @param border_color The color of the polygon's border.
 		//! @param fill_color The color of the polygon's interior.
 		//! @note This function assumes the width of the polygon is sufficiently greater than the border width to avoid overlapping the border with the polygon's edges. If the polygon is too narrow or contains too-sharp corners, overlap may occur.
 		void draw_polygon
-			( std::vector<units::view_space::point> const& vertices
+			( units::view_space::polygon const& polygon
 			, units::view_space::scalar border_width
 			, units::colors::color border_color
 			, units::colors::color fill_color
 			);
 
 		//! Draws a filled polygon with a border.
-		//! @param vertices The vertices of the polygon.
+		//! @param polygon The polygon to draw.
 		//! @param border_width The width of the polygon's border.
 		//! @param border_color The color of the polygon's border.
 		//! @param fill_color The color of the polygon's interior.
 		//! @note This function assumes the width of the polygon is sufficiently greater than the border width to avoid overlapping the border with the polygon's edges. If the polygon is too narrow or contains too-sharp corners, overlap may occur.
 		void draw_polygon
-			( std::vector<units::screen_space::point> const& vertices
+			( units::screen_space::polygon const& polygon
 			, units::screen_space::scalar border_width
 			, units::colors::color border_color
 			, units::colors::color fill_color
@@ -147,6 +147,6 @@ namespace sdl
 		GLuint _ibo;
 
 		void set_draw_color(units::colors::color color);
-		void draw_triangle_strip(std::vector<units::view_space::point> vertices, units::colors::color color);
+		void draw_triangle_strip(units::view_space::polygon const& polygon, units::colors::color color);
 	};
 }

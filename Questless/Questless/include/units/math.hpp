@@ -5,36 +5,36 @@
 
 #pragma once
 
+#include <type_traits>
+
 namespace units::math
 {
 	namespace detail
 	{
+		//! @todo Replace sqrt_iterative with constexpr lambda if recursive lambdas are added. Also, reimplement as a loop once supported.
 		template <typename Floating>
 		constexpr Floating sqrt_iterative(Floating x, Floating current, Floating previous)
 		{
-			static_assert(std::is_floating_point_v<Floating>, "Requires a floating-point type.");
 			return current == previous
 				? current
 				: sqrt_iterative(x, static_cast<Floating>(0.5 * (current + x / current)), current);
 		}
-	}
 
-	//! The square root of the floating-point number @p x.
-	template <typename Floating>
-	constexpr std::enable_if_t<std::is_floating_point<Floating>::value, Floating>
-	sqrt(Floating x)
-	{
-		//! @todo Replace sqrt_iterative with constexpr lambda when better supported.
-		return detail::sqrt_iterative(x, static_cast<Floating>(0.5 * x), Floating(0.0));
+		template <typename T>
+		struct dependent_false_type : std::false_type {};
 	}
 
 	//! The square root of the integral number @p x.
-	template <typename Integer>
-	constexpr std::enable_if_t<std::is_integral<Integer>::value, Integer>
-	sqrt(Integer x)
+	template <typename Arithmetic>
+	constexpr Arithmetic sqrt(Arithmetic x)
 	{
-		//! @todo Replace sqrt_iterative with constexpr lambda when better supported.
-		return static_cast<Integer>(detail::sqrt_iterative(static_cast<double>(x), 0.5 * x, 0.0));
+		if constexpr (std::is_integral_v<Arithmetic>) {
+			return static_cast<Arithmetic>(sqrt(static_cast<double>(x)));
+		} else if constexpr (std::is_floating_point_v<Arithmetic>) {
+			return detail::sqrt_iterative(x, static_cast<Arithmetic>(0.5 * x), static_cast<Arithmetic>(0.0));
+		} else {
+			static_assert(detail::dependent_false_type<Arithmetic>::value, "sqrt() requires an integral or floating-point argument.");
+		}
 	}
 
 	//! The square of @p value.
@@ -45,10 +45,11 @@ namespace units::math
 	template <typename T>
 	constexpr T cube(T value) { return value * value * value; }
 
+	//! The absolute value of @p value.
 	template <typename T>
-	constexpr T abs(T x)
+	constexpr T abs(T value)
 	{
-		return x < T(0) ? -x : x;
+		return value < static_cast<T>(0) ? -value : value;
 	}
 
 	template <typename Floating, typename = std::enable_if_t<std::is_floating_point<Floating>::value>>

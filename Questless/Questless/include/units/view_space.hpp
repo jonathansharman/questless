@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include "space.hpp"
 
 namespace units
@@ -36,6 +38,9 @@ namespace units
 		static constexpr auto align_top = v_align::near;
 		static constexpr auto align_middle = v_align::mid;
 		static constexpr auto align_bottom = v_align::far;
+
+		//! Define a polygon as a sequence of its vertex points.
+		using polygon = std::vector<point>;
 	};
 
 	inline auto& width(view_space::box& box) { return box.size.x(); }
@@ -59,5 +64,7 @@ namespace units
 	inline view_space::point bottom_left(view_space::box const& box) { return view_space::point{box.position.x(), box.position.y() + box.size.y()}; }
 	inline view_space::point bottom_right(view_space::box const& box) { return box.position + box.size; }
 
-	inline view_space::point center(view_space::box const& box) { return box.position + box.size / 2; }
+	inline view_space::point center(view_space::box const& box) { return box.position + box.size / 2.0f; }
+
+	inline view_space::scalar area(view_space::box const& box) { return width(box) * height(box); }
 }

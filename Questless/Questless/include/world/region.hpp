@@ -98,7 +98,7 @@ namespace ql
 		//! Adds @p light_source to the region's light sources.
 		void add(light_source const& light_source);
 
-		//! Adds @p light_source from the region's light sources, if present.
+		//! Removes @p light_source from the region's light sources, if present.
 		void remove(light_source const& light_source);
 
 		//! The tile at @p region_tile_coords or nullptr if none.

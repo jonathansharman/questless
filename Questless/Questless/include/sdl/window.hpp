@@ -105,7 +105,8 @@ namespace sdl
 		std::string _title;
 		std::string _icon_filename;
 
-		mutable std::optional<int> _width, _height;
+		mutable std::optional<int> _width;
+		mutable std::optional<int> _height;
 
 		//! The SDL window flags.
 		Uint32 flags() const { return SDL_GetWindowFlags(_sdl_window); }

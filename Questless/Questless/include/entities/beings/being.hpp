@@ -204,10 +204,8 @@ namespace ql
 	private:
 		uptr<ql::agent> _agent; //!< The agent responsible for this being.
 
-		//! @todo Maybe use a std::pair of actions and conts, and then use the auto [action, cont] = ... syntax in act() once supported?
 		std::deque<double> _action_delays; //!< The queue of delays before the next action in the delayed actions queue should begin.
-		std::deque<uptr<action>> _delayed_actions; //!< The queue of delayed actions to occur when this being is not busy.
-		std::deque<action::cont> _delayed_action_conts; //!< The queue of delayed action continuations.
+		std::deque<std::tuple<uptr<action>, action::cont>> _delayed_actions; //!< The queue of delayed actions and continuations to occur when this being is not busy.
 
 		// Statuses
 

@@ -4,10 +4,11 @@
 
 #pragma once
 
+#include <vector>
+
 #include "space.hpp"
 
-// For conversions.
-#include "view_space.hpp"
+#include "view_space.hpp" // for conversions
 
 namespace units
 {
@@ -39,6 +40,9 @@ namespace units
 		static constexpr auto align_top = v_align::near;
 		static constexpr auto align_middle = v_align::mid;
 		static constexpr auto align_bottom = v_align::far;
+
+		//! Define a polygon as a sequence of its vertex points.
+		using polygon = std::vector<point>;
 	};
 
 	inline int& width(screen_space::box& box) { return box.size.x(); }
@@ -63,6 +67,8 @@ namespace units
 	inline screen_space::point bottom_right(screen_space::box const& box) { return box.position + box.size; }
 
 	inline screen_space::point center(screen_space::box const& box) { return box.position + box.size / 2; }
+
+	inline screen_space::scalar area(screen_space::box const& box) { return width(box) * height(box); }
 
 	//! @todo Add a uniform mechanism for converting between spaces?
 

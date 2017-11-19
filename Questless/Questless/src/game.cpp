@@ -566,22 +566,22 @@ namespace ql
 		//! @todo Uncomment to test polygon rendering after adding support for non-convex polygons.
 #if 0
 		{ // Draw hexagon.
-			std::vector<view_space::point> vertices;
+			view_space::polygon polygon;
 			for (int i = 0; i < 6; ++i) {
 				auto const angle = constants::tau / 6 * i;
 				auto const offset = view_space::vector{static_cast<float>(cos(angle) * 50), static_cast<float>(sin(angle) * 50)};
-				vertices.push_back(view_space::point{50.0f, 50.0f} + offset);
+				polygon.push_back(view_space::point{50.0f, 50.0f} + offset);
 			}
 			float border_width = abs(static_cast<float>(10 * sin(constants::tau * duration_cast<game_space::seconds>(clock::now() - _time_last_state_change).count() / 4)));
-			renderer().draw_polygon(vertices, border_width, colors::white(), colors::orange());
+			the_renderer().draw_polygon(polygon, border_width, colors::white(), colors::orange());
 
 			// Reverse hexagon and draw again. (Testing winding-order detection.)
-			auto reverse_vertices = std::vector<view_space::point>(vertices.rbegin(), vertices.rend());
+			auto reverse_vertices = std::vector<view_space::point>(polygon.rbegin(), polygon.rend());
 			for (auto& v : reverse_vertices) { v.y() += 100.0f; }
-			renderer().draw_polygon(reverse_vertices, border_width, colors::white(), colors::clear());
+			the_renderer().draw_polygon(reverse_vertices, border_width, colors::white(), colors::clear());
 		}
 		{ // Draw right triangles. (Different border widths and winding orders.)
-			renderer().draw_polygon
+			the_renderer().draw_polygon
 				(
 					{ view_space::point{100.0f, 0.0f}
 					, view_space::point{200.0f, 0.0f}
@@ -591,7 +591,7 @@ namespace ql
 				, colors::red()
 				, colors::cyan()
 				);
-			renderer().draw_polygon
+			the_renderer().draw_polygon
 				(
 					{ view_space::point{100.0f, 100.0f}
 					, view_space::point{100.0f, 200.0f}
@@ -604,7 +604,7 @@ namespace ql
 		}
 		{ // Draw non-convex polygon.
 			float border_width = abs(static_cast<float>(20 * sin(constants::tau * duration_cast<game_space::seconds>(clock::now() - _time_last_state_change).count() / 4)));
-			renderer().draw_polygon
+			the_renderer().draw_polygon
 				(
 					{ view_space::point{200.0f, 0.0f}
 					, view_space::point{300.0f, 0.0f}
@@ -628,9 +628,9 @@ namespace ql
 				star_vertices.push_back(center + offset);
 			}
 			float border_width = abs(static_cast<float>(8 * sin(constants::tau * duration_cast<game_space::seconds>(clock::now() - _time_last_state_change).count() / 4)));
-			//renderer().draw_polygon(star_vertices, colors::lime(), Fill::outline);
-			//renderer().draw_polygon(star_vertices, colors::lime(), Fill::solid);
-			renderer().draw_polygon(star_vertices, border_width, colors::red(0.5f), colors::blue(0.5f));
+			//the_renderer().draw_polygon(star_vertices, colors::lime(), Fill::outline);
+			//the_renderer().draw_polygon(star_vertices, colors::lime(), Fill::solid);
+			the_renderer().draw_polygon(star_vertices, border_width, colors::red(0.5f), colors::blue(0.5f));
 		}
 #endif
 	}

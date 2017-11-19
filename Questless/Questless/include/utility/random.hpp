@@ -35,6 +35,12 @@ namespace ql
 		return std::uniform_real_distribution<Floating>(min, max)(rng);
 	}
 
+	//! True or false with @p probability chance of returning true.
+	inline bool bernoulli_trial(double probability)
+	{
+		return probability > uniform(0.0, 1.0);
+	}
+
 	//! A random angle in radians.
 	inline units::game_space::radians random_angle()
 	{
@@ -54,5 +60,11 @@ namespace ql
 	inline units::game_space::vector random_displacement(double min_length, double max_length)
 	{
 		return units::game_space::vector{random_angle(), uniform(min_length, max_length)};
+	}
+
+	//! A uniformly randomly sampled point from within the bounds of @p box.
+	inline units::game_space::point random_point_within(units::game_space::box box)
+	{
+		return box.position + units::game_space::vector{uniform(0.0, width(box)), uniform(0.0, height(box))};
 	}
 }

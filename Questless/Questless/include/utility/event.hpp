@@ -8,6 +8,8 @@
 #include <functional>
 #include <memory>
 
+#include "utility.hpp"
+
 namespace ql
 {
 	//! Holds a modifiable list of handler callbacks that can be invoked in order.
@@ -26,9 +28,7 @@ namespace ql
 		//! Removes any instances of the event handler @p f.
 		void remove(handler_t const& f)
 		{
-			_handlers.erase(remove_if(_handlers.begin(), _handlers.end(), [&f](handler_t const& x) {
-				return x == f;
-			}), _handlers.end());
+			erase_if(_handlers, [&f](handler_t const& x) { return x == f; });
 		}
 
 		event& operator +=(handler_t const& f) { add(f); }
@@ -38,7 +38,7 @@ namespace ql
 			return *this;
 		}
 
-		//! Calls each event handler in turn, passing them @p args.
+		//! Calls each event handler in turn, passing @p args to each.
 		//! @return True if no callback marked the event as handled, false otherwise.
 		[[nodiscard]] bool operator ()(Args... args)
 		{

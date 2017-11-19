@@ -58,4 +58,6 @@ namespace units
 	inline texture_space::point bottom_right(texture_space::box const& box) { return box.position + box.size; }
 
 	inline texture_space::point center(texture_space::box const& box) { return box.position + box.size / 2; }
+
+	inline texture_space::scalar area(texture_space::box const& box) { return width(box) * height(box); }
 }

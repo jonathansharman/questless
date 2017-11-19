@@ -10,7 +10,7 @@ namespace ql
 {
 	void green_magic_particle::particle_subupdate()
 	{
-		if (uniform(0.0, 1.0) < _inflection_probability) {
+		if (bernoulli_trial(_inflection_probability)) {
 			_turning_right = !_turning_right;
 		}
 
