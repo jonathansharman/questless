@@ -30,21 +30,27 @@ namespace ql
 	{
 		_cooldown -= 1.0;
 
-		// Try to charge, if auto-charge is enabled.
-		if (_autocharge && equipped()) {
-			ql::id<being> bearer_id = *opt_bearer_id();
-			if (being* bearer = the_game().beings.ptr(bearer_id)) {
-				// The maximum amout of mana a gatestone absorbs per unit time while equipped and set to auto-charge.
-				constexpr double recharge_per_turn = 1.0;
+		if (equipped()) {
+			// Charge over time, if auto-charge is enabled.
+			if (_autocharge && equipped()) {
+				ql::id<being> bearer_id = *opt_bearer_id();
+				if (being* bearer = the_game().beings.ptr(bearer_id)) {
+					// The maximum amout of mana a gatestone absorbs per unit time while equipped and set to auto-charge.
+					constexpr double recharge_per_turn = 1.0;
 
-				// The amount of mana actually transferred is capped by the amount needed and the amount available.
-				double const mana_to_full = _capacity - mana;
-				double const transferred_mana = std::min({recharge_per_turn, mana_to_full, bearer->mana.value()});
+					// The amount of mana actually transferred is capped by the amount needed and the amount available.
+					double const mana_to_full = _capacity - mana;
+					double const transferred_mana = std::min({recharge_per_turn, mana_to_full, bearer->mana.value()});
 
-				// Deduct the mana from the charging being.
-				bearer->mana -= transferred_mana;
-				mana += transferred_mana;
+					// Deduct the mana from the charging being.
+					bearer->mana -= transferred_mana;
+					mana += transferred_mana;
+				}
 			}
+		} else {
+			// Discharge over time if not equipped.
+			constexpr double discharge_per_turn = 1.0;
+			mana -= discharge_per_turn;
 		}
 	}
 
