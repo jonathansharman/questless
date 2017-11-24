@@ -36,16 +36,16 @@ namespace ql
 	complete melee_attack::finish::perform(being& actor, cont cont)
 	{
 		if (weapon* weapon = the_game().items.ptr_as<ql::weapon>(_attack->weapon_id)) {
-			if (weapon->equipped() && *weapon->bearer_id() == actor.id) {
+			if (weapon->equipped() && *weapon->opt_bearer_id() == actor.id) {
 				_attack->cost().incur(actor);
 				actor.busy_time += _attack->follow_through();
 				weapon->active_cooldown = _attack->cooldown();
 				auto coords = actor.coords + _vector; //! @todo This will need to be more complicated for longer-ranged melee weapons.
 				if (being* target = actor.region->being_at(coords)) {
 					// Reduce damage based on difference between direction faced and direction attacked.
-					constexpr double penalty_per_turn = 0.25;
+					constexpr double percent_penalty_per_turn = 0.25;
 					dmg::group damage = _attack->damage();
-					damage *= 1.0 - penalty_per_turn * region_tile::distance(actor.direction, _vector.direction());
+					damage *= 1.0 - percent_penalty_per_turn * region_tile::distance(actor.direction, _vector.direction());
 
 					weapon->integrity -= _attack->wear_ratio() * damage.total();
 					{ //! @todo Part targeting. Apply damage to random body part for now.
@@ -58,11 +58,11 @@ namespace ql
 					return actor.agent().send_message(std::make_unique<message_melee_miss>(), [cont] { return cont(result::success); });
 				}
 			} else {
-				// weapon.has been unequipped from the actor.
+				// Weapon has been unequipped from the actor.
 				return cont(action::result::aborted);
 			}
 		} else {
-			// weapon.has been destroyed.
+			// Weapon has been destroyed.
 			return cont(action::result::aborted);
 		}
 	}
@@ -79,7 +79,7 @@ namespace ql
 	complete ranged_attack::finish::perform(being& actor, cont cont)
 	{
 		if (weapon* weapon = the_game().items.ptr_as<ql::weapon>(_attack->weapon_id)) {
-			if (weapon->equipped() && *weapon->bearer_id() == actor.id) {
+			if (weapon->equipped() && *weapon->opt_bearer_id() == actor.id) {
 				return _attack->cost().check(actor, [&] {
 					int range = _attack->range();
 					return actor.agent().query_tile(std::make_unique<tile_query_ranged_attack_target>(range), actor.coords, tile_in_range_predicate(actor, range),
@@ -109,11 +109,11 @@ namespace ql
 					);
 				});
 			} else {
-				// weapon.has been unequipped from the actor.
+				// Weapon has been unequipped from the actor.
 				return cont(action::result::aborted);
 			}
 		} else {
-			// weapon.has been destroyed.
+			// Weapon has been destroyed.
 			return cont(action::result::aborted);
 		}
 	}

@@ -21,7 +21,7 @@ namespace ql
 			return actor.agent().send_message(std::make_unique<message_cannot_equip>(), [cont] { return cont(result::aborted); });
 		};
 
-		_equipment._bearer_id = actor.id;
+		_equipment._opt_bearer_id = actor.id;
 
 		body_part_counts reqs = _equipment.requirements();
 
@@ -177,8 +177,8 @@ namespace ql
 
 	void equipment::unequip()
 	{
-		if (_bearer_id) {
-			if (being* bearer = the_game().beings.ptr(*_bearer_id)) {
+		if (_opt_bearer_id) {
+			if (being* bearer = the_game().beings.ptr(*_opt_bearer_id)) {
 				for (auto head_id : _head_ids) {
 					if (head* head = bearer->body.find_head(head_id)) {
 						head->equipped_item_id = std::nullopt;
@@ -221,7 +221,7 @@ namespace ql
 				}
 			}
 
-			_bearer_id = std::nullopt;
+			_opt_bearer_id = std::nullopt;
 			_head_ids.clear();
 			_torso_ids.clear();
 			_arm_ids.clear();

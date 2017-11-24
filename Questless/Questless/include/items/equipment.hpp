@@ -26,10 +26,10 @@ namespace ql
 		virtual double unequip_time() const = 0;
 
 		//! Whether the item is currently equipped to a being.
-		bool equipped() const { return _bearer_id.has_value(); }
+		bool equipped() const { return _opt_bearer_id.has_value(); }
 
 		//! The ID of the being bearing this equipment or nullopt if it's currently unequipped.
-		std::optional<ql::id<being>> bearer_id() const { return _bearer_id; }
+		std::optional<ql::id<being>> opt_bearer_id() const { return _opt_bearer_id; }
 	protected:
 		struct heads : tagged_type<int> { using tagged_type::tagged_type; };
 		struct torsos : tagged_type<int> { using tagged_type::tagged_type; };
@@ -93,6 +93,7 @@ namespace ql
 			int _tails;
 		};
 
+		friend class equip;
 		class equip : public action
 		{
 		public:
@@ -103,8 +104,8 @@ namespace ql
 		private:
 			equipment& _equipment;
 		};
-		friend class equip;
 
+		friend class unequip;
 		class unequip : public action
 		{
 		public:
@@ -115,9 +116,8 @@ namespace ql
 		private:
 			equipment& _equipment;
 		};
-		friend class unequip;
 	private:
-		std::optional<ql::id<being>> _bearer_id;
+		std::optional<ql::id<being>> _opt_bearer_id;
 		std::vector<ql::id<body_part>> _part_ids;
 
 		std::vector<ql::id<body_part>> _head_ids;

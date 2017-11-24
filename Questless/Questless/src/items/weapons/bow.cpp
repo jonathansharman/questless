@@ -15,7 +15,7 @@ namespace ql
 	{
 		for (item& maybe_quiver : actor.inventory.items) {
 			if (quiver* quiver = dynamic_cast<ql::quiver*>(&maybe_quiver)) {
-				if (quiver->equipped() && quiver->bearer_id() == actor.id) {
+				if (quiver->equipped() && quiver->opt_bearer_id() == actor.id) {
 					for (item& maybe_arrow : quiver->inventory.items) {
 						if (dynamic_cast<arrow*>(&maybe_arrow)) {
 							// Found an arrow in an equipped quiver.
@@ -38,7 +38,7 @@ namespace ql
 	{
 		for (item& maybe_quiver : actor.inventory.items) {
 			if (quiver* quiver = dynamic_cast<ql::quiver*>(&maybe_quiver)) {
-				if (quiver->equipped() && quiver->bearer_id() == actor.id) {
+				if (quiver->equipped() && quiver->opt_bearer_id() == actor.id) {
 					for (item& maybe_arrow : quiver->inventory.items) {
 						if (arrow* arrow = dynamic_cast<ql::arrow*>(&maybe_arrow)) {
 							// Found an arrow in an equipped quiver.

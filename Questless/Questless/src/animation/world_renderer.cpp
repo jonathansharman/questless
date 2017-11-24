@@ -105,7 +105,29 @@ namespace ql
 
 	void world_renderer::draw_entities()
 	{
-		for (auto const& entity_view : _world_view->entity_views()) {
+#if 1
+		// Created a view of the entities sorted by y-coordinates.
+		auto y_sort = [](world_view::entity_view const& a, world_view::entity_view  const& b) {
+			if (entity const* entity_a = get_entity_cptr(a.id)) {
+				if (entity const* entity_b = get_entity_cptr(b.id)) {
+					auto y_a = layout::dflt().to_world(entity_a->coords).y();
+					auto y_b = layout::dflt().to_world(entity_b->coords).y();
+					return y_a > y_b;
+				}
+			}
+			return false;
+		};
+		std::multiset<world_view::entity_view, decltype(y_sort)> sorted_entity_views
+			( _world_view->entity_views().begin()
+			, _world_view->entity_views().end()
+			, y_sort
+			);
+#else
+		std::vector<world_view::entity_view> sorted_entity_views(_world_view->entity_views().begin(), _world_view->entity_views().end());
+#endif
+
+		// Draw from the sorted view.
+		for (auto const& entity_view : sorted_entity_views) {
 			// Attempt to load the entity.
 			if (entity const* entity = get_entity_cptr(entity_view.id)) {
 				auto entity_var_ref = get_entity_cref_var(entity_view.id);
