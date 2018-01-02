@@ -59,7 +59,7 @@ namespace ql
 				, _enable_autocharge{!gatestone._autocharge}
 				, _incur_delay{delay}
 			{}
-			static auto make(gatestone& gatestone, bool delay) { return std::make_unique<toggle_autocharge>(gatestone, delay); }
+			static auto make(gatestone& gatestone, bool delay) { return umake<toggle_autocharge>(gatestone, delay); }
 			std::string name() const final { return _enable_autocharge ? "Enable auto-charge" : "Disable auto-charge"; }
 			complete perform(being& actor, cont cont) final;
 		private:
@@ -75,7 +75,7 @@ namespace ql
 		{
 		public:
 			incant(gatestone& gatestone) : _gatestone_id{gatestone.id} {}
-			static auto make(gatestone& gatestone) { return std::make_unique<incant>(gatestone); }
+			static auto make(gatestone& gatestone) { return umake<incant>(gatestone); }
 			std::string name() const final { return "Incant"; }
 			complete perform(being& actor, cont cont) final;
 		private:

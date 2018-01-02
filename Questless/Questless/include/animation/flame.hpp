@@ -17,7 +17,7 @@ namespace ql
 		{
 			constexpr int n_flames = 2;
 			for (int i = 0; i < n_flames; ++i) {
-				push_front(std::make_unique<flame_particle>());
+				push_front(umake<flame_particle>());
 			}
 		}
 	};

@@ -15,10 +15,10 @@ namespace ql
 		//! @param duration The number of turns remaining before the status modifier expires.
 		//! @param source_id The ID of the being that caused the status modifier, if any.
 		mute(int duration, std::optional<id<being>> source_id = std::nullopt)
-			: status("Mute", duration, source_id), _modifiers{std::make_unique<mute_modifier>(true)}
+			: status("Mute", duration, source_id), _modifiers{umake<mute_modifier>(true)}
 		{}
 
-		virtual type type() const { return type::debuff; }
+		virtual status_type type() const { return status_type::debuff; }
 
 		std::vector<uptr<modifier>> const& modifiers() const final { return _modifiers; }
 	private:

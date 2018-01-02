@@ -15,7 +15,7 @@ namespace ql
 	{
 		return actor.mana >= _amount
 			? cont()
-			: actor.agent().send_message(std::make_unique<message_not_enough_mana>(_amount - actor.mana), [cont] { return complete{}; })
+			: actor.agent().send_message(umake<message_not_enough_mana>(_amount - actor.mana), [cont] { return complete{}; })
 			;
 	}
 

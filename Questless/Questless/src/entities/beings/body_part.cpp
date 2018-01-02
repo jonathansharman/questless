@@ -3,7 +3,9 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "entities/beings/body_part.hpp"
+
 #include "entities/beings/being.hpp"
+#include "game.hpp"
 
 using std::string;
 using std::vector;
@@ -13,62 +15,48 @@ using namespace units;
 namespace ql
 {
 	body_part::body_part
-		( being& owner
-		, std::string name
+		( ql::id<being> owner_id
 		, ql::vitality vitality
 		, ql::weight weight
-		, dmg::protect protection
-		, dmg::resist resistance
-		, dmg::vuln vulnerability
-		, std::vector<screen_space::box> regions
+		, vector<uptr<attachment>> attachments
 		, ql::id<body_part> id
 		)
 		: id{id}
-		, health {vitality, [] { return 0.0; }, [this]() { return _vitality; }}
-		, _owner{owner}
-		, _name{std::move(name)}
+		, vitality{vitality}
+		, health{vitality, [] { return 0.0; }, [this] { return this->vitality; }}
+		, bleeding{0.0, [] { return 0.0; }, [this] { return this->vitality; }}
+		, _owner_id{owner_id}
+		, _attachments{std::move(attachments)}
 		, _enabled{true}
-		, _vitality{vitality}
 		, _weight{weight}
-		, _protection{protection}
-		, _resistance{resistance}
-		, _vulnerability{vulnerability}
-		, _regions{std::move(regions)}
-	{
-		for (auto& region : _regions) {
-			left(region) *= 5;
-			top(region) *= 5;
-			
-			top(region) = -top(region);
-
-			width(region) *= 5;
-			height(region) *= 5;
-
-			++width(region);
-			++height(region);
-		}
-	}
+	{}
 
 	void body_part::update()
 	{
-		health += _owner.stats.health_regen * _vitality;
+		being& owner = the_game().beings.ref(_owner_id);
+
+		health += owner.stats.health_regen * vitality;
+
+		bleeding -= owner.stats.health_regen * vitality;
 	}
 
 	void body_part::take_damage(dmg::group& damage, std::optional<ql::id<being>> source_id)
 	{
-		_owner.take_damage(damage, *this, source_id);
+		being& owner = the_game().beings.ref(_owner_id);
+		owner.take_damage(damage, *this, source_id);
 	}
 
 	void body_part::heal(double amount, std::optional<ql::id<being>> opt_source_id)
 	{
-		_owner.heal(amount, *this, opt_source_id);
+		being& owner = the_game().beings.ref(_owner_id);
+		owner.heal(amount, *this, opt_source_id);
 	}
-	
-	std::function<void(double&, double const&)> body_part::health_mutator()
+
+	void body_part::generate_attached_parts()
 	{
-		return [this](double& health, double const& new_health)
-		{
-			health = std::clamp(new_health, 0.0, _vitality);
-		};
+		for (auto& attachment : _attachments) {
+			attachment->part = attachment->default_part(_owner_id);
+			attachment->part->generate_attached_parts();
+		}
 	}
 }

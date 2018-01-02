@@ -20,7 +20,7 @@ namespace ql
 		//! The player's current view of the world.
 		world_view const& world_view() const { return *_world_view; }
 
-		void update_world_view() { _world_view = std::make_unique<ql::world_view>(being, true); }
+		void update_world_view() { _world_view = umake<ql::world_view>(being, true); }
 
 		void act() final;
 
@@ -39,7 +39,7 @@ namespace ql
 
 		complete query_count
 			( uptr<count_query> query
-			, int default
+			, int default_value
 			, std::optional<int> min
 			, std::optional<int> max
 			, std::function<complete(std::optional<int>)> cont
@@ -47,7 +47,7 @@ namespace ql
 
 		complete query_magnitude
 			( uptr<magnitude_query> query
-			, double default
+			, double default_value
 			, std::optional<double> min
 			, std::optional<double> max
 			, std::function<complete(std::optional<double>)> cont

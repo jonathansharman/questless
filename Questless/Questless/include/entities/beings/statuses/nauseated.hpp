@@ -19,8 +19,8 @@ namespace ql
 			: status("Nauseated", duration, source_id)
 			, _magnitude{magnitude}
 			, _modifiers
-				{ std::make_unique<strength_modifier>(-_magnitude)
-				, std::make_unique<endurance_modifier>(-_magnitude)
+				{ umake<strength_modifier>(-_magnitude)
+				, umake<endurance_modifier>(-_magnitude)
 				}
 		{}
 

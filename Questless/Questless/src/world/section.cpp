@@ -69,25 +69,25 @@ namespace ql
 
 				switch (static_cast<tile_subtype>(c)) {
 					case tile_subtype::dirt:
-						tile = std::make_unique<dirt_tile>(temperature_offset);
+						tile = umake<dirt_tile>(temperature_offset);
 						break;
 					case tile_subtype::edge:
-						tile = std::make_unique<edge_tile>(temperature_offset);
+						tile = umake<edge_tile>(temperature_offset);
 						break;
 					case tile_subtype::grass:
-						tile = std::make_unique<grass_tile>(temperature_offset);
+						tile = umake<grass_tile>(temperature_offset);
 						break;
 					case tile_subtype::sand:
-						tile = std::make_unique<sand_tile>(temperature_offset);
+						tile = umake<sand_tile>(temperature_offset);
 						break;
 					case tile_subtype::snow:
-						tile = std::make_unique<snow_tile>(temperature_offset);
+						tile = umake<snow_tile>(temperature_offset);
 						break;
 					case tile_subtype::stone:
-						tile = std::make_unique<stone_tile>(temperature_offset);
+						tile = umake<stone_tile>(temperature_offset);
 						break;
 					case tile_subtype::water:
-						tile = std::make_unique<water_tile>(temperature_offset);
+						tile = umake<water_tile>(temperature_offset);
 						break;
 					default:
 						throw std::logic_error{"Unrecognized tile type."};

@@ -20,7 +20,7 @@ namespace ql::magic
 			uptr<magic::spell> _spell;
 		};
 
-		return std::make_unique<cast>(std::move(spell));
+		return umake<cast>(std::move(spell));
 	}
 	
 	double spell::incant_time(being& caster) const

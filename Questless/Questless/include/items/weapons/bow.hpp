@@ -15,7 +15,7 @@ namespace ql
 		bow(ql::id<item> id = ql::id<item>::make())
 			: item{id}
 			, weapon_base<bow>{durability()}
-			, _shoot{std::make_shared<shoot>(id)}
+			, _shoot{smake<shoot>(id)}
 		{}
 
 		std::string name() const final { return "Bow"; }

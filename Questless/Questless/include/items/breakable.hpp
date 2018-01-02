@@ -25,7 +25,7 @@ namespace ql
 		lazy_bounded<double> integrity;
 	protected:
 		breakable(double integrity)
-			: integrity{integrity, [] { return 0.0; }, [this]() { return durability(); }}
+			: integrity{integrity, [] { return 0.0; }, [this] { return durability(); }}
 		{}
 	private:
 		std::function<void(double&, double const&)> integrity_mutator();

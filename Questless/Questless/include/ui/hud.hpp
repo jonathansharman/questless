@@ -42,8 +42,8 @@ namespace ql
 	private:
 		// Constants
 
-		static constexpr float _inv_width_percent = 0.7f;
-		static constexpr float _inv_height_percent = 0.7f;
+		static constexpr float _inv_width_pct = 0.7f;
+		static constexpr float _inv_height_pct = 0.7f;
 
 		static constexpr units::screen_space::vector _item_icon_size{55, 55};
 		static constexpr int _item_count_font_size = 10;

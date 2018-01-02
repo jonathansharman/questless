@@ -50,10 +50,6 @@ namespace ql
 		//! Carries out any effects that should occur each update cycle and decrements the duration of the status.
 		//! @param target The being affected by the status.
 		void update(being& target);
-
-		//! Carries out any effects that should occur when the status expires.
-		//! @param target The being affected by the status.
-		virtual void expire(being& target);
 	protected:
 		//! @param name The name of the status modifier displayed to the player.
 		//! @param duration The number of turns remaining before the status modifier expires.
@@ -66,5 +62,9 @@ namespace ql
 
 		//! Carries out status subtype-specific effects that should occur each update cycle.
 		virtual void subupdate(being& target);
+
+		//! Carries out any effects that should occur when the status expires.
+		//! @param target The being affected by the status.
+		virtual void expire(being& target);
 	};
 }

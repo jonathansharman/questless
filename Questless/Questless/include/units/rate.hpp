@@ -170,7 +170,7 @@ namespace units
 	constexpr ToRate rate_cast(rate<QuantityType, TimeRep, Period> const& rate)
 	{
 		using ratio = std::ratio_divide<ToRate::Period, Period>;
-		return ToRate{static_cast<ToRate::quantity_type>(rate.quantity() * r::den / r::num)};
+		return ToRate{static_cast<typename ToRate::quantity_type>(rate.quantity() * r::den / r::num)};
 	}
 }
 

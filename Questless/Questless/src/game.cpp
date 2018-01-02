@@ -33,7 +33,6 @@
 #include "magic/all_spells.hpp"
 
 using std::move;
-using std::make_unique;
 using std::dynamic_pointer_cast;
 using std::string;
 using std::function;
@@ -68,9 +67,9 @@ namespace ql
 
 		// Initialize window.
 		if (fullscreen) {
-			set_the_window(make_unique<window>("Questless", "resources/textures/icon.png", true));
+			set_the_window(umake<window>("Questless", "resources/textures/icon.png", true));
 		} else {
-			set_the_window(make_unique<window>("Questless", "resources/textures/icon.png", false, _dflt_window_width, _dflt_window_height, true, true, true, false));
+			set_the_window(umake<window>("Questless", "resources/textures/icon.png", false, _dflt_window_width, _dflt_window_height, true, true, true, false));
 		}
 
 		{ // Initialize OpenGL.
@@ -95,11 +94,11 @@ namespace ql
 			}
 
 			// Generate GLSL programs.
-			set_dflt_program(std::make_unique<shader_program>
+			set_dflt_program(umake<shader_program>
 				( contents_of_file("resources/shaders/dflt.vert").c_str()
 				, contents_of_file("resources/shaders/dflt.frag").c_str()
 				));
-			set_solid_program(std::make_unique<shader_program>
+			set_solid_program(umake<shader_program>
 				( contents_of_file("resources/shaders/solid.vert").c_str()
 				, contents_of_file("resources/shaders/solid.frag").c_str()
 				));
@@ -136,9 +135,9 @@ namespace ql
 		}
 
 		// Initialize renderer.
-		set_the_renderer(make_unique<renderer>(the_window(), the_window().width(), the_window().height()));
+		set_the_renderer(umake<renderer>(the_window(), the_window().width(), the_window().height()));
 
-		_camera = make_unique<ql::camera>(game_space::point{0.0, 0.0});
+		_camera = umake<ql::camera>(game_space::point{0.0, 0.0});
 
 		if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
 			throw std::runtime_error("Failed to initialize IMG. SDL Error: " + string{SDL_GetError()});
@@ -150,7 +149,7 @@ namespace ql
 			throw std::runtime_error("Failed to initialize TTF. SDL Error: " + string{SDL_GetError()});
 		}
 
-		_fnt_20pt = make_unique<font>("resources/fonts/firamono.ttf", 20, SDL_BLENDMODE_BLEND);
+		_fnt_20pt = umake<font>("resources/fonts/firamono.ttf", 20, SDL_BLENDMODE_BLEND);
 
 		// Initialize sound.
 
@@ -160,7 +159,7 @@ namespace ql
 
 		// Initialize and load menu resources.
 
-		_hud = make_unique<ql::hud>();
+		_hud = umake<ql::hud>();
 
 		// Load textures and graphics.
 
@@ -168,7 +167,7 @@ namespace ql
 
 		// Load sounds.
 
-		_sfx_splash = make_unique<sound>("resources/sounds/splash.wav");
+		_sfx_splash = umake<sound>("resources/sounds/splash.wav");
 
 		// Initialize game state.
 
@@ -210,18 +209,18 @@ namespace ql
 
 	void game::load_textures()
 	{
-		_txt_test1 = make_unique<texture>("resources/textures/test1.png");
-		_txt_test2 = make_unique<texture>("resources/textures/test2.png");
-		_txt_test3 = make_unique<texture>("resources/textures/test3.png");
-		_txt_test_even = make_unique<texture>("resources/textures/test-even.png");
+		_txt_test1 = umake<texture>("resources/textures/test1.png");
+		_txt_test2 = umake<texture>("resources/textures/test2.png");
+		_txt_test3 = umake<texture>("resources/textures/test3.png");
+		_txt_test_even = umake<texture>("resources/textures/test-even.png");
 
-		_txt_splash_logo = make_unique<texture>("resources/textures/splash/logo.png");
+		_txt_splash_logo = umake<texture>("resources/textures/splash/logo.png");
 
-		_txt_splash_flame = make_unique<texture>("resources/textures/splash/flame.png");
+		_txt_splash_flame = umake<texture>("resources/textures/splash/flame.png");
 
-		_txt_hex_highlight = make_unique<texture>("resources/textures/terrain/tile.png");
+		_txt_hex_highlight = umake<texture>("resources/textures/terrain/tile.png");
 
-		_txt_hex_circle = make_unique<texture>("resources/textures/ui/hex_circle.png");
+		_txt_hex_circle = umake<texture>("resources/textures/ui/hex_circle.png");
 	}
 
 	complete game::add_dialog(uptr<dialog> dialog)
@@ -232,7 +231,7 @@ namespace ql
 
 	void game::query_player_choice(function<void(player_action_dialog::choice)> cont)
 	{
-		_player_action_dialog = make_unique<player_action_dialog>(*_hud, move(cont));
+		_player_action_dialog = umake<player_action_dialog>(*_hud, move(cont));
 	}
 
 	void game::add_effect(sptr<effect> const& effect)
@@ -287,7 +286,7 @@ namespace ql
 		}
 		if (the_input().window_resized()) {
 			the_window().recreate();
-			set_the_renderer(make_unique<renderer>(the_window(), the_window().width(), the_window().height()));
+			set_the_renderer(umake<renderer>(the_window(), the_window().width(), the_window().height()));
 		}
 
 		{ // Perform state-specific updates.
@@ -439,28 +438,28 @@ namespace ql
 		for (auto const& option : _main_menu.poll_selections()) {
 			if (option.first == "Questless") {
 				if (option.second == "Continue" || option.second == "Begin Anew") {
-					_region = make_unique<ql::region>("Region1");
-					//_region = make_unique<region>("Slot1", "Region1");
+					_region = umake<ql::region>("Region1");
+					//_region = umake<region>("Slot1", "Region1");
 
 					{ // Spawn the player's being.
-						auto player_being = make_unique<human>(agent::make<player>);
+						auto player_being = umake<human>(agent::make<player>);
 						_player = dynamic_cast<player*>(&player_being->agent());
 						_player_being_id = player_being->id;
-						player_being->inventory.add(items.add(make_unique<scroll>(make_unique<magic::shock>())).id);
-						player_being->inventory.add(items.add(make_unique<scroll>(make_unique<magic::heal>())).id);
-						player_being->inventory.add(items.add(make_unique<scroll>(make_unique<magic::teleport>())).id);
-						player_being->inventory.add(items.add(make_unique<scroll>(make_unique<magic::eagle_eye>())).id);
-						player_being->inventory.add(items.add(make_unique<quarterstaff>()).id);
-						player_being->inventory.add(items.add(make_unique<bow>()).id);
+						player_being->inventory.add(items.add(umake<scroll>(umake<magic::shock>())).id);
+						player_being->inventory.add(items.add(umake<scroll>(umake<magic::heal>())).id);
+						player_being->inventory.add(items.add(umake<scroll>(umake<magic::teleport>())).id);
+						player_being->inventory.add(items.add(umake<scroll>(umake<magic::eagle_eye>())).id);
+						player_being->inventory.add(items.add(umake<quarterstaff>()).id);
+						player_being->inventory.add(items.add(umake<bow>()).id);
 						{
 							inventory inventory;
 							constexpr int arrow_count = 20;
 							for (int i = 0; i < arrow_count; ++i) {
-								inventory.add(items.add(make_unique<arrow>()).id);
+								inventory.add(items.add(umake<arrow>()).id);
 							}
-							player_being->inventory.add(items.add(make_unique<quiver>(std::move(inventory))).id);
+							player_being->inventory.add(items.add(umake<quiver>(std::move(inventory))).id);
 						}
-						player_being->inventory.add(items.add(make_unique<gatestone>(100.0, 100.0, 0.0, magic::color::green)).id);
+						player_being->inventory.add(items.add(umake<gatestone>(100.0, 100.0, 0.0, magic::color::green)).id);
 						_region->spawn_player(move(player_being));
 					}
 					// Pass the player's being ID to the HUD.
@@ -468,7 +467,7 @@ namespace ql
 					// Update the player's initial world view.
 					_player->update_world_view();
 					// Initialize the world renderer.
-					_world_renderer = make_unique<ql::world_renderer>(_player->world_view());
+					_world_renderer = umake<ql::world_renderer>(_player->world_view());
 					// Set the camera position relative to the player's being.
 					_camera->position(game_space::point{layout::dflt().to_world(beings.cref(*_player_being_id).coords)});
 
@@ -752,7 +751,7 @@ namespace ql
 	void game::update_player_view()
 	{
 		//! @todo Do something reasonable with the player view when the player dies.
-		being* player_being = beings.ptr(*_player_being_id);
+		being const* player_being = beings.cptr(*_player_being_id);
 		if (player_being && !player_being->dead) {
 			// Update the player's world view.
 			_player->update_world_view();

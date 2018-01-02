@@ -361,7 +361,7 @@
     <ClInclude Include="include\units\constants.hpp" />
     <ClInclude Include="include\units\frequency.hpp" />
     <ClInclude Include="include\units\game_space.hpp" />
-    <ClInclude Include="include\units\hex_coords.hpp" />
+    <ClInclude Include="include\units\hex_space.hpp" />
     <ClInclude Include="include\units\math.hpp" />
     <ClInclude Include="include\units\rate.hpp" />
     <ClInclude Include="include\units\screen_space.hpp" />

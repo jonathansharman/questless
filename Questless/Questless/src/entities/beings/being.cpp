@@ -25,6 +25,7 @@ namespace ql
 		, energy{stats.stamina, [] { return 0.0; }, [this] { return stats.stamina.value(); }}
 		, satiety{max_satiety}
 		, alertness{max_alertness}
+		, mood{0.0}
 		, busy_time{0.0}
 		, dead{false}
 		, direction{static_cast<region_tile::direction>(uniform(1, 6))}
@@ -50,7 +51,7 @@ namespace ql
 		in >> base_stats;
 		in >> stats;
 
-		in >> mana >> energy >> satiety >> alertness >> busy_time >> dead;
+		in >> mana >> energy >> satiety >> alertness >> mood >> busy_time >> dead;
 
 		//! @todo Is there a better way to extract into an enum class?
 		int direction_int;
@@ -68,7 +69,7 @@ namespace ql
 
 		//! @todo Write body.
 
-		out << mana << ' ' << energy << ' ' << satiety << ' ' << alertness << ' '
+		out << mana << ' ' << energy << ' ' << satiety << ' ' << alertness << ' ' << mood << ' '
 			<< busy_time << ' ' << dead << ' ' << static_cast<int>(direction);
 
 		out << base_stats << ' ';
@@ -152,19 +153,11 @@ namespace ql
 		refresh_stats();
 		
 		// Update status modifiers.
-		{
-			std::size_t i = 0;
-			while (i < _statuses.size()) {
-				_statuses[i]->update(*this);
-				if (_statuses[i]->duration() == 0) {
-					auto expired = std::move(_statuses[i]);
-					_statuses.erase(_statuses.begin() + i);
-					expired->expire(*this);
-				} else {
-					++i;
-				}
-			}
+		for (auto& status : _statuses) {
+			status->update(*this);
 		}
+		// Remove expired status modifiers.
+		erase_if(_statuses, [](auto const& status) { return status->duration() == 0; });
 
 		// Update conditions.
 		mana += stats.mana_regen;
@@ -173,27 +166,70 @@ namespace ql
 		alertness += alertness_rate;
 		busy_time -= 1.0;
 
-		// Update body parts.
-		for (body_part& part : body) {
-			part.update();
+		// Update body.
+		body.update();
+
+		{ // Handle temperature damage.
+			double const temp = region->temperature(coords);
+			if (temp > stats.max_temp) {
+				dmg::group burn = dmg::burn{(temp - stats.max_temp) / (stats.max_temp - stats.min_temp) * temperature_damage_factor};
+				for (body_part& part : body) {
+					take_damage(burn, part, std::nullopt);
+				}
+			} else if (temp < stats.min_temp) {
+				dmg::group freeze = dmg::freeze{(stats.min_temp - temp) / (stats.max_temp - stats.min_temp) * temperature_damage_factor};
+				for (body_part& part : body) {
+					take_damage(freeze, part, std::nullopt);
+				}
+			}
+		}
+
+		{ // Handle blood loss.
+			constexpr double stage_1_max = 0.15;
+			constexpr double stage_2_max = 0.3;
+			constexpr double stage_3_max = 0.4;
+
+			double const pct_blood_lost = 1.0 - body.blood / body.total_vitality();
+
+			// No effects for stage 1 blood loss.
+			if (pct_blood_lost > stage_1_max) {
+				// Stage 2: anxiety
+
+				// Mood loss per unit time as a factor of stage-2 blood loss.
+				constexpr double mood_loss_factor = 1.0;
+				mood -= (pct_blood_lost - stage_1_max) / (1.0 - stage_1_max) * mood_loss_factor;
+			}
+			if (pct_blood_lost > stage_2_max) {
+				// Stage 3: confusion
+				
+				// Intellect loss as a factor of stage-3 blood loss.
+				constexpr double intellect_loss_factor = 50.0;
+				stats.intellect -= (pct_blood_lost - stage_2_max) / (1.0 - stage_2_max) * intellect_loss_factor;
+			}
+			if (pct_blood_lost > stage_3_max) {
+				// Stage 4: lethargy, loss of consciousness, damage
+
+				double const pct_stage_4_blood_lost = (pct_blood_lost - stage_3_max) / (1.0 - stage_3_max);
+
+				// Energy loss per unit time as a factor of stage-4 blood loss.
+				constexpr double energy_loss_factor = 1.0;
+				energy -= pct_stage_4_blood_lost * energy_loss_factor;
+
+				// Alertness loss per unit time as a factor of stage-4 blood loss.
+				constexpr double alertness_loss_factor = 1.0;
+				alertness -= pct_stage_4_blood_lost * alertness_loss_factor;
+
+				// Percent of each part's vitality dealt to it as blight damage as a factor of stage-4 blood loss.
+				constexpr double damage_factor = 0.1;
+				for (body_part& part : body) {
+					dmg::group damage = dmg::blight{part.vitality * pct_stage_4_blood_lost * damage_factor};
+					part.take_damage(damage, std::nullopt);
+				}
+			}
 		}
 
 		// Update abilities.
 		abilities.update(*this);
-
-		// Handle temperature damage.
-		double const temp = region->temperature(coords);
-		if (temp > stats.max_temp) {
-			dmg::group burn = dmg::burn{(temp - stats.max_temp) / (stats.max_temp - stats.min_temp) * temperature_damage_factor};
-			for (body_part& part : body) {
-				take_damage(burn, part, std::nullopt);
-			}
-		} else if (temp < stats.min_temp) {
-			dmg::group freeze = dmg::freeze{(stats.min_temp - temp) / (stats.max_temp - stats.min_temp) * temperature_damage_factor};
-			for (body_part& part : body) {
-				take_damage(freeze, part, std::nullopt);
-			}
-		}
 
 		// Update items.
 		for (item& item : inventory.items) {
@@ -201,7 +237,7 @@ namespace ql
 		}
 	}
 
-	void being::take_damage(dmg::group& damage, body_part& part, std::optional<ql::id<being>> opt_source_id)
+	void being::take_damage(dmg::group& damage, body_part& target_part, std::optional<ql::id<being>> opt_source_id)
 	{
 		// Store whether the being was already dead upon taking this damage.
 		bool const was_already_dead = dead;
@@ -210,9 +246,9 @@ namespace ql
 		being* const source = opt_source_id ? the_game().beings.ptr(*opt_source_id) : nullptr;
 
 		// Target will take damage.
-		if (before_take_damage(damage, part, opt_source_id)) {
+		if (before_take_damage(damage, target_part, opt_source_id)) {
 			// Source, if present, will deal damage.
-			if (!source || source->before_deal_damage(damage, part, id)) {
+			if (!source || source->before_deal_damage(damage, target_part, id)) {
 				// First, apply shields' protection, in reverse order so that more recently equipped shields are the first defense.
 				for (auto shields_it = _shields.rbegin(); shields_it != _shields.rend(); ++shields_it) {
 					armor& shield = **shields_it;
@@ -220,38 +256,78 @@ namespace ql
 				}
 
 				// Apply part's armor's protection and resistance.
-				if (part.equipped_item_id) {
-					if (armor* armor = the_game().items.ptr_as<ql::armor>(*part.equipped_item_id)) {
+				if (target_part.equipped_item_id) {
+					if (armor* armor = the_game().items.ptr_as<ql::armor>(*target_part.equipped_item_id)) {
 						armor->apply(damage);
 					}
 				}
 
-				// Apply part's and being's protection stats.
-				damage = damage.with(part.protection() + stats.protection);
+				{ // Apply part's and being's protection, resistance, and vulnerability.
+					dmg::protect const total_protection = target_part.protection() + stats.protection;
+					dmg::resist const total_resistance = stats.resistance + target_part.resistance();
+					dmg::vuln const total_vulnerability = stats.vulnerability + target_part.vulnerability();
+					damage = damage.with(total_protection, total_resistance, total_vulnerability);
+				}
 
-				// Resistance and vulnerability are the sum of the being's overall values and those of the target part.
-				dmg::resist total_resistance = stats.resistance + part.resistance();
-				dmg::vuln total_vulnerability = stats.vulnerability + part.vulnerability();
+				{ // Apply secondary damage effects.
+					//! @todo Add effects for other damage types. Balance numbers.
+					struct damage_effect_applier
+					{
+						body_part& body_part;
+						void operator ()(dmg::slash const& slash)
+						{
+							constexpr double bleeding_per_slash = 0.1;
+							body_part.bleeding += slash * bleeding_per_slash;
+						}
+						void operator ()(dmg::pierce const& pierce)
+						{
+							constexpr double bleeding_per_pierce = 0.1;
+							body_part.bleeding += pierce * bleeding_per_pierce;
+						}
+						void operator ()(dmg::cleave const& cleave)
+						{
+							constexpr double bleeding_per_cleave = 0.1;
+							body_part.bleeding += cleave * bleeding_per_cleave;
+						}
+						void operator ()(dmg::bludgeon const& bludgeon)
+						{
+							constexpr double bleeding_per_bludgeon = 0.05;
+							body_part.bleeding += bludgeon * bleeding_per_bludgeon;
+						}
+						void operator ()(dmg::burn const& burn)
+						{
+							constexpr double cauterization_per_burn = 1.0;
+							body_part.bleeding -= burn * cauterization_per_burn;
+						}
+						void operator ()(dmg::freeze const& /*freeze*/) {}
+						void operator ()(dmg::blight const& /*blight*/) {}
+						void operator ()(dmg::poison const& /*poison*/) {}
+						void operator ()(dmg::shock const& /*shock*/) {}
+					};
+					for (dmg::damage const& damage_part : damage.parts()) {
+						std::visit(damage_effect_applier{target_part}, damage_part);
+					}
+				}
 
 				// Part loses health.
-				part.health -= damage.with(total_resistance, total_vulnerability).total() / (1.0 + endurance_factor * stats.endurance);
+				target_part.health -= damage.total() / (1.0 + endurance_factor * stats.endurance);
 
 				// Check for part disability.
-				if (part.health <= 0) {
-					//! @todo Disable part.
-					if (part.vital()) {
+				if (target_part.health <= 0) {
+					//! @todo Disable target_part.
+					if (target_part.vital()) {
 						// A vital part has been disabled. Kill target.
 						dead = true;
 					}
 				}
 
 				// Add injury effect.
-				the_game().add_effect(std::make_shared<injury_effect>(coords, damage, id, part.id, opt_source_id));
+				the_game().add_effect(smake<injury_effect>(coords, damage, id, target_part.id, opt_source_id));
 
 				// Target has taken damage.
-				if (after_take_damage(damage, part, opt_source_id)) {
+				if (after_take_damage(damage, target_part, opt_source_id)) {
 					// Source, if present, has dealt damage.
-					if (!source || source->after_deal_damage(damage, part, id)) {
+					if (!source || source->after_deal_damage(damage, target_part, id)) {
 						// Handle death, if this damage killed the target.
 						if (!was_already_dead && dead) {
 							// Target will die.
@@ -264,7 +340,7 @@ namespace ql
 										// Spawn corpse.
 										ql::region& corpse_region = *region; // Save region since the being's region pointer will be nulled when it's removed.
 										region->remove(*this);
-										auto corpse = std::make_unique<ql::corpse>(id);
+										auto corpse = umake<ql::corpse>(id);
 										corpse_region.add(*corpse, coords);
 										the_game().objects.add(std::move(corpse));
 									} else {
@@ -347,19 +423,19 @@ namespace ql
 
 		// Apply condition effects.
 
-		double percent_weary = 1.0 - energy / result.stamina;
-		result.strength -= percent_weary * energy_strength_penalty * base_stats.strength;
-		result.endurance -= percent_weary * energy_endurance_penalty * base_stats.endurance;
+		double pct_weary = 1.0 - energy / result.stamina;
+		result.strength -= pct_weary * energy_strength_penalty * base_stats.strength;
+		result.endurance -= pct_weary * energy_endurance_penalty * base_stats.endurance;
 
-		double percent_sleepy = 1.0 - alertness / max_alertness;
-		result.agility -= percent_sleepy * alertness_agility_penalty * base_stats.agility;
+		double pct_sleepy = 1.0 - alertness / max_alertness;
+		result.agility -= pct_sleepy * alertness_agility_penalty * base_stats.agility;
 		//! @todo How to apply sleepy penalty to body part dexterities?
-		//result.dexterity -= percent_sleepy * alertness_dexterity_penalty * base_stats.dexterity;
-		result.intellect -= percent_sleepy * alertness_intellect_penalty * base_stats.intellect;
+		//result.dexterity -= pct_sleepy * alertness_dexterity_penalty * base_stats.dexterity;
+		result.intellect -= pct_sleepy * alertness_intellect_penalty * base_stats.intellect;
 
-		double percent_hungry = 1.0 - satiety / max_satiety;
-		result.health_regen -= percent_hungry * satiety_health_regen_penalty * base_stats.health_regen;
-		result.mana_regen -= percent_hungry * satiety_mana_regen_penalty * base_stats.mana_regen;
+		double pct_hungry = 1.0 - satiety / max_satiety;
+		result.health_regen -= pct_hungry * satiety_health_regen_penalty * base_stats.health_regen;
+		result.mana_regen -= pct_hungry * satiety_mana_regen_penalty * base_stats.mana_regen;
 
 		return result;
 	}

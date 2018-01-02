@@ -19,14 +19,14 @@ namespace ql
 		count_dialog
 			( std::string title
 			, std::string prompt
-			, int default
+			, int default_value
 			, std::optional<int> min
 			, std::optional<int> max
 			, std::function<void(std::optional<int>)> cont
 			)
 			: _title{std::move(title)}
 			, _prompt{std::move(prompt)}
-			, _count{default}
+			, _count{default_value}
 			, _min{min}
 			, _max{max}
 			, _cont{std::move(cont)}

@@ -10,7 +10,7 @@ namespace ql
 {
 	void white_magic_particle::particle_subupdate()
 	{
-		_velocity.step().x() *= 1.0 - _vx_percent_drag_rate * game::frame_duration;
+		_velocity.step().x() *= 1.0 - _vx_pct_drag_rate * game::frame_duration;
 	}
 
 	sdl::texture const& white_magic_particle::texture() const

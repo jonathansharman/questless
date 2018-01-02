@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "units/hex_coords.hpp"
+#include "units/hex_space.hpp"
 
 namespace ql
 {

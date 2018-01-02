@@ -29,7 +29,7 @@ namespace ql
 			_color_factor = units::colors::orange_factor();
 		}
 	private:
-		static constexpr units::hertz _vx_percent_drag_rate = 1.8_Hz;
+		static constexpr units::hertz _vx_pct_drag_rate = 1.8_Hz;
 
 		void particle_subupdate() final;
 

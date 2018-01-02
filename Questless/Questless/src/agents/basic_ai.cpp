@@ -18,7 +18,7 @@ namespace ql
 		// Wait for up to 10 time units.
 		ai.idle(uniform(0.0, 10.0));
 		// Walk next time.
-		ai._state = std::make_unique<walk_state>();
+		ai._state = umake<walk_state>();
 	}
 	void basic_ai::walk_state::act(basic_ai& ai)
 	{
@@ -26,7 +26,7 @@ namespace ql
 		if (random_bool()) {
 			ai.walk(ai.being.direction, [&ai](action::result result) {
 				// Idle next time.
-				ai._state = std::make_unique<idle_state>();
+				ai._state = umake<idle_state>();
 				if (result == action::result::aborted) {
 					// Walk failed. Wait for up to 10 time units instead.
 					ai.idle(uniform(0.0, 10.0));
@@ -37,7 +37,7 @@ namespace ql
 			auto direction = static_cast<region_tile::direction>(uniform(1, 6));
 			ai.turn(direction, [&ai](action::result result) {
 				// Idle next time.
-				ai._state = std::make_unique<idle_state>();
+				ai._state = umake<idle_state>();
 				if (result == action::result::aborted) {
 					// Turn failed. Wait for up to 10 time units instead.
 					ai.idle(uniform(0.0, 10.0));
@@ -51,7 +51,7 @@ namespace ql
 		if (ql::being* target = the_game().beings.ptr(target_id)) {
 			if (ai.being.perception_of(target->coords).category() == perception::category::none) {
 				// Target not visible. Switch to idle state.
-				ai._state = std::make_unique<idle_state>();
+				ai._state = umake<idle_state>();
 				ai.act();
 
 				//! @todo Only go passive while target is out of visual range. Keep a grudge list?
@@ -93,7 +93,7 @@ namespace ql
 			}
 		} else {
 			// Target not found. Switch to idle state.
-			ai._state = std::make_unique<idle_state>();
+			ai._state = umake<idle_state>();
 			ai.act();
 		}
 	}
@@ -108,7 +108,7 @@ namespace ql
 
 	complete basic_ai::query_count
 		( uptr<count_query> query
-		, int default
+		, int default_value
 		, std::optional<int> min
 		, std::optional<int> max
 		, std::function<complete(std::optional<int>)> cont
@@ -116,29 +116,29 @@ namespace ql
 	{
 		struct count_query_handler : count_query_const_visitor
 		{
-			int default;
+			int default_value;
 			std::optional<int> min;
 			std::optional<int> max;
 			std::function<complete(std::optional<int>)> cont;
 
 			count_query_handler
-				( int default
+				( int default_value
 				, std::optional<int> min
 				, std::optional<int> max
 				, std::function<complete(std::optional<int>)> cont
 				)
-				: default{default}, min{min}, max{max}, cont{std::move(cont)}
+				: default_value{default_value}, min{min}, max{max}, cont{std::move(cont)}
 			{}
 		};
 
-		count_query_handler handler{std::move(default), min, max, std::move(cont)};
+		count_query_handler handler{std::move(default_value), min, max, std::move(cont)};
 		query->accept(handler);
 		return complete{};
 	}
 
 	complete basic_ai::query_magnitude
 		( uptr<magnitude_query> query
-		, double default
+		, double default_value
 		, std::optional<double> min
 		, std::optional<double> max
 		, std::function<complete(std::optional<double>)> cont
@@ -146,35 +146,35 @@ namespace ql
 	{
 		struct magnitude_query_handler : magnitude_query_const_visitor
 		{
-			double default;
+			double default_value;
 			std::optional<double> min;
 			std::optional<double> max;
 			std::function<complete(std::optional<double>)> cont;
 
 			magnitude_query_handler
-				( double default
+				( double default_value
 				, std::optional<double> min
 				, std::optional<double> max
 				, std::function<complete(std::optional<double>)> cont
 				)
-				: default{default}, min{min}, max{max}, cont{std::move(cont)}
+				: default_value{default_value}, min{min}, max{max}, cont{std::move(cont)}
 			{}
 
 			void visit(magnitude_query_wait_time const&) final
 			{
-				cont(default);
+				cont(default_value);
 			}
 			void visit(magnitude_query_shock const&) final
 			{
-				cont(default);
+				cont(default_value);
 			}
 			void visit(magnitude_query_heal const&) final
 			{
-				cont(default);
+				cont(default_value);
 			}
 		};
 
-		magnitude_query_handler handler{std::move(default), min, max, std::move(cont)};
+		magnitude_query_handler handler{std::move(default_value), min, max, std::move(cont)};
 		query->accept(handler);
 		return complete{};
 	}
@@ -320,7 +320,7 @@ namespace ql
 	{
 		// Retaliate against injuries.
 		if (effect.opt_source_id && effect.target_being_id == being.id) {
-			_state = std::make_unique<attack_state>(*effect.opt_source_id);
+			_state = umake<attack_state>(*effect.opt_source_id);
 		}
 	}
 }

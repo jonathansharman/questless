@@ -18,7 +18,7 @@ namespace ql
 		confused(double magnitude, int duration, std::optional<id<being>> source_id = std::nullopt)
 			: status("Confused", duration, source_id)
 			, _magnitude{magnitude}
-			, _modifiers{std::make_unique<intellect_modifier>(-magnitude)}
+			, _modifiers{umake<intellect_modifier>(-magnitude)}
 		{}
 
 		virtual status_type type() const { return status_type::debuff; }

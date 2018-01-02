@@ -82,6 +82,10 @@ namespace ql
 		static constexpr double health_regen_asleep_factor = 1.0; //!< Additional health regeneration multiplier while asleep.
 		static constexpr double mana_regen_asleep_factor = 1.0; //!< Additional mana regeneration multiplier while asleep.
 
+		// Mood
+		static constexpr double min_mood = -100.0;
+		static constexpr double max_mood = 100.0;
+
 		// Strength
 		static constexpr double strength_factor = 0.01; //!< Proportion of strength by which base damage is multiplied.
 
@@ -115,7 +119,7 @@ namespace ql
 		lazy_bounded<double> energy;
 		static_bounded<double, min_satiety, max_satiety> satiety;
 		static_bounded<double, min_alertness, max_alertness> alertness;
-
+		static_bounded<double, min_mood, max_mood> mood;
 		dynamic_property<double> busy_time;
 		bool dead;
 		region_tile::direction direction;
@@ -183,11 +187,11 @@ namespace ql
 		//! Advances the being one time unit.
 		void update() final;
 
-		//! Causes the being to take damage from the specified source being.
+		//! Causes the being to take damage to the given part from the specified source being.
 		//! @param damage Damage to be applied to this being.
-		//! @param part The body part to damage.
+		//! @param target_part The body part to damage.
 		//! @param opt_source_id The ID of the being which caused the damage, if any.
-		void take_damage(dmg::group& damage, body_part& part, std::optional<ql::id<being>> opt_source_id);
+		void take_damage(dmg::group& damage, body_part& target_part, std::optional<ql::id<being>> opt_source_id);
 
 		//! Causes the being to be healed by the specified source being.
 		//! @param amount Health to be restored to this being.
@@ -200,7 +204,7 @@ namespace ql
 		being(const std::function<uptr<ql::agent>(being&)>& make_agent, ql::id<being> id, ql::body body, const std::function<ql::stats()>& make_base_stats);
 		being(std::istream& in, ql::body body);
 
-		virtual ql::body make_body() = 0;
+		virtual ql::body make_body(ql::id<being> owner_id) = 0;
 	private:
 		uptr<ql::agent> _agent; //!< The agent responsible for this being.
 

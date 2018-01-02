@@ -45,14 +45,14 @@ namespace ql
 
 			static auto make(modal_weapon& weapon, std::string name)
 			{
-				return std::make_unique<switch_form<TargetForm>>(weapon, name);
+				return umake<switch_form<TargetForm>>(weapon, name);
 			}
 
 			std::string name() const final { return _name; }
 
 			complete perform(being& actor, cont cont) final
 			{
-				_form = std::make_unique<TargetForm>(_weapon);
+				_form = umake<TargetForm>(_weapon);
 				actor.busy_time += _weapon.switch_time();
 				return cont(result::success);
 			}

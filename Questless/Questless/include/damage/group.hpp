@@ -18,24 +18,24 @@ namespace ql::dmg
 	class group
 	{
 	public:
-		static constexpr double percent_pad_to_slash = 0.50;
-		static constexpr double percent_pad_to_pierce = 0.25;
-		static constexpr double percent_pad_to_cleave = 0.75;
-		static constexpr double percent_pad_to_bludgeon = 1.00;
+		static constexpr double pct_pad_to_slash = 0.50;
+		static constexpr double pct_pad_to_pierce = 0.25;
+		static constexpr double pct_pad_to_cleave = 0.75;
+		static constexpr double pct_pad_to_bludgeon = 1.00;
 
-		static constexpr double percent_deflect_to_slash = 1.00;
-		static constexpr double percent_deflect_to_pierce = 0.50;
-		static constexpr double percent_deflect_to_cleave = 0.75;
-		static constexpr double percent_deflect_to_bludgeon = 0.25;
+		static constexpr double pct_deflect_to_slash = 1.00;
+		static constexpr double pct_deflect_to_pierce = 0.50;
+		static constexpr double pct_deflect_to_cleave = 0.75;
+		static constexpr double pct_deflect_to_bludgeon = 0.25;
 
-		static constexpr double percent_fireproof_to_burn = 1.00;
-		static constexpr double percent_frostproof_to_freeze = 1.00;
+		static constexpr double pct_fireproof_to_burn = 1.00;
+		static constexpr double pct_frostproof_to_freeze = 1.00;
 
-		static constexpr double percent_fortify_to_blight = 1.00;
+		static constexpr double pct_fortify_to_blight = 1.00;
 
-		static constexpr double percent_immunize_to_poison = 1.00;
+		static constexpr double pct_immunize_to_poison = 1.00;
 
-		static constexpr double percent_insulate_to_shock = 1.00;
+		static constexpr double pct_insulate_to_shock = 1.00;
 
 		group() = default;
 
@@ -120,11 +120,8 @@ namespace ql::dmg
 			return result;
 		}
 
-		//! Damage group adjusted by the given protection.
-		group with(protect const& protection) const;
-
-		//! Damage group adjusted by the given resistance and vulnerability.
-		group with(resist const& resistance, vuln const& vulnerability) const;
+		//! Damage group adjusted by the given @protection, @resistance, and @vulnerability.
+		group with(protect const& protection, resist const& resistance, vuln const& vulnerability) const;
 	private:
 		std::vector<damage> _parts;
 		protect _protection_evasion;

@@ -19,7 +19,7 @@ namespace ql
 		illuminated(double magnitude, int duration, std::optional<id<being>> source_id = std::nullopt)
 			: status("Illuminated", duration, source_id)
 			, _magnitude{magnitude}
-			, _modifiers{std::make_unique<stealth_modifier>(-_magnitude)}
+			, _modifiers{umake<stealth_modifier>(-_magnitude)}
 		{}
 
 		virtual status_type type() const { return status_type::debuff; }

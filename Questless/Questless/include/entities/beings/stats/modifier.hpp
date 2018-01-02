@@ -33,7 +33,7 @@ namespace ql
 	{
 	public:
 		constexpr mute_modifier(bool mute) : _mute{mute} {}
-		static auto make(bool mute) { return std::make_unique<mute_modifier>(mute); }
+		static auto make(bool mute) { return umake<mute_modifier>(mute); }
 		void apply(stats& stats) final { stats.mute = _mute; }
 	private:
 		bool _mute;

@@ -22,7 +22,6 @@ namespace fs = std::experimental::filesystem; //! @todo Replace this with std::f
 using std::string;
 using std::vector;
 using std::function;
-using std::make_unique;
 
 using namespace sdl;
 
@@ -71,10 +70,10 @@ namespace ql
 						if ((section_r != 0 || section_q != 0) && uniform(0, 10) == 0) {
 							auto entity_coords = section::region_tile_coords(section_coords, section_tile::point{q, r});
 							if (!uniform(0, 12)) {
-								spawn(make_unique<campfire>(*this, entity_coords), entity_coords);
+								spawn(umake<campfire>(*this, entity_coords), entity_coords);
 							} else {
-								auto new_being = make_unique<goblin>(agent::make<basic_ai>);
-								new_being->inventory.add(the_game().items.add(make_unique<quarterstaff>()).id);
+								auto new_being = umake<goblin>(agent::make<basic_ai>);
+								new_being->inventory.add(the_game().items.add(umake<quarterstaff>()).id);
 								spawn(std::move(new_being), entity_coords);
 							}
 						}
@@ -135,7 +134,7 @@ namespace ql
 			switch (static_cast<entity_class>(entity_id)) {
 				case entity_class::goblin_class:
 				{
-					being& goblin = the_game().beings.add(make_unique<ql::goblin>(sin));
+					being& goblin = the_game().beings.add(umake<ql::goblin>(sin));
 					add(goblin, goblin.coords);
 					break;
 				}

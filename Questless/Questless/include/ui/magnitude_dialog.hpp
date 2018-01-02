@@ -19,14 +19,14 @@ namespace ql
 		magnitude_dialog
 			( std::string title
 			, std::string prompt
-			, double default
+			, double default_value
 			, std::optional<double> min
 			, std::optional<double> max
 			, std::function<void(std::optional<double>)> cont
 			)
 			: _title{std::move(title)}
 			, _prompt{std::move(prompt)}
-			, _magnitude{default}
+			, _magnitude{default_value}
 			, _min{min}
 			, _max{max}
 			, _cont{std::move(cont)}

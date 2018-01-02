@@ -98,7 +98,7 @@ namespace ql
 		{
 		public:
 			equip(equipment& equipment) : _equipment{equipment} {}
-			static auto make(equipment& equipment) { return std::make_unique<equip>(equipment); }
+			static auto make(equipment& equipment) { return umake<equip>(equipment); }
 			std::string name() const final { return "Equip"; }
 			complete perform(being& actor, cont cont) final;
 		private:
@@ -110,7 +110,7 @@ namespace ql
 		{
 		public:
 			unequip(equipment& equipment) : _equipment{equipment} {}
-			static auto make(equipment& equipment) { return std::make_unique<unequip>(equipment); }
+			static auto make(equipment& equipment) { return umake<unequip>(equipment); }
 			std::string name() const final { return "Unequip"; }
 			complete perform(being& actor, cont cont) final;
 		private:

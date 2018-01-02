@@ -14,7 +14,7 @@ namespace ql
 	campfire::campfire(ql::region& region, region_tile::point coords, ql::id<object> id) : object_base<campfire>{id}
 	{
 		//! @todo region and coords hide class members. (Related to the above TODO concerning light sources and campires.)
-		auto light_source = std::make_unique<ql::light_source>(coords, 100.0);
+		auto light_source = umake<ql::light_source>(coords, 100.0);
 		region.add(*light_source);
 		the_game().light_sources.add(std::move(light_source));
 	}

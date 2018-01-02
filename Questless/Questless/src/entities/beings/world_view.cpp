@@ -10,7 +10,7 @@
 #include "game.hpp"
 #include "entities/beings/being.hpp"
 #include "entities/objects/object.hpp"
-#include "units/hex_coords.hpp"
+#include "units/hex_space.hpp"
 
 using namespace sdl;
 using namespace units;

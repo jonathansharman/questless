@@ -58,6 +58,7 @@ namespace ql
 		// Effect Visitor Methods //
 		////////////////////////////
 
+		void visit(bleeding_effect const&) final;
 		void visit(eagle_eye_effect const&) final;
 		void visit(injury_effect const&) final;
 		void visit(lightning_bolt_effect const&) final;

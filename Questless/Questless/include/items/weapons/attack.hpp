@@ -76,7 +76,7 @@ namespace ql
 		{
 		public:
 			launch(sptr<melee_attack> attack) : _attack{std::move(attack)} {}
-			static uptr<launch> make(sptr<melee_attack> attack) { return std::make_unique<launch>(std::move(attack)); }
+			static uptr<launch> make(sptr<melee_attack> attack) { return umake<launch>(std::move(attack)); }
 			std::string name() const final { return _attack->name(); }
 			complete perform(being& actor, cont cont) final;
 		private:
@@ -115,7 +115,7 @@ namespace ql
 		{
 		public:
 			launch(sptr<ranged_attack> attack) : _attack{std::move(attack)} {}
-			static uptr<launch> make(sptr<ranged_attack> attack) { return std::make_unique<launch>(std::move(attack)); }
+			static uptr<launch> make(sptr<ranged_attack> attack) { return umake<launch>(std::move(attack)); }
 			std::string name() const final { return _attack->name(); }
 			complete perform(being& actor, cont cont) final;
 		private:
@@ -126,7 +126,7 @@ namespace ql
 		{
 		public:
 			finish(sptr<ranged_attack> attack) : _attack{std::move(attack)} {}
-			static auto make(sptr<ranged_attack> attack) { return std::make_unique<finish>(attack); }
+			static auto make(sptr<ranged_attack> attack) { return umake<finish>(attack); }
 			std::string name() const final { return _attack->name(); }
 			complete perform(being& actor, cont cont) final;
 		private:

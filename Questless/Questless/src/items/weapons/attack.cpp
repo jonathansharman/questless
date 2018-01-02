@@ -19,12 +19,12 @@ namespace ql
 	complete melee_attack::launch::perform(being& actor, cont cont)
 	{
 		return _attack->cost().check(actor, [&] {
-			return actor.agent().query_vector(std::make_unique<vector_query_melee_attack>(), actor.coords, [](region_tile::vector v) { return v.length() != 0; },
+			return actor.agent().query_vector(umake<vector_query_melee_attack>(), actor.coords, [](region_tile::vector v) { return v.length() != 0; },
 				[&actor, cont, attack = _attack](std::optional<region_tile::vector> opt_vector) {
 					if (opt_vector) {
 						auto& weapon = the_game().items.cref_as<ql::weapon>(attack->weapon_id);
 						double delay = weapon.active_cooldown + attack->wind_up();
-						return actor.add_delayed_action(delay, std::move(cont), std::make_unique<finish>(attack, *opt_vector));
+						return actor.add_delayed_action(delay, std::move(cont), umake<finish>(attack, *opt_vector));
 					} else {
 						return cont(result::aborted);
 					}
@@ -43,9 +43,9 @@ namespace ql
 				auto coords = actor.coords + _vector; //! @todo This will need to be more complicated for longer-ranged melee weapons.
 				if (being* target = actor.region->being_at(coords)) {
 					// Reduce damage based on difference between direction faced and direction attacked.
-					constexpr double percent_penalty_per_turn = 0.25;
+					constexpr double pct_penalty_per_turn = 0.25;
 					dmg::group damage = _attack->damage();
-					damage *= 1.0 - percent_penalty_per_turn * region_tile::distance(actor.direction, _vector.direction());
+					damage *= 1.0 - pct_penalty_per_turn * region_tile::distance(actor.direction, _vector.direction());
 
 					weapon->integrity -= _attack->wear_ratio() * damage.total();
 					{ //! @todo Part targeting. Apply damage to random body part for now.
@@ -55,7 +55,7 @@ namespace ql
 					}
 					return cont(result::success);
 				} else {
-					return actor.agent().send_message(std::make_unique<message_melee_miss>(), [cont] { return cont(result::success); });
+					return actor.agent().send_message(umake<message_melee_miss>(), [cont] { return cont(result::success); });
 				}
 			} else {
 				// Weapon has been unequipped from the actor.
@@ -72,7 +72,7 @@ namespace ql
 		return _attack->cost().check(actor, [&] {
 			weapon const& weapon = the_game().items.cref_as<ql::weapon>(_attack->weapon_id);
 			double delay = weapon.active_cooldown + _attack->wind_up();
-			return actor.add_delayed_action(delay, std::move(cont), std::make_unique<finish>(_attack));
+			return actor.add_delayed_action(delay, std::move(cont), umake<finish>(_attack));
 		});
 	}
 
@@ -82,7 +82,7 @@ namespace ql
 			if (weapon->equipped() && *weapon->opt_bearer_id() == actor.id) {
 				return _attack->cost().check(actor, [&] {
 					int range = _attack->range();
-					return actor.agent().query_tile(std::make_unique<tile_query_ranged_attack_target>(range), actor.coords, tile_in_range_predicate(actor, range),
+					return actor.agent().query_tile(umake<tile_query_ranged_attack_target>(range), actor.coords, tile_in_range_predicate(actor, range),
 						// Okay to capture weapon by reference; already checked that it's still there, and callback is synchronous here.
 						[&actor, cont, attack = _attack, &weapon = *weapon](std::optional<region_tile::point> opt_coords) {
 							if (opt_coords) {
@@ -100,7 +100,7 @@ namespace ql
 									}
 									return cont(result::success);
 								} else {
-									return actor.agent().send_message(std::make_unique<message_arrow_miss>(), [cont] { return cont(result::success); });
+									return actor.agent().send_message(umake<message_arrow_miss>(), [cont] { return cont(result::success); });
 								}
 							} else {
 								return cont(result::aborted);

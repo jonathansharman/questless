@@ -265,6 +265,10 @@ Utility
 		Items in the chest do not experience the passage of time
 			This makes stasis chests ideal for storage of perishables
 		Inventory is tied to the coordinates of the chest
+	Heat sink
+		Just an object with extremely high specific heat
+		Can be used to stay warm in cold weather or cool in hot weather
+		This could be a crafting material for clothing
 Weapons
 	Melee
 		Blades

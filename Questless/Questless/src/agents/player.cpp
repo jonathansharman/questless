@@ -10,11 +10,11 @@
 #include "ui/direction_dialog.hpp"
 #include "ui/magnitude_dialog.hpp"
 #include "ui/message_dialog.hpp"
-#include "ui/tile_dialog.hpp"
-#include "ui/vector_dialog.hpp"
-
 #include "ui/qte/incant.hpp"
 #include "ui/qte/shock.hpp"
+#include "ui/tile_dialog.hpp"
+#include "ui/vector_dialog.hpp"
+#include "utility/reference.hpp"
 
 using std::function;
 
@@ -79,12 +79,12 @@ namespace ql
 					if (std::optional<id<item>> opt_item_id = the_game().hud().hotbar()[u.index]) {
 						item& item = the_game().items.ref(*opt_item_id);
 						// Get a list of the item's actions. It's shared so the lambda that captures it is copyable, so the lambda can be passed as a std::function.
-						auto actions = std::make_shared<std::vector<uptr<action>>>(item.actions());
+						auto actions = smake<std::vector<uptr<action>>>(item.actions());
 						// Get the action names from the list of actions.
 						std::vector<std::string> action_names;
 						std::transform(actions->begin(), actions->end(), std::back_inserter(action_names), [](uptr<action> const& action) { return action->name(); });
 						// Open list dialog for the player to choose an action.
-						auto dialog = std::make_unique<list_dialog>(sdl::the_input().mouse_position(), item.name(), std::move(action_names),
+						auto dialog = umake<list_dialog>(sdl::the_input().mouse_position(), item.name(), std::move(action_names),
 							[&player = player, actions](std::optional<int> opt_action_idx) {
 								if (!opt_action_idx) {
 									// No action selected. Player must try to act again.
@@ -163,13 +163,13 @@ namespace ql
 		message->accept(titler);
 		message_prompter prompter;
 		message->accept(prompter);
-		auto dialog = std::make_unique<message_dialog>(std::move(titler.title), std::move(prompter.prompt), std::move(cont));
+		auto dialog = umake<message_dialog>(std::move(titler.title), std::move(prompter.prompt), std::move(cont));
 		return the_game().add_dialog(std::move(dialog));
 	}
 
 	complete player::query_count
 		( uptr<count_query> query
-		, int default
+		, int default_value
 		, std::optional<int> min
 		, std::optional<int> max
 		, function<complete(std::optional<int>)> cont
@@ -188,13 +188,13 @@ namespace ql
 		query->accept(titler);
 		count_query_prompter prompter;
 		query->accept(prompter);
-		auto dialog = std::make_unique<count_dialog>(std::move(titler.title), std::move(prompter.prompt), default, min, max, std::move(cont));
+		auto dialog = umake<count_dialog>(std::move(titler.title), std::move(prompter.prompt), default_value, min, max, std::move(cont));
 		return the_game().add_dialog(std::move(dialog));
 	}
 
 	complete player::query_magnitude
 		( uptr<magnitude_query> query
-		, double default
+		, double default_value
 		, std::optional<double> min
 		, std::optional<double> max
 		, function<complete(std::optional<double>)> cont
@@ -219,7 +219,7 @@ namespace ql
 		query->accept(titler);
 		magnitude_query_prompter prompter;
 		query->accept(prompter);
-		auto dialog = std::make_unique<magnitude_dialog>(std::move(titler.title), std::move(prompter.prompt), default, min, max, std::move(cont));
+		auto dialog = umake<magnitude_dialog>(std::move(titler.title), std::move(prompter.prompt), default_value, min, max, std::move(cont));
 		return the_game().add_dialog(std::move(dialog));
 	}
 	
@@ -249,7 +249,7 @@ namespace ql
 		query->accept(titler);
 		tile_query_prompter prompter;
 		query->accept(prompter);
-		auto dialog = std::make_unique<tile_dialog>
+		auto dialog = umake<tile_dialog>
 			( std::move(titler.title)
 			, std::move(prompter.prompt)
 			, std::move(origin)
@@ -277,7 +277,7 @@ namespace ql
 		query->accept(titler);
 		direction_query_prompter prompter;
 		query->accept(prompter);
-		auto dialog = std::make_unique<direction_dialog>(std::move(titler.title), std::move(prompter.prompt), std::move(cont));
+		auto dialog = umake<direction_dialog>(std::move(titler.title), std::move(prompter.prompt), std::move(cont));
 		return the_game().add_dialog(std::move(dialog));
 	}
 
@@ -303,7 +303,7 @@ namespace ql
 		query->accept(titler);
 		vector_query_prompter prompter;
 		query->accept(prompter);
-		auto dialog = std::make_unique<vector_dialog>(std::move(titler.title), std::move(prompter.prompt), origin, std::move(predicate), std::move(cont));
+		auto dialog = umake<vector_dialog>(std::move(titler.title), std::move(prompter.prompt), origin, std::move(predicate), std::move(cont));
 		return the_game().add_dialog(std::move(dialog));
 	}
 
@@ -333,13 +333,13 @@ namespace ql
 
 	complete player::get_shock_quality(region_tile::point target_coords, std::function<complete(double)> cont) const
 	{
-		auto dialog = std::make_unique<qte::shock>(target_coords, std::move(cont));
+		auto dialog = umake<qte::shock>(target_coords, std::move(cont));
 		return the_game().add_dialog(std::move(dialog));
 	}
 
 	complete player::incant(gatestone& gatestone, std::function<complete(uptr<magic::spell>)> cont) const
 	{
-		auto dialog = std::make_unique<qte::incant>(gatestone, std::move(cont));
+		auto dialog = umake<qte::incant>(gatestone, std::move(cont));
 		return the_game().add_dialog(std::move(dialog));
 	}
 }

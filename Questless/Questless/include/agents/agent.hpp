@@ -35,7 +35,7 @@ namespace ql
 		agent(being& being) : being{being} {}
 
 		template <typename Derived>
-		static auto make(being& being) { return std::make_unique<Derived>(being); }
+		static auto make(being& being) { return umake<Derived>(being); }
 
 		virtual ~agent() = default;
 
@@ -61,7 +61,7 @@ namespace ql
 
 		virtual complete query_count
 			( uptr<count_query> query
-			, int default
+			, int default_value
 			, std::optional<int> min
 			, std::optional<int> max
 			, std::function<complete(std::optional<int>)> cont
@@ -69,7 +69,7 @@ namespace ql
 
 		virtual complete query_magnitude
 			( uptr<magnitude_query>
-			, double default
+			, double default_value
 			, std::optional<double> min
 			, std::optional<double> max
 			, std::function<complete(std::optional<double>)> cont

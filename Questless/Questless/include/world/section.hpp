@@ -14,7 +14,7 @@
 #include "animation/camera.hpp"
 #include "coordinates.hpp"
 #include "tile.hpp"
-#include "units/hex_coords.hpp"
+#include "units/hex_space.hpp"
 #include "utility/container_view.hpp"
 #include "utility/id.hpp"
 #include "utility/reference.hpp"

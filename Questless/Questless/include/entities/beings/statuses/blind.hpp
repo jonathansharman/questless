@@ -18,7 +18,7 @@ namespace ql
 		blind(double magnitude, int duration, std::optional<id<being>> source_id = std::nullopt)
 			: status("Blind", duration, source_id)
 			, _magnitude{magnitude}
-			, _modifiers{std::make_unique<visual_acuity_modifier>(-magnitude)}
+			, _modifiers{umake<visual_acuity_modifier>(-magnitude)}
 		{}
 
 		virtual status_type type() const { return status_type::debuff; }

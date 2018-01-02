@@ -45,7 +45,7 @@ namespace ql
 		constexpr lazy_bounded(lazy_bounded&& other)
 			: lower_bound_getter{std::move(other.lower_bound_getter)}
 			, upper_bound_getter{std::move(other.upper_bound_getter)}
-			, _value{std::move(bounded._value)}
+			, _value{std::move(other._value)}
 		{}
 
 		////////////////////////////

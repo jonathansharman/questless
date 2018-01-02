@@ -10,10 +10,8 @@ namespace ql
 	{
 		// Broken armor has no effect.
 		if (!broken()) {
-			// Calcuate reduced damage by first applying protection and then applying resistance.
-			dmg::group const reduced_damage = damage
-				.with(protection()) // First apply protection.
-				.with(resistance(), dmg::vuln::zero()); // Then apply resistance.
+			// Calcuate reduced damage.
+			dmg::group const reduced_damage = damage.with(protection(), resistance(), dmg::vuln::zero());
 
 			// Calculate the armor's total effective damage reduction.
 			double const effective_reduction = damage.total() - reduced_damage.total();

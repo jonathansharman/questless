@@ -300,7 +300,7 @@ namespace ql
 
 		// Render background.
 
-		_background = std::make_unique<texture>(screen_space::vector
+		_background = umake<texture>(screen_space::vector
 			{ _content_width + _left_margin + _right_margin
 			, _content_height + _top_margin + _bottom_margin
 			});

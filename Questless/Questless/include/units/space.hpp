@@ -13,28 +13,31 @@
 
 namespace units
 {
-	template <typename Scalar, int DimensionCount>
-	class buffer_base
+	namespace detail
 	{
-	protected:
-		constexpr buffer_base() = default;
-		constexpr buffer_base(buffer_base const&) = default;
-		constexpr buffer_base(buffer_base&&) = default;
+		template <typename Scalar, int DimensionCount>
+		class buffer_base
+		{
+		protected:
+			constexpr buffer_base() = default;
+			constexpr buffer_base(buffer_base const&) = default;
+			constexpr buffer_base(buffer_base&&) = default;
 
-		constexpr explicit buffer_base(std::array<Scalar, DimensionCount> elements)
-			: _elements{std::move(elements)}
-		{}
+			constexpr explicit buffer_base(std::array<Scalar, DimensionCount> elements)
+				: _elements{std::move(elements)}
+			{}
 
-		template <typename... Args>
-		constexpr explicit buffer_base(Args... args)
-			: _elements{{std::forward<Args>(args)...}}
-		{}
+			template <typename... Args>
+			constexpr explicit buffer_base(Args... args)
+				: _elements{{std::forward<Args>(args)...}}
+			{}
 
-		buffer_base& operator =(buffer_base const&) & = default;
-		buffer_base& operator =(buffer_base&&) & = default;
+			buffer_base& operator =(buffer_base const&) & = default;
+			buffer_base& operator =(buffer_base&&) & = default;
 
-		std::array<Scalar, DimensionCount> _elements;
-	};
+			std::array<Scalar, DimensionCount> _elements;
+		};
+	}
 
 	//! A generic type-safe space, parameterized over a number of dimensions and a scalar type.
 	//! @tparam Tag A tag used to distinguish this space semantically from other structurally equivalent spaces.
@@ -209,8 +212,8 @@ namespace units
 			template <typename UnitsPerCircle>
 			explicit vector(typename space::angle<UnitsPerCircle> theta, scalar r) //! @todo Cannot be constexpr because of cos() and sin(). Implement constexpr trig functions in units::math to enable.
 				: Buffer
-					{ static_cast<scalar>(r * cos(theta.count()))
-					, static_cast<scalar>(r * sin(theta.count()))
+					{ static_cast<scalar>(r * cos(angle_cast<radians>(theta).count()))
+					, static_cast<scalar>(r * sin(angle_cast<radians>(theta).count()))
 					}
 			{
 				static_assert(dimension_count == 2, "Requires two-dimensional space.");
@@ -688,7 +691,7 @@ TEST_CASE("[vector] operations")
 	using int_space = units::space<struct int_space_tag, int, 2>;
 	using double_space = units::space<struct double_space_tag, double, 2>;
 
-	int_space::vector vi1{3, 4};
+	typename int_space::vector vi1{3, 4};
 
 	SUBCASE("length")
 	{
@@ -739,9 +742,9 @@ TEST_CASE("[vector] operations")
 	}
 	SUBCASE("rotations")
 	{
-		double_space::vector vd{3.0, 4.0};
-		constexpr double_space::degrees dtheta{90.0};
-		constexpr double_space::vector vd_rot{-4.0, 3.0};
+		typename double_space::vector vd{3.0, 4.0};
+		constexpr typename double_space::degrees dtheta{90.0};
+		constexpr typename double_space::vector vd_rot{-4.0, 3.0};
 		auto vd_rot_actual = vd.rotated(dtheta);
 
 		CHECK(vd_rot_actual[0] == doctest::Approx(vd_rot[0]));
@@ -759,7 +762,7 @@ TEST_CASE("[point] operations")
 	using int_space = units::space<struct int_space_tag, int, 2>;
 	using double_space = units::space<struct double_space_tag, double, 2>;
 
-	int_space::point pi1{3, 4};
+	typename int_space::point pi1{3, 4};
 
 	SUBCASE("binary operations")
 	{
@@ -785,10 +788,10 @@ TEST_CASE("[point] operations")
 	}
 	SUBCASE("rotations")
 	{
-		double_space::point pd{3.0, 4.0};
-		constexpr double_space::degrees dtheta{90.0};
-		constexpr double_space::point pivot{1.0, 1.0};
-		constexpr double_space::point pd_rot{-2.0, 3.0};
+		typename double_space::point pd{3.0, 4.0};
+		constexpr typename double_space::degrees dtheta{90.0};
+		constexpr typename double_space::point pivot{1.0, 1.0};
+		constexpr typename double_space::point pd_rot{-2.0, 3.0};
 		auto pd_rot_actual = pd.rotated(pivot, dtheta);
 
 		CHECK(pd_rot_actual[0] == doctest::Approx(pd_rot[0]));

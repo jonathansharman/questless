@@ -24,7 +24,7 @@ namespace ql
 
 	complete agent::idle(action::cont cont)
 	{
-		return query_magnitude(std::make_unique<magnitude_query_wait_time>(), 10.0, 0.0, std::nullopt,
+		return query_magnitude(umake<magnitude_query_wait_time>(), 10.0, 0.0, std::nullopt,
 			[this, cont](std::optional<double> duration) {
 				if (duration) {
 					this->being.busy_time += *duration;

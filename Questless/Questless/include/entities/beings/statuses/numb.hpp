@@ -19,8 +19,8 @@ namespace ql
 			: status("Numb", duration, source_id)
 			, _magnitude{magnitude}
 			, _modifiers
-				{ std::make_unique<agility_modifier>(-_magnitude)
-				, std::make_unique<dexterity_modifier>(-_magnitude)
+				{ umake<agility_modifier>(-_magnitude)
+				, umake<dexterity_modifier>(-_magnitude)
 				}
 		{}
 

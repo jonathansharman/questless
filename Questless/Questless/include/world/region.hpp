@@ -150,12 +150,12 @@ namespace ql
 		// Time Constants
 
 		static double constexpr _day_length = 1200.0;
-		static double constexpr _twilight_percentage = 0.05;
+		static double constexpr _twilight_pct = 0.05;
 		static double constexpr _end_of_morning = 0.25 * _day_length;
 		static double constexpr _end_of_afternoon = 0.5 * _day_length;
-		static double constexpr _end_of_dusk = (0.5 + _twilight_percentage) * _day_length;
+		static double constexpr _end_of_dusk = (0.5 + _twilight_pct) * _day_length;
 		static double constexpr _end_of_evening = (2.0 / 3.0) * _day_length;
-		static double constexpr _end_of_night = (1.0 - _twilight_percentage) * _day_length;
+		static double constexpr _end_of_night = (1.0 - _twilight_pct) * _day_length;
 
 		/////////////////
 		// Member Data //

@@ -18,7 +18,7 @@ namespace ql
 		deaf(double magnitude, int duration, std::optional<id<being>> source_id = std::nullopt)
 			: status("Deaf", duration, source_id)
 			, _magnitude{magnitude}
-			, _modifiers{std::make_unique<hearing_modifier>(-magnitude)}
+			, _modifiers{umake<hearing_modifier>(-magnitude)}
 		{}
 
 		virtual status_type type() const { return status_type::debuff; }

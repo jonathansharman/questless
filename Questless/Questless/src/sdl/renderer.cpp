@@ -348,7 +348,9 @@ namespace sdl
 		, colors::color fill_color
 		)
 	{
-		draw_box(to_view_space(box), to_view_space(border_width), border_color, fill_color);
+		if (units::width(box) > 0 && units::height(box) > 0) {
+			draw_box(to_view_space(box), to_view_space(border_width), border_color, fill_color);
+		}
 	}
 	
 	void renderer::draw_box
@@ -358,7 +360,9 @@ namespace sdl
 		, colors::color fill_color
 		)
 	{
-		draw_polygon({top_left(box), top_right(box), bottom_right(box), bottom_left(box)}, border_width, border_color, fill_color);
+		if (units::width(box) > 0.0f && units::height(box) > 0.0f) {
+			draw_polygon({top_left(box), top_right(box), bottom_right(box), bottom_left(box)}, border_width, border_color, fill_color);
+		}
 	}
 
 	void renderer::set_draw_color(colors::color color)

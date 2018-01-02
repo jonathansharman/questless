@@ -14,8 +14,6 @@
 #include "utility/utility.hpp"
 #include "world/region.hpp"
 
-using std::make_unique;
-
 using namespace sdl;
 using namespace units;
 
@@ -255,7 +253,7 @@ namespace ql
 		}
 		_terrain_bounds = *opt_bounds;
 		
-		_terrain_texture = make_unique<texture>(screen_space::vector{lround(width(_terrain_bounds)), lround(height(_terrain_bounds))});
+		_terrain_texture = umake<texture>(screen_space::vector{lround(width(_terrain_bounds)), lround(height(_terrain_bounds))});
 		_terrain_texture->as_target([&] {
 			the_renderer().clear(colors::clear());
 			for (auto const& section_view : _world_view->section_views()) {
@@ -308,13 +306,29 @@ namespace ql
 	// Effect Visitor Functions //
 	//////////////////////////////
 
+	void world_renderer::visit(bleeding_effect const& e)
+	{
+		being const* const bleeding_being = the_game().beings.cptr(e.bleeding_being_id);
+		//! @todo Pass along the vitality in the event object if it's needed here (to avoid having to make up a number).
+
+		game_space::point const position = layout::dflt().to_world(e.origin());
+		double const amount = e.amount;
+		double const target_vitality = bleeding_being ? bleeding_being->body.total_vitality() : 100.0;
+
+		constexpr double scaling_factor = 250.0;
+		int const n = static_cast<int>(amount / target_vitality * scaling_factor);
+		for (int i = 0; i < n; ++i) {
+			_animations.push_back(std::make_pair(umake<blood_particle>(), position));
+		}
+	}
+
 	void world_renderer::visit(eagle_eye_effect const& e)
 	{
 		static auto eagle_eye_sound_handle = the_sound_manager().add("resources/sounds/spells/eagle-eye.wav");
 
 		game_space::point position = layout::dflt().to_world(e.origin());
 		for (int i = 0; i < 50; ++i) {
-			_animations.push_back(std::make_pair(make_unique<green_magic_particle>(), position));
+			_animations.push_back(std::make_pair(umake<green_magic_particle>(), position));
 		}
 		the_sound_manager()[eagle_eye_sound_handle].play();
 	}
@@ -326,7 +340,7 @@ namespace ql
 
 		being const* const target_being = the_game().beings.cptr(e.target_being_id);
 		body_part const* const target_part = target_being ? target_being->body.find_part(e.target_part_id) : nullptr;
-		double const target_vitality = target_part ? target_part->vitality() : 100.0; // Assume vitality = 100 if being no longer exists to check.
+		double const target_vitality = target_part ? target_part->vitality : 100.0; // Assume vitality = 100 if being no longer exists to check.
 		//! @todo Pass along the vitality in the event object if it's needed here (to avoid having to make up a number).
 
 		game_space::point const position = layout::dflt().to_world(e.origin());
@@ -345,7 +359,7 @@ namespace ql
 					constexpr double scaling_factor = 20.0;
 					int const n = static_cast<int>(lost_health / target_vitality * scaling_factor);
 					for (int i = 0; i < n; ++i) {
-						animations.push_back(std::make_pair(make_unique<blood_particle>(), position));
+						animations.push_back(std::make_pair(umake<blood_particle>(), position));
 					}
 				};
 
@@ -353,7 +367,7 @@ namespace ql
 				{
 					spawn_blood(amount);
 					animations.push_back(std::make_pair
-						( make_unique<text_particle>(std::to_string(lround(amount)), colors::white())
+						( umake<text_particle>(std::to_string(lround(amount)), colors::white())
 						, position
 						));
 					the_sound_manager()[pierce_sound_handle].play();
@@ -363,7 +377,7 @@ namespace ql
 				{
 					spawn_blood(amount);
 					animations.push_back(std::make_pair
-						( make_unique<text_particle>(std::to_string(lround(amount)), colors::white())
+						( umake<text_particle>(std::to_string(lround(amount)), colors::white())
 						, position
 						));
 					the_sound_manager()[hit_sound_handle].play();
@@ -376,35 +390,35 @@ namespace ql
 				void operator ()(dmg::burn const& burn)
 				{
 					animations.push_back(std::make_pair
-						( make_unique<text_particle>(std::to_string(lround(burn)), colors::orange())
+						( umake<text_particle>(std::to_string(lround(burn)), colors::orange())
 						, position
 						));
 				}
 				void operator ()(dmg::freeze const& freeze)
 				{
 					animations.push_back(std::make_pair
-						( make_unique<text_particle>(std::to_string(lround(freeze)), colors::cyan())
+						( umake<text_particle>(std::to_string(lround(freeze)), colors::cyan())
 						, position
 						));
 				}
 				void operator ()(dmg::blight const& blight)
 				{
 					animations.push_back(std::make_pair
-						( make_unique<text_particle>(std::to_string(lround(blight)), colors::black())
+						( umake<text_particle>(std::to_string(lround(blight)), colors::black())
 						, position
 						));
 				}
 				void operator ()(dmg::poison const& poison)
 				{
 					animations.push_back(std::make_pair
-					(make_unique<text_particle>(std::to_string(lround(poison)), colors::purple())
+					(umake<text_particle>(std::to_string(lround(poison)), colors::purple())
 						, position
 					));
 				}
 				void operator ()(dmg::shock const& shock)
 				{
 					animations.push_back(std::make_pair
-						( make_unique<text_particle>(std::to_string(lround(shock)), colors::yellow())
+						( umake<text_particle>(std::to_string(lround(shock)), colors::yellow())
 						, position
 						));
 				}
@@ -419,7 +433,7 @@ namespace ql
 
 		game_space::point position = layout::dflt().to_world(e.origin());
 		for (int i = 0; i < 35; ++i) {
-			_animations.push_back(std::make_pair(make_unique<yellow_magic_particle>(), position));
+			_animations.push_back(std::make_pair(umake<yellow_magic_particle>(), position));
 		}
 		the_sound_manager()[lightning_bolt_sound_handle].play();
 	}

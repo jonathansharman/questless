@@ -20,6 +20,8 @@ namespace ql
 	class body
 	{
 	public:
+		lazy_bounded<double> blood;
+
 		//! @param owner The being that owns this body.
 		//! @param root The root of the body parts tree.
 		body(being& owner, uptr<body_part> root);
@@ -27,7 +29,12 @@ namespace ql
 		body(body&&) = default;
 
 		//! The root body part, to which all other body parts are attached.
+		body_part const& root() const { return *_root; }
+		//! The root body part, to which all other body parts are attached.
 		body_part& root() { return *_root; }
+
+		//! The cumulative vitality of all parts of this body.
+		double total_vitality() const { return _total_vitality; }
 
 		//! Iterator to beginning of body parts.
 		auto begin() { return _parts.begin(); }
@@ -84,18 +91,12 @@ namespace ql
 		//! The tail on this body with the given ID or nullptr if none exists.
 		tail* find_tail(id<body_part> id);
 
-		//! The bounding box around the body's parts.
-		units::screen_space::box bounds() const { return _bounds; }
-
-		//! The offset from the upper left corner of the bounds to the body's center.
-		units::screen_space::vector offset_to_center() const { return _offset_to_center; }
+		//! Advances the body and all its parts one time unit.
+		void update();
 	private:
-		being& _owner;
+		being& _owner; // Okay to store reference here. A body's lifetime is a subset of its owning being's lifetime.
 
 		uptr<body_part> _root;
-
-		units::screen_space::box _bounds;
-		units::screen_space::vector _offset_to_center;
 
 		std::vector<ref<body_part>> _parts;
 
@@ -107,6 +108,9 @@ namespace ql
 		std::vector<ref<foot>> _feet;
 		std::vector<ref<wing>> _wings;
 		std::vector<ref<tail>> _tails;
+
+		// Cumulative attributes
+		double _total_vitality;
 
 		static cref<body_part> body_part_ref_to_cref(ref<body_part> body_part)
 		{

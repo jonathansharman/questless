@@ -12,22 +12,23 @@ namespace ql
 {
 	//! Conditionally removes elements from a container.
 	//! @param container An iterable container.
-	//! @param predicate A predicate over elements of the container. Elements for which the predicate is true are removed.
-	template <typename ContainerType, typename PredicateType>
-	void erase_if(ContainerType& container, PredicateType&& predicate)
+	//! @param predicate A predicate over elements of the container. Elements for which the predicate is true are erased.
+	template <typename Container, typename Predicate>
+	void erase_if(Container& container, Predicate&& predicate)
 	{
-		for (auto it = container.begin(); it != container.end();) {
-			if (std::forward<PredicateType>(predicate)(*it)) {
-				it = container.erase(it);
-			} else {
-				++it;
-			}
-		}
+		container.erase
+			( std::remove_if
+				( container.begin()
+				, container.end()
+				, std::forward<Predicate>(predicate)
+				)
+			, container.end()
+			);
 	};
 
 	//! Moves @p pointer into a new vector and returns it.
 	template <typename T, typename U>
-	static auto make_uptr_vector(uptr<U> pointer)
+	auto make_uptr_vector(uptr<U> pointer)
 	{
 		std::vector<uptr<T>> modifiers;
 		modifiers.push_back(std::move(pointer));
@@ -36,7 +37,7 @@ namespace ql
 
 	//! Moves the given pointers into a new vector and returns it.
 	template <typename T, typename First, typename... Rest>
-	static auto make_uptr_vector(First first, Rest... rest)
+	auto make_uptr_vector(First first, Rest... rest)
 	{
 		std::vector<uptr<T>> modifiers;
 		modifiers.push_back(std::move(first));
@@ -45,17 +46,31 @@ namespace ql
 		return modifiers;
 	}
 
+	//! Generates a new vector by applying @p f to each element of @p source_vector.
+	//! @param source_vector The vector from which to generate the transformed vector.
+	//! @param f A function from the source vector element type to the result vector element type.
+	//! @return The transformed vector.
+	template <typename T, typename UnaryFunction>
+	auto transformed_vector(std::vector<T> source_vector, UnaryFunction&& f)
+	{
+		std::vector<std::invoke_result_t<UnaryFunction, T>> result;
+		for (T const& element : source_vector) {
+			result.push_back(f(element));
+		};
+		return result;
+	}
+
 	//! @todo Why do the following lambda overload helpers not work?
 
-	/*template <typename... Functors>
-	struct overloaded : Functors...
-	{
-		using Functors::operator ()...;
-	};
+	//template <typename... Functors>
+	//struct overloaded : Functors...
+	//{
+	//	using Functors::operator ()...;
+	//};
 
-	template <typename... Functors>
-	overloaded<Functors...> overload(Functors...)
-	{
-		return overloaded<Functors...>{};
-	}*/
+	//template <typename... Functors>
+	//overloaded<Functors...> overload(Functors...)
+	//{
+	//	return overloaded<Functors...>{};
+	//}
 }

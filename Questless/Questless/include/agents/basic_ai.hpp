@@ -27,7 +27,7 @@ namespace ql
 
 		complete query_count
 			( uptr<count_query> query
-			, int default
+			, int default_value
 			, std::optional<int> min
 			, std::optional<int> max
 			, std::function<complete(std::optional<int>)> cont
@@ -35,7 +35,7 @@ namespace ql
 
 		complete query_magnitude
 			( uptr<magnitude_query> query
-			, double default
+			, double default_value
 			, std::optional<double> min
 			, std::optional<double> max
 			, std::function<complete(std::optional<double>)> cont
@@ -77,6 +77,7 @@ namespace ql
 		// Effect Visitor Methods //
 		////////////////////////////
 
+		void visit(bleeding_effect const&) override {} // Ignore.
 		void visit(eagle_eye_effect const&) override {} // Ignore.
 		void visit(injury_effect const& effect) override;
 		void visit(lightning_bolt_effect const&) override {} // Ignore.
@@ -96,6 +97,6 @@ namespace ql
 			void act(basic_ai& ai) override;
 		};
 
-		uptr<state> _state = std::make_unique<idle_state>();
+		uptr<state> _state = umake<idle_state>();
 	};
 }

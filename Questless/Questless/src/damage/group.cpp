@@ -6,7 +6,7 @@
 
 namespace ql::dmg
 {
-	group group::with(protect const& protection) const
+	group group::with(protect const& protection, resist const& resistance, vuln const& vulnerability) const
 	{
 		group result = *this;
 
@@ -24,50 +24,43 @@ namespace ql::dmg
 
 				void operator ()(slash& slash) const
 				{
-					slash -= reduced_protection.pad() * percent_pad_to_slash + reduced_protection.deflect() * percent_deflect_to_slash;
+					slash -= reduced_protection.pad() * pct_pad_to_slash + reduced_protection.deflect() * pct_deflect_to_slash;
 				}
 				void operator ()(pierce& pierce) const
 				{
-					pierce -= reduced_protection.pad() * percent_pad_to_pierce + reduced_protection.deflect() * percent_deflect_to_pierce;
+					pierce -= reduced_protection.pad() * pct_pad_to_pierce + reduced_protection.deflect() * pct_deflect_to_pierce;
 				}
 				void operator ()(cleave& cleave) const
 				{
-					cleave -= reduced_protection.pad() * percent_pad_to_cleave + reduced_protection.deflect() * percent_deflect_to_cleave;
+					cleave -= reduced_protection.pad() * pct_pad_to_cleave + reduced_protection.deflect() * pct_deflect_to_cleave;
 				}
 				void operator ()(bludgeon& bludgeon) const
 				{
-					bludgeon -= reduced_protection.pad() * percent_pad_to_bludgeon + reduced_protection.deflect() * percent_deflect_to_bludgeon;
+					bludgeon -= reduced_protection.pad() * pct_pad_to_bludgeon + reduced_protection.deflect() * pct_deflect_to_bludgeon;
 				}
 				void operator ()(burn& burn) const
 				{
-					burn -= reduced_protection.fireproof() * percent_fireproof_to_burn;
+					burn -= reduced_protection.fireproof() * pct_fireproof_to_burn;
 				}
 				void operator ()(freeze& freeze) const
 				{
-					freeze -= reduced_protection.frostproof() * percent_frostproof_to_freeze;
+					freeze -= reduced_protection.frostproof() * pct_frostproof_to_freeze;
 				}
 				void operator ()(blight& blight) const
 				{
-					blight -= reduced_protection.fortify() * percent_fortify_to_blight;
+					blight -= reduced_protection.fortify() * pct_fortify_to_blight;
 				}
 				void operator ()(poison& poison) const
 				{
-					poison -= reduced_protection.immunize() * percent_immunize_to_poison;
+					poison -= reduced_protection.immunize() * pct_immunize_to_poison;
 				}
 				void operator ()(shock& shock) const
 				{
-					shock -= reduced_protection.insulate() * percent_insulate_to_shock;
+					shock -= reduced_protection.insulate() * pct_insulate_to_shock;
 				}
 			};
 			std::visit(protection_applier{reduced_protection}, part);
-		}
-		return result;
-	}
 
-	group group::with(resist const& resistance, vuln const& vulnerability) const
-	{
-		group result = *this;
-		for (auto& part : result._parts) {
 			struct damage_multiplier_applier
 			{
 				resist const& resistance;

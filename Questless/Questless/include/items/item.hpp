@@ -11,7 +11,7 @@
 
 #include "item_visitor.hpp"
 #include "agents/action.hpp"
-#include "units/hex_coords.hpp"
+#include "units/hex_space.hpp"
 #include "utility/id.hpp"
 #include "utility/reference.hpp"
 
@@ -43,7 +43,7 @@ namespace ql
 		{
 		public:
 			drop(item& item) : _item{item} {}
-			static auto make(item& item) { return std::make_unique<drop>(item); }
+			static auto make(item& item) { return umake<drop>(item); }
 			std::string name() const final { return "Drop"; }
 			complete perform(being& actor, cont cont) final;
 		private:
@@ -54,7 +54,7 @@ namespace ql
 		{
 		public:
 			toss(item& item) : _item{item} {}
-			static auto make(item& item) { return std::make_unique<toss>(item); }
+			static auto make(item& item) { return umake<toss>(item); }
 			std::string name() const final { return "Throw"; }
 			complete perform(being& actor, cont cont) final;
 		private:

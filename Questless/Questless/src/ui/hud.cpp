@@ -15,7 +15,7 @@ namespace ql
 {
 	hud::hud()
 	{
-		_fnt_item_count = std::make_unique<font>("resources/fonts/dumbledor1.ttf", _item_count_font_size, SDL_BLENDMODE_BLEND);
+		_fnt_item_count = umake<font>("resources/fonts/dumbledor1.ttf", _item_count_font_size, SDL_BLENDMODE_BLEND);
 
 		load_textures_and_layout();
 	}
@@ -117,50 +117,66 @@ namespace ql
 						}
 					, colors::black()
 					);
-				// Mana
-				int mana_bar_height = lround(_condition_bar_height * player_being->mana / player_being->stats.spirit);
-				the_renderer().draw_box
-					( screen_space::box
-						{ screen_space::point{left + 1, _screen_bottom}
-						, screen_space::vector{_condition_bar_width - 2, mana_bar_height - 1}
-						, { screen_space::align_left, screen_space::align_bottom }
-						}
-					, colors::blue()
-					);
-				left += _condition_bar_width;
-				// Energy
-				int energy_bar_height = lround(_condition_bar_height * player_being->energy / player_being->stats.stamina);
-				the_renderer().draw_box
-					( screen_space::box
-						{ screen_space::point{left + 1, _screen_bottom}
-						, screen_space::vector{_condition_bar_width - 2, energy_bar_height - 1}
-						, { screen_space::align_left, screen_space::align_bottom }
-						}
-					, colors::cyan()
-					);
-				left += _condition_bar_width;
-				// Satiety
-				int satiety_bar_height = lround(_condition_bar_height * player_being->satiety / being::max_satiety);
-				the_renderer().draw_box
-					( screen_space::box
-						{ screen_space::point{left + 1, _screen_bottom}
-						, screen_space::vector{_condition_bar_width - 2, satiety_bar_height - 1}
-						, { screen_space::align_left, screen_space::align_bottom }
-						}
-					, colors::brown()
-					);
-				left += _condition_bar_width;
-				// Alertness
-				int alertness_bar_height = lround(_condition_bar_height * player_being->alertness / being::max_alertness);
-				the_renderer().draw_box
-					( screen_space::box
-						{ screen_space::point{left + 1, _screen_bottom}
-						, screen_space::vector{_condition_bar_width - 2, alertness_bar_height - 1}
-						, { screen_space::align_left, screen_space::align_bottom }
-						}
-					, colors::yellow()
-					);
-				left += _condition_bar_width;
+				{ // Blood.
+					int const blood_bar_height = lround(_condition_bar_height * player_being->body.blood / player_being->body.total_vitality());
+					the_renderer().draw_box
+						( screen_space::box
+							{ screen_space::point{left + 1, _screen_bottom}
+							, screen_space::vector{_condition_bar_width - 2, blood_bar_height - 1}
+							, { screen_space::align_left, screen_space::align_bottom }
+							}
+						, colors::red()
+						);
+					left += _condition_bar_width;
+				}
+				{ // Mana
+					int const mana_bar_height = lround(_condition_bar_height * player_being->mana / player_being->stats.spirit);
+					the_renderer().draw_box
+						( screen_space::box
+							{ screen_space::point{left + 1, _screen_bottom}
+							, screen_space::vector{_condition_bar_width - 2, mana_bar_height - 1}
+							, { screen_space::align_left, screen_space::align_bottom }
+							}
+						, colors::blue()
+						);
+					left += _condition_bar_width;
+				}
+				{ // Energy
+					int const energy_bar_height = lround(_condition_bar_height * player_being->energy / player_being->stats.stamina);
+					the_renderer().draw_box
+						( screen_space::box
+							{ screen_space::point{left + 1, _screen_bottom}
+							, screen_space::vector{_condition_bar_width - 2, energy_bar_height - 1}
+							, { screen_space::align_left, screen_space::align_bottom }
+							}
+						, colors::cyan()
+						);
+					left += _condition_bar_width;
+				}
+				{ // Satiety
+					int const satiety_bar_height = lround(_condition_bar_height * player_being->satiety / being::max_satiety);
+					the_renderer().draw_box
+						( screen_space::box
+							{ screen_space::point{left + 1, _screen_bottom}
+							, screen_space::vector{_condition_bar_width - 2, satiety_bar_height - 1}
+							, { screen_space::align_left, screen_space::align_bottom }
+							}
+						, colors::brown()
+						);
+					left += _condition_bar_width;
+				}
+				{ // Alertness
+					int const alertness_bar_height = lround(_condition_bar_height * player_being->alertness / being::max_alertness);
+					the_renderer().draw_box
+						( screen_space::box
+							{ screen_space::point{left + 1, _screen_bottom}
+							, screen_space::vector{_condition_bar_width - 2, alertness_bar_height - 1}
+							, { screen_space::align_left, screen_space::align_bottom }
+							}
+						, colors::yellow()
+						);
+					left += _condition_bar_width;
+				}
 			}
 
 			{ // Draw the body.
@@ -221,13 +237,13 @@ namespace ql
 		_screen_bottom = the_window().height() - 1;
 
 		// Load hotbar textures and position hotbar.
-		_hotbar_slot_texture = std::make_unique<texture>("resources/textures/ui/hud/hotbar-slot.png");
+		_hotbar_slot_texture = umake<texture>("resources/textures/ui/hud/hotbar-slot.png");
 		_hotbar_width = _hotbar_slot_texture->width() * _hotbar_size + _hotbar_interslot_gap * (_hotbar_size - 1);
 		_hotbar_x_start = (the_window().width() - _hotbar_width) / 2;
 
 		// Calculate number of visible inventory rows and columns.
-		_inv_row_count = std::max(1l, lround(_inv_height_percent * the_window().height() / _item_icon_size.y()));
-		_inv_column_count = std::max(1l, lround(_inv_width_percent * the_window().width() / _item_icon_size.x()));
+		_inv_row_count = std::max(1l, lround(_inv_height_pct * the_window().height() / _item_icon_size.y()));
+		_inv_column_count = std::max(1l, lround(_inv_width_pct * the_window().width() / _item_icon_size.x()));
 
 		// Set inventory layout.
 		_inv_layout = screen_space::box

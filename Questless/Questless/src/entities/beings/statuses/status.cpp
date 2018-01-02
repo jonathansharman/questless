@@ -19,6 +19,9 @@ namespace ql
 	{
 		--_duration;
 		subupdate(target);
+		if (_duration == 0) {
+			expire(target);
+		}
 	}
 
 	void status::expire(being&) {}

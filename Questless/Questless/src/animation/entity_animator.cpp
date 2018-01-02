@@ -19,11 +19,11 @@ namespace ql
 
 	void entity_animator::visit(human const&)
 	{
-		static auto sprite_sheet = std::make_shared<ql::sprite_sheet>
+		static auto sprite_sheet = smake<ql::sprite_sheet>
 			( the_texture_manager().add("resources/textures/human-animation.png")
 			, sprite_sheet_space::vector{3, 1}
 			);
-		auto sprite_animation = std::make_unique<ql::sprite_animation>
+		auto sprite_animation = umake<ql::sprite_animation>
 			( sprite_sheet
 			, std::vector<sprite_animation::frame>
 				{ {game_space::seconds{0.2}, sprite_sheet_space::point{0, 0}, texture_space::vector{0, 6}}
@@ -38,11 +38,11 @@ namespace ql
 	}
 	void entity_animator::visit(goblin const&)
 	{
-		static auto sprite_sheet = std::make_shared<ql::sprite_sheet>
+		static auto sprite_sheet = smake<ql::sprite_sheet>
 			( the_texture_manager().add("resources/textures/goblin-animation.png")
 			, sprite_sheet_space::vector{3, 1}
 			);
-		auto sprite_animation = std::make_unique<ql::sprite_animation>
+		auto sprite_animation = umake<ql::sprite_animation>
 			( sprite_sheet
 			, std::vector<sprite_animation::frame>
 				{ {game_space::seconds{0.2}, sprite_sheet_space::point{0, 0}, texture_space::vector{0, 6}}
@@ -61,19 +61,19 @@ namespace ql
 	void entity_animator::visit(campfire const&)
 	{
 		static auto texture_handle = the_texture_manager().add("resources/textures/entities/objects/campfire.png");
-		auto animation_stack = std::make_unique<ql::animation_stack>();
-		animation_stack->add(std::make_unique<still>(texture_handle, texture_space::vector{0, 0}));
-		animation_stack->add(std::make_unique<flame>());
+		auto animation_stack = umake<ql::animation_stack>();
+		animation_stack->add(umake<still>(texture_handle, texture_space::vector{0, 0}));
+		animation_stack->add(umake<flame>());
 		_animation = std::move(animation_stack);
 	}
 	void entity_animator::visit(corpse const&)
 	{
 		static auto texture_handle = the_texture_manager().add("resources/textures/entities/objects/grave.png");
-		_animation = std::make_unique<still>(texture_handle, texture_space::vector{0, 6});
+		_animation = umake<still>(texture_handle, texture_space::vector{0, 6});
 	}
 	void entity_animator::visit(item_box const&)
 	{
 		static auto texture_handle = the_texture_manager().add("resources/textures/entities/objects/item-box.png");
-		_animation = std::make_unique<still>(texture_handle, texture_space::vector{0, 4});
+		_animation = umake<still>(texture_handle, texture_space::vector{0, 4});
 	}
 }

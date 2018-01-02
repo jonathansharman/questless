@@ -72,7 +72,7 @@ namespace ql
 				// Cache miss. Create handle to texture formed by pasting the spell texture on top of the scroll texture.
 				auto texture_handle = the_texture_manager().add_with_generator([=] {
 					texture& scroll_texture = the_texture_manager()[scroll_handle];
-					auto texture = std::make_unique<sdl::texture>(scroll_texture.size());
+					auto texture = umake<sdl::texture>(scroll_texture.size());
 					texture->as_target([&] {
 						scroll_texture.draw(screen_space::point{0, 0});
 						the_texture_manager()[spell_handle].draw(screen_space::point{0, 0});

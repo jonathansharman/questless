@@ -136,6 +136,9 @@
     <Filter Include="src\magic">
       <UniqueIdentifier>{ea4c9649-02c6-4da1-bd4a-6628b0a695e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\entities\beings\bodies">
+      <UniqueIdentifier>{69d89cc6-9720-43d8-99ee-a459fd008dbf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\agents\direction_query.hpp">
@@ -516,9 +519,6 @@
     <ClInclude Include="include\ui\qte\incant.hpp">
       <Filter>include\ui\qte</Filter>
     </ClInclude>
-    <ClInclude Include="include\units\hex_coords.hpp">
-      <Filter>include\units</Filter>
-    </ClInclude>
     <ClInclude Include="include\units\math.hpp">
       <Filter>include\units</Filter>
     </ClInclude>
@@ -632,6 +632,9 @@
     </ClInclude>
     <ClInclude Include="include\utility\debug.hpp">
       <Filter>include\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="include\units\hex_space.hpp">
+      <Filter>include\units</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

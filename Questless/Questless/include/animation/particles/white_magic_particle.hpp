@@ -25,7 +25,7 @@ namespace ql
 			}
 		{}
 	private:
-		static constexpr units::hertz _vx_percent_drag_rate = 1.8_Hz;
+		static constexpr units::hertz _vx_pct_drag_rate = 1.8_Hz;
 		static constexpr units::game_space::radians _dtheta_max = 2.0 * units::game_space::radians::circle();
 
 		void particle_subupdate() final;

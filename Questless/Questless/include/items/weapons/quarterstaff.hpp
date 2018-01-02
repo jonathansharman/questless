@@ -15,7 +15,7 @@ namespace ql
 	public:
 		quarterstaff(ql::id<item> id = ql::id<item>::make())
 			: item{id}
-			, modal_weapon_base<quarterstaff>{durability(), std::make_unique<standard_form>(*this)}
+			, modal_weapon_base<quarterstaff>{durability(), umake<standard_form>(*this)}
 		{}
 
 		std::string name() const final { return "Staff (" + current_form().name() + ')'; }
@@ -34,8 +34,8 @@ namespace ql
 		public:
 			standard_form(modal_weapon& weapon)
 				: form{weapon}
-				, _strike{std::make_shared<strike>(weapon.id)}
-				, _jab{std::make_shared<jab>(weapon.id)}
+				, _strike{smake<strike>(weapon.id)}
+				, _jab{smake<jab>(weapon.id)}
 			{}
 
 			std::string name() const final { return "Quarterstaff"; }
@@ -88,8 +88,8 @@ namespace ql
 		public:
 			half_staff_form(modal_weapon& weapon)
 				: form{weapon}
-				, _strike{std::make_shared<strike>(weapon.id)}
-				, _jab{std::make_shared<jab>(weapon.id)}
+				, _strike{smake<strike>(weapon.id)}
+				, _jab{smake<jab>(weapon.id)}
 			{}
 
 			std::string name() const final { return "Half Staff"; }

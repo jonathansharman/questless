@@ -140,7 +140,7 @@ namespace units
 	constexpr ToFrequency frequency_cast(frequency<Rep, Period> const& f)
 	{
 		using ratio = std::ratio_divide<ToFrequency::period, Period>;
-		return ToFrequency{static_cast<ToFrequency::rep>(f.count() * ratio::den / ratio::num)};
+		return ToFrequency{static_cast<typename ToFrequency::rep>(f.count() * ratio::den / ratio::num)};
 	}
 
 	//! Frequency type representing cycles per second.

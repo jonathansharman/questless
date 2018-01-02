@@ -17,17 +17,17 @@ namespace ql
 	uptr<sdl::texture> dialog::make_title(char const* title, colors::color color)
 	{
 		static auto title_font_handle = the_font_manager().add("resources/fonts/dumbledor1.ttf", 32);
-		return std::make_unique<texture>(the_font_manager()[title_font_handle].render(title, color));
+		return umake<texture>(the_font_manager()[title_font_handle].render(title, color));
 	}
 	uptr<sdl::texture> dialog::make_prompt(char const* prompt, colors::color color)
 	{
 		static auto prompt_font_handle = the_font_manager().add("resources/fonts/dumbledor1.ttf", 20);
-		return std::make_unique<texture>(the_font_manager()[prompt_font_handle].render(prompt, color));
+		return umake<texture>(the_font_manager()[prompt_font_handle].render(prompt, color));
 	}
 	uptr<sdl::texture> dialog::make_selector(char const* selector, colors::color color)
 	{
 		static auto selector_font_handle = the_font_manager().add("resources/fonts/dumbledor1.ttf", 32);
-		return std::make_unique<texture>(the_font_manager()[selector_font_handle].render(selector, color));
+		return umake<texture>(the_font_manager()[selector_font_handle].render(selector, color));
 	}
 
 	void dialog::draw_title(texture const& title)

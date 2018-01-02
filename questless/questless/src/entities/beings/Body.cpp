@@ -8,13 +8,19 @@
 #include <algorithm>
 #include <memory>
 
+#include "entities/beings/being.hpp"
 #include "entities/beings/body_part.hpp"
+#include "game.hpp"
 
 using namespace units;
 
 namespace ql
 {
-	body::body(being& owner, uptr<body_part> root) : _owner{owner}, _root{std::move(root)}
+	body::body(being& owner, uptr<body_part> root)
+		: blood{0.0, [] { return 0.0; }, [&owner = owner] { return owner.body.total_vitality(); }}
+		, _owner{owner}
+		, _root{std::move(root)}
+		, _total_vitality{0.0}
 	{
 		class part_attacher : public body_part_mutable_visitor
 		{
@@ -33,12 +39,7 @@ namespace ql
 			body& _body;
 		};
 
-		int x_min = 0;
-		int y_min = 0;
-		int x_max = 0;
-		int y_max = 0;
-
-		// Walk the parts tree to build the parts lists and compute bounds.
+		// Walk the parts tree to build the parts lists and compute cumulative values.
 		std::deque<ref<body_part>> work_list;
 		work_list.push_back(*_root);
 		while (!work_list.empty()) {
@@ -47,22 +48,20 @@ namespace ql
 			part_attacher attacher{*this};
 			part.accept(attacher);
 
-			for (screen_space::box const& region : part.regions()) {
-				x_min = std::min(x_min, left(region));
-				x_max = std::max(x_max, right(region));
-				y_min = std::min(y_min, top(region));
-				y_max = std::max(y_max, bottom(region));
-			}
+			// Add part values to totals.
+			_total_vitality += part.vitality;
 
 			// Remove current part from work list and add its children.
 			work_list.pop_front();
-			for (uptr<body_part> const& child : part.children()) {
-				work_list.push_back(*child);
+			for (auto const& attachment : part.attachments()) {
+				if (attachment->part) {
+					work_list.push_back(*attachment->part);
+				}
 			}
 		}
 
-		_bounds = screen_space::box{screen_space::point{x_min, y_min}, screen_space::vector{x_max - x_min + 1, y_max - y_min + 1}};
-		_offset_to_center = screen_space::vector{-x_min, -y_min};
+		// Start with maximum blood.
+		blood = _total_vitality;
 	}
 
 	body_part* body::find_part(id<body_part> id)
@@ -162,5 +161,30 @@ namespace ql
 			}
 		}
 		return nullptr;
+	}
+
+	void body::update()
+	{
+		// Update cumulative values.
+		_total_vitality = 0.0;
+		for (body_part const& part : _parts) {
+			_total_vitality += part.vitality;
+		}
+
+		{ // Bleed.
+			double blood_loss = 0.0;
+			for (body_part const& part : _parts) {
+				blood_loss += part.bleeding;
+			}
+			if (blood_loss > 0.0) {
+				blood -= blood_loss;
+				the_game().add_effect(smake<bleeding_effect>(_owner.coords, blood_loss, _owner.id));
+			}
+		}
+
+		// Update parts.
+		for (body_part& part : _parts) {
+			part.update();
+		}
 	}
 }

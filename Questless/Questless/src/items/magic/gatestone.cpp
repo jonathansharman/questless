@@ -79,7 +79,7 @@ namespace ql
 	{
 		if (incanter.stats.mute) {
 			// Can't incant if mute.
-			return incanter.agent().send_message(std::make_unique<message_incant_failed_mute>(), [cont] { return cont(action::result::aborted); });
+			return incanter.agent().send_message(umake<message_incant_failed_mute>(), [cont] { return cont(action::result::aborted); });
 		} else {
 			// Ensure the gatestone still exists and is equipped to the incanter.
 			if (auto gatestone = the_game().items.ptr_as<ql::gatestone>(_gatestone_id)) {
@@ -91,7 +91,7 @@ namespace ql
 							if (gatestone->mana < required_mana) {
 								// Not enough gatestone mana.
 								double const mana_deficit = required_mana - gatestone->mana;
-								return incanter.agent().send_message(std::make_unique<message_incant_gatestone_not_enough_mana>(mana_deficit), [cont] { return cont(action::result::aborted); });
+								return incanter.agent().send_message(umake<message_incant_gatestone_not_enough_mana>(mana_deficit), [cont] { return cont(action::result::aborted); });
 							} else {
 								// Spend gatestone mana and cast the spell after the incantation delay.
 								gatestone->mana -= required_mana;
