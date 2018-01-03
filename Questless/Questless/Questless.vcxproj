@@ -128,7 +128,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/std:c++latest /permissive- %(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
       <DisableSpecificWarnings>4268;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
@@ -147,7 +147,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/std:c++latest /permissive- %(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
       <DisableSpecificWarnings>4268;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
@@ -200,7 +200,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/std:c++latest /permissive- %(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
       <DisableSpecificWarnings>4268;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>

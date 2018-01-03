@@ -44,7 +44,7 @@ namespace units
 	//! @tparam Scalar The data type of scalar values in this space.
 	//! @tparam DimensionCount The number of dimensions in this space. Must be non-negative.
 	//! @tparam Buffer A type containing a @p std::array<Scalar, DimensionCount>. May include space-spefific data accessors for use in points and vectors.
-	template <typename Tag, typename Scalar, int DimensionCount, typename Buffer = buffer_base<Scalar, DimensionCount>>
+	template <typename Tag, typename Scalar, int DimensionCount, typename Buffer = detail::buffer_base<Scalar, DimensionCount>>
 	struct space
 	{
 	private:
@@ -177,7 +177,7 @@ namespace units
 		template<typename ToAngle, typename FromAngle>
 		static constexpr ToAngle angle_cast(FromAngle const& theta)
 		{
-			using ratio = std::ratio_divide<ToAngle::units_per_circle, FromAngle::units_per_circle>;
+			using ratio = std::ratio_divide<typename ToAngle::units_per_circle, typename FromAngle::units_per_circle>;
 			using from_scalar = typename FromAngle::scalar;
 			using to_scalar = typename ToAngle::scalar;
 			return ToAngle{static_cast<to_scalar>(theta.count() * static_cast<from_scalar>(ratio::num) / static_cast<from_scalar>(ratio::den))};
@@ -228,8 +228,8 @@ namespace units
 				return vector{std::array<scalar, dimension_count>()};
 			}
 
-			scalar& operator [](std::size_t index) & { return _elements[index]; }
-			constexpr scalar const& operator [](std::size_t index) const& { return _elements[index]; }
+			scalar& operator [](std::size_t index) & { return this->_elements[index]; }
+			constexpr scalar const& operator [](std::size_t index) const& { return this->_elements[index]; }
 
 			friend std::ostream& operator <<(std::ostream& out, vector const& v)
 			{
@@ -241,8 +241,8 @@ namespace units
 				return out;
 			}
 
-			bool operator ==(vector const& that) const { return _elements == that._elements; }
-			bool operator !=(vector const& that) const { return _elements != that._elements; }
+			bool operator ==(vector const& that) const { return this->_elements == that._elements; }
+			bool operator !=(vector const& that) const { return this->_elements != that._elements; }
 
 			friend vector operator +(vector const& v1, vector const& v2)
 			{
@@ -300,28 +300,28 @@ namespace units
 			vector& operator +=(vector const& that) &
 			{
 				for (int i = 0; i < dimension_count; ++i) {
-					_elements[i] += that[i];
+					this->_elements[i] += that[i];
 				}
 				return *this;
 			}
 			vector& operator -=(vector const& that) &
 			{
 				for (int i = 0; i < dimension_count; ++i) {
-					_elements[i] -= that[i];
+					this->_elements[i] -= that[i];
 				}
 				return *this;
 			}
 			vector& operator *=(scalar k) &
 			{
 				for (int i = 0; i < dimension_count; ++i) {
-					_elements[i] *= k;
+					this->_elements[i] *= k;
 				}
 				return *this;
 			}
 			vector& operator /=(scalar k) &
 			{
 				for (int i = 0; i < dimension_count; ++i) {
-					_elements[i] /= k;
+					this->_elements[i] /= k;
 				}
 				return *this;
 			}
@@ -337,8 +337,8 @@ namespace units
 				auto const cos_dtheta = static_cast<scalar>(cos(dtheta_radians));
 				auto const sin_dtheta = static_cast<scalar>(sin(dtheta_radians));
 				*this = vector
-					{ static_cast<scalar>(_elements[0] * cos_dtheta - _elements[1] * sin_dtheta)
-					, static_cast<scalar>(_elements[0] * sin_dtheta + _elements[1] * cos_dtheta)
+					{ static_cast<scalar>(this->_elements[0] * cos_dtheta - this->_elements[1] * sin_dtheta)
+					, static_cast<scalar>(this->_elements[0] * sin_dtheta + this->_elements[1] * cos_dtheta)
 					};
 			}
 
@@ -353,8 +353,8 @@ namespace units
 				auto const cos_dtheta = static_cast<scalar>(cos(dtheta_radians));
 				auto const sin_dtheta = static_cast<scalar>(sin(dtheta_radians));
 				return vector
-					{ static_cast<scalar>(_elements[0] * cos_dtheta - _elements[1] * sin_dtheta)
-					, static_cast<scalar>(_elements[0] * sin_dtheta + _elements[1] * cos_dtheta)
+					{ static_cast<scalar>(this->_elements[0] * cos_dtheta - this->_elements[1] * sin_dtheta)
+					, static_cast<scalar>(this->_elements[0] * sin_dtheta + this->_elements[1] * cos_dtheta)
 					};
 			}
 
@@ -363,7 +363,7 @@ namespace units
 			{
 				scalar sum_of_squares(0);
 				for (int i = 0; i < dimension_count; ++i) {
-					sum_of_squares += _elements[i] * _elements[i];
+					sum_of_squares += this->_elements[i] * this->_elements[i];
 				}
 				return static_cast<scalar>(math::sqrt(sum_of_squares));
 			}
@@ -373,7 +373,7 @@ namespace units
 			{
 				scalar result(0);
 				for (int i = 0; i < dimension_count; ++i) {
-					result += _elements[i] * _elements[i];
+					result += this->_elements[i] * this->_elements[i];
 				}
 				return result;
 			}
@@ -383,7 +383,7 @@ namespace units
 			typename space::angle<UnitsPerCircle> angle() const  //! @todo Cannot be constexpr because of cos() and sin(). Implement constexpr trig functions in units::math to enable.
 			{
 				static_assert(dimension_count == 2, "Requires two-dimensional space.");
-				return typename space::angle<UnitsPerCircle>{static_cast<scalar>(atan2(_elements[1], _elements[0]))};
+				return typename space::angle<UnitsPerCircle>{static_cast<scalar>(atan2(this->_elements[1], this->_elements[0]))};
 			}
 		};
 
@@ -409,8 +409,8 @@ namespace units
 			point& operator =(point const&) & = default;
 			point& operator =(point&&) & = default;
 
-			scalar& operator [](std::size_t index) & { return _elements[index]; }
-			constexpr scalar const& operator [](std::size_t index) const& { return _elements[index]; }
+			scalar& operator [](std::size_t index) & { return this->_elements[index]; }
+			constexpr scalar const& operator [](std::size_t index) const& { return this->_elements[index]; }
 
 			friend std::ostream& operator <<(std::ostream& out, point const& p)
 			{
@@ -425,7 +425,7 @@ namespace units
 			constexpr bool operator ==(point const& that) const
 			{
 				for (int i = 0; i < dimension_count; ++i) {
-					if (_elements[i] != that[i]) {
+					if (this->_elements[i] != that[i]) {
 						return false;
 					}
 				}
@@ -434,7 +434,7 @@ namespace units
 			constexpr bool operator !=(point const& that) const
 			{
 				for (int i = 0; i < dimension_count; ++i) {
-					if (_elements[i] != that[i]) {
+					if (this->_elements[i] != that[i]) {
 						return true;
 					}
 				}
@@ -495,14 +495,14 @@ namespace units
 			point& operator +=(vector const& v) &
 			{
 				for (int i = 0; i < dimension_count; ++i) {
-					_elements[i] += v[i];
+					this->_elements[i] += v[i];
 				}
 				return *this;
 			}
 			point& operator -=(vector const& v) &
 			{
 				for (int i = 0; i < dimension_count; ++i) {
-					_elements[i] -= v[i];
+					this->_elements[i] -= v[i];
 				}
 				return *this;
 			}
@@ -530,8 +530,8 @@ namespace units
 				auto offset = vector{origin[0], origin[1]};
 				*this -= offset;
 				*this = point
-					{ static_cast<scalar>(_elements[0] * cos_dtheta - _elements[1] * sin_dtheta)
-					, static_cast<scalar>(_elements[0] * sin_dtheta + _elements[1] * cos_dtheta)
+					{ static_cast<scalar>(this->_elements[0] * cos_dtheta - this->_elements[1] * sin_dtheta)
+					, static_cast<scalar>(this->_elements[0] * sin_dtheta + this->_elements[1] * cos_dtheta)
 					};
 				*this += offset;
 			}

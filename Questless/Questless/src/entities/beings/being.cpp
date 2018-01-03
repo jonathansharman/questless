@@ -222,8 +222,8 @@ namespace ql
 				// Percent of each part's vitality dealt to it as blight damage as a factor of stage-4 blood loss.
 				constexpr double damage_factor = 0.1;
 				for (body_part& part : body) {
-					dmg::group damage = dmg::blight{part.vitality * pct_stage_4_blood_lost * damage_factor};
-					part.take_damage(damage, std::nullopt);
+					dmg::group blight = dmg::blight{part.vitality * pct_stage_4_blood_lost * damage_factor};
+					part.take_damage(blight, std::nullopt);
 				}
 			}
 		}

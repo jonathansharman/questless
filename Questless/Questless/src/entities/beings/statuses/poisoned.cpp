@@ -9,7 +9,7 @@ namespace ql
 {
 	void poisoned::subupdate(being& target)
 	{
-		dmg::group poison = dmg::poison{_magnitude};
+		dmg::group poison{dmg::poison{_magnitude}};
 		for (body_part& part : target.body) {
 			target.take_damage(poison, part, source());
 		}

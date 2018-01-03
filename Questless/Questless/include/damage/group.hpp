@@ -39,6 +39,7 @@ namespace ql::dmg
 
 		group() = default;
 
+		//! Constructs a damage group from a list of damage components.
 		//! @param parts The list of components in this damage group.
 		//! @param protection_evasion The amount of protection this damage group evades.
 		group(std::vector<damage> parts, protect protection_evasion = protect::zero())
@@ -49,9 +50,9 @@ namespace ql::dmg
 		//! Constructs a damage group from a single damage component.
 		//! @param part The single component of this damage group.
 		//! @param protection_evasion The amount of protection this damage group evades.
-		group(damage damage_part, protect protection_evasion = protect::zero())
-			: _parts{{damage_part}}
-			, _protection_evasion{protection_evasion}
+		template <typename Damage>
+		group(Damage damage_part, protect protection_evasion = protect::zero())
+			: group{damage{damage_part}, protection_evasion}
 		{}
 
 		static group zero() { return group{}; }
@@ -125,5 +126,11 @@ namespace ql::dmg
 	private:
 		std::vector<damage> _parts;
 		protect _protection_evasion;
+
+		//! Helper @param protection_evasion The amount of protection this damage group evades.
+		group(damage damage_part, protect protection_evasion = protect::zero())
+			: _parts{{damage_part}}
+			, _protection_evasion{protection_evasion}
+		{}
 	};
 }
