@@ -69,7 +69,7 @@ namespace ql
 		virtual ~body_part() = default;
 
 		//! The player-visisble name of the body part.
-		virtual std::string const& name() const = 0;
+		virtual std::string name() const = 0;
 
 		//! Whether the body part is vital to its being. If true, the being dies when this body part is disabled.
 		virtual bool vital() const = 0;
@@ -90,13 +90,25 @@ namespace ql
 		double weight() const { return _weight; }
 
 		//! The body part's protection stat.
-		virtual dmg::protect const& protection() const { return dmg::protect::zero(); }
+		virtual dmg::protect const& protection() const
+		{
+			static auto result = dmg::protect::zero();
+			return result;
+		}
 
 		//! The body part's resistance stat.
-		virtual dmg::resist const& resistance() const { return dmg::resist::zero(); }
+		virtual dmg::resist const& resistance() const
+		{
+			static auto result = dmg::resist::zero();
+			return result;
+		}
 
 		//! The body part's vulnerability stat.
-		virtual dmg::vuln const& vulnerability() const { return dmg::vuln::zero(); }
+		virtual dmg::vuln const& vulnerability() const
+		{
+			static auto result = dmg::vuln::zero();
+			return result;
+		}
 
 		//! The draw layer, with smaller-numbered layers drawn first (i.e. in the background).
 		virtual int layer() const = 0;
@@ -165,7 +177,7 @@ namespace ql
 			, _mute{mute}
 		{}
 
-		std::string const& name() const override { return "Head"; }
+		std::string name() const override { return "Head"; }
 
 		bool vital() const override { return true; }
 
@@ -205,7 +217,7 @@ namespace ql
 			, _strength{strength}
 		{}
 
-		std::string const& name() const override { return "Torso"; }
+		std::string name() const override { return "Torso"; }
 
 		bool vital() const override { return true; }
 
@@ -243,7 +255,7 @@ namespace ql
 			, _strength{strength}
 		{}
 
-		std::string const& name() const override { return "Arm"; }
+		std::string name() const override { return "Arm"; }
 
 		bool vital() const override { return false; }
 
@@ -281,7 +293,7 @@ namespace ql
 			, _dexterity{dexterity}
 		{}
 
-		std::string const& name() const override { return "Hand"; }
+		std::string name() const override { return "Hand"; }
 
 		bool vital() const override { return false; }
 
@@ -318,7 +330,7 @@ namespace ql
 			, _strength{strength}
 		{}
 
-		std::string const& name() const override { return "Leg"; }
+		std::string name() const override { return "Leg"; }
 
 		bool vital() const override { return false; }
 
@@ -359,7 +371,7 @@ namespace ql
 			, _agility{agility}
 		{}
 
-		std::string const& name() const override { return "Foot"; }
+		std::string name() const override { return "Foot"; }
 
 		bool vital() const override { return false; }
 
@@ -396,7 +408,7 @@ namespace ql
 			, _weight{weight}
 		{}
 
-		std::string const& name() const override { return "Wing"; }
+		std::string name() const override { return "Wing"; }
 
 		bool vital() const override { return false; }
 
@@ -417,7 +429,7 @@ namespace ql
 	public:
 		using body_part_base<tail>::body_part_base;
 
-		std::string const& name() const override { return "Tail"; }
+		std::string name() const override { return "Tail"; }
 
 		bool vital() const override { return false; }
 

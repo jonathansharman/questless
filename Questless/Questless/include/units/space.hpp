@@ -674,6 +674,8 @@ namespace units
 #define DOCTEST_CONFIG_DISABLE
 #endif
 #include <doctest.h>
+#undef near // Defined in minwindef.h (!)
+#undef far // Defined in minwindef.h (!)
 
 TEST_CASE("[angle] operations")
 {

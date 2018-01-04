@@ -12,17 +12,17 @@ namespace ql
 	std::vector<uptr<action>> gatestone::actions()
 	{
 		std::vector<uptr<action>> actions;
-		if (_cooldown == 0.0) {
-			actions.push_back(incant::make(*this));
-		}
-		actions.push_back(toggle_autocharge::make(*this, true));
 		if (equipped()) {
+			if (_cooldown == 0.0) {
+				actions.push_back(incant::make(*this));
+			}
+			actions.push_back(toggle_autocharge::make(*this, true));
 			actions.push_back(unequip::make(*this));
+			actions.push_back(drop::make(*this));
+			actions.push_back(toss::make(*this));
 		} else {
 			actions.push_back(equip::make(*this));
 		}
-		actions.push_back(drop::make(*this));
-		actions.push_back(toss::make(*this));
 		return actions;
 	}
 

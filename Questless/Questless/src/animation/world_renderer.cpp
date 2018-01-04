@@ -105,11 +105,11 @@ namespace ql
 	{
 #if 1
 		// Created a view of the entities sorted by y-coordinates.
-		auto y_sort = [](world_view::entity_view const& a, world_view::entity_view  const& b) {
+		auto y_sort = [](world_view::entity_view const& a, world_view::entity_view const& b) {
 			if (entity const* entity_a = get_entity_cptr(a.id)) {
 				if (entity const* entity_b = get_entity_cptr(b.id)) {
-					auto y_a = layout::dflt().to_world(entity_a->coords).y();
-					auto y_b = layout::dflt().to_world(entity_b->coords).y();
+					double const y_a = layout::dflt().to_world(entity_a->coords).y();
+					double const y_b = layout::dflt().to_world(entity_b->coords).y();
 					return y_a > y_b;
 				}
 			}
