@@ -46,6 +46,19 @@ namespace sdl
 				throw std::runtime_error{"Failed to link OpenGL program."};
 			}
 		}
+
+		// Detach shaders.
+		glDetachShader(_program, vertex_shader);
+		glDetachShader(_program, fragment_shader);
+
+		// Delete shaders.
+		glDeleteShader(vertex_shader);
+		glDeleteShader(fragment_shader);
+	}
+
+	shader_program::~shader_program()
+	{
+		glDeleteProgram(_program);
 	}
 
 	GLint shader_program::get_attribute_handle(char const* attribute_name) const

@@ -37,7 +37,7 @@ namespace ql
 
 	void camera::update()
 	{
-		screen_space::vector center_to_mouse = the_input().mouse_position() - the_window().center();
+		screen_space::vector center_to_mouse = the_input().mouse_position() - the_window().screen_center();
 		game_space::vector scaled_center_to_mouse = game_space::vector{static_cast<double>(center_to_mouse.x()), static_cast<double>(-center_to_mouse.y())} / _zoom;
 		_point_hovered = _position + scaled_center_to_mouse;
 		_point_hovered.rotate(_position, _angle);
@@ -48,7 +48,7 @@ namespace ql
 		( texture const& texture
 		, game_space::point position
 		, origin origin
-		, colors::color_factor draw_color_factor
+		, colors::color_vector draw_color_vector
 		, h_scale horizontal_scale
 		, v_scale vertical_scale
 		, game_space::radians angle
@@ -58,7 +58,7 @@ namespace ql
 		texture.draw_transformed
 			( screen_point(position)
 			, origin
-			, draw_color_factor * color_factor
+			, draw_color_vector * color_vector
 			, static_cast<float>(_zoom * horizontal_scale)
 			, static_cast<float>(_zoom * vertical_scale)
 			, angle - _angle

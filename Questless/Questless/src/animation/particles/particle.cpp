@@ -38,19 +38,19 @@ namespace ql
 		texture().draw(position, texture_space::align_center, texture_space::align_middle);
 	}
 
-	void particle::draw(units::game_space::point position, camera const& camera, colors::color_factor color_factor) const
+	void particle::draw(units::game_space::point position, camera const& camera, colors::color_vector color_vector) const
 	{
-		// Determine color factor to use.
-		color_factor = ignore_color_mod() ? _color_factor : color_factor * _color_factor;
+		// Determine color vector to use.
+		color_vector = ignore_color_mod() ? _color_vector : color_vector * _color_vector;
 		if (fade_out()) {
-			color_factor[3] *= static_cast<float>(_time_left.count() / _lifetime.count());
+			color_vector[3] *= static_cast<float>(_time_left.count() / _lifetime.count());
 		}
 
 		camera.draw
 			( texture()
 			, position + _displacement
 			, origin{texture_space::vector::zero()}
-			, color_factor
+			, color_vector
 			, h_scale{_scale}
 			, v_scale{_scale}
 			, _angle

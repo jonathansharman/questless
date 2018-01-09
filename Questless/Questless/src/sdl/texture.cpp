@@ -181,7 +181,7 @@ namespace sdl
 		( screen_space::point position
 		, texture_space::h_align horizontal_alignment
 		, texture_space::v_align vertical_alignment
-		, color_factor color_factor
+		, color_vector color_vector
 		, std::optional<texture_space::box> const& src_rect
 		) const
 	{
@@ -205,13 +205,13 @@ namespace sdl
 				position.y() -= height() / 2;
 				break;
 		}
-		draw_transformed(position, texture_space::vector::zero(), color_factor, 1.0f, 1.0f, game_space::radians::zero(), src_rect);
+		draw_transformed(position, texture_space::vector::zero(), color_vector, 1.0f, 1.0f, game_space::radians::zero(), src_rect);
 	}
 
 	void texture::draw_transformed
 		( screen_space::point position
 		, texture_space::vector origin
-		, color_factor color_factor
+		, color_vector color_vector
 		, float horizontal_scale
 		, float vertical_scale
 		, units::game_space::radians angle
@@ -231,9 +231,9 @@ namespace sdl
 		glBindTexture(GL_TEXTURE_2D, _texture);
 		glEnable(GL_TEXTURE_2D);
 
-		{ // Set color factor.
-			static GLuint color_factor_uniform = dflt_program().get_uniform_handle("color_factor");
-			glUniform4f(color_factor_uniform, color_factor.red(), color_factor.green(), color_factor.blue(), color_factor.alpha());
+		{ // Set color vector.
+			static GLuint color_vector_uniform = dflt_program().get_uniform_handle("color_vector");
+			glUniform4f(color_vector_uniform, color_vector.red(), color_vector.green(), color_vector.blue(), color_vector.alpha());
 		}
 
 		{ // Set model matrix.

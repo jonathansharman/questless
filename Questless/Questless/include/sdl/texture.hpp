@@ -61,20 +61,20 @@ namespace sdl
 		//! @param position The coordinates of the texture on the screen.
 		//! @param horizontal_alignment The horizontal alignment of the texture.
 		//! @param vertical_alignment The vertical alignment of the texture.
-		//! @param color_factor A factor to be applied component-wise to the texture's color.
+		//! @param color_vector A factor to be applied component-wise to the texture's color.
 		//! @param src_rect The section of the texture to be drawn. If nullopt, the entire texture is used.
 		void draw
 			( units::screen_space::point position
 			, units::texture_space::h_align horizontal_alignment = units::texture_space::align_left
 			, units::texture_space::v_align vertical_alignment = units::texture_space::align_top
-			, units::colors::color_factor color_factor = units::colors::white_factor()
+			, units::colors::color_vector color_vector = units::colors::white_vector()
 			, std::optional<units::texture_space::box> const& src_rect = std::nullopt
 			) const;
 
 		//! Draws all or part the texture to the screen (or current frame buffer), using the provided transformations.
 		//! @param position The coordinates of the texture on the screen.
 		//! @param origin The offset from the texture's center to its origin point.
-		//! @param color_factor A factor to be applied component-wise to the texture's color.
+		//! @param color_vector A factor to be applied component-wise to the texture's color.
 		//! @param horizontal_scale The horizontal scale of the texture.
 		//! @param vertical_scale The vertical scale of the texture.
 		//! @param angle The counter-clockwise rotation of the the texture around the origin, in radians.
@@ -82,7 +82,7 @@ namespace sdl
 		void draw_transformed
 			( units::screen_space::point position
 			, units::texture_space::vector origin = units::texture_space::vector::zero()
-			, units::colors::color_factor color_factor = units::colors::white_factor()
+			, units::colors::color_vector color_vector = units::colors::white_vector()
 			, float horizontal_scale = 1.0f
 			, float vertical_scale = 1.0f
 			, units::game_space::radians angle = units::game_space::radians::zero() //! @todo This should use screen space radians.

@@ -22,16 +22,16 @@ namespace ql
 	class camera
 	{
 	public:
-		//! A color factor to apply to anything drawn using this camera.
-		units::colors::color_factor color_factor;
+		//! A color vector to apply to anything drawn using this camera.
+		units::colors::color_vector color_vector;
 
 		//! Constructs a camera with the specified starting position.
 		//! @param position The starting position of the camera.
 		camera(units::game_space::point position)
-			: color_factor{units::colors::white_factor()}
+			: color_vector{units::colors::white_vector()}
 			, _position{position}
 			, _zoom{1.0}
-			, _angle{0}
+			, _angle{0.0}
 		{}
 
 		camera& operator =(camera const&) = delete;
@@ -85,7 +85,7 @@ namespace ql
 		//! @param texture The texture to be drawn.
 		//! @param position The in-game coordinates of the texture.
 		//! @param origin The offset from the texture's center to its origin point.
-		//! @param color An additional color factor, applied on top of the camera's color factor.
+		//! @param color An additional color vector, applied on top of the camera's color vector.
 		//! @param horizontal_scale The horizontal scale of the texture.
 		//! @param vertical_scale The vertical scale of the texture.
 		//! @param angle The counter-clockwise rotation of the texture, in radians.
@@ -94,7 +94,7 @@ namespace ql
 			( sdl::texture const& texture
 			, units::game_space::point position
 			, origin origin = origin{units::texture_space::vector::zero()}
-			, units::colors::color_factor color_factor = units::colors::white_factor()
+			, units::colors::color_vector color_vector = units::colors::white_vector()
 			, h_scale horizontal_scale = h_scale{1.0}
 			, v_scale vertical_scale = v_scale{1.0}
 			, units::game_space::radians angle = units::game_space::radians{0.0}

@@ -4,9 +4,9 @@
 
 #include "entities/beings/body.hpp"
 
-#include <deque>
 #include <algorithm>
 #include <memory>
+#include <queue>
 
 #include "entities/beings/being.hpp"
 #include "entities/beings/body_part.hpp"
@@ -40,8 +40,8 @@ namespace ql
 		};
 
 		// Walk the parts tree to build the parts lists and compute cumulative values.
-		std::deque<ref<body_part>> work_list;
-		work_list.push_back(*_root);
+		std::queue<ref<body_part>> work_list;
+		work_list.push(*_root);
 		while (!work_list.empty()) {
 			body_part& part = work_list.front();
 			_parts.push_back(part);
@@ -52,10 +52,10 @@ namespace ql
 			_total_vitality += part.vitality;
 
 			// Remove current part from work list and add its children.
-			work_list.pop_front();
+			work_list.pop();
 			for (auto const& attachment : part.attachments()) {
 				if (attachment->part) {
-					work_list.push_back(*attachment->part);
+					work_list.push(*attachment->part);
 				}
 			}
 		}

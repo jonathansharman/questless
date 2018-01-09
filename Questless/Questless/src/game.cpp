@@ -72,67 +72,68 @@ namespace ql
 			set_the_window(umake<window>("Questless", "resources/textures/icon.png", false, _dflt_window_width, _dflt_window_height, true, true, true, false));
 		}
 
-		{ // Initialize OpenGL.
-			// Create OpenGL context.
-			SDL_GLContext gl_context = SDL_GL_CreateContext(the_window().sdl_ptr()); //! @todo Destroy context.
-			if (!gl_context) {
-				throw std::runtime_error("Failed to create OpenGL context. SDL Error: " + string{SDL_GetError()});
-			}
+		initialize_opengl();
+		//{ // Initialize OpenGL.
+		//	// Create OpenGL context.
+		//	SDL_GLContext gl_context = SDL_GL_CreateContext(the_window().sdl_ptr()); //! @todo Destroy context.
+		//	if (!gl_context) {
+		//		throw std::runtime_error("Failed to create OpenGL context. SDL Error: " + string{SDL_GetError()});
+		//	}
 
-			// Initialize GLEW.
-			glewExperimental = GL_TRUE;
-			if (glewInit() != GLEW_OK) {
-				throw std::runtime_error("Failed to initialize GLEW.");
-			}
+		//	// Initialize GLEW.
+		//	glewExperimental = GL_TRUE;
+		//	if (glewInit() != GLEW_OK) {
+		//		throw std::runtime_error("Failed to initialize GLEW.");
+		//	}
 
-			// Use late swap tearing.
-			if (SDL_GL_SetSwapInterval(-1)) {
-				// Fall back to VSync.
-				if (SDL_GL_SetSwapInterval(1)) {
-					throw std::runtime_error("Failed to set swap interval. SDL Error: " + string{SDL_GetError()});
-				}
-			}
+		//	// Use late swap tearing.
+		//	if (SDL_GL_SetSwapInterval(-1)) {
+		//		// Fall back to VSync.
+		//		if (SDL_GL_SetSwapInterval(1)) {
+		//			throw std::runtime_error("Failed to set swap interval. SDL Error: " + string{SDL_GetError()});
+		//		}
+		//	}
 
-			// Generate GLSL programs.
-			set_dflt_program(umake<shader_program>
-				( contents_of_file("resources/shaders/dflt.vert").c_str()
-				, contents_of_file("resources/shaders/dflt.frag").c_str()
-				));
-			set_solid_program(umake<shader_program>
-				( contents_of_file("resources/shaders/solid.vert").c_str()
-				, contents_of_file("resources/shaders/solid.frag").c_str()
-				));
-			
-			// Set clear color.
-			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		//	// Generate GLSL programs.
+		//	set_dflt_program(umake<shader_program>
+		//		( contents_of_file("resources/shaders/dflt.vert").c_str()
+		//		, contents_of_file("resources/shaders/dflt.frag").c_str()
+		//		));
+		//	set_solid_program(umake<shader_program>
+		//		( contents_of_file("resources/shaders/solid.vert").c_str()
+		//		, contents_of_file("resources/shaders/solid.frag").c_str()
+		//		));
+		//	
+		//	// Set clear color.
+		//	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-			{ // Set default program uniforms.
-				dflt_program().use();
+		//	{ // Set default program uniforms.
+		//		dflt_program().use();
 
-				GLint viewport_size_uniform = dflt_program().get_uniform_handle("viewport_size");
-				int window_width = the_window().width();
-				int window_height = the_window().height();
-				glUniform2f(viewport_size_uniform, static_cast<float>(window_width), static_cast<float>(window_height));
+		//		GLint viewport_size_uniform = dflt_program().get_uniform_handle("viewport_size");
+		//		int window_width = the_window().width();
+		//		int window_height = the_window().height();
+		//		glUniform2f(viewport_size_uniform, static_cast<float>(window_width), static_cast<float>(window_height));
 
-				GLint flip_y_uniform = dflt_program().get_uniform_handle("flip_y");
-				glUniform1i(flip_y_uniform, GL_FALSE);
-			}
-			{ // Set solid program uniforms.
-				solid_program().use();
+		//		GLint flip_y_uniform = dflt_program().get_uniform_handle("flip_y");
+		//		glUniform1i(flip_y_uniform, GL_FALSE);
+		//	}
+		//	{ // Set solid program uniforms.
+		//		solid_program().use();
 
-				GLint viewport_size_uniform = solid_program().get_uniform_handle("viewport_size");
-				int window_width = the_window().width();
-				int window_height = the_window().height();
-				glUniform2f(viewport_size_uniform, static_cast<float>(window_width), static_cast<float>(window_height));
+		//		GLint viewport_size_uniform = solid_program().get_uniform_handle("viewport_size");
+		//		int window_width = the_window().width();
+		//		int window_height = the_window().height();
+		//		glUniform2f(viewport_size_uniform, static_cast<float>(window_width), static_cast<float>(window_height));
 
-				GLint flip_y_uniform = dflt_program().get_uniform_handle("flip_y");
-				glUniform1i(flip_y_uniform, GL_FALSE);
-			}
+		//		GLint flip_y_uniform = dflt_program().get_uniform_handle("flip_y");
+		//		glUniform1i(flip_y_uniform, GL_FALSE);
+		//	}
 
-			// Set blend function.
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		}
+		//	// Set blend function.
+		//	glEnable(GL_BLEND);
+		//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		//}
 
 		// Initialize renderer.
 		set_the_renderer(umake<renderer>(the_window(), the_window().width(), the_window().height()));
@@ -223,6 +224,69 @@ namespace ql
 		_txt_hex_circle = umake<texture>("resources/textures/ui/hex_circle.png");
 	}
 
+	void game::initialize_opengl()
+	{
+		// Create OpenGL context.
+		SDL_GLContext gl_context = SDL_GL_CreateContext(the_window().sdl_ptr()); //! @todo Destroy context.
+		if (!gl_context) {
+			throw std::runtime_error("Failed to create OpenGL context. SDL Error: " + string{SDL_GetError()});
+		}
+
+		// Initialize GLEW.
+		glewExperimental = GL_TRUE;
+		if (glewInit() != GLEW_OK) {
+			throw std::runtime_error("Failed to initialize GLEW.");
+		}
+
+		// Use late swap tearing.
+		if (SDL_GL_SetSwapInterval(-1)) {
+			// Fall back to VSync.
+			if (SDL_GL_SetSwapInterval(1)) {
+				throw std::runtime_error("Failed to set swap interval. SDL Error: " + string{SDL_GetError()});
+			}
+		}
+
+		// Generate GLSL programs.
+		set_dflt_program(umake<shader_program>
+			( contents_of_file("resources/shaders/dflt.vert").c_str()
+			, contents_of_file("resources/shaders/dflt.frag").c_str()
+			));
+		set_solid_program(umake<shader_program>
+			( contents_of_file("resources/shaders/solid.vert").c_str()
+			, contents_of_file("resources/shaders/solid.frag").c_str()
+			));
+			
+		// Set clear color.
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+		{ // Set default program uniforms.
+			dflt_program().use();
+
+			GLint viewport_size_uniform = dflt_program().get_uniform_handle("viewport_size");
+			int window_width = the_window().width();
+			int window_height = the_window().height();
+			glUniform2f(viewport_size_uniform, static_cast<float>(window_width), static_cast<float>(window_height));
+
+			GLint flip_y_uniform = dflt_program().get_uniform_handle("flip_y");
+			glUniform1i(flip_y_uniform, GL_FALSE);
+		}
+		{ // Set solid program uniforms.
+			solid_program().use();
+
+			GLint viewport_size_uniform = solid_program().get_uniform_handle("viewport_size");
+			int window_width = the_window().width();
+			int window_height = the_window().height();
+			glUniform2f(viewport_size_uniform, static_cast<float>(window_width), static_cast<float>(window_height));
+
+			GLint flip_y_uniform = dflt_program().get_uniform_handle("flip_y");
+			glUniform1i(flip_y_uniform, GL_FALSE);
+		}
+
+		// Set blend function.
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+
 	complete game::add_dialog(uptr<dialog> dialog)
 	{
 		_dialogs.push_back(move(dialog));
@@ -285,6 +349,7 @@ namespace ql
 			//! @todo Save previous window size and restore it here.
 		}
 		if (the_input().window_resized()) {
+			initialize_opengl();
 			the_window().recreate();
 			set_the_renderer(umake<renderer>(the_window(), the_window().width(), the_window().height()));
 		}
@@ -424,11 +489,11 @@ namespace ql
 			intensity = static_cast<float>(1.0 - ms_fading_out / _splash_fade_out_duration.count());
 		}
 
-		screen_space::point logo_position = the_window().center() + screen_space::vector{uniform(-_splash_logo_jiggle, _splash_logo_jiggle), uniform(-_splash_logo_jiggle, _splash_logo_jiggle)};
-		_txt_splash_logo->draw(logo_position, texture_space::align_center, texture_space::align_middle, colors::color_factor{intensity, intensity, intensity, 1.0f});
+		screen_space::point logo_position = the_window().screen_center() + screen_space::vector{uniform(-_splash_logo_jiggle, _splash_logo_jiggle), uniform(-_splash_logo_jiggle, _splash_logo_jiggle)};
+		_txt_splash_logo->draw(logo_position, texture_space::align_center, texture_space::align_middle, colors::color_vector{intensity, intensity, intensity, 1.0f});
 
 		for (screen_space::point position : _splash_flame_positions) {
-			_txt_splash_flame->draw(position, texture_space::align_center, texture_space::align_bottom, colors::color_factor{intensity, intensity, intensity, 1.0f});
+			_txt_splash_flame->draw(position, texture_space::align_center, texture_space::align_bottom, colors::color_vector{intensity, intensity, intensity, 1.0f});
 		}
 	}
 
@@ -483,7 +548,7 @@ namespace ql
 
 	void game::render_menu()
 	{
-		_main_menu.draw(the_window().center(), screen_space::align_center, screen_space::align_middle);
+		_main_menu.draw(the_window().screen_center(), screen_space::align_center, screen_space::align_middle);
 	}
 
 	void game::render_playing()
@@ -493,7 +558,7 @@ namespace ql
 		if (the_input().pressed(mouse_button::right)) {
 			_point_clicked_rounded = layout::dflt().to_world(_camera->tile_hovered());
 		}
-		_camera->draw(*_txt_hex_highlight, layout::dflt().to_world(_camera->tile_hovered()), origin{texture_space::vector::zero()}, colors::white_factor(0.5f));
+		_camera->draw(*_txt_hex_highlight, layout::dflt().to_world(_camera->tile_hovered()), origin{texture_space::vector::zero()}, colors::white_vector(0.5f));
 		_camera->draw(*_txt_hex_circle, _point_clicked_rounded);
 
 		_world_renderer->draw_entities();

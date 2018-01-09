@@ -26,7 +26,7 @@ namespace ql
 			, max_displacement{5.0}
 			}
 		{
-			_color_factor = units::colors::orange_factor();
+			_color_vector = units::colors::orange_vector();
 		}
 	private:
 		static constexpr units::hertz _vx_pct_drag_rate = 1.8_Hz;

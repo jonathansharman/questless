@@ -16,10 +16,10 @@ namespace ql
 		}
 	}
 
-	void particle_animation::draw(units::game_space::point position, camera const& camera, colors::color_factor color_factor) const
+	void particle_animation::draw(units::game_space::point position, camera const& camera, colors::color_vector color_vector) const
 	{
 		for (auto& particle : _particles) {
-			particle->draw(position, camera, color_factor);
+			particle->draw(position, camera, color_vector);
 		}
 	}
 

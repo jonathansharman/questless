@@ -16,7 +16,7 @@ namespace ql
 		texture.draw(dst_point);
 	}
 
-	void still::draw(units::game_space::point position, camera const& camera, colors::color_factor color) const
+	void still::draw(units::game_space::point position, camera const& camera, colors::color_vector color) const
 	{
 		camera.draw
 			( the_texture_manager()[_texture_handle]

@@ -34,13 +34,13 @@ namespace ql
 		//	( screen_space::point{position.x() - frame.origin.u(), position.y() + frame.origin.v()} //! @todo Uncouth point casting here.
 		//	, h_align::center
 		//	, v_align::middle
-		//	, colors::white_factor()
+		//	, colors::white_vector()
 		//	, src_rect
 		//	);
 		the_texture_manager()[_sprite_sheet->texture_handle].draw_transformed
 			( position
 			, frame.origin
-			, colors::white_factor()
+			, colors::white_vector()
 			, 1.0f
 			, 1.0f
 			, game_space::radians{0.0}
@@ -51,14 +51,14 @@ namespace ql
 			);
 	}
 
-	void sprite_animation::draw(units::game_space::point position, camera const& camera, colors::color_factor color_factor) const
+	void sprite_animation::draw(units::game_space::point position, camera const& camera, colors::color_vector color_vector) const
 	{
 		sprite_animation::frame const& frame = _frames[_frame_index];
 		camera.draw
 			( the_texture_manager()[_sprite_sheet->texture_handle]
 			, game_space::point{position}
 			, origin{frame.origin}
-			, color_factor
+			, color_vector
 			, h_scale{1.0}
 			, v_scale{1.0}
 			, game_space::radians{0.0}

@@ -47,8 +47,8 @@ namespace ql
 		//! Draws the animation at @p position in game space using @p camera.
 		//! @param position The position in game space at which to draw the animation.
 		//! @param camera The camera with which to draw the animation.
-		//! @param color_factor An additional color factor, applied on top of the camera's color factor.
-		virtual void draw(units::game_space::point position, camera const& camera, units::colors::color_factor color_factor = units::colors::white_factor()) const = 0;
+		//! @param color_vector An additional color vector, applied on top of the camera's color vector.
+		virtual void draw(units::game_space::point position, camera const& camera, units::colors::color_vector color_vector = units::colors::white_vector()) const = 0;
 	protected:
 		bool _over = false;
 

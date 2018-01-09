@@ -34,10 +34,10 @@ namespace ql
 			}
 		}
 
-		void draw(units::game_space::point position, camera const& camera, units::colors::color_factor color_factor = units::colors::white_factor()) const
+		void draw(units::game_space::point position, camera const& camera, units::colors::color_vector color_vector = units::colors::white_vector()) const
 		{
 			for (auto& animation : _animations) {
-				animation->draw(position, camera, color_factor);
+				animation->draw(position, camera, color_vector);
 			}
 		}
 	private:

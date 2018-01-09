@@ -104,7 +104,7 @@ namespace ql::qte
 				( the_texture_manager()[point_charge_texture_handle]
 				, point_charge.position
 				, origin{texture_space::vector::zero()}
-				, colors::color_factor{1.0f, intensity, intensity, 1.0f}
+				, colors::color_vector{1.0f, intensity, intensity, 1.0f}
 				, h_scale{(1.0 + intensity) / 2.0}
 				, v_scale{(1.0 + intensity) / 2.0}
 				, game_space::radians{0.0}

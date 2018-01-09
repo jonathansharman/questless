@@ -239,10 +239,10 @@ namespace ql
 		_page_views[_page_index].title_texture.draw(_content_position);
 
 		for (int i = 0; i < static_cast<int>(_page_views[_page_index].option_textures.size()); ++i) {
-			colors::color_factor option_color_factor = _pages[_page_index].option_index == i ? _selected_color_factor : _unselected_color_factor;
+			colors::color_vector option_color_vector = _pages[_page_index].option_index == i ? _selected_color_vector : _unselected_color_vector;
 
 			screen_space::point option_position{_content_position.x(), _content_position.y() + title_height + i * option_height};
-			_page_views[_page_index].option_textures[i].draw(option_position, texture_space::align_left, texture_space::align_top, option_color_factor);
+			_page_views[_page_index].option_textures[i].draw(option_position, texture_space::align_left, texture_space::align_top, option_color_vector);
 		}
 	}
 

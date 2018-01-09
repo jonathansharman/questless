@@ -147,9 +147,13 @@ namespace sdl
 			return height;
 		}
 	}
-	screen_space::point window::center() const
+	screen_space::point window::screen_center() const
 	{
 		return screen_space::point{width() / 2, height() / 2};
+	}
+	view_space::point window::view_center() const
+	{
+		return view_space::point{width() / 2.0f, height() / 2.0f};
 	}
 	screen_space::scalar window::x_center() const
 	{

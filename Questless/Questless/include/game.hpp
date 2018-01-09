@@ -192,6 +192,8 @@ namespace ql
 
 		void load_textures();
 
+		void initialize_opengl();
+
 		// Update methods
 
 		enum class update_result { continue_game, game_over };

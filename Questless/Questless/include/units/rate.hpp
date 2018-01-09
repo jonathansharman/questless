@@ -26,11 +26,9 @@ namespace units
 		static constexpr rate<quantity_type, time_rep, period> zero() { return rate<quantity_type, time_rep, period>{quantity_type{}}; }
 
 		//! The amount of the quantity type per unit period.
-		constexpr quantity_type const& step() const& { return _step; }
+		constexpr quantity_type& step() { return _step; }
 		//! The amount of the quantity type per unit period.
-		quantity_type&& step() && { return std::move(_step); }
-		//! The amount of the quantity type per unit period.
-		quantity_type& step() & { return _step; }
+		constexpr quantity_type step() const { return _step; }
 
 		constexpr bool operator <(rate<quantity_type, time_rep, period> const& that) const { return _step < that._step; }
 		constexpr bool operator <=(rate<quantity_type, time_rep, period> const& that) const { return _step <= that._step; }
@@ -40,28 +38,28 @@ namespace units
 		constexpr bool operator >(rate<quantity_type, time_rep, period> const& that) const { return _step > that._step; }
 
 		// Closed under addition.
-		rate<quantity_type, time_rep, period>& operator +=(rate<quantity_type, time_rep, period> const& rate) &
+		constexpr rate<quantity_type, time_rep, period>& operator +=(rate<quantity_type, time_rep, period> const& rate) &
 		{
 			_step += rate._step;
 			return *this;
 		}
 
 		// Closed under subtraction.
-		rate<quantity_type, time_rep, period>& operator -=(rate<quantity_type, time_rep, period> const& rate) &
+		constexpr rate<quantity_type, time_rep, period>& operator -=(rate<quantity_type, time_rep, period> const& rate) &
 		{
 			_step -= rate._step;
 			return *this;
 		}
 
 		// Closed under scalar multiplication.
-		rate<quantity_type, time_rep, period>& operator *=(time_rep const& k) &
+		constexpr rate<quantity_type, time_rep, period>& operator *=(time_rep const& k) &
 		{
 			_step *= k;
 			return *this;
 		}
 
 		// Closed under scalar division.
-		rate<quantity_type, time_rep, period>& operator /=(time_rep const& k) &
+		constexpr rate<quantity_type, time_rep, period>& operator /=(time_rep const& k) &
 		{
 			_step /= k;
 			return *this;

@@ -247,7 +247,7 @@ namespace ql
 
 		// Set inventory layout.
 		_inv_layout = screen_space::box
-			{ the_window().center()
+			{ the_window().screen_center()
 			, screen_space::vector{_inv_column_count * _item_icon_size.x(), _inv_row_count * _item_icon_size.y()}
 			, { screen_space::align_center, screen_space::align_middle }
 			};

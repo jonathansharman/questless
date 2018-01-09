@@ -18,6 +18,8 @@ namespace sdl
 		//! @param fragment_source The GLSL source code for the fragment shader.
 		shader_program(char const* vertex_source, char const* fragment_source);
 
+		~shader_program();
+
 		//! Locates the handle for the attribute @p attribute_name.
 		//! @param attribute_name The name of the attribute as it appears in the GLSL source code.
 		//! @return The handle for the given attribute.

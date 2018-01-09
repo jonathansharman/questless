@@ -104,8 +104,8 @@ namespace ql
 		static constexpr int option_font_size = 30;
 
 		static constexpr units::colors::color _title_color = units::colors::black();
-		static constexpr units::colors::color_factor _unselected_color_factor = units::colors::black_factor();
-		static constexpr units::colors::color_factor _selected_color_factor = units::colors::red_factor();
+		static constexpr units::colors::color_vector _unselected_color_vector = units::colors::black_vector();
+		static constexpr units::colors::color_vector _selected_color_vector = units::colors::red_vector();
 
 		static sdl::sound_handle _hover_sound_handle, _select_sound_handle;
 

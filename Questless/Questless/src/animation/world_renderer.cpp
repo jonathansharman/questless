@@ -140,7 +140,7 @@ namespace ql
 						_unknown_entity_animation->draw
 							( layout::dflt().to_world(entity->coords)
 							, the_game().camera()
-							, colors::color_factor{intensity, intensity, intensity, 1.0f}
+							, colors::color_vector{intensity, intensity, intensity, 1.0f}
 							);
 						break;
 					case perception::category::medium:
@@ -177,7 +177,7 @@ namespace ql
 						entity_animation.draw
 							( layout::dflt().to_world(entity->coords)
 							, the_game().camera()
-							, colors::color_factor{intensity, intensity, intensity, 1.0f}
+							, colors::color_vector{intensity, intensity, intensity, 1.0f}
 							);
 						break;
 					}
@@ -292,7 +292,7 @@ namespace ql
 								tile_texture.draw_transformed
 									( tile_screen_point
 									, texture_space::vector::zero()
-									, colors::color_factor{intensity, intensity, intensity, 1.0f}
+									, colors::color_vector{intensity, intensity, intensity, 1.0f}
 									);
 							}
 						}

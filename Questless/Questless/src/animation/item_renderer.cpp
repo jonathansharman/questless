@@ -94,37 +94,37 @@ namespace ql
 			the_texture_manager()[texture_handle].draw(_position);
 		} else {
 			static auto texture_handle = the_texture_manager().add("resources/textures/items/soul-gem-white.png");
-			colors::color_factor draw_color_factor;
+			colors::color_vector draw_color_vector;
 			switch (gatestone.color()) {
 				case magic::color::white:
-					draw_color_factor = colors::white_factor();
+					draw_color_vector = colors::white_vector();
 					break;
 				case magic::color::black:
-					draw_color_factor = colors::color_factor{0.2f, 0.2f, 0.2f, 1.0f};
+					draw_color_vector = colors::color_vector{0.2f, 0.2f, 0.2f, 1.0f};
 					break;
 				case magic::color::green:
-					draw_color_factor = colors::green_factor();
+					draw_color_vector = colors::green_vector();
 					break;
 				case magic::color::red:
-					draw_color_factor = colors::red_factor();
+					draw_color_vector = colors::red_vector();
 					break;
 				case magic::color::blue:
-					draw_color_factor = colors::blue_factor();
+					draw_color_vector = colors::blue_vector();
 					break;
 				case magic::color::yellow:
-					draw_color_factor = colors::yellow_factor();
+					draw_color_vector = colors::yellow_vector();
 					break;
 				case magic::color::violet:
-					draw_color_factor = colors::purple_factor();
+					draw_color_vector = colors::purple_vector();
 					break;
 				case magic::color::orange:
-					draw_color_factor = colors::orange_factor();
+					draw_color_vector = colors::orange_vector();
 					break;
 				default:
 					throw std::logic_error{"Unknown spell color."};
 			}
-			the_texture_manager()[texture_handle].draw(_position, texture_space::align_left, texture_space::align_top, draw_color_factor);
-			colors::color fill_color{draw_color_factor.red(), draw_color_factor.green(), draw_color_factor.blue(), draw_color_factor.alpha()};
+			the_texture_manager()[texture_handle].draw(_position, texture_space::align_left, texture_space::align_top, draw_color_vector);
+			colors::color fill_color{draw_color_vector.red(), draw_color_vector.green(), draw_color_vector.blue(), draw_color_vector.alpha()};
 			the_renderer().draw_box(screen_space::box{_position, screen_space::vector{6, 55}}, colors::black());
 			the_renderer().draw_box(screen_space::box{_position, screen_space::vector{6, static_cast<int>(55 * gatestone.mana / gatestone.capacity())}}, 1, colors::black(), fill_color);
 

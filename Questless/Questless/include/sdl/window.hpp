@@ -94,8 +94,10 @@ namespace sdl
 		int width() const;
 		//! The window height.
 		int height() const;
-		//! The center point of the window.
-		units::screen_space::point center() const;
+		//! The center point of the window, in screen space.
+		units::screen_space::point screen_center() const;
+		//! The center point of the window, in view space.
+		units::view_space::point view_center() const;
 		//! The horizontal center of the window.
 		int x_center() const;
 		//! The vertical center of the window.
