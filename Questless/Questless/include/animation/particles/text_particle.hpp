@@ -5,14 +5,14 @@
 #pragma once
 
 #include "animation/particles/particle.hpp"
-#include "sdl/renderable.hpp"
+#include "sdl/resources.hpp"
 #include "utility/utility.hpp"
 #include "utility/initializer.hpp"
 
 namespace ql
 {
 	//! A particle composed of colored text.
-	class text_particle : public particle, public sdl::renderable
+	class text_particle : public particle
 	{
 	public:
 		//! @param position The particle's starting position.
@@ -48,8 +48,6 @@ namespace ql
 		void particle_subupdate() final {}
 
 		sdl::texture const& texture() const final { return _texture; }
-
-		void refresh() final { _texture = make_texture(); }
 
 		sdl::texture make_texture() const;
 	};

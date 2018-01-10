@@ -3,7 +3,6 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "sdl/resources.hpp"
-#include "sdl/renderable.hpp"
 
 namespace sdl
 {
@@ -30,9 +29,8 @@ namespace sdl
 		bool initializing = _renderer == nullptr;
 		_renderer = std::move(renderer);
 		if (!initializing && _renderer != nullptr) {
-			// Reassigning the renderer. Need to invalidate shared textures and refresh all renderable objects.
+			// Reassigning the renderer. Need to invalidate shared textures.
 			the_texture_manager().clear_cache();
-			renderable::refresh_all();
 		}
 	}
 

@@ -3,7 +3,6 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "sdl/font.hpp"
-#include "sdl/renderable.hpp" //! @todo Remove after done debugging.
 
 using namespace units;
 

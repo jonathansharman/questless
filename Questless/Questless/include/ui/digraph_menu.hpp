@@ -8,7 +8,7 @@
 #include <utility>
 
 #include "sdl/input.hpp"
-#include "sdl/renderable.hpp"
+#include "sdl/resources.hpp"
 #include "utility/initializer.hpp"
 #include "utility/reference.hpp"
 #include "utility/utility.hpp"
@@ -16,7 +16,7 @@
 namespace ql
 {
 	//! A menu consisting of linked pages of options.
-	class digraph_menu : public sdl::renderable
+	class digraph_menu
 	{
 	public:
 		//! @param min_width The minimum width of the menu, including margins. If necessary, the menu will stretch to fit its contents.
@@ -136,7 +136,5 @@ namespace ql
 
 		//! Renders or rerenders menu textures.
 		void render();
-
-		void refresh() final { _render_is_current = false; }
 	};
 }

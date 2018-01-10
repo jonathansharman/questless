@@ -474,9 +474,6 @@
     <ClInclude Include="include\sdl\input.hpp">
       <Filter>include\sdl</Filter>
     </ClInclude>
-    <ClInclude Include="include\sdl\renderable.hpp">
-      <Filter>include\sdl</Filter>
-    </ClInclude>
     <ClInclude Include="include\sdl\renderer.hpp">
       <Filter>include\sdl</Filter>
     </ClInclude>
@@ -837,9 +834,6 @@
       <Filter>src\sdl</Filter>
     </ClCompile>
     <ClCompile Include="src\sdl\input.cpp">
-      <Filter>src\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sdl\renderable.cpp">
       <Filter>src\sdl</Filter>
     </ClCompile>
     <ClCompile Include="src\sdl\renderer.cpp">

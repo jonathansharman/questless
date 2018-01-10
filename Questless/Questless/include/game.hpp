@@ -38,7 +38,7 @@
 namespace ql
 {
 	//! Represents an instance of the game Questless.
-	class game : public sdl::renderable
+	class game
 	{
 	public:
 		using clock = std::chrono::steady_clock;
@@ -187,8 +187,6 @@ namespace ql
 		//! Creates a game object, initializes the environment, and loads game resources.
 		//! @param fullscreen Whether to run the game in fullscreen mode.
 		game(bool fullscreen);
-
-		void refresh() final { load_textures(); }
 
 		void load_textures();
 

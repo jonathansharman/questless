@@ -10,7 +10,7 @@
 
 #include "items/item.hpp"
 #include "sdl/input.hpp"
-#include "sdl/renderable.hpp"
+#include "sdl/font.hpp"
 #include "sdl/texture.hpp"
 #include "utility/id.hpp"
 
@@ -19,7 +19,7 @@ namespace ql
 	class being;
 
 	//! The head-up display controls and displays various elements, such as conditions, the hotbar, and the inventory.
-	class hud : public sdl::renderable
+	class hud
 	{
 	public:
 		hud();
@@ -84,12 +84,6 @@ namespace ql
 		uptr<sdl::font> _fnt_item_count;
 
 		// Methods
-
-		void refresh() final
-		{
-			load_textures();
-			load_layout();
-		}
 
 		void load_textures();
 		void load_layout();

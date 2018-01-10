@@ -107,8 +107,6 @@ namespace ql
 
 		int _selection;
 
-		void refresh() final { load_textures(); }
-
 		void load_textures()
 		{
 			static auto list_option_font_handle = sdl::the_font_manager().add("resources/fonts/dumbledor1.ttf", 20);

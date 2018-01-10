@@ -12,7 +12,6 @@
 #include "effects/effect.hpp"
 #include "entities/beings/world_view.hpp"
 #include "entities/entity.hpp"
-#include "sdl/renderable.hpp"
 #include "sdl/renderer.hpp"
 #include "still.hpp"
 #include "utility/initializer.hpp"
@@ -23,7 +22,7 @@ namespace ql
 	class game;
 
 	//! Draws the elements of the world that the player can see.
-	class world_renderer : public sdl::renderable, effect_const_visitor
+	class world_renderer : public effect_const_visitor
 	{
 	public:
 		//! @param world_view The initial world view to render.
@@ -88,8 +87,6 @@ namespace ql
 		std::vector<std::pair<uptr<animation>, units::game_space::point>> _animations;
 		
 		std::optional<std::function<bool(region_tile::point)>> _highlight_predicate;
-
-		void refresh() final;
 
 		sdl::texture& cache_tile_texture(tile const& tile);
 		animation& cache_animation(entity_id_var_t entity);

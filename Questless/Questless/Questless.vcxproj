@@ -428,7 +428,6 @@
     <ClInclude Include="include\magic\teleport.hpp" />
     <ClInclude Include="include\sdl\font.hpp" />
     <ClInclude Include="include\sdl\input.hpp" />
-    <ClInclude Include="include\sdl\renderable.hpp" />
     <ClInclude Include="include\sdl\renderer.hpp" />
     <ClInclude Include="include\sdl\resources.hpp" />
     <ClInclude Include="include\sdl\resource_manager.hpp" />
@@ -556,7 +555,6 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\sdl\font.cpp" />
     <ClCompile Include="src\sdl\input.cpp" />
-    <ClCompile Include="src\sdl\renderable.cpp" />
     <ClCompile Include="src\sdl\renderer.cpp" />
     <ClCompile Include="src\sdl\resources.cpp" />
     <ClCompile Include="src\sdl\shader_program.cpp" />

@@ -211,12 +211,6 @@ namespace ql
 		_terrain_render_is_current = false;
 	}
 
-	void world_renderer::refresh()
-	{
-		_tile_textures.clear();
-		_terrain_render_is_current = false;
-	}
-
 	texture& world_renderer::cache_tile_texture(tile const& tile)
 	{
 		tile_texturer tile_texturer;

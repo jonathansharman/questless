@@ -98,10 +98,6 @@ namespace ql
 			throw std::runtime_error("Failed to initialize Mix. SDL Error: " + string{SDL_GetError()});
 	    }
 
-		// Initialize and load menu resources.
-
-		_hud = umake<ql::hud>();
-
 		// Load textures and graphics.
 
 		load_textures();
@@ -479,7 +475,8 @@ namespace ql
 						player_being->inventory.add(items.add(umake<gatestone>(100.0, 100.0, 0.0, magic::color::green)).id);
 						_region->spawn_player(move(player_being));
 					}
-					// Pass the player's being ID to the HUD.
+					// Create the HUD and pass the player's being ID to it.
+					_hud = umake<ql::hud>();
 					_hud->set_player_being_id(*_player_being_id);
 					// Update the player's initial world view.
 					_player->update_world_view();

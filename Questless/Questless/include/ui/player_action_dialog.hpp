@@ -32,7 +32,5 @@ namespace ql
 		hud& _hud;
 		continuation<choice> _cont;
 		static std::size_t _last_used;
-
-		void refresh() final {}
 	};
 }

@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include "sdl/renderable.hpp"
 #include "sdl/resources.hpp"
 #include "sdl/window.hpp"
 #include "sdl/input.hpp"
@@ -14,7 +13,7 @@
 namespace ql
 {
 	//! A UI element used to exchange information with the player.
-	class dialog : public sdl::renderable
+	class dialog
 	{
 	public:
 		enum class state { open, closed };

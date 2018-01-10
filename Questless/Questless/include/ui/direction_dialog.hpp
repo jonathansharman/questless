@@ -38,8 +38,6 @@ namespace ql
 		uptr<sdl::texture> _txt_title;
 		uptr<sdl::texture> _txt_prompt;
 
-		void refresh() final { load_textures(); }
-
 		void load_textures();
 
 	};
