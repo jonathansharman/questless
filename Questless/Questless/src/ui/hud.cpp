@@ -17,11 +17,16 @@ namespace ql
 	{
 		_fnt_item_count = umake<font>("resources/fonts/dumbledor1.ttf", _item_count_font_size, SDL_BLENDMODE_BLEND);
 
-		load_textures_and_layout();
+		load_textures();
+		load_layout();
 	}
 	
 	void hud::update()
 	{
+		if (the_input().window_resized()) {
+			load_layout();
+		}
+
 		if (_player_being_id) {
 			if (being const* player_being = the_game().beings.cptr(*_player_being_id)) {
 				update_displayed_items(*player_being);
@@ -232,12 +237,16 @@ namespace ql
 		}
 	}
 
-	void hud::load_textures_and_layout()
+	void hud::load_textures()
+	{
+		_hotbar_slot_texture = umake<texture>("resources/textures/ui/hud/hotbar-slot.png");
+	}
+
+	void hud::load_layout()
 	{
 		_screen_bottom = the_window().height() - 1;
 
-		// Load hotbar textures and position hotbar.
-		_hotbar_slot_texture = umake<texture>("resources/textures/ui/hud/hotbar-slot.png");
+		// Position hotbar.
 		_hotbar_width = _hotbar_slot_texture->width() * _hotbar_size + _hotbar_interslot_gap * (_hotbar_size - 1);
 		_hotbar_x_start = (the_window().width() - _hotbar_width) / 2;
 

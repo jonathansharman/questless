@@ -67,6 +67,9 @@ namespace sdl
 		if (result == -1) {
 			throw std::runtime_error{"GLSL program attribute not found."};
 		}
+		if (glGetError() == GL_INVALID_OPERATION) {
+			throw std::runtime_error{"This GLSL program is invalid or hasn't been linked."};
+		}
 		return result;
 	}
 

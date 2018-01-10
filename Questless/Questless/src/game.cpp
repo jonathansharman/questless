@@ -72,68 +72,8 @@ namespace ql
 			set_the_window(umake<window>("Questless", "resources/textures/icon.png", false, _dflt_window_width, _dflt_window_height, true, true, true, false));
 		}
 
+		// Initialize OpenGL.
 		initialize_opengl();
-		//{ // Initialize OpenGL.
-		//	// Create OpenGL context.
-		//	SDL_GLContext gl_context = SDL_GL_CreateContext(the_window().sdl_ptr()); //! @todo Destroy context.
-		//	if (!gl_context) {
-		//		throw std::runtime_error("Failed to create OpenGL context. SDL Error: " + string{SDL_GetError()});
-		//	}
-
-		//	// Initialize GLEW.
-		//	glewExperimental = GL_TRUE;
-		//	if (glewInit() != GLEW_OK) {
-		//		throw std::runtime_error("Failed to initialize GLEW.");
-		//	}
-
-		//	// Use late swap tearing.
-		//	if (SDL_GL_SetSwapInterval(-1)) {
-		//		// Fall back to VSync.
-		//		if (SDL_GL_SetSwapInterval(1)) {
-		//			throw std::runtime_error("Failed to set swap interval. SDL Error: " + string{SDL_GetError()});
-		//		}
-		//	}
-
-		//	// Generate GLSL programs.
-		//	set_dflt_program(umake<shader_program>
-		//		( contents_of_file("resources/shaders/dflt.vert").c_str()
-		//		, contents_of_file("resources/shaders/dflt.frag").c_str()
-		//		));
-		//	set_solid_program(umake<shader_program>
-		//		( contents_of_file("resources/shaders/solid.vert").c_str()
-		//		, contents_of_file("resources/shaders/solid.frag").c_str()
-		//		));
-		//	
-		//	// Set clear color.
-		//	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-		//	{ // Set default program uniforms.
-		//		dflt_program().use();
-
-		//		GLint viewport_size_uniform = dflt_program().get_uniform_handle("viewport_size");
-		//		int window_width = the_window().width();
-		//		int window_height = the_window().height();
-		//		glUniform2f(viewport_size_uniform, static_cast<float>(window_width), static_cast<float>(window_height));
-
-		//		GLint flip_y_uniform = dflt_program().get_uniform_handle("flip_y");
-		//		glUniform1i(flip_y_uniform, GL_FALSE);
-		//	}
-		//	{ // Set solid program uniforms.
-		//		solid_program().use();
-
-		//		GLint viewport_size_uniform = solid_program().get_uniform_handle("viewport_size");
-		//		int window_width = the_window().width();
-		//		int window_height = the_window().height();
-		//		glUniform2f(viewport_size_uniform, static_cast<float>(window_width), static_cast<float>(window_height));
-
-		//		GLint flip_y_uniform = dflt_program().get_uniform_handle("flip_y");
-		//		glUniform1i(flip_y_uniform, GL_FALSE);
-		//	}
-
-		//	// Set blend function.
-		//	glEnable(GL_BLEND);
-		//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		//}
 
 		// Initialize renderer.
 		set_the_renderer(umake<renderer>(the_window(), the_window().width(), the_window().height()));
@@ -227,8 +167,8 @@ namespace ql
 	void game::initialize_opengl()
 	{
 		// Create OpenGL context.
-		SDL_GLContext gl_context = SDL_GL_CreateContext(the_window().sdl_ptr()); //! @todo Destroy context.
-		if (!gl_context) {
+		opengl_context() = SDL_GL_CreateContext(the_window().sdl_ptr()); //! @todo Destroy context?
+		if (!opengl_context()) {
 			throw std::runtime_error("Failed to create OpenGL context. SDL Error: " + string{SDL_GetError()});
 		}
 
@@ -255,30 +195,30 @@ namespace ql
 			( contents_of_file("resources/shaders/solid.vert").c_str()
 			, contents_of_file("resources/shaders/solid.frag").c_str()
 			));
-			
+
 		// Set clear color.
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 		{ // Set default program uniforms.
 			dflt_program().use();
 
-			GLint viewport_size_uniform = dflt_program().get_uniform_handle("viewport_size");
-			int window_width = the_window().width();
-			int window_height = the_window().height();
+			GLint const viewport_size_uniform = dflt_program().get_uniform_handle("viewport_size");
+			int const window_width = the_window().width();
+			int const window_height = the_window().height();
 			glUniform2f(viewport_size_uniform, static_cast<float>(window_width), static_cast<float>(window_height));
 
-			GLint flip_y_uniform = dflt_program().get_uniform_handle("flip_y");
+			GLint const flip_y_uniform = dflt_program().get_uniform_handle("flip_y");
 			glUniform1i(flip_y_uniform, GL_FALSE);
 		}
 		{ // Set solid program uniforms.
 			solid_program().use();
 
-			GLint viewport_size_uniform = solid_program().get_uniform_handle("viewport_size");
-			int window_width = the_window().width();
-			int window_height = the_window().height();
+			GLint const viewport_size_uniform = solid_program().get_uniform_handle("viewport_size");
+			int const window_width = the_window().width();
+			int const window_height = the_window().height();
 			glUniform2f(viewport_size_uniform, static_cast<float>(window_width), static_cast<float>(window_height));
 
-			GLint flip_y_uniform = dflt_program().get_uniform_handle("flip_y");
+			GLint const flip_y_uniform = dflt_program().get_uniform_handle("flip_y");
 			glUniform1i(flip_y_uniform, GL_FALSE);
 		}
 
@@ -349,9 +289,21 @@ namespace ql
 			//! @todo Save previous window size and restore it here.
 		}
 		if (the_input().window_resized()) {
-			initialize_opengl();
-			the_window().recreate();
-			set_the_renderer(umake<renderer>(the_window(), the_window().width(), the_window().height()));
+			// Refresh the window.
+			the_window().refresh();
+
+			// Reset the viewport and viewport GLSL uniforms.
+			glViewport(0, 0, static_cast<GLsizei>(the_window().width()), static_cast<GLsizei>(the_window().height()));
+			{ // dflt_program
+				dflt_program().use();
+				GLint const viewport_size_uniform = dflt_program().get_uniform_handle("viewport_size");
+				glUniform2f(viewport_size_uniform, static_cast<float>(the_window().width()), static_cast<float>(the_window().height()));
+			}
+			{ // solid_program
+				solid_program().use();
+				GLint const viewport_size_uniform = solid_program().get_uniform_handle("viewport_size");
+				glUniform2f(viewport_size_uniform, static_cast<float>(the_window().width()), static_cast<float>(the_window().height()));
+			}
 		}
 
 		{ // Perform state-specific updates.

@@ -9,11 +9,14 @@ namespace sdl
 {
 	namespace
 	{
+		SDL_GLContext _opengl_context;
 		std::unique_ptr<shader_program> _dflt_program;
 		std::unique_ptr<shader_program> _solid_program;
 		std::unique_ptr<renderer> _renderer = nullptr;
 		std::unique_ptr<window> _window = nullptr;
 	}
+
+	SDL_GLContext& opengl_context() { return _opengl_context; }
 
 	shader_program& dflt_program() { return *_dflt_program; }
 	void set_dflt_program(std::unique_ptr<shader_program> shader_program) { _dflt_program = std::move(shader_program); }

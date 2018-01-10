@@ -60,8 +60,8 @@ namespace sdl
 		window& operator =(window const&) = delete;
 		window& operator =(window&&) & = default;
 
-		//! Creates a new window pointer with the same properties as the old one and destroys the old one.
-		void recreate();
+		//! Refreshes cached window attributes.
+		void refresh();
 
 		//! The internal SDL_Window pointer.
 		SDL_Window* const sdl_ptr() const { return _sdl_window; }

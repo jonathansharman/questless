@@ -28,11 +28,11 @@ int main(int argc, char* argv[])
 	(void)argv; // Supress unused variable warning.
 #endif
 
-	//try {
+//	try {
 		ql::the_game().run();
-	//} catch (std::exception& ex) {
-	//	std::string message = ex.what();
-	//	//! @todo Try-catch for exception for last-resort error reporting. (Should log the message or something.)
-	//}
+//	} catch (std::exception& ex) {
+//		std::string message = ex.what();
+//		//! @todo Try-catch for exception for last-resort error reporting. (Should log the message or something.)
+//	}
 	return result;
 }

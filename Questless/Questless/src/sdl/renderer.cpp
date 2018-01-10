@@ -125,12 +125,12 @@ namespace sdl
 		solid_program().use();
 
 		// Enable vertex attributes.
-		static GLuint position_attribute = solid_program().get_attribute_handle("position");
+		GLuint const position_attribute = solid_program().get_attribute_handle("position"); //! @todo Cache this, invalidating cache after window resize.
 		glEnableVertexAttribArray(position_attribute);
 
 		{ // Set model matrix to identity.
 			glm::mat4 model_matrix;
-			static GLuint model_matrix_uniform = solid_program().get_uniform_handle("model_matrix");
+			GLuint const model_matrix_uniform = solid_program().get_uniform_handle("model_matrix"); //! @todo Cache this, invalidating cache after window resize.
 			glUniformMatrix4fv(model_matrix_uniform, 1, GL_FALSE, glm::value_ptr(model_matrix));
 		}
 
@@ -158,7 +158,7 @@ namespace sdl
 		}
 
 		// Set color uniform.
-		static GLuint color_uniform = solid_program().get_uniform_handle("color");
+		GLuint color_uniform = solid_program().get_uniform_handle("color"); //! @todo Cache this, invalidating cache after window resize.
 		glUniform4f(color_uniform, color.red(), color.green(), color.blue(), color.alpha());
 
 		// Render.
@@ -198,12 +198,12 @@ namespace sdl
 		solid_program().use();
 
 		// Enable vertex attributes.
-		static GLuint position_attribute = solid_program().get_attribute_handle("position");
+		GLuint const position_attribute = solid_program().get_attribute_handle("position"); //! @todo Cache this, invalidating cache after window resize.
 		glEnableVertexAttribArray(position_attribute);
 
 		{ // Set model matrix to identity.
 			glm::mat4 model_matrix;
-			static GLuint model_matrix_uniform = solid_program().get_uniform_handle("model_matrix");
+			GLuint const model_matrix_uniform = solid_program().get_uniform_handle("model_matrix"); //! @todo Cache this, invalidating cache after window resize.
 			glUniformMatrix4fv(model_matrix_uniform, 1, GL_FALSE, glm::value_ptr(model_matrix));
 		}
 
@@ -232,7 +232,7 @@ namespace sdl
 		}
 
 		// Set color uniform.
-		static GLuint color_uniform = solid_program().get_uniform_handle("color");
+		GLuint const color_uniform = solid_program().get_uniform_handle("color"); //! @todo Cache this, invalidating cache after window resize.
 		glUniform4f(color_uniform, color.red(), color.green(), color.blue(), color.alpha());
 
 		// Render.
@@ -386,12 +386,12 @@ namespace sdl
 		solid_program().use();
 
 		// Enable vertex attributes.
-		static GLuint position_attribute = solid_program().get_attribute_handle("position");
+		GLuint const position_attribute = solid_program().get_attribute_handle("position"); //! @todo Cache this, invalidating cache after window resize.
 		glEnableVertexAttribArray(position_attribute);
 
 		{ // Set model matrix to identity.
 			glm::mat4 model_matrix;
-			static GLuint model_matrix_uniform = solid_program().get_uniform_handle("model_matrix");
+			GLuint const model_matrix_uniform = solid_program().get_uniform_handle("model_matrix"); //! @todo Cache this, invalidating cache after window resize.
 			glUniformMatrix4fv(model_matrix_uniform, 1, GL_FALSE, glm::value_ptr(model_matrix));
 		}
 
@@ -420,7 +420,7 @@ namespace sdl
 		}
 
 		// Set color uniform.
-		static GLuint color_uniform = solid_program().get_uniform_handle("color");
+		GLuint const color_uniform = solid_program().get_uniform_handle("color"); //! @todo Cache this, invalidating cache after window resize.
 		glUniform4f(color_uniform, color.red(), color.green(), color.blue(), color.alpha());
 
 		// Render.

@@ -222,9 +222,9 @@ namespace sdl
 		dflt_program().use();
 
 		// Enable vertex attributes.
-		static GLuint position_attribute = dflt_program().get_attribute_handle("position");
+		GLuint const position_attribute = dflt_program().get_attribute_handle("position"); //! @todo Cache this, invalidating cache after window resize.
 		glEnableVertexAttribArray(position_attribute);
-		static GLuint texture_coords_attribute = dflt_program().get_attribute_handle("texture_coords");
+		GLuint const texture_coords_attribute = dflt_program().get_attribute_handle("texture_coords"); //! @todo Cache this, invalidating cache after window resize.
 		glEnableVertexAttribArray(texture_coords_attribute);
 
 		// Bind texture.
@@ -232,7 +232,7 @@ namespace sdl
 		glEnable(GL_TEXTURE_2D);
 
 		{ // Set color vector.
-			static GLuint color_vector_uniform = dflt_program().get_uniform_handle("color_vector");
+			GLuint const color_vector_uniform = dflt_program().get_uniform_handle("color_vector"); //! @todo Cache this, invalidating cache after window resize.
 			glUniform4f(color_vector_uniform, color_vector.red(), color_vector.green(), color_vector.blue(), color_vector.alpha());
 		}
 
@@ -256,7 +256,7 @@ namespace sdl
 			// Origin
 			model_matrix = glm::translate(model_matrix, glm::vec3{-2.0f * origin.u() / width, -2.0f * origin.v() / height, 0.0f});
 
-			static GLuint model_matrix_uniform = dflt_program().get_uniform_handle("model_matrix");
+			GLuint const model_matrix_uniform = dflt_program().get_uniform_handle("model_matrix"); //! @todo Cache this, invalidating cache after window resize.
 			glUniformMatrix4fv(model_matrix_uniform, 1, GL_FALSE, glm::value_ptr(model_matrix));
 		}
 

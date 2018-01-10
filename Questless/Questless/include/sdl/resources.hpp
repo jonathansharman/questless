@@ -18,6 +18,9 @@
 
 namespace sdl
 {
+	//! The OpenGL context.
+	SDL_GLContext& opengl_context();
+
 	//! The default OpenGL program, using basic shaders.
 	shader_program& dflt_program();
 

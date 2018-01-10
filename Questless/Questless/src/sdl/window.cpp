@@ -67,24 +67,10 @@ namespace sdl
 		SDL_DestroyWindow(_sdl_window);
 	}
 
-	void window::recreate()
+	void window::refresh()
 	{
-		// Cached width and height no longer valid.
 		_width = std::nullopt;
 		_height = std::nullopt;
-
-		SDL_Window* old_sdl_window = _sdl_window;
-		int x_init = x();
-		int y_init = y();
-		_sdl_window = SDL_CreateWindow
-			( _title.c_str()
-			, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED
-			, width(), height()
-			, flags()
-			);
-		SDL_SetWindowIcon(_sdl_window, IMG_Load(_icon_filename.c_str()));
-		SDL_SetWindowPosition(_sdl_window, x_init, y_init);
-		SDL_DestroyWindow(old_sdl_window);
 	}
 
 	bool window::maximized() const

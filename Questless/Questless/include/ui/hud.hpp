@@ -85,9 +85,14 @@ namespace ql
 
 		// Methods
 
-		void refresh() final { load_textures_and_layout(); }
+		void refresh() final
+		{
+			load_textures();
+			load_layout();
+		}
 
-		void load_textures_and_layout();
+		void load_textures();
+		void load_layout();
 
 		void update_displayed_items(being const& player_being);
 	};
