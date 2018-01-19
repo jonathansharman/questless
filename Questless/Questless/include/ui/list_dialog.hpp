@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "dialog.hpp"
-#include "units/screen_space.hpp"
+#include "units/window_space.hpp"
 #include "sdl/resources.hpp"
 
 namespace ql
@@ -18,12 +18,12 @@ namespace ql
 	{
 	public:
 		list_dialog
-			( units::screen_space::point origin
+			( units::window_space::point origin
 			, std::string title
 			, std::vector<std::string> options
 			, std::function<void(std::optional<int>)> cont
 			)
-			: _bounds{origin, units::screen_space::vector::zero()}
+			: _bounds{origin, units::window_space::vector::zero()}
 			, _title{std::move(title)}
 			, _options{std::move(options)}
 			, _cont{std::move(cont)}
@@ -73,19 +73,19 @@ namespace ql
 			sdl::the_renderer().draw_box(_bounds, 1, units::colors::black(), units::colors::color{1.0f, 0.75f, 0.6f, 1.0f});
 
 			{ // Draw highlight.
-				units::screen_space::box bounds
-					{ units::screen_space::point{left(_bounds) + _x_padding, top(_bounds) + _y_padding + _title_height + _selection * _option_height}
-					, units::screen_space::vector{width(_bounds) - 2 * _x_padding, _option_height}
+				units::window_space::box bounds
+					{ units::window_space::point{left(_bounds) + _x_padding, top(_bounds) + _y_padding + _title_height + _selection * _option_height}
+					, units::window_space::vector{width(_bounds) - 2 * _x_padding, _option_height}
 					};
 				sdl::the_renderer().draw_box(bounds, units::colors::white());
 			}
 
 			// Draw title.
-			_txt_title->draw(units::screen_space::point{left(_bounds) + _x_padding, top(_bounds) + _y_padding});
+			_txt_title->draw(units::window_space::point{left(_bounds) + _x_padding, top(_bounds) + _y_padding});
 
 			// Draw options.
 			for (size_t i = 0; i < _options.size(); ++i) {
-				_txt_options[i].draw(units::screen_space::point
+				_txt_options[i].draw(units::window_space::point
 					{ left(_bounds) + _x_padding
 					, top(_bounds) + _y_padding + _title_height + static_cast<int>(i) * _option_height
 					});
@@ -97,7 +97,7 @@ namespace ql
 		static constexpr int _x_padding = 10;
 		static constexpr int _y_padding = 10;
 
-		units::screen_space::box _bounds;
+		units::window_space::box _bounds;
 		std::string _title;
 		std::vector<std::string> _options;
 		continuation<std::optional<int>> _cont;

@@ -13,7 +13,7 @@
 
 #include "window.hpp"
 #include "units/colors.hpp"
-#include "units/screen_space.hpp"
+#include "units/window_space.hpp"
 #include "units/view_space.hpp"
 
 namespace sdl
@@ -65,7 +65,7 @@ namespace sdl
 		void draw_lines(std::vector<units::view_space::point> const& vertices, units::colors::color color);
 
 		//! Draws lines connecting the given @p vertices, with color @p color.
-		void draw_lines(std::vector<units::screen_space::point> const& vertices, units::colors::color color);
+		void draw_lines(std::vector<units::window_space::point> const& vertices, units::colors::color color);
 
 		//! Draws a solid polygon.
 		//! @param polygon The polygon to draw.
@@ -75,7 +75,7 @@ namespace sdl
 		//! Draws a solid polygon.
 		//! @param polygon The polygon to draw.
 		//! @param color The color of the polygon.
-		void draw_polygon(units::screen_space::polygon const& polygon, units::colors::color color);
+		void draw_polygon(units::window_space::polygon const& polygon, units::colors::color color);
 
 		//! Draws a filled polygon with a border.
 		//! @param polygon The polygon to draw.
@@ -97,8 +97,8 @@ namespace sdl
 		//! @param fill_color The color of the polygon's interior.
 		//! @note This function assumes the width of the polygon is sufficiently greater than the border width to avoid overlapping the border with the polygon's edges. If the polygon is too narrow or contains too-sharp corners, overlap may occur.
 		void draw_polygon
-			( units::screen_space::polygon const& polygon
-			, units::screen_space::scalar border_width
+			( units::window_space::polygon const& polygon
+			, units::window_space::scalar border_width
 			, units::colors::color border_color
 			, units::colors::color fill_color
 			);
@@ -111,7 +111,7 @@ namespace sdl
 		//! Draws a solid box.
 		//! @param box The box to be drawn.
 		//! @param color The color of the box.
-		void draw_box(units::screen_space::box const& box, units::colors::color color);
+		void draw_box(units::window_space::box const& box, units::colors::color color);
 
 		//! Draws a box with a border.
 		//! @param box The box to be drawn.
@@ -131,8 +131,8 @@ namespace sdl
 		//! @param border_color The color of the box's border.
 		//! @param fill_color The color of the box's interior.
 		void draw_box
-			( units::screen_space::box const& box
-			, units::screen_space::scalar border_width
+			( units::window_space::box const& box
+			, units::window_space::scalar border_width
 			, units::colors::color border_color
 			, units::colors::color fill_color
 			);

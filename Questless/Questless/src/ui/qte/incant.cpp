@@ -78,15 +78,15 @@ namespace ql::qte
 	{
 		static constexpr int metronome_width = 10;
 
-		int x_center = the_window().x_center();
+		int x_center = the_window().window_center_x();
 		int window_width = the_window().width();
 		int window_height = the_window().height();
 
 		int x = static_cast<int>(x_center - metronome_width / 2 + sin(time_factor * _elapsed_time.count()) * window_width / 2);
 		the_renderer().draw_box
-			( screen_space::box
-				{ screen_space::point{x, 0}
-				, screen_space::vector{metronome_width, window_height}
+			( window_space::box
+				{ window_space::point{x, 0}
+				, window_space::vector{metronome_width, window_height}
 				}
 			, _tick ? colors::red() : colors::white()
 			);

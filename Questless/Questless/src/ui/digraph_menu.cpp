@@ -6,7 +6,7 @@
 
 #include <algorithm>
 
-#include "units/screen_space.hpp"
+#include "units/window_space.hpp"
 
 using namespace sdl;
 using namespace units;
@@ -143,14 +143,14 @@ namespace ql
 		// Get index of option over which the mouse is hovering, if any.
 
 		std::optional<int> hovered_option_index = std::nullopt;
-		screen_space::point position = _content_position;
+		window_space::point position = _content_position;
 		position.y() += title_height;
 		for (size_t i = 0; i < _pages[_page_index].options.size(); ++i) {
-			screen_space::box box = screen_space::box
-				{ screen_space::point{position.x(), position.y()}
+			window_space::box box = window_space::box
+				{ window_space::point{position.x(), position.y()}
 				, _page_views[_page_index].option_textures[i].size()
 				};
-			screen_space::point point = the_input().mouse_position();
+			window_space::point point = the_input().mouse_position();
 			if (box.contains(point)) {
 				hovered_option_index = static_cast<int>(i);
 				break;
@@ -202,7 +202,7 @@ namespace ql
 		return selections;
 	}
 
-	void digraph_menu::draw(screen_space::point origin, screen_space::h_align horizontal_alignment, screen_space::v_align vertical_alignment)
+	void digraph_menu::draw(window_space::point origin, window_space::h_align horizontal_alignment, window_space::v_align vertical_alignment)
 	{
 		if (!_render_is_current) {
 			render();
@@ -210,29 +210,29 @@ namespace ql
 
 		_content_position = origin;
 		switch (horizontal_alignment) {
-			case screen_space::align_left:
+			case window_space::align_left:
 				break;
-			case screen_space::align_center:
+			case window_space::align_center:
 				_content_position.x() -= _content_width / 2;
 				break;
-			case screen_space::align_right:
+			case window_space::align_right:
 				_content_position.x() -= _content_width;
 				break;
 		}
 		switch (vertical_alignment) {
-			case screen_space::align_top:
+			case window_space::align_top:
 				break;
-			case screen_space::align_middle:
+			case window_space::align_middle:
 				_content_position.y() -= _content_height / 2;
 				break;
-			case screen_space::align_bottom:
+			case window_space::align_bottom:
 				_content_position.y() -= _content_height;
 				break;
 		}
 
 		// Draw background.
 
-		_background->draw(screen_space::point{_content_position.x() - _left_margin, _content_position.y() - _top_margin});
+		_background->draw(window_space::point{_content_position.x() - _left_margin, _content_position.y() - _top_margin});
 
 		// Draw text.
 
@@ -241,7 +241,7 @@ namespace ql
 		for (int i = 0; i < static_cast<int>(_page_views[_page_index].option_textures.size()); ++i) {
 			colors::color_vector option_color_vector = _pages[_page_index].option_index == i ? _selected_color_vector : _unselected_color_vector;
 
-			screen_space::point option_position{_content_position.x(), _content_position.y() + title_height + i * option_height};
+			window_space::point option_position{_content_position.x(), _content_position.y() + title_height + i * option_height};
 			_page_views[_page_index].option_textures[i].draw(option_position, texture_space::align_left, texture_space::align_top, option_color_vector);
 		}
 	}
@@ -300,7 +300,7 @@ namespace ql
 
 		// Render background.
 
-		_background = umake<texture>(screen_space::vector
+		_background = umake<texture>(window_space::vector
 			{ _content_width + _left_margin + _right_margin
 			, _content_height + _top_margin + _bottom_margin
 			});
@@ -308,24 +308,24 @@ namespace ql
 			// Interior
 			for (int x = 0; x < _content_width / _tile_width; ++x) {
 				for (int y = 0; y < _content_height / _tile_height; ++y) {
-					the_texture_manager()[_tile_handle].draw(screen_space::point{_left_margin + _tile_width * x, _top_margin + _tile_height * y});
+					the_texture_manager()[_tile_handle].draw(window_space::point{_left_margin + _tile_width * x, _top_margin + _tile_height * y});
 				}
 			}
 			// Top and bottom margins
 			for (int x = 0; x < _content_width / _tile_width; ++x) {
-				the_texture_manager()[_u_handle].draw(screen_space::point{_left_margin + _tile_width * x, 0});
-				the_texture_manager()[_d_handle].draw(screen_space::point{_left_margin + _tile_width * x, _top_margin + _content_height});
+				the_texture_manager()[_u_handle].draw(window_space::point{_left_margin + _tile_width * x, 0});
+				the_texture_manager()[_d_handle].draw(window_space::point{_left_margin + _tile_width * x, _top_margin + _content_height});
 			}
 			// Left and right margins
 			for (int y = 0; y < _content_height / _tile_height; ++y) {
-				the_texture_manager()[_l_handle].draw(screen_space::point{0, _top_margin + _tile_width * y});
-				the_texture_manager()[_r_handle].draw(screen_space::point{_left_margin + _content_width, _top_margin + _tile_width * y});
+				the_texture_manager()[_l_handle].draw(window_space::point{0, _top_margin + _tile_width * y});
+				the_texture_manager()[_r_handle].draw(window_space::point{_left_margin + _content_width, _top_margin + _tile_width * y});
 			}
 			// Corners
-			the_texture_manager()[_ul_handle].draw(screen_space::point{0, 0});
-			the_texture_manager()[_ur_handle].draw(screen_space::point{_left_margin + _content_width, 0});
-			the_texture_manager()[_dl_handle].draw(screen_space::point{0, _top_margin + _content_height});
-			the_texture_manager()[_dr_handle].draw(screen_space::point{_left_margin + _content_width, _top_margin + _content_height});
+			the_texture_manager()[_ul_handle].draw(window_space::point{0, 0});
+			the_texture_manager()[_ur_handle].draw(window_space::point{_left_margin + _content_width, 0});
+			the_texture_manager()[_dl_handle].draw(window_space::point{0, _top_margin + _content_height});
+			the_texture_manager()[_dr_handle].draw(window_space::point{_left_margin + _content_width, _top_margin + _content_height});
 		});
 
 		_render_is_current = true;

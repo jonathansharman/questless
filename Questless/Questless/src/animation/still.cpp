@@ -9,10 +9,10 @@ using namespace units;
 
 namespace ql
 {
-	void still::draw(units::screen_space::point position) const
+	void still::draw(units::window_space::point position) const
 	{
 		texture const& texture = the_texture_manager()[_texture_handle];
-		screen_space::point dst_point{position.x() - _origin.u(), position.y() - _origin.v()};
+		window_space::point dst_point{position.x() - _origin.u(), position.y() - _origin.v()};
 		texture.draw(dst_point);
 	}
 

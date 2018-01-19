@@ -16,7 +16,7 @@
 #include "shader_program.hpp"
 #include "units/colors.hpp"
 #include "units/game_space.hpp"
-#include "units/screen_space.hpp"
+#include "units/window_space.hpp"
 #include "units/texture_space.hpp"
 
 namespace sdl
@@ -31,7 +31,7 @@ namespace sdl
 		//! Constructs a targetable, blank texture with the specified dimensions. Useful for building textures at run time.
 		//! @param size The size of this texture in screen space.
 		//! @param color The initial background color for the texture. Defaults to clear black.
-		texture(units::screen_space::vector size = units::screen_space::vector::zero(), units::colors::color color = units::colors::clear());
+		texture(units::window_space::vector size = units::window_space::vector::zero(), units::colors::color color = units::colors::clear());
 
 		//! Constructs a texture object from the specified image file.
 		//! @param filename The name of the image file.
@@ -55,7 +55,7 @@ namespace sdl
 		int height() const { return _size.y(); }
 
 		//! The width and height of the texture, as a screen space vector.
-		units::screen_space::vector size() const { return _size; }
+		units::window_space::vector size() const { return _size; }
 
 		//! Draws all or part of the texture to the screen (or current frame buffer).
 		//! @param position The coordinates of the texture on the screen.
@@ -64,7 +64,7 @@ namespace sdl
 		//! @param color_vector A factor to be applied component-wise to the texture's color.
 		//! @param src_rect The section of the texture to be drawn. If nullopt, the entire texture is used.
 		void draw
-			( units::screen_space::point position
+			( units::window_space::point position
 			, units::texture_space::h_align horizontal_alignment = units::texture_space::align_left
 			, units::texture_space::v_align vertical_alignment = units::texture_space::align_top
 			, units::colors::color_vector color_vector = units::colors::white_vector()
@@ -80,7 +80,7 @@ namespace sdl
 		//! @param angle The counter-clockwise rotation of the the texture around the origin, in radians.
 		//! @param src_rect The section of the texture to be drawn. If nullopt, the entire texture is used.
 		void draw_transformed
-			( units::screen_space::point position
+			( units::window_space::point position
 			, units::texture_space::vector origin = units::texture_space::vector::zero()
 			, units::colors::color_vector color_vector = units::colors::white_vector()
 			, float horizontal_scale = 1.0f
@@ -103,7 +103,7 @@ namespace sdl
 		GLuint _texture;
 		GLuint _vbo = NULL;
 		GLuint _ibo = NULL;
-		units::screen_space::vector _size;
+		units::window_space::vector _size;
 
 		//! Goes before the function call in @p as_target().
 		//! @return The generated FBO.

@@ -27,7 +27,7 @@ namespace ql
 			return *_animations.back();
 		}
 
-		void draw(units::screen_space::point position) const
+		void draw(units::window_space::point position) const
 		{
 			for (auto& animation : _animations) {
 				animation->draw(position);

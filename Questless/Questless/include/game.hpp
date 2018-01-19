@@ -163,7 +163,7 @@ namespace ql
 		player* _player;
 
 		bool _splash_sound_played;
-		std::vector<units::screen_space::point> _splash_flame_positions;
+		std::vector<units::window_space::point> _splash_flame_positions;
 
 		uptr<ql::region> _region;
 

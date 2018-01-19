@@ -259,6 +259,7 @@ Utility
 		There's a small chance item placed in the satchel will change into random new items, thanks to the shifters
 			The chance of mutation for each item is based on the amount of time it has spent in the satchel
 				This makes chaos satchels a great place to store junk and a bad place to store valuables
+			Smaller mutation chance for higher "quality" satchel
 	Stasis chest
 		Stores some volume of items in Stasis
 		Has a fixed (small) mass and volume, regardless of its contents

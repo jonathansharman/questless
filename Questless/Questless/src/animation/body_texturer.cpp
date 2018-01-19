@@ -3,6 +3,9 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "animation/body_texturer.hpp"
+
+#include <unordered_map>
+
 #include "entities/beings/body_part.hpp"
 #include "sdl/resources.hpp"
 #include "utility/utility.hpp"
@@ -30,13 +33,13 @@ namespace
 
 	struct render_data
 	{
-		std::multimap<int, std::tuple<view_space::polygon, colors::color>> colored_hitboxes;
+		std::unordered_multimap<int, std::tuple<view_space::polygon, colors::color>> colored_hitboxes;
 		view_space::box bounds;
 	};
 
 	render_data get_render_data(ql::body_part const& root)
 	{
-		std::multimap<int, std::tuple<view_space::polygon, colors::color>> colored_hitboxes;
+		std::unordered_multimap<int, std::tuple<view_space::polygon, colors::color>> colored_hitboxes;
 
 		// Initialize bounds to just the first vertex of the root part.
 		view_space::box bounds{root.hitbox().front(), view_space::vector::zero()};
@@ -76,7 +79,7 @@ namespace ql
 	{
 		render_data data = get_render_data(body.root());
 
-		screen_space::vector const texture_size
+		window_space::vector const texture_size
 			{ static_cast<int>(data.bounds.size.x())
 			, static_cast<int>(data.bounds.size.y())
 			};
@@ -86,9 +89,9 @@ namespace ql
 			auto offset_to_center = view_space::point{0.0f, 0.0f} - data.bounds.position;
 
 			{ // Draw outline.
-				screen_space::box outline
-					{ screen_space::point{0, 0}
-					, screen_space::vector{_texture->width(), _texture->height()}
+				window_space::box outline
+					{ window_space::point{0, 0}
+					, window_space::vector{_texture->width(), _texture->height()}
 					};
 				the_renderer().draw_box(outline, 1, colors::red(), colors::clear());
 			}

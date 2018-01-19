@@ -5,7 +5,7 @@
 #pragma once
 
 #include "animation/camera.hpp"
-#include "units/screen_space.hpp"
+#include "units/window_space.hpp"
 #include "utility/static_bounded.hpp"
 
 namespace ql
@@ -42,7 +42,7 @@ namespace ql
 		}
 
 		//! Draws the animation at @p position in screen space.
-		virtual void draw(units::screen_space::point position) const = 0;
+		virtual void draw(units::window_space::point position) const = 0;
 
 		//! Draws the animation at @p position in game space using @p camera.
 		//! @param position The position in game space at which to draw the animation.

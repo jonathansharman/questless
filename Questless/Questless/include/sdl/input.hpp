@@ -4,14 +4,14 @@
 
 #pragma once
 
-#include <vector>
-#include <map>
 #include <stdexcept>
+#include <string>
+#include <vector>
+#include <unordered_map>
 
 #include <SDL.h>
 
-#include "sdl/window.hpp"
-#include "units/screen_space.hpp"
+#include "units/window_space.hpp"
 
 namespace sdl
 {
@@ -40,14 +40,6 @@ namespace sdl
 		}
 
 		input();
-		input(input const& the_input);
-		input(input&& the_input);
-
-		~input();
-
-		input& operator =(input the_input) &;
-
-		friend void swap(input& first, input& second);
 
 		//! Updates the input state.
 		//! @note Calls SDL_PumpEvents.
@@ -58,16 +50,8 @@ namespace sdl
 		//! Whether the user has attempted to quit the application.
 		bool quit() const { return _quit; }
 
-		//! Whether the user maximized the window.
-		bool window_maximized() const { return _window_maximized; }
-		//! Whether the user restored the window.
-		bool window_restored() const { return _window_restored; }
-		//! Whether the user resized the window.
+		//! Whether the window resized during the last update.
 		bool window_resized() const { return _window_resized; }
-		//! The window's new width after being resized. The value is unspecified if the window wasn't resized last update.
-		int resized_window_width() const { return _resized_window_width; }
-		//! The window's new height after being resized. The value is unspecified if the window wasn't resized last update.
-		int resized_window_height() const { return _resized_window_height; }
 
 		// Keyboard state accessors
 
@@ -95,8 +79,8 @@ namespace sdl
 		auto y_mouse() const { return _mouse_position.y(); }
 		auto last_x_mouse() const { return _prev_mouse_position.x(); }
 		auto last_y_mouse() const { return _prev_mouse_position.y(); }
-		units::screen_space::point mouse_position() const { return _mouse_position; }
-		units::screen_space::point last_mouse_position() const { return _prev_mouse_position; }
+		units::window_space::point mouse_position() const { return _mouse_position; }
+		units::window_space::point last_mouse_position() const { return _prev_mouse_position; }
 		bool mouse_moved() const { return _mouse_position != _prev_mouse_position; }
 
 		bool pressed(mouse_button button) const;
@@ -111,7 +95,7 @@ namespace sdl
 
 		//! Sets the position of the mouse cursor in the window.
 		//! @param position The position to which the cursor is moved.
-		void move_mouse(units::screen_space::point const& position);
+		void move_mouse(units::window_space::point const& position);
 
 		//! Hides the mouse cursor.
 		void hide_mouse() const { SDL_ShowCursor(0); }
@@ -122,24 +106,18 @@ namespace sdl
 		SDL_Event _event;
 
 		bool _quit;
+		bool _window_resized;
 
-		bool _window_maximized = false;
-		bool _window_restored = false;
-		bool _window_resized = false;
-		int _resized_window_width, _resized_window_height;
-
-		int _key_count;
-		uint8_t* _prev_keyboard_state;
-		uint8_t const* _curr_keyboard_state;
+		std::vector<uint8_t> _prev_keyboard_state;
 
 		std::vector<SDL_Keycode> _press_buffer;
 		std::vector<SDL_Keycode> _release_buffer;
 
-		std::map<SDL_Keycode, int> _presses;
-		std::map<SDL_Keycode, int> _releases;
-		
-		units::screen_space::point _mouse_position;
-		units::screen_space::point _prev_mouse_position;
+		std::unordered_map<SDL_Keycode, int> _presses;
+		std::unordered_map<SDL_Keycode, int> _releases;
+
+		units::window_space::point _mouse_position;
+		units::window_space::point _prev_mouse_position;
 
 		uint32_t _prev_mouse_state;
 		uint32_t _curr_mouse_state;

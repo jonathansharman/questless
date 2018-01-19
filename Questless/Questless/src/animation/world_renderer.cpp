@@ -247,7 +247,7 @@ namespace ql
 		}
 		_terrain_bounds = *opt_bounds;
 		
-		_terrain_texture = umake<texture>(screen_space::vector{lround(width(_terrain_bounds)), lround(height(_terrain_bounds))});
+		_terrain_texture = umake<texture>(window_space::vector{lround(width(_terrain_bounds)), lround(height(_terrain_bounds))});
 		_terrain_texture->as_target([&] {
 			the_renderer().clear(colors::clear());
 			for (auto const& section_view : _world_view->section_views()) {
@@ -262,7 +262,7 @@ namespace ql
 								region_tile::point const region_tile_coords = section.region_tile_coords(section_tile_coords);
 								game_space::point const tile_game_point = layout::dflt().to_world(region_tile_coords);
 								game_space::point const terrain_game_point = _terrain_bounds.position;
-								screen_space::point const tile_screen_point
+								window_space::point const tile_screen_point
 									{ lround(tile_game_point.x() - terrain_game_point.x())
 									, lround(terrain_game_point.y() - tile_game_point.y() + height(_terrain_bounds) - 1)
 									};

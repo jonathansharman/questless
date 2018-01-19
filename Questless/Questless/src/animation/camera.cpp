@@ -37,7 +37,7 @@ namespace ql
 
 	void camera::update()
 	{
-		screen_space::vector center_to_mouse = the_input().mouse_position() - the_window().screen_center();
+		window_space::vector center_to_mouse = the_input().mouse_position() - the_window().window_center();
 		game_space::vector scaled_center_to_mouse = game_space::vector{static_cast<double>(center_to_mouse.x()), static_cast<double>(-center_to_mouse.y())} / _zoom;
 		_point_hovered = _position + scaled_center_to_mouse;
 		_point_hovered.rotate(_position, _angle);
@@ -69,7 +69,7 @@ namespace ql
 	void camera::draw_lines(std::vector<game_space::point> points, colors::color color) const
 	{
 		// Transform segment end points.
-		std::vector<screen_space::point> screen_points;
+		std::vector<window_space::point> screen_points;
 		for (game_space::point const& point : points) {
 			screen_points.push_back(screen_point(point));
 		}
@@ -78,12 +78,12 @@ namespace ql
 		the_renderer().draw_lines(screen_points, color);
 	}
 
-	screen_space::point camera::screen_point(game_space::point point) const
+	window_space::point camera::screen_point(game_space::point point) const
 	{
 		game_space::point const window_center = game_space::point{0.0, 0.0} + game_space::vector{static_cast<double>(the_window().width()), static_cast<double>(the_window().height())} / 2.0;
 		game_space::vector const camera_to_point = point - _position;
 		game_space::point const scaled_point = _zoom * game_space::vector{camera_to_point.x(), -camera_to_point.y()} + window_center;
 		game_space::point const rotated_scaled_point = scaled_point.rotated(window_center, _angle);
-		return screen_space::point{lround(rotated_scaled_point.x()), lround(rotated_scaled_point.y())};
+		return window_space::point{lround(rotated_scaled_point.x()), lround(rotated_scaled_point.y())};
 	}
 }

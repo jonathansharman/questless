@@ -114,6 +114,6 @@ namespace ql
 		region_tile::point _tile_hovered;
 
 		//! The given game point transformed to screen space, accounting for the camera.
-		units::screen_space::point screen_point(units::game_space::point point) const;
+		units::window_space::point screen_point(units::game_space::point point) const;
 	};
 }

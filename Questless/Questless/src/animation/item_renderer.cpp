@@ -74,8 +74,8 @@ namespace ql
 					texture& scroll_texture = the_texture_manager()[scroll_handle];
 					auto texture = umake<sdl::texture>(scroll_texture.size());
 					texture->as_target([&] {
-						scroll_texture.draw(screen_space::point{0, 0});
-						the_texture_manager()[spell_handle].draw(screen_space::point{0, 0});
+						scroll_texture.draw(window_space::point{0, 0});
+						the_texture_manager()[spell_handle].draw(window_space::point{0, 0});
 					});
 					return texture;
 				});
@@ -125,8 +125,8 @@ namespace ql
 			}
 			the_texture_manager()[texture_handle].draw(_position, texture_space::align_left, texture_space::align_top, draw_color_vector);
 			colors::color fill_color{draw_color_vector.red(), draw_color_vector.green(), draw_color_vector.blue(), draw_color_vector.alpha()};
-			the_renderer().draw_box(screen_space::box{_position, screen_space::vector{6, 55}}, colors::black());
-			the_renderer().draw_box(screen_space::box{_position, screen_space::vector{6, static_cast<int>(55 * gatestone.mana / gatestone.capacity())}}, 1, colors::black(), fill_color);
+			the_renderer().draw_box(window_space::box{_position, window_space::vector{6, 55}}, colors::black());
+			the_renderer().draw_box(window_space::box{_position, window_space::vector{6, static_cast<int>(55 * gatestone.mana / gatestone.capacity())}}, 1, colors::black(), fill_color);
 
 			//! @todo Clean this up. Remove magic numbers.
 		}

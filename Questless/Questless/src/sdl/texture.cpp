@@ -48,7 +48,7 @@ namespace
 
 namespace sdl
 {
-	texture::texture(screen_space::vector size, colors::color color) : _size{size}
+	texture::texture(window_space::vector size, colors::color color) : _size{size}
 	{
 		if (width() != 0 && height() != 0) {
 			// Generate texture.
@@ -91,7 +91,7 @@ namespace sdl
 		}
 
 		// Store width and height;
-		_size = screen_space::vector{surface->w, surface->h};
+		_size = window_space::vector{surface->w, surface->h};
 
 		// Determine surface format.
 		GLenum format = get_gl_format(surface);
@@ -123,7 +123,7 @@ namespace sdl
 	texture::texture(SDL_Surface* surface)
 	{
 		// Store width and height;
-		_size = screen_space::vector{surface->w, surface->h};
+		_size = window_space::vector{surface->w, surface->h};
 
 		// Determine surface format.
 		GLenum format = get_gl_format(surface);
@@ -178,7 +178,7 @@ namespace sdl
 	}
 
 	void texture::draw
-		( screen_space::point position
+		( window_space::point position
 		, texture_space::h_align horizontal_alignment
 		, texture_space::v_align vertical_alignment
 		, color_vector color_vector
@@ -209,7 +209,7 @@ namespace sdl
 	}
 
 	void texture::draw_transformed
-		( screen_space::point position
+		( window_space::point position
 		, texture_space::vector origin
 		, color_vector color_vector
 		, float horizontal_scale

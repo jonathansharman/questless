@@ -11,6 +11,7 @@
 #include <SDL.h>
 
 #include "units/screen_space.hpp"
+#include "units/window_space.hpp"
 
 namespace sdl
 {
@@ -60,8 +61,11 @@ namespace sdl
 		window& operator =(window const&) = delete;
 		window& operator =(window&&) & = default;
 
-		//! Refreshes cached window attributes.
-		void refresh();
+		//! Refreshes cached window size.
+		void refresh_size();
+
+		//! Refreshes cached window position.
+		void refresh_position();
 
 		//! The internal SDL_Window pointer.
 		SDL_Window* const sdl_ptr() const { return _sdl_window; }
@@ -81,34 +85,39 @@ namespace sdl
 		//! Whether the window is in resizable mode.
 		bool resizable() const;
 
-		//! The position of the window.
-		units::screen_space::point position() const;
-		//! The x-coordinate of the window.
-		int x() const;
-		//! The y-coordinate of the window.
-		int y() const;
+		//! The position of the window in screen space.
+		units::screen_space::point position() const { return _layout.position; }
+		//! The x-coordinate of the window in screen space.
+		units::screen_space::scalar x() const { return _layout.position.x(); }
+		//! The y-coordinate of the window in screen space.
+		units::screen_space::scalar y() const { return _layout.position.y(); }
 
-		//! The resolution of the window: width by height.
-		units::screen_space::vector resolution() const;
-		//! The window width.
-		int width() const;
-		//! The window height.
-		int height() const;
-		//! The center point of the window, in screen space.
-		units::screen_space::point screen_center() const;
+		//! The size/resolution of the window in screen space.
+		units::screen_space::vector size() const { return _layout.size; }
+		//! The width of the window in screen space.
+		units::screen_space::scalar width() const { return _layout.size.x(); }
+		//! The height of the window in screen space.
+		units::screen_space::scalar height() const { return _layout.size.y(); }
+
+		//! The center point of the window, in window space.
+		units::window_space::point window_center() const;
+		//! The horizontal center of the window, in window space.
+		units::window_space::scalar window_center_x() const;
+		//! The vertical center of the window, in window space.
+		units::window_space::scalar window_center_y() const;
+
 		//! The center point of the window, in view space.
 		units::view_space::point view_center() const;
-		//! The horizontal center of the window.
-		int x_center() const;
-		//! The vertical center of the window.
-		int y_center() const;
+		//! The horizontal center of the window, in view space.
+		units::view_space::scalar view_center_x() const;
+		//! The vertical center of the window, in view space.
+		units::view_space::scalar view_center_y() const;
 	private:
 		SDL_Window* _sdl_window;
 		std::string _title;
 		std::string _icon_filename;
 
-		std::optional<int> mutable _width;
-		std::optional<int> mutable _height;
+		units::screen_space::box _layout;
 
 		//! The SDL window flags.
 		Uint32 flags() const { return SDL_GetWindowFlags(_sdl_window); }

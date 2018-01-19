@@ -7,7 +7,7 @@
 #include "sdl/font.hpp"
 #include "sdl/resources.hpp"
 
-#include "units/screen_space.hpp"
+#include "units/window_space.hpp"
 
 using namespace sdl;
 using namespace units;
@@ -32,38 +32,38 @@ namespace ql
 
 	void dialog::draw_title(texture const& title)
 	{
-		int x_center = the_window().x_center();
+		int x_center = the_window().window_center().x();
 		the_renderer().draw_box
-			( screen_space::box
-				{ screen_space::point{x_center - title.width() / 2, 0}
-				, screen_space::vector{title.width(), title.height()}
+			( window_space::box
+				{ window_space::point{x_center - title.width() / 2, 0}
+				, window_space::vector{title.width(), title.height()}
 				}
 			, colors::black(0.5f)
 			);
-		title.draw(screen_space::point{x_center, 0}, texture_space::align_center);
+		title.draw(window_space::point{x_center, 0}, texture_space::align_center);
 	}
 	void dialog::draw_prompt(texture const& prompt)
 	{
-		int x_center = the_window().x_center();
+		int x_center = the_window().window_center().x();
 		the_renderer().draw_box
-			( screen_space::box
-				{ screen_space::point{x_center - prompt.width() / 2, _prompt_top}
-				, screen_space::vector{prompt.width(), prompt.height()}
+			( window_space::box
+				{ window_space::point{x_center - prompt.width() / 2, _prompt_top}
+				, window_space::vector{prompt.width(), prompt.height()}
 				}
 			, colors::black(0.5f)
 			);
-		prompt.draw(screen_space::point{x_center, _prompt_top}, texture_space::align_center);
+		prompt.draw(window_space::point{x_center, _prompt_top}, texture_space::align_center);
 	}
 	void dialog::draw_selector(texture const& selector)
 	{
-		int x_center = the_window().x_center();
+		int x_center = the_window().window_center().x();
 		the_renderer().draw_box
-			( screen_space::box
-				{ screen_space::point{x_center - selector.width() / 2, _selector_top}
-				, screen_space::vector{selector.width(), selector.height()}
+			( window_space::box
+				{ window_space::point{x_center - selector.width() / 2, _selector_top}
+				, window_space::vector{selector.width(), selector.height()}
 				}
 			, colors::black(0.5f)
 			);
-		selector.draw(screen_space::point{x_center, _selector_top}, texture_space::align_center);
+		selector.draw(window_space::point{x_center, _selector_top}, texture_space::align_center);
 	}
 }

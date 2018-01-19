@@ -10,7 +10,7 @@
 #include <boost/iterator/transform_iterator.hpp>
 
 #include "entities/beings/body_part.hpp"
-#include "units/screen_space.hpp"
+#include "units/window_space.hpp"
 
 namespace ql
 {

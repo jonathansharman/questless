@@ -280,14 +280,7 @@ namespace ql
 			return update_result::game_over;
 		}
 
-		//! @todo Sometimes resizing the window causes a crash.
-		if (the_input().window_restored()) {
-			//! @todo Save previous window size and restore it here.
-		}
 		if (the_input().window_resized()) {
-			// Refresh the window.
-			the_window().refresh();
-
 			// Reset the viewport and viewport GLSL uniforms.
 			glViewport(0, 0, static_cast<GLsizei>(the_window().width()), static_cast<GLsizei>(the_window().height()));
 			{ // dflt_program
@@ -378,7 +371,7 @@ namespace ql
 		oss_fps.precision(2);
 		oss_fps << fps_buffer_sum / _fps_buffer.size();
 		texture txt_fps = _fnt_20pt->render(oss_fps.str().c_str(), colors::white());
-		txt_fps.draw(screen_space::point(the_window().width() - 1, the_window().height() - 1), texture_space::align_right, texture_space::align_bottom);
+		txt_fps.draw(window_space::point(the_window().width() - 1, the_window().height() - 1), texture_space::align_right, texture_space::align_bottom);
 
 		// Swap buffers to update the screen.
 		SDL_GL_SwapWindow(the_window().sdl_ptr());
@@ -391,7 +384,7 @@ namespace ql
 			_sfx_splash->play();
 		}
 
-		for (screen_space::point& position : _splash_flame_positions) {
+		for (window_space::point& position : _splash_flame_positions) {
 			position.y() += lround(_splash_flames_vy * frame_duration);
 			if (position.y() < 0) {
 				position.y() += the_window().height() + _txt_splash_flame->height();
@@ -437,10 +430,10 @@ namespace ql
 			intensity = static_cast<float>(1.0 - ms_fading_out / _splash_fade_out_duration.count());
 		}
 
-		screen_space::point logo_position = the_window().screen_center() + screen_space::vector{uniform(-_splash_logo_jiggle, _splash_logo_jiggle), uniform(-_splash_logo_jiggle, _splash_logo_jiggle)};
+		window_space::point logo_position = the_window().window_center() + window_space::vector{uniform(-_splash_logo_jiggle, _splash_logo_jiggle), uniform(-_splash_logo_jiggle, _splash_logo_jiggle)};
 		_txt_splash_logo->draw(logo_position, texture_space::align_center, texture_space::align_middle, colors::color_vector{intensity, intensity, intensity, 1.0f});
 
-		for (screen_space::point position : _splash_flame_positions) {
+		for (window_space::point position : _splash_flame_positions) {
 			_txt_splash_flame->draw(position, texture_space::align_center, texture_space::align_bottom, colors::color_vector{intensity, intensity, intensity, 1.0f});
 		}
 	}
@@ -497,7 +490,7 @@ namespace ql
 
 	void game::render_menu()
 	{
-		_main_menu.draw(the_window().screen_center(), screen_space::align_center, screen_space::align_middle);
+		_main_menu.draw(the_window().window_center(), window_space::align_center, window_space::align_middle);
 	}
 
 	void game::render_playing()
@@ -528,14 +521,14 @@ namespace ql
 			ss_cam_coords << "Cam: ((" << _camera->position().x() << ", " << _camera->position().y() << "), ";
 			ss_cam_coords << _camera->angle().count() << ", " << _camera->zoom() << ")";
 			texture txt_cam_coords = _fnt_20pt->render(ss_cam_coords.str().c_str(), colors::white());
-			txt_cam_coords.draw(screen_space::point{0, 0});
+			txt_cam_coords.draw(window_space::point{0, 0});
 		}
 		{
 			auto cam_hex_coords = layout::dflt().to_hex_coords<region_tile::point>(_camera->position());
 			std::ostringstream ss_cam_hex_coords;
 			ss_cam_hex_coords << "Cam hex: (" << cam_hex_coords.q << ", " << cam_hex_coords.r << ")";
 			texture txt_cam_hex_coords = _fnt_20pt->render(ss_cam_hex_coords.str().c_str(), colors::white());
-			txt_cam_hex_coords.draw(screen_space::point{0, 25});
+			txt_cam_hex_coords.draw(window_space::point{0, 25});
 		}
 		{
 			std::ostringstream ss_time;
@@ -563,7 +556,7 @@ namespace ql
 			}
 			ss_time << "Time: " << _region->time() << " (" << time_of_day << ", " << time_name << ')';
 			texture txt_turn = _fnt_20pt->render(ss_time.str().c_str(), colors::white());
-			txt_turn.draw(screen_space::point{0, 50});
+			txt_turn.draw(window_space::point{0, 50});
 		}
 
 		// Draw q- and r-axes.
@@ -573,8 +566,8 @@ namespace ql
 		camera().draw_lines({layout::dflt().to_world(origin), layout::dflt().to_world(q_axis)}, colors::green());
 		camera().draw_lines({layout::dflt().to_world(origin), layout::dflt().to_world(r_axis)}, colors::red());
 
-		_txt_test1->draw(screen_space::point{0, 0});
-		the_renderer().draw_box(screen_space::box{screen_space::point{0, 0}, screen_space::vector{15, 15}}, 1, colors::blue(), colors::clear());
+		_txt_test1->draw(window_space::point{0, 0});
+		the_renderer().draw_box(window_space::box{window_space::point{0, 0}, window_space::vector{15, 15}}, 1, colors::blue(), colors::clear());
 
 		//! @todo Uncomment to test polygon rendering after adding support for non-convex polygons.
 #if 0
@@ -704,7 +697,7 @@ namespace ql
 		if (_dialogs.empty()) {
 			// Pan camera.
 			if (the_input().down(mouse_button::middle)) {
-				screen_space::vector mouse_shift = the_input().last_mouse_position() - the_input().mouse_position();
+				window_space::vector mouse_shift = the_input().last_mouse_position() - the_input().mouse_position();
 				auto pan = game_space::vector{static_cast<double>(mouse_shift.x()), static_cast<double>(-mouse_shift.y())} / _camera->zoom();
 				pan.rotate(_camera->angle());
 				_camera->pan(pan);

@@ -34,6 +34,9 @@ namespace sdl
 			throw std::runtime_error{"Failed to create window."};
 		}
 		SDL_SetWindowIcon(_sdl_window, IMG_Load(_icon_filename.c_str()));
+
+		refresh_position();
+		refresh_size();
 	}
 
 	window::window
@@ -67,10 +70,14 @@ namespace sdl
 		SDL_DestroyWindow(_sdl_window);
 	}
 
-	void window::refresh()
+	void window::refresh_size()
 	{
-		_width = std::nullopt;
-		_height = std::nullopt;
+		SDL_GetWindowSize(_sdl_window, &_layout.size.x(), &_layout.size.y());
+	}
+
+	void window::refresh_position()
+	{
+		SDL_GetWindowPosition(_sdl_window, &_layout.position.x(), &_layout.position.y());
 	}
 
 	bool window::maximized() const
@@ -88,65 +95,29 @@ namespace sdl
 		return (flags() & SDL_WINDOW_RESIZABLE) != 0;
 	}
 
-	screen_space::point window::position() const
+	window_space::point window::window_center() const
 	{
-		screen_space::point result;
-		SDL_GetWindowPosition(_sdl_window, &result.x(), &result.y());
-		return result;
+		return window_space::point{width() / 2, height() / 2};
 	}
-	int window::x() const
+	window_space::scalar window::window_center_x() const
 	{
-		int x;
-		SDL_GetWindowPosition(_sdl_window, &x, nullptr);
-		return x;
+		return width() / 2;
 	}
-	int window::y() const
+	window_space::scalar window::window_center_y() const
 	{
-		int y;
-		SDL_GetWindowPosition(_sdl_window, nullptr, &y);
-		return y;
+		return height() / 2;
 	}
 
-	screen_space::vector window::resolution() const
-	{
-		return screen_space::vector{width(), height()};
-	}
-	int window::width() const
-	{
-		if (_width) {
-			return *_width;
-		} else {
-			int width;
-			SDL_GetWindowSize(_sdl_window, &width, nullptr);
-			_width = width;
-			return width;
-		}
-	}
-	int window::height() const
-	{
-		if (_height) {
-			return *_height;
-		} else {
-			int height;
-			SDL_GetWindowSize(_sdl_window, nullptr, &height);
-			_height = height;
-			return height;
-		}
-	}
-	screen_space::point window::screen_center() const
-	{
-		return screen_space::point{width() / 2, height() / 2};
-	}
 	view_space::point window::view_center() const
 	{
 		return view_space::point{width() / 2.0f, height() / 2.0f};
 	}
-	screen_space::scalar window::x_center() const
+	view_space::scalar window::view_center_x() const
 	{
-		return width() / 2;
+		return width() / 2.0f;
 	}
-	screen_space::scalar window::y_center() const
+	view_space::scalar window::view_center_y() const
 	{
-		return height() / 2;
+		return height() / 2.0f;
 	}
 }

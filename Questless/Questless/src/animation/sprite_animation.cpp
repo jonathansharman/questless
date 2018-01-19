@@ -22,16 +22,16 @@ namespace ql
 		, _loops{0}
 	{}
 
-	void sprite_animation::draw(units::screen_space::point position) const
+	void sprite_animation::draw(units::window_space::point position) const
 	{
 		//! @todo What is the default center in this case, and what should it be?
 		sprite_animation::frame const& frame = _frames[_frame_index];
-		//screen_space::box src_rect
-		//	{ screen_space::point{_sprite_sheet->cel_width() * frame.coords.x(), _sprite_sheet->cel_height() * frame.coords.y()}
-		//	, screen_space::vector{_sprite_sheet->cel_width(), _sprite_sheet->cel_height()}
+		//window_space::box src_rect
+		//	{ window_space::point{_sprite_sheet->cel_width() * frame.coords.x(), _sprite_sheet->cel_height() * frame.coords.y()}
+		//	, window_space::vector{_sprite_sheet->cel_width(), _sprite_sheet->cel_height()}
 		//	};
 		//the_texture_manager()[_sprite_sheet->texture_handle].draw
-		//	( screen_space::point{position.x() - frame.origin.u(), position.y() + frame.origin.v()} //! @todo Uncouth point casting here.
+		//	( window_space::point{position.x() - frame.origin.u(), position.y() + frame.origin.v()} //! @todo Uncouth point casting here.
 		//	, h_align::center
 		//	, v_align::middle
 		//	, colors::white_vector()

@@ -20,7 +20,7 @@ using std::runtime_error;
 
 using namespace units;
 
-//! @todo Can use ranges algorithms for the various vector<screen_space::point> -> vector<ViewSpace::point> conversions, when available.
+//! @todo Can use ranges algorithms for the various vector<window_space::point> -> vector<ViewSpace::point> conversions, when available.
 
 namespace sdl
 {
@@ -168,7 +168,7 @@ namespace sdl
 		glDisableVertexAttribArray(position_attribute);
 	}
 	
-	void renderer::draw_lines(vector<screen_space::point> const& vertices, colors::color color)
+	void renderer::draw_lines(vector<window_space::point> const& vertices, colors::color color)
 	{
 		vector<view_space::point> view_space_vertices;
 		for (auto const& vertex : vertices) {
@@ -242,7 +242,7 @@ namespace sdl
 		glDisableVertexAttribArray(position_attribute);
 	}
 
-	void renderer::draw_polygon(screen_space::polygon const& polygon, colors::color color)
+	void renderer::draw_polygon(window_space::polygon const& polygon, colors::color color)
 	{
 		vector<view_space::point> view_space_vertices;
 		for (auto const& vertex : polygon) {
@@ -318,8 +318,8 @@ namespace sdl
 	}
 	
 	void renderer::draw_polygon
-		( vector<screen_space::point> const& vertices
-		, screen_space::scalar border_width
+		( vector<window_space::point> const& vertices
+		, window_space::scalar border_width
 		, colors::color border_color
 		, colors::color fill_color
 		)
@@ -336,14 +336,14 @@ namespace sdl
 		draw_polygon({top_left(box), top_right(box), bottom_right(box), bottom_left(box)}, color);
 	}
 
-	void renderer::draw_box(screen_space::box const& box, colors::color color)
+	void renderer::draw_box(window_space::box const& box, colors::color color)
 	{
 		draw_box(to_view_space(box), color);
 	}
 
 	void renderer::draw_box
-		( screen_space::box const& box
-		, screen_space::scalar border_width
+		( window_space::box const& box
+		, window_space::scalar border_width
 		, colors::color border_color
 		, colors::color fill_color
 		)

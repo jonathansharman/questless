@@ -33,10 +33,10 @@ namespace ql
 		{}
 
 		//! The dimensions of a single cel.
-		units::screen_space::vector cel_size() const
+		units::window_space::vector cel_size() const
 		{
 			if (_need_cel_size) {
-				_cel_size = units::screen_space::vector
+				_cel_size = units::window_space::vector
 					{ sdl::the_texture_manager()[texture_handle].width() / cel_dimensions.x()
 					, sdl::the_texture_manager()[texture_handle].height() / cel_dimensions.y()
 					};
@@ -52,7 +52,7 @@ namespace ql
 		int cel_height() const { return cel_size().y(); }
 	private:
 		bool mutable _need_cel_size = true;
-		units::screen_space::vector mutable _cel_size;
+		units::window_space::vector mutable _cel_size;
 	};
 
 	//! A simple 2D animation.
@@ -81,7 +81,7 @@ namespace ql
 		//! @param looping Whether to loop the animation or play just once.
 		sprite_animation(sptr<sprite_sheet> sprite_sheet, std::vector<frame> frames, ql::looping looping);
 
-		void draw(units::screen_space::point position) const final;
+		void draw(units::window_space::point position) const final;
 
 		void draw(units::game_space::point position, camera const& camera, units::colors::color_vector color_vector = units::colors::white_vector()) const final;
 

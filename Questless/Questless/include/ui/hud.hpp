@@ -45,7 +45,7 @@ namespace ql
 		static constexpr float _inv_width_pct = 0.7f;
 		static constexpr float _inv_height_pct = 0.7f;
 
-		static constexpr units::screen_space::vector _item_icon_size{55, 55};
+		static constexpr units::window_space::vector _item_icon_size{55, 55};
 		static constexpr int _item_count_font_size = 10;
 
 		static constexpr size_t _hotbar_size = 10;
@@ -74,7 +74,7 @@ namespace ql
 		int _hotbar_width;
 		int _hotbar_x_start;
 
-		units::screen_space::box _inv_layout;
+		units::window_space::box _inv_layout;
 
 		int _inv_row_count;
 		int _inv_column_count;

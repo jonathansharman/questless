@@ -8,8 +8,6 @@
 
 #include "space.hpp"
 
-#include "view_space.hpp" // for conversions
-
 namespace units
 {
 	namespace detail
@@ -69,11 +67,4 @@ namespace units
 	inline screen_space::point center(screen_space::box const& box) { return box.position + box.size / 2; }
 
 	inline screen_space::scalar area(screen_space::box const& box) { return width(box) * height(box); }
-
-	//! @todo Add a uniform mechanism for converting between spaces?
-
-	inline view_space::scalar to_view_space(screen_space::scalar s) { return static_cast<view_space::scalar>(s); }
-	inline view_space::point to_view_space(screen_space::point p) { return view_space::point{to_view_space(p.x()), to_view_space(p.y())}; }
-	inline view_space::vector to_view_space(screen_space::vector v) { return view_space::vector{to_view_space(v.x()), to_view_space(v.y())}; }
-	inline view_space::box to_view_space(screen_space::box b) { return view_space::box{to_view_space(b.position), to_view_space(b.size)}; }
 }

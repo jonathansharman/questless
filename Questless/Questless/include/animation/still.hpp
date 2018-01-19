@@ -20,7 +20,7 @@ namespace ql
 			: _texture_handle{texture_handle}, _origin{origin}
 		{}
 
-		void draw(units::screen_space::point position) const final;
+		void draw(units::window_space::point position) const final;
 
 		void draw(units::game_space::point position, camera const& camera, units::colors::color_vector color_vector = units::colors::white_vector()) const final;
 	private:

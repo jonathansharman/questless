@@ -633,6 +633,9 @@
     <ClInclude Include="include\units\hex_space.hpp">
       <Filter>include\units</Filter>
     </ClInclude>
+    <ClInclude Include="include\units\window_space.hpp">
+      <Filter>include\units</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
