@@ -172,13 +172,8 @@ namespace ql
 		}
 
 		{ // Bleed.
-			double blood_loss = 0.0;
 			for (body_part const& part : _parts) {
-				blood_loss += part.bleeding;
-			}
-			if (blood_loss > 0.0) {
-				blood -= blood_loss;
-				the_game().add_effect(smake<bleeding_effect>(_owner.coords, blood_loss, _owner.id));
+				blood -= part.bleeding;
 			}
 		}
 

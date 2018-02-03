@@ -636,6 +636,9 @@
     <ClInclude Include="include\units\window_space.hpp">
       <Filter>include\units</Filter>
     </ClInclude>
+    <ClInclude Include="include\animation\bleeding.hpp">
+      <Filter>include\animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">

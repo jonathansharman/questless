@@ -338,6 +338,7 @@
     <ClInclude Include="include\agents\vector_query.hpp" />
     <ClInclude Include="include\animation\animation.hpp" />
     <ClInclude Include="include\animation\animation_stack.hpp" />
+    <ClInclude Include="include\animation\bleeding.hpp" />
     <ClInclude Include="include\animation\body_texturer.hpp" />
     <ClInclude Include="include\animation\camera.hpp" />
     <ClInclude Include="include\animation\entity_animator.hpp" />

@@ -68,6 +68,7 @@ namespace ql
 		}
 
 		//! @todo Should the tile texture and entity animation caches ever be cleaned out? If so, when and how? Consider tracking how long since a texture was last used and purging it after a set time.
+		_entity_animation_map.clear();
 	}
 
 	void world_renderer::update()
@@ -103,7 +104,6 @@ namespace ql
 
 	void world_renderer::draw_entities()
 	{
-#if 1
 		// Created a view of the entities sorted by y-coordinates.
 		auto y_sort = [](world_view::entity_view const& a, world_view::entity_view const& b) {
 			if (entity const* entity_a = get_entity_cptr(a.id)) {
@@ -120,9 +120,6 @@ namespace ql
 			, _world_view->entity_views().end()
 			, y_sort
 			);
-#else
-		std::vector<world_view::entity_view> sorted_entity_views(_world_view->entity_views().begin(), _world_view->entity_views().end());
-#endif
 
 		// Draw from the sorted view.
 		for (auto const& entity_view : sorted_entity_views) {
@@ -300,22 +297,6 @@ namespace ql
 	// Effect Visitor Functions //
 	//////////////////////////////
 
-	void world_renderer::visit(bleeding_effect const& e)
-	{
-		being const* const bleeding_being = the_game().beings.cptr(e.bleeding_being_id);
-		//! @todo Pass along the vitality in the event object if it's needed here (to avoid having to make up a number).
-
-		game_space::point const position = layout::dflt().to_world(e.origin());
-		double const amount = e.amount;
-		double const target_vitality = bleeding_being ? bleeding_being->body.total_vitality() : 100.0;
-
-		constexpr double scaling_factor = 250.0;
-		int const n = static_cast<int>(amount / target_vitality * scaling_factor);
-		for (int i = 0; i < n; ++i) {
-			_animations.push_back(std::make_pair(umake<blood_particle>(), position));
-		}
-	}
-
 	void world_renderer::visit(eagle_eye_effect const& e)
 	{
 		static auto eagle_eye_sound_handle = the_sound_manager().add("resources/sounds/spells/eagle-eye.wav");
@@ -405,9 +386,9 @@ namespace ql
 				void operator ()(dmg::poison const& poison)
 				{
 					animations.push_back(std::make_pair
-					(umake<text_particle>(std::to_string(lround(poison.value())), colors::purple())
+						( umake<text_particle>(std::to_string(lround(poison.value())), colors::purple())
 						, position
-					));
+						));
 				}
 				void operator ()(dmg::shock const& shock)
 				{

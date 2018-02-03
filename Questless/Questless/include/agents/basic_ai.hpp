@@ -77,7 +77,6 @@ namespace ql
 		// Effect Visitor Methods //
 		////////////////////////////
 
-		void visit(bleeding_effect const&) override {} // Ignore.
 		void visit(eagle_eye_effect const&) override {} // Ignore.
 		void visit(injury_effect const& effect) override;
 		void visit(lightning_bolt_effect const&) override {} // Ignore.

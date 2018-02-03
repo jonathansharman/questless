@@ -35,28 +35,6 @@ namespace ql
 
 	//! @todo Eventually move effect subtypes to individual header files.
 
-	class bleeding_effect : public effect_base<bleeding_effect>
-	{
-	public:
-		double amount;
-		id<being> bleeding_being_id;
-
-		//! @param origin The coordinates of the effect's origin.
-		//! @param amount The amount of bleeding.
-		//! @param bleeding_being_id The ID of the bleeding being.
-		bleeding_effect
-			( region_tile::point origin
-			, double amount
-			, id<being> bleeding_being_id
-			)
-			: effect_base<bleeding_effect>{origin}
-			, amount{amount}
-			, bleeding_being_id{bleeding_being_id}
-		{}
-
-		int range() const final { return 7; }
-	};
-
 	class eagle_eye_effect : public effect_base<eagle_eye_effect>
 	{
 	public:
