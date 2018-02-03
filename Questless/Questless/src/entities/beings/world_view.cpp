@@ -19,18 +19,18 @@ namespace ql
 {
 	world_view::world_view(being const& being, bool find_bounds)
 		: _region{*being.region}
+		, _origin{being.coords}
+		, _visual_range{being.stats.vision.max_range()}
 		, _bounds{std::nullopt}
 	{
 		ql::region const& region = _region;
-		vision vision = being.stats.vision;
-		int visual_range = vision.max_range();
 
 		// Find the set of coordinates of sections plausibly visible to the being.
 		std::set<region_section::point> section_coords_set;
-		for (int q = -visual_range; q <= visual_range; ++q) {
-			for (int r = -visual_range; r <= visual_range; ++r) {
-				region_tile::vector offset{q, r};
-				if (offset.length() <= visual_range) {
+		for (int q = -_visual_range; q <= _visual_range; ++q) {
+			for (int r = -_visual_range; r <= _visual_range; ++r) {
+				region_tile::vector const offset{q, r};
+				if (offset.length() <= _visual_range) {
 					if (section const* section = region.containing_section(being.coords + offset)) {
 						section_coords_set.insert(section->coords());
 					}
@@ -71,7 +71,7 @@ namespace ql
 					_entity_views.emplace_back(other_being.id, perception::maximum());
 				} else {
 					region_tile::point other_coords = other_being.coords;
-					if ((being.coords - other_coords).length() <= visual_range) {
+					if ((being.coords - other_coords).length() <= _visual_range) {
 						section_tile::point other_section_coords = section::section_tile_coords(other_coords);
 						perception tile_perception = section_view.tile_perceptions[other_section_coords.q][other_section_coords.r];
 
@@ -83,7 +83,7 @@ namespace ql
 			// Calculate object visibilities.
 			for (object const& object : region.section_at(section_coords)->objects) {
 				region_tile::point other_coords = object.coords;
-				if ((being.coords - other_coords).length() <= visual_range) {
+				if ((being.coords - other_coords).length() <= _visual_range) {
 					section_tile::point other_section_coords = section::section_tile_coords(other_coords);
 					perception tile_perception = section_view.tile_perceptions[other_section_coords.q][other_section_coords.r];
 					_entity_views.emplace_back(object.id, tile_perception);

@@ -28,6 +28,28 @@ namespace ql
 		_unknown_entity_animation = still{unknown_entity_animation_ss, texture_space::vector::zero()};
 	}
 
+	world_renderer::world_renderer(world_view const& world_view)
+		: _world_view{&world_view}
+		, _tile_selector_animation
+			{ ql::sprite_animation
+				{ smake<ql::sprite_sheet>
+					( the_texture_manager().add("resources/textures/terrain/selector.png")
+					, sprite_sheet_space::vector{4, 1}
+					)
+				, std::vector<sprite_animation::frame>
+					{ {game_space::seconds{0.100}, sprite_sheet_space::point{0, 0}, texture_space::vector{0, 0}}
+					, {game_space::seconds{0.075}, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 0}}
+					, {game_space::seconds{0.050}, sprite_sheet_space::point{2, 0}, texture_space::vector{0, 0}}
+					, {game_space::seconds{0.025}, sprite_sheet_space::point{3, 0}, texture_space::vector{0, 0}}
+					, {game_space::seconds{0.050}, sprite_sheet_space::point{2, 0}, texture_space::vector{0, 0}}
+					, {game_space::seconds{0.075}, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 0}}
+					}
+				, looping{true}
+				}
+			}
+		, _terrain_render_is_current{false}
+	{}
+
 	auto world_renderer::get_entity_id_var(entity_cref_var_t entity) -> entity_id_var_t
 	{
 		struct visitor
@@ -73,6 +95,9 @@ namespace ql
 
 	void world_renderer::update()
 	{
+		// Update tile selector animation.
+		_tile_selector_animation.update();
+
 		// Update cached entity animations.
 
 		for (auto& id_and_animation : _entity_animation_map) {
@@ -93,12 +118,32 @@ namespace ql
 
 	void world_renderer::draw_terrain()
 	{
+		// Render if necessary.
 		if (!_terrain_render_is_current) {
 			render_terrain();
 			_terrain_render_is_current = true;
 		}
+		// Draw terrain.
 		if (_terrain_texture) {
 			the_game().camera().draw(*_terrain_texture, game_space::point{center(_terrain_bounds)});
+		}
+		// Draw tile highlights, if active.
+		if (_highlight_predicate) {
+			int const visual_range = _world_view->visual_range();
+			for (int q = -visual_range; q <= visual_range; ++q) {
+				for (int r = -visual_range; r <= visual_range; ++r) {
+					region_tile::vector const offset{q, r};
+					if (offset.length() <= visual_range) {
+						auto tile_coords = _world_view->origin() + offset;
+						if ((*_highlight_predicate)(tile_coords)) {
+							_tile_selector_animation.draw
+								( layout::dflt().to_world(tile_coords)
+								, the_game().camera()
+								);
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -271,15 +316,7 @@ namespace ql
 								// If it's there, use it. Otherwise, create the texture and cache it.
 								texture& tile_texture = it != _tile_textures.end() ? *it->second : cache_tile_texture(tile);
 
-								float intensity = static_cast<float>((tile_perception.level - perception::minimum_level) / (perception::maximum_level - perception::minimum_level));
-
-								// Apply highlights.
-								if (_highlight_predicate) {
-									if ((*_highlight_predicate)(region_tile_coords)) {
-										intensity = 1.5f;
-									}
-								}
-
+								float const intensity = static_cast<float>((tile_perception.level - perception::minimum_level) / (perception::maximum_level - perception::minimum_level));
 								tile_texture.draw_transformed
 									( tile_screen_point
 									, texture_space::vector::zero()

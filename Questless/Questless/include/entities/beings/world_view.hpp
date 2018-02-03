@@ -61,6 +61,8 @@ namespace ql
 		std::vector<section_view> const& section_views() const { return _section_views; }
 		std::vector<entity_view> const& entity_views() const { return _entity_views; }
 		ql::region const& region() const { return _region; }
+		region_tile::point origin() const { return _origin; }
+		int visual_range() const { return _visual_range; }
 
 		//! A bounding box around the visible tiles or nullopt if initialized with find_bounds set to false or if no tiles are visible.
 		std::optional<units::game_space::box> bounds() const { return _bounds; }
@@ -68,6 +70,8 @@ namespace ql
 		std::vector<section_view> _section_views;
 		std::vector<entity_view> _entity_views;
 		std::reference_wrapper<const ql::region> _region;
+		region_tile::point _origin;
+		int _visual_range;
 
 		std::optional<units::game_space::box> _bounds;
 	};

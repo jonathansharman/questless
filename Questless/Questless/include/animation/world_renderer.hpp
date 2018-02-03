@@ -13,6 +13,7 @@
 #include "entities/beings/world_view.hpp"
 #include "entities/entity.hpp"
 #include "sdl/renderer.hpp"
+#include "sprite_animation.hpp"
 #include "still.hpp"
 #include "utility/initializer.hpp"
 #include "world/tile.hpp"
@@ -26,7 +27,7 @@ namespace ql
 	{
 	public:
 		//! @param world_view The initial world view to render.
-		world_renderer(world_view const& world_view) : _world_view{&world_view}, _terrain_render_is_current{false} {}
+		world_renderer(world_view const& world_view);
 
 		//! Updates the world renderer's world view.
 		//! @param world_view The new world view to render.
@@ -77,6 +78,7 @@ namespace ql
 
 		world_view const* _world_view;
 
+		sprite_animation _tile_selector_animation;
 		std::unordered_map<tile_subtype, uptr<sdl::texture>> _tile_textures;
 		std::unordered_map<entity_id_var_t, uptr<animation>> _entity_animation_map;
 		uptr<sdl::texture> _terrain_texture;
