@@ -14,7 +14,7 @@ namespace ql
 	{
 	public:
 		black_magic_particle() : particle
-			{ units::game_space::vector{0.0, 0.0}
+			{ units::game_space::vector::zero()
 			, units::game_space::velocity{units::game_space::vector{random_angle(), uniform(5.0, 25.0)}}
 			, units::game_space::acceleration::zero()
 			, random_angle()

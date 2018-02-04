@@ -5,6 +5,7 @@
 #include "animation/world_renderer.hpp"
 
 #include "animation/entity_animator.hpp"
+#include "animation/particles/arrow_particle.hpp"
 #include "animation/particles/blood_particle.hpp"
 #include "animation/particles/green_magic_particle.hpp"
 #include "animation/particles/text_particle.hpp"
@@ -333,6 +334,16 @@ namespace ql
 	//////////////////////////////
 	// Effect Visitor Functions //
 	//////////////////////////////
+
+	void world_renderer::visit(arrow_attack_effect const& e)
+	{
+		static auto arrow_sound_handle = the_sound_manager().add("resources/sounds/spells/eagle-eye.wav");
+
+		game_space::point source = layout::dflt().to_world(e.origin());
+		game_space::point target = layout::dflt().to_world(e.target);
+		_animations.push_back(std::make_pair(umake<arrow_particle>(source, target), source));
+		the_sound_manager()[arrow_sound_handle].play();
+	}
 
 	void world_renderer::visit(eagle_eye_effect const& e)
 	{

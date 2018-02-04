@@ -15,7 +15,7 @@ namespace ql
 	{
 	public:
 		yellow_magic_particle() : particle
-			{ units::game_space::vector{0.0, 0.0}
+			{ units::game_space::vector::zero()
 			, units::game_space::vector{random_angle(), 100.0} / 1.0s
 			, units::game_space::acceleration::zero()
 			, random_angle()

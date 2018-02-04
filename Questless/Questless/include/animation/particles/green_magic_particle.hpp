@@ -15,7 +15,7 @@ namespace ql
 	public:
 		green_magic_particle()
 			: particle
-				{ units::game_space::vector{0.0, 0.0}
+				{ units::game_space::vector::zero()
 				, random_displacement(20.0, 50.0) / 1.0s
 				, units::game_space::acceleration::zero()
 				, random_angle()

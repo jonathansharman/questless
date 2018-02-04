@@ -8,12 +8,14 @@
 
 namespace ql
 {
+	class arrow_attack_effect;
 	class eagle_eye_effect;
 	class injury_effect;
 	class lightning_bolt_effect;
 
 	using effect_subtype_list = type_list::of_t
-		< eagle_eye_effect
+		< arrow_attack_effect
+		, eagle_eye_effect
 		, injury_effect
 		, lightning_bolt_effect
 		>;

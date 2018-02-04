@@ -14,7 +14,7 @@ namespace ql
 	{
 	public:
 		white_magic_particle() : particle
-			{ units::game_space::vector{0.0, 0.0}
+			{ units::game_space::vector::zero()
 			, random_displacement(80.0) / 1.0s
 			, units::game_space::vector{0.0, 50.0} / 1.0s / 1.0s
 			, random_angle()

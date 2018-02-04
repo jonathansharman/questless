@@ -13,7 +13,7 @@ namespace ql
 	{
 	public:
 		blood_particle() : particle
-			{ units::game_space::vector{0.0, 0.0} // displacement
+			{ units::game_space::vector::zero() // displacement
 			, units::game_space::vector::zero() / 1.0s // velocity
 			, units::game_space::vector{0.0, -600.0} / 1.0s / 1.0s // acceleration
 			, random_angle() // angle

@@ -71,7 +71,7 @@ namespace ql
 	{
 		return _attack->cost().check(actor, [&] {
 			weapon const& weapon = the_game().items.cref_as<ql::weapon>(_attack->weapon_id);
-			double delay = weapon.active_cooldown + _attack->wind_up();
+			double const delay = weapon.active_cooldown + _attack->wind_up();
 			return actor.add_delayed_action(delay, std::move(cont), umake<finish>(_attack));
 		});
 	}
@@ -81,7 +81,7 @@ namespace ql
 		if (weapon* weapon = the_game().items.ptr_as<ql::weapon>(_attack->weapon_id)) {
 			if (weapon->equipped() && *weapon->opt_bearer_id() == actor.id) {
 				return _attack->cost().check(actor, [&] {
-					int range = _attack->range();
+					int const range = _attack->range();
 					return actor.agent().query_tile(umake<tile_query_ranged_attack_target>(range), actor.coords, tile_in_range_predicate(actor, range),
 						// Okay to capture weapon by reference; already checked that it's still there, and callback is synchronous here.
 						[&actor, cont, attack = _attack, &weapon = *weapon](std::optional<region_tile::point> opt_coords) {
@@ -89,6 +89,10 @@ namespace ql
 								attack->cost().incur(actor);
 								actor.busy_time += attack->follow_through();
 								weapon.active_cooldown = attack->cooldown();
+
+								// Add attack effect.
+								the_game().add_effect(attack->get_effect(actor.coords, *opt_coords));
+
 								if (being* target = actor.region->being_at(*opt_coords)) {
 									dmg::group damage = attack->damage();
 									weapon.integrity -= attack->wear_ratio() * damage.total();

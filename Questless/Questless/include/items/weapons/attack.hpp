@@ -8,6 +8,7 @@
 
 #include "agents/action.hpp"
 #include "agents/cost.hpp"
+#include "effects/effect.hpp"
 #include "damage/group.hpp"
 #include "utility/id.hpp"
 #include "utility/reference.hpp"
@@ -52,6 +53,9 @@ namespace ql
 
 		//! An action that launches the attack.
 		virtual uptr<action> launch() = 0;
+	protected:
+		//! Creates an effect representing this attack.
+		virtual sptr<effect> get_effect(region_tile::point source, region_tile::point target) = 0;
 	};
 
 	//! A close-range attack.

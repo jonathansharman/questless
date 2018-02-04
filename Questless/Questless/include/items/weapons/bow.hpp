@@ -62,6 +62,8 @@ namespace ql
 			};
 
 			arrow_cost _cost;
+
+			sptr<effect> get_effect(region_tile::point source, region_tile::point target) final;
 		};
 
 		sptr<shoot> _shoot;

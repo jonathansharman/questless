@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <optional>
+
 #include "effect_visitor.hpp"
 #include "damage/group.hpp"
 #include "utility/id.hpp"
@@ -35,6 +37,21 @@ namespace ql
 
 	//! @todo Eventually move effect subtypes to individual header files.
 
+	class arrow_attack_effect : public effect_base<arrow_attack_effect>
+	{
+	public:
+		region_tile::point const target;
+
+		//! @param origin The coordinates of the effect's origin.
+		//! @param target The coordinates of the attack target.
+		arrow_attack_effect(region_tile::point origin, region_tile::point target)
+			: effect_base<arrow_attack_effect>{origin}
+			, target{target}
+		{}
+
+		int range() const final { return 2 * (target - origin()).length(); }
+	};
+
 	class eagle_eye_effect : public effect_base<eagle_eye_effect>
 	{
 	public:
@@ -43,7 +60,8 @@ namespace ql
 		//! @param origin The coordinates of the effect's origin.
 		//! @param caster_id The ID of the caster.
 		eagle_eye_effect(region_tile::point origin, id<being> caster_id)
-			: effect_base<eagle_eye_effect>{origin}, caster_id{caster_id}
+			: effect_base<eagle_eye_effect>{origin}
+			, caster_id{caster_id}
 		{}
 
 		int range() const final { return 3; }

@@ -20,7 +20,7 @@ namespace ql
 		//! @param color The color of the particle's text.
 		text_particle(std::string text, units::colors::color color)
 			: particle
-				{ units::game_space::vector{0.0, 0.0}
+				{ units::game_space::vector::zero()
 				, (random_displacement(120.0) + units::game_space::vector{0.0, 160.0}) / 1.0s
 				, units::game_space::vector{0.0, -400.0} / 1.0s / 1.0s
 				, units::game_space::radians{0.0}

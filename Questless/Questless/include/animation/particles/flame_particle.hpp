@@ -15,7 +15,7 @@ namespace ql
 	public:
 		//! @param position The particle's starting position.
 		flame_particle() : particle
-			{ units::game_space::vector{0.0, 0.0}
+			{ units::game_space::vector::zero()
 			, units::game_space::velocity::zero()
 			, units::game_space::vector{0.0, 30.0} / 1.0s / 1.0s
 			, units::game_space::radians::zero()

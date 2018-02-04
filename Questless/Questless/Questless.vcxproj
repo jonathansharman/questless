@@ -344,6 +344,7 @@
     <ClInclude Include="include\animation\entity_animator.hpp" />
     <ClInclude Include="include\animation\flame.hpp" />
     <ClInclude Include="include\animation\item_renderer.hpp" />
+    <ClInclude Include="include\animation\particles\arrow_particle.hpp" />
     <ClInclude Include="include\animation\particles\black_magic_particle.hpp" />
     <ClInclude Include="include\animation\particles\blood_particle.hpp" />
     <ClInclude Include="include\animation\particles\blue_magic_particle.hpp" />
@@ -500,6 +501,7 @@
     <ClCompile Include="src\animation\camera.cpp" />
     <ClCompile Include="src\animation\entity_animator.cpp" />
     <ClCompile Include="src\animation\item_renderer.cpp" />
+    <ClCompile Include="src\animation\particles\arrow_particle.cpp" />
     <ClCompile Include="src\animation\particles\black_magic_particle.cpp" />
     <ClCompile Include="src\animation\particles\blood_particle.cpp" />
     <ClCompile Include="src\animation\particles\blue_magic_particle.cpp" />

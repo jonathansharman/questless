@@ -6,6 +6,9 @@
 #include "items/weapons/arrow.hpp"
 #include "entities/beings/being.hpp"
 #include "game.hpp"
+#include "units/hex_space.hpp"
+
+using namespace units;
 
 namespace ql
 {
@@ -56,5 +59,10 @@ namespace ql
 			}
 		}
 		throw std::logic_error{"Couldn't find arrow to spend."};
+	}
+	
+	sptr<effect> bow::shoot::get_effect(region_tile::point source, region_tile::point target)
+	{
+		return smake<arrow_attack_effect>(source, target);
 	}
 }

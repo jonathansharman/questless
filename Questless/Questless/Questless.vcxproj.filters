@@ -639,6 +639,9 @@
     <ClInclude Include="include\animation\bleeding.hpp">
       <Filter>include\animation</Filter>
     </ClInclude>
+    <ClInclude Include="include\animation\particles\arrow_particle.hpp">
+      <Filter>include\animation\particles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -919,6 +922,9 @@
     </ClCompile>
     <ClCompile Include="src\utility\random.cpp">
       <Filter>src\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\particles\arrow_particle.cpp">
+      <Filter>src\animation\particles</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

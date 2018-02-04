@@ -23,7 +23,7 @@ namespace ql
 
 		_displacement += _velocity * elapsed_time;
 		_velocity += _acceleration * elapsed_time;
-		if (face_towards_heading()) {
+		if (face_towards_heading() && _velocity != game_space::velocity::zero()) {
 			_angle = _velocity.step().angle();
 		} else {
 			_angle += _angular_velocity * elapsed_time;
