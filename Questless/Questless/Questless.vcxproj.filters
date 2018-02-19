@@ -642,6 +642,9 @@
     <ClInclude Include="include\animation\particles\arrow_particle.hpp">
       <Filter>include\animation\particles</Filter>
     </ClInclude>
+    <ClInclude Include="include\ui\qte\aim_missile.hpp">
+      <Filter>include\ui\qte</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -925,6 +928,9 @@
     </ClCompile>
     <ClCompile Include="src\animation\particles\arrow_particle.cpp">
       <Filter>src\animation\particles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\qte\aim_missile.cpp">
+      <Filter>src\ui\qte</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

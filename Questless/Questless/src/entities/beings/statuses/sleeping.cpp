@@ -9,7 +9,7 @@ namespace ql
 {
 	void sleeping::subupdate(being& target)
 	{
-		for (body_part& part : target.body) { //! @todo How should body parts regen while sleeping? Percentage? Flat amount?
+		for (body_part& part : target.body.parts()) { //! @todo How should body parts regen while sleeping? Percentage? Flat amount?
 			part.health += target.stats.health_regen * being::health_regen_asleep_factor;
 		}
 		target.mana += target.stats.mana_regen * being::mana_regen_asleep_factor;

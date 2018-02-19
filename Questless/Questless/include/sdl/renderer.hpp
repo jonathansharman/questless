@@ -136,6 +136,34 @@ namespace sdl
 			, units::colors::color border_color
 			, units::colors::color fill_color
 			);
+
+		//! Draws a disc with a border using a polygonal approximation.
+		//! @param boundary The bounding circle of the disc to be drawn.
+		//! @param border_width The width of the disc's border.
+		//! @param border_color The color of the disc's border.
+		//! @param fill_color The color of the disc's interior.
+		//! @param segments_per_radius The number of segments to use in the polygonal approximation, divided by the radius of the disc. Improves disc quality at the cost of time.
+		void draw_disc
+			( units::view_space::sphere const& boundary
+			, units::view_space::scalar border_width
+			, units::colors::color border_color
+			, units::colors::color fill_color
+			, float segments_per_radius = 1.0f
+			);
+
+		//! Draws a disc with a border using a polygonal approximation.
+		//! @param boundary The bounding circle of the disc to be drawn.
+		//! @param border_width The width of the disc's border.
+		//! @param border_color The color of the disc's border.
+		//! @param fill_color The color of the disc's interior.
+		//! @param segments_per_radius The number of segments to use in the polygonal approximation, divided by the radius of the disc. Improves disc quality at the cost of time.
+		void draw_disc
+			( units::window_space::sphere const& boundary
+			, units::window_space::scalar border_width
+			, units::colors::color border_color
+			, units::colors::color fill_color
+			, float segments_per_radius = 1.0f
+			);
 	private:
 		SDL_Renderer* _renderer;
 		int _w;

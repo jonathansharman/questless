@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <range/v3/all.hpp>
+
 #include "reference.hpp"
 #include "units/game_space.hpp"
 
@@ -58,6 +60,13 @@ namespace ql
 			result.push_back(f(element));
 		};
 		return result;
+	}
+
+	//! Returns a transform view to statically cast elements to type @p T.
+	template <typename T>
+	static auto cast_transform()
+	{
+		return ranges::view::transform([](auto arg) { return static_cast<T>(arg); });
 	}
 
 	//! @todo Why do the following lambda overload helpers not work?

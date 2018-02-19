@@ -11,36 +11,41 @@
 #include "../dialog.hpp"
 #include "animation/camera.hpp"
 #include "units/game_space.hpp"
+#include "units/view_space.hpp"
+
+namespace ql
+{
+	class being;
+	class body_part;
+}
 
 namespace ql::qte
 {
-	//! Quick time event for determining shock strength.
-	class shock : public dialog
+	//! Quick time event for determining the .
+	class aim_missile : public dialog
 	{
 	public:
 		//! @param target_coords The target strike coordinates.
 		//! @param cont The dialog continuation function.
-		shock(region_tile::point target_coords, std::function<void(double)> cont);
+		aim_missile(region_tile::point source_coords, being const& target_being, std::function<void(body_part*)> cont);
 
 		state update() final;
 
 		void draw() const final;
 	private:
-		struct charge
-		{
-			units::game_space::point position;
-			units::game_space::velocity velocity;
-		};
+		enum class aiming_state { beginning, aiming, in_flight, ending };
+
+		static constexpr units::game_space::seconds _time_limit = 5.0s;
 
 		static sdl::texture_handle _point_charge_texture_handle;
 
-		units::game_space::point _target_point;
-		continuation<double> _cont;
+		region_tile::point _source_coords;
+		being const& _target_being;
+		continuation<body_part*> _cont;
+		units::view_space::sphere _aiming_circle;
+		aiming_state _aiming_state = aiming_state::beginning;
 
 		units::game_space::seconds _elapsed_time = 0.0s;
-		int _quadrant = 0;
-
-		std::vector<charge> _charges;
 
 		uptr<sdl::texture> _txt_title;
 		uptr<sdl::texture> _txt_prompt;

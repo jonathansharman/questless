@@ -94,15 +94,14 @@ namespace ql
 								the_game().add_effect(attack->get_effect(actor.coords, *opt_coords));
 
 								if (being* target = actor.region->being_at(*opt_coords)) {
-									dmg::group damage = attack->damage();
-									weapon.integrity -= attack->wear_ratio() * damage.total();
-
-									{ //! @todo Part targeting. Apply damage to random body part for now.
-										auto it = target->body.parts().begin();
-										std::advance(it, uniform(std::size_t{0}, target->body.parts().size() - 1));
-										target->take_damage(damage, *it, actor.id);
-									}
-									return cont(result::success);
+									return actor.agent().aim_missile(actor.coords, *target, [id = actor.id, cont, &weapon, attack, &target = *target](body_part* body_part) {
+										dmg::group damage = attack->damage();
+										weapon.integrity -= attack->wear_ratio() * damage.total();
+										if (body_part) {
+											target.take_damage(damage, *body_part, id);
+										}
+										return cont(result::success);
+									});
 								} else {
 									return actor.agent().send_message(umake<message_arrow_miss>(), [cont] { return cont(result::success); });
 								}

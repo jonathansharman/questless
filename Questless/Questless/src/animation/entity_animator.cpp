@@ -43,7 +43,7 @@ namespace ql
 		// Bleeding animation
 		constexpr double bleeding_scaling_factor = 5.0;
 		double total_bleeding = 0.0;
-		for (body_part const& part : human.body) {
+		for (body_part const& part : human.body.parts()) {
 			total_bleeding += part.bleeding;
 		}
 		if (total_bleeding > 0.0) {
@@ -78,7 +78,7 @@ namespace ql
 		// Bleeding animation
 		constexpr double bleeding_scaling_factor = 5.0;
 		double total_bleeding = 0.0;
-		for (body_part const& part : goblin.body) {
+		for (body_part const& part : goblin.body.parts()) {
 			total_bleeding += part.bleeding;
 		}
 		if (total_bleeding > 0.0) {

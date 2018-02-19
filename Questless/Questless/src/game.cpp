@@ -759,7 +759,7 @@ namespace ql
 	{
 		//! @todo Do something reasonable with the player view when the player dies.
 		being const* player_being = beings.cptr(*_player_being_id);
-		if (player_being && !player_being->dead) {
+		if (player_being && player_being->mortality != ql::mortality::dead) {
 			// Update the player's world view.
 			_player->update_world_view();
 			// Update the world renderer's world view.

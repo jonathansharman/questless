@@ -76,4 +76,5 @@ namespace units
 	inline view_space::point to_view_space(window_space::point p) { return view_space::point{to_view_space(p.x()), to_view_space(p.y())}; }
 	inline view_space::vector to_view_space(window_space::vector v) { return view_space::vector{to_view_space(v.x()), to_view_space(v.y())}; }
 	inline view_space::box to_view_space(window_space::box b) { return view_space::box{to_view_space(b.position), to_view_space(b.size)}; }
+	inline view_space::sphere to_view_space(window_space::sphere s) { return view_space::sphere{to_view_space(s.center), to_view_space(s.radius)}; }
 }

@@ -30,7 +30,7 @@ namespace ql::magic
 						}
 						caster.mana -= cost;
 						//! @todo Part targeting. For now, just heal everything.
-						for (body_part& part : target->body) {
+						for (body_part& part : target->body.parts()) {
 							target->heal(magnitude, part, caster.id);
 						}
 						return cont(action::result::success);

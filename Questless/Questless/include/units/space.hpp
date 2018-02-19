@@ -705,7 +705,7 @@ namespace units
 				return true;
 			}
 
-			//! Translates the rectangle by the given offset.
+			//! Translates this box by the given offset.
 			void translate(vector const& offset) &
 			{
 				position += offset;
@@ -753,6 +753,71 @@ namespace units
 					return position;
 				} else {
 					return apply_alignment<index + 1>(position, size, alignment);
+				}
+			}
+		};
+
+		//! A sphere in this space. E.g. a circle in 2D spaces or a 
+		class sphere
+		{
+		public:
+			//! The center point of this sphere.
+			point center;
+
+			//! The radius of this sphere.
+			scalar radius;
+
+			constexpr sphere() = default;
+			constexpr sphere(sphere const&) = default;
+			constexpr sphere(sphere&&) = default;
+
+			//! A sphere centered at @p center with radius @p radius.
+			explicit constexpr sphere(point center, scalar radius)
+				: center{std::move(center)}
+				, radius{std::move(radius)}
+			{}
+
+			sphere& operator =(sphere const&) & = default;
+			sphere& operator =(sphere&&) & = default;
+
+			friend std::ostream& operator <<(std::ostream& out, sphere const& sphere)
+			{
+				out << '(' << sphere.center << ", " << box.radius << ')';
+				return out;
+			}
+
+			constexpr friend bool operator ==(sphere const& left, sphere const& right)
+			{
+				return left.center == right.center && left.radius == right.radius;
+			}
+			constexpr friend bool operator !=(sphere const& left, sphere const& right)
+			{
+				return left.center != right.center || left.radius != right.radius;
+			}
+
+			constexpr bool contains(point const& point) const
+			{
+				//! @todo Rigorously define what containment means for generic spaces (inclusive vs. exclusive bounds).
+				return (center - point).length_squared() <= radius * radius;
+			}
+
+			//! Translates this sphere by the given offset.
+			void translate(vector const& offset) &
+			{
+				center += offset;
+			}
+
+			//! A copy of this sphere translated by @p offset.
+			constexpr sphere translated(vector const& offset) const
+			{
+				return sphere{position + offset, size};
+			}
+
+			//! Extends this sphere, if necessary, to include the given point.
+			void extend(point const& point)
+			{
+				if (!contains(point)) {
+					radius = (center - point).length();
 				}
 			}
 		};
@@ -896,3 +961,5 @@ TEST_CASE("[point] operations")
 }
 
 //! @todo box tests
+
+//! @todo sphere tests

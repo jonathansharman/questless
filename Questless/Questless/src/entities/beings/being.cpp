@@ -27,7 +27,7 @@ namespace ql
 		, alertness{max_alertness}
 		, mood{0.0}
 		, busy_time{0.0}
-		, dead{false}
+		, mortality{ql::mortality::alive}
 		, direction{static_cast<region_tile::direction>(uniform(1, 6))}
 		, _agent{make_agent(*this)}
 		
@@ -51,9 +51,11 @@ namespace ql
 		in >> base_stats;
 		in >> stats;
 
-		in >> mana >> energy >> satiety >> alertness >> mood >> busy_time >> dead;
-
+		in >> mana >> energy >> satiety >> alertness >> mood >> busy_time;
 		//! @todo Is there a better way to extract into an enum class?
+		int mortality_int;
+		in >> mortality_int;
+		mortality = static_cast<ql::mortality>(mortality_int);
 		int direction_int;
 		in >> direction_int;
 		direction = static_cast<region_tile::direction>(direction_int);
@@ -70,7 +72,7 @@ namespace ql
 		//! @todo Write body.
 
 		out << mana << ' ' << energy << ' ' << satiety << ' ' << alertness << ' ' << mood << ' '
-			<< busy_time << ' ' << dead << ' ' << static_cast<int>(direction);
+			<< busy_time << ' ' << static_cast<int>(mortality) << ' ' << static_cast<int>(direction);
 
 		out << base_stats << ' ';
 		out << stats << ' ';
@@ -173,12 +175,12 @@ namespace ql
 			double const temp = region->temperature(coords);
 			if (temp > stats.max_temp) {
 				dmg::group burn = dmg::burn{(temp - stats.max_temp) / (stats.max_temp - stats.min_temp) * temperature_damage_factor};
-				for (body_part& part : body) {
+				for (body_part& part : body.parts()) {
 					take_damage(burn, part, std::nullopt);
 				}
 			} else if (temp < stats.min_temp) {
 				dmg::group freeze = dmg::freeze{(stats.min_temp - temp) / (stats.max_temp - stats.min_temp) * temperature_damage_factor};
-				for (body_part& part : body) {
+				for (body_part& part : body.parts()) {
 					take_damage(freeze, part, std::nullopt);
 				}
 			}
@@ -221,7 +223,7 @@ namespace ql
 
 				// Percent of each part's vitality dealt to it as blight damage as a factor of stage-4 blood loss.
 				constexpr double damage_factor = 0.1;
-				for (body_part& part : body) {
+				for (body_part& part : body.parts()) {
 					dmg::group blight = dmg::blight{part.vitality * pct_stage_4_blood_lost * damage_factor};
 					part.take_damage(blight, std::nullopt);
 				}
@@ -240,7 +242,7 @@ namespace ql
 	void being::take_damage(dmg::group& damage, body_part& target_part, std::optional<ql::id<being>> opt_source_id)
 	{
 		// Store whether the being was already dead upon taking this damage.
-		bool const was_already_dead = dead;
+		bool const was_already_dead = mortality == ql::mortality::dead;
 
 		// Get source.
 		being* const source = opt_source_id ? the_game().beings.ptr(*opt_source_id) : nullptr;
@@ -317,7 +319,7 @@ namespace ql
 					//! @todo Disable target_part.
 					if (target_part.vital()) {
 						// A vital part has been disabled. Kill target.
-						dead = true;
+						mortality = ql::mortality::dead;
 					}
 				}
 
@@ -329,7 +331,7 @@ namespace ql
 					// Source, if present, has dealt damage.
 					if (!source || source->after_deal_damage(damage, target_part, id)) {
 						// Handle death, if this damage killed the target.
-						if (!was_already_dead && dead) {
+						if (!was_already_dead && mortality == ql::mortality::dead) {
 							// Target will die.
 							if (before_die(opt_source_id)) {
 								// Source, if present, will have killed target.
@@ -403,7 +405,7 @@ namespace ql
 		ql::stats result = base_stats;
 
 		// Apply body part stat modifiers, and sum weight.
-		for (body_part const& part : body) {
+		for (body_part const& part : body.parts()) {
 			modifier::apply_all(part.modifiers(), result);
 
 			result.weight += part.weight();

@@ -10,12 +10,12 @@ namespace ql
 {
 	//! @todo Get rid of MutableViewType and ConstViewType and just use auto for mutable_xform and const_xform, whenever template parameter auto is supported.
 
-	//! Stores a reference to a @p Container and allows iteration through a transformed view.
-	//! @tparam Container A containter type supporting forward iteration
+	//! Stores a reference to a @p Container and allows const and mutable iteration through a transformed view.
+	//! @tparam Container A containter type supporting forward iteration.
 	//! @tparam MutableViewType The viewed type when using non-const iterators.
 	//! @tparam ConstViewType The viewed type when using const iterators.
-	//! @tparam mutable_xform Unary function for transforming elements of the container to type @p MutableViewType
-	//! @tparam const_xform Unary function for transforming elements of the container to type @p ConstViewType
+	//! @tparam mutable_xform Unary function for transforming elements of the container to type @p MutableViewType.
+	//! @tparam const_xform Unary function for transforming elements of the container to type @p ConstViewType.
 	template
 		< typename Container
 		, typename MutableViewType

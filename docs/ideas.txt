@@ -31,22 +31,46 @@ The Nexus
 	Where all the other realms intersect.
 
 ================================================================================
-Potion brewing
+Brewing
 ================================================================================
-Ingredient categories
-	???
-Basic ingredients
-	Water
-Basic potion effects
-	Healing
-	Mana restoration?
-Brewing techniques
+Ingredients
+	Liquids
+		Water
+		Blood
+	Solids
+	Powders
+		Gatestone dust
+Actions
 	Crush
 	Slice
 	Mix
 	Boil
 	Smoke
+	Incant
+		Each magic color has a potion enchantment spell
+		Always the final step for any magical potion
 Recipes
+	Healing Potion
+		Ingredients: ???
+		Effect: health regeneration
+	Healing Salve
+		Ingredients: ???
+		Effect: health regeneration for the part on which it's applied
+	Mana Potion
+		Ingredients: ???
+		Effect: mana regeneration, mana poisoning
+	Happiness Incense
+		Ingredients: ???
+		Effect: poisoning, mental impairment, mood elevation
+	Lich Potion
+		Ingredients: blood (of the innocent?), black gatestone, ???
+		Incantation: black
+		Effect: Curse of the Lich: drinker becomes a lich if it dies within a set time after consumption
+		Steps:
+			1) Add blood.
+			2) Crush black gatestone into powder.
+			3) Add black gatestone powder.
+			4) Incant.
 
 ================================================================================
 Spellcasting
@@ -358,20 +382,20 @@ White - good - light - revelation
 		Healer
 		Light mage
 			Light, detection, alertness
-	Celestial Runes
+	Celestial
 		Exorcise - Empowers target's black antimagic, weaken its black magic, and removes possession from it.
 		Immortalize - Make a target being temporarily immortal.
 		Divine - Temporarily gain complete perception of a target being.
 		Raise Ladder - Can only cast while in the Nexus or Heaven. Create a ladder from the Nexus to Heaven, allowing travel between the realms.
 		Astral Project - Temporarily project the caster's soul from its body.
 		Summon hosts
-	Restoration Runes
+	Restorative
 		Cleanse - Remove a negative status from a target. The status power must be lower than the invocation power.
 		Immunize - Give a target a chosen amount of blight resistance for a chosen duration.
 		Mend - Restore health to a body part.
 		Holistic Heal - Restore a being and all its body parts to full health.
 		Resurrect - Return a target corpse to life. Health after resurrection depends on spell magnitude.
-	Light Runes
+	Light
 		Bright Vision - Temporarily raise target's glare tolerance.
 		Blinding Light - Dramatically increase the light level at target tile for a short duration.
 		Illuminate - Increase the light level in an area around the caster for a certain duration.
@@ -383,7 +407,7 @@ Black - evil - darkness - illusion
 		Necromancer
 		Shadow mage
 			Darkness, stealth, sleep
-	Demonic Runes
+	Demonic
 		Corrupt - Empowers target's white antimagic and weakens its white magic
 		Possess - Channeled, interrupted by taking 10% of vitality in damage at once. Take control of a target being for a certain duration. Invocation power times caster's black power divided by target's black resistance must be greater than target's intellect.
 		Damn - If the caster is alive after a certain duration, the target dies.
@@ -391,15 +415,15 @@ Black - evil - darkness - illusion
 		Enslave Fiend - Enslave target fiend, making it loyal to the caster.
 		Open Hellmouth - Can only cast while in the Nexus or Hell. Create a hellmouth from the Nexus to Hell, allowing travel between the realms.
 		Summon demons and devils
-	Necrotic Runes
+	Necrotic
 		Rot - Afflict target with rot, causing blight damage over time.
 		Enfeeble - Give a target a chosen amount of blight vulnerability for a chosen duration.
 		Defile?
 		Exanimate - Extract a target's soul, resulting in a corpse and a wraith under the caster's control.
 		Exsanguinate - Cause a being to bleed from all its parts.
-		Raise Dead - Raise a target corpse to undeath under the caster's control. The undead being's stats depend on the spell magnitude, and it disintegrates after the spell's duration elapses.
+		Raise Dead - Raise a target corpse to undeath under the caster's control. The undead being's stats depend on the spell magnitude, and it returns to death after the spell's duration elapses.
 		Summon spirits
-	Shadow Runes
+	Shadow
 		Night Vision - Temporarily raise target's darkness tolerance.
 		Blind Spot - Dramatically decrease the light level at target tile for a short duration.
 		Enshadow - Decrease the light level in an area around the caster for a certain duration.
@@ -411,7 +435,7 @@ Green - matter - nature
 		Zoomage
 		Phytomage
 		Elementalist
-	Bestial Runes
+	Bestial
 		Metamorphose hide - Creates and equips a low-durability, high-power body armor. Currently equipped body armor is unequipped without incurring unequip time.
 		Metamorphose claws - Creates and equips a low-durability, high-power one-handed weapon for each hand. Currently equipped weapons are unequipped without incurring unequip times.
 		Feral Form - Temporarily become feral. While feral, a being is mute and has increased strength, endurance, agility, dexterity, vision, and hearing but decreased spirit, stamina, and intellect.
@@ -421,12 +445,12 @@ Green - matter - nature
 		Scavenge - Destroy a target corpse and regain health in proportion to its vitality when it was alive.
 		Communicate with animals?
 		Summon animals
-	Botanic Runes
+	Botanic
 		Regenerate - Become passive while regaining health for a chosen duration.
 		Communicate with plants?
 		Summon plants
 			Growth - Creates a disc of trees at target location, blocking movement.
-	Elemental Runes
+	Elemental
 		Fire
 			Ignite - Sets a fire at the target location, increasing the light level and greatly increasing the temperature at that location. Fire wanes in intensity over time and then is extinguished.
 			Pyrophile - Temporarily become a pyrophile. A pyrophile's maximum temperature is raised dramatically, and it heals over time in proportion to the ambient temperature. (Use a different effect besides healing?)
@@ -445,7 +469,7 @@ Red - energy - technology
 	Specializations
 		Power mage
 		Technomage
-	Power Runes
+	Power
 		Charge - Gain mana over time. Total mana restored is equal to casting cost plus spell duration times a constant factor.
 			E.g., spend 100 mana to recover 100 mana over 0 turns. Or spend 100 mana to recover 200 mana over, say, 25 turns.
 		Overcharge - Gain mana and then lose twice that much over time. The more mana gained, the faster it depletes.
@@ -455,20 +479,20 @@ Red - energy - technology
 		Shock - Deal shock damage to a target being. Chain to nearby beings, with less range and damage for each jump. Targets are chosen first by proximity then at random. May target the caster and other friendly beings.
 		Scroll Magnet - Steal a scroll from target being.
 		Levitate - Temporarily gain the power of flight.
-	Mech Runes
+	Tech
 		Repair - Restores health to target machine.
 		Summon machines
 Blue - stasis - time
 	Specializations
 		Chronomancer
-	Stasis Runes
+	Stasis
 		Summon preservers from the stasis
-	Time Runes
+	Time
 Yellow - chaos - space
 	Specializations
 		Chaos mage
 		Space mage...?
-	Chaos Runes
+	Chaos
 		Revolt - Swaps a stat of two beings.
 		Confuse - Reduces the target being's intellect.
 		Madden - Causes the target being to become insane for a certain duration. While insane, the target behaves erratically and often self-destructively.
@@ -484,7 +508,7 @@ Yellow - chaos - space
 		Mirage - Cause a being to perceive something that's not there.
 		Transmute - ???
 		Create Chimera - Choose two beings and randomly swap their body parts around.
-	Space Runes
+	Space
 		Interport - Swap positions of two beings.
 		Teleport - Teleport within a certain distance.
 		Banish - Banish target being to the chaos for a certain duration. While banished, an impassable and indestructible chaos portal appears in its place. During banishment, the being cannot be interacted with and does not update its state.
@@ -493,7 +517,7 @@ Yellow - chaos - space
 Violet - peace - order
 	Specializations
 		Peacekeeper
-	Peace Runes
+	Peace
 		Imprison - For a certain duration, prevent target from moving or using melee attacks.
 		Silence - Cause muteness in target being for a certain duration.
 		Disarmament - Unequip all weapons (including caster's weapons) within a certain range. Unequip times are not incurred; the effect is immediate. Any weapons being readied will not connect with their targets. Recovery times from weapons used prior to casting are unaffected.
@@ -503,7 +527,7 @@ Violet - peace - order
 Orange - war - strife
 	Specializations
 		Battle mage
-	Battle Runes
+	Battle
 		Battle Cry - Temporarily empowers strength and endurance.
 		Duel - A target being and the caster temporarily become immune to weapon-based attacks from all other beings except each other and unable to deal damage to other beings.
 			Exploitable with allies?
@@ -680,6 +704,8 @@ Fiend (Legion)
 	Demonic
 		Demon - chaotic evil
 		Imp - neutral evil
+		Ghoul - neutral evil
+			Eats corpses
 	Diabolical
 		Devil - lawful evil
 	Hellhound - neutral evil

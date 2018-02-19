@@ -57,7 +57,7 @@ namespace sdl
 			return true;
 		}
 
-		std::vector<std::vector<view_space::point>> convex_components(std::vector<view_space::point> polygon)
+		vector<vector<view_space::point>> convex_components(vector<view_space::point> polygon)
 		{
 			//! @todo Implement.
 			return {polygon};
@@ -177,7 +177,7 @@ namespace sdl
 		draw_lines(view_space_vertices, color);
 	}
 
-	void renderer::draw_polygon(vector<view_space::point> const& vertices, colors::color color)
+	void renderer::draw_polygon(view_space::polygon const& vertices, colors::color color)
 	{
 		// Don't bother rendering transparent polygons.
 		if (color.alpha() == 0.0f) { return; }
@@ -363,6 +363,35 @@ namespace sdl
 		if (units::width(box) > 0.0f && units::height(box) > 0.0f) {
 			draw_polygon({top_left(box), top_right(box), bottom_right(box), bottom_left(box)}, border_width, border_color, fill_color);
 		}
+	}
+
+	void renderer::draw_disc
+		( view_space::sphere const& boundary
+		, view_space::scalar border_width
+		, colors::color border_color
+		, colors::color fill_color
+		, float segments_per_radius
+		)
+	{
+		view_space::polygon polygon;
+		int segments_count = lround(boundary.radius * segments_per_radius);
+		for (int i = 0; i < segments_count; ++i) {
+			view_space::radians const angle{static_cast<float>(constants::tau * i / segments_count)};
+			view_space::vector const offset{angle, boundary.radius};
+			polygon.push_back(boundary.center + offset);
+		}
+		draw_polygon(polygon, border_width, border_color, fill_color);
+	}
+
+	void renderer::draw_disc
+		( window_space::sphere const& boundary
+		, window_space::scalar border_width
+		, colors::color border_color
+		, colors::color fill_color
+		, float segments_per_radius
+		)
+	{
+		draw_disc(to_view_space(boundary), to_view_space(border_width), border_color, fill_color, segments_per_radius);
 	}
 
 	void renderer::set_draw_color(colors::color color)

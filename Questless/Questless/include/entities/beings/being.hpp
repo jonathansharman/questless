@@ -40,6 +40,8 @@ namespace ql
 	struct busy_time : tagged_type<double> { using tagged_type::tagged_type; };
 	struct dead : tagged_type<bool> { using tagged_type::tagged_type; };
 
+	enum class mortality : int { alive = 0, dead, undead, immortal };
+
 	//! An animate entity.
 	class being : public entity
 	{
@@ -121,7 +123,7 @@ namespace ql
 		static_bounded<double, min_alertness, max_alertness> alertness;
 		static_bounded<double, min_mood, max_mood> mood;
 		dynamic_property<double> busy_time;
-		bool dead;
+		mortality mortality;
 		region_tile::direction direction;
 
 		// Abilities

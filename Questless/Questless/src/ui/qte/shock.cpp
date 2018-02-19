@@ -18,14 +18,19 @@ namespace ql::qte
 		: _target_point{units::layout::dflt().to_world(target_coords)}
 		, _cont{std::move(cont)}
 	{
-		load_textures();
+		_txt_title = make_title("Build up a charge!");
+		_txt_prompt = make_prompt("Circle the target counter-clockwise as fast as you can!");
 	}
 
 	dialog::state shock::update()
 	{
+		static constexpr units::game_space::seconds time_limit = 5.0s;
+		static constexpr int charges_per_quadrant = 4;
+		static constexpr double expected_charges = charges_per_quadrant * 70.0;
+
 		_elapsed_time += game::frame_duration;
-		if (_elapsed_time > _time_limit) {
-			return _cont(_charges.size() / _expected_charges);
+		if (_elapsed_time > time_limit) {
+			return _cont(_charges.size() / expected_charges);
 		}
 
 		// Acclerate only when the mouse moves to the next quadrant over.
@@ -60,7 +65,7 @@ namespace ql::qte
 			}
 		}
 		if (accelerate) {
-			for (int i = 0; i < _charges_per_quadrant; ++i) {
+			for (int i = 0; i < charges_per_quadrant; ++i) {
 				_charges.push_back(charge
 					{ _target_point + random_displacement(100.0)
 					, game_space::velocity{game_space::vector{random_angle(), 100.0}}
@@ -113,11 +118,5 @@ namespace ql::qte
 
 		draw_title(*_txt_title);
 		draw_prompt(*_txt_prompt);
-	}
-
-	void shock::load_textures()
-	{
-		_txt_title = make_title("Build up a charge!");
-		_txt_prompt = make_prompt("Circle the target counter-clockwise as fast as you can!");
 	}
 }

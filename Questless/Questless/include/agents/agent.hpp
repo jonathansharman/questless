@@ -109,6 +109,7 @@ namespace ql
 
 		// Quick Time Events
 
+		virtual complete aim_missile(region_tile::point source_coords, ql::being& target_being, std::function<complete(body_part*)> cont) const;
 		virtual complete get_shock_quality(region_tile::point target_coords, std::function<complete(double)> cont) const;
 
 		virtual complete incant(gatestone& gatestone, std::function<complete(uptr<magic::spell>)> cont) const;

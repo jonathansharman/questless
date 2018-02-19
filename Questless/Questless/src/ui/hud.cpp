@@ -3,6 +3,7 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "ui/hud.hpp"
+
 #include "game.hpp"
 #include "entities/beings/being.hpp"
 #include "animation/item_renderer.hpp"

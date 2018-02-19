@@ -11,6 +11,7 @@
     <GLEW_PATH>D:\vc-libs\glew-2.0.0\</GLEW_PATH>
     <GLM_PATH>D:\vc-libs\glm\</GLM_PATH>
     <GSL_PATH>D:\vc-libs\GSL\</GSL_PATH>
+    <RANGE_V3_PATH>D:\vc-libs\range-v3\</RANGE_V3_PATH>
   </PropertyGroup>
   <PropertyGroup />
   <ItemDefinitionGroup />
@@ -48,6 +49,10 @@
     </BuildMacro>
     <BuildMacro Include="GSL_PATH">
       <Value>$(GSL_PATH)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="RANGE_V3_PATH">
+      <Value>$(RANGE_V3_PATH)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
   </ItemGroup>

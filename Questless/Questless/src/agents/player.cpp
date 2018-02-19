@@ -10,6 +10,7 @@
 #include "ui/direction_dialog.hpp"
 #include "ui/magnitude_dialog.hpp"
 #include "ui/message_dialog.hpp"
+#include "ui/qte/aim_missile.hpp"
 #include "ui/qte/incant.hpp"
 #include "ui/qte/shock.hpp"
 #include "ui/tile_dialog.hpp"
@@ -331,15 +332,24 @@ namespace ql
 
 	// Quick Time Events
 
+	complete player::aim_missile(region_tile::point source_coords, ql::being& target_being, std::function<complete(body_part*)> cont) const
+	{
+		return the_game().add_dialog
+			( umake<qte::aim_missile>(source_coords, target_being, std::move(cont))
+			);
+	}
+
 	complete player::get_shock_quality(region_tile::point target_coords, std::function<complete(double)> cont) const
 	{
-		auto dialog = umake<qte::shock>(target_coords, std::move(cont));
-		return the_game().add_dialog(std::move(dialog));
+		return the_game().add_dialog
+			( umake<qte::shock>(target_coords, std::move(cont))
+			);
 	}
 
 	complete player::incant(gatestone& gatestone, std::function<complete(uptr<magic::spell>)> cont) const
 	{
-		auto dialog = umake<qte::incant>(gatestone, std::move(cont));
-		return the_game().add_dialog(std::move(dialog));
+		return the_game().add_dialog
+			( umake<qte::incant>(gatestone, std::move(cont))
+			);
 	}
 }

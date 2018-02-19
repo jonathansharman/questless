@@ -7,10 +7,11 @@
 #include <memory>
 #include <vector>
 
-#include <boost/iterator/transform_iterator.hpp>
+#include <range/v3/all.hpp>
 
 #include "entities/beings/body_part.hpp"
 #include "units/window_space.hpp"
+#include "utility/utility.hpp"
 
 namespace ql
 {
@@ -36,21 +37,15 @@ namespace ql
 		//! The cumulative vitality of all parts of this body.
 		double total_vitality() const { return _total_vitality; }
 
-		//! Iterator to beginning of body parts.
-		auto begin() { return _parts.begin(); }
-		//! Iterator to end of body parts.
-		auto end() { return _parts.end(); }
-
-		//! Const iterator to beginning of body parts.
-		auto begin() const
-		{
-			return boost::make_transform_iterator(_parts.begin(), body_part_ref_to_cref);
-		}
-		//! Const iterator to end of body parts.
-		auto end() const
-		{
-			return boost::make_transform_iterator(_parts.end(), body_part_ref_to_cref);
-		}
+		auto parts() const { return _parts | cast_transform<cref<body_part>>(); }
+		auto heads() const { return _heads | cast_transform<cref<head>>(); }
+		auto torsos() const { return _torsos | cast_transform<cref<torso>>(); }
+		auto arms() const { return _arms | cast_transform<cref<arm>>(); }
+		auto hands() const { return _hands | cast_transform<cref<hand>>(); }
+		auto legs() const { return _legs | cast_transform<cref<leg>>(); }
+		auto feet() const { return _feet | cast_transform<cref<foot>>(); }
+		auto wings() const { return _wings | cast_transform<cref<wing>>(); }
+		auto tails() const { return _tails | cast_transform<cref<tail>>(); }
 
 		std::vector<ref<body_part>> const& parts() { return _parts; }
 		std::vector<ref<head>> const& heads() { return _heads; }
@@ -111,10 +106,5 @@ namespace ql
 
 		// Cumulative attributes
 		double _total_vitality;
-
-		static cref<body_part> body_part_ref_to_cref(ref<body_part> body_part)
-		{
-			return static_cast<cref<ql::body_part>>(body_part);
-		}
 	};
 }
