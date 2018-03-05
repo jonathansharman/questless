@@ -41,7 +41,7 @@ namespace ql
 		game_space::vector scaled_center_to_mouse = game_space::vector{static_cast<double>(center_to_mouse.x()), static_cast<double>(-center_to_mouse.y())} / _zoom;
 		_point_hovered = _position + scaled_center_to_mouse;
 		_point_hovered.rotate(_position, _angle);
-		_tile_hovered = layout::dflt().to_hex_coords<region_tile::point>(_point_hovered);
+		_tile_hovered = to_region_tile(_point_hovered);
 	}
 
 	void camera::draw

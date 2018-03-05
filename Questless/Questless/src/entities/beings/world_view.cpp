@@ -51,7 +51,7 @@ namespace ql
 
 					if (find_bounds && tile_perception.level > 0.0) {
 						// Update bounding rectangle.
-						game_space::point tile_game_point = layout::dflt().to_world(region_tile_coords);
+						game_space::point tile_game_point = to_world(region_tile_coords);
 						if (!_bounds) {
 							_bounds = game_space::box{game_space::point{tile_game_point.x(), tile_game_point.y()}, game_space::vector::zero()};
 						} else {
@@ -93,15 +93,15 @@ namespace ql
 		if (_bounds) {
 			//! @todo Figure out the correct way to compute these adjustments.
 
-			//point size = layout::dflt().size.to_point();
-			//point double_size = (2 * layout::dflt().size).to_point();
+			//point size = size.to_point();
+			//point double_size = (2 * size).to_point();
 			//_bounds->x -= size.x;
 			//_bounds->y -= size.y;
 			//_bounds->w += double_size.x;
 			//_bounds->h += double_size.y;
 
-			game_space::vector size = layout::dflt().size;
-			game_space::vector double_size = 2 * layout::dflt().size;
+			game_space::vector size = hex_layout.size;
+			game_space::vector double_size = 2 * hex_layout.size;
 			left(*_bounds) -= 31.0;
 			top(*_bounds) -= 19.0;
 			width(*_bounds) += 62.0;

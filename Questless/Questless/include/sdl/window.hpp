@@ -68,7 +68,7 @@ namespace sdl
 		void refresh_position();
 
 		//! The internal SDL_Window pointer.
-		SDL_Window* const sdl_ptr() const { return _sdl_window; }
+		SDL_Window* sdl_ptr() const { return _sdl_window; }
 
 		//! The window title.
 		std::string title() const { return _title; }

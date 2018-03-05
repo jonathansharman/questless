@@ -476,7 +476,7 @@ namespace ql
 					// Initialize the world renderer.
 					_world_renderer = umake<ql::world_renderer>(_player->world_view());
 					// Set the camera position relative to the player's being.
-					_camera->position(game_space::point{layout::dflt().to_world(beings.cref(*_player_being_id).coords)});
+					_camera->position(game_space::point{to_world(beings.cref(*_player_being_id).coords)});
 
 					_time_last_state_change = clock::now();
 					_state = state::playing;
@@ -498,9 +498,9 @@ namespace ql
 		_world_renderer->draw_terrain();
 
 		if (the_input().pressed(mouse_button::right)) {
-			_point_clicked_rounded = layout::dflt().to_world(_camera->tile_hovered());
+			_point_clicked_rounded = to_world(_camera->tile_hovered());
 		}
-		_camera->draw(*_txt_hex_highlight, layout::dflt().to_world(_camera->tile_hovered()), origin{texture_space::vector::zero()}, colors::white_vector(0.5f));
+		_camera->draw(*_txt_hex_highlight, to_world(_camera->tile_hovered()), origin{texture_space::vector::zero()}, colors::white_vector(0.5f));
 		_camera->draw(*_txt_hex_circle, _point_clicked_rounded);
 
 		_world_renderer->draw_entities();
@@ -524,7 +524,7 @@ namespace ql
 			txt_cam_coords.draw(window_space::point{0, 0});
 		}
 		{
-			auto cam_hex_coords = layout::dflt().to_hex_coords<region_tile::point>(_camera->position());
+			auto cam_hex_coords = to_region_tile(_camera->position());
 			std::ostringstream ss_cam_hex_coords;
 			ss_cam_hex_coords << "Cam hex: (" << cam_hex_coords.q << ", " << cam_hex_coords.r << ")";
 			texture txt_cam_hex_coords = _fnt_20pt->render(ss_cam_hex_coords.str().c_str(), colors::white());
@@ -563,8 +563,8 @@ namespace ql
 		region_tile::point origin{0, 0};
 		region_tile::point q_axis{5, 0};
 		region_tile::point r_axis{0, 5};
-		camera().draw_lines({layout::dflt().to_world(origin), layout::dflt().to_world(q_axis)}, colors::green());
-		camera().draw_lines({layout::dflt().to_world(origin), layout::dflt().to_world(r_axis)}, colors::red());
+		camera().draw_lines({to_world(origin), to_world(q_axis)}, colors::green());
+		camera().draw_lines({to_world(origin), to_world(r_axis)}, colors::red());
 
 		_txt_test1->draw(window_space::point{0, 0});
 		the_renderer().draw_box(window_space::box{window_space::point{0, 0}, window_space::vector{15, 15}}, 1, colors::blue(), colors::clear());
@@ -737,7 +737,7 @@ namespace ql
 			if (being* player = beings.ptr(*_player_being_id)) {
 				constexpr double recoil = 0.2;
 
-				game_space::vector to_player = layout::dflt().to_world(player->coords) - _camera->position();
+				game_space::vector to_player = to_world(player->coords) - _camera->position();
 				_camera->position(_camera->position() + recoil * to_player);
 
 				double to_zoom_1 = 1.0 - _camera->zoom();

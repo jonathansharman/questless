@@ -8,6 +8,7 @@
 #include <functional>
 #include <memory>
 #include <optional>
+#include <variant>
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -63,16 +64,41 @@ namespace sdl
 		//! @param vertical_alignment The vertical alignment of the texture.
 		//! @param color_vector A factor to be applied component-wise to the texture's color.
 		//! @param src_rect The section of the texture to be drawn. If nullopt, the entire texture is used.
+		//! @tparam Point The point type. Supported types are units::view_space::point and units::window_space::point.
+		template <typename Point>
 		void draw
-			( units::window_space::point position
+			( Point position
 			, units::texture_space::h_align horizontal_alignment = units::texture_space::align_left
 			, units::texture_space::v_align vertical_alignment = units::texture_space::align_top
 			, units::colors::color_vector color_vector = units::colors::white_vector()
 			, std::optional<units::texture_space::box> const& src_rect = std::nullopt
-			) const;
+			) const
+		{
+			switch (horizontal_alignment) {
+				case units::texture_space::align_left:
+					position.x() += width() / 2;
+					break;
+				case units::texture_space::align_center:
+					break;
+				case units::texture_space::align_right:
+					position.x() -= width() / 2;
+					break;
+			}
+			switch (vertical_alignment) {
+				case units::texture_space::align_top:
+					position.y() += height() / 2;
+					break;
+				case units::texture_space::align_middle:
+					break;
+				case units::texture_space::align_bottom:
+					position.y() -= height() / 2;
+					break;
+			}
+			draw_transformed(position, units::texture_space::vector::zero(), color_vector, 1.0f, 1.0f, units::game_space::radians::zero(), src_rect);
+		}
 
 		//! Draws all or part the texture to the screen (or current frame buffer), using the provided transformations.
-		//! @param position The coordinates of the texture on the screen.
+		//! @param position The coordinates of the texture on the screen in view or window space.
 		//! @param origin The offset from the texture's center to its origin point.
 		//! @param color_vector A factor to be applied component-wise to the texture's color.
 		//! @param horizontal_scale The horizontal scale of the texture.
@@ -80,7 +106,7 @@ namespace sdl
 		//! @param angle The counter-clockwise rotation of the the texture around the origin, in radians.
 		//! @param src_rect The section of the texture to be drawn. If nullopt, the entire texture is used.
 		void draw_transformed
-			( units::window_space::point position
+			( std::variant<units::window_space::point, units::view_space::point> position
 			, units::texture_space::vector origin = units::texture_space::vector::zero()
 			, units::colors::color_vector color_vector = units::colors::white_vector()
 			, float horizontal_scale = 1.0f

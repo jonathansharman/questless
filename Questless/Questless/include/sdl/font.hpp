@@ -36,7 +36,7 @@ namespace sdl
 		friend void swap(font& first, font& second);
 
 		//! The internal TTF_Font pointer.
-		TTF_Font* const std_ptr() { return _font; }
+		TTF_Font* std_ptr() { return _font; }
 
 		//! The pt. size of the font.
 		int size() const { return _size; }

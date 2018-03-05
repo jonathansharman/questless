@@ -518,6 +518,7 @@ Violet - peace - order
 	Specializations
 		Peacekeeper
 	Peace
+		Encourage - Increase target being's mood.
 		Imprison - For a certain duration, prevent target from moving or using melee attacks.
 		Silence - Cause muteness in target being for a certain duration.
 		Disarmament - Unequip all weapons (including caster's weapons) within a certain range. Unequip times are not incurred; the effect is immediate. Any weapons being readied will not connect with their targets. Recovery times from weapons used prior to casting are unaffected.
@@ -529,6 +530,7 @@ Orange - war - strife
 		Battle mage
 	Battle
 		Battle Cry - Temporarily empowers strength and endurance.
+		Demoralize - Reduce target being's mood.
 		Duel - A target being and the caster temporarily become immune to weapon-based attacks from all other beings except each other and unable to deal damage to other beings.
 			Exploitable with allies?
 				How about, "when it expires, the one with the lowest health percentage dies"?

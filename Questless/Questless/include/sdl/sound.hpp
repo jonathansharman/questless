@@ -29,7 +29,7 @@ namespace sdl
 		friend void swap(sound& first, sound& second);
 
 		//! The internal Mix_Chunk pointer.
-		Mix_Chunk* const sdl_ptr() { return _chunk; }
+		Mix_Chunk* sdl_ptr() { return _chunk; }
 
 		//! Plays the sound.
 		//! @param loop The number of times to loop the sound. 0 for no loop.

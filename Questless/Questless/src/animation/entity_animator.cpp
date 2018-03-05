@@ -30,10 +30,10 @@ namespace ql
 		auto sprite_animation = umake<ql::sprite_animation>
 			( sprite_sheet
 			, std::vector<sprite_animation::frame>
-				{ {game_space::seconds{0.2}, sprite_sheet_space::point{0, 0}, texture_space::vector{0, 6}}
-				, {game_space::seconds{0.2}, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 6}}
-				, {game_space::seconds{0.2}, sprite_sheet_space::point{2, 0}, texture_space::vector{0, 6}}
-				, {game_space::seconds{0.2}, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 6}}
+				{ {game_space::seconds{0.2}, sprite_sheet_space::point{0, 0}, texture_space::vector{0, 12}}
+				, {game_space::seconds{0.2}, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 12}}
+				, {game_space::seconds{0.2}, sprite_sheet_space::point{2, 0}, texture_space::vector{0, 12}}
+				, {game_space::seconds{0.2}, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 12}}
 				}
 			, looping{true}
 			);
@@ -65,10 +65,10 @@ namespace ql
 		auto sprite_animation = umake<ql::sprite_animation>
 			( sprite_sheet
 			, std::vector<sprite_animation::frame>
-				{ {game_space::seconds{0.2}, sprite_sheet_space::point{0, 0}, texture_space::vector{0, 6}}
-				, {game_space::seconds{0.2}, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 6}}
-				, {game_space::seconds{0.2}, sprite_sheet_space::point{2, 0}, texture_space::vector{0, 6}}
-				, {game_space::seconds{0.2}, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 6}}
+				{ {game_space::seconds{0.2}, sprite_sheet_space::point{0, 0}, texture_space::vector{0, 12}}
+				, {game_space::seconds{0.2}, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 12}}
+				, {game_space::seconds{0.2}, sprite_sheet_space::point{2, 0}, texture_space::vector{0, 12}}
+				, {game_space::seconds{0.2}, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 12}}
 				}
 			, looping{true}
 			);
@@ -108,11 +108,11 @@ namespace ql
 	void entity_animator::visit(corpse const&)
 	{
 		static auto texture_handle = the_texture_manager().add("resources/textures/entities/objects/grave.png");
-		_animation = umake<still>(texture_handle, texture_space::vector{0, 6});
+		_animation = umake<still>(texture_handle, texture_space::vector{0, 12});
 	}
 	void entity_animator::visit(item_box const&)
 	{
 		static auto texture_handle = the_texture_manager().add("resources/textures/entities/objects/item-box.png");
-		_animation = umake<still>(texture_handle, texture_space::vector{0, 4});
+		_animation = umake<still>(texture_handle, texture_space::vector{0, 8});
 	}
 }

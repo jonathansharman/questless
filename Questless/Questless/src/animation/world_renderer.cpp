@@ -138,7 +138,7 @@ namespace ql
 						auto tile_coords = _world_view->origin() + offset;
 						if ((*_highlight_predicate)(tile_coords)) {
 							_tile_selector_animation.draw
-								( layout::dflt().to_world(tile_coords)
+								( to_world(tile_coords)
 								, the_game().camera()
 								);
 						}
@@ -154,8 +154,8 @@ namespace ql
 		auto y_sort = [](world_view::entity_view const& a, world_view::entity_view const& b) {
 			if (entity const* entity_a = get_entity_cptr(a.id)) {
 				if (entity const* entity_b = get_entity_cptr(b.id)) {
-					double const y_a = layout::dflt().to_world(entity_a->coords).y();
-					double const y_b = layout::dflt().to_world(entity_b->coords).y();
+					double const y_a = to_world(entity_a->coords).y();
+					double const y_b = to_world(entity_b->coords).y();
 					return y_a > y_b;
 				}
 			}
@@ -181,7 +181,7 @@ namespace ql
 						break;
 					case perception::category::low:
 						_unknown_entity_animation->draw
-							( layout::dflt().to_world(entity->coords)
+							( to_world(entity->coords)
 							, the_game().camera()
 							, colors::color_vector{intensity, intensity, intensity, 1.0f}
 							);
@@ -195,8 +195,8 @@ namespace ql
 						{
 							void operator ()(being const& being)
 							{
-								game_space::point start = layout::dflt().to_world(being.coords);
-								game_space::point end = layout::dflt().to_world(being.coords.neighbor(being.direction));
+								game_space::point start = to_world(being.coords);
+								game_space::point end = to_world(being.coords.neighbor(being.direction));
 								the_game().camera().draw_lines({start, end}, colors::magenta());
 							}
 							void operator ()(object const&) {}
@@ -208,8 +208,8 @@ namespace ql
 						//	( overload
 						//		( [](being const& being)
 						//			{
-						//				game_space::point start = layout::dflt().to_world(being.coords);
-						//				game_space::point end = layout::dflt().to_world(being.coords.neighbor(being.direction));
+						//				game_space::point start = to_world(being.coords);
+						//				game_space::point end = to_world(being.coords.neighbor(being.direction));
 						//				the_game().camera().draw_lines({start, end}, color::magenta());
 						//			}
 						//		, [](object const&) {}
@@ -218,7 +218,7 @@ namespace ql
 						//	);
 
 						entity_animation.draw
-							( layout::dflt().to_world(entity->coords)
+							( to_world(entity->coords)
 							, the_game().camera()
 							, colors::color_vector{intensity, intensity, intensity, 1.0f}
 							);
@@ -303,7 +303,7 @@ namespace ql
 							perception tile_perception = section_view.tile_perceptions[section_tile_coords.q][section_tile_coords.r];
 							if (tile_perception.category() != perception::category::none) {
 								region_tile::point const region_tile_coords = section.region_tile_coords(section_tile_coords);
-								game_space::point const tile_game_point = layout::dflt().to_world(region_tile_coords);
+								game_space::point const tile_game_point = to_world(region_tile_coords);
 								game_space::point const terrain_game_point = _terrain_bounds.position;
 								window_space::point const tile_screen_point
 									{ lround(tile_game_point.x() - terrain_game_point.x())
@@ -339,8 +339,8 @@ namespace ql
 	{
 		static auto arrow_sound_handle = the_sound_manager().add("resources/sounds/spells/eagle-eye.wav");
 
-		game_space::point source = layout::dflt().to_world(e.origin());
-		game_space::point target = layout::dflt().to_world(e.target);
+		game_space::point source = to_world(e.origin());
+		game_space::point target = to_world(e.target);
 		_animations.push_back(std::make_pair(umake<arrow_particle>(source, target), source));
 		the_sound_manager()[arrow_sound_handle].play();
 	}
@@ -349,7 +349,7 @@ namespace ql
 	{
 		static auto eagle_eye_sound_handle = the_sound_manager().add("resources/sounds/spells/eagle-eye.wav");
 
-		game_space::point position = layout::dflt().to_world(e.origin());
+		game_space::point position = to_world(e.origin());
 		for (int i = 0; i < 50; ++i) {
 			_animations.push_back(std::make_pair(umake<green_magic_particle>(), position));
 		}
@@ -366,7 +366,7 @@ namespace ql
 		double const target_vitality = target_part ? target_part->vitality.value() : 100.0; // Assume vitality = 100 if being no longer exists to check.
 		//! @todo Pass along the vitality in the event object if it's needed here (to avoid having to make up a number).
 
-		game_space::point const position = layout::dflt().to_world(e.origin());
+		game_space::point const position = to_world(e.origin());
 
 		dmg::group const& damage = e.damage;
 
@@ -454,7 +454,7 @@ namespace ql
 	{
 		static auto lightning_bolt_sound_handle = the_sound_manager().add("resources/sounds/spells/lightning-bolt.wav");
 
-		game_space::point position = layout::dflt().to_world(e.origin());
+		game_space::point position = to_world(e.origin());
 		for (int i = 0; i < 35; ++i) {
 			_animations.push_back(std::make_pair(umake<yellow_magic_particle>(), position));
 		}

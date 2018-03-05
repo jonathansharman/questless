@@ -248,119 +248,117 @@ namespace ql
 		being* const source = opt_source_id ? the_game().beings.ptr(*opt_source_id) : nullptr;
 
 		// Target will take damage.
-		if (before_take_damage(damage, target_part, opt_source_id)) {
-			// Source, if present, will deal damage.
-			if (!source || source->before_deal_damage(damage, target_part, id)) {
-				// First, apply shields' protection, in reverse order so that more recently equipped shields are the first defense.
-				for (auto shields_it = _shields.rbegin(); shields_it != _shields.rend(); ++shields_it) {
-					armor& shield = **shields_it;
-					shield.apply(damage);
+		if (!before_take_damage(damage, target_part, opt_source_id)) return;
+
+		// Source, if present, will deal damage.
+		if (source && !source->before_deal_damage(damage, target_part, id)) return;
+
+		// First, apply shields' protection, in reverse order so that more recently equipped shields are the first defense.
+		for (auto shields_it = _shields.rbegin(); shields_it != _shields.rend(); ++shields_it) {
+			armor& shield = **shields_it;
+			shield.apply(damage);
+		}
+
+		// Apply part's armor's protection and resistance.
+		if (target_part.equipped_item_id) {
+			if (armor* armor = the_game().items.ptr_as<ql::armor>(*target_part.equipped_item_id)) {
+				armor->apply(damage);
+			}
+		}
+
+		{ // Apply part's and being's protection, resistance, and vulnerability.
+			dmg::protect const total_protection = target_part.protection() + stats.protection;
+			dmg::resist const total_resistance = stats.resistance + target_part.resistance();
+			dmg::vuln const total_vulnerability = stats.vulnerability + target_part.vulnerability();
+			damage = damage.with(total_protection, total_resistance, total_vulnerability);
+		}
+
+		{ // Apply secondary damage effects.
+			//! @todo Add effects for other damage types. Balance numbers.
+			struct damage_effect_applier
+			{
+				body_part& body_part;
+				void operator ()(dmg::slash const& slash)
+				{
+					constexpr double bleeding_per_slash = 0.1;
+					body_part.bleeding += slash * bleeding_per_slash;
 				}
-
-				// Apply part's armor's protection and resistance.
-				if (target_part.equipped_item_id) {
-					if (armor* armor = the_game().items.ptr_as<ql::armor>(*target_part.equipped_item_id)) {
-						armor->apply(damage);
-					}
+				void operator ()(dmg::pierce const& pierce)
+				{
+					constexpr double bleeding_per_pierce = 0.1;
+					body_part.bleeding += pierce * bleeding_per_pierce;
 				}
-
-				{ // Apply part's and being's protection, resistance, and vulnerability.
-					dmg::protect const total_protection = target_part.protection() + stats.protection;
-					dmg::resist const total_resistance = stats.resistance + target_part.resistance();
-					dmg::vuln const total_vulnerability = stats.vulnerability + target_part.vulnerability();
-					damage = damage.with(total_protection, total_resistance, total_vulnerability);
+				void operator ()(dmg::cleave const& cleave)
+				{
+					constexpr double bleeding_per_cleave = 0.1;
+					body_part.bleeding += cleave * bleeding_per_cleave;
 				}
-
-				{ // Apply secondary damage effects.
-					//! @todo Add effects for other damage types. Balance numbers.
-					struct damage_effect_applier
-					{
-						body_part& body_part;
-						void operator ()(dmg::slash const& slash)
-						{
-							constexpr double bleeding_per_slash = 0.1;
-							body_part.bleeding += slash * bleeding_per_slash;
-						}
-						void operator ()(dmg::pierce const& pierce)
-						{
-							constexpr double bleeding_per_pierce = 0.1;
-							body_part.bleeding += pierce * bleeding_per_pierce;
-						}
-						void operator ()(dmg::cleave const& cleave)
-						{
-							constexpr double bleeding_per_cleave = 0.1;
-							body_part.bleeding += cleave * bleeding_per_cleave;
-						}
-						void operator ()(dmg::bludgeon const& bludgeon)
-						{
-							constexpr double bleeding_per_bludgeon = 0.05;
-							body_part.bleeding += bludgeon * bleeding_per_bludgeon;
-						}
-						void operator ()(dmg::burn const& burn)
-						{
-							constexpr double cauterization_per_burn = 1.0;
-							body_part.bleeding -= burn * cauterization_per_burn;
-						}
-						void operator ()(dmg::freeze const& /*freeze*/) {}
-						void operator ()(dmg::blight const& /*blight*/) {}
-						void operator ()(dmg::poison const& /*poison*/) {}
-						void operator ()(dmg::shock const& /*shock*/) {}
-					};
-					for (dmg::damage const& damage_part : damage.parts()) {
-						std::visit(damage_effect_applier{target_part}, damage_part);
-					}
+				void operator ()(dmg::bludgeon const& bludgeon)
+				{
+					constexpr double bleeding_per_bludgeon = 0.05;
+					body_part.bleeding += bludgeon * bleeding_per_bludgeon;
 				}
-
-				// Part loses health.
-				target_part.health -= damage.total() / (1.0 + endurance_factor * stats.endurance);
-
-				// Check for part disability.
-				if (target_part.health <= 0) {
-					//! @todo Disable target_part.
-					if (target_part.vital()) {
-						// A vital part has been disabled. Kill target.
-						mortality = ql::mortality::dead;
-					}
+				void operator ()(dmg::burn const& burn)
+				{
+					constexpr double cauterization_per_burn = 1.0;
+					body_part.bleeding -= burn * cauterization_per_burn;
 				}
+				void operator ()(dmg::freeze const& /*freeze*/) {}
+				void operator ()(dmg::blight const& /*blight*/) {}
+				void operator ()(dmg::poison const& /*poison*/) {}
+				void operator ()(dmg::shock const& /*shock*/) {}
+			};
+			for (dmg::damage const& damage_part : damage.parts()) {
+				std::visit(damage_effect_applier{target_part}, damage_part);
+			}
+		}
 
-				// Add injury effect.
-				the_game().add_effect(smake<injury_effect>(coords, damage, id, target_part.id, opt_source_id));
+		// Part loses health.
+		target_part.health -= damage.total() / (1.0 + endurance_factor * stats.endurance);
 
-				// Target has taken damage.
-				if (after_take_damage(damage, target_part, opt_source_id)) {
-					// Source, if present, has dealt damage.
-					if (!source || source->after_deal_damage(damage, target_part, id)) {
-						// Handle death, if this damage killed the target.
-						if (!was_already_dead && mortality == ql::mortality::dead) {
-							// Target will die.
-							if (before_die(opt_source_id)) {
-								// Source, if present, will have killed target.
-								if (!source || source->before_kill(id)) {
-									// Target's death succeeded.
+		// Check for part disability.
+		if (target_part.health <= 0) {
+			//! @todo Disable target_part.
+			if (target_part.vital()) {
+				// A vital part has been disabled. Kill target.
+				mortality = ql::mortality::dead;
+			}
+		}
 
-									if (corporeal()) {
-										// Spawn corpse.
-										ql::region& corpse_region = *region; // Save region since the being's region pointer will be nulled when it's removed.
-										region->remove(*this);
-										auto corpse = umake<ql::corpse>(id);
-										corpse_region.add(*corpse, coords);
-										the_game().objects.add(std::move(corpse));
-									} else {
-										region->remove(*this);
-									}
+		// Add injury effect.
+		the_game().add_effect(smake<injury_effect>(coords, damage, id, target_part.id, opt_source_id));
 
-									// Source, if present, has killed target.
-									if (!source || source->after_kill(id)) {
-										// Target has died.
-										if (after_die(opt_source_id)) {
-											return;
-										}
-									}
-								}
-							}
-						}
-					}
-				}
+		// Target has taken damage.
+		if (!after_take_damage(damage, target_part, opt_source_id)) return;
+
+		// Source, if present, has dealt damage.
+		if (source && !source->after_deal_damage(damage, target_part, id)) return;
+
+		// Handle death, if this damage killed the target.
+		if (!was_already_dead && mortality == ql::mortality::dead) {
+			// Target will die.
+			if (!before_die(opt_source_id)) return;
+
+			// Source, if present, will have killed target.
+			if (source && !source->before_kill(id)) return;
+
+			// Target's death succeeded.
+			if (corporeal()) {
+				// Spawn corpse.
+				ql::region& corpse_region = *region; // Save region since the being's region pointer will be nulled when it's removed.
+				region->remove(*this);
+				auto corpse = umake<ql::corpse>(id);
+				corpse_region.add(*corpse, coords);
+				the_game().objects.add(std::move(corpse));
+			} else {
+				region->remove(*this);
+			}
+
+			// Source, if present, has killed target.
+			if (!source || source->after_kill(id)) {
+				// Target has died.
+				if (!after_die(opt_source_id)) return;
+				return;
 			}
 		}
 	}

@@ -15,7 +15,7 @@ using namespace units::math;
 namespace ql::qte
 {
 	shock::shock(region_tile::point target_coords, std::function<void(double)> cont)
-		: _target_point{units::layout::dflt().to_world(target_coords)}
+		: _target_point{to_world(target_coords)}
 		, _cont{std::move(cont)}
 	{
 		_txt_title = make_title("Build up a charge!");

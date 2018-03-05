@@ -150,7 +150,7 @@ namespace units
 			constexpr explicit point() = default;
 			constexpr explicit point(int q, int r) : q{q}, r{r}, s{-q - r} {}
 			constexpr explicit point(int q, int r, int s) : q{q}, r{r}, s{s} {}
-			explicit point(double q, double r)
+			constexpr explicit point(double q, double r)
 				: point{q, r, -q - r}
 			{}
 
@@ -230,7 +230,7 @@ namespace units
 		};
 	};
 
-	struct orientation
+	struct hex_orientation
 	{
 		// Forward matrix, used to go from hex coords to world coords.
 		//  [[f0 f1]
@@ -248,11 +248,11 @@ namespace units
 		double b3;
 		double start_angle;
 
-		constexpr orientation(double f0, double f1, double f2, double f3, double b0, double b1, double b2, double b3, double start_angle)
+		constexpr hex_orientation(double f0, double f1, double f2, double f3, double b0, double b1, double b2, double b3, double start_angle)
 			: f0{f0}, f1{f1}, f2{f2}, f3{f3}, b0{b0}, b1{b1}, b2{b2}, b3{b3}, start_angle{start_angle}
 		{}
 
-		constexpr orientation(double f0, double f1, double f2, double f3, double start_angle)
+		constexpr hex_orientation(double f0, double f1, double f2, double f3, double start_angle)
 			: f0{f0}, f1{f1}, f2{f2}, f3{f3}
 			, b0{1.0 / (f0 * f3 - f1 * f2) * f3}
 			, b1{1.0 / (f0 * f3 - f1 * f2) * -f1}
@@ -260,23 +260,18 @@ namespace units
 			, b3{1.0 / (f0 * f3 - f1 * f2) * f0}
 			, start_angle{start_angle}
 		{}
+
+		constexpr static auto pointy() { return hex_orientation{math::sqrt(3.0), math::sqrt(3.0) / 2.0, 0.0, 3.0 / 2.0, 0.5}; }
+		constexpr static auto flat() { return hex_orientation{3.0 / 2.0, 0.0, math::sqrt(3.0) / 2.0, math::sqrt(3.0), 0.0}; }
 	};
 
-	constexpr orientation orientation_pointy{math::sqrt(3.0), math::sqrt(3.0) / 2.0, 0.0, 3.0 / 2.0, 0.5};
-	constexpr orientation orientation_flat{3.0 / 2.0, 0.0, math::sqrt(3.0) / 2.0, math::sqrt(3.0), 0.0};
-
-	struct layout
+	struct hex_layout
 	{
-		orientation orientation;
+		hex_orientation orientation;
 		game_space::vector size;
 		game_space::point origin;
 
-		static constexpr layout dflt()
-		{
-			return layout{orientation_flat, game_space::vector{30.0f, 36.0f / math::sqrt(3.0f)}, game_space::point{0.0f, 0.0f}};
-		}
-
-		constexpr layout(units::orientation orientation, game_space::vector size, game_space::point origin)
+		constexpr hex_layout(units::hex_orientation orientation, game_space::vector size, game_space::point origin)
 			: orientation{orientation}, size{std::move(size)}, origin{std::move(origin)}
 		{}
 

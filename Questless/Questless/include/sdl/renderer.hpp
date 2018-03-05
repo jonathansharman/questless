@@ -37,7 +37,7 @@ namespace sdl
 		renderer& operator =(renderer&&) & = default;
 
 		//! The internal SDL_Renderer pointer.
-		SDL_Renderer* const sdl_ptr() { return _renderer; }
+		SDL_Renderer* sdl_ptr() { return _renderer; }
 
 		//! The logical width of the render target.
 		int width() const { return _w; }

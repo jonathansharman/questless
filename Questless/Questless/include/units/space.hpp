@@ -68,11 +68,11 @@ namespace units
 
 		static_assert(n >= 0, "Number of dimensions must be non-negative.");
 
-		//! Represents the axis along the dimension with index @p dimension.
-		template <int dimension>
+		//! Represents the axis along the dimension with index @p Index.
+		template <int Index>
 		struct axis
 		{
-			static_assert(0 <= dimension && dimension < n, "Axis index out of bounds.");
+			static_assert(0 <= Index && Index < n, "Axis index out of bounds.");
 
 			//! Alignment along this axis.
 			enum class align { near, mid, far };
@@ -469,7 +469,7 @@ namespace units
 
 			//! The counter-clockwise angle of the vector from the positive x-axis (in radians by default).
 			template <typename UnitsPerCircle = radians::units_per_circle>
-			typename space::angle<UnitsPerCircle> angle() const  //! @todo Cannot be constexpr because of cos() and sin(). Implement constexpr trig functions in units::math to enable.
+			typename space::angle<UnitsPerCircle> angle() const //! @todo Cannot be constexpr because of cos() and sin(). Implement constexpr trig functions in units::math to enable.
 			{
 				static_assert(n == 2, "Requires two-dimensional space.");
 				return typename space::angle<UnitsPerCircle>{static_cast<scalar>(atan2(this->_elements[1], this->_elements[0]))};
@@ -735,24 +735,24 @@ namespace units
 				return apply_alignment<0>(position, size, alignment);
 			}
 
-			template <int index>
+			template <int Index>
 			static constexpr point apply_alignment(point position, vector size, alignment const& alignment)
 			{
 				//! @todo Specialize these adjustments for integers and floats?
-				switch (std::get<index>(alignment)) {
-					case axis<index>::align::near:
+				switch (std::get<Index>(alignment)) {
+					case axis<Index>::align::near:
 						break;
-					case axis<index>::align::mid:
-						position[index] -= size[index] / 2 - 1;
+					case axis<Index>::align::mid:
+						position[Index] -= size[Index] / 2 - 1;
 						break;
-					case axis<index>::align::far:
-						position[index] -= size[index] - 1;
+					case axis<Index>::align::far:
+						position[Index] -= size[Index] - 1;
 						break;
 				}
-				if constexpr (index == n - 1) {
+				if constexpr (Index == n - 1) {
 					return position;
 				} else {
-					return apply_alignment<index + 1>(position, size, alignment);
+					return apply_alignment<Index + 1>(position, size, alignment);
 				}
 			}
 		};
@@ -835,9 +835,10 @@ TEST_CASE("[angle] operations")
 {
 	using double_space = units::space<struct double_space_tag, double, 2>;
 
+	constexpr auto circle_degrees = double_space::angle_cast<double_space::degrees>(double_space::radians::circle());
+
 	SUBCASE("conversions")
 	{
-		constexpr auto circle_degrees = double_space::angle_cast<double_space::degrees>(double_space::radians::circle());
 		CHECK(circle_degrees[0] == doctest::Approx(360.0));
 	}
 }

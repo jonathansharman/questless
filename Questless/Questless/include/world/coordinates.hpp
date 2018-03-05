@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "units/game_space.hpp"
 #include "units/hex_space.hpp"
 
 namespace ql
@@ -33,6 +34,49 @@ namespace ql
 			return left.region < right.region || (left.region == right.region && left.section < right.section);
 		}
 	};
+
+	//! The hex layout used in Questless.
+	constexpr auto hex_layout = units::hex_layout
+		{ units::hex_orientation::flat()
+		, units::game_space::vector{30.0f, 36.0f / units::math::sqrt(3.0f)}
+		, units::game_space::point{0.0f, 0.0f}
+		};
+
+	// Conversions between world and region tile coordinates.
+
+	//! Converts @p p to a game space point.
+	constexpr auto to_world(region_tile::point p)
+	{
+		return units::game_space::point
+			{ ((hex_layout.orientation.f0 * p.q + hex_layout.orientation.f1 * p.r) * hex_layout.size.x() + hex_layout.origin.x())
+			, ((hex_layout.orientation.f2 * p.q + hex_layout.orientation.f3 * p.r) * hex_layout.size.y() + hex_layout.origin.y())
+			};
+	}
+	//! Converts @p v to a game space vector.
+	constexpr auto to_world(region_tile::vector v)
+	{
+		return units::game_space::point
+			{ ((hex_layout.orientation.f0 * v.q + hex_layout.orientation.f1 * v.r) * hex_layout.size.x())
+			, ((hex_layout.orientation.f2 * v.q + hex_layout.orientation.f3 * v.r) * hex_layout.size.y())
+			};
+	}
+
+	//! Converts @p p to a region tile space point.
+	constexpr auto to_region_tile(units::game_space::point p)
+	{
+		return region_tile::point
+			{ hex_layout.orientation.b0 * (p.x() - hex_layout.origin.x()) / hex_layout.size.x() + hex_layout.orientation.b1 * (p.y() - hex_layout.origin.y()) / hex_layout.size.y()
+			, hex_layout.orientation.b2 * (p.x() - hex_layout.origin.x()) / hex_layout.size.x() + hex_layout.orientation.b3 * (p.y() - hex_layout.origin.y()) / hex_layout.size.y()
+			};
+	}
+	//! Converts @p v to a region tile space vector.
+	constexpr auto to_region_tile(units::game_space::vector v)
+	{
+		return region_tile::point
+			{ hex_layout.orientation.b0 * v.x() / hex_layout.size.x() + hex_layout.orientation.b1 * v.y() / hex_layout.size.y()
+			, hex_layout.orientation.b2 * v.x() / hex_layout.size.x() + hex_layout.orientation.b3 * v.y() / hex_layout.size.y()
+			};
+	}
 }
 
 // Specialize std::hash.
@@ -46,9 +90,7 @@ namespace std
 			return hash_value(p);
 		}
 	};
-}
-namespace std
-{
+
 	template <>
 	struct hash<ql::section_tile::vector>
 	{
@@ -57,9 +99,7 @@ namespace std
 			return hash_value(v);
 		}
 	};
-}
-namespace std
-{
+
 	template <>
 	struct hash<ql::region_tile::point>
 	{
@@ -68,9 +108,7 @@ namespace std
 			return hash_value(p);
 		}
 	};
-}
-namespace std
-{
+
 	template <>
 	struct hash<ql::region_tile::vector>
 	{
@@ -79,9 +117,7 @@ namespace std
 			return hash_value(v);
 		}
 	};
-}
-namespace std
-{
+
 	template <>
 	struct hash<ql::region_section::point>
 	{
@@ -90,9 +126,7 @@ namespace std
 			return hash_value(p);
 		}
 	};
-}
-namespace std
-{
+
 	template <>
 	struct hash<ql::region_section::vector>
 	{

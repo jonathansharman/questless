@@ -177,39 +177,8 @@ namespace sdl
 		return *this;
 	}
 
-	void texture::draw
-		( window_space::point position
-		, texture_space::h_align horizontal_alignment
-		, texture_space::v_align vertical_alignment
-		, color_vector color_vector
-		, std::optional<texture_space::box> const& src_rect
-		) const
-	{
-		switch (horizontal_alignment) {
-			case texture_space::align_left:
-				position.x() += width() / 2;
-				break;
-			case texture_space::align_center:
-				break;
-			case texture_space::align_right:
-				position.x() -= width() / 2;
-				break;
-		}
-		switch (vertical_alignment) {
-			case texture_space::align_top:
-				position.y() += height() / 2;
-				break;
-			case texture_space::align_middle:
-				break;
-			case texture_space::align_bottom:
-				position.y() -= height() / 2;
-				break;
-		}
-		draw_transformed(position, texture_space::vector::zero(), color_vector, 1.0f, 1.0f, game_space::radians::zero(), src_rect);
-	}
-
 	void texture::draw_transformed
-		( window_space::point position
+		( std::variant<window_space::point, view_space::point> position
 		, texture_space::vector origin
 		, color_vector color_vector
 		, float horizontal_scale
@@ -241,10 +210,24 @@ namespace sdl
 			int const height = src_rect ? units::height(*src_rect) : _size.y();
 
 			glm::mat4 model_matrix;
-			// Position. Correct for odd width/height by nudging position by half a pixel.
-			float const x = (width & 1) ? position.x() + 0.5f : position.x();
-			float const y = (height & 1) ? position.y() + 0.5f : position.y();
-			model_matrix = glm::translate(model_matrix, glm::vec3{x, y, 0.0f});
+			// Position. Correct for odd width/height in window space by nudging position by half a pixel.
+			auto const view_space_position = [&] {
+				struct to_float_coords
+				{
+					int const width;
+					int const height;
+					auto operator ()(view_space::point position) { return position; }
+					auto operator ()(window_space::point position)
+					{
+						return view_space::point
+							{ position.x() + ((width & 1) ? 0.5f : 0.0f)
+							, position.y() + ((height & 1) ? 0.5f : 0.0f)
+							};
+					}
+				};
+				return std::visit(to_float_coords{width, height}, position);
+			}();
+			model_matrix = glm::translate(model_matrix, glm::vec3{view_space_position.x(), view_space_position.y(), 0.0f});
 			// Orientation
 			model_matrix = glm::rotate
 				( model_matrix
@@ -254,7 +237,7 @@ namespace sdl
 			// Scale
 			model_matrix = glm::scale(model_matrix, glm::vec3{horizontal_scale * width, vertical_scale * height, 1.0f});
 			// Origin
-			model_matrix = glm::translate(model_matrix, glm::vec3{-2.0f * origin.u() / width, -2.0f * origin.v() / height, 0.0f});
+			model_matrix = glm::translate(model_matrix, glm::vec3{-1.0f * origin.u() / width, -1.0f * origin.v() / height, 0.0f});
 
 			GLuint const model_matrix_uniform = dflt_program().get_uniform_handle("model_matrix"); //! @todo Cache this, invalidating cache after window resize.
 			glUniformMatrix4fv(model_matrix_uniform, 1, GL_FALSE, glm::value_ptr(model_matrix));

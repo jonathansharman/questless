@@ -18,13 +18,31 @@ using namespace units::math;
 namespace ql::qte
 {
 	aim_missile::aim_missile(region_tile::point source_coords, being const& target_being, std::function<void(body_part*)> cont)
-		: _source_coords{source_coords}
+		: _source_tile_coords{source_coords}
 		, _target_being{target_being}
 		, _cont{std::move(cont)}
 		, _aiming_circle{view_space::point{500.0f, 500.0f}, 10.0f}
+		, _txt_title{make_title("Aim your shot!")}
+		, _txt_prompt{make_prompt("Pull back the aiming circle.")}
 	{
-		_txt_title = make_title("Aim your shot!");
-		_txt_prompt = make_prompt("Pull back the aiming circle.");
+		auto const tile_source_to_target = _target_being.coords - _source_tile_coords;
+		auto const game_source_to_target = to_world(tile_source_to_target);
+		view_space::vector const view_source_to_target
+			{ static_cast<view_space::scalar>(game_source_to_target.x())
+			, static_cast<view_space::scalar>(-game_source_to_target.y())
+			};
+		view_space::scalar const view_distance = view_source_to_target.length();
+		auto const unit_source_to_target = view_distance == 0.0f ? view_source_to_target : view_source_to_target / view_distance;
+
+		// Reduce scale with distance.
+		constexpr float base_scale_divisor = 50.0f;
+		_target_view_scale = base_scale_divisor / (view_distance + 1.0f);
+
+		constexpr float aiming_circle_distance = 100.0f;
+		_aiming_circle.center = the_window().view_center() - aiming_circle_distance * unit_source_to_target;
+
+		constexpr float target_distance = 200.0f;
+		_target_view_coords = the_window().view_center() + target_distance * unit_source_to_target;
 	}
 
 	dialog::state aim_missile::update()
@@ -41,7 +59,7 @@ namespace ql::qte
 				// Can't hold at full draw for too long, or it's an automatic miss.
 				//! @todo This seems bow-specific.
 				_elapsed_time += game::frame_duration;
-				if (_elapsed_time > time_limit) {
+				if (_elapsed_time > time_limit * 10000) { // @todo Remove the factor after debugging.
 					return _cont(nullptr);
 				}
 
@@ -66,17 +84,30 @@ namespace ql::qte
 
 	void aim_missile::draw() const
 	{
-		static auto point_charge_texture_handle = the_texture_manager().add("resources/textures/particles/glow-large.png");
-
 		{ // Draw the target.
 			body_texturer texturer;
 			texturer.visit(_target_being.body);
 			uptr<texture> texture = texturer.texture();
-			texture->draw(the_window().window_center(), texture_space::align_left, texture_space::align_bottom);
+			texture->draw_transformed
+				( _target_view_coords
+				, texture_space::vector{0, texture->height() / 2}
+				, colors::white_vector()
+				, _target_view_scale
+				, _target_view_scale
+				);
 		}
 
-		// Draw the aiming circle.
-		the_renderer().draw_disc(_aiming_circle, 3.0f, colors::white(), colors::red(0.75f));
+		if (_aiming_state == aiming_state::beginning || _aiming_state == aiming_state::aiming) {
+			// Draw the aiming circle.
+			the_renderer().draw_disc(_aiming_circle, 3.0f, colors::white(), colors::red(0.75f));
+			// Draw the hint circle.
+			view_space::sphere const hint_circle
+				//{ the_window().view_center() + (the_window().view_center() - _aiming_circle.center)
+				{ _target_view_coords
+				, _aiming_circle.radius
+				};
+			the_renderer().draw_disc(hint_circle, 3.0f, colors::white(0.5f), colors::red(0.375f));
+		}
 
 		draw_title(*_txt_title);
 		draw_prompt(*_txt_prompt);
