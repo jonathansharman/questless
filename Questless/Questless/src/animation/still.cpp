@@ -9,22 +9,21 @@ using namespace units;
 
 namespace ql
 {
-	void still::draw(units::window_space::point position) const
+	void still::draw(window_space::point position) const
 	{
 		texture const& texture = the_texture_manager()[_texture_handle];
 		window_space::point dst_point{position.x() - _origin.u(), position.y() - _origin.v()};
 		texture.draw(dst_point);
 	}
 
-	void still::draw(units::game_space::point position, camera const& camera, colors::color_vector color) const
+	void still::draw(game_space::point position, camera const& camera, colors::color_vector color) const
 	{
 		camera.draw
 			( the_texture_manager()[_texture_handle]
-			, units::game_space::point{position}
+			, game_space::point{position}
 			, origin{_origin}
 			, color
-			, h_scale{1.0}
-			, v_scale{1.0}
+			, view_space::vector{1.0f, 1.0f}
 			, game_space::radians{0.0}
 			);
 	}

@@ -14,8 +14,6 @@
 namespace ql
 {
 	struct origin : tagged_type<units::texture_space::vector> { using tagged_type::tagged_type; };
-	struct h_scale : tagged_type<double> { using tagged_type::tagged_type; };
-	struct v_scale : tagged_type<double> { using tagged_type::tagged_type; };
 	struct src_rect : tagged_type<std::optional<units::texture_space::box>> { using tagged_type::tagged_type; };
 
 	//! A simple 2D camera, useful for panning, zooming, and rotating around a scene.
@@ -86,8 +84,7 @@ namespace ql
 		//! @param position The in-game coordinates of the texture.
 		//! @param origin The offset from the texture's center to its origin point.
 		//! @param color An additional color vector, applied on top of the camera's color vector.
-		//! @param horizontal_scale The horizontal scale of the texture.
-		//! @param vertical_scale The vertical scale of the texture.
+		//! @param scale The scale of the texture.
 		//! @param angle The counter-clockwise rotation of the texture, in radians.
 		//! @param src_rect An optional Rect specifying the portion of the texture to be copied. If nullopt, the entire texture is used.
 		void draw
@@ -95,8 +92,7 @@ namespace ql
 			, units::game_space::point position
 			, origin origin = origin{units::texture_space::vector::zero()}
 			, units::colors::color_vector color_vector = units::colors::white_vector()
-			, h_scale horizontal_scale = h_scale{1.0}
-			, v_scale vertical_scale = v_scale{1.0}
+			, units::view_space::vector scale = units::view_space::vector{1.0f, 1.0f}
 			, units::game_space::radians angle = units::game_space::radians{0.0}
 			, src_rect const& src_rect = src_rect{std::nullopt}
 			) const;

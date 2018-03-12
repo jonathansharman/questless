@@ -26,13 +26,13 @@ namespace sdl
 {
 	namespace
 	{
-		bool has_positive_winding_order(vector<view_space::point> const& vertices)
+		bool has_positive_winding_order(view_space::polygon const& polygon)
 		{
 			// Winding order is positive iff "winding" is positive.
 			float winding = 0.0f;
-			for (std::size_t i = 0; i < vertices.size(); ++i) {
-				auto const p1 = vertices[i];
-				auto const p2 = i == vertices.size() - 1 ? vertices.front() : vertices[i + 1];
+			for (std::size_t i = 0; i < polygon.size(); ++i) {
+				auto const p1 = polygon[i];
+				auto const p2 = i == polygon.size() - 1 ? polygon.front() : polygon[i + 1];
 
 				winding += (p1.x() - p2.x()) * (p2.y() + p1.y());
 			}
@@ -177,13 +177,10 @@ namespace sdl
 		draw_lines(view_space_vertices, color);
 	}
 
-	void renderer::draw_polygon(view_space::polygon const& vertices, colors::color color)
+	void renderer::draw_polygon(view_space::polygon const& polygon, colors::color color)
 	{
 		// Don't bother rendering transparent polygons.
 		if (color.alpha() == 0.0f) { return; }
-
-		// Degenerate polygons are not visible.
-		if (vertices.size() < 3) { return; }
 
 		//! @todo Reenable after convex_components() is implemented.
 		// Break solid non-convex polygons into convex subpolygons.
@@ -210,12 +207,12 @@ namespace sdl
 		{ // Set vertex data.
 			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 			vector<GLfloat> vertex_data;
-			vertex_data.reserve(2 * vertices.size());
-			for (auto const& vertex : vertices) {
+			vertex_data.reserve(2 * polygon.size());
+			for (auto const& vertex : polygon) {
 				vertex_data.push_back(vertex.x());
 				vertex_data.push_back(vertex.y());
 			}
-			glBufferData(GL_ARRAY_BUFFER, 2 * vertices.size() * sizeof(GLfloat), vertex_data.data(), GL_DYNAMIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, 2 * polygon.size() * sizeof(GLfloat), vertex_data.data(), GL_DYNAMIC_DRAW);
 			{
 				GLint const component_count = 2;
 				GLsizei const stride = 2 * sizeof(GLfloat);
@@ -225,7 +222,7 @@ namespace sdl
 		}
 
 		{ // Set IBO.
-			vector<GLuint> index_data(vertices.size());
+			vector<GLuint> index_data(polygon.size());
 			std::iota(index_data.begin(), index_data.end(), 0);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_data.size() * sizeof(GLuint), index_data.data(), GL_DYNAMIC_DRAW);
@@ -236,7 +233,7 @@ namespace sdl
 		glUniform4f(color_uniform, color.red(), color.green(), color.blue(), color.alpha());
 
 		// Render.
-		glDrawElements(GL_TRIANGLE_FAN, vertices.size(), GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLE_FAN, polygon.size(), GL_UNSIGNED_INT, nullptr);
 
 		// Disable vertex attributes.
 		glDisableVertexAttribArray(position_attribute);
@@ -244,11 +241,11 @@ namespace sdl
 
 	void renderer::draw_polygon(window_space::polygon const& polygon, colors::color color)
 	{
-		vector<view_space::point> view_space_vertices;
+		view_space::polygon view_space_polygon;
 		for (auto const& vertex : polygon) {
-			view_space_vertices.push_back(to_view_space(vertex));
+			view_space_polygon.push_back(to_view_space(vertex));
 		}
-		draw_polygon(view_space_vertices, color);
+		draw_polygon(view_space_polygon, color);
 	}
 	
 	void renderer::draw_polygon
@@ -262,7 +259,7 @@ namespace sdl
 		if (polygon.size() < 3) { return; }
 
 		// Construct fill vertices.
-		vector<view_space::point> fill_vertices;
+		view_space::polygon fill_vertices;
 		bool const positive_winding_order = has_positive_winding_order(polygon);
 		for (std::size_t i = 0; i < polygon.size(); ++i) {
 			auto const p_minus_1 = i == 0 ? polygon.back() : polygon[i - 1];
@@ -318,22 +315,22 @@ namespace sdl
 	}
 	
 	void renderer::draw_polygon
-		( vector<window_space::point> const& vertices
+		( window_space::polygon const& polygon
 		, window_space::scalar border_width
 		, colors::color border_color
 		, colors::color fill_color
 		)
 	{
-		vector<view_space::point> view_space_vertices;
-		for (auto const& vertex : vertices) {
-			view_space_vertices.push_back(to_view_space(vertex));
+		view_space::polygon view_space_polygon;
+		for (auto const& vertex : polygon) {
+			view_space_polygon.push_back(to_view_space(vertex));
 		}
-		draw_polygon(view_space_vertices, to_view_space(border_width), border_color, fill_color);
+		draw_polygon(view_space_polygon, to_view_space(border_width), border_color, fill_color);
 	}
 
 	void renderer::draw_box(view_space::box const& box, colors::color color)
 	{
-		draw_polygon({top_left(box), top_right(box), bottom_right(box), bottom_left(box)}, color);
+		draw_polygon(view_space::polygon{top_left(box), top_right(box), bottom_right(box), bottom_left(box)}, color);
 	}
 
 	void renderer::draw_box(window_space::box const& box, colors::color color)
@@ -361,7 +358,7 @@ namespace sdl
 		)
 	{
 		if (units::width(box) > 0.0f && units::height(box) > 0.0f) {
-			draw_polygon({top_left(box), top_right(box), bottom_right(box), bottom_left(box)}, border_width, border_color, fill_color);
+			draw_polygon(view_space::polygon{top_left(box), top_right(box), bottom_right(box), bottom_left(box)}, border_width, border_color, fill_color);
 		}
 	}
 
@@ -409,7 +406,7 @@ namespace sdl
 		}
 	}
 
-	void renderer::draw_triangle_strip(view_space::polygon const& polygon, colors::color color)
+	void renderer::draw_triangle_strip(vector<view_space::point> const& vertices, colors::color color)
 	{
 		// Bind program.
 		solid_program().use();
@@ -427,12 +424,12 @@ namespace sdl
 		{ // Set vertex data.
 			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 			vector<GLfloat> vertex_data;
-			vertex_data.reserve(2 * polygon.size());
-			for (auto const& vertex : polygon) {
+			vertex_data.reserve(2 * vertices.size());
+			for (auto const& vertex : vertices) {
 				vertex_data.push_back(vertex.x());
 				vertex_data.push_back(vertex.y());
 			}
-			glBufferData(GL_ARRAY_BUFFER, 2 * polygon.size() * sizeof(GLfloat), vertex_data.data(), GL_DYNAMIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, 2 * vertices.size() * sizeof(GLfloat), vertex_data.data(), GL_DYNAMIC_DRAW);
 			{
 				GLint const component_count = 2;
 				GLsizei const stride = 2 * sizeof(GLfloat);
@@ -442,7 +439,7 @@ namespace sdl
 		}
 
 		{ // Set IBO.
-			vector<GLuint> index_data(polygon.size());
+			vector<GLuint> index_data(vertices.size());
 			std::iota(index_data.begin(), index_data.end(), 0);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_data.size() * sizeof(GLuint), index_data.data(), GL_DYNAMIC_DRAW);
@@ -453,7 +450,7 @@ namespace sdl
 		glUniform4f(color_uniform, color.red(), color.green(), color.blue(), color.alpha());
 
 		// Render.
-		glDrawElements(GL_TRIANGLE_STRIP, polygon.size(), GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLE_STRIP, vertices.size(), GL_UNSIGNED_INT, nullptr);
 
 		// Disable vertex attributes.
 		glDisableVertexAttribArray(position_attribute);

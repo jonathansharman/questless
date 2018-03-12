@@ -104,14 +104,14 @@ namespace ql::qte
 
 		// Draw point charges.
 		for (auto const& point_charge : _charges) {
-			float intensity = uniform(0.0f, 1.0f);
+			float const intensity = uniform(0.0f, 1.0f);
+			view_space::scalar scale = (1.0f + intensity) / 2.0f;
 			the_game().camera().draw
 				( the_texture_manager()[point_charge_texture_handle]
 				, point_charge.position
 				, origin{texture_space::vector::zero()}
 				, colors::color_vector{1.0f, intensity, intensity, 1.0f}
-				, h_scale{(1.0 + intensity) / 2.0}
-				, v_scale{(1.0 + intensity) / 2.0}
+				, view_space::vector{scale, scale}
 				, game_space::radians{0.0}
 				);
 		}

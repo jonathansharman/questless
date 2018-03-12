@@ -22,7 +22,7 @@ namespace ql
 		, _loops{0}
 	{}
 
-	void sprite_animation::draw(units::window_space::point position) const
+	void sprite_animation::draw(window_space::point position) const
 	{
 		//! @todo What is the default center in this case, and what should it be?
 		sprite_animation::frame const& frame = _frames[_frame_index];
@@ -41,8 +41,7 @@ namespace ql
 			( position
 			, frame.origin
 			, colors::white_vector()
-			, 1.0f
-			, 1.0f
+			, view_space::vector{1.0f, 1.0f}
 			, game_space::radians{0.0}
 			, src_rect{texture_space::box
 				{ texture_space::point{_sprite_sheet->cel_width() * frame.coords.x(), _sprite_sheet->cel_height() * frame.coords.y()}
@@ -51,7 +50,7 @@ namespace ql
 			);
 	}
 
-	void sprite_animation::draw(units::game_space::point position, camera const& camera, colors::color_vector color_vector) const
+	void sprite_animation::draw(game_space::point position, camera const& camera, colors::color_vector color_vector) const
 	{
 		sprite_animation::frame const& frame = _frames[_frame_index];
 		camera.draw
@@ -59,8 +58,7 @@ namespace ql
 			, game_space::point{position}
 			, origin{frame.origin}
 			, color_vector
-			, h_scale{1.0}
-			, v_scale{1.0}
+			, view_space::vector{1.0f, 1.0f}
 			, game_space::radians{0.0}
 			, src_rect{texture_space::box
 				{ texture_space::point{_sprite_sheet->cel_width() * frame.coords.x(), _sprite_sheet->cel_height() * frame.coords.y()}

@@ -181,9 +181,8 @@ namespace sdl
 		( std::variant<window_space::point, view_space::point> position
 		, texture_space::vector origin
 		, color_vector color_vector
-		, float horizontal_scale
-		, float vertical_scale
-		, units::game_space::radians angle
+		, view_space::vector scale
+		, game_space::radians angle
 		, std::optional<texture_space::box> const& src_rect
 		) const
 	{
@@ -235,7 +234,7 @@ namespace sdl
 				, glm::vec3{0.0f, 0.0f, 1.0f}
 				);
 			// Scale
-			model_matrix = glm::scale(model_matrix, glm::vec3{horizontal_scale * width, vertical_scale * height, 1.0f});
+			model_matrix = glm::scale(model_matrix, glm::vec3{scale.x() * width, scale.y() * height, 1.0f});
 			// Origin
 			model_matrix = glm::translate(model_matrix, glm::vec3{-1.0f * origin.u() / width, -1.0f * origin.v() / height, 0.0f});
 

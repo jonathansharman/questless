@@ -51,8 +51,10 @@ namespace ql
 			, position + _displacement
 			, origin{texture_space::vector::zero()}
 			, color_vector
-			, h_scale{_scale}
-			, v_scale{_scale}
+			, view_space::vector
+				{ static_cast<view_space::scalar>(_scale)
+				, static_cast<view_space::scalar>(_scale)
+				}
 			, _angle
 			);
 	}

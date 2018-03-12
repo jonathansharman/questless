@@ -92,8 +92,7 @@ namespace ql::qte
 				( _target_view_coords
 				, texture_space::vector{0, texture->height() / 2}
 				, colors::white_vector()
-				, _target_view_scale
-				, _target_view_scale
+				, view_space::vector{_target_view_scale, _target_view_scale}
 				);
 		}
 

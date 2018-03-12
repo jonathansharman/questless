@@ -4,8 +4,10 @@
 
 #pragma once
 
+#include <algorithm>
 #include <array>
 #include <initializer_list>
+#include <numeric>
 #include <ratio>
 #include <type_traits>
 
@@ -694,6 +696,7 @@ namespace units
 				return left.origin != right.origin || left.size != right.size;
 			}
 
+			//! Whether this box contains @p point.
 			constexpr bool contains(point const& point) const
 			{
 				//! @todo Rigorously define what containment means for generic spaces (inclusive vs. exclusive bounds).
@@ -795,6 +798,7 @@ namespace units
 				return left.center != right.center || left.radius != right.radius;
 			}
 
+			//! Whether this sphere contains @p point.
 			constexpr bool contains(point const& point) const
 			{
 				//! @todo Rigorously define what containment means for generic spaces (inclusive vs. exclusive bounds).
@@ -821,6 +825,54 @@ namespace units
 				}
 			}
 		};
+
+		//! A simple closed polygon in this space defined by a sequence of vertices. Only defined for 2D spaces.
+		//! @note Behavior is undefined if the given points do not form a simple closed polytope.
+		using polygon = std::vector<point>;
+
+		//! The smallest box that contains @p polygon.
+		static box bounding_box(polygon const& polygon)
+		{
+			static_assert(n == 2, "Use of polygon operations requires a 2D type.");
+
+			//! @todo Check that the edge cases are correct here. Calling .contains(v) on the result of this function should work for all v in polygon.
+			auto min_x = std::accumulate(polygon.begin(), polygon.end(), std::numeric_limits<scalar>::max(), [](scalar const& acc, point const& v) {
+				return std::min(acc, v.x());
+			});
+			auto max_x = std::accumulate(polygon.begin(), polygon.end(), std::numeric_limits<scalar>::min(), [](scalar const& acc, point const& v) {
+				return std::max(acc, v.x());
+			});
+			auto min_y = std::accumulate(polygon.begin(), polygon.end(), std::numeric_limits<scalar>::max(), [](scalar const& acc, point const& v) {
+				return std::min(acc, v.y());
+			});
+			auto max_y = std::accumulate(polygon.begin(), polygon.end(), std::numeric_limits<scalar>::min(), [](scalar const& acc, point const& v) {
+				return std::max(acc, v.y());
+			});
+			return box{point{min_x, min_y}, vector{max_x - min_x, max_y - min_y}};
+		}
+
+		//! Whether @p polygon contains @p point.
+		static bool contains(polygon const& polygon, point const& point)
+		{
+			static_assert(n == 2, "Use of polygon operations requires a 2D type.");
+
+			//! @todo Rigorously define what containment means for generic spaces (inclusive vs. exclusive bounds).
+
+			// First check if the point is outside the bounding box.
+			if (!bounding_box(polygon).contains(point)) { return false; }
+
+			// Now check how many edges a ray from the point to the right intersects.
+			// Adapted from https://stackoverflow.com/questions/217578/how-can-i-determine-whether-a-2d-point-is-within-a-polygon.
+			bool result = false;
+			for (std::size_t i = 0, j = polygon.size() - 1; i < polygon.size(); j = i++) {
+				bool const between_y_coords = polygon[i].y() > point.y() != polygon[j].y() > point.y();
+				bool const cond2 = point.x() < (polygon[j].x() - polygon[i].x()) * (point.y() - polygon[i].y()) / (polygon[j].y() - polygon[i].y()) + polygon[i].x();
+				if (between_y_coords && cond2) {
+					result = !result;
+				}
+			}
+			return result;
+		}
 	};
 }
 
@@ -964,3 +1016,26 @@ TEST_CASE("[point] operations")
 //! @todo box tests
 
 //! @todo sphere tests
+
+TEST_CASE("[polygon] operations")
+{
+	//! @todo Test integral spaces.
+
+	//! @todo Why don't these tests compile?
+
+	//struct double_space : units::space<struct double_space_tag, double, 2> {};
+
+	//double_space::point v1{0.0, 0.0};
+	//double_space::point v2{1.0, 0.0};
+	//double_space::point v3{0.0, 1.0};
+	//double_space::polygon poly{v1, v2, v3};
+
+	//SUBCASE("bounding box")
+	//{
+	//	double_space::box const bounding_box
+	//		{ double_space::point{0.0, 1.0}
+	//		, double_space::vector{1.0, 1.0}
+	//		};
+	//	CHECK(poly.bounding_box() == bounding_box);
+	//}
+}

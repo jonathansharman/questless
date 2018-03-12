@@ -89,43 +89,31 @@ namespace ql
 
 	void item_renderer::visit(gatestone const& gatestone)
 	{
+		static auto empty_texture_handle = the_texture_manager().add("resources/textures/items/soul-gem-empty.png");
 		if (gatestone.mana == 0.0) {
-			static auto texture_handle = the_texture_manager().add("resources/textures/items/soul-gem-empty.png");
-			the_texture_manager()[texture_handle].draw(_position);
+			the_texture_manager()[empty_texture_handle].draw(_position);
 		} else {
-			static auto texture_handle = the_texture_manager().add("resources/textures/items/soul-gem-white.png");
-			colors::color_vector draw_color_vector;
-			switch (gatestone.color()) {
-				case magic::color::white:
-					draw_color_vector = colors::white_vector();
-					break;
-				case magic::color::black:
-					draw_color_vector = colors::color_vector{0.2f, 0.2f, 0.2f, 1.0f};
-					break;
-				case magic::color::green:
-					draw_color_vector = colors::green_vector();
-					break;
-				case magic::color::red:
-					draw_color_vector = colors::red_vector();
-					break;
-				case magic::color::blue:
-					draw_color_vector = colors::blue_vector();
-					break;
-				case magic::color::yellow:
-					draw_color_vector = colors::yellow_vector();
-					break;
-				case magic::color::violet:
-					draw_color_vector = colors::purple_vector();
-					break;
-				case magic::color::orange:
-					draw_color_vector = colors::orange_vector();
-					break;
-				default:
-					throw std::logic_error{"Unknown spell color."};
-			}
-			the_texture_manager()[texture_handle].draw(_position, texture_space::align_left, texture_space::align_top, draw_color_vector);
-			colors::color fill_color{draw_color_vector.red(), draw_color_vector.green(), draw_color_vector.blue(), draw_color_vector.alpha()};
+			static auto non_empty_texture_handle = the_texture_manager().add("resources/textures/items/soul-gem.png");
+			colors::color_vector const draw_color_vector = [&] {
+				float const alpha = static_cast<float>(gatestone.mana / gatestone.capacity());
+				switch (gatestone.color()) {
+					case magic::color::white:  return colors::white_vector(alpha);
+					case magic::color::black:  return colors::color_vector{0.2f, 0.2f, 0.2f, alpha};
+					case magic::color::green:  return colors::green_vector(alpha);
+					case magic::color::red:    return colors::red_vector(alpha);
+					case magic::color::blue:   return colors::blue_vector(alpha);
+					case magic::color::yellow: return colors::yellow_vector(alpha);
+					case magic::color::violet: return colors::purple_vector(alpha);
+					case magic::color::orange: return colors::orange_vector(alpha);
+					default: throw std::logic_error{"Unknown spell color."};
+				}
+			}();
+			// Draw the gatestone.
+			the_texture_manager()[empty_texture_handle].draw(_position, texture_space::align_left, texture_space::align_top);
+			the_texture_manager()[non_empty_texture_handle].draw(_position, texture_space::align_left, texture_space::align_top, draw_color_vector);
+			// Draw charge bar.
 			the_renderer().draw_box(window_space::box{_position, window_space::vector{6, 55}}, colors::black());
+			colors::color const fill_color{draw_color_vector.red(), draw_color_vector.green(), draw_color_vector.blue(), draw_color_vector.alpha()};
 			the_renderer().draw_box(window_space::box{_position, window_space::vector{6, static_cast<int>(55 * gatestone.mana / gatestone.capacity())}}, 1, colors::black(), fill_color);
 
 			//! @todo Clean this up. Remove magic numbers.

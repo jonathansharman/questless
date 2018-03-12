@@ -175,6 +175,6 @@ namespace sdl
 		GLuint _ibo;
 
 		void set_draw_color(units::colors::color color);
-		void draw_triangle_strip(units::view_space::polygon const& polygon, units::colors::color color);
+		void draw_triangle_strip(std::vector<units::view_space::point> const& vertices, units::colors::color color);
 	};
 }

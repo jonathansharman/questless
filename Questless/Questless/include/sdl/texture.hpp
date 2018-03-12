@@ -94,14 +94,21 @@ namespace sdl
 					position.y() -= height() / 2;
 					break;
 			}
-			draw_transformed(position, units::texture_space::vector::zero(), color_vector, 1.0f, 1.0f, units::game_space::radians::zero(), src_rect);
+			draw_transformed
+				( position
+				, units::texture_space::vector::zero()
+				, color_vector
+				, units::view_space::vector{1.0f, 1.0f}
+				, units::game_space::radians::zero()
+				, src_rect
+				);
 		}
 
 		//! Draws all or part the texture to the screen (or current frame buffer), using the provided transformations.
 		//! @param position The coordinates of the texture on the screen in view or window space.
 		//! @param origin The offset from the texture's center to its origin point.
 		//! @param color_vector A factor to be applied component-wise to the texture's color.
-		//! @param horizontal_scale The horizontal scale of the texture.
+		//! @param scale The scale of the texture: <horizontal scale, vertical scale>.
 		//! @param vertical_scale The vertical scale of the texture.
 		//! @param angle The counter-clockwise rotation of the the texture around the origin, in radians.
 		//! @param src_rect The section of the texture to be drawn. If nullopt, the entire texture is used.
@@ -109,8 +116,7 @@ namespace sdl
 			( std::variant<units::window_space::point, units::view_space::point> position
 			, units::texture_space::vector origin = units::texture_space::vector::zero()
 			, units::colors::color_vector color_vector = units::colors::white_vector()
-			, float horizontal_scale = 1.0f
-			, float vertical_scale = 1.0f
+			, units::view_space::vector scale = units::view_space::vector{1.0f, 1.0f}
 			, units::game_space::radians angle = units::game_space::radians::zero() //! @todo This should use screen space radians.
 			, std::optional<units::texture_space::box> const& src_rect = std::nullopt
 			) const;

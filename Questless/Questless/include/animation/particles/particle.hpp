@@ -65,7 +65,7 @@ namespace ql
 		units::game_space::acceleration _acceleration;
 		units::game_space::radians _angle;
 		units::game_space::radians_per_sec _angular_velocity;
-		double _scale;
+		units::game_space::scalar _scale;
 		units::game_space::scale_velocity _scale_velocity;
 		units::game_space::seconds _lifetime;
 		units::game_space::seconds _time_left;

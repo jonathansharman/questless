@@ -40,9 +40,6 @@ namespace units
 		static constexpr auto align_top = v_align::near;
 		static constexpr auto align_middle = v_align::mid;
 		static constexpr auto align_bottom = v_align::far;
-
-		//! Define a polygon as a sequence of its vertex points.
-		using polygon = std::vector<point>;
 	};
 
 	inline int& width(window_space::box& box) { return box.size.x(); }

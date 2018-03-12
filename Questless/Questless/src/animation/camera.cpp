@@ -49,8 +49,7 @@ namespace ql
 		, game_space::point position
 		, origin origin
 		, colors::color_vector draw_color_vector
-		, h_scale horizontal_scale
-		, v_scale vertical_scale
+		, view_space::vector scale
 		, game_space::radians angle
 		, src_rect const& src_rect
 		) const
@@ -59,8 +58,7 @@ namespace ql
 			( screen_point(position)
 			, origin
 			, draw_color_vector * color_vector
-			, static_cast<float>(_zoom * horizontal_scale)
-			, static_cast<float>(_zoom * vertical_scale)
+			, scale
 			, angle - _angle
 			, src_rect
 			);
