@@ -5,10 +5,12 @@
 #pragma once
 
 #include "sdl/texture.hpp"
-#include "entities/beings/body.hpp"
+#include "utility/reference.hpp"
 
 namespace ql
 {
+	class body;
+
 	//! Creates textures for bodies.
 	class body_texturer
 	{

@@ -7,8 +7,9 @@
 #include <string>
 
 #include "agents/action.hpp"
+#include "items/magic/gatestone.hpp"
 #include "spell_visitor.hpp"
-#include "utility/dynamic_bounded.hpp"
+#include "utility/id.hpp"
 #include "utility/reference.hpp"
 
 namespace ql::magic
@@ -28,6 +29,9 @@ namespace ql::magic
 	class spell : public element<spell_subtype_list>
 	{
 	public:
+		//! @param gatestone_id The ID of the gatestone used to cast this spell.
+		spell(id<item> gatestone_id) : _gatestone_id{gatestone_id} {}
+
 		virtual ~spell() = default;
 
 		//! An action that casts @p spell.
@@ -44,14 +48,15 @@ namespace ql::magic
 
 		//! Time after casting this spell before the gatestone used to cast it can be used again.
 		virtual double cooldown() const = 0;
-
-		//! The amount of gatestone mana required to cast this spell from a gatestone.
-		virtual double required_gatestone_mana() const = 0;
 	private:
+		friend class cast;
+
+		id<item> _gatestone_id;
+
 		//! The base amount of time it takes to incant this spell, ignoring the skill of the caster.
 		virtual double base_incant_time() const = 0;
 
-		virtual complete perform_cast(being& actor, action::cont cont) = 0;
+		virtual complete perform_cast(being& actor, gatestone& gatestone, action::cont cont) = 0;
 	};
 
 	DEFINE_ELEMENT_BASE(spell, spell)

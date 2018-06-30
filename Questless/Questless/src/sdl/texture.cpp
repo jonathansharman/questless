@@ -42,7 +42,7 @@ namespace
 				return GL_RGB;
 			}
 		}
-		throw std::logic_error("Unsupported pixel format.");
+		assert(false && "Unsupported pixel format.");
 	}
 }
 

@@ -99,17 +99,15 @@ namespace units
 
 			constexpr int length() const { return static_cast<int>((math::abs(q) + math::abs(r) + math::abs(s)) / 2); }
 
-			//! The unit vector nearest this vector. Throws a @p std::domain_error for the zero vector.
+			//! The unit vector nearest this vector. This vector must be non-zero.
 			constexpr vector unit() const
 			{
 				double l = length();
-				if (l == 0) {
-					throw std::domain_error{"Unit vector of a zero-length vector is undefined."};
-				}
-				return *this / static_cast<double>(l);
+				assert(l != 0.0 && "Unit vector of a zero-length vector is undefined.");
+				return *this / l;
 			}
 
-			//! The nearest direction this vector points towards. Throws a @p std::domain_error for the zero vector.
+			//! The nearest direction this vector points towards. This vector must be non-zero.
 			constexpr direction direction() const
 			{
 				vector const u = unit();
@@ -118,19 +116,24 @@ namespace units
 						switch (u.r) {
 							case  0: return direction::four;
 							case  1: return direction::three;
+							default: break;
 						}
 					case  0:
 						switch (u.r) {
 							case -1: return direction::five;
 							case  1: return direction::two;
+							default: break;
 						}
 					case  1:
 						switch (u.r) {
 							case -1: return direction::six;
 							case  0: return direction::one;
+							default: break;
 						}
+					default:
+						break;
 				}
-				throw std::logic_error{"Invalid unit vector."};
+				assert(false && "Vector has no direction.");
 			}
 
 			//! Simple hash function.

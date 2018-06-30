@@ -33,7 +33,6 @@ namespace ql
 	class agent;
 
 	struct health : tagged_type<double> { using tagged_type::tagged_type; };
-	struct mana : tagged_type<double> { using tagged_type::tagged_type; };
 	struct energy : tagged_type<double> { using tagged_type::tagged_type; };
 	struct satiety : tagged_type<double> { using tagged_type::tagged_type; };
 	struct alertness : tagged_type<double> { using tagged_type::tagged_type; };
@@ -50,8 +49,8 @@ namespace ql
 		// Types //
 		///////////
 
-		using ref_less_t = std::function<bool(being const&, being const&)>;
-		using ptr_less_t = std::function<bool(uptr<being> const&, uptr<being> const&)>;
+		using ref_less_t = bool(*)(being const&, being const&);
+		using ptr_less_t = bool(*)(uptr<being> const&, uptr<being> const&);
 
 		///////////////
 		// Constants //
@@ -71,7 +70,6 @@ namespace ql
 		static constexpr double satiety_rate = -0.05; //!< Satiety gained per turn (awake or asleep).
 		static constexpr double satiety_rate_asleep = 0.025; //!< Additional satiety gained per turn asleep.
 		static constexpr double satiety_health_regen_penalty = 1.0; //!< Proportion of base health regeneration removed at zero satiety.
-		static constexpr double satiety_mana_regen_penalty = 1.0; //!< Proportion of base mana regeneration removed at zero satiety.
 
 		// Alertness
 		static constexpr double min_alertness = 0.0;
@@ -82,7 +80,6 @@ namespace ql
 		static constexpr double alertness_dexterity_penalty = 0.75; //!< Proportion of base dexterity removed at zero alertness.
 		static constexpr double alertness_intellect_penalty = 0.75; //!< Proportion of base intellect removed at zero alertness.
 		static constexpr double health_regen_asleep_factor = 1.0; //!< Additional health regeneration multiplier while asleep.
-		static constexpr double mana_regen_asleep_factor = 1.0; //!< Additional mana regeneration multiplier while asleep.
 
 		// Mood
 		static constexpr double min_mood = -100.0;
@@ -117,7 +114,6 @@ namespace ql
 
 		// Conditions
 
-		lazy_bounded<double> mana;
 		lazy_bounded<double> energy;
 		static_bounded<double, min_satiety, max_satiety> satiety;
 		static_bounded<double, min_alertness, max_alertness> alertness;
@@ -169,7 +165,7 @@ namespace ql
 		perception perception_of(region_tile::point region_tile_coords) const;
 
 		//! Causes the being to perform an action.
-		void act();
+		complete act();
 
 		//! Adds the given delayed action to the being's delayed actions queue.
 		//! @param delay The delay before the action is performed.

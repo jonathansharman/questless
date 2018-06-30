@@ -4,10 +4,13 @@
 
 #include "agents/player.hpp"
 
+#include "agents/queries/all_queries.hpp"
+#include "entities/beings/world_view.hpp"
 #include "game.hpp"
 #include "sdl/resources.hpp"
 #include "ui/count_dialog.hpp"
 #include "ui/direction_dialog.hpp"
+#include "ui/list_dialog.hpp"
 #include "ui/magnitude_dialog.hpp"
 #include "ui/message_dialog.hpp"
 #include "ui/qte/aim_missile.hpp"
@@ -21,7 +24,18 @@ using std::function;
 
 namespace ql
 {
-	void player::act()
+	player::player(ql::being& being)
+		: agent{being}
+		, _world_view{nullptr}
+	{}
+
+	player::~player() = default;
+
+	world_view const& player::world_view() const { return *_world_view; }
+
+	void player::update_world_view() { _world_view = umake<ql::world_view>(being, true); }
+
+	complete player::act()
 	{
 		the_game().query_player_choice([this](player_action_dialog::choice player_choice) {
 			struct player_choice_executor
@@ -136,10 +150,9 @@ namespace ql
 			void visit(message_cannot_equip const&) final { title = "Cannot Equip"; }
 			void visit(message_entity_in_the_way const&) final { title = "Obstruction"; }
 			void visit(message_incant_failed_mute const&) final { title = "Incantation"; }
-			void visit(message_incant_gatestone_not_enough_mana const&) final { title = "Incantation"; }
 			void visit(message_melee_miss const&) final { title = "Melee Attack"; }
 			void visit(message_not_enough_ammo const&) final { title = "Attack"; }
-			void visit(message_not_enough_mana const&) final { title = "Spell Cast"; }
+			void visit(message_not_enough_charge const&) final { title = "Spell Cast"; }
 		};
 		struct message_prompter : message_const_visitor
 		{
@@ -148,15 +161,11 @@ namespace ql
 			void visit(message_cannot_equip const&) final { prompt = "You don't have the requisite free body parts to equip this."; }
 			void visit(message_entity_in_the_way const&) final { prompt = "There's something in the way!"; }
 			void visit(message_incant_failed_mute const&) final { prompt = "You can't perform an incantation while mute!"; }
-			void visit(message_incant_gatestone_not_enough_mana const& m) final
-			{
-				prompt = "Not enough gatestone mana! Your gatestone needs " + std::to_string(m.mana_deficit) + " more mana for you to incant this.";
-			}
 			void visit(message_melee_miss const&) final { prompt = "Miss!"; }
 			void visit(message_not_enough_ammo const&) final { prompt = "Not enough ammo!"; }
-			void visit(message_not_enough_mana const& m) final
+			void visit(message_not_enough_charge const& m) final
 			{
-				prompt = "Not enough mana! You need " + std::to_string(m.mana_deficit) + " more mana to cast this.";
+				prompt = "Not enough charge! Your gatestone needs " + std::to_string(m.charge_deficit) + " more charge to cast this.";
 			}
 		};
 

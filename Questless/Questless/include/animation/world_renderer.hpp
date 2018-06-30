@@ -4,23 +4,27 @@
 
 #pragma once
 
-#include <memory>
 #include <unordered_map>
 #include <variant>
 
-#include "camera.hpp"
-#include "effects/effect.hpp"
-#include "entities/beings/world_view.hpp"
-#include "entities/entity.hpp"
-#include "sdl/renderer.hpp"
+#include "effects/effect_visitor.hpp"
 #include "sprite_animation.hpp"
-#include "still.hpp"
+#include "utility/id.hpp"
 #include "utility/initializer.hpp"
-#include "world/tile.hpp"
+#include "utility/reference.hpp"
+#include "world/coordinates.hpp"
+#include "world/tile_visitor.hpp"
 
 namespace ql
 {
+	class being;
+	class effect;
+	class entity;
 	class game;
+	class object;
+	class still;
+	class tile;
+	class world_view;
 
 	//! Draws the elements of the world that the player can see.
 	class world_renderer : public effect_const_visitor
@@ -67,7 +71,7 @@ namespace ql
 		using entity_cref_var_t = std::variant<cref<being>, cref<object>>;
 		using entity_cptr_var_t = std::variant<being const*, object const*>;
 
-		static std::optional<still> _unknown_entity_animation;
+		static uptr<still> _unknown_entity_animation;
 
 		friend class initializer<world_renderer>;
 		static initializer<world_renderer> _initializer;

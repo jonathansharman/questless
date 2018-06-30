@@ -55,7 +55,7 @@ namespace ql
 		) const
 	{
 		texture.draw_transformed
-			( screen_point(position)
+			( to_window_point(position)
 			, origin
 			, draw_color_vector * color_vector
 			, scale
@@ -67,16 +67,16 @@ namespace ql
 	void camera::draw_lines(std::vector<game_space::point> points, colors::color color) const
 	{
 		// Transform segment end points.
-		std::vector<window_space::point> screen_points;
+		std::vector<window_space::point> window_points;
 		for (game_space::point const& point : points) {
-			screen_points.push_back(screen_point(point));
+			window_points.push_back(to_window_point(point));
 		}
 
 		// Draw transformed line segments using the renderer.
-		the_renderer().draw_lines(screen_points, color);
+		the_renderer().draw_lines(window_points, color);
 	}
 
-	window_space::point camera::screen_point(game_space::point point) const
+	window_space::point camera::to_window_point(game_space::point point) const
 	{
 		game_space::point const window_center = game_space::point{0.0, 0.0} + game_space::vector{static_cast<double>(the_window().width()), static_cast<double>(the_window().height())} / 2.0;
 		game_space::vector const camera_to_point = point - _position;

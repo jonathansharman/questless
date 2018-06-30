@@ -15,28 +15,31 @@
 #include <unordered_map>
 #include <vector>
 
-#include "agents/player.hpp"
 #include "animation/camera.hpp"
 #include "animation/world_renderer.hpp"
-#include "effects/effect.hpp"
 #include "entities/beings/being.hpp"
-#include "items/item.hpp"
-#include "sdl/font.hpp"
-#include "sdl/input.hpp"
-#include "sdl/renderer.hpp"
-#include "sdl/sound.hpp"
-#include "sdl/texture.hpp"
-#include "sdl/window.hpp"
 #include "ui/digraph_menu.hpp"
 #include "ui/hud.hpp"
-#include "ui/list_dialog.hpp"
 #include "ui/player_action_dialog.hpp"
 #include "units/frequency.hpp"
 #include "utility/cache.hpp"
 #include "world/region.hpp"
 
+namespace sdl
+{
+	class font;
+	class input;
+	class renderer;
+	class sound;
+	class texture;
+	class window;
+}
+
 namespace ql
 {
+	class item;
+	class player;
+
 	//! Represents an instance of the game Questless.
 	class game
 	{
@@ -76,10 +79,6 @@ namespace ql
 		ql::region const& region() const { return *_region; }
 
 		world_renderer& world_renderer() { return *_world_renderer; }
-
-		//! Adds an effect to the world, notifying beings within range of its occurrence.
-		//! @param effect The effect to add.
-		void add_effect(sptr<effect> const& effect);
 
 		ql::hud& hud() { return *_hud; }
 		ql::hud const& hud() const { return *_hud; }

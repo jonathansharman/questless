@@ -3,9 +3,14 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "items/weapons/attack.hpp"
-#include "items/weapons/weapon.hpp"
+
+#include "agents/agent.hpp"
+#include "agents/queries/message.hpp"
+#include "agents/queries/tile_query.hpp"
+#include "agents/queries/vector_query.hpp"
 #include "entities/beings/being.hpp"
 #include "game.hpp"
+#include "items/weapons/weapon.hpp"
 #include "utility/random.hpp"
 
 namespace ql
@@ -91,7 +96,7 @@ namespace ql
 								weapon.active_cooldown = attack->cooldown();
 
 								// Add attack effect.
-								the_game().add_effect(attack->get_effect(actor.coords, *opt_coords));
+								actor.region->add_effect(attack->get_effect(actor.coords, *opt_coords));
 
 								if (being* target = actor.region->being_at(*opt_coords)) {
 									return actor.agent().aim_missile(actor.coords, *target, [id = actor.id, cont, &weapon, attack, &target = *target](body_part* body_part) {

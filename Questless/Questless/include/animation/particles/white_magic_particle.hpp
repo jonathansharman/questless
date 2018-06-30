@@ -13,21 +13,8 @@ namespace ql
 	class white_magic_particle : public particle
 	{
 	public:
-		white_magic_particle() : particle
-			{ units::game_space::vector::zero()
-			, random_displacement(80.0) / 1.0s
-			, units::game_space::vector{0.0, 50.0} / 1.0s / 1.0s
-			, random_angle()
-			, uniform(-1.0, 1.0) * _dtheta_max / 1.0s
-			, scale{1.0}
-			, units::game_space::scale_velocity{0.0}
-			, lifetime{units::game_space::seconds{uniform(2.0, 2.5)}}
-			}
-		{}
+		white_magic_particle();
 	private:
-		static constexpr units::hertz _vx_pct_drag_rate = 1.8_Hz;
-		static constexpr units::game_space::radians _dtheta_max = 2.0 * units::game_space::radians::circle();
-
 		void particle_subupdate() final;
 
 		sdl::texture const& texture() const final;

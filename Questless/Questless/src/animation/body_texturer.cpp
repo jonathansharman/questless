@@ -6,6 +6,7 @@
 
 #include <unordered_map>
 
+#include "entities/beings/body.hpp"
 #include "entities/beings/body_part.hpp"
 #include "sdl/resources.hpp"
 #include "utility/utility.hpp"

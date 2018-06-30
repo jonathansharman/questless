@@ -8,21 +8,23 @@
 
 namespace ql
 {
+	class world_view;
+
 	//! The agent representing the player's control over his or her character.
 	class player : public agent
 	{
 	public:
-		player(ql::being& being)
-			: agent{being}
-			, _world_view{nullptr}
-		{}
+		player(ql::being& being);
+
+		~player();
 
 		//! The player's current view of the world.
-		world_view const& world_view() const { return *_world_view; }
+		world_view const& world_view() const;
 
-		void update_world_view() { _world_view = umake<ql::world_view>(being, true); }
+		//! Updates the player's world view based on its internal being.
+		void update_world_view();
 
-		void act() final;
+		complete act() final;
 
 		void perceive(sptr<effect> const& effect) final;
 

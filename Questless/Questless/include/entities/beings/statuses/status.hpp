@@ -17,7 +17,7 @@ namespace ql
 {
 	class being;
 
-	enum class status_type { debuff, neutral, buff };
+	enum class status_type { bane, neutral, boon };
 
 	//! A status effect on a being, such as blindness or poison.
 	class status
@@ -32,7 +32,7 @@ namespace ql
 		//! The ID of the being that caused the status or nullopt if none did.
 		std::optional<id<being>> source() const { return _source_id; }
 
-		//! The type of the status: debuff, netural, or buff.
+		//! The type of the status: bane, netural, or boon.
 		virtual status_type type() const = 0;
 
 		//! The list of stat modifiers associated with this status.

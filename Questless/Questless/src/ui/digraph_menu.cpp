@@ -13,12 +13,6 @@ using namespace units;
 
 namespace ql
 {
-	sdl::sound_handle digraph_menu::_hover_sound_handle;
-	sdl::sound_handle digraph_menu::_select_sound_handle;
-
-	font_handle digraph_menu::_title_font_handle;
-	font_handle digraph_menu::_option_font_handle;
-
 	texture_handle digraph_menu::_ul_handle;
 	texture_handle digraph_menu::_ur_handle;
 	texture_handle digraph_menu::_dl_handle;
@@ -39,12 +33,6 @@ namespace ql
 	initializer<digraph_menu> digraph_menu::_initializer;
 	void digraph_menu::initialize()
 	{
-		_hover_sound_handle = the_sound_manager().add("resources/sounds/menu/hover.wav");
-		_select_sound_handle = the_sound_manager().add("resources/sounds/menu/select.wav");
-
-		_title_font_handle = the_font_manager().add("resources/fonts/dumbledor1.ttf", title_font_size);
-		_option_font_handle = the_font_manager().add("resources/fonts/dumbledor1.ttf", option_font_size);
-
 		_ul_handle = the_texture_manager().add("resources/textures/menu/ul.png");
 		_ur_handle = the_texture_manager().add("resources/textures/menu/ur.png");
 		_dl_handle = the_texture_manager().add("resources/textures/menu/dl.png");
@@ -140,11 +128,14 @@ namespace ql
 			return;
 		}
 
+		static auto hover_sound_handle = the_sound_manager().add("resources/sounds/menu/hover.wav");
+		static auto select_sound_handle = the_sound_manager().add("resources/sounds/menu/select.wav");
+
 		// Get index of option over which the mouse is hovering, if any.
 
 		std::optional<int> hovered_option_index = std::nullopt;
 		window_space::point position = _content_position;
-		position.y() += title_height;
+		position.y() += _title_height;
 		for (size_t i = 0; i < _pages[_page_index].options.size(); ++i) {
 			window_space::box box = window_space::box
 				{ window_space::point{position.x(), position.y()}
@@ -155,7 +146,7 @@ namespace ql
 				hovered_option_index = static_cast<int>(i);
 				break;
 			}
-			position.y() += option_height;
+			position.y() += _option_height;
 		}
 
 		// Change option index, if necessary.
@@ -163,16 +154,16 @@ namespace ql
 		int& current_option_index = _pages[_page_index].option_index;
 		if (the_input().mouse_moved() && hovered_option_index) {
 			if (current_option_index != hovered_option_index.value()) {
-				the_sound_manager()[_hover_sound_handle].play();
+				the_sound_manager()[hover_sound_handle].play();
 				current_option_index = hovered_option_index.value();
 			}
 		} else {
 			if (the_input().presses(SDLK_DOWN)) {
-				the_sound_manager()[_hover_sound_handle].play();
+				the_sound_manager()[hover_sound_handle].play();
 				++current_option_index;
 			}
 			if (the_input().presses(SDLK_UP)) {
-				the_sound_manager()[_hover_sound_handle].play();
+				the_sound_manager()[hover_sound_handle].play();
 				--current_option_index;
 			}
 			if (current_option_index < 0) {
@@ -185,7 +176,7 @@ namespace ql
 		// Check for selection.
 
 		if (the_input().presses(SDLK_RETURN) || the_input().presses(SDLK_SPACE) || hovered_option_index && the_input().pressed(mouse_button::left)) {
-			the_sound_manager()[_select_sound_handle].play();
+			the_sound_manager()[select_sound_handle].play();
 			digraph_menu::page::option selection = _pages[_page_index].options[_pages[_page_index].option_index];
 			if (selection.target) {
 				_page_index = selection.target.value();
@@ -204,6 +195,9 @@ namespace ql
 
 	void digraph_menu::draw(window_space::point origin, window_space::h_align horizontal_alignment, window_space::v_align vertical_alignment)
 	{
+		constexpr auto unselected_color_vector = colors::black_vector();
+		constexpr auto selected_color_vector = colors::red_vector();
+
 		if (!_render_is_current) {
 			render();
 		}
@@ -239,9 +233,9 @@ namespace ql
 		_page_views[_page_index].title_texture.draw(_content_position);
 
 		for (int i = 0; i < static_cast<int>(_page_views[_page_index].option_textures.size()); ++i) {
-			colors::color_vector option_color_vector = _pages[_page_index].option_index == i ? _selected_color_vector : _unselected_color_vector;
+			colors::color_vector option_color_vector = _pages[_page_index].option_index == i ? selected_color_vector : unselected_color_vector;
 
-			window_space::point option_position{_content_position.x(), _content_position.y() + title_height + i * option_height};
+			window_space::point option_position{_content_position.x(), _content_position.y() + _title_height + i * _option_height};
 			_page_views[_page_index].option_textures[i].draw(option_position, texture_space::align_left, texture_space::align_top, option_color_vector);
 		}
 	}
@@ -258,6 +252,14 @@ namespace ql
 
 	void digraph_menu::render()
 	{
+		constexpr int title_font_size = 48;
+		constexpr int option_font_size = 30;
+
+		static auto title_font_handle = the_font_manager().add("resources/fonts/dumbledor1.ttf", title_font_size);
+		static auto option_font_handle = the_font_manager().add("resources/fonts/dumbledor1.ttf", option_font_size);
+
+		constexpr auto title_color = colors::black();
+
 		static bool first_call = true;
 		if (first_call) {
 			// Initialize these on first call to render() rather than at static initialization since they rely on loaded textures.
@@ -279,13 +281,13 @@ namespace ql
 
 		_page_views.clear();
 		for (size_t i = 0; i < _pages.size(); ++i) {
-			_content_height = std::max(_content_height, static_cast<int>(title_height + _pages[_page_index].options.size() * option_height));
+			_content_height = std::max(_content_height, static_cast<int>(_title_height + _pages[_page_index].options.size() * _option_height));
 			std::vector<texture> option_textures;
 			for (size_t j = 0; j < _pages[i].options.size(); ++j) {
-				option_textures.push_back(the_font_manager()[_option_font_handle].render(_pages[i].options[j].name.c_str(), colors::white()));
+				option_textures.push_back(the_font_manager()[option_font_handle].render(_pages[i].options[j].name.c_str(), colors::white()));
 				_content_width = std::max(_content_width, option_textures[j].width());
 			}
-			_page_views.emplace_back(the_font_manager()[_title_font_handle].render(_pages[i].title.c_str(), _title_color), std::move(option_textures));
+			_page_views.emplace_back(the_font_manager()[title_font_handle].render(_pages[i].title.c_str(), title_color), std::move(option_textures));
 		}
 
 		int const width_remainder = _content_width % _tile_width;

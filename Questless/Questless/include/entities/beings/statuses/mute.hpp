@@ -18,7 +18,7 @@ namespace ql
 			: status("Mute", duration, source_id), _modifiers{umake<mute_modifier>(true)}
 		{}
 
-		virtual status_type type() const { return status_type::debuff; }
+		virtual status_type type() const { return status_type::bane; }
 
 		std::vector<uptr<modifier>> const& modifiers() const final { return _modifiers; }
 	private:

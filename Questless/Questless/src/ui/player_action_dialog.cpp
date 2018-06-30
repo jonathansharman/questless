@@ -4,6 +4,8 @@
 
 #include "ui/player_action_dialog.hpp"
 
+#include "sdl/resources.hpp"
+
 using namespace sdl;
 
 namespace ql

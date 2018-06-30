@@ -14,7 +14,7 @@ namespace ql
 		human(const std::function<uptr<ql::agent>(being&)>& make_agent, ql::id<being> id = ql::id<being>::make());
 		human(std::istream& in);
 
-		ql::entity_class entity_class() const final { return entity_class::human_class; }
+		ql::entity_subtype entity_subtype() const final { return entity_subtype::human_class; }
 
 		void serialize(std::ostream& out) const final;
 

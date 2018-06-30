@@ -90,12 +90,12 @@ namespace ql
 	void item_renderer::visit(gatestone const& gatestone)
 	{
 		static auto empty_texture_handle = the_texture_manager().add("resources/textures/items/soul-gem-empty.png");
-		if (gatestone.mana == 0.0) {
+		if (gatestone.charge == 0.0) {
 			the_texture_manager()[empty_texture_handle].draw(_position);
 		} else {
 			static auto non_empty_texture_handle = the_texture_manager().add("resources/textures/items/soul-gem.png");
 			colors::color_vector const draw_color_vector = [&] {
-				float const alpha = static_cast<float>(gatestone.mana / gatestone.capacity());
+				float const alpha = static_cast<float>(gatestone.charge / gatestone.capacity());
 				switch (gatestone.color()) {
 					case magic::color::white:  return colors::white_vector(alpha);
 					case magic::color::black:  return colors::color_vector{0.2f, 0.2f, 0.2f, alpha};
@@ -105,7 +105,7 @@ namespace ql
 					case magic::color::yellow: return colors::yellow_vector(alpha);
 					case magic::color::violet: return colors::purple_vector(alpha);
 					case magic::color::orange: return colors::orange_vector(alpha);
-					default: throw std::logic_error{"Unknown spell color."};
+					default: assert(false && "Invalid spell color.");
 				}
 			}();
 			// Draw the gatestone.
@@ -113,8 +113,8 @@ namespace ql
 			the_texture_manager()[non_empty_texture_handle].draw(_position, texture_space::align_left, texture_space::align_top, draw_color_vector);
 			// Draw charge bar.
 			the_renderer().draw_box(window_space::box{_position, window_space::vector{6, 55}}, colors::black());
-			colors::color const fill_color{draw_color_vector.red(), draw_color_vector.green(), draw_color_vector.blue(), draw_color_vector.alpha()};
-			the_renderer().draw_box(window_space::box{_position, window_space::vector{6, static_cast<int>(55 * gatestone.mana / gatestone.capacity())}}, 1, colors::black(), fill_color);
+			colors::color const fill_color{draw_color_vector.red(), draw_color_vector.green(), draw_color_vector.blue(), 1.0f};
+			the_renderer().draw_box(window_space::box{_position, window_space::vector{6, static_cast<int>(55 * gatestone.charge / gatestone.capacity())}}, 1, colors::black(), fill_color);
 
 			//! @todo Clean this up. Remove magic numbers.
 		}

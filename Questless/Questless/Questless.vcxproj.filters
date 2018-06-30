@@ -139,30 +139,15 @@
     <Filter Include="include\entities\beings\bodies">
       <UniqueIdentifier>{69d89cc6-9720-43d8-99ee-a459fd008dbf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\agents\queries">
+      <UniqueIdentifier>{e5c6de2a-f4a5-4252-9b51-c3c13a988ef5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\agents\direction_query.hpp">
-      <Filter>include\agents</Filter>
-    </ClInclude>
-    <ClInclude Include="include\agents\item_query.hpp">
-      <Filter>include\agents</Filter>
-    </ClInclude>
     <ClInclude Include="include\agents\lazy_ai.hpp">
       <Filter>include\agents</Filter>
     </ClInclude>
-    <ClInclude Include="include\agents\magnitude_query.hpp">
-      <Filter>include\agents</Filter>
-    </ClInclude>
-    <ClInclude Include="include\agents\message.hpp">
-      <Filter>include\agents</Filter>
-    </ClInclude>
     <ClInclude Include="include\agents\player.hpp">
-      <Filter>include\agents</Filter>
-    </ClInclude>
-    <ClInclude Include="include\agents\tile_query.hpp">
-      <Filter>include\agents</Filter>
-    </ClInclude>
-    <ClInclude Include="include\agents\vector_query.hpp">
       <Filter>include\agents</Filter>
     </ClInclude>
     <ClInclude Include="include\agents\action.hpp">
@@ -174,13 +159,7 @@
     <ClInclude Include="include\agents\basic_ai.hpp">
       <Filter>include\agents</Filter>
     </ClInclude>
-    <ClInclude Include="include\agents\being_query.hpp">
-      <Filter>include\agents</Filter>
-    </ClInclude>
     <ClInclude Include="include\agents\cost.hpp">
-      <Filter>include\agents</Filter>
-    </ClInclude>
-    <ClInclude Include="include\agents\count_query.hpp">
       <Filter>include\agents</Filter>
     </ClInclude>
     <ClInclude Include="include\animation\body_texturer.hpp">
@@ -282,9 +261,6 @@
     <ClInclude Include="include\entities\beings\stats\stats.hpp">
       <Filter>include\entities\beings\stats</Filter>
     </ClInclude>
-    <ClInclude Include="include\entities\beings\statuses\discharging.hpp">
-      <Filter>include\entities\beings\statuses</Filter>
-    </ClInclude>
     <ClInclude Include="include\entities\beings\statuses\eagle_eyed.hpp">
       <Filter>include\entities\beings\statuses</Filter>
     </ClInclude>
@@ -304,9 +280,6 @@
       <Filter>include\entities\beings\statuses</Filter>
     </ClInclude>
     <ClInclude Include="include\entities\beings\statuses\poisoned.hpp">
-      <Filter>include\entities\beings\statuses</Filter>
-    </ClInclude>
-    <ClInclude Include="include\entities\beings\statuses\recharging.hpp">
       <Filter>include\entities\beings\statuses</Filter>
     </ClInclude>
     <ClInclude Include="include\entities\beings\statuses\sleeping.hpp">
@@ -430,9 +403,6 @@
       <Filter>include\magic</Filter>
     </ClInclude>
     <ClInclude Include="include\magic\heal.hpp">
-      <Filter>include\magic</Filter>
-    </ClInclude>
-    <ClInclude Include="include\magic\mana_cost.hpp">
       <Filter>include\magic</Filter>
     </ClInclude>
     <ClInclude Include="include\magic\shock.hpp">
@@ -645,6 +615,39 @@
     <ClInclude Include="include\ui\qte\aim_missile.hpp">
       <Filter>include\ui\qte</Filter>
     </ClInclude>
+    <ClInclude Include="include\agents\queries\all_queries.hpp">
+      <Filter>include\agents\queries</Filter>
+    </ClInclude>
+    <ClInclude Include="include\agents\queries\message.hpp">
+      <Filter>include\agents\queries</Filter>
+    </ClInclude>
+    <ClInclude Include="include\agents\queries\tile_query.hpp">
+      <Filter>include\agents\queries</Filter>
+    </ClInclude>
+    <ClInclude Include="include\agents\queries\vector_query.hpp">
+      <Filter>include\agents\queries</Filter>
+    </ClInclude>
+    <ClInclude Include="include\agents\queries\being_query.hpp">
+      <Filter>include\agents\queries</Filter>
+    </ClInclude>
+    <ClInclude Include="include\agents\queries\count_query.hpp">
+      <Filter>include\agents\queries</Filter>
+    </ClInclude>
+    <ClInclude Include="include\agents\queries\direction_query.hpp">
+      <Filter>include\agents\queries</Filter>
+    </ClInclude>
+    <ClInclude Include="include\agents\queries\item_query.hpp">
+      <Filter>include\agents\queries</Filter>
+    </ClInclude>
+    <ClInclude Include="include\agents\queries\magnitude_query.hpp">
+      <Filter>include\agents\queries</Filter>
+    </ClInclude>
+    <ClInclude Include="include\world\tile_visitor.hpp">
+      <Filter>include\world</Filter>
+    </ClInclude>
+    <ClInclude Include="include\magic\charge_cost.hpp">
+      <Filter>include\magic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -743,16 +746,10 @@
     <ClCompile Include="src\entities\beings\statuses\poisoned.cpp">
       <Filter>src\entities\beings\statuses</Filter>
     </ClCompile>
-    <ClCompile Include="src\entities\beings\statuses\recharging.cpp">
-      <Filter>src\entities\beings\statuses</Filter>
-    </ClCompile>
     <ClCompile Include="src\entities\beings\statuses\sleeping.cpp">
       <Filter>src\entities\beings\statuses</Filter>
     </ClCompile>
     <ClCompile Include="src\entities\beings\statuses\status.cpp">
-      <Filter>src\entities\beings\statuses</Filter>
-    </ClCompile>
-    <ClCompile Include="src\entities\beings\statuses\discharging.cpp">
       <Filter>src\entities\beings\statuses</Filter>
     </ClCompile>
     <ClCompile Include="src\entities\beings\corporeal_being.cpp">
@@ -810,9 +807,6 @@
       <Filter>src\items\weapons</Filter>
     </ClCompile>
     <ClCompile Include="src\magic\heal.cpp">
-      <Filter>src\magic</Filter>
-    </ClCompile>
-    <ClCompile Include="src\magic\mana_cost.cpp">
       <Filter>src\magic</Filter>
     </ClCompile>
     <ClCompile Include="src\magic\shock.cpp">
@@ -931,6 +925,24 @@
     </ClCompile>
     <ClCompile Include="src\ui\qte\aim_missile.cpp">
       <Filter>src\ui\qte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\particles\flame.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\bleeding.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\items\weapons\quarterstaff.cpp">
+      <Filter>src\items\weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="src\items\weapons\quiver.cpp">
+      <Filter>src\items\weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="src\items\weapons\modal_weapon.cpp">
+      <Filter>src\items\weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="src\magic\charge_cost.cpp">
+      <Filter>src\magic</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

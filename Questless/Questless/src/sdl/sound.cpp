@@ -4,6 +4,8 @@
 
 #include "sdl/sound.hpp"
 
+#include <string>
+
 namespace sdl
 {
 	sound::sound(char const* filename)

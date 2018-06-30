@@ -4,17 +4,17 @@
 
 #pragma once
 
-#include "../animation.hpp"
-#include "../camera.hpp"
+#include "animation/animation.hpp"
 #include "sdl/texture.hpp"
 #include "utility/tagged_type.hpp"
-#include "utility/random.hpp"
 
 namespace ql
 {
 	struct scale : tagged_type<double> { using tagged_type::tagged_type; };
 	struct lifetime : tagged_type<units::game_space::seconds> { using tagged_type::tagged_type; };
 	struct max_displacement : tagged_type<double> { using tagged_type::tagged_type; };
+
+	class camera;
 
 	//! Used to create particle effects.
 	class particle : public animation
@@ -39,18 +39,7 @@ namespace ql
 			, units::game_space::scale_velocity scale_velocity
 			, lifetime lifetime
 			, max_displacement max_displacement = max_displacement{_dflt_max_displacement}
-			)
-			: _displacement{displacement + random_displacement(max_displacement)}
-			, _velocity{std::move(velocity)}
-			, _acceleration{std::move(acceleration)}
-			, _angle{std::move(angle)}
-			, _angular_velocity{std::move(angular_velocity)}
-			, _scale{scale}
-			, _scale_velocity{scale_velocity}
-			, _lifetime{lifetime}
-			, _time_left{lifetime}
-			, _color_vector{units::colors::white_vector()}
-		{}
+			);
 
 		virtual ~particle() = default;
 

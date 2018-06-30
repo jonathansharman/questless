@@ -5,7 +5,6 @@
 #pragma once
 
 #include <stdexcept>
-#include <string>
 #include <vector>
 #include <unordered_map>
 
@@ -22,22 +21,7 @@ namespace sdl
 	{
 	public:
 		//! The number key corresponding to the given index, with the number keys ordered 1 to 9 and then 0.
-		static decltype(SDLK_1) index_to_num_key(size_t index)
-		{
-			switch (index) {
-				case 0: return SDLK_1;
-				case 1: return SDLK_2;
-				case 2: return SDLK_3;
-				case 3: return SDLK_4;
-				case 4: return SDLK_5;
-				case 5: return SDLK_6;
-				case 6: return SDLK_7;
-				case 7: return SDLK_8;
-				case 8: return SDLK_9;
-				case 9: return SDLK_0;
-				default: throw std::out_of_range{"Invalid number key index: " + std::to_string(index) + '.'};
-			}
-		}
+		static decltype(SDLK_1) index_to_num_key(size_t index);
 
 		input();
 

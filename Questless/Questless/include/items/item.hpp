@@ -4,14 +4,8 @@
 
 #pragma once
 
-#include <vector>
-#include <string>
-#include <functional>
-#include <memory>
-
 #include "item_visitor.hpp"
 #include "agents/action.hpp"
-#include "units/hex_space.hpp"
 #include "utility/id.hpp"
 #include "utility/reference.hpp"
 

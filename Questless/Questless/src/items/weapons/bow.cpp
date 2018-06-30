@@ -3,15 +3,35 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "items/weapons/bow.hpp"
-#include "items/weapons/arrow.hpp"
+
+
+#include "agents/agent.hpp"
+#include "agents/queries/message.hpp"
+#include "effects/effect.hpp"
 #include "entities/beings/being.hpp"
 #include "game.hpp"
+#include "items/weapons/arrow.hpp"
+#include "items/weapons/quiver.hpp"
 #include "units/hex_space.hpp"
 
 using namespace units;
 
 namespace ql
 {
+	std::vector<uptr<action>> bow::actions()
+	{
+		std::vector<uptr<action>> actions;
+		if (equipped()) {
+			actions.push_back(_shoot->launch());
+			actions.push_back(unequip::make(*this));
+		} else {
+			actions.push_back(equip::make(*this));
+			actions.push_back(drop::make(*this));
+			actions.push_back(toss::make(*this));
+		}
+		return actions;
+	}
+
 	//! @todo These functions are O(n). Should be easy to find an efficient O(1) solution.
 
 	complete bow::shoot::arrow_cost::check(being& actor, cont cont) const
@@ -58,7 +78,7 @@ namespace ql
 				actor.inventory.remove(item.id);
 			}
 		}
-		throw std::logic_error{"Couldn't find arrow to spend."};
+		assert(false && "Couldn't find arrow to spend.");
 	}
 	
 	sptr<effect> bow::shoot::get_effect(region_tile::point source, region_tile::point target)

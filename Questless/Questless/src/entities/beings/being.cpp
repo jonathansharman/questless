@@ -3,6 +3,8 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "entities/beings/being.hpp"
+
+#include "effects/effect.hpp"
 #include "entities/beings/body.hpp"
 #include "entities/objects/corpse.hpp"
 #include "game.hpp"
@@ -21,7 +23,6 @@ namespace ql
 		, body{std::move(body)}
 		, base_stats{make_base_stats()}
 		, stats{get_base_stats_plus_body_stats()}
-		, mana{stats.spirit, [] { return 0.0; }, [this] { return stats.spirit.value(); }}
 		, energy{stats.stamina, [] { return 0.0; }, [this] { return stats.stamina.value(); }}
 		, satiety{max_satiety}
 		, alertness{max_alertness}
@@ -42,7 +43,6 @@ namespace ql
 		: entity{in}
 		, id{in}
 		, body{std::move(body)}
-		, mana{[] { return 0.0; }, [this] { return stats.spirit.value(); }}
 		, energy{[] { return 0.0; }, [this] { return stats.stamina.value(); }}
 		, busy_time{busy_time_mutator()}
 	{
@@ -51,7 +51,7 @@ namespace ql
 		in >> base_stats;
 		in >> stats;
 
-		in >> mana >> energy >> satiety >> alertness >> mood >> busy_time;
+		in >> energy >> satiety >> alertness >> mood >> busy_time;
 		//! @todo Is there a better way to extract into an enum class?
 		int mortality_int;
 		in >> mortality_int;
@@ -71,7 +71,7 @@ namespace ql
 
 		//! @todo Write body.
 
-		out << mana << ' ' << energy << ' ' << satiety << ' ' << alertness << ' ' << mood << ' '
+		out << energy << ' ' << satiety << ' ' << alertness << ' ' << mood << ' '
 			<< busy_time << ' ' << static_cast<int>(mortality) << ' ' << static_cast<int>(direction);
 
 		out << base_stats << ' ';
@@ -102,7 +102,7 @@ namespace ql
 				in_front = offset.q >= 0 && offset.r <= 0;
 				break;
 			default:
-				throw std::logic_error{"Invalid direction."};
+				assert(false && "Invalid direction.");
 		}
 		if (in_front && (region_tile_coords - coords).length() <= stats.vision.max_range()) {
 			double const illuminance = region->illuminance(region_tile_coords);
@@ -114,7 +114,7 @@ namespace ql
 		}
 	}
 
-	void being::act()
+	complete being::act()
 	{
 		if (_delayed_actions.empty()) {
 			// No delayed actions; have agent choose a new action to perform.
@@ -162,7 +162,6 @@ namespace ql
 		erase_if(_statuses, [](auto const& status) { return status->duration() == 0; });
 
 		// Update conditions.
-		mana += stats.mana_regen;
 		satiety += satiety_rate;
 		energy += energy_rate;
 		alertness += alertness_rate;
@@ -326,7 +325,7 @@ namespace ql
 		}
 
 		// Add injury effect.
-		the_game().add_effect(smake<injury_effect>(coords, damage, id, target_part.id, opt_source_id));
+		region->add_effect(smake<injury_effect>(coords, damage, id, target_part.id, opt_source_id));
 
 		// Target has taken damage.
 		if (!after_take_damage(damage, target_part, opt_source_id)) return;
@@ -435,7 +434,6 @@ namespace ql
 
 		double pct_hungry = 1.0 - satiety / max_satiety;
 		result.health_regen -= pct_hungry * satiety_health_regen_penalty * base_stats.health_regen;
-		result.mana_regen -= pct_hungry * satiety_mana_regen_penalty * base_stats.mana_regen;
 
 		return result;
 	}

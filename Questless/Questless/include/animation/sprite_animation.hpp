@@ -10,7 +10,6 @@
 #include "sdl/resources.hpp"
 #include "units/sprite_sheet_space.hpp"
 #include "units/texture_space.hpp"
-#include "utility/static_bounded.hpp"
 #include "utility/reference.hpp"
 #include "utility/tagged_type.hpp"
 

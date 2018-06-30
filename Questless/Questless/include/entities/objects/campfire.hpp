@@ -16,7 +16,7 @@ namespace ql
 		campfire(ql::region& region, region_tile::point coords, ql::id<object> id = ql::id<object>::make());
 		campfire(std::istream& in);
 
-		virtual ql::entity_class entity_class() const { return entity_class::campfire; }
+		virtual ql::entity_subtype entity_subtype() const { return entity_subtype::campfire; }
 
 		double transparency() const final { return 1.0; }
 

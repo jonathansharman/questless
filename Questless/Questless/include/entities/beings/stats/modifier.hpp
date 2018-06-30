@@ -58,11 +58,6 @@ namespace ql
 		using scalar_modifier::scalar_modifier;
 		void apply(stats& stats) final { stats.health_regen += magnitude(); }
 	};
-	struct mana_regen_modifier : public scalar_modifier
-	{
-		using scalar_modifier::scalar_modifier;
-		void apply(stats& stats) final { stats.mana_regen += magnitude(); }
-	};
 	struct strength_modifier : public scalar_modifier
 	{
 		using scalar_modifier::scalar_modifier;

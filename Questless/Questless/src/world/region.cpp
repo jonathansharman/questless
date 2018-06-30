@@ -3,7 +3,6 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include <filesystem>
-namespace fs = std::experimental::filesystem; //! @todo Replace this with std::filesystem when available.
 #include <limits.h>
 #include <sstream>
 #include <fstream>
@@ -11,6 +10,7 @@ namespace fs = std::experimental::filesystem; //! @todo Replace this with std::f
 #include "agents/agent.hpp"
 #include "agents/lazy_ai.hpp"
 #include "agents/basic_ai.hpp"
+#include "effects/effect.hpp"
 #include "entities/all_entities.hpp"
 #include "game.hpp"
 #include "items/weapons/quarterstaff.hpp"
@@ -22,6 +22,7 @@ namespace fs = std::experimental::filesystem; //! @todo Replace this with std::f
 using std::string;
 using std::vector;
 using std::function;
+namespace fs = std::experimental::filesystem; //! @todo Replace this with std::filesystem when available.
 
 using namespace sdl;
 
@@ -55,7 +56,7 @@ namespace ql
 						//if (r == section::diameter - 1 || q == section::diameter - 1) {
 						//	data += std::to_string(static_cast<int>(ql::subtype::edge)) + ' ' + std::to_string(0.0) + ' ';
 						//} else {
-							data += std::to_string(uniform(0, static_cast<int>(tile_subtype::TILE_CLASS_COUNT) - 1)) + ' ' + std::to_string(0.0) + ' ';
+							data += std::to_string(uniform(0, static_cast<int>(tile_subtype::TILE_SUBTYPE_COUNT) - 1)) + ' ' + std::to_string(0.0) + ' ';
 						//}
 
 						// Every tile is snow (nice for testing lighting).
@@ -131,14 +132,14 @@ namespace ql
 
 			unsigned entity_id;
 			sin >> entity_id;
-			switch (static_cast<entity_class>(entity_id)) {
-				case entity_class::goblin_class:
+			switch (static_cast<entity_subtype>(entity_id)) {
+				case entity_subtype::goblin_class:
 				{
 					being& goblin = the_game().beings.add(umake<ql::goblin>(sin));
 					add(goblin, goblin.coords);
 					break;
 				}
-				case entity_class::troll_class:
+				case entity_subtype::troll_class:
 					break;
 				default:
 					throw std::logic_error("Unknown entity type in entities file.");
@@ -470,6 +471,30 @@ namespace ql
 		}
 	}
 
+	void region::add_effect(sptr<effect> const& effect)
+	{
+		int range = effect->range();
+		auto origin = effect->origin();
+
+		region_tile::point min_tile_coords{origin.q - range, origin.r - range};
+		region_tile::point max_tile_coords{origin.q + range, origin.r + range};
+
+		region_section::point min_section_coords = section::region_section_coords(min_tile_coords);
+		region_section::point max_section_coords = section::region_section_coords(max_tile_coords);
+
+		for (int r = min_section_coords.r; r <= max_section_coords.r; ++r) {
+			for (int q = min_section_coords.q; q <= max_section_coords.q; ++q) {
+				region_section::point section_coords{q, r};
+				section* section = section_at(section_coords);
+				if (section) {
+					for (being& being : section->beings) {
+						being.agent().perceive(effect);
+					}
+				}
+			}
+		}
+	}
+
 	period_of_day region::get_period_of_day() const
 	{
 		if (_time_of_day <= _end_of_morning) {
@@ -516,11 +541,11 @@ namespace ql
 				return dawn_progress * dawn_and_dusk_light + (1.0 - dawn_progress) * night_light;
 			}
 			default:
-				throw std::logic_error{"Invalid period of day."};
+				assert(false && "Invalid period of day.");
 		}
 	}
 
-	void region::for_each_loaded_section(function<void(section&)> f)
+	void region::for_each_loaded_section(function<void(section&)> const& f) //! @todo Replace with function_reference or whatever if that becomes available sometime.
 	{
 		for (int r = -_loaded_sections_q_radius; r <= _loaded_sections_q_radius; ++r) {
 			for (int q = -_loaded_sections_r_radius; q <= _loaded_sections_r_radius; ++q) {

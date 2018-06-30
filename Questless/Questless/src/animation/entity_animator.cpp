@@ -10,12 +10,16 @@
 #include "animation/sprite_animation.hpp"
 #include "animation/still.hpp"
 #include "entities/all_entities.hpp"
+#include "sdl/resources.hpp"
 
 using namespace sdl;
 using namespace units;
 
 namespace ql
 {
+	entity_animator::entity_animator() = default;
+	entity_animator::~entity_animator() = default;
+
 	// Beings
 
 	void entity_animator::visit(human const& human)

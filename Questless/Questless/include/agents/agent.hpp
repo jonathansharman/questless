@@ -7,26 +7,28 @@
 #include <functional>
 #include <optional>
 
-#include "being_query.hpp"
-#include "count_query.hpp"
-#include "direction_query.hpp"
-#include "effects/effect.hpp"
-#include "entities/beings/world_view.hpp"
-#include "item_query.hpp"
-#include "items/item.hpp"
-#include "magnitude_query.hpp"
-#include "message.hpp"
-#include "tile_query.hpp"
-#include "vector_query.hpp"
+#include "action.hpp"
+#include "utility/complete.hpp"
+#include "utility/reference.hpp"
+#include "world/coordinates.hpp"
 
 namespace ql
 {
 	class being;
+	class body_part;
+	class effect;
+	class item;
 	class gatestone;
-	namespace magic
-	{
-		class spell;
-	}
+	namespace magic { class spell; }
+
+	struct being_query;
+	struct count_query;
+	struct direction_query;
+	struct item_query;
+	struct magnitude_query;
+	struct message;
+	struct tile_query;
+	struct vector_query;
 
 	//! Facilitates control of a being. Includes AIs and the player.
 	class agent
@@ -44,7 +46,7 @@ namespace ql
 		being& being;
 
 		//! Chooses and executes an action for the agent's being to perform.
-		virtual void act() = 0;
+		virtual complete act() = 0;
 
 		//! Causes the agent to perceive the given effect, possibly updating its state accordingly.
 		//! @param effect The effect to perceive.

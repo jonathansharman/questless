@@ -58,13 +58,13 @@ namespace ql::qte
 				uptr<magic::spell> spell = nullptr;
 				if (_notes.size() > 0) {
 					if (_notes.front() == note::left) {
-						spell = umake<magic::heal>();
+						spell = umake<magic::heal>(_gatestone.id);
 					} else if (_notes.front() == note::right) {
-						spell = umake<magic::shock>();
+						spell = umake<magic::shock>(_gatestone.id);
 					} else if (_notes.front() == note::up) {
-						spell = umake<magic::teleport>();
+						spell = umake<magic::teleport>(_gatestone.id);
 					} else if (_notes.front() == note::down) {
-						spell = umake<magic::eagle_eye>();
+						spell = umake<magic::eagle_eye>(_gatestone.id);
 					}
 				}
 				return _cont(std::move(spell));

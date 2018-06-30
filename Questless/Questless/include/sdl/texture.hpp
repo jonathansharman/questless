@@ -4,17 +4,15 @@
 
 #pragma once
 
-#include <algorithm>
 #include <functional>
 #include <memory>
 #include <optional>
 #include <variant>
 
+#include <glew.h>
 #include <SDL.h>
 #include <SDL_image.h>
 
-#include "renderer.hpp"
-#include "shader_program.hpp"
 #include "units/colors.hpp"
 #include "units/game_space.hpp"
 #include "units/window_space.hpp"
@@ -22,6 +20,8 @@
 
 namespace sdl
 {
+	// Forward-declare shader type.
+	class shader_program;
 	// Forward-declare default shader accessor.
 	shader_program& dflt_program();
 

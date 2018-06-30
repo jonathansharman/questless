@@ -5,7 +5,6 @@
 #pragma once
 
 #include "animation/particles/particle.hpp"
-#include "units/game_space.hpp"
 
 namespace ql
 {

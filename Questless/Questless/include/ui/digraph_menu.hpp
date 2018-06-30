@@ -4,10 +4,6 @@
 
 #pragma once
 
-#include <stdexcept>
-#include <utility>
-
-#include "sdl/input.hpp"
 #include "sdl/resources.hpp"
 #include "utility/initializer.hpp"
 #include "utility/reference.hpp"
@@ -98,18 +94,9 @@ namespace ql
 			{}
 		};
 
-		static constexpr int title_height = 60;
-		static constexpr int option_height = 32;
-		static constexpr int title_font_size = 48;
-		static constexpr int option_font_size = 30;
+		static constexpr int _title_height = 60;
+		static constexpr int _option_height = 32;
 
-		static constexpr units::colors::color _title_color = units::colors::black();
-		static constexpr units::colors::color_vector _unselected_color_vector = units::colors::black_vector();
-		static constexpr units::colors::color_vector _selected_color_vector = units::colors::red_vector();
-
-		static sdl::sound_handle _hover_sound_handle, _select_sound_handle;
-
-		static sdl::font_handle _title_font_handle, _option_font_handle;
 		static sdl::texture_handle _ul_handle, _ur_handle, _dl_handle, _dr_handle, _u_handle, _d_handle, _l_handle, _r_handle, _tile_handle;
 
 		static int _top_margin, _bottom_margin, _left_margin, _right_margin, _tile_width, _tile_height;

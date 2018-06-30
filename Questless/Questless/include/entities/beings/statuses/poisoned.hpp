@@ -19,7 +19,7 @@ namespace ql
 			: status("Poisoned", duration, source_id), _magnitude{magnitude}
 		{}
 
-		virtual status_type type() const { return status_type::debuff; }
+		virtual status_type type() const { return status_type::bane; }
 
 		void subupdate(being& target) final;
 	private:

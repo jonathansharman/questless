@@ -4,18 +4,16 @@
 
 #pragma once
 
-#include <string>
-#include <vector>
-#include <functional>
-
-#include "../dialog.hpp"
-#include "animation/camera.hpp"
-#include "magic/spell.hpp"
+#include "ui/dialog.hpp"
 #include "units/game_space.hpp"
 
 namespace ql
 {
 	class gatestone;
+	namespace magic
+	{
+		class spell;
+	}
 }
 
 namespace ql::qte

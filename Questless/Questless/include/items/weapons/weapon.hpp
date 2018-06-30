@@ -6,8 +6,7 @@
 
 #include "items/equipment.hpp"
 #include "items/breakable.hpp"
-#include "items/weapons/attack.hpp"
-#include "damage/group.hpp"
+#include "items/weapons/attack.hpp" // For convenience; used by virtually all weapons.
 
 namespace ql
 {

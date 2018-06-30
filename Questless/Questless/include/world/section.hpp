@@ -110,11 +110,13 @@ namespace ql
 		//! The ID of the object at @p tile_coords or nullopt if there is none.
 		std::optional<id<object>> object_id(region_tile::point tile_coords) const;
 
-		//! Adds the given being to the section. Throws a logic_error if there is already a being at its coordinates.
-		void add(being& being);
+		//! Tries to add the given being to the section. Returns true on success or false
+		//! if there is already a being at the being's coordinates.
+		[[nodiscard]] bool try_add(being& being);
 
-		//! Adds the given object to the section. Throws a logic_error if there is already an object at its coordinates.
-		void add(object& object);
+		//! Tries to add the given object to the section. Returns true on success or false
+		//! if there is already an object at the object's coordinates.
+		[[nodiscard]] bool try_add(object& object);
 
 		//! Removes the being at the given region tile coordinates, if present.
 		void remove_being(region_tile::point coords);
@@ -122,10 +124,10 @@ namespace ql
 		//! Removes the object at the given region tile coordinates, if present.
 		void remove_object(region_tile::point coords);
 
-		//! Removes @p being from the section.
+		//! Removes @p being from the section, if present.
 		void remove(being& being);
 
-		//! Removes @p object from the section.
+		//! Removes @p object from the section, if present.
 		void remove(object& object);
 
 		//! Adds @p light_source to the sections's light sources.

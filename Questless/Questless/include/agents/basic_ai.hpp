@@ -5,6 +5,8 @@
 #pragma once
 
 #include "agent.hpp"
+#include "effects/effect_visitor.hpp"
+#include "utility/id.hpp"
 
 namespace ql
 {
@@ -14,9 +16,9 @@ namespace ql
 	public:
 		basic_ai(ql::being& being) : agent{being} {}
 
-		void act() override;
+		complete act() override;
 
-		void perceive(sptr<effect> const& effect) override { effect->accept(*this); }
+		void perceive(sptr<effect> const& effect) override;
 
 		// Queries and messages
 
@@ -86,15 +88,15 @@ namespace ql
 		struct state
 		{
 			virtual ~state() = default;
-			virtual void act(basic_ai& ai) = 0;
+			virtual complete act(basic_ai& ai) = 0;
 		};
-		struct idle_state : public state { void act(basic_ai& ai) override; };
-		struct walk_state : public state { void act(basic_ai& ai) override; };
+		struct idle_state : public state { complete act(basic_ai& ai) override; };
+		struct walk_state : public state { complete act(basic_ai& ai) override; };
 		struct attack_state : public state
 		{
 			id<ql::being> target_id;
 			attack_state(id<ql::being> target_id) : target_id{target_id} {}
-			void act(basic_ai& ai) override;
+			complete act(basic_ai& ai) override;
 		};
 
 		uptr<state> _state = umake<idle_state>();

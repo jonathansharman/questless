@@ -137,6 +137,10 @@ namespace ql
 
 		//! Advances local time by one unit then updates everything contained in the region.
 		void update();
+
+		//! Adds an effect to this region, notifying beings within range of its occurrence.
+		//! @param effect The effect to add.
+		void add_effect(sptr<effect> const& effect);
 	private:
 		///////////////
 		// Constants //
@@ -169,7 +173,7 @@ namespace ql
 		double _time_of_day;
 		ql::period_of_day _period_of_day;
 
-		std::set<ref<being>, being::ref_less_t> _turn_queue;
+		std::set<ref<being>, bool(*)(being const&, being const&)> _turn_queue;
 		double _ambient_illuminance;
 
 		//////////////////////
@@ -183,7 +187,7 @@ namespace ql
 
 		//! Performs some operation on each section in the loaded rhomboid of sections.
 		//! @param f The operation to perform on each section.
-		void for_each_loaded_section(std::function<void(section&)> f);
+		void for_each_loaded_section(std::function<void(section&)> const& f);
 
 		// Helper methods to avoid duplicating code for const and non-const versions of methods.
 

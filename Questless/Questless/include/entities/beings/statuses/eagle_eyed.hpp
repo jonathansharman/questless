@@ -21,7 +21,7 @@ namespace ql
 			, _modifiers{make_uptr_vector<modifier>(umake<visual_acuity_modifier>(magnitude))}
 		{}
 
-		virtual status_type type() const { return status_type::buff; }
+		virtual status_type type() const { return status_type::boon; }
 
 		std::vector<uptr<modifier>> const& modifiers() const final { return _modifiers; }
 

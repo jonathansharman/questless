@@ -10,6 +10,7 @@
 #include "dialog.hpp"
 #include "hud.hpp"
 #include "utility/utility.hpp"
+#include "world/coordinates.hpp"
 
 namespace ql
 {

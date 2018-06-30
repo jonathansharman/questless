@@ -15,7 +15,6 @@ namespace ql
 			return ql::stats
 				{ spirit{0.0}
 				, health_regen{0.001}
-				, mana_regen{1.0}
 				, strength{0.0}
 				, endurance{120.0}
 				, stamina{120.0}

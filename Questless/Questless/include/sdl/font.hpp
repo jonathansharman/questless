@@ -4,9 +4,6 @@
 
 #pragma once
 
-#include <string>
-#include <algorithm>
-
 #include <SDL.h>
 #include <SDL_ttf.h>
 
@@ -44,8 +41,8 @@ namespace sdl
 		//! Renders the provided string of text as a texture with a transparent background.
 		//! @param text The text to be rendered. Must be at least one character in length.
 		//! @param text_color The text color.
-		texture render(char const* text, units::color_space::point text_color) const;
-	
+		texture render(char const* text, units::colors::color text_color) const;
+
 		//! Renders the provided string of text as a texture with a solid background.
 		//! @param text The text to be rendered. Must be at least one character in length.
 		//! @param text_color The text color.

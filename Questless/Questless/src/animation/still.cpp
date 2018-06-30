@@ -2,6 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
+#include "animation/camera.hpp"
 #include "animation/still.hpp"
 
 using namespace sdl;

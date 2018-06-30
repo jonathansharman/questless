@@ -90,7 +90,7 @@ namespace ql
 						tile = umake<water_tile>(temperature_offset);
 						break;
 					default:
-						throw std::logic_error{"Unrecognized tile type."};
+						assert(false && "Unrecognized tile type.");
 				}
 			}
 		}
@@ -118,22 +118,18 @@ namespace ql
 		return it != _object_map.end() ? std::make_optional(it->second) : std::nullopt;
 	}
 
-	void section::add(being& being)
+	bool section::try_add(being& being)
 	{
 		being.section = this;
 		auto result = _being_map.insert({being.coords, being.id});
-		if (!result.second) {
-			throw std::logic_error{"Attempted to place a being on top of another in a section."};
-		}
+		return result.second;
 	}
 
-	void section::add(object& object)
+	bool section::try_add(object& object)
 	{
 		object.section = this;
 		auto result = _object_map.insert({object.coords, object.id});
-		if (!result.second) {
-			throw std::logic_error{"Attempted to place an object on top of another in a section."};
-		}
+		return result.second;
 	}
 
 	typename void section::remove_being(region_tile::point coords)

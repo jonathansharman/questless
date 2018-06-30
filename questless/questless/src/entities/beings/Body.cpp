@@ -171,10 +171,9 @@ namespace ql
 			_total_vitality += part.vitality;
 		}
 
-		{ // Bleed.
-			for (body_part const& part : _parts) {
-				blood -= part.bleeding;
-			}
+		// Bleed and regenerate blood.
+		for (body_part const& part : _parts) {
+			blood += _owner.stats.health_regen * part.vitality - part.bleeding;
 		}
 
 		// Update parts.

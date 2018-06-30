@@ -3,11 +3,12 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "items/item.hpp"
-#include "entities/beings/being.hpp"
-#include "agents/agent.hpp"
 
-#include "game.hpp"
+#include "agents/agent.hpp"
+#include "agents/queries/message.hpp"
+#include "entities/beings/being.hpp"
 #include "entities/objects/item_box.hpp"
+#include "game.hpp"
 
 namespace ql
 {

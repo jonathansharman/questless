@@ -4,13 +4,37 @@
 
 #include "animation/particles/particle.hpp"
 
+#include "animation/camera.hpp"
 #include "game.hpp"
+#include "utility/random.hpp"
 
 using namespace sdl;
 using namespace units;
 
 namespace ql
 {
+	particle::particle
+		( game_space::vector displacement
+		, game_space::velocity velocity
+		, game_space::acceleration acceleration
+		, game_space::radians angle
+		, game_space::radians_per_sec angular_velocity
+		, scale scale
+		, game_space::scale_velocity scale_velocity
+		, lifetime lifetime
+		, max_displacement max_displacement
+		)
+		: _displacement{displacement + random_displacement(max_displacement)}
+		, _velocity{std::move(velocity)}
+		, _acceleration{std::move(acceleration)}
+		, _angle{std::move(angle)}
+		, _angular_velocity{std::move(angular_velocity)}
+		, _scale{scale}
+		, _scale_velocity{scale_velocity}
+		, _lifetime{lifetime}
+		, _time_left{lifetime}
+		, _color_vector{colors::white_vector()}
+	{}
 	void particle::animation_subupdate()
 	{
 		auto elapsed_time = animation::elapsed_time();

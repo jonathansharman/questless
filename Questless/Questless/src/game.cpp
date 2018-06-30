@@ -234,30 +234,6 @@ namespace ql
 		_player_action_dialog = umake<player_action_dialog>(*_hud, move(cont));
 	}
 
-	void game::add_effect(sptr<effect> const& effect)
-	{
-		int range = effect->range();
-		auto origin = effect->origin();
-
-		region_tile::point min_tile_coords{origin.q - range, origin.r - range};
-		region_tile::point max_tile_coords{origin.q + range, origin.r + range};
-
-		region_section::point min_section_coords = section::region_section_coords(min_tile_coords);
-		region_section::point max_section_coords = section::region_section_coords(max_tile_coords);
-
-		for (int r = min_section_coords.r; r <= max_section_coords.r; ++r) {
-			for (int q = min_section_coords.q; q <= max_section_coords.q; ++q) {
-				region_section::point section_coords{q, r};
-				section* section = _region->section_at(section_coords);
-				if (section) {
-					for (being& being : section->beings) {
-						being.agent().perceive(effect);
-					}
-				}
-			}
-		}
-	}
-
 	// Main Game Logic
 
 	void game::run()

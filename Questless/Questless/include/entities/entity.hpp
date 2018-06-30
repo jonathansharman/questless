@@ -15,16 +15,6 @@
 
 namespace ql
 {
-	enum class entity_class : unsigned
-		// Beings
-		{ human_class
-		, goblin_class
-		, troll_class
-		// Objects
-		, campfire
-		, corpse_class
-		, item_box_class
-		};
 	class game;
 	class region;
 	class section;
@@ -43,7 +33,7 @@ namespace ql
 		virtual ~entity() = default;
 
 		//! The entity's class's enumerated value.
-		virtual entity_class entity_class() const = 0;
+		virtual entity_subtype entity_subtype() const = 0;
 
 		//! @param out A stream object into which the serialized entity is inserted.
 		virtual void serialize(std::ostream& out) const;

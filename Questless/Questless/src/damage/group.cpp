@@ -10,11 +10,11 @@ namespace ql::dmg
 	{
 		group result = *this;
 
-		// Reduce protection by the damage's protection evasion.
-		protect const reduced_protection = protection - result._protection_evasion;
+		// Reduce protection by the damage's protection bypass.
+		protect const reduced_protection = protection - result._protection_bypass;
 
-		// Reduce the result's protection evasion by the amount spent on this protection.
-		result._protection_evasion -= protection - reduced_protection;
+		// Reduce the result's protection bypass by the amount spent on this protection.
+		result._protection_bypass -= protection - reduced_protection;
 
 		// Reduce damage by the reduced protection.
 		for (auto& part : result._parts) {

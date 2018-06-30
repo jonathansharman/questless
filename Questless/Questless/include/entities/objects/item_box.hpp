@@ -17,7 +17,7 @@ namespace ql
 		item_box(ql::id<object> id = ql::id<object>::make()) : object_base<item_box>{id} {}
 		item_box(std::istream& in) : object_base<item_box>{in} {}
 
-		virtual ql::entity_class entity_class() const { return entity_class::item_box_class; }
+		virtual ql::entity_subtype entity_subtype() const { return entity_subtype::item_box_class; }
 
 		double transparency() const final { return 0.5; }
 

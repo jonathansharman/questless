@@ -3,21 +3,43 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "animation/particles/green_magic_particle.hpp"
+
 #include "game.hpp"
 #include "sdl/resources.hpp"
+#include "utility/random.hpp"
+
+using namespace units;
 
 namespace ql
 {
+	green_magic_particle::green_magic_particle()
+		: particle
+			{ game_space::vector::zero()
+			, random_displacement(20.0, 50.0) / 1.0s
+			, game_space::acceleration::zero()
+			, random_angle()
+			, uniform(-2.0, 2.0) * units::game_space::radians::circle() / 1.0s
+			, scale{1.0}
+			, game_space::scale_velocity{0.0}
+			, lifetime{game_space::seconds{uniform(1.8, 2.2)}}
+			}
+		, _turning_right{random_bool()}
+	{
+		_scale_velocity = game_space::scale_velocity{scale{-_scale / _lifetime.count()}};
+	}
+
 	void green_magic_particle::particle_subupdate()
 	{
-		if (bernoulli_trial(_inflection_probability)) {
+		constexpr double inflection_probability = 0.1;
+		if (bernoulli_trial(inflection_probability)) {
 			_turning_right = !_turning_right;
 		}
 
+		constexpr game_space::radians_per_sec turn_rate = game_space::radians::circle() / 1.0s;
 		if (_turning_right) {
-			_velocity.step().rotate(units::game_space::radians{-1.0 * _turn_rate * game::frame_duration});
+			_velocity.step().rotate(game_space::radians{-1.0 * turn_rate * game::frame_duration});
 		} else {
-			_velocity.step().rotate(units::game_space::radians{_turn_rate * game::frame_duration});
+			_velocity.step().rotate(game_space::radians{turn_rate * game::frame_duration});
 		}
 	}
 

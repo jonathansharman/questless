@@ -11,13 +11,14 @@
 
 #include <SDL.h>
 
-#include "window.hpp"
 #include "units/colors.hpp"
 #include "units/window_space.hpp"
 #include "units/view_space.hpp"
 
 namespace sdl
 {
+	class window;
+
 	//! A simple wrapper around SDL_Renderer.
 	class renderer
 	{

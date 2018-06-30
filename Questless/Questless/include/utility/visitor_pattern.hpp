@@ -53,7 +53,7 @@ namespace ql
 using ElementType##_mutable_visitor = visitor<ElementSubtypeList>; \
 using ElementType##_const_visitor = visitor<type_list::add_const_t<ElementSubtypeList>>;
 
-//! Defines ParentType##_base, implementing const and non-cost ElementType::accept for ParentType using CRTP. Pulls in the visible ParentClass constructors as protected.
+//! Defines ParentType##_base, implementing const and non-const ElementType::accept for ParentType using CRTP. Pulls in the visible ParentClass constructors as protected.
 #define DEFINE_ELEMENT_BASE(ParentType, ElementType) \
 template <typename Derived> \
 class ParentType##_base : public ParentType \

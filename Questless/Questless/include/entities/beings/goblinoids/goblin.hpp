@@ -14,7 +14,7 @@ namespace ql
 		goblin(const std::function<uptr<ql::agent>(being&)>& make_agent, ql::id<being> id = ql::id<being>::make());
 		goblin(std::istream& in);
 
-		ql::entity_class entity_class() const final { return entity_class::goblin_class; }
+		ql::entity_subtype entity_subtype() const final { return entity_subtype::goblin_class; }
 
 		void serialize(std::ostream& out) const final;
 

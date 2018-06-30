@@ -4,65 +4,67 @@
 
 #include "agents/basic_ai.hpp"
 
+#include "agents/queries/all_queries.hpp"
+#include "effects/effect.hpp"
 #include "game.hpp"
 #include "utility/random.hpp"
 
 namespace ql
 {
-	void basic_ai::act()
+	complete basic_ai::act()
 	{
-		_state->act(*this);
+		return _state->act(*this);
 	}
-	void basic_ai::idle_state::act(basic_ai& ai)
+	complete basic_ai::idle_state::act(basic_ai& ai)
 	{
-		// Wait for up to 10 time units.
-		ai.idle(uniform(0.0, 10.0));
 		// Walk next time.
 		ai._state = umake<walk_state>();
+		// Wait for up to 10 time units.
+		return ai.idle(uniform(0.0, 10.0));
 	}
-	void basic_ai::walk_state::act(basic_ai& ai)
+	complete basic_ai::walk_state::act(basic_ai& ai)
 	{
 		// Move or turn at random.
 		if (random_bool()) {
-			ai.walk(ai.being.direction, [&ai](action::result result) {
+			return ai.walk(ai.being.direction, [&ai](action::result result) {
 				// Idle next time.
 				ai._state = umake<idle_state>();
 				if (result == action::result::aborted) {
 					// Walk failed. Wait for up to 10 time units instead.
-					ai.idle(uniform(0.0, 10.0));
+					return ai.idle(uniform(0.0, 10.0));
 				}
 				return complete{};
 			});
 		} else {
 			auto direction = static_cast<region_tile::direction>(uniform(1, 6));
-			ai.turn(direction, [&ai](action::result result) {
+			return ai.turn(direction, [&ai](action::result result) {
 				// Idle next time.
 				ai._state = umake<idle_state>();
 				if (result == action::result::aborted) {
 					// Turn failed. Wait for up to 10 time units instead.
-					ai.idle(uniform(0.0, 10.0));
+					return ai.idle(uniform(0.0, 10.0));
 				}
 				return complete{};
 			});
 		}
 	}
-	void basic_ai::attack_state::act(basic_ai& ai)
+	complete basic_ai::attack_state::act(basic_ai& ai)
 	{
 		if (ql::being* target = the_game().beings.ptr(target_id)) {
 			if (ai.being.perception_of(target->coords).category() == perception::category::none) {
 				// Target not visible. Switch to idle state.
 				ai._state = umake<idle_state>();
-				ai.act();
+				return ai.act();
 
 				//! @todo Only go passive while target is out of visual range. Keep a grudge list?
 			} else {
 				auto target_direction = (target->coords - ai.being.coords).direction();
 				if (ai.being.direction != target_direction) {
 					// Facing away from target. Turn towards it.
-					ai.turn(target_direction, [&ai](action::result result) {
+					return ai.turn(target_direction, [&ai](action::result result) {
 						if (result == action::result::aborted) {
 							// Turn failed. Wait for up to 10 time units instead.
-							ai.idle(uniform(0.0, 10.0));
+							return ai.idle(uniform(0.0, 10.0));
 						}
 						return complete{};
 					});
@@ -72,19 +74,19 @@ namespace ql
 						// Within striking distance of target.
 						//! @todo This is a hack that assumes the first item in the inventory is a melee weapon.
 						item& item = *ai.being.inventory.items.begin();
-						item.actions().front()->perform(ai.being, [&ai](action::result result) {
+						return item.actions().front()->perform(ai.being, [&ai](action::result result) {
 							if (result == action::result::aborted) {
 								// Attack failed. Wait for up to 10 time units instead.
-								ai.idle(uniform(0.0, 10.0));
+								return ai.idle(uniform(0.0, 10.0));
 							}
 							return complete{};
 						});
 					} else {
 						// Out of range. Move towards target.
-						ai.walk(target_direction, [&ai](action::result result) {
+						return ai.walk(target_direction, [&ai](action::result result) {
 							if (result == action::result::aborted) {
 								// Walk failed. Wait for up to 10 time units instead.
-								ai.idle(uniform(0.0, 10.0));
+								return ai.idle(uniform(0.0, 10.0));
 							}
 							return complete{};
 						});
@@ -94,9 +96,11 @@ namespace ql
 		} else {
 			// Target not found. Switch to idle state.
 			ai._state = umake<idle_state>();
-			ai.act();
+			return ai.act();
 		}
 	}
+
+	void basic_ai::perceive(sptr<effect> const& effect) { effect->accept(*this); }
 
 	complete basic_ai::send_message
 		( uptr<message> //message
@@ -150,6 +154,7 @@ namespace ql
 			std::optional<double> min;
 			std::optional<double> max;
 			std::function<complete(std::optional<double>)> cont;
+			complete result;
 
 			magnitude_query_handler
 				( double default_value
@@ -162,21 +167,21 @@ namespace ql
 
 			void visit(magnitude_query_wait_time const&) final
 			{
-				cont(default_value);
+				result = cont(default_value);
 			}
 			void visit(magnitude_query_shock const&) final
 			{
-				cont(default_value);
+				result = cont(default_value);
 			}
 			void visit(magnitude_query_heal const&) final
 			{
-				cont(default_value);
+				result = cont(default_value);
 			}
 		};
 
 		magnitude_query_handler handler{std::move(default_value), min, max, std::move(cont)};
 		query->accept(handler);
-		return complete{};
+		return handler.result;
 	}
 
 	complete basic_ai::query_tile

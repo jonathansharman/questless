@@ -19,7 +19,7 @@ namespace ql
 			: status("Healing", duration, source_id), _magnitude{magnitude}
 		{}
 
-		virtual status_type type() const { return status_type::buff; }
+		virtual status_type type() const { return status_type::boon; }
 
 		void subupdate(being& target) final;
 	private:

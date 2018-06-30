@@ -4,17 +4,15 @@
 
 #pragma once
 
-#include <string>
-
 #include "agents/action.hpp"
 #include "agents/cost.hpp"
-#include "effects/effect.hpp"
 #include "damage/group.hpp"
 #include "utility/id.hpp"
 #include "utility/reference.hpp"
 
 namespace ql
 {
+	class effect;
 	class item;
 	class weapon;
 

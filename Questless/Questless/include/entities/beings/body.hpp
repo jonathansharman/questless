@@ -21,6 +21,7 @@ namespace ql
 	class body
 	{
 	public:
+		//! The amount of blood in this body.
 		lazy_bounded<double> blood;
 
 		//! @param owner The being that owns this body.

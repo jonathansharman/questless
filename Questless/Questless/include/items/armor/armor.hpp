@@ -6,11 +6,14 @@
 
 #include "items/equipment.hpp"
 #include "items/breakable.hpp"
-#include "damage/group.hpp"
 #include "damage/multiplier.hpp"
 
 namespace ql
 {
+	namespace dmg {
+		class group;
+	}
+
 	//! Abstract base class for items that serve as armor.
 	class armor : public virtual equipment, public virtual breakable
 	{

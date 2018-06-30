@@ -5,7 +5,6 @@
 #pragma once
 
 #include "items/weapons/weapon.hpp"
-#include "items/weapons/quiver.hpp"
 
 namespace ql
 {
@@ -27,19 +26,7 @@ namespace ql
 
 		double durability() const final { return 400.0; }
 
-		virtual std::vector<uptr<action>> actions() final
-		{
-			std::vector<uptr<action>> actions;
-			if (equipped()) {
-				actions.push_back(_shoot->launch());
-				actions.push_back(unequip::make(*this));
-			} else {
-				actions.push_back(equip::make(*this));
-				actions.push_back(drop::make(*this));
-				actions.push_back(toss::make(*this));
-			}
-			return actions;
-		}
+		std::vector<uptr<action>> actions() final;
 	private:
 		class shoot : public ranged_attack
 		{

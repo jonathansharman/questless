@@ -5,7 +5,6 @@
 #pragma once
 
 #include "particle_animation.hpp"
-#include "particles/flame_particle.hpp"
 
 namespace ql
 {
@@ -13,12 +12,6 @@ namespace ql
 	class flame : public particle_animation
 	{
 	private:
-		void particle_animation_subupdate() final
-		{
-			constexpr int n_flames = 2;
-			for (int i = 0; i < n_flames; ++i) {
-				push_front(umake<flame_particle>());
-			}
-		}
+		void particle_animation_subupdate() final;
 	};
 }

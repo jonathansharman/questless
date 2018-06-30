@@ -10,23 +10,30 @@
 #include "animation/particles/green_magic_particle.hpp"
 #include "animation/particles/text_particle.hpp"
 #include "animation/particles/yellow_magic_particle.hpp"
+#include "animation/still.hpp"
 #include "animation/tile_texturer.hpp"
+#include "effects/effect.hpp"
+#include "entities/beings/being.hpp"
+#include "entities/beings/world_view.hpp"
+#include "entities/objects/object.hpp"
+#include "damage/damage.hpp"
 #include "game.hpp"
 #include "utility/utility.hpp"
 #include "world/region.hpp"
+#include "world/tile.hpp"
 
 using namespace sdl;
 using namespace units;
 
 namespace ql
 {
-	std::optional<still> world_renderer::_unknown_entity_animation;
+	uptr<still> world_renderer::_unknown_entity_animation;
 
 	initializer<world_renderer> _initializer;
 	void world_renderer::initialize()
 	{
 		auto unknown_entity_animation_ss = the_texture_manager().add("resources/textures/entities/unknown.png");
-		_unknown_entity_animation = still{unknown_entity_animation_ss, texture_space::vector::zero()};
+		_unknown_entity_animation = umake<still>(unknown_entity_animation_ss, texture_space::vector::zero());
 	}
 
 	world_renderer::world_renderer(world_view const& world_view)
@@ -55,8 +62,8 @@ namespace ql
 	{
 		struct visitor
 		{
-			entity_id_var_t operator ()(being const& being) { return being.id; }
-			entity_id_var_t operator ()(object const& object) { return object.id; }
+			entity_id_var_t operator ()(ql::being const& being) { return being.id; }
+			entity_id_var_t operator ()(ql::object const& object) { return object.id; }
 		};
 		return std::visit(visitor{}, entity);
 	}
@@ -65,8 +72,8 @@ namespace ql
 	{
 		struct visitor
 		{
-			entity_cref_var_t operator ()(ql::id<being> being_id) { return the_game().beings.cref(being_id); }
-			entity_cref_var_t operator ()(ql::id<object> object_id) { return the_game().objects.cref(object_id); }
+			entity_cref_var_t operator ()(ql::id<ql::being> being_id) { return the_game().beings.cref(being_id); }
+			entity_cref_var_t operator ()(ql::id<ql::object> object_id) { return the_game().objects.cref(object_id); }
 		};
 		return std::visit(visitor{}, id);
 	}
@@ -75,8 +82,8 @@ namespace ql
 	{
 		struct visitor
 		{
-			entity const* operator ()(ql::id<being> id) { return the_game().beings.cptr(id); }
-			entity const* operator ()(ql::id<object> id) { return the_game().objects.cptr(id); }
+			entity const* operator ()(ql::id<ql::being> id) { return the_game().beings.cptr(id); }
+			entity const* operator ()(ql::id<ql::object> id) { return the_game().objects.cptr(id); }
 		};
 		return std::visit(visitor{}, id);
 	}
@@ -225,7 +232,7 @@ namespace ql
 						break;
 					}
 					default:
-						throw std::logic_error{"Invalid perception category."};
+						assert(false && "Invalid perception category.");
 				}
 			} else {
 				// Remove the being from the animation cache if it doesn't exist anymore.

@@ -17,6 +17,6 @@ namespace ql
 
 	void entity::serialize(std::ostream& out) const
 	{
-		out << static_cast<unsigned>(entity_class()) << ' ' << coords.q << ' ' << coords.r << ' ' << coords.s << ' ';
+		out << static_cast<unsigned>(entity_subtype()) << ' ' << coords.q << ' ' << coords.r << ' ' << coords.s << ' ';
 	}
 }

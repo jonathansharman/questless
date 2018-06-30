@@ -4,13 +4,8 @@
 
 #pragma once
 
-#include <string>
-#include <vector>
-#include <functional>
-
-#include "../dialog.hpp"
-#include "animation/camera.hpp"
-#include "units/game_space.hpp"
+#include "ui/dialog.hpp"
+#include "world/coordinates.hpp"
 
 namespace ql::qte
 {
@@ -31,8 +26,6 @@ namespace ql::qte
 			units::game_space::point position;
 			units::game_space::velocity velocity;
 		};
-
-		static sdl::texture_handle _point_charge_texture_handle;
 
 		units::game_space::point _target_point;
 		continuation<double> _cont;

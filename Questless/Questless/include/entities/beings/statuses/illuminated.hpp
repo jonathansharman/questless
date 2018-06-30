@@ -22,7 +22,7 @@ namespace ql
 			, _modifiers{umake<stealth_modifier>(-_magnitude)}
 		{}
 
-		virtual status_type type() const { return status_type::debuff; }
+		virtual status_type type() const { return status_type::bane; }
 
 		std::vector<uptr<modifier>> const& modifiers() const final { return _modifiers; }
 	private:

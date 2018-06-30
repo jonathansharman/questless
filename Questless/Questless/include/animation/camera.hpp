@@ -4,12 +4,21 @@
 
 #pragma once
 
-#include "sdl/texture.hpp"
-#include "sdl/window.hpp"
-#include "sdl/input.hpp"
-#include "world/coordinates.hpp"
+#include <optional>
+
+#include "units/colors.hpp"
+#include "units/game_space.hpp"
+#include "units/texture_space.hpp"
+#include "units/view_space.hpp"
+#include "units/window_space.hpp"
 #include "utility/utility.hpp"
 #include "utility/tagged_type.hpp"
+#include "world/coordinates.hpp"
+
+namespace sdl
+{
+	class texture;
+}
 
 namespace ql
 {
@@ -109,7 +118,7 @@ namespace ql
 		units::game_space::point _point_hovered;
 		region_tile::point _tile_hovered;
 
-		//! The given game point transformed to screen space, accounting for the camera.
-		units::window_space::point screen_point(units::game_space::point point) const;
+		//! The given game point transformed to window space, accounting for the camera.
+		units::window_space::point to_window_point(units::game_space::point point) const;
 	};
 }

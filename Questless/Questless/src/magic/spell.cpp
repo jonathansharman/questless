@@ -3,8 +3,10 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "magic/spell.hpp"
-#include "entities/beings/being.hpp"
+
 #include "agents/agent.hpp"
+#include "entities/beings/being.hpp"
+#include "game.hpp"
 
 namespace ql::magic
 {
@@ -15,7 +17,12 @@ namespace ql::magic
 		public:
 			cast(uptr<magic::spell> spell) : _spell{std::move(spell)} {}
 			std::string name() const final { return "cast " + _spell->name(); }
-			complete perform(being& actor, cont cont) final { return _spell->perform_cast(actor, cont); }
+			complete perform(being& actor, cont cont) final
+			{
+				if (auto gatestone = the_game().items.ptr_as<ql::gatestone>(_spell->_gatestone_id)) {
+					return _spell->perform_cast(actor, *gatestone, cont);
+				}
+			}
 		private:
 			uptr<magic::spell> _spell;
 		};

@@ -5,7 +5,6 @@
 #pragma once
 
 #include <cmath>
-#include <variant>
 #include <vector>
 
 #include "damage.hpp"
@@ -14,7 +13,7 @@
 
 namespace ql::dmg
 {
-	//! Represents a single group of damage to a being, possibly including multiple types and quantities of damage and protection evasion.
+	//! Represents a single group of damage to a being, possibly including multiple types and quantities of damage and protection bypass.
 	class group
 	{
 	public:
@@ -41,18 +40,18 @@ namespace ql::dmg
 
 		//! Constructs a damage group from a list of damage components.
 		//! @param parts The list of components in this damage group.
-		//! @param protection_evasion The amount of protection this damage group evades.
-		group(std::vector<damage> parts, protect protection_evasion = protect::zero())
+		//! @param protection_bypass The amount of protection this damage group bypasses.
+		group(std::vector<damage> parts, protect protection_bypass = protect::zero())
 			: _parts{std::move(parts)}
-			, _protection_evasion{protection_evasion}
+			, _protection_bypass{protection_bypass}
 		{}
 
 		//! Constructs a damage group from a single damage component.
 		//! @param part The single component of this damage group.
-		//! @param protection_evasion The amount of protection this damage group evades.
+		//! @param protection_bypass The amount of protection this damage group bypasses.
 		template <typename Damage>
-		group(Damage damage_part, protect protection_evasion = protect::zero())
-			: group{damage{damage_part}, protection_evasion}
+		group(Damage damage_part, protect protection_bypass = protect::zero())
+			: group{damage{damage_part}, protection_bypass}
 		{}
 
 		static group zero() { return group{}; }
@@ -85,7 +84,7 @@ namespace ql::dmg
 		group& operator +=(group const& d)
 		{
 			_parts.insert(_parts.end(), d._parts.begin(), d._parts.end());
-			_protection_evasion += d._protection_evasion;
+			_protection_bypass += d._protection_bypass;
 			return *this;
 		}
 		group& operator *=(double k)
@@ -93,7 +92,7 @@ namespace ql::dmg
 			for (auto& part : _parts) {
 				std::visit([k](auto&& part) { std::forward<decltype(part)>(part) *= k; }, part);
 			}
-			_protection_evasion *= k;
+			_protection_bypass *= k;
 			return *this;
 		}
 		group& operator /=(double k)
@@ -101,7 +100,7 @@ namespace ql::dmg
 			for (auto& part : _parts) {
 				std::visit([k](auto&& part) { std::forward<decltype(part)>(part) /= k; }, part);
 			}
-			_protection_evasion /= k;
+			_protection_bypass /= k;
 			return *this;
 		}
 
@@ -109,7 +108,7 @@ namespace ql::dmg
 		std::vector<damage> const& parts() const { return _parts; }
 
 		//! The amount of protection this damage group is capable of bypassing.
-		protect const& protection_evasion() const { return _protection_evasion; }
+		protect const& protection_bypass() const { return _protection_bypass; }
 
 		//! The sum of the damage components.
 		double total() const
@@ -125,12 +124,12 @@ namespace ql::dmg
 		group with(protect const& protection, resist const& resistance, vuln const& vulnerability) const;
 	private:
 		std::vector<damage> _parts;
-		protect _protection_evasion;
+		protect _protection_bypass;
 
-		//! Helper @param protection_evasion The amount of protection this damage group evades.
-		group(damage damage_part, protect protection_evasion = protect::zero())
+		//! Helper for constructing a damage group from a single damage part and optional protection bypass.
+		group(damage damage_part, protect protection_bypass = protect::zero())
 			: _parts{{damage_part}}
-			, _protection_evasion{protection_evasion}
+			, _protection_bypass{protection_bypass}
 		{}
 	};
 }

@@ -10,6 +10,7 @@
 #include <numeric>
 #include <ratio>
 #include <type_traits>
+#include <vector>
 
 #include "constants.hpp"
 #include "math.hpp"

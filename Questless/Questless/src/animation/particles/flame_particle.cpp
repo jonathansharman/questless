@@ -3,13 +3,30 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "animation/particles/flame_particle.hpp"
+
 #include "game.hpp"
 #include "sdl/resources.hpp"
+#include "utility/random.hpp"
 
 using namespace sdl;
+using namespace units;
 
 namespace ql
 {
+	flame_particle::flame_particle() : particle
+		{ game_space::vector::zero()
+		, game_space::velocity::zero()
+		, game_space::vector{0.0, 30.0} / 1.0s / 1.0s
+		, game_space::radians::zero()
+		, game_space::radians_per_sec::zero()
+		, scale{0.75}
+		, game_space::scale_velocity::zero()
+		, lifetime{game_space::seconds{uniform(1.0, 1.5)}}
+		, max_displacement{5.0}
+		}
+	{
+		_color_vector = colors::orange_vector();
+	}
 	void flame_particle::particle_subupdate()
 	{
 		_velocity.step().x() *= 1.0 - _vx_pct_drag_rate * game::frame_duration;

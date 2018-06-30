@@ -6,17 +6,12 @@
 
 #include "items/weapons/modal_weapon.hpp"
 
-//! @todo Implementation file: Quaterstaff.cpp.
-
 namespace ql
 {
 	class quarterstaff : public modal_weapon_base<quarterstaff>
 	{
 	public:
-		quarterstaff(ql::id<item> id = ql::id<item>::make())
-			: item{id}
-			, modal_weapon_base<quarterstaff>{durability(), umake<standard_form>(*this)}
-		{}
+		quarterstaff(ql::id<item> id = ql::id<item>::make());
 
 		std::string name() const final { return "Staff (" + current_form().name() + ')'; }
 
@@ -40,21 +35,7 @@ namespace ql
 
 			std::string name() const final { return "Quarterstaff"; }
 
-			std::vector<uptr<action>> actions() final
-			{
-				std::vector<uptr<action>> actions;
-				if (weapon().equipped()) {
-					actions.push_back(_strike->launch());
-					actions.push_back(_jab->launch());
-					actions.push_back(switch_form<half_staff_form>::make(weapon(), "Switch to half-staff grip"));
-					actions.push_back(unequip::make(weapon()));
-				} else {
-					actions.push_back(equip::make(weapon()));
-					actions.push_back(drop::make(weapon()));
-					actions.push_back(toss::make(weapon()));
-				}
-				return actions;
-			}
+			std::vector<uptr<action>> actions() final;
 		private:
 			class strike : public melee_attack
 			{
@@ -98,21 +79,7 @@ namespace ql
 
 			std::string name() const final { return "Half Staff"; }
 
-			std::vector<uptr<action>> actions() final
-			{
-				std::vector<uptr<action>> actions;
-				if (weapon().equipped()) {
-					actions.push_back(_strike->launch());
-					actions.push_back(_jab->launch());
-					actions.push_back(switch_form<standard_form>::make(weapon(), "Switch to quarterstaff grip"));
-					actions.push_back(unequip::make(weapon()));
-				} else {
-					actions.push_back(equip::make(weapon()));
-					actions.push_back(drop::make(weapon()));
-					actions.push_back(toss::make(weapon()));
-				}
-				return actions;
-			}
+			std::vector<uptr<action>> actions() final;
 		private:
 			class strike : public melee_attack
 			{

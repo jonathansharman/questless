@@ -4,10 +4,6 @@
 
 #pragma once
 
-#include <string>
-#include <algorithm>
-#include <memory>
-
 #include <SDL.h>
 #include <SDL_mixer.h>
 

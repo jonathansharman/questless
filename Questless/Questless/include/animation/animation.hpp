@@ -4,12 +4,15 @@
 
 #pragma once
 
-#include "animation/camera.hpp"
+#include "units/colors.hpp"
+#include "units/game_space.hpp"
 #include "units/window_space.hpp"
 #include "utility/static_bounded.hpp"
 
 namespace ql
 {
+	class camera;
+
 	//! Abstract base for animations.
 	class animation
 	{
@@ -34,12 +37,7 @@ namespace ql
 		bool over() const { return _over; }
 
 		//! Updates the current animation.
-		void update()
-		{
-			if (!_over && !_paused) {
-				animation_subupdate();
-			}
-		}
+		void update();
 
 		//! Draws the animation at @p position in screen space.
 		virtual void draw(units::window_space::point position) const = 0;

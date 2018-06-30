@@ -17,7 +17,6 @@ namespace ql
 {
 	struct spirit : tagged_type<double> { using tagged_type::tagged_type; };
 	struct health_regen : tagged_type<double> { using tagged_type::tagged_type; };
-	struct mana_regen : tagged_type<double> { using tagged_type::tagged_type; };
 	struct strength : tagged_type<double> { using tagged_type::tagged_type; };
 	struct endurance : tagged_type<double> { using tagged_type::tagged_type; };
 	struct stamina : tagged_type<double> { using tagged_type::tagged_type; };
@@ -37,7 +36,6 @@ namespace ql
 
 		static_bounded<double, minimum_value> spirit = 0.0;
 		static_bounded<double, minimum_value> health_regen = 0.0;
-		static_bounded<double, minimum_value> mana_regen = 0.0;
 		static_bounded<double, minimum_value> strength = 0.0;
 		static_bounded<double, minimum_value> endurance = 0.0;
 		static_bounded<double, minimum_value> stamina = 0.0;
@@ -60,7 +58,6 @@ namespace ql
 		constexpr stats
 			( ql::spirit spirit
 			, ql::health_regen health_regen
-			, ql::mana_regen mana_regen
 			, ql::strength strength
 			, ql::endurance endurance
 			, ql::stamina stamina
@@ -79,7 +76,6 @@ namespace ql
 			)
 			: spirit{std::move(spirit)}
 			, health_regen{std::move(health_regen)}
-			, mana_regen{std::move(mana_regen)}
 			, strength{std::move(strength)}
 			, endurance{std::move(endurance)}
 			, stamina{std::move(stamina)}
@@ -99,7 +95,7 @@ namespace ql
 
 		friend std::ostream& operator <<(std::ostream& out, stats const& a)
 		{
-			out << a.spirit << ' ' << a.health_regen << ' ' << a.mana_regen << ' ' << a.strength << ' ' << a.endurance << ' '
+			out << a.spirit << ' ' << a.health_regen << ' ' << a.strength << ' ' << a.endurance << ' '
 				<< a.stamina << ' ' << a.agility << ' ' << a.stealth << ' ' << a.vision << ' ' << a.hearing << ' '
 				<< a.intellect << ' ' << a.weight << ' ' << a.min_temp << ' ' << a.max_temp << ' ' << a.mute << ' ';
 			return out;
@@ -107,7 +103,7 @@ namespace ql
 
 		friend std::istream& operator >>(std::istream& in, stats& a)
 		{
-			in >> a.spirit >> a.health_regen >> a.mana_regen >> a.strength >> a.endurance >> a.stamina >> a.agility
+			in >> a.spirit >> a.health_regen >> a.strength >> a.endurance >> a.stamina >> a.agility
 				>> a.stealth >> a.vision >> a.hearing >> a.intellect >> a.weight >> a.min_temp >> a.max_temp >> a.mute;
 			return in;
 		}

@@ -22,7 +22,7 @@ namespace ql
 			{ none   //!< Unperceived.
 			, low    //!< Presence perceived.
 			, medium //!< Type of entity perceived.
-			, high   //!< Attributes such as health, mana, and equipped items perceived.
+			, high   //!< Attributes such as health and equipped items perceived.
 			, full   //!< All attributes perceived.
 			};
 

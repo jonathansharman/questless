@@ -71,15 +71,12 @@ namespace ql
 
 	//! @todo Why do the following lambda overload helpers not work?
 
-	//template <typename... Functors>
-	//struct overloaded : Functors...
-	//{
-	//	using Functors::operator ()...;
+	//template<typename... Ts>
+	//struct overloaded : Ts... {
+	//	overloaded(Ts... t) : Ts(t)... {};
+	//	using typename Ts::operator()...;
 	//};
 
-	//template <typename... Functors>
-	//overloaded<Functors...> overload(Functors...)
-	//{
-	//	return overloaded<Functors...>{};
-	//}
+	//template<typename... Ts>
+	//overloaded(Ts...) -> overloaded<Ts...>;
 }

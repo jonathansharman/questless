@@ -22,7 +22,7 @@ namespace ql
 			, _being_id{in}
 		{}
 
-		virtual ql::entity_class entity_class() const { return entity_class::corpse_class; }
+		virtual ql::entity_subtype entity_subtype() const { return entity_subtype::corpse_class; }
 
 		double transparency() const final { return 0.5; }
 

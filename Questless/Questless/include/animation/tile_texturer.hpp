@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "world/tile.hpp"
+#include "world/tile_visitor.hpp"
 #include "sdl/texture.hpp"
 #include "utility/reference.hpp"
 

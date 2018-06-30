@@ -5,7 +5,6 @@
 #pragma once
 
 #include "particle_animation.hpp"
-#include "particles/blood_particle.hpp"
 
 namespace ql
 {
@@ -19,13 +18,6 @@ namespace ql
 		double _drops_per_update;
 		double _drops = 0.0;
 
-		void particle_animation_subupdate() final
-		{
-			_drops += _drops_per_update;
-			while (_drops > 1.0) {
-				push_front(umake<blood_particle>());
-				--_drops;
-			}
-		}
+		void particle_animation_subupdate() final;
 	};
 }

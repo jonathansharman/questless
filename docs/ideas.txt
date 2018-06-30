@@ -37,6 +37,7 @@ Ingredients
 	Liquids
 		Water
 		Blood
+			Blood of suffering - Blood obtained by confining a being to a black altar and then slaying it after its mood goes below a certain threshold. Used for black magic.
 	Solids
 	Powders
 		Gatestone dust
@@ -63,11 +64,11 @@ Recipes
 		Ingredients: ???
 		Effect: poisoning, mental impairment, mood elevation
 	Lich Potion
-		Ingredients: blood (of the innocent?), black gatestone, ???
+		Ingredients: blood of suffering, black gatestone, ???
 		Incantation: black
-		Effect: Curse of the Lich: drinker becomes a lich if it dies within a set time after consumption
+		Effect: Curse of the Lich: drinker becomes a lich if it dies while the curse within a set time after consumption
 		Steps:
-			1) Add blood.
+			1) Add blood of suffering.
 			2) Crush black gatestone into powder.
 			3) Add black gatestone powder.
 			4) Incant.
@@ -383,22 +384,22 @@ White - good - light - revelation
 		Light mage
 			Light, detection, alertness
 	Celestial
-		Exorcise - Empowers target's black antimagic, weaken its black magic, and removes possession from it.
-		Immortalize - Make a target being temporarily immortal.
-		Divine - Temporarily gain complete perception of a target being.
-		Raise Ladder - Can only cast while in the Nexus or Heaven. Create a ladder from the Nexus to Heaven, allowing travel between the realms.
-		Astral Project - Temporarily project the caster's soul from its body.
+		Exorcise - Drain a being's black gatestones and remove possession from it.
+		Immortalize - Make a being temporarily immortal.
+		Divine - Temporarily gain complete perception of a being.
+		Raise Ladder - Create a ladder from the Nexus to Heaven, allowing travel between the realms. Can only cast while in the Nexus or Heaven.
+		Astral Project - Temporarily project your soul from your body.
 		Summon hosts
 	Restorative
-		Cleanse - Remove a negative status from a target. The status power must be lower than the invocation power.
-		Immunize - Give a target a chosen amount of blight resistance for a chosen duration.
-		Mend - Restore health to a body part.
-		Holistic Heal - Restore a being and all its body parts to full health.
-		Resurrect - Return a target corpse to life. Health after resurrection depends on spell magnitude.
+		Cleanse - Remove a bane from a being. The bane's power must be lower than the invocation power.
+		Immunize - Give a being X blight resistance for Y ticks.
+		Mend - Restore X% health to a body part.
+		Regenerate - Restore a being's body to full health and replenish its blood.
+		Resurrect - Return a corpse to life, with X% of its health.
 	Light
-		Bright Vision - Temporarily raise target's glare tolerance.
-		Blinding Light - Dramatically increase the light level at target tile for a short duration.
-		Illuminate - Increase the light level in an area around the caster for a certain duration.
+		Bright Vision - Temporarily raise a being's glare tolerance.
+		Blinding Light - Dramatically increase the light level at a tile for a short duration.
+		Illuminate - Increase the light level in an area around yourself for X ticks.
 		Lumiphile - Temporarily become a lumiphile. Lumiphiles have increased agility and health regen while in bright light.
 		Dawnlight - Increase a being's alertness and prevent it from sleeping for a certain duration.
 Black - evil - darkness - illusion
@@ -408,11 +409,11 @@ Black - evil - darkness - illusion
 		Shadow mage
 			Darkness, stealth, sleep
 	Demonic
-		Corrupt - Empowers target's white antimagic and weakens its white magic
-		Possess - Channeled, interrupted by taking 10% of vitality in damage at once. Take control of a target being for a certain duration. Invocation power times caster's black power divided by target's black resistance must be greater than target's intellect.
-		Damn - If the caster is alive after a certain duration, the target dies.
-		Curse - Caster chooses an item and curses it. Carrying a cursed item deals blight damage over time. When a cursed item is picked up or thrown, it explodes, dealing a large amount of blight damage.
-		Enslave Fiend - Enslave target fiend, making it loyal to the caster.
+		Corrupt - Drain a being's white gatestones.
+		Possess - Channeled, interrupted by taking 10% of vitality in damage at once. Take control of a being for X ticks. Mana cost is proportional to the target's intellect.
+		Damn - Choose a being. If you are alive after X ticks, deal Y blight damage to that being.
+		Curse - Curse an item. Carrying a cursed item deals blight damage over time. Picking up a cursed item binds it to the carrier. When a bound cursed item is removed, it explodes, destroying itself and dealing blight damage in an area around the carrier.
+		Enslave Fiend - Enslave a fiend, making it loyal to you for X ticks.
 		Open Hellmouth - Can only cast while in the Nexus or Hell. Create a hellmouth from the Nexus to Hell, allowing travel between the realms.
 		Summon demons and devils
 	Necrotic
@@ -424,70 +425,74 @@ Black - evil - darkness - illusion
 		Raise Dead - Raise a target corpse to undeath under the caster's control. The undead being's stats depend on the spell magnitude, and it returns to death after the spell's duration elapses.
 		Summon spirits
 	Shadow
-		Night Vision - Temporarily raise target's darkness tolerance.
-		Blind Spot - Dramatically decrease the light level at target tile for a short duration.
-		Enshadow - Decrease the light level in an area around the caster for a certain duration.
-		Umbraphile - Temporarily become an umbraphile. Umbraphiles have increased dexterity and mana regen while in darkness.
-		Shadow Copy - Summon a temporary shadow copy of the caster onto an adjacent tile. The copy cannot attack and disintegrates when it takes damage.
-		Inflict Nightmares - Gives target being nightmares for a certain duration. Whenever a being with nightmares is asleep, it takes damage (what kind?).
+		Night Vision - Temporarily raise a being's darkness tolerance.
+		Blind Spot - Dramatically decrease the light level at a tile for a short duration.
+		Enshadow - Decrease the light level in an area around yourself for X ticks.
+		Umbraphile - Become an umbraphile for X ticks. Umbraphiles have increased dexterity and mana regen while in darkness.
+		Shadow Copy - Summon a temporary shadow copy of yourself onto an adjacent tile. The copy cannot attack and disintegrates when it takes damage.
+		Inflict Nightmares - Give a being nightmares for X ticks. Whenever a being with nightmares is asleep, it takes blight damage.
 Green - matter - nature
 	Specializations
 		Zoomage
 		Phytomage
 		Elementalist
 	Bestial
-		Metamorphose hide - Creates and equips a low-durability, high-power body armor. Currently equipped body armor is unequipped without incurring unequip time.
-		Metamorphose claws - Creates and equips a low-durability, high-power one-handed weapon for each hand. Currently equipped weapons are unequipped without incurring unequip times.
+		Metamorphose hide - Create and equip a low-durability, high-power body armor. Currently equipped body armor is unequipped without incurring unequip time.
+		Metamorphose claws - Create and equip a low-durability, high-power one-handed weapon for each hand. Currently equipped weapons are unequipped without incurring unequip times.
 		Feral Form - Temporarily become feral. While feral, a being is mute and has increased strength, endurance, agility, dexterity, vision, and hearing but decreased spirit, stamina, and intellect.
 			This seems like way too much stuff for one ability
-		Devour - Deals blight (?) damage to a target and restores health to the caster.
-		Eagle Eye - Temporarily increases caster's visual acuity by 100%.
-		Scavenge - Destroy a target corpse and regain health in proportion to its vitality when it was alive.
+		These two could use reworking with respect to body parts and so forth:
+			Devour - Deal blight (?) damage to a being and restore health to yourself equal to the effective damage dealt.
+			Scavenge - Destroy a corpse and regain health in proportion to its vitality when it was alive.
+		Eagle Eye - Temporarily increase your visual acuity by 100%.
+			No eagles in Questless. Rename.
 		Communicate with animals?
 		Summon animals
 	Botanic
-		Regenerate - Become passive while regaining health for a chosen duration.
+		Regenerate - Become passive and increase health regeneration by X for Y ticks.
 		Communicate with plants?
 		Summon plants
-			Growth - Creates a disc of trees at target location, blocking movement.
+			Growth - Create a disc of trees at a tile.
 	Elemental
 		Fire
 			Ignite - Sets a fire at the target location, increasing the light level and greatly increasing the temperature at that location. Fire wanes in intensity over time and then is extinguished.
 			Pyrophile - Temporarily become a pyrophile. A pyrophile's maximum temperature is raised dramatically, and it heals over time in proportion to the ambient temperature. (Use a different effect besides healing?)
-			Flamewalk - Temporarily gain flamewalk status, which doubles agility and causes the being to set fire to every tile it moves into.
+			Flamewalk - Temporarily become a flamewalker. Flamewalkers have doubles agility and set fire to each tile they move into.
 			Summon fire elemental
 		Water
-			Chill - Temporarily raise the target being's minimum temperature.
+			Chill - Temporarily raise a being's minimum temperature.
 			Freeze - Freeze target location, drastically lowering its temperature. The temperature returns to normal over time.
-			Flood - Create water at target tile.
+			Flood - Create water at a tile.
 			Summon frost elemental
 		Storm
 			Change wind
-			Dispell/summon rain
+			Dispel/summon rain
 			Summon storm elemental
 Red - energy - technology
 	Specializations
 		Power mage
 		Technomage
 	Power
-		Charge - Gain mana over time. Total mana restored is equal to casting cost plus spell duration times a constant factor.
-			E.g., spend 100 mana to recover 100 mana over 0 turns. Or spend 100 mana to recover 200 mana over, say, 25 turns.
-		Overcharge - Gain mana and then lose twice that much over time. The more mana gained, the faster it depletes.
-			E.g., gain 0 mana and lose 0 over 0 turns. Gain 100 mana and lose 200 mana over 10 turns. Gain 200 mana and lose 400 mana over 5 turns.
-			ALTERNATE IDEA: Gain mana immediately, but also gain mana poisoning in proportion to the amount gained. Mana poisoning deals blight damage over time.
+		Charge - Gain X mana over Y ticks. Total mana restored is equal to casting cost plus spell duration times a constant factor.
+			E.g., spend 100 mana to recover 100 mana immediately. Or spend 100 mana to recover 200 mana over, say, 25 ticks.
+		Overcharge - Gain X mana and c * X mana poisoning.
 		Discharge - Deal burn damage within an area of effect. Does less damage farther from the caster, down to zero damage at maximum range. Does more damage the fuller the caster's mana is before casting, up to 100% extra damage at full mana.
-		Shock - Deal shock damage to a target being. Chain to nearby beings, with less range and damage for each jump. Targets are chosen first by proximity then at random. May target the caster and other friendly beings.
-		Scroll Magnet - Steal a scroll from target being.
+		Shock - Deal shock damage to a being. Chain to nearby beings, with less range and damage for each jump. Targets are chosen first by proximity then at random. May target the caster and other friendly beings.
+		Gatestone Magnet - Steal a gatestone from a being.
 		Levitate - Temporarily gain the power of flight.
 	Tech
-		Repair - Restores health to target machine.
+		Repair - Restores health to a machine.
 		Summon machines
+		Construct advanced weapons
 Blue - stasis - time
 	Specializations
+		Stasis mage
 		Chronomancer
 	Stasis
 		Summon preservers from the stasis
+		Banish - Banish a being to stasis for a certain duration. While banished, an impassable and indestructible stasis portal appears in its place. During banishment, the being cannot be interacted with and does not update its state.
 	Time
+		Enchant Time Amulet - Time amulets are very expensive and difficult to construct or acquire and act as "save slots". Enchanting a time amulet is also difficult/expensive and creates a restore point. Using an enchanted time amulet restores the entire world to its state immediately after the amulet was enchanted. A time amulet can be re-enchanted to overwrite its previous restore point. If the player's character dies while carrying at least one enchanted time amulet, the game will present the option to restore the game from one of the available amulets.
 Yellow - chaos - space
 	Specializations
 		Chaos mage
@@ -508,54 +513,60 @@ Yellow - chaos - space
 		Mirage - Cause a being to perceive something that's not there.
 		Transmute - ???
 		Create Chimera - Choose two beings and randomly swap their body parts around.
-	Space
-		Interport - Swap positions of two beings.
-		Teleport - Teleport within a certain distance.
-		Banish - Banish target being to the chaos for a certain duration. While banished, an impassable and indestructible chaos portal appears in its place. During banishment, the being cannot be interacted with and does not update its state.
-		Open portal - ???
+		Mind Swap - Choose another being and permanently exchange control of your bodies with it.
 		Summon shifters from the chaos
+	Space
+		Interport - Swap the positions of two beings.
+		Teleport - Teleport to a tile within X spans.
+		Construct Portals - Construct a pair of linked chaos portals. They activate once each has been placed on a tile and allow fast travel between those two tiles. If either portal is destroyed, the other deactivates and becomes useless.
+			Perhaps it requires a spell or mana to use the portals?
 Violet - peace - order
 	Specializations
 		Peacekeeper
 	Peace
-		Encourage - Increase target being's mood.
-		Imprison - For a certain duration, prevent target from moving or using melee attacks.
-		Silence - Cause muteness in target being for a certain duration.
-		Disarmament - Unequip all weapons (including caster's weapons) within a certain range. Unequip times are not incurred; the effect is immediate. Any weapons being readied will not connect with their targets. Recovery times from weapons used prior to casting are unaffected.
-		Pacify - For a certain duration, cause the target to become passive. Passive beings cannot perform any actions.
-		Ward - Equip a low-durability passive shield.
-		Retribution - Gives target being retribution status. Next time that target deals damage to another being, it also deals that damage to itself.
+		Encourage - Increase a being's mood.
+		Imprison - For a certain duration, prevent a being from moving.
+		Silence - Mute a being for X ticks.
+		Disarmament - Unequip all weapons within a certain range, including your own. Unequip times are not incurred; the effect is immediate. Any weapons being readied will not connect with their targets. Recovery times from weapons used prior to casting are unaffected.
+		Ward X - Increase your X protection by Y for Z ticks.
+		Retribution - Give a being retribution status. Next time that target deals damage to another being, it also deals that damage to itself.
+		Pacify - Cause a being to become passive for X ticks. Passive beings cannot perform any actions.
 Orange - war - strife
 	Specializations
 		Battle mage
 	Battle
-		Battle Cry - Temporarily empowers strength and endurance.
-		Demoralize - Reduce target being's mood.
-		Duel - A target being and the caster temporarily become immune to weapon-based attacks from all other beings except each other and unable to deal damage to other beings.
+		Battle Cry - Temporarily empower your strength and endurance.
+		Demoralize - Reduce a being's mood.
+		Duel - Chose a being. For X ticks, you and that being become immune to weapon-based attacks from all other beings except each other and unable to deal damage to other beings.
 			Exploitable with allies?
-				How about, "when it expires, the one with the lowest health percentage dies"?
-		Rampage - The caster's next x actions do not incur cooldown.
-		Amputate - Remove a target body part.
+				How about, "when it expires, the one with the lowest health percentage dies"? Still exploitable using a weak minion.
+		Rampage - Your next X actions do not incur cooldown.
+		Amputate - Remove a body part.
 		Weapon and armor enchantments
+		Summon provokers from Discord
 
 ================================================================================
 Real-time Events for Spells
 ================================================================================
 White
-	Themes: 
+	Themes: discovery
 Black
-	Themes: 
+	Themes: ?
 Green
 	Themes: reflexes, senses, growth, balance
 	Given a grammar for a pictorial language, make changes to a starting pictorial string to arrive at a goal string.
 Red
-	Themes: mechanical thinking, efficiency, violence
+	Themes: mechanical thinking, efficiency
 Blue
+	Themes: ?
+Orange
+	Themes: violence
+Violet
 	Themes: discernment, slow thinking, pattern finding
 Yellow
 	Themes: unpredictability, entropy
 	Input a sequence of left and right arrow key presses such that the game can't predict your next press
-		Use a Markhov chain for this
+		Use the Markov chain from Wizards' Duel for this
 
 ================================================================================
 Abilities

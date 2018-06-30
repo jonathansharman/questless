@@ -325,17 +325,18 @@
     <ClInclude Include="include\agents\action.hpp" />
     <ClInclude Include="include\agents\agent.hpp" />
     <ClInclude Include="include\agents\basic_ai.hpp" />
-    <ClInclude Include="include\agents\being_query.hpp" />
     <ClInclude Include="include\agents\cost.hpp" />
-    <ClInclude Include="include\agents\count_query.hpp" />
-    <ClInclude Include="include\agents\direction_query.hpp" />
-    <ClInclude Include="include\agents\item_query.hpp" />
     <ClInclude Include="include\agents\lazy_ai.hpp" />
-    <ClInclude Include="include\agents\magnitude_query.hpp" />
-    <ClInclude Include="include\agents\message.hpp" />
     <ClInclude Include="include\agents\player.hpp" />
-    <ClInclude Include="include\agents\tile_query.hpp" />
-    <ClInclude Include="include\agents\vector_query.hpp" />
+    <ClInclude Include="include\agents\queries\all_queries.hpp" />
+    <ClInclude Include="include\agents\queries\being_query.hpp" />
+    <ClInclude Include="include\agents\queries\count_query.hpp" />
+    <ClInclude Include="include\agents\queries\direction_query.hpp" />
+    <ClInclude Include="include\agents\queries\item_query.hpp" />
+    <ClInclude Include="include\agents\queries\magnitude_query.hpp" />
+    <ClInclude Include="include\agents\queries\message.hpp" />
+    <ClInclude Include="include\agents\queries\tile_query.hpp" />
+    <ClInclude Include="include\agents\queries\vector_query.hpp" />
     <ClInclude Include="include\animation\animation.hpp" />
     <ClInclude Include="include\animation\animation_stack.hpp" />
     <ClInclude Include="include\animation\bleeding.hpp" />
@@ -383,7 +384,6 @@
     <ClInclude Include="include\entities\beings\statuses\blind.hpp" />
     <ClInclude Include="include\entities\beings\statuses\confused.hpp" />
     <ClInclude Include="include\entities\beings\statuses\deaf.hpp" />
-    <ClInclude Include="include\entities\beings\statuses\discharging.hpp" />
     <ClInclude Include="include\entities\beings\statuses\eagle_eyed.hpp" />
     <ClInclude Include="include\entities\beings\statuses\healing.hpp" />
     <ClInclude Include="include\entities\beings\statuses\illuminated.hpp" />
@@ -391,7 +391,6 @@
     <ClInclude Include="include\entities\beings\statuses\nauseated.hpp" />
     <ClInclude Include="include\entities\beings\statuses\numb.hpp" />
     <ClInclude Include="include\entities\beings\statuses\poisoned.hpp" />
-    <ClInclude Include="include\entities\beings\statuses\recharging.hpp" />
     <ClInclude Include="include\entities\beings\statuses\sleeping.hpp" />
     <ClInclude Include="include\entities\beings\statuses\status.hpp" />
     <ClInclude Include="include\entities\beings\world_view.hpp" />
@@ -423,7 +422,7 @@
     <ClInclude Include="include\magic\all_spells.hpp" />
     <ClInclude Include="include\magic\eagle_eye.hpp" />
     <ClInclude Include="include\magic\heal.hpp" />
-    <ClInclude Include="include\magic\mana_cost.hpp" />
+    <ClInclude Include="include\magic\charge_cost.hpp" />
     <ClInclude Include="include\magic\shock.hpp" />
     <ClInclude Include="include\magic\spell.hpp" />
     <ClInclude Include="include\magic\spell_visitor.hpp" />
@@ -490,6 +489,7 @@
     <ClInclude Include="include\world\region.hpp" />
     <ClInclude Include="include\world\section.hpp" />
     <ClInclude Include="include\world\tile.hpp" />
+    <ClInclude Include="include\world\tile_visitor.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\agents\action.cpp" />
@@ -498,6 +498,7 @@
     <ClCompile Include="src\agents\lazy_ai.cpp" />
     <ClCompile Include="src\agents\player.cpp" />
     <ClCompile Include="src\animation\animation.cpp" />
+    <ClCompile Include="src\animation\bleeding.cpp" />
     <ClCompile Include="src\animation\body_texturer.cpp" />
     <ClCompile Include="src\animation\camera.cpp" />
     <ClCompile Include="src\animation\entity_animator.cpp" />
@@ -506,6 +507,7 @@
     <ClCompile Include="src\animation\particles\black_magic_particle.cpp" />
     <ClCompile Include="src\animation\particles\blood_particle.cpp" />
     <ClCompile Include="src\animation\particles\blue_magic_particle.cpp" />
+    <ClCompile Include="src\animation\particles\flame.cpp" />
     <ClCompile Include="src\animation\particles\flame_particle.cpp" />
     <ClCompile Include="src\animation\particles\green_magic_particle.cpp" />
     <ClCompile Include="src\animation\particles\particle.cpp" />
@@ -530,10 +532,8 @@
     <ClCompile Include="src\entities\beings\human.cpp" />
     <ClCompile Include="src\entities\beings\incorporeal_being.cpp" />
     <ClCompile Include="src\entities\beings\stats\vision.cpp" />
-    <ClCompile Include="src\entities\beings\statuses\discharging.cpp" />
     <ClCompile Include="src\entities\beings\statuses\healing.cpp" />
     <ClCompile Include="src\entities\beings\statuses\poisoned.cpp" />
-    <ClCompile Include="src\entities\beings\statuses\recharging.cpp" />
     <ClCompile Include="src\entities\beings\statuses\sleeping.cpp" />
     <ClCompile Include="src\entities\beings\statuses\status.cpp" />
     <ClCompile Include="src\entities\beings\world_view.cpp" />
@@ -550,10 +550,13 @@
     <ClCompile Include="src\items\scroll.cpp" />
     <ClCompile Include="src\items\weapons\attack.cpp" />
     <ClCompile Include="src\items\weapons\bow.cpp" />
+    <ClCompile Include="src\items\weapons\modal_weapon.cpp" />
+    <ClCompile Include="src\items\weapons\quarterstaff.cpp" />
+    <ClCompile Include="src\items\weapons\quiver.cpp" />
     <ClCompile Include="src\items\weapons\weapon.cpp" />
     <ClCompile Include="src\magic\eagle_eye.cpp" />
     <ClCompile Include="src\magic\heal.cpp" />
-    <ClCompile Include="src\magic\mana_cost.cpp" />
+    <ClCompile Include="src\magic\charge_cost.cpp" />
     <ClCompile Include="src\magic\shock.cpp" />
     <ClCompile Include="src\magic\spell.cpp" />
     <ClCompile Include="src\magic\teleport.cpp" />

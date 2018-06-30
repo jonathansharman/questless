@@ -6,8 +6,10 @@
 
 #include "items/equipment.hpp"
 
-#include "game.hpp"
+#include "agents/agent.hpp"
+#include "agents/queries/message.hpp"
 #include "entities/beings/being.hpp"
+#include "game.hpp"
 
 namespace ql
 {

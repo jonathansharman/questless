@@ -16,7 +16,7 @@ namespace ql
 	public:
 		lazy_ai(ql::being& being) : agent{being} {}
 
-		void act() final;
+		complete act() final;
 
 		void perceive(sptr<effect> const&) final {}
 
@@ -25,10 +25,7 @@ namespace ql
 		complete send_message
 			( uptr<message>
 			, std::function<complete()> cont
-			) const final
-		{
-			return cont();
-		}
+			) const final;
 
 		complete query_count
 			( uptr<count_query>
@@ -36,10 +33,7 @@ namespace ql
 			, std::optional<int>
 			, std::optional<int>
 			, std::function<complete(std::optional<int>)> cont
-			) const final
-		{
-			return cont(std::nullopt);
-		}
+			) const final;
 
 		complete query_magnitude
 			( uptr<magnitude_query>
@@ -47,56 +41,38 @@ namespace ql
 			, std::optional<double>
 			, std::optional<double>
 			, std::function<complete(std::optional<double>)> cont
-			) const final
-		{
-			return cont(std::nullopt);
-		}
+			) const final;
 
 		complete query_tile
 			( uptr<tile_query>
 			, std::optional<region_tile::point>
 			, std::function<bool(region_tile::point)>
 			, std::function<complete(std::optional<region_tile::point>)> cont
-			) const final
-		{
-			return cont(std::nullopt);
-		}
+			) const final;
 
 		complete query_direction
 			( uptr<direction_query>
 			, std::function<complete(std::optional<region_tile::direction>)> cont
-			) const final
-		{
-			return cont(std::nullopt);
-		}
+			) const final;
 
 		complete query_vector
 			( uptr<vector_query>
 			, std::optional<region_tile::point>
 			, std::function<bool(region_tile::vector)>
 			, std::function<complete(std::optional<region_tile::vector>)> cont
-			) const final
-		{
-			return cont(std::nullopt);
-		}
+			) const final;
 
 		complete query_being
 			( uptr<being_query>
 			, std::function<bool(ql::being&)>
 			, std::function<complete(std::optional<ql::being*>)> cont
-			) const final
-		{
-			return cont(std::nullopt);
-		}
+			) const final;
 
 		complete query_item
 			( uptr<item_query>
 			, ql::being&
 			, std::function<bool(ql::being&)>
 			, std::function<complete(std::optional<item*>)> cont
-			) const final
-		{
-			return cont(std::nullopt);
-		}
+			) const final;
 	};
 }

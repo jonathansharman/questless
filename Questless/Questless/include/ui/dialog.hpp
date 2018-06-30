@@ -4,10 +4,9 @@
 
 #pragma once
 
-#include "sdl/resources.hpp"
-#include "sdl/window.hpp"
-#include "sdl/input.hpp"
-#include "utility/initializer.hpp"
+#include <functional>
+
+#include "sdl/texture.hpp"
 #include "utility/reference.hpp"
 
 namespace ql
@@ -18,9 +17,9 @@ namespace ql
 	public:
 		enum class state { open, closed };
 
-		//! Updates the dialog state based on input. To be called once per frame as long as it's open.
-		//! @return The state of the dialog after this update: either open or closed.
-		virtual state update() = 0; //! @todo Take input by ref or const-ref?
+		//! Updates the dialog state. To be called once per frame as long as this dialog is open.
+		//! @return The state of this dialog after this update: either open or closed.
+		virtual state update() = 0;
 
 		//! Draws the dialog to the screen.
 		virtual void draw() const = 0;

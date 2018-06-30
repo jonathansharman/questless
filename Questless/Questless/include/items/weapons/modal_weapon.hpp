@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "entities/beings/being.hpp"
 #include "items/weapons/weapon.hpp"
 
 namespace ql

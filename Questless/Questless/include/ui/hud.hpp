@@ -8,22 +8,19 @@
 #include <optional>
 #include <vector>
 
-#include "items/item.hpp"
-#include "sdl/input.hpp"
-#include "sdl/font.hpp"
-#include "sdl/texture.hpp"
+#include "units/window_space.hpp"
 #include "utility/id.hpp"
+#include "utility/reference.hpp"
 
 namespace ql
 {
 	class being;
+	class item;
 
 	//! The head-up display controls and displays various elements, such as conditions, the hotbar, and the inventory.
 	class hud
 	{
 	public:
-		hud();
-
 		//! Updates the HUD's state and animations. Should be called once per frame.
 		void update();
 
@@ -40,53 +37,16 @@ namespace ql
 		//! Whether the inventory view is open.
 		bool inventory_open() const { return _inv_open; }
 	private:
-		// Constants
-
-		static constexpr float _inv_width_pct = 0.7f;
-		static constexpr float _inv_height_pct = 0.7f;
-
-		static constexpr units::window_space::vector _item_icon_size{55, 55};
-		static constexpr int _item_count_font_size = 10;
-
 		static constexpr size_t _hotbar_size = 10;
-		static constexpr int _hotbar_interslot_gap = 2;
-		static constexpr int _hotbar_bottom_gap = 2;
-		static constexpr int _hotbar_slot_width = 65;
-		static constexpr int _hotbar_slot_h_padding = 5;
-		static constexpr int _hotbar_slot_v_padding = 5;
-
-		static constexpr int _conditions_count = 2;
-		static constexpr int _condition_bar_width = 10;
-		static constexpr int _condition_bar_height = 100;
-
-		// State Data
 
 		std::optional<id<being>> _player_being_id = std::nullopt;
 		std::array<std::optional<id<item>>, _hotbar_size> _hotbar;
 		bool _inv_open = false;
-		int _inv_page = 0; //! @todo Replace with filters.
-		std::vector<cref<item>> _displayed_items;
-
-		// View Data
-
-		int _screen_bottom;
-
-		int _hotbar_width;
-		int _hotbar_x_start;
-
+		int _inv_page = 0; //! @todo Replace with filters and a scrollable view.
 		units::window_space::box _inv_layout;
-
 		int _inv_row_count;
 		int _inv_column_count;
-
-		uptr<sdl::texture> _hotbar_slot_texture;
-
-		uptr<sdl::font> _fnt_item_count;
-
-		// Methods
-
-		void load_textures();
-		void load_layout();
+		std::vector<cref<item>> _displayed_items;
 
 		void update_displayed_items(being const& player_being);
 	};

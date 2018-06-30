@@ -15,27 +15,13 @@ namespace ql
 	public:
 		inventory inventory;
 
-		quiver(ql::inventory inventory, ql::id<item> id = ql::id<item>::make())
-			: item{id}
-			, inventory{std::move(inventory)}
-		{}
+		quiver(ql::inventory inventory, ql::id<item> id = ql::id<item>::make());
 
 		std::string name() const final { return "Quiver"; }
 
 		double weight() const final { return 0.5; }
 
-		virtual std::vector<uptr<action>> actions() final
-		{
-			std::vector<uptr<action>> actions;
-			if (equipped()) {
-				actions.push_back(unequip::make(*this));
-			} else {
-				actions.push_back(equip::make(*this));
-				actions.push_back(drop::make(*this));
-				actions.push_back(toss::make(*this));
-			}
-			return actions;
-		}
+		std::vector<uptr<action>> actions() final;
 
 		double equip_time() const final { return 1.0; }
 		double unequip_time() const final { return 1.0; }

@@ -4,6 +4,8 @@
 
 #include "ui/direction_dialog.hpp"
 
+#include "sdl/resources.hpp"
+
 using namespace sdl;
 using namespace units;
 

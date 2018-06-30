@@ -30,4 +30,15 @@ namespace ql
 		>;
 
 	DEFINE_VISITORS(entity, entity_subtype_list)
+
+	enum class entity_subtype : unsigned
+		// Beings
+		{ human_class
+		, goblin_class
+		, troll_class
+		// Objects
+		, campfire
+		, corpse_class
+		, item_box_class
+		};
 }

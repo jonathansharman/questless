@@ -6,7 +6,6 @@
 
 #include <string>
 #include <memory>
-#include <optional>
 
 #include <SDL.h>
 

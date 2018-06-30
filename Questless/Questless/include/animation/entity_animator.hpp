@@ -6,7 +6,6 @@
 
 #include "animation.hpp"
 #include "entities/entity_visitor.hpp"
-#include "sdl/resources.hpp"
 #include "utility/reference.hpp"
 
 namespace ql
@@ -15,6 +14,9 @@ namespace ql
 	class entity_animator : public entity_const_visitor
 	{
 	public:
+		entity_animator();
+		~entity_animator();
+
 		void visit(human const&) final;
 		void visit(goblin const&) final;
 

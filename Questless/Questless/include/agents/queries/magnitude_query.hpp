@@ -8,15 +8,24 @@
 
 namespace ql
 {
-	struct magnitude_query_heal;
-	struct magnitude_query_shock;
-	struct magnitude_query_wait_time;
+	#define MAGNITUDE_QUERY_FIRST \
+		X(magnitude_query_heal)	
+	#define MAGNITUDE_QUERY_REST \
+		X(magnitude_query_shock) \
+		X(magnitude_query_wait_time)
+
+	#define X(subtype) struct subtype;
+	MAGNITUDE_QUERY_FIRST
+	MAGNITUDE_QUERY_REST
+	#undef X
 
 	using magnitude_query_subtype_list = type_list::of_t
-		< magnitude_query_heal
-		, magnitude_query_shock
-		, magnitude_query_wait_time
+		#define X(subtype) < subtype
+		MAGNITUDE_QUERY_FIRST
+		#define X(subtype) , subtype
+		MAGNITUDE_QUERY_REST
 		>;
+		#undef X
 
 	DEFINE_VISITORS(magnitude_query, magnitude_query_subtype_list)
 
@@ -28,7 +37,8 @@ namespace ql
 
 	DEFINE_ELEMENT_BASE(magnitude_query, magnitude_query)
 
-	struct magnitude_query_heal : magnitude_query_base<magnitude_query_heal> {};
-	struct magnitude_query_shock : magnitude_query_base<magnitude_query_shock> {};
-	struct magnitude_query_wait_time : magnitude_query_base<magnitude_query_wait_time> {};
+	#define X(subtype) struct subtype : magnitude_query_base<subtype> {};
+	MAGNITUDE_QUERY_FIRST
+	MAGNITUDE_QUERY_REST
+	#undef X
 }
