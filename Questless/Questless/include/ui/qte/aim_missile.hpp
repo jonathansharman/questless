@@ -10,17 +10,14 @@
 #include "units/game_space.hpp"
 #include "units/view_space.hpp"
 
-namespace ql
-{
+namespace ql {
 	class being;
 	class body_part;
 }
 
-namespace ql::qte
-{
+namespace ql::qte {
 	//! Quick time event for determining the .
-	class aim_missile : public dialog
-	{
+	class aim_missile : public dialog {
 	public:
 		//! @param target_coords The target strike coordinates.
 		//! @param cont The dialog continuation function.

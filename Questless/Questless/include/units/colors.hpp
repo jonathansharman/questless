@@ -7,8 +7,7 @@
 
 #include "color_space.hpp"
 
-namespace units::colors
-{
+namespace units::colors {
 	using color = units::color_space::point;
 	using color_vector = units::color_space::vector;
 

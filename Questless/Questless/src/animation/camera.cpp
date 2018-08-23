@@ -11,32 +11,26 @@
 using namespace sdl;
 using namespace units;
 
-namespace ql
-{
-	void camera::zoom_factor(double factor)
-	{
+namespace ql {
+	void camera::zoom_factor(double factor) {
 		if (factor >= 0.0) {
 			_zoom *= factor;
 		}
 	}
 
-	game_space::radians camera::positive_angle() const
-	{
+	game_space::radians camera::positive_angle() const {
 		return _angle < game_space::radians::zero() ? _angle + game_space::radians::circle() : _angle;
 	}
 
-	void camera::angle(game_space::radians theta)
-	{
+	void camera::angle(game_space::radians theta) {
 		_angle.count() = fmod(theta.count(), game_space::radians::circle().count() / 2.0);
 	}
 
-	void camera::rotate(game_space::radians dtheta)
-	{
+	void camera::rotate(game_space::radians dtheta) {
 		_angle.count() = fmod((_angle + dtheta).count(), game_space::radians::circle().count() / 2.0);
 	}
 
-	void camera::update()
-	{
+	void camera::update() {
 		window_space::vector center_to_mouse = the_input().mouse_position() - the_window().window_center();
 		game_space::vector scaled_center_to_mouse = game_space::vector{static_cast<double>(center_to_mouse.x()), static_cast<double>(-center_to_mouse.y())} / _zoom;
 		_point_hovered = _position + scaled_center_to_mouse;
@@ -64,8 +58,7 @@ namespace ql
 			);
 	}
 
-	void camera::draw_lines(std::vector<game_space::point> points, colors::color color) const
-	{
+	void camera::draw_lines(std::vector<game_space::point> points, colors::color color) const {
 		// Transform segment end points.
 		std::vector<window_space::point> window_points;
 		for (game_space::point const& point : points) {
@@ -76,8 +69,7 @@ namespace ql
 		the_renderer().draw_lines(window_points, color);
 	}
 
-	window_space::point camera::to_window_point(game_space::point point) const
-	{
+	window_space::point camera::to_window_point(game_space::point point) const {
 		game_space::point const window_center = game_space::point{0.0, 0.0} + game_space::vector{static_cast<double>(the_window().width()), static_cast<double>(the_window().height())} / 2.0;
 		game_space::vector const camera_to_point = point - _position;
 		game_space::point const scaled_point = _zoom * game_space::vector{camera_to_point.x(), -camera_to_point.y()} + window_center;

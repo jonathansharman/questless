@@ -7,12 +7,9 @@
 #include "rate.hpp"
 #include "space.hpp"
 
-namespace units
-{
-	namespace detail
-	{
-		class game_space_buffer : public buffer_base<double, 2>
-		{
+namespace units {
+	namespace detail {
+		class game_space_buffer : public buffer_base<double, 2> {
 		public:
 			double& x() & { return _elements[0]; }
 			constexpr double const& x() const& { return _elements[0]; }
@@ -25,8 +22,7 @@ namespace units
 		};
 	}
 
-	struct game_space : space<struct game_space_tag, double, 2, detail::game_space_buffer>
-	{
+	struct game_space : space<struct game_space_tag, double, 2, detail::game_space_buffer> {
 		using h_align = axis<0>::align;
 		using v_align = axis<1>::align;
 

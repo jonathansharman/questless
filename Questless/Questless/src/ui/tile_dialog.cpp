@@ -3,15 +3,14 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "ui/tile_dialog.hpp"
+
 #include "game.hpp"
 
 using namespace sdl;
 using namespace units;
 
-namespace ql
-{
-	dialog::state tile_dialog::update()
-	{
+namespace ql {
+	dialog::state tile_dialog::update() {
 		if (the_input().presses(SDLK_BACKSPACE) || the_input().presses(SDLK_ESCAPE)) {
 			the_game().world_renderer().clear_highlight_predicate();
 			return _cont(std::nullopt);
@@ -51,8 +50,7 @@ namespace ql
 		return state::open;
 	}
 
-	void tile_dialog::draw() const
-	{
+	void tile_dialog::draw() const {
 		draw_title(*_txt_title);
 		draw_prompt(*_txt_prompt);
 
@@ -60,8 +58,7 @@ namespace ql
 		//! @todo This.
 	}
 
-	void tile_dialog::load_textures()
-	{
+	void tile_dialog::load_textures() {
 		_txt_title = make_title(_title.c_str());
 		_txt_prompt = make_prompt(_prompt.c_str());
 	}

@@ -15,24 +15,20 @@
 #include "world/coordinates.hpp"
 #include "world/section.hpp"
 
-namespace ql
-{
+namespace ql {
 	class region;
 	class being;
 	class object;
 
 	//! Represents everything an agent can perceive about its being's environment.
-	class world_view
-	{
+	class world_view {
 	public:
-		struct section_view
-		{
+		struct section_view {
 			region_section::point coords;
 			std::array<std::array<perception, section::diameter>, section::diameter> tile_perceptions;
 		};
 
-		struct entity_view
-		{
+		struct entity_view {
 			std::variant<id<being>, id<object>> id;
 			perception perception;
 

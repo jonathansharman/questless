@@ -4,6 +4,5 @@
 
 #include "damage/damage.hpp"
 
-namespace ql::dmg::detail
-{
+namespace ql::dmg::detail {
 }

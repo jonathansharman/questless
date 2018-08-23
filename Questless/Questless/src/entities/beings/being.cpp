@@ -6,6 +6,7 @@
 
 #include "effects/effect.hpp"
 #include "entities/beings/body.hpp"
+#include "entities/beings/statuses/status.hpp"
 #include "entities/objects/corpse.hpp"
 #include "game.hpp"
 #include "agents/agent.hpp"
@@ -15,9 +16,13 @@
 
 using std::function;
 
-namespace ql
-{
-	being::being(const function<uptr<ql::agent>(being&)>& make_agent, ql::id<being> id, ql::body body, const function<ql::stats()>& make_base_stats)
+namespace ql {
+	being::being
+		( const function<uptr<ql::agent>(being&)>& make_agent
+		, ql::id<being> id
+		, ql::body body
+		, function<ql::stats()> const& make_base_stats
+		)
 		: entity{}
 		, id{id}
 		, body{std::move(body)}
@@ -31,7 +36,6 @@ namespace ql
 		, mortality{ql::mortality::alive}
 		, direction{static_cast<region_tile::direction>(uniform(1, 6))}
 		, _agent{make_agent(*this)}
-		
 	{
 		refresh_stats();
 
@@ -63,8 +67,7 @@ namespace ql
 
 	being::~being() = default;
 
-	void being::serialize(std::ostream& out) const
-	{
+	void being::serialize(std::ostream& out) const {
 		entity::serialize(out);
 
 		out << id << ' ';
@@ -78,8 +81,7 @@ namespace ql
 		out << stats << ' ';
 	}
 
-	perception being::perception_of(region_tile::point region_tile_coords) const
-	{
+	perception being::perception_of(region_tile::point region_tile_coords) const {
 		bool in_front;
 		auto offset = region_tile_coords - coords;
 		switch (direction) {
@@ -114,8 +116,7 @@ namespace ql
 		}
 	}
 
-	complete being::act()
-	{
+	complete being::act() {
 		if (_delayed_actions.empty()) {
 			// No delayed actions; have agent choose a new action to perform.
 			agent().act();
@@ -132,8 +133,7 @@ namespace ql
 		}
 	}
 
-	complete being::add_delayed_action(double delay, action::cont cont, uptr<action> action)
-	{
+	complete being::add_delayed_action(double delay, action::cont cont, uptr<action> action) {
 		// If there are no enqueued delayed actions, just incur the delay immediately instead of enqueueing it.
 		if (_delayed_actions.empty()) {
 			busy_time += delay;
@@ -144,14 +144,12 @@ namespace ql
 		return complete{};
 	}
 
-	void being::clear_delayed_actions()
-	{
+	void being::clear_delayed_actions() {
 		_action_delays.clear();
 		_delayed_actions.clear();
 	}
 
-	void being::update()
-	{
+	void being::update() {
 		refresh_stats();
 		
 		// Update status modifiers.
@@ -238,8 +236,7 @@ namespace ql
 		}
 	}
 
-	void being::take_damage(dmg::group& damage, body_part& target_part, std::optional<ql::id<being>> opt_source_id)
-	{
+	void being::take_damage(dmg::group& damage, body_part& target_part, std::optional<ql::id<being>> opt_source_id) {
 		// Store whether the being was already dead upon taking this damage.
 		bool const was_already_dead = mortality == ql::mortality::dead;
 
@@ -274,31 +271,25 @@ namespace ql
 
 		{ // Apply secondary damage effects.
 			//! @todo Add effects for other damage types. Balance numbers.
-			struct damage_effect_applier
-			{
+			struct damage_effect_applier {
 				body_part& body_part;
-				void operator ()(dmg::slash const& slash)
-				{
+				void operator ()(dmg::slash const& slash) {
 					constexpr double bleeding_per_slash = 0.1;
 					body_part.bleeding += slash * bleeding_per_slash;
 				}
-				void operator ()(dmg::pierce const& pierce)
-				{
+				void operator ()(dmg::pierce const& pierce) {
 					constexpr double bleeding_per_pierce = 0.1;
 					body_part.bleeding += pierce * bleeding_per_pierce;
 				}
-				void operator ()(dmg::cleave const& cleave)
-				{
+				void operator ()(dmg::cleave const& cleave) {
 					constexpr double bleeding_per_cleave = 0.1;
 					body_part.bleeding += cleave * bleeding_per_cleave;
 				}
-				void operator ()(dmg::bludgeon const& bludgeon)
-				{
+				void operator ()(dmg::bludgeon const& bludgeon) {
 					constexpr double bleeding_per_bludgeon = 0.05;
 					body_part.bleeding += bludgeon * bleeding_per_bludgeon;
 				}
-				void operator ()(dmg::burn const& burn)
-				{
+				void operator ()(dmg::burn const& burn) {
 					constexpr double cauterization_per_burn = 1.0;
 					body_part.bleeding -= burn * cauterization_per_burn;
 				}
@@ -362,8 +353,7 @@ namespace ql
 		}
 	}
 
-	void being::heal(double amount, body_part& part, std::optional<ql::id<being>> opt_source_id)
-	{
+	void being::heal(double amount, body_part& part, std::optional<ql::id<being>> opt_source_id) {
 		//! @todo heal the part, if present.
 
 		// Get source.
@@ -386,8 +376,7 @@ namespace ql
 		}
 	}
 
-	void being::add_status(uptr<status> status)
-	{
+	void being::add_status(uptr<status> status) {
 		ql::status& ref = *status;
 		_statuses.push_back(std::move(status));
 		ref.apply(*this);
@@ -397,8 +386,7 @@ namespace ql
 	// Stats and Status Modifiers //
 	////////////////////////////////
 
-	stats being::get_base_stats_plus_body_stats()
-	{
+	stats being::get_base_stats_plus_body_stats() {
 		ql::stats result = base_stats;
 
 		// Apply body part stat modifiers, and sum weight.
@@ -411,8 +399,7 @@ namespace ql
 		return result;
 	}
 
-	stats being::get_stats()
-	{
+	stats being::get_stats() {
 		ql::stats result = get_base_stats_plus_body_stats();
 
 		// Apply status stat modifiers after body part modifiers.
@@ -438,8 +425,7 @@ namespace ql
 		return result;
 	}
 
-	std::function<void(double&, double const&)> being::busy_time_mutator()
-	{
+	std::function<void(double&, double const&)> being::busy_time_mutator() {
 		return [this](double& busy_time, double const& new_busy_time) {
 			this->region->remove_from_turn_queue(*this);
 			busy_time = new_busy_time;

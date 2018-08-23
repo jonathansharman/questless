@@ -6,13 +6,11 @@
 
 #include "agent.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! An AI that does nothing.
 	//!
 	//! Lazy AI respond to all queries with nullopt and simply idle when it's their turn.
-	class lazy_ai : public agent
-	{
+	class lazy_ai : public agent {
 	public:
 		lazy_ai(ql::being& being) : agent{being} {}
 

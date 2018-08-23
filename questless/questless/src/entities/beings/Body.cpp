@@ -11,19 +11,18 @@
 #include "entities/beings/being.hpp"
 #include "entities/beings/body_part.hpp"
 #include "game.hpp"
+#include "utility/utility.hpp"
 
 using namespace units;
 
-namespace ql
-{
+namespace ql {
 	body::body(being& owner, uptr<body_part> root)
 		: blood{0.0, [] { return 0.0; }, [&owner = owner] { return owner.body.total_vitality(); }}
 		, _owner{owner}
 		, _root{std::move(root)}
 		, _total_vitality{0.0}
 	{
-		class part_attacher : public body_part_mutable_visitor
-		{
+		class part_attacher : public body_part_mutable_visitor {
 		public:
 			part_attacher(body& body) : _body{body} {}
 
@@ -64,8 +63,17 @@ namespace ql
 		blood = _total_vitality;
 	}
 
-	body_part* body::find_part(id<body_part> id)
-	{
+	auto body::parts() const { return _parts | cast_transform<cref<body_part>>(); }
+	auto body::heads() const { return _heads | cast_transform<cref<head>>(); }
+	auto body::torsos() const { return _torsos | cast_transform<cref<torso>>(); }
+	auto body::arms() const { return _arms | cast_transform<cref<arm>>(); }
+	auto body::hands() const { return _hands | cast_transform<cref<hand>>(); }
+	auto body::legs() const { return _legs | cast_transform<cref<leg>>(); }
+	auto body::feet() const { return _feet | cast_transform<cref<foot>>(); }
+	auto body::wings() const { return _wings | cast_transform<cref<wing>>(); }
+	auto body::tails() const { return _tails | cast_transform<cref<tail>>(); }
+
+	body_part* body::find_part(id<body_part> id) {
 		for (body_part& part : _parts) {
 			if (part.id == id) {
 				return &part;
@@ -73,8 +81,7 @@ namespace ql
 		}
 		return nullptr;
 	}
-	body_part const* body::find_part(id<body_part> id) const
-	{
+	body_part const* body::find_part(id<body_part> id) const {
 		for (body_part& part : _parts) {
 			if (part.id == id) {
 				return &part;
@@ -83,8 +90,7 @@ namespace ql
 		return nullptr;
 	}
 
-	head* body::find_head(id<body_part> id)
-	{
+	head* body::find_head(id<body_part> id) {
 		for (head& head : _heads) {
 			if (head.id == id) {
 				return &head;
@@ -93,8 +99,7 @@ namespace ql
 		return nullptr;
 	}
 
-	torso* body::find_torso(id<body_part> id)
-	{
+	torso* body::find_torso(id<body_part> id) {
 		for (torso& torso : _torsos) {
 			if (torso.id == id) {
 				return &torso;
@@ -103,8 +108,7 @@ namespace ql
 		return nullptr;
 	}
 
-	arm* body::find_arm(id<body_part> id)
-	{
+	arm* body::find_arm(id<body_part> id) {
 		for (arm& arm : _arms) {
 			if (arm.id == id) {
 				return &arm;
@@ -113,8 +117,7 @@ namespace ql
 		return nullptr;
 	}
 
-	hand* body::find_hand(id<body_part> id)
-	{
+	hand* body::find_hand(id<body_part> id) {
 		for (hand& hand : _hands) {
 			if (hand.id == id) {
 				return &hand;
@@ -123,8 +126,7 @@ namespace ql
 		return nullptr;
 	}
 
-	leg* body::find_leg(id<body_part> id)
-	{
+	leg* body::find_leg(id<body_part> id) {
 		for (leg& leg : _legs) {
 			if (leg.id == id) {
 				return &leg;
@@ -133,8 +135,7 @@ namespace ql
 		return nullptr;
 	}
 
-	foot* body::find_foot(id<body_part> id)
-	{
+	foot* body::find_foot(id<body_part> id) {
 		for (foot& foot : _feet) {
 			if (foot.id == id) {
 				return &foot;
@@ -143,8 +144,7 @@ namespace ql
 		return nullptr;
 	}
 
-	wing* body::find_wing(id<body_part> id)
-	{
+	wing* body::find_wing(id<body_part> id) {
 		for (wing& wing : _wings) {
 			if (wing.id == id) {
 				return &wing;
@@ -153,8 +153,7 @@ namespace ql
 		return nullptr;
 	}
 
-	tail* body::find_tail(id<body_part> id)
-	{
+	tail* body::find_tail(id<body_part> id) {
 		for (tail& tail : _tails) {
 			if (tail.id == id) {
 				return &tail;
@@ -163,8 +162,7 @@ namespace ql
 		return nullptr;
 	}
 
-	void body::update()
-	{
+	void body::update() {
 		// Update cumulative values.
 		_total_vitality = 0.0;
 		for (body_part const& part : _parts) {

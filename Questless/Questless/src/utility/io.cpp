@@ -9,10 +9,8 @@
 
 #include "game.hpp"
 
-namespace ql
-{
-	std::string contents_of_file(char const* filename)
-	{
+namespace ql {
+	std::string contents_of_file(char const* filename) {
 		std::ifstream fin(filename);
 		std::stringstream ss;
 		ss << fin.rdbuf();

@@ -944,5 +944,8 @@
     <ClCompile Include="src\magic\charge_cost.cpp">
       <Filter>src\magic</Filter>
     </ClCompile>
+    <ClCompile Include="src\utility\event.cpp">
+      <Filter>src\utility</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

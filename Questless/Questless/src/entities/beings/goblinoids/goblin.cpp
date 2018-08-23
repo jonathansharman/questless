@@ -8,8 +8,7 @@
 
 using namespace units;
 
-namespace ql
-{
+namespace ql {
 	goblin::goblin(const std::function<uptr<ql::agent>(being&)>& make_agent, ql::id<being> id)
 		: corporeal_being_base<goblin>{make_agent, id, make_body(id), [] {
 			return ql::stats
@@ -42,19 +41,16 @@ namespace ql
 
 	goblin::goblin(std::istream& in) : corporeal_being_base<goblin>{in, make_body(ql::id<being>{999})} {} //! @todo using ID 999 here to allow compilation. Will need to extract ID from stream.
 
-	void goblin::serialize(std::ostream& out) const
-	{
+	void goblin::serialize(std::ostream& out) const {
 		being::serialize(out);
 
 		out << std::endl;
 	}
 
-	body goblin::make_body(ql::id<being> owner_id)
-	{
+	body goblin::make_body(ql::id<being> owner_id) {
 		// Hands
 
-		class goblin_hand : public hand
-		{
+		class goblin_hand : public hand {
 		public:
 			goblin_hand(ql::id<being> owner_id) : hand
 				{ owner_id
@@ -67,12 +63,10 @@ namespace ql
 			int layer() const final { return 3; };
 		protected:
 		};
-		class goblin_left_hand : public goblin_hand
-		{
+		class goblin_left_hand : public goblin_hand {
 		public:
 			using goblin_hand::goblin_hand;
-			view_space::polygon const& hitbox() const final
-			{
+			view_space::polygon const& hitbox() const final {
 				static auto result = view_space::polygon
 					{ view_space::point{-10.0f, -5.0f}
 					, view_space::point{-7.0f, 10.0f}
@@ -82,12 +76,10 @@ namespace ql
 				return result;
 			}
 		};
-		class goblin_right_hand : public goblin_hand
-		{
+		class goblin_right_hand : public goblin_hand {
 		public:
 			using goblin_hand::goblin_hand;
-			view_space::polygon const& hitbox() const final
-			{
+			view_space::polygon const& hitbox() const final {
 				static auto result = view_space::polygon
 					{ view_space::point{-10.0f, -5.0f}
 					, view_space::point{-7.0f, 10.0f}
@@ -100,8 +92,7 @@ namespace ql
 
 		// Arms
 
-		class goblin_arm : public arm
-		{
+		class goblin_arm : public arm {
 		public:
 			goblin_arm(ql::id<being> owner_id, std::vector<uptr<attachment>> attachments) : arm
 				{ owner_id
@@ -111,8 +102,7 @@ namespace ql
 				, std::move(attachments)
 				}
 			{}
-			view_space::polygon const& hitbox() const final
-			{
+			view_space::polygon const& hitbox() const final {
 				static auto result = view_space::polygon
 					{ view_space::point{-7.0f, -5.0f}
 					, view_space::point{-7.0f, 45.0f}
@@ -123,16 +113,14 @@ namespace ql
 			}
 			int layer() const final { return 2; };
 		};
-		class left_arm_attachment : public attachment
-		{
+		class left_arm_attachment : public attachment {
 		public:
 			using attachment::attachment;
 			virtual view_space::vector offset() const final { return view_space::vector{0.0f, 45.0f}; }
 			virtual view_space::radians rotation() const final { return view_space::radians::zero(); }
 			uptr<body_part> default_part(ql::id<being> owner_id) const final { return umake<goblin_left_hand>(owner_id); }
 		};
-		class goblin_left_arm : public goblin_arm
-		{
+		class goblin_left_arm : public goblin_arm {
 		public:
 			goblin_left_arm(ql::id<being> owner_id) : goblin_arm
 				{ owner_id
@@ -140,16 +128,14 @@ namespace ql
 				}
 			{}
 		};
-		class right_arm_attachment : public attachment
-		{
+		class right_arm_attachment : public attachment {
 		public:
 			using attachment::attachment;
 			virtual view_space::vector offset() const final { return view_space::vector{0.0f, 45.0f}; }
 			virtual view_space::radians rotation() const final { return view_space::radians::zero(); }
 			uptr<body_part> default_part(ql::id<being> owner_id) const final { return umake<goblin_right_hand>(owner_id); }
 		};
-		class goblin_right_arm : public goblin_arm
-		{
+		class goblin_right_arm : public goblin_arm {
 		public:
 			goblin_right_arm(ql::id<being> owner_id) : goblin_arm
 				{ owner_id
@@ -160,8 +146,7 @@ namespace ql
 
 		// Feet
 
-		class goblin_foot : public foot
-		{
+		class goblin_foot : public foot {
 		public:
 			goblin_foot(ql::id<being> owner_id) : foot
 				{ owner_id
@@ -174,12 +159,10 @@ namespace ql
 			int layer() const final { return 1; };
 		protected:
 		};
-		class goblin_left_foot : public goblin_foot
-		{
+		class goblin_left_foot : public goblin_foot {
 		public:
 			using goblin_foot::goblin_foot;
-			view_space::polygon const& hitbox() const final
-			{
+			view_space::polygon const& hitbox() const final {
 				static auto result = view_space::polygon
 					{ view_space::point{-10.0f, 10.0f}
 					, view_space::point{-10.0f, -5.0f}
@@ -188,12 +171,10 @@ namespace ql
 				return result;
 			}
 		};
-		class goblin_right_foot : public goblin_foot
-		{
+		class goblin_right_foot : public goblin_foot {
 		public:
 			using goblin_foot::goblin_foot;
-			view_space::polygon const& hitbox() const final
-			{
+			view_space::polygon const& hitbox() const final {
 				static auto result = view_space::polygon
 					{ view_space::point{10.0f, -5.0f}
 					, view_space::point{10.0f, 10.0f}
@@ -205,8 +186,7 @@ namespace ql
 
 		// Legs
 
-		class goblin_leg : public leg
-		{
+		class goblin_leg : public leg {
 		public:
 			goblin_leg(ql::id<being> owner_id, std::vector<uptr<attachment>> attachments) : leg
 				{ owner_id
@@ -217,8 +197,7 @@ namespace ql
 				, std::move(attachments)
 				}
 			{}
-			view_space::polygon const& hitbox() const final
-			{
+			view_space::polygon const& hitbox() const final {
 				static auto result = view_space::polygon
 					{ view_space::point{-7.0f, -5.0f}
 					, view_space::point{-7.0f, 45.0f}
@@ -229,16 +208,14 @@ namespace ql
 			}
 			int layer() const final { return 0; };
 		};
-		class left_leg_attachment : public attachment
-		{
+		class left_leg_attachment : public attachment {
 		public:
 			using attachment::attachment;
 			virtual view_space::vector offset() const final { return view_space::vector{0.0f, 45.0f}; }
 			virtual view_space::radians rotation() const final { return view_space::radians::zero(); }
 			uptr<body_part> default_part(ql::id<being> owner_id) const final { return umake<goblin_left_foot>(owner_id); }
 		};
-		class goblin_left_leg : public goblin_leg
-		{
+		class goblin_left_leg : public goblin_leg {
 		public:
 			goblin_left_leg(ql::id<being> owner_id) : goblin_leg
 				{ owner_id
@@ -246,16 +223,14 @@ namespace ql
 				}
 			{}
 		};
-		class right_leg_attachment : public attachment
-		{
+		class right_leg_attachment : public attachment {
 		public:
 			using attachment::attachment;
 			virtual view_space::vector offset() const final { return view_space::vector{0.0f, 45.0f}; }
 			virtual view_space::radians rotation() const final { return view_space::radians::zero(); }
 			uptr<body_part> default_part(ql::id<being> owner_id) const final { return umake<goblin_right_foot>(owner_id); }
 		};
-		class goblin_right_leg : public goblin_leg
-		{
+		class goblin_right_leg : public goblin_leg {
 		public:
 			goblin_right_leg(ql::id<being> owner_id) : goblin_leg
 				{ owner_id
@@ -266,8 +241,7 @@ namespace ql
 
 		// Head
 
-		class goblin_head : public head
-		{
+		class goblin_head : public head {
 		public:
 			goblin_head(ql::id<being> owner_id) : head
 				{ owner_id
@@ -279,8 +253,7 @@ namespace ql
 				, {}
 				}
 			{}
-			view_space::polygon const& hitbox() const final
-			{
+			view_space::polygon const& hitbox() const final {
 				static auto result = view_space::polygon
 					{ view_space::point{-10.0f, 0.0f}
 					, view_space::point{-10.0f, -20.0f}
@@ -297,48 +270,42 @@ namespace ql
 
 		// Torso
 
-		class goblin_torso_attachment_head : public attachment
-		{
+		class goblin_torso_attachment_head : public attachment {
 		public:
 			using attachment::attachment;
 			virtual view_space::vector offset() const final { return view_space::vector{0.0f, -25.0f}; }
 			virtual view_space::radians rotation() const final { return view_space::radians::zero(); }
 			uptr<body_part> default_part(ql::id<being> owner_id) const final { return umake<goblin_head>(owner_id); }
 		};
-		class goblin_torso_attachment_right_arm : public attachment
-		{
+		class goblin_torso_attachment_right_arm : public attachment {
 		public:
 			using attachment::attachment;
 			virtual view_space::vector offset() const final { return view_space::vector{-25.0f, -25.0f}; }
 			virtual view_space::radians rotation() const final { return view_space::radians::circle() / 20.0f; }
 			uptr<body_part> default_part(ql::id<being> owner_id) const final { return umake<goblin_right_arm>(owner_id); }
 		};
-		class goblin_torso_attachment_left_arm : public attachment
-		{
+		class goblin_torso_attachment_left_arm : public attachment {
 		public:
 			using attachment::attachment;
 			virtual view_space::vector offset() const final { return view_space::vector{25.0f, -25.0f}; }
 			virtual view_space::radians rotation() const final { return -view_space::radians::circle() / 20.0f; }
 			uptr<body_part> default_part(ql::id<being> owner_id) const final { return umake<goblin_left_arm>(owner_id); }
 		};
-		class goblin_torso_attachment_right_leg : public attachment
-		{
+		class goblin_torso_attachment_right_leg : public attachment {
 		public:
 			using attachment::attachment;
 			virtual view_space::vector offset() const final { return view_space::vector{-15.0f, 25.0f}; }
 			virtual view_space::radians rotation() const final { return view_space::radians::zero(); }
 			uptr<body_part> default_part(ql::id<being> owner_id) const final { return umake<goblin_right_leg>(owner_id); }
 		};
-		class goblin_torso_attachment_left_leg : public attachment
-		{
+		class goblin_torso_attachment_left_leg : public attachment {
 		public:
 			using attachment::attachment;
 			virtual view_space::vector offset() const final { return view_space::vector{15.0f, 25.0f}; }
 			virtual view_space::radians rotation() const final { return view_space::radians::zero(); }
 			uptr<body_part> default_part(ql::id<being> owner_id) const final { return umake<goblin_left_leg>(owner_id); }
 		};
-		class goblin_torso : public torso
-		{
+		class goblin_torso : public torso {
 		public:
 			goblin_torso(ql::id<being> owner_id) : torso
 				{ owner_id
@@ -354,8 +321,7 @@ namespace ql
 					)
 				}
 			{}
-			view_space::polygon const& hitbox() const final
-			{
+			view_space::polygon const& hitbox() const final {
 				static auto result = view_space::polygon
 					{ view_space::point{-25.0f, -25.0f}
 					, view_space::point{-15.0f, 25.0f}

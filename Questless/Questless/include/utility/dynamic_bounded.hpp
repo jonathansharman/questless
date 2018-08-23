@@ -6,14 +6,12 @@
 
 #include <algorithm>
 
-namespace ql
-{
+namespace ql {
 	//! An inclusive, dynamically bounded range of arithmetic values, clamping values outside the range to the nearest valid value.
-	//! @tparam ArithmeticType An arithmetic type, i.e. a type that supports arithmetic operations.
+	//! @tparam ArithmeticType A type that supports arithmetic operations.
 	//! @note See also @p static_bounded and @p lazy_bounded.
 	template <typename ArithmeticType, typename = std::enable_if_t<std::is_arithmetic_v<ArithmeticType>>>
-	class dynamic_bounded
-	{
+	class dynamic_bounded {
 	public:
 		using arithmetic_type = ArithmeticType;
 
@@ -38,12 +36,7 @@ namespace ql
 		{}
 
 		constexpr dynamic_bounded(dynamic_bounded const&) = default;
-
-		constexpr dynamic_bounded(dynamic_bounded&& other)
-			: _lower_bound{std::move(lower_bound)}
-			, _upper_bound{std::move(upper_bound)}
-			, _value{std::move(bounded._value)}
-		{}
+		constexpr dynamic_bounded(dynamic_bounded&& other) = default;
 
 		////////////////////////////
 		// Accessors and Mutators //
@@ -62,14 +55,12 @@ namespace ql
 		constexpr arithmetic_type const& upper_bound() const { return _upper_bound; }
 
 		//! Sets the contained value to the given new value, clamped to the valid range.
-		void set_value(arithmetic_type const& value)
-		{
+		void set_value(arithmetic_type const& value) {
 			_value = std::clamp(value, _lower_bound, _upper_bound);
 		}
 
 		//! Sets the inclusive minimum value in the range to @p lower_bound and clamps the contained value if necessary.
-		void set_lower_bound(arithmetic_type lower_bound)
-		{
+		void set_lower_bound(arithmetic_type lower_bound) {
 			_lower_bound = std::move(lower_bound);
 			if (_value < _lower_bound) {
 				_value = _lower_bound;
@@ -77,8 +68,7 @@ namespace ql
 		}
 
 		//! Sets the inclusive maximum value in the range to @p upper_bound and clamps the contained value if necessary.
-		void set_upper_bound(arithmetic_type upper_bound)
-		{
+		void set_upper_bound(arithmetic_type upper_bound) {
 			_upper_bound = std::move(upper_bound);
 			if (_value > _upper_bound) {
 				_value = _upper_bound;
@@ -89,44 +79,37 @@ namespace ql
 		// Asignment //
 		///////////////
 
-		dynamic_bounded& operator =(dynamic_bounded const& bounded)
-		{
+		dynamic_bounded& operator =(dynamic_bounded const& bounded) {
 			set_value(bounded._value);
 			return *this;
 		}
-		dynamic_bounded& operator =(arithmetic_type value)
-		{
+		dynamic_bounded& operator =(arithmetic_type value) {
 			set_value(std::move(value));
 			return *this;
 		}
 
 		template <typename T>
-		dynamic_bounded& operator +=(T const& that)
-		{
+		dynamic_bounded& operator +=(T const& that) {
 			set_value(_value + that);
 			return *this;
 		}
 		template <typename T>
-		dynamic_bounded& operator -=(T const& that)
-		{
+		dynamic_bounded& operator -=(T const& that) {
 			set_value(_value - that);
 			return *this;
 		}
 		template <typename T>
-		dynamic_bounded& operator *=(T const& that)
-		{
+		dynamic_bounded& operator *=(T const& that) {
 			set_value(_value * that);
 			return *this;
 		}
 		template <typename T>
-		dynamic_bounded& operator /=(T const& that)
-		{
+		dynamic_bounded& operator /=(T const& that) {
 			set_value(_value / that);
 			return *this;
 		}
 		template <typename T>
-		dynamic_bounded& operator %=(T const& that)
-		{
+		dynamic_bounded& operator %=(T const& that) {
 			set_value(_value % that);
 			return *this;
 		}
@@ -135,24 +118,20 @@ namespace ql
 		// Increment/decrement Operators //
 		///////////////////////////////////
 
-		dynamic_bounded& operator ++()
-		{
+		dynamic_bounded& operator ++() {
 			set_value(_value + 1);
 			return *this;
 		}
-		dynamic_bounded& operator --()
-		{
+		dynamic_bounded& operator --() {
 			set_value(_value - 1);
 			return *this;
 		}
-		dynamic_bounded operator ++(int)
-		{
+		dynamic_bounded operator ++(int) {
 			arithmetic_type value = _value;
 			set_value(_value + 1);
 			return value;
 		}
-		dynamic_bounded operator --(int)
-		{
+		dynamic_bounded operator --(int) {
 			arithmetic_type value = _value;
 			set_value(_value - 1);
 			return value;
@@ -162,16 +141,15 @@ namespace ql
 		// Stream Extraction Operator //
 		////////////////////////////////
 
-		friend std::istream& operator >>(std::istream& in, dynamic_bounded& bounded)
-		{
+		friend std::istream& operator >>(std::istream& in, dynamic_bounded& bounded) {
 			arithmetic_type value;
 			in >> value;
 			bounded.set_value(value);
 			return in;
 		}
 	private:
-		arithmetic_type const _lower_bound;
-		arithmetic_type const _upper_bound;
+		arithmetic_type _lower_bound;
+		arithmetic_type _upper_bound;
 		arithmetic_type _value;
 	};
 }

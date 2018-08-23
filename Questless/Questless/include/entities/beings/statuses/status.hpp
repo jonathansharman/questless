@@ -10,18 +10,16 @@
 #include <memory>
 
 #include "entities/beings/stats/stats.hpp"
-#include "entities/beings/stats/modifier.hpp"
 #include "utility/id.hpp"
 
-namespace ql
-{
+namespace ql {
 	class being;
+	class modifier;
 
 	enum class status_type { bane, neutral, boon };
 
 	//! A status effect on a being, such as blindness or poison.
-	class status
-	{
+	class status {
 	public:
 		//! The name of the status modifier displayed to the player.
 		std::string name() const { return _name; }
@@ -36,8 +34,7 @@ namespace ql
 		virtual status_type type() const = 0;
 
 		//! The list of stat modifiers associated with this status.
-		virtual std::vector<uptr<modifier>> const& modifiers() const
-		{
+		virtual std::vector<uptr<modifier>> const& modifiers() const {
 			// No modifiers by default.
 			static std::vector<uptr<modifier>> modifiers;
 			return modifiers;

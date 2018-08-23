@@ -9,10 +9,8 @@
 using namespace sdl;
 using namespace units;
 
-namespace ql
-{
-	dialog::state direction_dialog::update()
-	{
+namespace ql {
+	dialog::state direction_dialog::update() {
 		if (the_input().presses(SDLK_BACKSPACE) || the_input().presses(SDLK_ESCAPE)) {
 			return _cont(std::nullopt);
 		}
@@ -34,14 +32,12 @@ namespace ql
 		return state::open;
 	}
 
-	void direction_dialog::draw() const
-	{
+	void direction_dialog::draw() const {
 		draw_title(*_txt_title);
 		draw_prompt(*_txt_prompt);
 	}
 
-	void direction_dialog::load_textures()
-	{
+	void direction_dialog::load_textures() {
 		_txt_title = make_title(_title.c_str());
 		_txt_prompt = make_prompt(_prompt.c_str());
 	}

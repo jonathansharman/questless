@@ -22,8 +22,7 @@
 
 using std::function;
 
-namespace ql
-{
+namespace ql {
 	player::player(ql::being& being)
 		: agent{being}
 		, _world_view{nullptr}
@@ -35,61 +34,56 @@ namespace ql
 
 	void player::update_world_view() { _world_view = umake<ql::world_view>(being, true); }
 
-	complete player::act()
-	{
-		the_game().query_player_choice([this](player_action_dialog::choice player_choice) {
-			struct player_choice_executor
-			{
+	complete player::act() {
+		return the_game().query_player_choice([this](player_action_dialog::choice player_choice) {
+			struct player_choice_executor {
 				player& player;
 
-				void operator ()(player_action_dialog::idle const& i)
-				{
+				complete operator ()(player_action_dialog::idle const& i) {
 					if (i.prolonged) {
-						player.idle([&player = player](action::result result) {
+						return player.idle([&player = player](action::result result) {
 							if (result == action::result::aborted) {
 								// Chosen action aborted. Player must try to act again.
-								player.act();
+								return player.act();
 							}
 							return complete{};
 						});
 					} else {
-						player.idle(1.0);
+						return player.idle(1.0);
 					}
 				}
-				void operator ()(player_action_dialog::move const& m)
-				{
+				complete operator ()(player_action_dialog::move const& m) {
 					if (m.strafe) {
 						// Strafe.
-						player.walk(m.direction, [&player = player](action::result result) {
+						return player.walk(m.direction, [&player = player](action::result result) {
 							if (result == action::result::aborted) {
 								// Chosen action aborted. Player must try to act again.
-								player.act();
+								return player.act();
 							}
 							return complete{};
 						});
 					} else {
 						// Turn towards the chosen direction or move in that direction if already facing that way.
 						if (player.being.direction == m.direction) {
-							player.walk(m.direction, [&player = player](action::result result) {
+							return player.walk(m.direction, [&player = player](action::result result) {
 								if (result == action::result::aborted) {
 									// Chosen action aborted. Player must try to act again.
-									player.act();
+									return player.act();
 								}
 								return complete{};
 							});
 						} else {
-							player.turn(m.direction, [&player = player](action::result result) {
+							return player.turn(m.direction, [&player = player](action::result result) {
 								if (result == action::result::aborted) {
 									// Chosen action aborted. Player must try to act again.
-									player.act();
+									return player.act();
 								}
 								return complete{};
 							});
 						}
 					}
 				}
-				void operator ()(player_action_dialog::use const& u)
-				{
+				complete operator ()(player_action_dialog::use const& u) {
 					//! @todo Sync the hotbar with changes to the inventory.
 					if (std::optional<id<item>> opt_item_id = the_game().hud().hotbar()[u.index]) {
 						item& item = the_game().items.ref(*opt_item_id);
@@ -103,36 +97,33 @@ namespace ql
 							[&player = player, actions](std::optional<int> opt_action_idx) {
 								if (!opt_action_idx) {
 									// No action selected. Player must try to act again.
-									player.act();
-									return complete{};
+									return player.act();
 								} else {
 									// Perform the chosen action.
 									int action_idx = *opt_action_idx;
 									return (*actions)[action_idx]->perform(player.being, [&player = player](action::result result) {
 										if (result == action::result::aborted) {
 											// Chosen action aborted. Player must try to act again.
-											player.act();
+											return player.act();
 										}
 										return complete{};
 									});
 								}
 							}
 						);
-						the_game().add_dialog(std::move(dialog));
+						return the_game().add_dialog(std::move(dialog));
 					}
 				}
 			};
-			std::visit(player_choice_executor{*this}, player_choice);
+			return std::visit(player_choice_executor{*this}, player_choice);
 		});
 	}
 
-	void player::perceive(sptr<effect> const& effect)
-	{
+	void player::perceive(sptr<effect> const& effect) {
 		_perceived_effects.push_back(effect);
 	}
 
-	std::vector<sptr<effect>> player::poll_perceived_effects()
-	{
+	std::vector<sptr<effect>> player::poll_perceived_effects() {
 		std::vector<sptr<effect>> perceived_effects = std::move(_perceived_effects);
 		_perceived_effects.clear();
 		return perceived_effects;
@@ -143,8 +134,7 @@ namespace ql
 		, function<complete()> cont
 		) const
 	{
-		struct message_titler : message_const_visitor
-		{
+		struct message_titler : message_const_visitor {
 			std::string title;
 			void visit(message_arrow_miss const&) final { title = "Ranged Attack"; }
 			void visit(message_cannot_equip const&) final { title = "Cannot Equip"; }
@@ -154,8 +144,7 @@ namespace ql
 			void visit(message_not_enough_ammo const&) final { title = "Attack"; }
 			void visit(message_not_enough_charge const&) final { title = "Spell Cast"; }
 		};
-		struct message_prompter : message_const_visitor
-		{
+		struct message_prompter : message_const_visitor {
 			std::string prompt;
 			void visit(message_arrow_miss const&) final { prompt = "Miss!"; }
 			void visit(message_cannot_equip const&) final { prompt = "You don't have the requisite free body parts to equip this."; }
@@ -163,8 +152,7 @@ namespace ql
 			void visit(message_incant_failed_mute const&) final { prompt = "You can't perform an incantation while mute!"; }
 			void visit(message_melee_miss const&) final { prompt = "Miss!"; }
 			void visit(message_not_enough_ammo const&) final { prompt = "Not enough ammo!"; }
-			void visit(message_not_enough_charge const& m) final
-			{
+			void visit(message_not_enough_charge const& m) final {
 				prompt = "Not enough charge! Your gatestone needs " + std::to_string(m.charge_deficit) + " more charge to cast this.";
 			}
 		};
@@ -185,12 +173,10 @@ namespace ql
 		, function<complete(std::optional<int>)> cont
 		) const
 	{
-		struct count_query_titler : count_query_const_visitor
-		{
+		struct count_query_titler : count_query_const_visitor {
 			std::string title;
 		};
-		struct count_query_prompter : count_query_const_visitor
-		{
+		struct count_query_prompter : count_query_const_visitor {
 			std::string prompt;
 		};
 
@@ -210,15 +196,13 @@ namespace ql
 		, function<complete(std::optional<double>)> cont
 		) const
 	{
-		struct magnitude_query_titler : magnitude_query_const_visitor
-		{
+		struct magnitude_query_titler : magnitude_query_const_visitor {
 			std::string title;
 			void visit(magnitude_query_heal const&) final { title = "Heal Amount"; }
 			void visit(magnitude_query_shock const&) final { title = "Lightning Bolt Strength"; }
 			void visit(magnitude_query_wait_time const&) final { title = "Wait"; }
 		};
-		struct magnitude_query_prompter : magnitude_query_const_visitor
-		{
+		struct magnitude_query_prompter : magnitude_query_const_visitor {
 			std::string prompt;
 			void visit(magnitude_query_heal const&) final { prompt = "Choose how much health to restore."; }
 			void visit(magnitude_query_shock const&) final { prompt = "Choose how strong to make the lightning bolt."; }
@@ -240,15 +224,13 @@ namespace ql
 		, function<complete(std::optional<region_tile::point>)> cont
 		) const
 	{
-		struct tile_query_titler : tile_query_const_visitor
-		{
+		struct tile_query_titler : tile_query_const_visitor {
 			std::string title;
 			void visit(tile_query_ranged_attack_target const&) final { title = "Ranged Attack"; }
 			void visit(tile_query_shock_target const&) final { title = "Shock Target"; }
 			void visit(tile_query_teleport_target const&) final { title = "Teleport Target"; }
 		};
-		struct tile_query_prompter : tile_query_const_visitor
-		{
+		struct tile_query_prompter : tile_query_const_visitor {
 			std::string prompt;
 			void visit(tile_query_ranged_attack_target const&) final { prompt = "Choose attack target."; }
 			void visit(tile_query_shock_target const&) final { prompt = "Select a tile to be zapped with an electric discharge."; }
@@ -274,12 +256,10 @@ namespace ql
 		, function<complete(std::optional<region_tile::direction>)> cont
 		) const
 	{
-		struct direction_query_titler : direction_query_const_visitor
-		{
+		struct direction_query_titler : direction_query_const_visitor {
 			std::string title;
 		};
-		struct direction_query_prompter : direction_query_const_visitor
-		{
+		struct direction_query_prompter : direction_query_const_visitor {
 			std::string prompt;
 		};
 
@@ -298,13 +278,11 @@ namespace ql
 		, std::function<complete(std::optional<region_tile::vector>)> cont
 		) const
 	{
-		struct vector_query_titler : vector_query_const_visitor
-		{
+		struct vector_query_titler : vector_query_const_visitor {
 			std::string title;
 			void visit(vector_query_melee_attack const&) final { title = "Melee Attack"; }
 		};
-		struct vector_query_prompter : vector_query_const_visitor
-		{
+		struct vector_query_prompter : vector_query_const_visitor {
 			std::string prompt;
 			void visit(vector_query_melee_attack const&) final { prompt = "Choose attack direction."; }
 		};
@@ -341,22 +319,19 @@ namespace ql
 
 	// Quick Time Events
 
-	complete player::aim_missile(region_tile::point source_coords, ql::being& target_being, std::function<complete(body_part*)> cont) const
-	{
+	complete player::aim_missile(region_tile::point source_coords, ql::being& target_being, std::function<complete(body_part*)> cont) const {
 		return the_game().add_dialog
 			( umake<qte::aim_missile>(source_coords, target_being, std::move(cont))
 			);
 	}
 
-	complete player::get_shock_quality(region_tile::point target_coords, std::function<complete(double)> cont) const
-	{
+	complete player::get_shock_quality(region_tile::point target_coords, std::function<complete(double)> cont) const {
 		return the_game().add_dialog
 			( umake<qte::shock>(target_coords, std::move(cont))
 			);
 	}
 
-	complete player::incant(gatestone& gatestone, std::function<complete(uptr<magic::spell>)> cont) const
-	{
+	complete player::incant(gatestone& gatestone, std::function<complete(uptr<magic::spell>)> cont) const {
 		return the_game().add_dialog
 			( umake<qte::incant>(gatestone, std::move(cont))
 			);

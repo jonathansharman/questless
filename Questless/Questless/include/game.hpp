@@ -25,8 +25,7 @@
 #include "utility/cache.hpp"
 #include "world/region.hpp"
 
-namespace sdl
-{
+namespace sdl {
 	class font;
 	class input;
 	class renderer;
@@ -35,14 +34,12 @@ namespace sdl
 	class window;
 }
 
-namespace ql
-{
+namespace ql {
 	class item;
 	class player;
 
 	//! Represents an instance of the game Questless.
-	class game
-	{
+	class game {
 	public:
 		using clock = std::chrono::steady_clock;
 
@@ -73,7 +70,7 @@ namespace ql
 		//! Adds the given dialog to the dialogs stack.
 		complete add_dialog(uptr<dialog> dialog);
 
-		void query_player_choice(std::function<void(player_action_dialog::choice)> cont);
+		complete query_player_choice(std::function<void(player_action_dialog::choice)> cont);
 
 		ql::region& region() { return *_region; }
 		ql::region const& region() const { return *_region; }
@@ -211,8 +208,7 @@ namespace ql
 	};
 
 	//! The game instance.
-	inline game& the_game()
-	{
+	inline game& the_game() {
 		static game instance{false};
 		return instance;
 	}

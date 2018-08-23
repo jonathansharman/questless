@@ -10,8 +10,7 @@
 using namespace sdl;
 using namespace units;
 
-namespace ql
-{
+namespace ql {
 	sprite_animation::sprite_animation(sptr<sprite_sheet> sprite_sheet, std::vector<frame> frames, ql::looping looping)
 		: looping{looping}
 		, in_reverse{false}
@@ -22,8 +21,7 @@ namespace ql
 		, _loops{0}
 	{}
 
-	void sprite_animation::draw(window_space::point position) const
-	{
+	void sprite_animation::draw(window_space::point position) const {
 		//! @todo What is the default center in this case, and what should it be?
 		sprite_animation::frame const& frame = _frames[_frame_index];
 		//window_space::box src_rect
@@ -50,8 +48,7 @@ namespace ql
 			);
 	}
 
-	void sprite_animation::draw(game_space::point position, camera const& camera, colors::color_vector color_vector) const
-	{
+	void sprite_animation::draw(game_space::point position, camera const& camera, colors::color_vector color_vector) const {
 		sprite_animation::frame const& frame = _frames[_frame_index];
 		camera.draw
 			( the_texture_manager()[_sprite_sheet->texture_handle]
@@ -67,8 +64,7 @@ namespace ql
 			);
 	}
 
-	game_space::seconds sprite_animation::duration() const
-	{
+	game_space::seconds sprite_animation::duration() const {
 		auto total = game_space::seconds::zero();
 		for (frame const& frame : _frames) {
 			total += frame.duration;
@@ -76,8 +72,7 @@ namespace ql
 		return total;
 	}
 
-	void sprite_animation::reset(randomize_start_time randomize_starting_time)
-	{
+	void sprite_animation::reset(randomize_start_time randomize_starting_time) {
 		if (randomize_starting_time) {
 			// The next time update() is called, the animation will advance to a random point.
 			_accrued_time = uniform(0.0, 1.0) * duration();
@@ -87,8 +82,7 @@ namespace ql
 		_over = false;
 	}
 
-	void sprite_animation::animation_subupdate()
-	{
+	void sprite_animation::animation_subupdate() {
 		_accrued_time += elapsed_time();
 		while (_accrued_time > _frames[_frame_index].duration) {
 			_accrued_time -= _frames[_frame_index].duration;

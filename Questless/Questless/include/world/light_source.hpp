@@ -11,12 +11,10 @@
 #include "coordinates.hpp"
 #include "utility/id.hpp"
 
-namespace ql
-{
+namespace ql {
 	class region;
 
-	class light_source
-	{
+	class light_source {
 	public:
 		id<light_source> const id;
 

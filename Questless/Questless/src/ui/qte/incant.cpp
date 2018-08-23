@@ -11,8 +11,7 @@
 using namespace sdl;
 using namespace units;
 
-namespace ql::qte
-{
+namespace ql::qte {
 	incant::incant(gatestone& gatestone, std::function<void(uptr<magic::spell>)> cont)
 		: _gatestone{gatestone}
 		, _cont{std::move(cont)}
@@ -20,8 +19,7 @@ namespace ql::qte
 		load_textures();
 	}
 
-	dialog::state incant::update()
-	{
+	dialog::state incant::update() {
 		_elapsed_time += game::frame_duration;
 
 		_tick = false;
@@ -74,8 +72,7 @@ namespace ql::qte
 		return state::open;
 	}
 
-	void incant::draw() const
-	{
+	void incant::draw() const {
 		static constexpr int metronome_width = 10;
 
 		int x_center = the_window().window_center_x();
@@ -95,8 +92,7 @@ namespace ql::qte
 		draw_prompt(*_txt_prompt);
 	}
 
-	void incant::load_textures()
-	{
+	void incant::load_textures() {
 		_txt_title = make_title("Incant a spell!");
 		_txt_prompt = make_prompt("Use the arrow keys to control the pitch, and type the magic words.");
 	}

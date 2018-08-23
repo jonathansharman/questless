@@ -12,8 +12,7 @@
 #include "utility/id.hpp"
 #include "utility/reference.hpp"
 
-namespace ql::magic
-{
+namespace ql::magic {
 	enum class color
 		{ white
 		, black
@@ -26,8 +25,7 @@ namespace ql::magic
 		};
 
 	//! A magical spell that can be cast by a being.
-	class spell : public element<spell_subtype_list>
-	{
+	class spell : public element<spell_subtype_list> {
 	public:
 		//! @param gatestone_id The ID of the gatestone used to cast this spell.
 		spell(id<item> gatestone_id) : _gatestone_id{gatestone_id} {}

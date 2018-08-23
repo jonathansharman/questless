@@ -25,13 +25,11 @@
 using namespace sdl;
 using namespace units;
 
-namespace ql
-{
+namespace ql {
 	uptr<still> world_renderer::_unknown_entity_animation;
 
 	initializer<world_renderer> _initializer;
-	void world_renderer::initialize()
-	{
+	void world_renderer::initialize() {
 		auto unknown_entity_animation_ss = the_texture_manager().add("resources/textures/entities/unknown.png");
 		_unknown_entity_animation = umake<still>(unknown_entity_animation_ss, texture_space::vector::zero());
 	}
@@ -58,38 +56,31 @@ namespace ql
 		, _terrain_render_is_current{false}
 	{}
 
-	auto world_renderer::get_entity_id_var(entity_cref_var_t entity) -> entity_id_var_t
-	{
-		struct visitor
-		{
+	auto world_renderer::get_entity_id_var(entity_cref_var_t entity) -> entity_id_var_t {
+		struct visitor {
 			entity_id_var_t operator ()(ql::being const& being) { return being.id; }
 			entity_id_var_t operator ()(ql::object const& object) { return object.id; }
 		};
 		return std::visit(visitor{}, entity);
 	}
 
-	auto world_renderer::get_entity_cref_var(entity_id_var_t id) -> entity_cref_var_t
-	{
-		struct visitor
-		{
+	auto world_renderer::get_entity_cref_var(entity_id_var_t id) -> entity_cref_var_t {
+		struct visitor {
 			entity_cref_var_t operator ()(ql::id<ql::being> being_id) { return the_game().beings.cref(being_id); }
 			entity_cref_var_t operator ()(ql::id<ql::object> object_id) { return the_game().objects.cref(object_id); }
 		};
 		return std::visit(visitor{}, id);
 	}
 
-	entity const* world_renderer::get_entity_cptr(entity_id_var_t id)
-	{
-		struct visitor
-		{
+	entity const* world_renderer::get_entity_cptr(entity_id_var_t id) {
+		struct visitor {
 			entity const* operator ()(ql::id<ql::being> id) { return the_game().beings.cptr(id); }
 			entity const* operator ()(ql::id<ql::object> id) { return the_game().objects.cptr(id); }
 		};
 		return std::visit(visitor{}, id);
 	}
 
-	void world_renderer::update_view(world_view const& world_view, std::vector<sptr<effect>> effects)
-	{
+	void world_renderer::update_view(world_view const& world_view, std::vector<sptr<effect>> effects) {
 		_world_view = &world_view;
 		_terrain_render_is_current = false;
 
@@ -101,8 +92,7 @@ namespace ql
 		_entity_animation_map.clear();
 	}
 
-	void world_renderer::update()
-	{
+	void world_renderer::update() {
 		// Update tile selector animation.
 		_tile_selector_animation.update();
 
@@ -124,8 +114,7 @@ namespace ql
 		}
 	}
 
-	void world_renderer::draw_terrain()
-	{
+	void world_renderer::draw_terrain() {
 		// Render if necessary.
 		if (!_terrain_render_is_current) {
 			render_terrain();
@@ -155,8 +144,7 @@ namespace ql
 		}
 	}
 
-	void world_renderer::draw_entities()
-	{
+	void world_renderer::draw_entities() {
 		// Created a view of the entities sorted by y-coordinates.
 		auto y_sort = [](world_view::entity_view const& a, world_view::entity_view const& b) {
 			if (entity const* entity_a = get_entity_cptr(a.id)) {
@@ -198,10 +186,8 @@ namespace ql
 					case perception::category::full:
 					{
 						// Draw heading.
-						struct heading_drawer
-						{
-							void operator ()(being const& being)
-							{
+						struct heading_drawer {
+							void operator ()(being const& being) {
 								game_space::point start = to_world(being.coords);
 								game_space::point end = to_world(being.coords.neighbor(being.direction));
 								the_game().camera().draw_lines({start, end}, colors::magenta());
@@ -241,36 +227,31 @@ namespace ql
 		}
 	}
 
-	void world_renderer::draw_effects()
-	{
+	void world_renderer::draw_effects() {
 		for (auto& animation_and_coords : _animations) {
 			auto const& animation = *animation_and_coords.first;
 			animation.draw(animation_and_coords.second, the_game().camera());
 		}
 	}
 
-	void world_renderer::set_highlight_predicate(std::function<bool(region_tile::point)> predicate)
-	{
+	void world_renderer::set_highlight_predicate(std::function<bool(region_tile::point)> predicate) {
 		_highlight_predicate = std::move(predicate);
 		_terrain_render_is_current = false;
 	}
 
-	void world_renderer::clear_highlight_predicate()
-	{
+	void world_renderer::clear_highlight_predicate() {
 		_highlight_predicate = std::nullopt;
 		_terrain_render_is_current = false;
 	}
 
-	texture& world_renderer::cache_tile_texture(tile const& tile)
-	{
+	texture& world_renderer::cache_tile_texture(tile const& tile) {
 		tile_texturer tile_texturer;
 		tile.accept(tile_texturer);
 		_tile_textures[tile.subtype()] = tile_texturer.texture();
 		return *_tile_textures[tile.subtype()];
 	};
 
-	animation& world_renderer::cache_animation(entity_id_var_t entity_id)
-	{
+	animation& world_renderer::cache_animation(entity_id_var_t entity_id) {
 		entity_animator entity_animator;
 		get_entity_cptr(entity_id)->accept(entity_animator);
 
@@ -278,8 +259,7 @@ namespace ql
 		return *result.first->second;
 	};
 
-	animation& world_renderer::get_animation(entity_id_var_t entity_id)
-	{
+	animation& world_renderer::get_animation(entity_id_var_t entity_id) {
 		// Search for the entity's animation in the cache.
 		auto it = _entity_animation_map.find(entity_id);
 		// If it's there, use it. Otherwise, create and cache the animation.
@@ -288,8 +268,7 @@ namespace ql
 			: cache_animation(entity_id);
 	}
 
-	void world_renderer::render_terrain()
-	{
+	void world_renderer::render_terrain() {
 		std::optional<game_space::box> opt_bounds = _world_view->bounds();
 		if (!opt_bounds) {
 			_terrain_texture = nullptr;
@@ -342,8 +321,7 @@ namespace ql
 	// Effect Visitor Functions //
 	//////////////////////////////
 
-	void world_renderer::visit(arrow_attack_effect const& e)
-	{
+	void world_renderer::visit(arrow_attack_effect const& e) {
 		static auto arrow_sound_handle = the_sound_manager().add("resources/sounds/spells/eagle-eye.wav");
 
 		game_space::point source = to_world(e.origin());
@@ -352,8 +330,7 @@ namespace ql
 		the_sound_manager()[arrow_sound_handle].play();
 	}
 
-	void world_renderer::visit(eagle_eye_effect const& e)
-	{
+	void world_renderer::visit(eagle_eye_effect const& e) {
 		static auto eagle_eye_sound_handle = the_sound_manager().add("resources/sounds/spells/eagle-eye.wav");
 
 		game_space::point position = to_world(e.origin());
@@ -363,8 +340,7 @@ namespace ql
 		the_sound_manager()[eagle_eye_sound_handle].play();
 	}
 
-	void world_renderer::visit(injury_effect const& e)
-	{
+	void world_renderer::visit(injury_effect const& e) {
 		static auto pierce_sound_handle = the_sound_manager().add("resources/sounds/weapons/pierce.wav");
 		static auto hit_sound_handle = the_sound_manager().add("resources/sounds/weapons/hit.wav");
 
@@ -378,14 +354,12 @@ namespace ql
 		dmg::group const& damage = e.damage;
 
 		for (auto const& part : damage.parts()) {
-			struct damage_renderer
-			{
+			struct damage_renderer {
 				std::vector<std::pair<uptr<animation>, units::game_space::point>>& animations;
 				game_space::point const position;
 				double const target_vitality;
 
-				void spawn_blood(double const lost_health)
-				{
+				void spawn_blood(double const lost_health) {
 					constexpr double scaling_factor = 20.0;
 					int const n = static_cast<int>(lost_health / target_vitality * scaling_factor);
 					for (int i = 0; i < n; ++i) {
@@ -393,8 +367,7 @@ namespace ql
 					}
 				};
 
-				void render_slash_or_pierce(double const amount)
-				{
+				void render_slash_or_pierce(double const amount) {
 					spawn_blood(amount);
 					animations.push_back(std::make_pair
 						( umake<text_particle>(std::to_string(lround(amount)), colors::white())
@@ -403,8 +376,7 @@ namespace ql
 					the_sound_manager()[pierce_sound_handle].play();
 				}
 
-				void render_cleave_or_bludgeon(double const amount)
-				{
+				void render_cleave_or_bludgeon(double const amount) {
 					spawn_blood(amount);
 					animations.push_back(std::make_pair
 						( umake<text_particle>(std::to_string(lround(amount)), colors::white())
@@ -417,36 +389,31 @@ namespace ql
 				void operator ()(dmg::pierce const& pierce) { render_slash_or_pierce(pierce.value()); }
 				void operator ()(dmg::cleave const& cleave) { render_cleave_or_bludgeon(cleave.value()); }
 				void operator ()(dmg::bludgeon const& bludgeon) { render_cleave_or_bludgeon(bludgeon.value()); }
-				void operator ()(dmg::burn const& burn)
-				{
+				void operator ()(dmg::burn const& burn) {
 					animations.push_back(std::make_pair
 						( umake<text_particle>(std::to_string(lround(burn.value())), colors::orange())
 						, position
 						));
 				}
-				void operator ()(dmg::freeze const& freeze)
-				{
+				void operator ()(dmg::freeze const& freeze) {
 					animations.push_back(std::make_pair
 						( umake<text_particle>(std::to_string(lround(freeze.value())), colors::cyan())
 						, position
 						));
 				}
-				void operator ()(dmg::blight const& blight)
-				{
+				void operator ()(dmg::blight const& blight) {
 					animations.push_back(std::make_pair
 						( umake<text_particle>(std::to_string(lround(blight.value())), colors::black())
 						, position
 						));
 				}
-				void operator ()(dmg::poison const& poison)
-				{
+				void operator ()(dmg::poison const& poison) {
 					animations.push_back(std::make_pair
 						( umake<text_particle>(std::to_string(lround(poison.value())), colors::purple())
 						, position
 						));
 				}
-				void operator ()(dmg::shock const& shock)
-				{
+				void operator ()(dmg::shock const& shock) {
 					animations.push_back(std::make_pair
 						( umake<text_particle>(std::to_string(lround(shock.value())), colors::yellow())
 						, position
@@ -457,8 +424,7 @@ namespace ql
 		}
 	}
 
-	void world_renderer::visit(lightning_bolt_effect const& e)
-	{
+	void world_renderer::visit(lightning_bolt_effect const& e) {
 		static auto lightning_bolt_sound_handle = the_sound_manager().add("resources/sounds/spells/lightning-bolt.wav");
 
 		game_space::point position = to_world(e.origin());

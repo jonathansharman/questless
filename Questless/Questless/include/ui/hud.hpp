@@ -12,14 +12,12 @@
 #include "utility/id.hpp"
 #include "utility/reference.hpp"
 
-namespace ql
-{
+namespace ql {
 	class being;
 	class item;
 
 	//! The head-up display controls and displays various elements, such as conditions, the hotbar, and the inventory.
-	class hud
-	{
+	class hud {
 	public:
 		//! Updates the HUD's state and animations. Should be called once per frame.
 		void update();

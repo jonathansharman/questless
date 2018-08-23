@@ -6,11 +6,9 @@
 
 #include "animation/particles/particle.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! An arrow in flight.
-	class arrow_particle : public particle
-	{
+	class arrow_particle : public particle {
 	public:
 		//! @param source Where the arrow is shot from.
 		//! @param target Where the arrow is headed towards.

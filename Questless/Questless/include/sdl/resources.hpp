@@ -16,8 +16,7 @@
 #include "texture.hpp"
 #include "window.hpp"
 
-namespace sdl
-{
+namespace sdl {
 	//! The OpenGL context.
 	SDL_GLContext& opengl_context();
 

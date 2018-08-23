@@ -6,13 +6,11 @@
 
 #include "agent.hpp"
 
-namespace ql
-{
+namespace ql {
 	class world_view;
 
 	//! The agent representing the player's control over his or her character.
-	class player : public agent
-	{
+	class player : public agent {
 	public:
 		player(ql::being& being);
 

@@ -9,13 +9,11 @@
 #include "items/item.hpp"
 #include "utility/tagged_type.hpp"
 
-namespace ql
-{
+namespace ql {
 	class body_part;
 
 	//! Abstract base class for items that can be equipped to a being.
-	class equipment : public virtual item
-	{
+	class equipment : public virtual item {
 	public:
 		virtual ~equipment() = default;
 
@@ -40,8 +38,7 @@ namespace ql
 		struct wings : tagged_type<int> { using tagged_type::tagged_type; };
 		struct tails : tagged_type<int> { using tagged_type::tagged_type; };
 
-		class body_part_counts
-		{
+		class body_part_counts {
 		public:
 			constexpr body_part_counts() : _heads{0}, _torsos{0}, _arms{0}, _hands{0}, _legs{0}, _feet{0}, _wings{0}, _tails{0} {}
 
@@ -94,8 +91,7 @@ namespace ql
 		};
 
 		friend class equip;
-		class equip : public action
-		{
+		class equip : public action {
 		public:
 			equip(equipment& equipment) : _equipment{equipment} {}
 			static auto make(equipment& equipment) { return umake<equip>(equipment); }
@@ -106,8 +102,7 @@ namespace ql
 		};
 
 		friend class unequip;
-		class unequip : public action
-		{
+		class unequip : public action {
 		public:
 			unequip(equipment& equipment) : _equipment{equipment} {}
 			static auto make(equipment& equipment) { return umake<unequip>(equipment); }

@@ -8,11 +8,9 @@
 #include "entities/entity_visitor.hpp"
 #include "utility/reference.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! Creates animations for entities.
-	class entity_animator : public entity_const_visitor
-	{
+	class entity_animator : public entity_const_visitor {
 	public:
 		entity_animator();
 		~entity_animator();

@@ -6,11 +6,9 @@
 
 #include "being.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! A being with no physical body.
-	class incorporeal_being : public being
-	{
+	class incorporeal_being : public being {
 	public:
 		bool corporeal() const final { return false; }
 	protected:

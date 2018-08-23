@@ -7,12 +7,12 @@
 #include <algorithm>
 
 #include "units/window_space.hpp"
+#include "utility/utility.hpp"
 
 using namespace sdl;
 using namespace units;
 
-namespace ql
-{
+namespace ql {
 	texture_handle digraph_menu::_ul_handle;
 	texture_handle digraph_menu::_ur_handle;
 	texture_handle digraph_menu::_dl_handle;
@@ -31,8 +31,7 @@ namespace ql
 	int digraph_menu::_tile_height;
 
 	initializer<digraph_menu> digraph_menu::_initializer;
-	void digraph_menu::initialize()
-	{
+	void digraph_menu::initialize() {
 		_ul_handle = the_texture_manager().add("resources/textures/menu/ul.png");
 		_ur_handle = the_texture_manager().add("resources/textures/menu/ur.png");
 		_dl_handle = the_texture_manager().add("resources/textures/menu/dl.png");
@@ -54,8 +53,7 @@ namespace ql
 		, _render_is_current{false}
 	{}
 
-	void digraph_menu::add_page(std::string title)
-	{
+	void digraph_menu::add_page(std::string title) {
 		if (!find(title)) {
 			_pages.push_back(page(std::move(title)));
 			_render_is_current = false;
@@ -64,8 +62,7 @@ namespace ql
 		}
 	}
 
-	void digraph_menu::add_option(std::string_view page_title, std::string option_name)
-	{
+	void digraph_menu::add_option(std::string_view page_title, std::string option_name) {
 		std::optional<int> page_index = find(page_title);
 		if (page_index) {
 			_pages[*page_index].options.push_back(page::option(std::move(option_name), std::nullopt));
@@ -75,8 +72,7 @@ namespace ql
 		}
 	}
 
-	void digraph_menu::add_option(std::string_view location_page_title, std::string option_name, std::string_view target_page_title)
-	{
+	void digraph_menu::add_option(std::string_view location_page_title, std::string option_name, std::string_view target_page_title) {
 		std::optional<int> location_page_index = find(location_page_title);
 		if (location_page_index) {
 			std::optional<int> target_index = find(target_page_title);
@@ -91,8 +87,7 @@ namespace ql
 		}
 	}
 
-	void digraph_menu::set_page(std::string_view title)
-	{
+	void digraph_menu::set_page(std::string_view title) {
 		for (size_t index = 0; index < _pages.size(); ++index) {
 			if (_pages[index].title == title) {
 				_page_index = static_cast<int>(index);
@@ -102,8 +97,7 @@ namespace ql
 		throw std::invalid_argument("Attempted to navigate to a nonexistent menu page.");
 	}
 	
-	void digraph_menu::set_option(std::string_view page_title, int option_index)
-	{
+	void digraph_menu::set_option(std::string_view page_title, int option_index) {
 		std::optional<int> page_index = find(page_title);
 		if (!page_index) {
 			throw std::invalid_argument("Attempted to set the option of a nonexistent menu page.");
@@ -115,15 +109,13 @@ namespace ql
 		}
 	}
 
-	void digraph_menu::clear()
-	{
+	void digraph_menu::clear() {
 		_pages.clear();
 		_page_index = 0;
 		_render_is_current = false;
 	}
 
-	void digraph_menu::update()
-	{
+	void digraph_menu::update() {
 		if (_pages.size() == 0 || !_render_is_current) {
 			return;
 		}
@@ -186,15 +178,13 @@ namespace ql
 		}
 	}
 
-	std::vector<std::pair<std::string, std::string>> digraph_menu::poll_selections()
-	{
+	std::vector<std::pair<std::string, std::string>> digraph_menu::poll_selections() {
 		auto selections = _selections;
 		_selections.clear();
 		return selections;
 	}
 
-	void digraph_menu::draw(window_space::point origin, window_space::h_align horizontal_alignment, window_space::v_align vertical_alignment)
-	{
+	void digraph_menu::draw(window_space::point origin, window_space::h_align horizontal_alignment, window_space::v_align vertical_alignment) {
 		constexpr auto unselected_color_vector = colors::black_vector();
 		constexpr auto selected_color_vector = colors::red_vector();
 
@@ -240,8 +230,7 @@ namespace ql
 		}
 	}
 
-	std::optional<int> digraph_menu::find(std::string_view page_title)
-	{
+	std::optional<int> digraph_menu::find(std::string_view page_title) {
 		for (size_t i = 0; i < _pages.size(); ++i) {
 			if (_pages[i].title == page_title) {
 				return static_cast<int>(i);
@@ -250,8 +239,7 @@ namespace ql
 		return std::nullopt;
 	}
 
-	void digraph_menu::render()
-	{
+	void digraph_menu::render() {
 		constexpr int title_font_size = 48;
 		constexpr int option_font_size = 30;
 

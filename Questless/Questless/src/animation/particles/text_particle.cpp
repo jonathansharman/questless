@@ -9,8 +9,7 @@
 
 using namespace units;
 
-namespace ql
-{
+namespace ql {
 	//! @param position The particle's starting position.
 	//! @param text The text for the particle to show.
 	//! @param color The color of the particle's text.
@@ -30,8 +29,7 @@ namespace ql
 		, _texture{make_texture()}
 	{}
 
-	sdl::texture text_particle::make_texture() const
-	{
+	sdl::texture text_particle::make_texture() const {
 		static auto font_handle = sdl::the_font_manager().add("resources/fonts/firamono.ttf", 20);
 		return sdl::the_font_manager()[font_handle].render(_text.c_str(), _color);
 	}

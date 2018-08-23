@@ -10,11 +10,9 @@
 #include "texture.hpp"
 #include "units/color_space.hpp"
 
-namespace sdl
-{
+namespace sdl {
 	//! A simple wrapper around TTF_Font.
-	class font
-	{
+	class font {
 	public:
 		//! Constructs an unloaded sound object.
 		//! @param filename The name of a TrueType font file.

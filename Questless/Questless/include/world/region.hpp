@@ -11,19 +11,16 @@
 #include <string>
 
 #include "section.hpp"
-#include "entities/beings/being.hpp"
-#include "entities/objects/object.hpp"
-#include "utility/utility.hpp"
 
-namespace ql
-{
+namespace ql {
+	class being;
 	class game;
+	class object;
 
 	enum class period_of_day { morning, afternoon, dusk, evening, night, dawn };
 
 	//! A large set of connected sections of hexagonal tiles.
-	class region
-	{
+	class region {
 	public:
 		//! Pseudo-randomly generates a new region.
 		//! @param name The name of the new region.
@@ -41,11 +38,11 @@ namespace ql
 
 		//! Removes the given being from the turn queue if it's there.
 		//! @param being A being.
-		void remove_from_turn_queue(being& being) { if (being.busy_time <= 0.0) _turn_queue.erase(being); }
+		void remove_from_turn_queue(being& being);
 
 		//! Adds the given being to the turn queue if it's not busy.
 		//! @param being A being.
-		void add_to_turn_queue(being& being) { if (being.busy_time <= 0.0) _turn_queue.insert(being); }
+		void add_to_turn_queue(being& being);
 
 		//! The being whose turn it is to act or null if none are ready.
 		being* next_ready_being();
@@ -196,14 +193,12 @@ namespace ql
 
 		tile* tile_helper(region_tile::point region_tile_coords) const;
 
-		section* section_helper(region_section::point region_section_coords) const
-		{
+		section* section_helper(region_section::point region_section_coords) const {
 			auto it = _section_map.find(region_section_coords);
 			return it == _section_map.end() ? nullptr : const_cast<section*>(&it->second);
 		}
 
-		section* containing_section_helper(region_tile::point region_tile_coords) const
-		{
+		section* containing_section_helper(region_tile::point region_tile_coords) const {
 			auto it = _section_map.find(section::region_section_coords(region_tile_coords));
 			return it == _section_map.end() ? nullptr : const_cast<section*>(&it->second);
 		}

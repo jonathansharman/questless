@@ -6,8 +6,7 @@
 
 #include "utility/visitor_pattern.hpp"
 
-namespace ql
-{
+namespace ql {
 	class dirt_tile;
 	class edge_tile;
 	class grass_tile;

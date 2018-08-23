@@ -7,11 +7,9 @@
 #include "items/equipment.hpp"
 #include "items/inventory.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! An item for containing projectiles, such as arrows.
-	class quiver : public equipment_base<quiver>
-	{
+	class quiver : public equipment_base<quiver> {
 	public:
 		inventory inventory;
 

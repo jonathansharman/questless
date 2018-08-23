@@ -13,24 +13,20 @@
 #include "entities/entity.hpp"
 #include "entities/beings/abilities.hpp"
 #include "entities/beings/body.hpp"
-#include "entities/beings/statuses/status.hpp"
 #include "entities/perception.hpp"
 #include "items/armor/armor.hpp"
 #include "items/inventory.hpp"
-#include "items/item.hpp"
 #include "items/weapons/weapon.hpp"
-#include "magic/spell.hpp"
 #include "stats/stats.hpp"
 #include "utility/event.hpp"
 #include "utility/dynamic_property.hpp"
 #include "utility/lazy_bounded.hpp"
 #include "utility/static_bounded.hpp"
 #include "utility/id.hpp"
-#include "utility/utility.hpp"
 
-namespace ql
-{
+namespace ql {
 	class agent;
+	class status;
 
 	struct health : tagged_type<double> { using tagged_type::tagged_type; };
 	struct energy : tagged_type<double> { using tagged_type::tagged_type; };
@@ -42,8 +38,7 @@ namespace ql
 	enum class mortality : int { alive = 0, dead, undead, immortal };
 
 	//! An animate entity.
-	class being : public entity
-	{
+	class being : public entity {
 	public:
 		///////////
 		// Types //
@@ -199,7 +194,13 @@ namespace ql
 
 		void add_status(uptr<status> status);
 	protected:
-		being(const std::function<uptr<ql::agent>(being&)>& make_agent, ql::id<being> id, ql::body body, const std::function<ql::stats()>& make_base_stats);
+		being
+			( const std::function<uptr<ql::agent>(being&)>& make_agent
+			, ql::id<being> id
+			, ql::body body
+			, std::function<ql::stats()> const& make_base_stats
+			);
+
 		being(std::istream& in, ql::body body);
 
 		virtual ql::body make_body(ql::id<being> owner_id) = 0;

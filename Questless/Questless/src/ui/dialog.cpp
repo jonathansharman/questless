@@ -12,26 +12,21 @@
 using namespace sdl;
 using namespace units;
 
-namespace ql
-{
-	uptr<sdl::texture> dialog::make_title(char const* title, colors::color color)
-	{
+namespace ql {
+	uptr<sdl::texture> dialog::make_title(char const* title, colors::color color) {
 		static auto title_font_handle = the_font_manager().add("resources/fonts/dumbledor1.ttf", 32);
 		return umake<texture>(the_font_manager()[title_font_handle].render(title, color));
 	}
-	uptr<sdl::texture> dialog::make_prompt(char const* prompt, colors::color color)
-	{
+	uptr<sdl::texture> dialog::make_prompt(char const* prompt, colors::color color) {
 		static auto prompt_font_handle = the_font_manager().add("resources/fonts/dumbledor1.ttf", 20);
 		return umake<texture>(the_font_manager()[prompt_font_handle].render(prompt, color));
 	}
-	uptr<sdl::texture> dialog::make_selector(char const* selector, colors::color color)
-	{
+	uptr<sdl::texture> dialog::make_selector(char const* selector, colors::color color) {
 		static auto selector_font_handle = the_font_manager().add("resources/fonts/dumbledor1.ttf", 32);
 		return umake<texture>(the_font_manager()[selector_font_handle].render(selector, color));
 	}
 
-	void dialog::draw_title(texture const& title)
-	{
+	void dialog::draw_title(texture const& title) {
 		int x_center = the_window().window_center().x();
 		the_renderer().draw_box
 			( window_space::box
@@ -42,8 +37,7 @@ namespace ql
 			);
 		title.draw(window_space::point{x_center, 0}, texture_space::align_center);
 	}
-	void dialog::draw_prompt(texture const& prompt)
-	{
+	void dialog::draw_prompt(texture const& prompt) {
 		int x_center = the_window().window_center().x();
 		the_renderer().draw_box
 			( window_space::box
@@ -54,8 +48,7 @@ namespace ql
 			);
 		prompt.draw(window_space::point{x_center, _prompt_top}, texture_space::align_center);
 	}
-	void dialog::draw_selector(texture const& selector)
-	{
+	void dialog::draw_selector(texture const& selector) {
 		int x_center = the_window().window_center().x();
 		the_renderer().draw_box
 			( window_space::box

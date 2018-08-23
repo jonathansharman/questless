@@ -5,10 +5,8 @@
 #include "items/scroll.hpp"
 #include "entities/beings/being.hpp"
 
-namespace ql
-{
-	std::vector<uptr<action>> scroll::actions()
-	{
+namespace ql {
+	std::vector<uptr<action>> scroll::actions() {
 		std::vector<uptr<action>> actions;
 		if (blank()) {
 			//! @todo Write?

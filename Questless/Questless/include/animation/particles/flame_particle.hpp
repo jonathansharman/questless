@@ -6,11 +6,9 @@
 
 #include "animation/particles/particle.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! A particle of flame and smoke.
-	class flame_particle : public particle
-	{
+	class flame_particle : public particle {
 	public:
 		flame_particle();
 	private:

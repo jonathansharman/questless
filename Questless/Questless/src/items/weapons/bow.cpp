@@ -16,10 +16,8 @@
 
 using namespace units;
 
-namespace ql
-{
-	std::vector<uptr<action>> bow::actions()
-	{
+namespace ql {
+	std::vector<uptr<action>> bow::actions() {
 		std::vector<uptr<action>> actions;
 		if (equipped()) {
 			actions.push_back(_shoot->launch());
@@ -34,8 +32,7 @@ namespace ql
 
 	//! @todo These functions are O(n). Should be easy to find an efficient O(1) solution.
 
-	complete bow::shoot::arrow_cost::check(being& actor, cont cont) const
-	{
+	complete bow::shoot::arrow_cost::check(being& actor, cont cont) const {
 		for (item& maybe_quiver : actor.inventory.items) {
 			if (quiver* quiver = dynamic_cast<ql::quiver*>(&maybe_quiver)) {
 				if (quiver->equipped() && quiver->opt_bearer_id() == actor.id) {
@@ -57,8 +54,7 @@ namespace ql
 		return actor.agent().send_message(umake<message_not_enough_ammo>(), [cont] { return complete{}; });
 	}
 
-	void bow::shoot::arrow_cost::incur(being& actor) const
-	{
+	void bow::shoot::arrow_cost::incur(being& actor) const {
 		for (item& maybe_quiver : actor.inventory.items) {
 			if (quiver* quiver = dynamic_cast<ql::quiver*>(&maybe_quiver)) {
 				if (quiver->equipped() && quiver->opt_bearer_id() == actor.id) {
@@ -81,8 +77,7 @@ namespace ql
 		assert(false && "Couldn't find arrow to spend.");
 	}
 	
-	sptr<effect> bow::shoot::get_effect(region_tile::point source, region_tile::point target)
-	{
+	sptr<effect> bow::shoot::get_effect(region_tile::point source, region_tile::point target) {
 		return smake<arrow_attack_effect>(source, target);
 	}
 }

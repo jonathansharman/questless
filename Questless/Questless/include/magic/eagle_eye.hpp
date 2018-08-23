@@ -6,11 +6,9 @@
 
 #include "spell.hpp"
 
-namespace ql::magic
-{
+namespace ql::magic {
 	//! Temporarily increases the caster's visual acuity.
-	class eagle_eye : public spell_base<eagle_eye>
-	{
+	class eagle_eye : public spell_base<eagle_eye> {
 	public:
 		std::string name() const final { return "Eagle Eye"; }
 

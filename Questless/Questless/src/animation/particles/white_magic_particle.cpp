@@ -10,8 +10,7 @@
 
 using namespace units;
 
-namespace ql
-{
+namespace ql {
 	white_magic_particle::white_magic_particle() : particle
 		{ game_space::vector::zero()
 		, random_displacement(80.0) / 1.0s
@@ -24,14 +23,12 @@ namespace ql
 		}
 	{}
 
-	void white_magic_particle::particle_subupdate()
-	{
+	void white_magic_particle::particle_subupdate() {
 		constexpr units::hertz vx_pct_drag_rate = 1.8_Hz;
 		_velocity.step().x() *= 1.0 - vx_pct_drag_rate * game::frame_duration;
 	}
 
-	sdl::texture const& white_magic_particle::texture() const
-	{
+	sdl::texture const& white_magic_particle::texture() const {
 		static auto texture_handle = sdl::the_texture_manager().add("resources/textures/particles/magic/white.png");
 		return sdl::the_texture_manager()[texture_handle];
 	}

@@ -9,11 +9,12 @@
 
 #include "type_list.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! Visitor template for at least one type (recursive case).
 	template <typename ElementSubtypeList, int Length = ElementSubtypeList::length_type::value>
-	class visitor : public visitor<typename ElementSubtypeList::tail_type, ElementSubtypeList::tail_type::length_type::value>
+	class visitor
+		: public visitor<typename ElementSubtypeList::tail_type
+		, ElementSubtypeList::tail_type::length_type::value>
 	{
 	public:
 		virtual ~visitor() = default;
@@ -31,8 +32,7 @@ namespace ql
 
 	//! Specialization of visitor template for one type.
 	template <typename ElementSubtypeList>
-	class visitor<ElementSubtypeList, 1>
-	{
+	class visitor<ElementSubtypeList, 1> {
 	public:
 		//! Visits @p element.
 		virtual void visit(typename ElementSubtypeList::head_type& element) = 0;
@@ -40,8 +40,7 @@ namespace ql
 
 	//! An element that accepts both modifying visitors of type @p MutableVisitorType and non-modifying visitors of type @p ConstVisitorType.
 	template <typename ElementSubtypeList>
-	class element
-	{
+	class element {
 	public:
 		virtual void accept(visitor<ElementSubtypeList>& visitor) = 0;
 		virtual void accept(visitor<type_list::add_const_t<ElementSubtypeList>>& visitor) const = 0;

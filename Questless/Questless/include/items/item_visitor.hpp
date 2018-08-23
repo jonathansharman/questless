@@ -6,8 +6,7 @@
 
 #include "utility/visitor_pattern.hpp"
 
-namespace ql
-{
+namespace ql {
 	class arrow;
 	class bow;
 	class gatestone;

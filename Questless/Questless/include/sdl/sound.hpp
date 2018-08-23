@@ -7,11 +7,9 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 
-namespace sdl
-{
+namespace sdl {
 	//! A simple wrapper around Mix_Chunk.
-	class sound
-	{
+	class sound {
 	public:
 		//! @param filename The WAV file from which to load the sound.
 		sound(char const* filename);

@@ -12,13 +12,11 @@
 #include "world/coordinates.hpp"
 #include "utility/complete.hpp"
 
-namespace ql
-{
+namespace ql {
 	class being;
 
 	//! An action that a being can perform via its controlling agent.
-	class action
-	{
+	class action {
 	public:
 		enum class result { success, aborted };
 

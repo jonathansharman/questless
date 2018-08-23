@@ -9,11 +9,9 @@
 
 #include "dialog.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! Retrieves a count from the player.
-	class count_dialog : public dialog
-	{
+	class count_dialog : public dialog {
 	public:
 		count_dialog
 			( std::string title

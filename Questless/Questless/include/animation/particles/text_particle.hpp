@@ -8,11 +8,9 @@
 
 #include "animation/particles/particle.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! A particle composed of colored text.
-	class text_particle : public particle
-	{
+	class text_particle : public particle {
 	public:
 		//! @param position The particle's starting position.
 		//! @param text The text for the particle to show.

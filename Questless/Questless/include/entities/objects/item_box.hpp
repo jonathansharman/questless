@@ -8,11 +8,9 @@
 
 #include "object.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! A box capable of holding some items.
-	class item_box : public object_base<item_box>
-	{
+	class item_box : public object_base<item_box> {
 	public:
 		item_box(ql::id<object> id = ql::id<object>::make()) : object_base<item_box>{id} {}
 		item_box(std::istream& in) : object_base<item_box>{in} {}

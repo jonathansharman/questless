@@ -12,11 +12,9 @@
 #include "units/screen_space.hpp"
 #include "units/window_space.hpp"
 
-namespace sdl
-{
+namespace sdl {
 	//! A simple wrapper around SDL_Window.
-	class window
-	{
+	class window {
 	public:
 		//! Constructs a window object with the specified properties.
 		//! @param title The title of the window.

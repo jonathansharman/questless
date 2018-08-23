@@ -10,8 +10,7 @@ namespace ql {
 		, inventory{std::move(inventory)}
 	{}
 
-	std::vector<uptr<action>> quiver::actions()
-	{
+	std::vector<uptr<action>> quiver::actions() {
 		std::vector<uptr<action>> actions;
 		if (equipped()) {
 			actions.push_back(unequip::make(*this));

@@ -8,12 +8,9 @@
 
 #include "space.hpp"
 
-namespace units
-{
-	namespace detail
-	{
-		class screen_space_buffer : public buffer_base<int, 2>
-		{
+namespace units {
+	namespace detail {
+		class screen_space_buffer : public buffer_base<int, 2> {
 		public:
 			int& x() & { return _elements[0]; }
 			constexpr int const& x() const& { return _elements[0]; }
@@ -26,8 +23,7 @@ namespace units
 		};
 	}
 
-	struct screen_space : space<struct screen_space_tag, int, 2, detail::screen_space_buffer>
-	{
+	struct screen_space : space<struct screen_space_tag, int, 2, detail::screen_space_buffer> {
 		using h_align = axis<0>::align;
 		using v_align = axis<1>::align;
 

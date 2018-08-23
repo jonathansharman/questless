@@ -8,11 +8,9 @@
 #include "items/breakable.hpp"
 #include "items/weapons/attack.hpp" // For convenience; used by virtually all weapons.
 
-namespace ql
-{
+namespace ql {
 	//! An item that can be used for attacking.
-	class weapon : public equipment, public breakable
-	{
+	class weapon : public equipment, public breakable {
 	public:
 		virtual ~weapon() = default;
 

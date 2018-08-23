@@ -7,15 +7,13 @@
 #include <functional>
 #include <istream>
 
-namespace ql
-{
+namespace ql {
 	//! An inclusive range of arithmetic values bounded lazily to limits defined by function results.
 	//! Values outside the range are clamped to the nearest valid value on read.
 	//! @tparam ArithmeticType An arithmetic type, i.e. a type that supports arithmetic operations.
 	//! @note See also @p static_bounded and @p dynamic_bounded.
 	template <typename ArithmeticType>
-	class lazy_bounded
-	{
+	class lazy_bounded {
 	public:
 		using arithmetic_type = ArithmeticType;
 		using bound_getter_type = std::function<arithmetic_type()>;
@@ -56,8 +54,7 @@ namespace ql
 		constexpr operator arithmetic_type() const { return value(); }
 
 		//! The contained value.
-		constexpr arithmetic_type value() const
-		{
+		constexpr arithmetic_type value() const {
 			auto result = std::clamp(_value, lower_bound_getter(), upper_bound_getter());
 			return result;
 		}
@@ -69,44 +66,37 @@ namespace ql
 		// Asignment //
 		///////////////
 
-		lazy_bounded& operator =(lazy_bounded const& bounded)
-		{
+		lazy_bounded& operator =(lazy_bounded const& bounded) {
 			_value = bounded._value;
 			return *this;
 		}
-		lazy_bounded& operator =(arithmetic_type value)
-		{
+		lazy_bounded& operator =(arithmetic_type value) {
 			_value = std::move(value);
 			return *this;
 		}
 
 		template <typename T>
-		lazy_bounded& operator +=(T const& that)
-		{
+		lazy_bounded& operator +=(T const& that) {
 			_value = value() + that;
 			return *this;
 		}
 		template <typename T>
-		lazy_bounded& operator -=(T const& that)
-		{
+		lazy_bounded& operator -=(T const& that) {
 			_value = value() - that;
 			return *this;
 		}
 		template <typename T>
-		lazy_bounded& operator *=(T const& that)
-		{
+		lazy_bounded& operator *=(T const& that) {
 			_value = value() * that;
 			return *this;
 		}
 		template <typename T>
-		lazy_bounded& operator /=(T const& that)
-		{
+		lazy_bounded& operator /=(T const& that) {
 			_value = value() / that;
 			return *this;
 		}
 		template <typename T>
-		lazy_bounded& operator %=(T const& that)
-		{
+		lazy_bounded& operator %=(T const& that) {
 			_value = value() % that;
 			return *this;
 		}
@@ -115,24 +105,20 @@ namespace ql
 		// Increment/decrement Operators //
 		///////////////////////////////////
 
-		lazy_bounded& operator ++()
-		{
+		lazy_bounded& operator ++() {
 			_value = value() + 1;
 			return *this;
 		}
-		lazy_bounded& operator --()
-		{
+		lazy_bounded& operator --() {
 			_value = value() - 1;
 			return *this;
 		}
-		lazy_bounded operator ++(int)
-		{
+		lazy_bounded operator ++(int) {
 			arithmetic_type old_value = value();
 			_value = old_value + 1;
 			return old_value;
 		}
-		lazy_bounded operator --(int)
-		{
+		lazy_bounded operator --(int) {
 			arithmetic_type old_value = value();
 			_value = old_value - 1;
 			return old_value;
@@ -142,8 +128,7 @@ namespace ql
 		// Stream Extraction Operator //
 		////////////////////////////////
 
-		friend std::istream& operator >>(std::istream& in, lazy_bounded& bounded)
-		{
+		friend std::istream& operator >>(std::istream& in, lazy_bounded& bounded) {
 			in >> bounded._value;
 			return in;
 		}

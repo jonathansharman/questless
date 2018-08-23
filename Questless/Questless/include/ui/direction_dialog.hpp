@@ -9,11 +9,9 @@
 #include "dialog.hpp"
 #include "world/coordinates.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! Retrieves a direction from the player.
-	class direction_dialog : public dialog
-	{
+	class direction_dialog : public dialog {
 	public:
 		direction_dialog
 			( std::string title

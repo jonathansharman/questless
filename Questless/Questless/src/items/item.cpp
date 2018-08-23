@@ -10,10 +10,8 @@
 #include "entities/objects/item_box.hpp"
 #include "game.hpp"
 
-namespace ql
-{
-	complete item::drop::perform(being& actor, cont cont)
-	{
+namespace ql {
+	complete item::drop::perform(being& actor, cont cont) {
 		actor.inventory.remove(_item.id);
 
 		if (object* object = actor.region->object_at(actor.coords)) {
@@ -36,8 +34,7 @@ namespace ql
 		}
 	}
 
-	complete item::toss::perform(being& actor, cont cont)
-	{
+	complete item::toss::perform(being& actor, cont cont) {
 		//! @todo This.
 		return drop{_item}.perform(actor, cont);
 	}

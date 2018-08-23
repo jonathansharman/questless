@@ -4,12 +4,9 @@
 
 #pragma once
 
-namespace units
-{
-	namespace detail
-	{
-		class texture_space_buffer : public buffer_base<int, 2>
-		{
+namespace units {
+	namespace detail {
+		class texture_space_buffer : public buffer_base<int, 2> {
 		public:
 			int& u() & { return _elements[0]; }
 			constexpr int const& u() const& { return _elements[0]; }
@@ -22,8 +19,7 @@ namespace units
 		};
 	}
 
-	struct texture_space : space<struct texture_space_tag, int, 2, detail::texture_space_buffer>
-	{
+	struct texture_space : space<struct texture_space_tag, int, 2, detail::texture_space_buffer> {
 		using h_align = axis<0>::align;
 		using v_align = axis<1>::align;
 

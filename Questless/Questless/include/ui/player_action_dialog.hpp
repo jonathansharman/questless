@@ -8,15 +8,13 @@
 #include <variant>
 
 #include "dialog.hpp"
-#include "hud.hpp"
-#include "utility/utility.hpp"
 #include "world/coordinates.hpp"
 
-namespace ql
-{
+namespace ql {
+	class hud;
+
 	//! Dialog for the player to choose an action for his or her controlled being.
-	class player_action_dialog : public dialog
-	{
+	class player_action_dialog : public dialog {
 	public:
 		struct idle { bool prolonged; };
 		struct move { bool strafe; region_tile::direction direction; };

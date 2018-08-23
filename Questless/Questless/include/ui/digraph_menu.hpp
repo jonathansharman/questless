@@ -7,13 +7,10 @@
 #include "sdl/resources.hpp"
 #include "utility/initializer.hpp"
 #include "utility/reference.hpp"
-#include "utility/utility.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! A menu consisting of linked pages of options.
-	class digraph_menu
-	{
+	class digraph_menu {
 	public:
 		//! @param min_width The minimum width of the menu, including margins. If necessary, the menu will stretch to fit its contents.
 		//! @param min_height The minimum height of the menu, including margins. If necessary, the menu will stretch to fit its contents.
@@ -65,10 +62,8 @@ namespace ql
 			, units::window_space::v_align vertical_alignment = units::window_space::align_top
 			);
 	private:
-		struct page
-		{
-			struct option
-			{
+		struct page {
+			struct option {
 				std::string name;
 				std::optional<int> target;
 
@@ -84,8 +79,7 @@ namespace ql
 			page(std::string title) : title{std::move(title)}, option_index{0} {}
 		};
 
-		struct page_view
-		{
+		struct page_view {
 			sdl::texture title_texture;
 			mutable std::vector<sdl::texture> option_textures;
 

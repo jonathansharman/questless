@@ -11,23 +11,22 @@
 
 #include "body_part_visitor.hpp"
 #include "damage/group.hpp"
-#include "items/item.hpp"
 #include "stats/modifier.hpp"
 #include "units/view_space.hpp"
 #include "utility/id.hpp"
 #include "utility/lazy_bounded.hpp"
+#include "utility/utility.hpp"
 
-namespace ql
-{
+namespace ql {
 	class being;
 	class body_part;
+	class item;
 
 	struct dexterity : tagged_type<double> { using tagged_type::tagged_type; };
 	struct vitality : tagged_type<double> { using tagged_type::tagged_type; };
 
 	//! An attachment point on a body part.
-	class attachment
-	{
+	class attachment {
 	public:
 		virtual ~attachment() = default;
 
@@ -48,8 +47,7 @@ namespace ql
 	};
 
 	//! A being's body part.
-	class body_part : public element<body_part_subtype_list>
-	{
+	class body_part : public element<body_part_subtype_list> {
 	public:
 		static constexpr double minimum_vitality = 0.0;
 
@@ -90,22 +88,19 @@ namespace ql
 		double weight() const { return _weight; }
 
 		//! The body part's protection stat.
-		virtual dmg::protect const& protection() const
-		{
+		virtual dmg::protect const& protection() const {
 			static auto result = dmg::protect::zero();
 			return result;
 		}
 
 		//! The body part's resistance stat.
-		virtual dmg::resist const& resistance() const
-		{
+		virtual dmg::resist const& resistance() const {
 			static auto result = dmg::resist::zero();
 			return result;
 		}
 
 		//! The body part's vulnerability stat.
-		virtual dmg::vuln const& vulnerability() const
-		{
+		virtual dmg::vuln const& vulnerability() const {
 			static auto result = dmg::vuln::zero();
 			return result;
 		}
@@ -154,8 +149,7 @@ namespace ql
 
 	// body_part Subtypes
 
-	class head : public body_part_base<head>
-	{
+	class head : public body_part_base<head> {
 	public:
 		head
 			( ql::id<being> owner_id
@@ -166,12 +160,12 @@ namespace ql
 			, mute mute
 			, std::vector<uptr<attachment>> attachments
 			)
-			: body_part_base<head>
-				{ owner_id
-				, vitality
-				, weight
-				, std::move(attachments)
-				}
+			: body_part_base<head> {
+				owner_id,
+				vitality,
+				weight,
+				std::move(attachments),
+			}
 			, _intellect{intellect}
 			, _spirit{spirit}
 			, _mute{mute}
@@ -181,8 +175,7 @@ namespace ql
 
 		bool vital() const override { return true; }
 
-		std::vector<uptr<modifier>> modifiers() const override
-		{
+		std::vector<uptr<modifier>> modifiers() const override {
 			return make_uptr_vector<modifier>
 				( umake<intellect_modifier>(_intellect)
 				, umake<spirit_modifier>(_spirit)
@@ -198,8 +191,7 @@ namespace ql
 		bool _mute;
 	};
 
-	class torso : public body_part_base<torso>
-	{
+	class torso : public body_part_base<torso> {
 	public:
 		torso
 			( ql::id<being> owner_id
@@ -208,12 +200,12 @@ namespace ql
 			, strength strength
 			, std::vector<uptr<attachment>> attachments
 			)
-			: body_part_base<torso>
-				{ owner_id
-				, vitality
-				, weight
-				, std::move(attachments)
-				}
+			: body_part_base<torso> {
+				owner_id,
+				vitality,
+				weight,
+				std::move(attachments),
+			}
 			, _strength{strength}
 		{}
 
@@ -221,8 +213,7 @@ namespace ql
 
 		bool vital() const override { return true; }
 
-		std::vector<uptr<modifier>> modifiers() const override
-		{
+		std::vector<uptr<modifier>> modifiers() const override {
 			return make_uptr_vector<modifier>
 				( umake<strength_modifier>(_strength)
 				, umake<weight_modifier>(weight())
@@ -236,8 +227,7 @@ namespace ql
 		double _strength;
 	};
 
-	class arm : public body_part_base<arm>
-	{
+	class arm : public body_part_base<arm> {
 	public:
 		arm
 			( ql::id<being> owner_id
@@ -259,8 +249,7 @@ namespace ql
 
 		bool vital() const override { return false; }
 
-		std::vector<uptr<modifier>> modifiers() const override
-		{
+		std::vector<uptr<modifier>> modifiers() const override {
 			return make_uptr_vector<modifier>
 				( umake<strength_modifier>(_strength)
 				, umake<weight_modifier>(weight())
@@ -274,8 +263,7 @@ namespace ql
 		double _strength;
 	};
 
-	class hand : public body_part_base<hand>
-	{
+	class hand : public body_part_base<hand> {
 	public:
 		hand
 			( ql::id<being> owner_id
@@ -297,8 +285,7 @@ namespace ql
 
 		bool vital() const override { return false; }
 
-		std::vector<uptr<modifier>> modifiers() const override
-		{
+		std::vector<uptr<modifier>> modifiers() const override {
 			return make_uptr_vector<modifier>(umake<weight_modifier>(weight()));
 		}
 
@@ -309,8 +296,7 @@ namespace ql
 		double _dexterity;
 	};
 
-	class leg : public body_part_base<leg>
-	{
+	class leg : public body_part_base<leg> {
 	public:
 		leg
 			( ql::id<being> owner_id
@@ -334,8 +320,7 @@ namespace ql
 
 		bool vital() const override { return false; }
 
-		std::vector<uptr<modifier>> modifiers() const override
-		{
+		std::vector<uptr<modifier>> modifiers() const override {
 			return make_uptr_vector<modifier>
 				( umake<agility_modifier>(_agility)
 				, umake<strength_modifier>(_strength)
@@ -352,8 +337,7 @@ namespace ql
 		double _strength;
 	};
 
-	class foot : public body_part_base<foot>
-	{
+	class foot : public body_part_base<foot> {
 	public:
 		foot
 			( ql::id<being> owner_id
@@ -375,8 +359,7 @@ namespace ql
 
 		bool vital() const override { return false; }
 
-		std::vector<uptr<modifier>> modifiers() const override
-		{
+		std::vector<uptr<modifier>> modifiers() const override {
 			return make_uptr_vector<modifier>
 				( umake<agility_modifier>(_agility)
 				, umake<weight_modifier>(weight())
@@ -390,8 +373,7 @@ namespace ql
 		double _agility;
 	};
 
-	class wing : public body_part_base<wing>
-	{
+	class wing : public body_part_base<wing> {
 	public:
 		wing
 			( ql::id<being> owner_id
@@ -412,8 +394,7 @@ namespace ql
 
 		bool vital() const override { return false; }
 
-		std::vector<uptr<modifier>> modifiers() const override
-		{
+		std::vector<uptr<modifier>> modifiers() const override {
 			return make_uptr_vector<modifier>(umake<weight_modifier>(weight()));
 		}
 
@@ -424,8 +405,7 @@ namespace ql
 		double _weight;
 	};
 
-	class tail : public body_part_base<tail>
-	{
+	class tail : public body_part_base<tail> {
 	public:
 		using body_part_base<tail>::body_part_base;
 
@@ -433,8 +413,7 @@ namespace ql
 
 		bool vital() const override { return false; }
 
-		std::vector<uptr<modifier>> modifiers() const override
-		{
+		std::vector<uptr<modifier>> modifiers() const override {
 			return make_uptr_vector<modifier>(umake<weight_modifier>(weight()));
 		}
 

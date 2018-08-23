@@ -5,12 +5,10 @@
 #include "entities/objects/object.hpp"
 #include "game.hpp"
 
-namespace ql
-{
+namespace ql {
 	object::object(std::istream& in) : entity{in}, id{in} {}
 
-	void object::serialize(std::ostream& out) const
-	{
+	void object::serialize(std::ostream& out) const {
 		entity::serialize(out);
 
 		out << id << ' ';
@@ -18,8 +16,7 @@ namespace ql
 		//! @todo object-specific serialization.
 	}
 
-	void object::update()
-	{
+	void object::update() {
 		//! @todo This.
 	}
 }

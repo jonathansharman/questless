@@ -6,8 +6,7 @@
 
 #include "utility/visitor_pattern.hpp"
 
-namespace ql
-{
+namespace ql {
 	#define MAGNITUDE_QUERY_FIRST \
 		X(magnitude_query_heal)	
 	#define MAGNITUDE_QUERY_REST \
@@ -22,6 +21,7 @@ namespace ql
 	using magnitude_query_subtype_list = type_list::of_t
 		#define X(subtype) < subtype
 		MAGNITUDE_QUERY_FIRST
+		#undef X
 		#define X(subtype) , subtype
 		MAGNITUDE_QUERY_REST
 		>;
@@ -30,8 +30,7 @@ namespace ql
 	DEFINE_VISITORS(magnitude_query, magnitude_query_subtype_list)
 
 	//! A request to an agent for a magnitude.
-	struct magnitude_query : element<magnitude_query_subtype_list>
-	{
+	struct magnitude_query : element<magnitude_query_subtype_list> {
 		virtual ~magnitude_query() = default;
 	};
 

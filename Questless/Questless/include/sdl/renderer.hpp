@@ -15,13 +15,11 @@
 #include "units/window_space.hpp"
 #include "units/view_space.hpp"
 
-namespace sdl
-{
+namespace sdl {
 	class window;
 
 	//! A simple wrapper around SDL_Renderer.
-	class renderer
-	{
+	class renderer {
 	public:
 		//! Constructs a renderer object with the given window and logical dimensions.
 		//! @param window The window onto which the renderer will render images.

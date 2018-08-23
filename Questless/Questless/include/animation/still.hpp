@@ -8,11 +8,9 @@
 #include "sdl/resources.hpp"
 #include "units/game_space.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! A still image.
-	class still : public animation
-	{
+	class still : public animation {
 	public:
 		//! @param texture_handle A handle to the texture to use for this still.
 		//! @param origin The origin of this still's texture, relative to its center.

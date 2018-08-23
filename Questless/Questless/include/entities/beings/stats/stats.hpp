@@ -13,8 +13,7 @@
 #include "utility/tagged_type.hpp"
 #include "vision.hpp"
 
-namespace ql
-{
+namespace ql {
 	struct spirit : tagged_type<double> { using tagged_type::tagged_type; };
 	struct health_regen : tagged_type<double> { using tagged_type::tagged_type; };
 	struct strength : tagged_type<double> { using tagged_type::tagged_type; };
@@ -30,8 +29,7 @@ namespace ql
 	struct mute : tagged_type<bool> { using tagged_type::tagged_type; };
 
 	//! Represents the stats of a being.
-	struct stats
-	{
+	struct stats {
 		static constexpr double minimum_value = 0.0;
 
 		static_bounded<double, minimum_value> spirit = 0.0;
@@ -93,16 +91,14 @@ namespace ql
 			, vulnerability{std::move(vulnerability)}
 		{}
 
-		friend std::ostream& operator <<(std::ostream& out, stats const& a)
-		{
+		friend std::ostream& operator <<(std::ostream& out, stats const& a) {
 			out << a.spirit << ' ' << a.health_regen << ' ' << a.strength << ' ' << a.endurance << ' '
 				<< a.stamina << ' ' << a.agility << ' ' << a.stealth << ' ' << a.vision << ' ' << a.hearing << ' '
 				<< a.intellect << ' ' << a.weight << ' ' << a.min_temp << ' ' << a.max_temp << ' ' << a.mute << ' ';
 			return out;
 		}
 
-		friend std::istream& operator >>(std::istream& in, stats& a)
-		{
+		friend std::istream& operator >>(std::istream& in, stats& a) {
 			in >> a.spirit >> a.health_regen >> a.strength >> a.endurance >> a.stamina >> a.agility
 				>> a.stealth >> a.vision >> a.hearing >> a.intellect >> a.weight >> a.min_temp >> a.max_temp >> a.mute;
 			return in;

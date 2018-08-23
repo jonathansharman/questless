@@ -6,11 +6,9 @@
 
 #include "utility/static_bounded.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! Represents perception of an entity.
-	struct perception
-	{
+	struct perception {
 		//! Minimum possible perception level.
 		static constexpr double minimum_level = 0.0;
 
@@ -43,8 +41,7 @@ namespace ql
 		constexpr perception& operator =(perception&&) = default;
 
 		//! The category of perception associated with the perception level.
-		constexpr category category() const
-		{
+		constexpr category category() const {
 			if (level > _high_full_threshold) {
 				return category::full;
 			} else if (level > _medium_high_threshold) {

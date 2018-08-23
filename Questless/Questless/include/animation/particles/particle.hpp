@@ -8,8 +8,7 @@
 #include "sdl/texture.hpp"
 #include "utility/tagged_type.hpp"
 
-namespace ql
-{
+namespace ql {
 	struct scale : tagged_type<double> { using tagged_type::tagged_type; };
 	struct lifetime : tagged_type<units::game_space::seconds> { using tagged_type::tagged_type; };
 	struct max_displacement : tagged_type<double> { using tagged_type::tagged_type; };
@@ -17,8 +16,7 @@ namespace ql
 	class camera;
 
 	//! Used to create particle effects.
-	class particle : public animation
-	{
+	class particle : public animation {
 	public:
 		//! @param displacement Initial displacement from the origin, in game space.
 		//! @param velocity Initial velocity in game pixels per second.

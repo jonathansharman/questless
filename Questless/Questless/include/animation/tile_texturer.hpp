@@ -8,11 +8,9 @@
 #include "sdl/texture.hpp"
 #include "utility/reference.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! Creates textures for tiles.
-	class tile_texturer : public tile_const_visitor
-	{
+	class tile_texturer : public tile_const_visitor {
 	public:
 		void visit(dirt_tile const&) final;
 		void visit(edge_tile const&) final;

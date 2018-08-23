@@ -6,11 +6,9 @@
 
 #include "particle_animation.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! Creates drops of blood.
-	class bleeding : public particle_animation
-	{
+	class bleeding : public particle_animation {
 	public:
 		//! @param drops_per_update The number of drops of blood to create per frame. Can be less than one.
 		bleeding(double drops_per_update) : _drops_per_update(drops_per_update) {}

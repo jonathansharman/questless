@@ -6,11 +6,9 @@
 
 #include "animation/particles/particle.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! A blood drop particle.
-	class blood_particle : public particle
-	{
+	class blood_particle : public particle {
 	public:
 		blood_particle();
 	private:

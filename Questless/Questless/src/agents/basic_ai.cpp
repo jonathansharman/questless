@@ -9,21 +9,17 @@
 #include "game.hpp"
 #include "utility/random.hpp"
 
-namespace ql
-{
-	complete basic_ai::act()
-	{
+namespace ql {
+	complete basic_ai::act() {
 		return _state->act(*this);
 	}
-	complete basic_ai::idle_state::act(basic_ai& ai)
-	{
+	complete basic_ai::idle_state::act(basic_ai& ai) {
 		// Walk next time.
 		ai._state = umake<walk_state>();
 		// Wait for up to 10 time units.
 		return ai.idle(uniform(0.0, 10.0));
 	}
-	complete basic_ai::walk_state::act(basic_ai& ai)
-	{
+	complete basic_ai::walk_state::act(basic_ai& ai) {
 		// Move or turn at random.
 		if (random_bool()) {
 			return ai.walk(ai.being.direction, [&ai](action::result result) {
@@ -48,8 +44,7 @@ namespace ql
 			});
 		}
 	}
-	complete basic_ai::attack_state::act(basic_ai& ai)
-	{
+	complete basic_ai::attack_state::act(basic_ai& ai) {
 		if (ql::being* target = the_game().beings.ptr(target_id)) {
 			if (ai.being.perception_of(target->coords).category() == perception::category::none) {
 				// Target not visible. Switch to idle state.
@@ -102,11 +97,7 @@ namespace ql
 
 	void basic_ai::perceive(sptr<effect> const& effect) { effect->accept(*this); }
 
-	complete basic_ai::send_message
-		( uptr<message> //message
-		, std::function<complete()> cont
-		) const
-	{
+	complete basic_ai::send_message(uptr<message> /*message*/, std::function<complete()> cont) const {
 		return cont();
 	}
 
@@ -118,8 +109,7 @@ namespace ql
 		, std::function<complete(std::optional<int>)> cont
 		) const
 	{
-		struct count_query_handler : count_query_const_visitor
-		{
+		struct count_query_handler : count_query_const_visitor {
 			int default_value;
 			std::optional<int> min;
 			std::optional<int> max;
@@ -148,8 +138,7 @@ namespace ql
 		, std::function<complete(std::optional<double>)> cont
 		) const
 	{
-		struct magnitude_query_handler : magnitude_query_const_visitor
-		{
+		struct magnitude_query_handler : magnitude_query_const_visitor {
 			double default_value;
 			std::optional<double> min;
 			std::optional<double> max;
@@ -165,16 +154,13 @@ namespace ql
 				: default_value{default_value}, min{min}, max{max}, cont{std::move(cont)}
 			{}
 
-			void visit(magnitude_query_wait_time const&) final
-			{
+			void visit(magnitude_query_wait_time const&) final {
 				result = cont(default_value);
 			}
-			void visit(magnitude_query_shock const&) final
-			{
+			void visit(magnitude_query_shock const&) final {
 				result = cont(default_value);
 			}
-			void visit(magnitude_query_heal const&) final
-			{
+			void visit(magnitude_query_heal const&) final {
 				result = cont(default_value);
 			}
 		};
@@ -191,12 +177,12 @@ namespace ql
 		, std::function<complete(std::optional<region_tile::point>)> cont
 		) const
 	{
-		struct tile_query_handler : tile_query_const_visitor
-		{
+		struct tile_query_handler : tile_query_const_visitor {
 			basic_ai const& ai;
 			std::optional<region_tile::point> origin;
 			std::function<bool(region_tile::point)> predicate;
 			std::function<complete(std::optional<region_tile::point>)> cont;
+			complete return_value;
 
 			tile_query_handler
 				( basic_ai const& ai
@@ -210,31 +196,27 @@ namespace ql
 				, cont{std::move(cont)}
 			{}
 
-			void visit(tile_query_ranged_attack_target const& query) final
-			{
+			void visit(tile_query_ranged_attack_target const& query) final {
 				auto target_id = dynamic_cast<attack_state*>(ai._state.get())->target_id;
 				if (ql::being* target = the_game().beings.ptr(target_id)) {
 					if ((target->coords - ai.being.coords).length() <= query.range) {
 						// If in range, shoot the target.
-						cont(target->coords);
-						return;
+						return_value = cont(target->coords);
 					}
 				}
-				cont(std::nullopt);
+				return_value = cont(std::nullopt);
 			}
-			void visit(tile_query_shock_target const&) final
-			{
-				cont(std::nullopt);
+			void visit(tile_query_shock_target const&) final {
+				return_value = cont(std::nullopt);
 			}
-			void visit(tile_query_teleport_target const&) final
-			{
-				cont(std::nullopt);
+			void visit(tile_query_teleport_target const&) final {
+				return_value = cont(std::nullopt);
 			}
 		};
 
 		tile_query_handler handler{*this, std::move(origin), std::move(predicate), std::move(cont)};
 		query->accept(handler);
-		return complete{};
+		return handler.return_value;
 	}
 
 	complete basic_ai::query_direction
@@ -242,8 +224,7 @@ namespace ql
 		, std::function<complete(std::optional<region_tile::direction>)> cont
 		) const
 	{
-		struct direction_query_handler : direction_query_const_visitor
-		{
+		struct direction_query_handler : direction_query_const_visitor {
 			basic_ai const& ai;
 			std::function<complete(std::optional<region_tile::direction>)> cont;
 
@@ -268,10 +249,10 @@ namespace ql
 		, std::function<complete(std::optional<region_tile::vector>)> cont
 		) const
 	{
-		struct vector_query_handler : vector_query_const_visitor
-		{
+		struct vector_query_handler : vector_query_const_visitor {
 			basic_ai const& ai;
 			std::function<complete(std::optional<region_tile::vector>)> cont;
+			complete return_value;
 
 			vector_query_handler
 				( basic_ai const& ai
@@ -281,21 +262,19 @@ namespace ql
 				, cont{std::move(cont)}
 			{}
 
-			void visit(vector_query_melee_attack const&) final
-			{
+			void visit(vector_query_melee_attack const&) final {
 				auto target_id = dynamic_cast<attack_state*>(ai._state.get())->target_id;
 				if (ql::being* target = the_game().beings.ptr(target_id)) {
 					// Attack towards the target.
-					cont((target->coords - ai.being.coords).unit());
-					return;
+					return_value = cont((target->coords - ai.being.coords).unit());
 				}
-				cont(std::nullopt);
+				return_value = cont(std::nullopt);
 			}
 		};
 
 		vector_query_handler handler{*this, std::move(cont)};
 		query->accept(handler);
-		return complete{};
+		return handler.return_value;
 	}
 
 	complete basic_ai::query_being
@@ -321,8 +300,7 @@ namespace ql
 	// Effect Visitor Methods //
 	////////////////////////////
 
-	void basic_ai::visit(injury_effect const& effect)
-	{
+	void basic_ai::visit(injury_effect const& effect) {
 		// Retaliate against injuries.
 		if (effect.opt_source_id && effect.target_being_id == being.id) {
 			_state = umake<attack_state>(*effect.opt_source_id);

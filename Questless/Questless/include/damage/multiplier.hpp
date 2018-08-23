@@ -8,12 +8,10 @@
 #include "utility/tagged_type.hpp"
 #include "utility/static_bounded.hpp"
 
-namespace ql::dmg
-{
+namespace ql::dmg {
 	//! Base type for resist and vuln, using CRTP.
 	template <typename Derived>
-	class multiplier
-	{
+	class multiplier {
 	public:
 		constexpr multiplier() = default;
 
@@ -39,12 +37,10 @@ namespace ql::dmg
 			, _shock{shock}
 		{}
 
-		constexpr multiplier(factor factor)
-		{
-			multiplier& multiplier;
+		constexpr multiplier(factor factor) {
+			friend struct part_factor_assigner {
+				multiplier& multiplier;
 
-			friend struct part_factor_assigner
-			{
 				void operator ()(slash_factor slash_factor) { multiplier._slash = slash_factor; }
 				void operator ()(pierce_factor pierce_factor) { multiplier._pierce = pierce_factor; }
 				void operator ()(cleave_factor cleave_factor) { multiplier._cleave = cleave_factor; }
@@ -60,22 +56,20 @@ namespace ql::dmg
 
 		static constexpr Derived zero() { return Derived{}; }
 
-		constexpr friend Derived operator +(Derived const& d1, Derived const& d2)
-		{
-			return Derived
-				{ slash_factor{d1._slash + d2._slash}
-				, pierce_factor{d1._pierce + d2._pierce}
-				, cleave_factor{d1._cleave + d2._cleave}
-				, bludgeon_factor{d1._bludgeon + d2._bludgeon}
-				, burn_factor{d1._burn + d2._burn}
-				, freeze_factor{d1._freeze + d2._freeze}
-				, blight_factor{d1._blight + d2._blight}
-				, poison_factor{d1._poison + d2._poison}
-				, shock_factor{d1._shock + d2._shock}
-				};
+		constexpr friend Derived operator +(Derived const& d1, Derived const& d2) {
+			return Derived {
+				slash_factor{d1._slash + d2._slash},
+				pierce_factor{d1._pierce + d2._pierce},
+				cleave_factor{d1._cleave + d2._cleave},
+				bludgeon_factor{d1._bludgeon + d2._bludgeon},
+				burn_factor{d1._burn + d2._burn},
+				freeze_factor{d1._freeze + d2._freeze},
+				blight_factor{d1._blight + d2._blight},
+				poison_factor{d1._poison + d2._poison},
+				shock_factor{d1._shock + d2._shock},
+			};
 		}
-		friend constexpr Derived operator -(Derived const& d1, Derived const& d2)
-		{
+		friend constexpr Derived operator -(Derived const& d1, Derived const& d2) {
 			Derived difference;
 			difference.slash = d1._slash - d2._slash;
 			difference.pierce = d1._pierce - d2._pierce;
@@ -88,51 +82,47 @@ namespace ql::dmg
 			difference.shock = d1._shock - d2._shock;
 			return difference;
 		}
-		friend constexpr Derived operator *(Derived const& d, double k)
-		{
-			return Derived
-				{ slash_factor{d._slash * k}
-				, pierce_factor{d._pierce * k}
-				, cleave_factor{d._cleave * k}
-				, bludgeon_factor{d._bludgeon * k}
-				, burn_factor{d._burn * k}
-				, freeze_factor{d._freeze * k}
-				, blight_factor{d._blight * k}
-				, poison_factor{d._poison * k}
-				, shock_factor{d._shock * k}
-				};
+		friend constexpr Derived operator *(Derived const& d, double k) {
+			return Derived {
+				slash_factor{d._slash * k},
+				pierce_factor{d._pierce * k},
+				cleave_factor{d._cleave * k},
+				bludgeon_factor{d._bludgeon * k},
+				burn_factor{d._burn * k},
+				freeze_factor{d._freeze * k},
+				blight_factor{d._blight * k},
+				poison_factor{d._poison * k},
+				shock_factor{d._shock * k},
+			};
 		}
-		friend constexpr Derived operator *(double k, Derived const& d)
-		{
-			return Derived
-				{ slash_factor{k * d._slash}
-				, pierce_factor{k * d._pierce}
-				, cleave_factor{k * d._cleave}
-				, bludgeon_factor{k * d._bludgeon}
-				, burn_factor{k * d._burn}
-				, freeze_factor{k * d._freeze}
-				, blight_factor{k * d._blight}
-				, poison_factor{k * d._poison}
-				, shock_factor{k * d._shock}
-				};
+		friend constexpr Derived operator *(double k, Derived const& d) {
+			return Derived {
+				slash_factor{k * d._slash},
+				pierce_factor{k * d._pierce},
+				cleave_factor{k * d._cleave},
+				bludgeon_factor{k * d._bludgeon},
+				burn_factor{k * d._burn},
+				freeze_factor{k * d._freeze},
+				blight_factor{k * d._blight},
+				poison_factor{k * d._poison},
+				shock_factor{k * d._shock},
+			};
 		}
-		friend constexpr Derived operator /(Derived const& d, double k)
-		{
-			return Derived
-				{ d._slash / k
-				, d._pierce / k
-				, d._cleave / k
-				, d._bludgeon / k
-				, d._burn / k
-				, d._freeze / k
-				, d._blight / k
-				, d._poison / k
-				, d._shock / k
-				};
+		friend constexpr Derived operator /(Derived const& d, double k) {
+			return Derived {
+				d._slash / k,
+				d._pierce / k,
+				d._cleave / k,
+				d._bludgeon / k,
+				d._burn / k,
+				d._freeze / k,
+				d._blight / k,
+				d._poison / k,
+				d._shock / k,
+			};
 		}
 
-		Derived& operator +=(Derived const& addend)
-		{
+		Derived& operator +=(Derived const& addend) {
 			_slash += addend._slash;
 			_pierce += addend._pierce;
 			_cleave += addend._cleave;
@@ -144,8 +134,7 @@ namespace ql::dmg
 			_shock += addend._shock;
 			return static_cast<Derived&>(*this);
 		}
-		Derived& operator -=(Derived const& d)
-		{
+		Derived& operator -=(Derived const& d) {
 			_slash -= d._slash;
 			_pierce -= d._pierce;
 			_cleave -= d._cleave;
@@ -157,8 +146,7 @@ namespace ql::dmg
 			_shock -= d._shock;
 			return static_cast<Derived&>(*this);
 		}
-		Derived& operator *=(double k)
-		{
+		Derived& operator *=(double k) {
 			_slash *= k;
 			_pierce *= k;
 			_cleave *= k;
@@ -193,15 +181,13 @@ namespace ql::dmg
 	};
 
 	//! Reduces the percentage damage taken
-	class resist : public multiplier<resist>
-	{
+	class resist : public multiplier<resist> {
 	public:
 		using multiplier<resist>::multiplier;
 	};
 
 	//! Increases the percentage of damage taken.
-	class vuln : public multiplier<vuln>
-	{
+	class vuln : public multiplier<vuln> {
 	public:
 		using multiplier<vuln>::multiplier;
 	};

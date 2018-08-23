@@ -15,19 +15,16 @@
 #include "utility/tagged_type.hpp"
 #include "world/coordinates.hpp"
 
-namespace sdl
-{
+namespace sdl {
 	class texture;
 }
 
-namespace ql
-{
+namespace ql {
 	struct origin : tagged_type<units::texture_space::vector> { using tagged_type::tagged_type; };
 	struct src_rect : tagged_type<std::optional<units::texture_space::box>> { using tagged_type::tagged_type; };
 
 	//! A simple 2D camera, useful for panning, zooming, and rotating around a scene.
-	class camera
-	{
+	class camera {
 	public:
 		//! A color vector to apply to anything drawn using this camera.
 		units::colors::color_vector color_vector;

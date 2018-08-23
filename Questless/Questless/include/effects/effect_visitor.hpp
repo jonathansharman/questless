@@ -6,8 +6,7 @@
 
 #include "utility/visitor_pattern.hpp"
 
-namespace ql
-{
+namespace ql {
 	class arrow_attack_effect;
 	class eagle_eye_effect;
 	class injury_effect;

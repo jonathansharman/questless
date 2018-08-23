@@ -19,10 +19,8 @@
 #include <deque>
 #include <type_traits>
 
-namespace ql::magic
-{
-	complete shock::perform_cast(being& caster, gatestone& gatestone, action::cont cont)
-	{
+namespace ql::magic {
+	complete shock::perform_cast(being& caster, gatestone& gatestone, action::cont cont) {
 		return caster.agent().query_tile(umake<tile_query_shock_target>(), caster.coords, action::tile_in_range_predicate(caster, _range),
 			[&caster, &gatestone, cont = std::move(cont)](std::optional<region_tile::point> opt_tile_coords) {
 				if (!opt_tile_coords) {

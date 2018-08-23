@@ -15,13 +15,10 @@
 #include "constants.hpp"
 #include "math.hpp"
 
-namespace units
-{
-	namespace detail
-	{
+namespace units {
+	namespace detail {
 		template <typename Scalar, int DimensionCount>
-		class buffer_base
-		{
+		class buffer_base {
 		protected:
 			constexpr buffer_base() = default;
 			constexpr buffer_base(buffer_base const&) = default;
@@ -49,14 +46,12 @@ namespace units
 	//! @tparam DimensionCount The number of dimensions in this space. Must be non-negative.
 	//! @tparam Buffer A type containing a @p std::array<Scalar, DimensionCount>. May include space-spefific data accessors for use in points and vectors.
 	template <typename Tag, typename Scalar, int DimensionCount, typename Buffer = detail::buffer_base<Scalar, DimensionCount>>
-	struct space
-	{
+	struct space {
 	private:
 		//! @todo Is there a way to generate the type for the alignment tuple without using a dummy function?
 
 		template <int... DimensionIndices>
-		static decltype(auto) align_dummy(std::integer_sequence<int, DimensionIndices...>)
-		{
+		static decltype(auto) align_dummy(std::integer_sequence<int, DimensionIndices...>) {
 			return std::tuple<typename axis<DimensionIndices>::align...>{};
 		}
 
@@ -73,8 +68,7 @@ namespace units
 
 		//! Represents the axis along the dimension with index @p Index.
 		template <int Index>
-		struct axis
-		{
+		struct axis {
 			static_assert(0 <= Index && Index < n, "Axis index out of bounds.");
 
 			//! Alignment along this axis.
@@ -86,8 +80,7 @@ namespace units
 
 		//! An angle in this space, with @p UnitsPerCircle angle units per full circle, as a std::ratio.
 		template <typename UnitsPerCircle>
-		class angle
-		{
+		class angle {
 		public:
 			using scalar = scalar;
 			using units_per_circle = UnitsPerCircle;
@@ -105,8 +98,7 @@ namespace units
 
 			template <typename... Args>
 			constexpr explicit angle(Args... args)
-				: _components{{std::forward<Args>(args)...}}
-			{
+				: _components{{std::forward<Args>(args)...}} {
 				static_assert(sizeof...(args) == n - 1, "All components of an angle must be initialized.");
 			}
 
@@ -119,8 +111,7 @@ namespace units
 			constexpr scalar& operator [](std::size_t index) { return _components[index]; }
 			constexpr scalar operator [](std::size_t index) const { return _components[index]; }
 
-			friend std::ostream& operator <<(std::ostream& out, angle const& phi)
-			{
+			friend std::ostream& operator <<(std::ostream& out, angle const& phi) {
 				for (angle component : phi._components) {
 					out << component << ' ';
 				}
@@ -128,16 +119,14 @@ namespace units
 			}
 
 			//! phi1 < phi2 iff phi1[i] < phi2[i] for all i in [0, n - 1).
-			constexpr friend bool operator <(angle const& lhs, angle const& rhs)
-			{
+			constexpr friend bool operator <(angle const& lhs, angle const& rhs) {
 				for (std::size_t i = 0; i < n - 1; ++i) {
 					if (lhs._components[i] >= rhs._components[i]) return false;
 				}
 				return true;
 			}
 			//! phi1 <= phi2 iff phi1[i] <= phi2[i] for all i in [0, n - 1).
-			constexpr friend bool operator <=(angle const& lhs, angle const& rhs)
-			{
+			constexpr friend bool operator <=(angle const& lhs, angle const& rhs) {
 				for (std::size_t i = 0; i < n - 1; ++i) {
 					if (lhs._components[i] <= rhs._components[i]) return false;
 				}
@@ -146,16 +135,14 @@ namespace units
 			constexpr friend bool operator ==(angle const& lhs, angle const& rhs) { return lhs._component == rhs._component; }
 			constexpr friend bool operator !=(angle const& lhs, angle const& rhs) { return lhs._component != rhs._component; }
 			//! phi1 >= phi2 iff phi1[i] >= phi2[i] for all i in [0, n - 1).
-			constexpr friend bool operator >=(angle const& lhs, angle const& rhs)
-			{
+			constexpr friend bool operator >=(angle const& lhs, angle const& rhs) {
 				for (std::size_t i = 0; i < n - 1; ++i) {
 					if (lhs._components[i] >= rhs._components[i]) return false;
 				}
 				return true;
 			}
 			//! phi1 > phi2 iff phi1[i] > phi2[i] for all i in [0, n - 1).
-			constexpr friend bool operator >(angle const& lhs, angle const& rhs)
-			{
+			constexpr friend bool operator >(angle const& lhs, angle const& rhs) {
 				for (std::size_t i = 0; i < n - 1; ++i) {
 					if (lhs._components[i] > rhs._components[i]) return false;
 				}
@@ -163,38 +150,33 @@ namespace units
 			}
 
 			// Closed under addition.
-			constexpr angle& operator +=(angle const& that) &
-			{
+			constexpr angle& operator +=(angle const& that) & {
 				for (std::size_t i = 0; i < n - 1; ++i) {
 					this->_components[i] += that._components[i];
 				}
 				return *this;
 			}
-			constexpr friend angle operator +(angle const& lhs, angle const& rhs)
-			{
+			constexpr friend angle operator +(angle const& lhs, angle const& rhs) {
 				angle result = lhs;
 				result += rhs;
 				return result;
 			}
 
 			// Closed under substraction.
-			constexpr angle& operator -=(angle const& that) &
-			{
+			constexpr angle& operator -=(angle const& that) & {
 				for (std::size_t i = 0; i < n - 1; ++i) {
 					this->_components[i] -= that._components[i];
 				}
 				return *this;
 			}
-			constexpr friend angle operator -(angle const& lhs, angle const& rhs)
-			{
+			constexpr friend angle operator -(angle const& lhs, angle const& rhs) {
 				angle result = lhs;
 				result -= rhs;
 				return result;
 			}
 
 			// Closed under negation.
-			constexpr friend angle operator -(angle const& phi)
-			{
+			constexpr friend angle operator -(angle const& phi) {
 				angle result = phi;
 				for (std::size_t i = 0; i < n - 1; ++i) {
 					result._components[i] = -result._components[i];
@@ -203,38 +185,33 @@ namespace units
 			}
 
 			// Closed under scalar multiplication.
-			constexpr angle& operator *=(scalar k) &
-			{
+			constexpr angle& operator *=(scalar k) & {
 				for (scalar& component : _components) {
 					component = component * k;
 				}
 				return *this;
 			}
-			constexpr friend angle operator *(scalar k, angle const& phi)
-			{
+			constexpr friend angle operator *(scalar k, angle const& phi) {
 				angle result = phi;
 				for (scalar& component : result._components) {
 					component = k * component;
 				}
 				return result;
 			}
-			constexpr friend angle operator *(angle const& phi, scalar k)
-			{
+			constexpr friend angle operator *(angle const& phi, scalar k) {
 				angle result = phi;
 				result *= k;
 				return phi;
 			}
 
 			// Closed under scalar division.
-			constexpr angle& operator /=(scalar k) &
-			{
+			constexpr angle& operator /=(scalar k) & {
 				for (scalar& component : _components) {
 					component = component / k;
 				}
 				return *this;
 			}
-			constexpr friend angle operator /(angle const& phi, scalar k)
-			{
+			constexpr friend angle operator /(angle const& phi, scalar k) {
 				angle result = phi;
 				result /= k;
 				return result;
@@ -253,8 +230,7 @@ namespace units
 
 		//! Casts @p phi from @p FromAngle to @p ToAngle.
 		template<typename ToAngle, typename FromAngle>
-		static constexpr ToAngle angle_cast(FromAngle const& phi)
-		{
+		static constexpr ToAngle angle_cast(FromAngle const& phi) {
 			using ratio = std::ratio_divide<typename ToAngle::units_per_circle, typename FromAngle::units_per_circle>;
 			using from_scalar = typename FromAngle::scalar;
 			using to_scalar = typename ToAngle::scalar;
@@ -277,8 +253,7 @@ namespace units
 		using gradians = angle<std::ratio<400>>;
 
 		//! A vector in this space.
-		class vector : public Buffer
-		{
+		class vector : public Buffer {
 		public:
 			constexpr vector() = default;
 			constexpr vector(vector const&) = default;
@@ -290,15 +265,13 @@ namespace units
 
 			template <typename... Args>
 			constexpr explicit vector(Args... args)
-				: Buffer{{std::forward<Args>(args)...}}
-			{
+				: Buffer{{std::forward<Args>(args)...}} {
 				static_assert(sizeof...(args) == n, "All components of a vector must be initialized.");
 			}
 
 			//! Constructs a vector with angle @p phi and radius @p r.
 			template <typename UnitsPerCircle>
-			explicit vector(typename space::angle<UnitsPerCircle> phi, scalar r) //! @todo Cannot be constexpr because of cos() and sin(). Implement constexpr trig functions in units::math to enable.
-			{
+			explicit vector(typename space::angle<UnitsPerCircle> phi, scalar r) { //! @todo Cannot be constexpr because of cos() and sin(). Implement constexpr trig functions in units::math to enable.
 				static_assert(n >= 2, "Vector from angle and radius requires a space with two or more dimensions.");
 
 				std::fill(this->_elements.begin(), this->_elements.end(), r);
@@ -321,8 +294,7 @@ namespace units
 			constexpr scalar& operator [](std::size_t index) { return this->_elements[index]; }
 			constexpr scalar operator [](std::size_t index) const { return this->_elements[index]; }
 
-			friend std::ostream& operator <<(std::ostream& out, vector const& v)
-			{
+			friend std::ostream& operator <<(std::ostream& out, vector const& v) {
 				out << '(';
 				for (std::size_t i = 0; i < v._elements.size() - 1; ++i) {
 					out << v[i] << ", ";
@@ -334,21 +306,18 @@ namespace units
 			bool operator ==(vector const& that) const { return this->_elements == that._elements; }
 			bool operator !=(vector const& that) const { return this->_elements != that._elements; }
 
-			friend vector operator +(vector const& v1, vector const& v2)
-			{
+			friend vector operator +(vector const& v1, vector const& v2) {
 				auto result = v1;
 				result += v2;
 				return result;
 			}
 
-			friend vector operator -(vector const& v1, vector const& v2)
-			{
+			friend vector operator -(vector const& v1, vector const& v2) {
 				auto result = v1;
 				result -= v2;
 				return result;
 			}
-			friend vector operator -(vector const& v)
-			{
+			friend vector operator -(vector const& v) {
 				auto result = v;
 				for (int i = 0; i < n; ++i) {
 					result[i] = -result[i];
@@ -357,22 +326,19 @@ namespace units
 			}
 
 			//! Component-wise product.
-			friend vector operator *(vector const& v1, vector const& v2)
-			{
+			friend vector operator *(vector const& v1, vector const& v2) {
 				auto result = v1;
 				for (int i = 0; i < n; ++i) {
 					result[i] *= v2[i];
 				}
 				return result;
 			}
-			friend vector operator *(vector const& v, scalar k)
-			{
+			friend vector operator *(vector const& v, scalar k) {
 				auto result = v;
 				result *= k;
 				return result;
 			}
-			friend vector operator *(scalar k, vector const& v)
-			{
+			friend vector operator *(scalar k, vector const& v) {
 				auto result = v;
 				for (int i = 0; i < n; ++i) {
 					result[i] = k * result[i];
@@ -380,36 +346,31 @@ namespace units
 				return result;
 			}
 
-			friend vector operator /(vector const& v, scalar k)
-			{
+			friend vector operator /(vector const& v, scalar k) {
 				auto result = v;
 				result /= k;
 				return result;
 			}
 
-			vector& operator +=(vector const& that) &
-			{
+			vector& operator +=(vector const& that) & {
 				for (int i = 0; i < n; ++i) {
 					this->_elements[i] += that[i];
 				}
 				return *this;
 			}
-			vector& operator -=(vector const& that) &
-			{
+			vector& operator -=(vector const& that) & {
 				for (int i = 0; i < n; ++i) {
 					this->_elements[i] -= that[i];
 				}
 				return *this;
 			}
-			vector& operator *=(scalar k) &
-			{
+			vector& operator *=(scalar k) & {
 				for (int i = 0; i < n; ++i) {
 					this->_elements[i] *= k;
 				}
 				return *this;
 			}
-			vector& operator /=(scalar k) &
-			{
+			vector& operator /=(scalar k) & {
 				for (int i = 0; i < n; ++i) {
 					this->_elements[i] /= k;
 				}
@@ -420,8 +381,7 @@ namespace units
 			//! @param dphi The rotation to apply.
 			//! @note @dphi will be converted to radians for this computation, so passing it as radians will save an angle conversion.
 			template <typename UnitsPerCircle>
-			void rotate(typename space::angle<UnitsPerCircle> const& dphi) &
-			{
+			void rotate(typename space::angle<UnitsPerCircle> const& dphi) & {
 				static_assert(std::is_floating_point_v<scalar> && n == 2, "Requires two-dimensional floating-point space.");
 
 				radians const dphi_radians = angle_cast<radians>(dphi);
@@ -437,8 +397,8 @@ namespace units
 			//! @param dphi The rotation to apply.
 			//! @note @dphi will be converted to radians for this computation, so passing it as radians will save an angle conversion.
 			template <typename UnitsPerCircle>
-			vector rotated(typename space::angle<UnitsPerCircle> const& dphi) const //! @todo Cannot be constexpr because of cos() and sin(). Implement constexpr trig functions in units::math to enable.
-			{
+			vector rotated(typename space::angle<UnitsPerCircle> const& dphi) const {
+				//! @todo Cannot be constexpr because of cos() and sin(). Implement constexpr trig functions in units::math to enable.
 				static_assert(std::is_floating_point_v<scalar> && n == 2, "Requires two-dimensional floating-point space.");
 
 				radians const dphi_radians = angle_cast<radians>(dphi);
@@ -451,8 +411,7 @@ namespace units
 			}
 
 			//! The vector's length.
-			constexpr scalar length() const
-			{
+			constexpr scalar length() const {
 				scalar sum_of_squares(0);
 				for (int i = 0; i < n; ++i) {
 					sum_of_squares += this->_elements[i] * this->_elements[i];
@@ -461,8 +420,7 @@ namespace units
 			}
 
 			//! The square of the vector's length.
-			constexpr scalar length_squared() const
-			{
+			constexpr scalar length_squared() const {
 				scalar result(0);
 				for (int i = 0; i < n; ++i) {
 					result += this->_elements[i] * this->_elements[i];
@@ -472,16 +430,15 @@ namespace units
 
 			//! The counter-clockwise angle of the vector from the positive x-axis (in radians by default).
 			template <typename UnitsPerCircle = radians::units_per_circle>
-			typename space::angle<UnitsPerCircle> angle() const //! @todo Cannot be constexpr because of cos() and sin(). Implement constexpr trig functions in units::math to enable.
-			{
+			typename space::angle<UnitsPerCircle> angle() const {
+				//! @todo Cannot be constexpr because of cos() and sin(). Implement constexpr trig functions in units::math to enable.
 				static_assert(n == 2, "Requires two-dimensional space.");
 				return typename space::angle<UnitsPerCircle>{static_cast<scalar>(atan2(this->_elements[1], this->_elements[0]))};
 			}
 		};
 
 		//! A point in this space.
-		class point : public Buffer
-		{
+		class point : public Buffer {
 		public:
 			constexpr point() = default;
 			constexpr point(point const&) = default;
@@ -492,9 +449,7 @@ namespace units
 			{}
 
 			template <typename... Args>
-			constexpr explicit point(Args... args)
-				: Buffer{{std::forward<Args>(args)...}}
-			{
+			constexpr explicit point(Args... args) : Buffer{{std::forward<Args>(args)...}} {
 				static_assert(sizeof...(args) == n, "All coordinates of a point must be initialized.");
 			}
 
@@ -504,8 +459,7 @@ namespace units
 			constexpr scalar& operator [](std::size_t index) { return this->_elements[index]; }
 			constexpr scalar operator [](std::size_t index) const { return this->_elements[index]; }
 
-			friend std::ostream& operator <<(std::ostream& out, point const& p)
-			{
+			friend std::ostream& operator <<(std::ostream& out, point const& p) {
 				out << '(';
 				for (std::size_t i = 0; i < n - 1; ++i) {
 					out << p[i] << ", ";
@@ -514,8 +468,7 @@ namespace units
 				return out;
 			}
 
-			constexpr bool operator ==(point const& that) const
-			{
+			constexpr bool operator ==(point const& that) const {
 				for (int i = 0; i < n; ++i) {
 					if (this->_elements[i] != that[i]) {
 						return false;
@@ -523,8 +476,7 @@ namespace units
 				}
 				return true;
 			}
-			constexpr bool operator !=(point const& that) const
-			{
+			constexpr bool operator !=(point const& that) const {
 				for (int i = 0; i < n; ++i) {
 					if (this->_elements[i] != that[i]) {
 						return true;
@@ -533,16 +485,14 @@ namespace units
 				return false;
 			}
 
-			constexpr friend point operator +(point const& p, vector const& v)
-			{
+			constexpr friend point operator +(point const& p, vector const& v) {
 				point result;
 				for (int i = 0; i < n; ++i) {
 					result[i] = p[i] + v[i];
 				}
 				return result;
 			}
-			constexpr friend point operator +(vector const& v, point const& p)
-			{
+			constexpr friend point operator +(vector const& v, point const& p) {
 				point result;
 				for (int i = 0; i < n; ++i) {
 					result[i] = p[i] + v[i];
@@ -550,16 +500,14 @@ namespace units
 				return result;
 			}
 
-			constexpr friend point operator -(point const& p, vector const& v)
-			{
+			constexpr friend point operator -(point const& p, vector const& v) {
 				point result;
 				for (int i = 0; i < n; ++i) {
 					result[i] = p[i] - v[i];
 				}
 				return result;
 			}
-			constexpr friend vector operator -(point const& p1, point const& p2)
-			{
+			constexpr friend vector operator -(point const& p1, point const& p2) {
 				vector result;
 				for (int i = 0; i < n; ++i) {
 					result[i] = p1[i] - p2[i];
@@ -568,15 +516,13 @@ namespace units
 			}
 
 			//! Component-wise product.
-			friend point operator *(point const& p, vector const& v)
-			{
+			friend point operator *(point const& p, vector const& v) {
 				auto result = p;
 				result *= v;
 				return result;
 			}
 			//! Component-wise product.
-			friend point operator *(vector const& v, point const& p)
-			{
+			friend point operator *(vector const& v, point const& p) {
 				auto result = p;
 				for (int i = 0; i < n; ++i) {
 					result[i] = result[i] * v[i];
@@ -584,15 +530,13 @@ namespace units
 				return result;
 			}
 
-			point& operator +=(vector const& v) &
-			{
+			point& operator +=(vector const& v) & {
 				for (int i = 0; i < n; ++i) {
 					this->_elements[i] += v[i];
 				}
 				return *this;
 			}
-			point& operator -=(vector const& v) &
-			{
+			point& operator -=(vector const& v) & {
 				for (int i = 0; i < n; ++i) {
 					this->_elements[i] -= v[i];
 				}
@@ -600,10 +544,9 @@ namespace units
 			}
 
 			//! Component-wise product.
-			point& operator *=(vector const& v)
-			{
+			point& operator *=(vector const& v) {
 				for (int i = 0; i < n; ++i) {
-					coordinates[i] = coordinates[i] * v[i];
+					this->_elements[i] *= v[i];
 				}
 				return *this;
 			}
@@ -612,8 +555,7 @@ namespace units
 			//! @param origin The origin around which the point will be rotated.
 			//! @param dphi The counter-clockwise rotation to apply, in radians.
 			template <typename UnitsPerCircle>
-			void rotate(point const& origin, angle<UnitsPerCircle> const& dphi) &
-			{
+			void rotate(point const& origin, angle<UnitsPerCircle> const& dphi) & {
 				static_assert(std::is_floating_point_v<scalar> && n == 2, "Requires two-dimensional floating-point space.");
 
 				scalar const dphi_radians = angle_cast<radians>(dphi).count();
@@ -632,8 +574,8 @@ namespace units
 			//! @param origin The origin around which the point will be rotated.
 			//! @param phi The counter-clockwise rotation to apply, in radians.
 			template <typename UnitsPerCircle>
-			point rotated(point const& origin, angle<UnitsPerCircle> const& dphi) const //! @todo Cannot be constexpr because of cos() and sin(). Implement constexpr trig functions in units::math to enable.
-			{
+			point rotated(point const& origin, angle<UnitsPerCircle> const& dphi) const {
+				//! @todo Cannot be constexpr because of cos() and sin(). Implement constexpr trig functions in units::math to enable.
 				static_assert(std::is_floating_point_v<scalar> && n == 2, "Requires two-dimensional floating-point space.");
 
 				scalar const dphi_radians = angle_cast<radians>(dphi).count();
@@ -651,8 +593,7 @@ namespace units
 		};
 
 		//! A rectangular, orthogonal volume in this space.
-		class box
-		{
+		class box {
 		public:
 			//! The position of the minimal corner of this box.
 			point position;
@@ -682,24 +623,20 @@ namespace units
 			box& operator =(box const&) & = default;
 			box& operator =(box&&) & = default;
 
-			friend std::ostream& operator <<(std::ostream& out, box const& box)
-			{
+			friend std::ostream& operator <<(std::ostream& out, box const& box) {
 				out << '(' << box.origin << ", " << box.size << ')';
 				return out;
 			}
 
-			constexpr friend bool operator ==(box const& left, box const& right)
-			{
+			constexpr friend bool operator ==(box const& left, box const& right) {
 				return left.origin == right.origin && left.size == right.size;
 			}
-			constexpr friend bool operator !=(box const& left, box const& right)
-			{
+			constexpr friend bool operator !=(box const& left, box const& right) {
 				return left.origin != right.origin || left.size != right.size;
 			}
 
 			//! Whether this box contains @p point.
-			constexpr bool contains(point const& point) const
-			{
+			constexpr bool contains(point const& point) const {
 				//! @todo Rigorously define what containment means for generic spaces (inclusive vs. exclusive bounds).
 				for (int i = 0; i < n; ++i) {
 					if (point[i] < position[i] || point[i] > position[i] + size[i]) {
@@ -710,20 +647,17 @@ namespace units
 			}
 
 			//! Translates this box by the given offset.
-			void translate(vector const& offset) &
-			{
+			void translate(vector const& offset) & {
 				position += offset;
 			}
 
 			//! A copy of this box translated by @p offset.
-			constexpr box translated(vector const& offset) const
-			{
+			constexpr box translated(vector const& offset) const {
 				return box{position + offset, size};
 			}
 
 			//! Extends this box, if necessary, to include the given point.
-			void extend(point const& point)
-			{
+			void extend(point const& point) {
 				for (int i = 0; i < n; ++i) {
 					if (point[i] < position[i]) {
 						size[i] += position[i] - point[i];
@@ -734,14 +668,12 @@ namespace units
 				}
 			}
 		private:
-			static constexpr point aligned_position(point position, vector size, alignment const& alignment)
-			{
+			static constexpr point aligned_position(point position, vector size, alignment const& alignment) {
 				return apply_alignment<0>(position, size, alignment);
 			}
 
 			template <int Index>
-			static constexpr point apply_alignment(point position, vector size, alignment const& alignment)
-			{
+			static constexpr point apply_alignment(point position, vector size, alignment const& alignment) {
 				//! @todo Specialize these adjustments for integers and floats?
 				switch (std::get<Index>(alignment)) {
 					case axis<Index>::align::near:
@@ -762,8 +694,7 @@ namespace units
 		};
 
 		//! A sphere in this space. E.g. a circle in 2D spaces or a 
-		class sphere
-		{
+		class sphere {
 		public:
 			//! The center point of this sphere.
 			point center;
@@ -784,43 +715,36 @@ namespace units
 			sphere& operator =(sphere const&) & = default;
 			sphere& operator =(sphere&&) & = default;
 
-			friend std::ostream& operator <<(std::ostream& out, sphere const& sphere)
-			{
+			friend std::ostream& operator <<(std::ostream& out, sphere const& sphere) {
 				out << '(' << sphere.center << ", " << box.radius << ')';
 				return out;
 			}
 
-			constexpr friend bool operator ==(sphere const& left, sphere const& right)
-			{
+			constexpr friend bool operator ==(sphere const& left, sphere const& right) {
 				return left.center == right.center && left.radius == right.radius;
 			}
-			constexpr friend bool operator !=(sphere const& left, sphere const& right)
-			{
+			constexpr friend bool operator !=(sphere const& left, sphere const& right) {
 				return left.center != right.center || left.radius != right.radius;
 			}
 
 			//! Whether this sphere contains @p point.
-			constexpr bool contains(point const& point) const
-			{
+			constexpr bool contains(point const& point) const {
 				//! @todo Rigorously define what containment means for generic spaces (inclusive vs. exclusive bounds).
 				return (center - point).length_squared() <= radius * radius;
 			}
 
 			//! Translates this sphere by the given offset.
-			void translate(vector const& offset) &
-			{
+			void translate(vector const& offset) & {
 				center += offset;
 			}
 
 			//! A copy of this sphere translated by @p offset.
-			constexpr sphere translated(vector const& offset) const
-			{
-				return sphere{position + offset, size};
+			constexpr sphere translated(vector const& offset) const {
+				return sphere{center + offset, radius};
 			}
 
 			//! Extends this sphere, if necessary, to include the given point.
-			void extend(point const& point)
-			{
+			void extend(point const& point) {
 				if (!contains(point)) {
 					radius = (center - point).length();
 				}
@@ -832,8 +756,7 @@ namespace units
 		using polygon = std::vector<point>;
 
 		//! The smallest box that contains @p polygon.
-		static box bounding_box(polygon const& polygon)
-		{
+		static box bounding_box(polygon const& polygon) {
 			static_assert(n == 2, "Use of polygon operations requires a 2D type.");
 
 			//! @todo Check that the edge cases are correct here. Calling .contains(v) on the result of this function should work for all v in polygon.
@@ -853,8 +776,7 @@ namespace units
 		}
 
 		//! Whether @p polygon contains @p point.
-		static bool contains(polygon const& polygon, point const& point)
-		{
+		static bool contains(polygon const& polygon, point const& point) {
 			static_assert(n == 2, "Use of polygon operations requires a 2D type.");
 
 			//! @todo Rigorously define what containment means for generic spaces (inclusive vs. exclusive bounds).
@@ -884,74 +806,62 @@ namespace units
 #undef near // Defined in minwindef.h (!)
 #undef far // Defined in minwindef.h (!)
 
-TEST_CASE("[angle] operations")
-{
+TEST_CASE("[angle] operations") {
 	using double_space = units::space<struct double_space_tag, double, 2>;
 
 	constexpr auto circle_degrees = double_space::angle_cast<double_space::degrees>(double_space::radians::circle());
 
-	SUBCASE("conversions")
-	{
+	SUBCASE("conversions") {
 		CHECK(circle_degrees[0] == doctest::Approx(360.0));
 	}
 }
 
-TEST_CASE("[vector] operations")
-{
+TEST_CASE("[vector] operations") {
 	using int_space = units::space<struct int_space_tag, int, 2>;
 	using double_space = units::space<struct double_space_tag, double, 2>;
 
 	typename int_space::vector vi1{3, 4};
 
-	SUBCASE("length")
-	{
+	SUBCASE("length") {
 		CHECK(vi1.length() == 5);
 		CHECK(vi1.length_squared() == 25);
 	}
-	SUBCASE("angle")
-	{
+	SUBCASE("angle") {
 		constexpr double_space::vector vd{3.0, 4.0};
 		CHECK(vd.angle<double_space::radians>()[0] == doctest::Approx(0.927295218));
 	}
-	SUBCASE("binary operations")
-	{
+	SUBCASE("binary operations") {
 		constexpr int_space::vector vi2{1, 6};
-		SUBCASE("addition")
-		{
+		SUBCASE("addition") {
 			constexpr int_space::vector v_sum{4, 10};
 			CHECK(vi1 + vi2 == v_sum);
 			vi1 += vi2;
 			CHECK(vi1 == v_sum);
 		}
-		SUBCASE("subtraction")
-		{
+		SUBCASE("subtraction") {
 			constexpr int_space::vector v_diff{2, -2};
 			CHECK(vi1 - vi2 == v_diff);
 			vi1 -= vi2;
 			CHECK(vi1 == v_diff);
 		}
 	}
-	SUBCASE("scalar operations")
-	{
+	SUBCASE("scalar operations") {
 		constexpr int k = 2;
-		SUBCASE("scalar multiplication")
-		{
+		SUBCASE("scalar multiplication") {
 			constexpr int_space::vector v_prod{6, 8};
 			CHECK(k * vi1 == v_prod);
 			CHECK(vi1 * k == v_prod);
 			vi1 *= k;
 			CHECK(vi1 == v_prod);
 		}
-		SUBCASE("scalar division")
-		{
+		SUBCASE("scalar division") {
 			constexpr int_space::vector v_quot{1, 2};
 			CHECK(vi1 / k == v_quot);
 			vi1 /= k;
 			CHECK(vi1 == v_quot);
 		}
 	}
-	SUBCASE("rotations")
-	{
+	SUBCASE("rotations") {
 		typename double_space::vector vd{3.0, 4.0};
 		constexpr typename double_space::degrees dphi{90.0};
 		constexpr typename double_space::vector vd_rot{-4.0, 3.0};
@@ -967,25 +877,21 @@ TEST_CASE("[vector] operations")
 	}
 }
 
-TEST_CASE("[point] operations")
-{
+TEST_CASE("[point] operations") {
 	using int_space = units::space<struct int_space_tag, int, 2>;
 	using double_space = units::space<struct double_space_tag, double, 2>;
 
 	typename int_space::point pi1{3, 4};
 
-	SUBCASE("binary operations")
-	{
-		SUBCASE("addition")
-		{
+	SUBCASE("binary operations") {
+		SUBCASE("addition") {
 			constexpr int_space::vector vi{1, 6};
 			constexpr int_space::point p_sum{4, 10};
 			CHECK(pi1 + vi == p_sum);
 			pi1 += vi;
 			CHECK(pi1 == p_sum);
 		}
-		SUBCASE("subtraction")
-		{
+		SUBCASE("subtraction") {
 			constexpr int_space::point pi2{1, 6};
 			constexpr int_space::vector v_diff{2, -2};
 			CHECK(pi1 - pi2 == v_diff);
@@ -996,8 +902,7 @@ TEST_CASE("[point] operations")
 			CHECK(pi1 == p_diff);
 		}
 	}
-	SUBCASE("rotations")
-	{
+	SUBCASE("rotations") {
 		typename double_space::point pd{3.0, 4.0};
 		constexpr typename double_space::degrees dphi{90.0};
 		constexpr typename double_space::point pivot{1.0, 1.0};
@@ -1018,8 +923,7 @@ TEST_CASE("[point] operations")
 
 //! @todo sphere tests
 
-TEST_CASE("[polygon] operations")
-{
+TEST_CASE("[polygon] operations") {
 	//! @todo Test integral spaces.
 
 	//! @todo Why don't these tests compile?

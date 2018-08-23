@@ -5,13 +5,12 @@
 #pragma once
 
 #include "entities/beings/statuses/status.hpp"
-#include "entities/beings/stats/modifier.hpp"
 
-namespace ql
-{
+namespace ql {
+	class modifier;
+
 	//! Reduces stealth and black magic.
-	class illuminated : public status
-	{
+	class illuminated : public status {
 	public:
 		//! @param magnitude How powerful the status modifier is.
 		//! @param duration The number of turns remaining before the status modifier expires.

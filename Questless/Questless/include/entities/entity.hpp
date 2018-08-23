@@ -10,18 +10,15 @@
 
 #include "entity_visitor.hpp"
 #include "utility/reference.hpp"
-#include "utility/utility.hpp"
 #include "world/coordinates.hpp"
 
-namespace ql
-{
+namespace ql {
 	class game;
 	class region;
 	class section;
 
 	//! Things that can exist on the world map, including beings and objects.
-	class entity : public element<entity_subtype_list>
-	{
+	class entity : public element<entity_subtype_list> {
 	public:
 		using ref_less_t = bool(*)(entity const&, entity const&);
 		using ptr_less_t = bool(*)(uptr<entity> const&, uptr<entity> const&);

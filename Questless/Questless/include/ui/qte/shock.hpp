@@ -7,11 +7,9 @@
 #include "ui/dialog.hpp"
 #include "world/coordinates.hpp"
 
-namespace ql::qte
-{
+namespace ql::qte {
 	//! Quick time event for determining shock strength.
-	class shock : public dialog
-	{
+	class shock : public dialog {
 	public:
 		//! @param target_coords The target strike coordinates.
 		//! @param cont The dialog continuation function.
@@ -21,8 +19,7 @@ namespace ql::qte
 
 		void draw() const final;
 	private:
-		struct charge
-		{
+		struct charge {
 			units::game_space::point position;
 			units::game_space::velocity velocity;
 		};

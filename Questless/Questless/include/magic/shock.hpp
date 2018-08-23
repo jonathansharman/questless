@@ -6,11 +6,9 @@
 
 #include "spell.hpp"
 
-namespace ql::magic
-{
+namespace ql::magic {
 	//! Discharges a bolt of electricity to strike a tile.
-	class shock : public spell_base<shock>
-	{
+	class shock : public spell_base<shock> {
 	public:
 		std::string name() const final { return "Lightning Bolt"; }
 

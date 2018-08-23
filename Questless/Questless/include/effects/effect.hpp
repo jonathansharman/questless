@@ -11,14 +11,12 @@
 #include "utility/id.hpp"
 #include "world/coordinates.hpp"
 
-namespace ql
-{
+namespace ql {
 	class being;
 	class body_part;
 
 	//! An in-game effect perceivable by beings, such as light and sound stimuli.
-	class effect : public element<effect_subtype_list>
-	{
+	class effect : public element<effect_subtype_list> {
 	public:
 		//! @param origin The coordinates of the effect's origin.
 		effect(region_tile::point origin) : _origin{origin} {}
@@ -37,8 +35,7 @@ namespace ql
 
 	//! @todo Eventually move effect subtypes to individual header files.
 
-	class arrow_attack_effect : public effect_base<arrow_attack_effect>
-	{
+	class arrow_attack_effect : public effect_base<arrow_attack_effect> {
 	public:
 		region_tile::point const target;
 
@@ -52,8 +49,7 @@ namespace ql
 		int range() const final { return 2 * (target - origin()).length(); }
 	};
 
-	class eagle_eye_effect : public effect_base<eagle_eye_effect>
-	{
+	class eagle_eye_effect : public effect_base<eagle_eye_effect> {
 	public:
 		id<being> const caster_id;
 
@@ -67,8 +63,7 @@ namespace ql
 		int range() const final { return 3; }
 	};
 
-	class injury_effect : public effect_base<injury_effect>
-	{
+	class injury_effect : public effect_base<injury_effect> {
 	public:
 		dmg::group const damage;
 		id<being> target_being_id;
@@ -97,8 +92,7 @@ namespace ql
 		int range() const final { return 7; }
 	};
 
-	class lightning_bolt_effect : public effect_base<lightning_bolt_effect>
-	{
+	class lightning_bolt_effect : public effect_base<lightning_bolt_effect> {
 	public:
 		using effect_base<lightning_bolt_effect>::effect_base;
 

@@ -32,11 +32,9 @@
 //! @warning It is critical to define the initializer member after all other static members in order to guarantee it is initialized last.
 //!
 template <typename T>
-class initializer
-{
+class initializer {
 public:
-	initializer()
-	{
+	initializer() {
 		T::initialize();
 	}
 };

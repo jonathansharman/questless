@@ -15,34 +15,28 @@
 using namespace sdl;
 using namespace units;
 
-namespace ql
-{
-	void item_renderer::visit(arrow const&)
-	{
+namespace ql {
+	void item_renderer::visit(arrow const&) {
 		static auto texture_handle = the_texture_manager().add("resources/textures/items/arrow.png");
 		the_texture_manager()[texture_handle].draw(_position);
 	}
 
-	void item_renderer::visit(bow const&)
-	{
+	void item_renderer::visit(bow const&) {
 		static auto texture_handle = the_texture_manager().add("resources/textures/items/bow.png");
 		the_texture_manager()[texture_handle].draw(_position);
 	}
 
-	void item_renderer::visit(quarterstaff const&)
-	{
+	void item_renderer::visit(quarterstaff const&) {
 		static auto texture_handle = the_texture_manager().add("resources/textures/items/quarterstaff.png");
 		the_texture_manager()[texture_handle].draw(_position);
 	}
 
-	void item_renderer::visit(quiver const&)
-	{
+	void item_renderer::visit(quiver const&) {
 		static auto texture_handle = the_texture_manager().add("resources/textures/items/quiver.png");
 		the_texture_manager()[texture_handle].draw(_position);
 	}
 
-	void item_renderer::visit(scroll const& scroll)
-	{
+	void item_renderer::visit(scroll const& scroll) {
 		if (scroll.blank()) {
 			static auto texture_handle = the_texture_manager().add("resources/textures/items/blank-scroll.png");
 			the_texture_manager()[texture_handle].draw(_position);
@@ -87,8 +81,7 @@ namespace ql
 		}
 	}
 
-	void item_renderer::visit(gatestone const& gatestone)
-	{
+	void item_renderer::visit(gatestone const& gatestone) {
 		static auto empty_texture_handle = the_texture_manager().add("resources/textures/items/soul-gem-empty.png");
 		if (gatestone.charge == 0.0) {
 			the_texture_manager()[empty_texture_handle].draw(_position);

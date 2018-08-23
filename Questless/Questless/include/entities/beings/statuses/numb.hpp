@@ -6,11 +6,9 @@
 
 #include "entities/beings/statuses/status.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! Reduces agility and dexterity.
-	class numb : public status
-	{
+	class numb : public status {
 	public:
 		//! @param magnitude How powerful the status modifier is.
 		//! @param duration The number of turns remaining before the status modifier expires.
@@ -18,10 +16,10 @@ namespace ql
 		numb(double magnitude, int duration, std::optional<id<being>> source_id = std::nullopt)
 			: status("Numb", duration, source_id)
 			, _magnitude{magnitude}
-			, _modifiers
-				{ umake<agility_modifier>(-_magnitude)
-				, umake<dexterity_modifier>(-_magnitude)
-				}
+			, _modifiers {
+				umake<agility_modifier>(-_magnitude),
+				umake<dexterity_modifier>(-_magnitude),
+			}
 		{}
 
 		virtual status_type type() const { return status_type::bane; }

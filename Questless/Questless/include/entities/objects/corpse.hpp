@@ -5,13 +5,12 @@
 #pragma once
 
 #include "object.hpp"
-#include "entities/beings/being.hpp"
 
-namespace ql
-{
+namespace ql {
+	class being;
+
 	//! The remains of a deceased corporeal being.
-	class corpse : public object_base<corpse>
-	{
+	class corpse : public object_base<corpse> {
 	public:
 		corpse(ql::id<being> being_id, ql::id<object> id = ql::id<object>::make())
 			: object_base<corpse>{id}

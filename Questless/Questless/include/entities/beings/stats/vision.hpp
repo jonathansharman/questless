@@ -11,16 +11,14 @@
 #include "units/constants.hpp"
 #include "units/math.hpp"
 
-namespace ql
-{
+namespace ql {
 	struct acuity : tagged_type<double> { using tagged_type::tagged_type; };
 	struct ideal_illuminance : tagged_type<double> { using tagged_type::tagged_type; };
 	struct darkness_tolerance : tagged_type<double> { using tagged_type::tagged_type; };
 	struct glare_tolerance : tagged_type<double> { using tagged_type::tagged_type; };
 
 	//! Represents a being's vision-related stats.
-	class vision
-	{
+	class vision {
 	public:
 		static constexpr double minimum_value = 0.0;
 
@@ -59,21 +57,18 @@ namespace ql
 			, _max_range{get_max_range()}
 		{}
 
-		friend std::ostream& operator <<(std::ostream& out, vision v)
-		{
+		friend std::ostream& operator <<(std::ostream& out, vision v) {
 			out << v.acuity << ' ' << v.ideal_illuminance << ' ' << v.darkness_tolerance << ' ' << v.glare_tolerance << ' ';
 			return out;
 		}
 
-		friend std::istream& operator >>(std::istream& in, vision v)
-		{
+		friend std::istream& operator >>(std::istream& in, vision v) {
 			in >> v.acuity >> v.ideal_illuminance >> v.darkness_tolerance >> v.glare_tolerance;
 			return in;
 		}
 
 		//! The maximum distance in hex units a being with this vision can see.
-		int max_range() const
-		{
+		int max_range() const {
 			if (_previous_acuity != acuity) {
 				_max_range = get_max_range();
 				_previous_acuity = acuity;
@@ -90,8 +85,7 @@ namespace ql
 		double mutable _previous_acuity;
 		int mutable _max_range;
 
-		constexpr int get_max_range() const
-		{
+		constexpr int get_max_range() const {
 			// Use a cutoff to avoid including many tiles with very low visibility.
 			constexpr double cutoff = 20.0;
 

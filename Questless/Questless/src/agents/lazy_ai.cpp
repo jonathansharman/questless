@@ -8,8 +8,7 @@
 #include "game.hpp"
 #include "utility/random.hpp"
 
-namespace ql
-{
+namespace ql {
 	void lazy_ai::act() { being.busy_time += uniform(1.0, 2.0); }
 
 	complete lazy_ai::send_message

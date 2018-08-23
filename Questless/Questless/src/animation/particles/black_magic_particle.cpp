@@ -10,8 +10,7 @@
 
 using namespace units;
 
-namespace ql
-{
+namespace ql {
 	black_magic_particle::black_magic_particle() : particle
 		{ game_space::vector::zero()
 		, game_space::velocity{game_space::vector{random_angle(), uniform(5.0, 25.0)}}
@@ -24,14 +23,12 @@ namespace ql
 		}
 	{}
 
-	void black_magic_particle::particle_subupdate()
-	{
+	void black_magic_particle::particle_subupdate() {
 		_velocity *= 1.0 + _acceleration_factor * game::frame_duration;
 		_velocity.step().rotate(game_space::radians{_turn_rate * game::frame_duration});
 	}
 
-	sdl::texture const& black_magic_particle::texture() const
-	{
+	sdl::texture const& black_magic_particle::texture() const {
 		static auto texture_handle = sdl::the_texture_manager().add("resources/textures/particles/magic/black.png");
 		return sdl::the_texture_manager()[texture_handle];
 	}

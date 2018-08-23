@@ -11,15 +11,12 @@
 
 #include "entities/beings/body_part.hpp"
 #include "units/window_space.hpp"
-#include "utility/utility.hpp"
 
-namespace ql
-{
+namespace ql {
 	class being;
 
 	//! A being's body, which is composed of a tree of body parts.
-	class body
-	{
+	class body {
 	public:
 		//! The amount of blood in this body.
 		lazy_bounded<double> blood;
@@ -38,15 +35,15 @@ namespace ql
 		//! The cumulative vitality of all parts of this body.
 		double total_vitality() const { return _total_vitality; }
 
-		auto parts() const { return _parts | cast_transform<cref<body_part>>(); }
-		auto heads() const { return _heads | cast_transform<cref<head>>(); }
-		auto torsos() const { return _torsos | cast_transform<cref<torso>>(); }
-		auto arms() const { return _arms | cast_transform<cref<arm>>(); }
-		auto hands() const { return _hands | cast_transform<cref<hand>>(); }
-		auto legs() const { return _legs | cast_transform<cref<leg>>(); }
-		auto feet() const { return _feet | cast_transform<cref<foot>>(); }
-		auto wings() const { return _wings | cast_transform<cref<wing>>(); }
-		auto tails() const { return _tails | cast_transform<cref<tail>>(); }
+		std::vector<cref<body_part>> const& parts() const;
+		std::vector<cref<head>> const& heads() const;
+		std::vector<cref<torso>> const& torsos() const;
+		std::vector<cref<arm>> const& arms() const;
+		std::vector<cref<hand>> const& hands() const;
+		std::vector<cref<leg>> const& legs() const;
+		std::vector<cref<foot>> const& feet() const;
+		std::vector<cref<wing>> const& wings() const;
+		std::vector<cref<tail>> const& tails() const;
 
 		std::vector<ref<body_part>> const& parts() { return _parts; }
 		std::vector<ref<head>> const& heads() { return _heads; }

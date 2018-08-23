@@ -10,11 +10,9 @@
 
 #include "dialog.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! Retrieves a floating-point value from the player.
-	class magnitude_dialog : public dialog
-	{
+	class magnitude_dialog : public dialog {
 	public:
 		magnitude_dialog
 			( std::string title

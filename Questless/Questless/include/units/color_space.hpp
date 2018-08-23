@@ -6,13 +6,10 @@
 
 #include "space.hpp"
 
-namespace units
-{
-	namespace detail
-	{
+namespace units {
+	namespace detail {
 		using color_buffer_base_t = buffer_base<float, 4>;
-		class color_buffer : public color_buffer_base_t
-		{
+		class color_buffer : public color_buffer_base_t {
 		public:
 			float& red() & { return _elements[0]; }
 			constexpr float const& red() const& { return _elements[0]; }

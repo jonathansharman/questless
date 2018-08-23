@@ -6,11 +6,9 @@
 
 #include "item.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! An item that can be crafted from other items.
-	class craftable : public virtual item
-	{
+	class craftable : public virtual item {
 	public:
 		virtual ~craftable() = 0 {}
 

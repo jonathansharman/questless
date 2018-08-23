@@ -11,25 +11,20 @@
 #include <memory>
 #include <iostream>
 
-#include "animation/camera.hpp"
-#include "coordinates.hpp"
-#include "tile.hpp"
 #include "units/hex_space.hpp"
 #include "utility/container_view.hpp"
 #include "utility/id.hpp"
 #include "utility/reference.hpp"
+#include "world/coordinates.hpp"
 
-namespace ql
-{
+namespace ql {
 	class being;
-
-	class object;
-
 	class light_source;
+	class object;
+	class tile;
 
 	//! An rhomboid section of hexes in a region.
-	class section
-	{
+	class section {
 	public:
 		static ref<being> being_entry_to_ref(std::pair<region_tile::point const, id<being>> being_entry);
 		static cref<being> being_entry_to_cref(std::pair<region_tile::point const, id<being>> being_entry);
@@ -68,8 +63,7 @@ namespace ql
 		static region_section::point region_section_coords(region_tile::point region_tile_coords);
 
 		//! The coordinates of @p region_tile_coords relative to the section that contains them.
-		static section_tile::point section_tile_coords(region_tile::point region_tile_coords)
-		{
+		static section_tile::point section_tile_coords(region_tile::point region_tile_coords) {
 			return section_tile::point
 				{ ((region_tile_coords.q + section::radius) % section::diameter + section::diameter) % section::diameter
 				, ((region_tile_coords.r + section::radius) % section::diameter + section::diameter) % section::diameter
@@ -137,27 +131,23 @@ namespace ql
 		void remove(light_source const& light_source);
 
 		//! Region tile coordinates from @p region_section_coords and @p section_tile_coords.
-		static region_tile::point region_tile_coords(region_section::point region_section_coords, section_tile::point section_tile_coords)
-		{
+		static region_tile::point region_tile_coords(region_section::point region_section_coords, section_tile::point section_tile_coords) {
 			int q = region_section_coords.q * diameter + section_tile_coords.q - radius;
 			int r = region_section_coords.r * diameter + section_tile_coords.r - radius;
 			return region_tile::point{q, r};
 		}
 
 		//! Region tile coordinates from @p section_tile_coords in this section.
-		region_tile::point region_tile_coords(section_tile::point section_tile_coords) const
-		{
+		region_tile::point region_tile_coords(section_tile::point section_tile_coords) const {
 			return region_tile_coords(_coords, section_tile_coords);
 		}
 
 		//! The tile at @p section_tile_coords in this section.
-		ql::tile const& tile_at(section_tile::point section_tile_coords) const
-		{
+		ql::tile const& tile_at(section_tile::point section_tile_coords) const {
 			return *_tiles[section_tile_coords.q][section_tile_coords.r];
 		}
 		//! The tile at @p section_tile_coords in this section.
-		ql::tile& tile_at(section_tile::point section_tile_coords)
-		{
+		ql::tile& tile_at(section_tile::point section_tile_coords) {
 			return *_tiles[section_tile_coords.q][section_tile_coords.r];
 		}
 	private:

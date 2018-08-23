@@ -7,19 +7,15 @@
 #include <memory>
 #include <vector>
 
-#include "stats.hpp"
-#include "utility/utility.hpp"
+#include "stats.hpp" //! @todo This could be forward-declared, but it would require practically doubling the amount of code in this file. Move inclusion to .cpp if ever added for another reason.
 #include "utility/reference.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! A modification to a stat of a being.
-	struct modifier
-	{
+	struct modifier {
 		//! Modifies the stat according to the given modifiers.
 		//! @param modifiers A vector of stat modifiers.
-		static void apply_all(std::vector<uptr<modifier>> const& modifiers, stats& stats)
-		{
+		static void apply_all(std::vector<uptr<modifier>> const& modifiers, stats& stats) {
 			for (auto const& modifier : modifiers) {
 				modifier->apply(stats);
 			}
@@ -29,8 +25,7 @@ namespace ql
 	};
 
 	//! Overrides whether the being is mute.
-	class mute_modifier : public modifier
-	{
+	class mute_modifier : public modifier {
 	public:
 		constexpr mute_modifier(bool mute) : _mute{mute} {}
 		static auto make(bool mute) { return umake<mute_modifier>(mute); }
@@ -40,90 +35,74 @@ namespace ql
 	};
 
 	//! Adjusts a scalar stat by some magnitude.
-	class scalar_modifier : public modifier
-	{
+	class scalar_modifier : public modifier {
 	public:
 		constexpr scalar_modifier(double magnitude) : _magnitude{magnitude} {}
 		constexpr double magnitude() const { return _magnitude; }
 	private:
 		double _magnitude;
 	};
-	struct spirit_modifier : public scalar_modifier
-	{
+	struct spirit_modifier : public scalar_modifier {
 		using scalar_modifier::scalar_modifier;
 		void apply(stats& stats) final { stats.spirit += magnitude(); }
 	};
-	struct health_regen_modifier : public scalar_modifier
-	{
+	struct health_regen_modifier : public scalar_modifier {
 		using scalar_modifier::scalar_modifier;
 		void apply(stats& stats) final { stats.health_regen += magnitude(); }
 	};
-	struct strength_modifier : public scalar_modifier
-	{
+	struct strength_modifier : public scalar_modifier {
 		using scalar_modifier::scalar_modifier;
 		void apply(stats& stats) final { stats.strength += magnitude(); }
 	};
-	struct endurance_modifier : public scalar_modifier
-	{
+	struct endurance_modifier : public scalar_modifier {
 		using scalar_modifier::scalar_modifier;
 		void apply(stats& stats) final { stats.endurance += magnitude(); }
 	};
-	struct stamina_modifier : public scalar_modifier
-	{
+	struct stamina_modifier : public scalar_modifier {
 		using scalar_modifier::scalar_modifier;
 		void apply(stats& stats) final { stats.stamina += magnitude(); }
 	};
-	struct agility_modifier : public scalar_modifier
-	{
+	struct agility_modifier : public scalar_modifier {
 		using scalar_modifier::scalar_modifier;
 		void apply(stats& stats) final { stats.agility += magnitude(); }
 	};
-	struct stealth_modifier : public scalar_modifier
-	{
+	struct stealth_modifier : public scalar_modifier {
 		using scalar_modifier::scalar_modifier;
 		void apply(stats& stats) final { stats.stealth += magnitude(); }
 	};
 
 	// Vision Modifiers
 
-	struct visual_acuity_modifier : public scalar_modifier
-	{
+	struct visual_acuity_modifier : public scalar_modifier {
 		using scalar_modifier::scalar_modifier;
 		void apply(stats& stats) final { stats.vision.acuity += magnitude(); }
 	};
-	struct ideal_luminance_modifier : public scalar_modifier
-	{
+	struct ideal_luminance_modifier : public scalar_modifier {
 		using scalar_modifier::scalar_modifier;
 		void apply(stats& stats) final { stats.vision.ideal_illuminance += magnitude(); }
 	};
-	struct light_tolerance_modifier : public scalar_modifier
-	{
+	struct light_tolerance_modifier : public scalar_modifier {
 		using scalar_modifier::scalar_modifier;
 		void apply(stats& stats) final { stats.vision.darkness_tolerance += magnitude(); }
 	};
 
-	struct hearing_modifier : public scalar_modifier
-	{
+	struct hearing_modifier : public scalar_modifier {
 		using scalar_modifier::scalar_modifier;
 		void apply(stats& stats) final { stats.hearing += magnitude(); }
 	};
-	struct intellect_modifier : public scalar_modifier
-	{
+	struct intellect_modifier : public scalar_modifier {
 		using scalar_modifier::scalar_modifier;
 		void apply(stats& stats) final { stats.intellect += magnitude(); }
 	};
-	struct weight_modifier : public scalar_modifier
-	{
+	struct weight_modifier : public scalar_modifier {
 		using scalar_modifier::scalar_modifier;
 		void apply(stats& stats) final { stats.weight += magnitude(); }
 	};
-	struct min_temp_modifier : public scalar_modifier
-	{
+	struct min_temp_modifier : public scalar_modifier {
 		using scalar_modifier::scalar_modifier;
 		void apply(stats& stats) final { stats.min_temp += magnitude(); }
 	};
-	struct max_temp_modifier : public scalar_modifier
-	{
+	struct max_temp_modifier : public scalar_modifier {
 		using scalar_modifier::scalar_modifier;
 		void apply(stats& stats) final { stats.max_temp += magnitude(); }
 	};

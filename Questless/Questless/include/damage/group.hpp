@@ -11,11 +11,9 @@
 #include "multiplier.hpp"
 #include "protect.hpp"
 
-namespace ql::dmg
-{
+namespace ql::dmg {
 	//! Represents a single group of damage to a being, possibly including multiple types and quantities of damage and protection bypass.
-	class group
-	{
+	class group {
 	public:
 		static constexpr double pct_pad_to_slash = 0.50;
 		static constexpr double pct_pad_to_pierce = 0.25;
@@ -56,47 +54,40 @@ namespace ql::dmg
 
 		static group zero() { return group{}; }
 
-		friend group operator +(group const& d1, group const& d2)
-		{
+		friend group operator +(group const& d1, group const& d2) {
 			group sum = d1;
 			sum += d2;
 			return sum;
 		}
-		friend group operator *(group const& d, double k)
-		{
+		friend group operator *(group const& d, double k) {
 			group product = d;
 			product *= k;
 			return product;
 		}
-		friend group operator *(double k, group const& d)
-		{
+		friend group operator *(double k, group const& d) {
 			group product = d;
 			product *= k;
 			return product;
 		}
-		friend group operator /(group const& d, double k)
-		{
+		friend group operator /(group const& d, double k) {
 			group quotient = d;
 			quotient /= k;
 			return quotient;
 		}
 
-		group& operator +=(group const& d)
-		{
+		group& operator +=(group const& d) {
 			_parts.insert(_parts.end(), d._parts.begin(), d._parts.end());
 			_protection_bypass += d._protection_bypass;
 			return *this;
 		}
-		group& operator *=(double k)
-		{
+		group& operator *=(double k) {
 			for (auto& part : _parts) {
 				std::visit([k](auto&& part) { std::forward<decltype(part)>(part) *= k; }, part);
 			}
 			_protection_bypass *= k;
 			return *this;
 		}
-		group& operator /=(double k)
-		{
+		group& operator /=(double k) {
 			for (auto& part : _parts) {
 				std::visit([k](auto&& part) { std::forward<decltype(part)>(part) /= k; }, part);
 			}
@@ -111,8 +102,7 @@ namespace ql::dmg
 		protect const& protection_bypass() const { return _protection_bypass; }
 
 		//! The sum of the damage components.
-		double total() const
-		{
+		double total() const {
 			double result = 0;
 			for (auto const& part : _parts) {
 				std::visit([&result](auto&& part) { result += std::forward<decltype(part)>(part); }, part);

@@ -6,11 +6,9 @@
 
 #include "particle_animation.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! Creates sparks, smoke, and flame.
-	class flame : public particle_animation
-	{
+	class flame : public particle_animation {
 	private:
 		void particle_animation_subupdate() final;
 	};

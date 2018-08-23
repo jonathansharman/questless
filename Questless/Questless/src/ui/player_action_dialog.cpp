@@ -5,15 +5,14 @@
 #include "ui/player_action_dialog.hpp"
 
 #include "sdl/resources.hpp"
+#include "ui/hud.hpp"
 
 using namespace sdl;
 
-namespace ql
-{
+namespace ql {
 	std::size_t player_action_dialog::_last_used = 0;
 
-	dialog::state player_action_dialog::update()
-	{
+	dialog::state player_action_dialog::update() {
 		if (!_hud.inventory_open()) {
 			if (the_input().presses(SDLK_z) || the_input().down(SDLK_x) || the_input().presses(SDLK_RETURN)) {
 				return _cont(idle{the_input().shift()});

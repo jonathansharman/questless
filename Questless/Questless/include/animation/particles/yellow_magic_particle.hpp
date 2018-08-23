@@ -8,11 +8,9 @@
 
 #include "utility/random.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! A particle for effects involving yellow magic.
-	class yellow_magic_particle : public particle
-	{
+	class yellow_magic_particle : public particle {
 	public:
 		yellow_magic_particle();
 	private:

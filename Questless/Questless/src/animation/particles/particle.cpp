@@ -11,8 +11,7 @@
 using namespace sdl;
 using namespace units;
 
-namespace ql
-{
+namespace ql {
 	particle::particle
 		( game_space::vector displacement
 		, game_space::velocity velocity
@@ -35,8 +34,7 @@ namespace ql
 		, _time_left{lifetime}
 		, _color_vector{colors::white_vector()}
 	{}
-	void particle::animation_subupdate()
-	{
+	void particle::animation_subupdate() {
 		auto elapsed_time = animation::elapsed_time();
 
 		_time_left -= elapsed_time;
@@ -57,13 +55,11 @@ namespace ql
 		particle_subupdate();
 	}
 
-	void particle::draw(units::window_space::point position) const
-	{
+	void particle::draw(units::window_space::point position) const {
 		texture().draw(position, texture_space::align_center, texture_space::align_middle);
 	}
 
-	void particle::draw(units::game_space::point position, camera const& camera, colors::color_vector color_vector) const
-	{
+	void particle::draw(units::game_space::point position, camera const& camera, colors::color_vector color_vector) const {
 		// Determine color vector to use.
 		color_vector = ignore_color_mod() ? _color_vector : color_vector * _color_vector;
 		if (fade_out()) {

@@ -7,8 +7,7 @@
 #include <functional>
 #include <istream>
 
-namespace ql
-{
+namespace ql {
 	//! @brief A property type, inspired by C#-style properties. Supports dynamic mutators.
 	//! @tparam ValueType The underlying value type.
 	//!
@@ -19,8 +18,7 @@ namespace ql
 	//! The mutator takes the current value by reference and the new value by const-reference and is responsible for assigning the new value to
 	//! the current value, handling any domain errors appropriately.
 	template <typename ValueType>
-	class dynamic_property
-	{
+	class dynamic_property {
 	public:
 		using value_type = ValueType;
 		using mutator_type = std::function<void(value_type&, value_type const&)>;
@@ -80,8 +78,7 @@ namespace ql
 		//! Sets the property's mutator function to the given function.
 		//! @param mutator The new function to use as the mutator.
 		//! @param mutate_now Whether to call the new mutator on the current value.
-		void set_mutator(mutator_type mutator, bool mutate_now = true)
-		{
+		void set_mutator(mutator_type mutator, bool mutate_now = true) {
 			_mutator = std::move(mutator);
 			if (mutate_now) {
 				_mutator(_value, _value);
@@ -92,13 +89,11 @@ namespace ql
 		// Asignment //
 		///////////////
 
-		dynamic_property& operator =(dynamic_property const& property)
-		{
+		dynamic_property& operator =(dynamic_property const& property) {
 			set_value(property._value);
 			return *this;
 		}
-		dynamic_property& operator =(value_type value)
-		{
+		dynamic_property& operator =(value_type value) {
 			set_value(value);
 			return *this;
 		}
@@ -108,32 +103,27 @@ namespace ql
 		/////////////////////////////////////
 
 		template <typename T>
-		dynamic_property& operator +=(T const& that)
-		{
+		dynamic_property& operator +=(T const& that) {
 			set_value(_value + that);
 			return *this;
 		}
 		template <typename T>
-		dynamic_property& operator -=(T const& that)
-		{
+		dynamic_property& operator -=(T const& that) {
 			set_value(_value - that);
 			return *this;
 		}
 		template <typename T>
-		dynamic_property& operator *=(T const& that)
-		{
+		dynamic_property& operator *=(T const& that) {
 			set_value(_value * that);
 			return *this;
 		}
 		template <typename T>
-		dynamic_property& operator /=(T const& that)
-		{
+		dynamic_property& operator /=(T const& that) {
 			set_value(_value / that);
 			return *this;
 		}
 		template <typename T>
-		dynamic_property& operator %=(T const& that)
-		{
+		dynamic_property& operator %=(T const& that) {
 			set_value(_value % that);
 			return *this;
 		}
@@ -143,32 +133,27 @@ namespace ql
 		//////////////////////////////////
 
 		template <typename T>
-		dynamic_property& operator &=(T const& that)
-		{
+		dynamic_property& operator &=(T const& that) {
 			set_value(_value & that);
 			return *this;
 		}
 		template <typename T>
-		dynamic_property& operator |=(T const& that)
-		{
+		dynamic_property& operator |=(T const& that) {
 			set_value(_value | that);
 			return *this;
 		}
 		template <typename T>
-		dynamic_property& operator ^=(T const& that)
-		{
+		dynamic_property& operator ^=(T const& that) {
 			set_value(_value | that);
 			return *this;
 		}
 		template <typename T>
-		dynamic_property& operator <<=(T const& that)
-		{
+		dynamic_property& operator <<=(T const& that) {
 			set_value(_value << that);
 			return *this;
 		}
 		template <typename T>
-		dynamic_property& operator >>=(T const& that)
-		{
+		dynamic_property& operator >>=(T const& that) {
 			set_value(_value >> that);
 			return *this;
 		}
@@ -177,24 +162,20 @@ namespace ql
 		// Increment/decrement Operators //
 		///////////////////////////////////
 
-		dynamic_property& operator ++()
-		{
+		dynamic_property& operator ++() {
 			set_value(_value + 1);
 			return *this;
 		}
-		dynamic_property& operator --()
-		{
+		dynamic_property& operator --() {
 			set_value(_value - 1);
 			return *this;
 		}
-		dynamic_property operator ++(int)
-		{
+		dynamic_property operator ++(int) {
 			value_type value = _value;
 			set_value(_value + 1);
 			return value;
 		}
-		dynamic_property operator --(int)
-		{
+		dynamic_property operator --(int) {
 			value_type value = _value;
 			set_value(_value - 1);
 			return value;
@@ -204,8 +185,7 @@ namespace ql
 		// Stream Extraction Operator //
 		////////////////////////////////
 
-		friend std::istream& operator >>(std::istream& in, dynamic_property& property)
-		{
+		friend std::istream& operator >>(std::istream& in, dynamic_property& property) {
 			value_type value;
 			in >> value;
 			property.set_value(value);

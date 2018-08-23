@@ -10,12 +10,9 @@
 
 #include "view_space.hpp" // for conversions
 
-namespace units
-{
-	namespace detail
-	{
-		class window_space_buffer : public buffer_base<int, 2>
-		{
+namespace units {
+	namespace detail {
+		class window_space_buffer : public buffer_base<int, 2> {
 		public:
 			int& x() & { return _elements[0]; }
 			constexpr int const& x() const& { return _elements[0]; }
@@ -28,8 +25,7 @@ namespace units
 		};
 	}
 
-	struct window_space : space<struct window_space_tag, int, 2, detail::window_space_buffer>
-	{
+	struct window_space : space<struct window_space_tag, int, 2, detail::window_space_buffer> {
 		using h_align = axis<0>::align;
 		using v_align = axis<1>::align;
 

@@ -6,11 +6,9 @@
 
 #include "spell.hpp"
 
-namespace ql::magic
-{
+namespace ql::magic {
 	//! Teleports the caster some distance from its current location.
-	class teleport : public spell_base<teleport>
-	{
+	class teleport : public spell_base<teleport> {
 	public:
 		std::string name() const final { return "Teleport"; }
 

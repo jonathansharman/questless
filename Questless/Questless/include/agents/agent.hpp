@@ -12,8 +12,7 @@
 #include "utility/reference.hpp"
 #include "world/coordinates.hpp"
 
-namespace ql
-{
+namespace ql {
 	class being;
 	class body_part;
 	class effect;
@@ -31,8 +30,7 @@ namespace ql
 	struct vector_query;
 
 	//! Facilitates control of a being. Includes AIs and the player.
-	class agent
-	{
+	class agent {
 	public:
 		agent(being& being) : being{being} {}
 

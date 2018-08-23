@@ -15,8 +15,7 @@ using namespace sdl;
 using namespace units;
 using namespace units::math;
 
-namespace ql::qte
-{
+namespace ql::qte {
 	aim_missile::aim_missile(region_tile::point source_coords, being const& target_being, std::function<void(body_part*)> cont)
 		: _source_tile_coords{source_coords}
 		, _target_being{target_being}
@@ -45,8 +44,7 @@ namespace ql::qte
 		_target_view_coords = the_window().view_center() + target_distance * unit_source_to_target;
 	}
 
-	dialog::state aim_missile::update()
-	{
+	dialog::state aim_missile::update() {
 		static constexpr units::game_space::seconds time_limit = 5.0s;
 
 		switch (_aiming_state) {
@@ -82,8 +80,7 @@ namespace ql::qte
 		return state::open;
 	}
 
-	void aim_missile::draw() const
-	{
+	void aim_missile::draw() const {
 		{ // Draw the target.
 			body_texturer texturer;
 			texturer.visit(_target_being.body);

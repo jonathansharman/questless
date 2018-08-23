@@ -9,40 +9,33 @@
 #include "game.hpp"
 #include "entities/beings/being.hpp"
 #include "entities/objects/object.hpp"
+#include "tile.hpp"
 #include "world/light_source.hpp"
 #include "world/region.hpp"
 
-namespace ql
-{
-	ref<being> section::being_entry_to_ref(std::pair<region_tile::point const, id<being>> being_entry)
-	{
+namespace ql {
+	ref<being> section::being_entry_to_ref(std::pair<region_tile::point const, id<being>> being_entry) {
 		return the_game().beings.ref(being_entry.second);
 	}
-	cref<being> section::being_entry_to_cref(std::pair<region_tile::point const, id<being>> being_entry)
-	{
+	cref<being> section::being_entry_to_cref(std::pair<region_tile::point const, id<being>> being_entry) {
 		return the_game().beings.ref(being_entry.second);
 	}
 
-	ref<object> section::object_entry_to_ref(std::pair<region_tile::point const, id<object>> object_entry)
-	{
+	ref<object> section::object_entry_to_ref(std::pair<region_tile::point const, id<object>> object_entry) {
 		return the_game().objects.ref(object_entry.second);
 	}
-	cref<object> section::object_entry_to_cref(std::pair<region_tile::point const, id<object>> object_entry)
-	{
+	cref<object> section::object_entry_to_cref(std::pair<region_tile::point const, id<object>> object_entry) {
 		return the_game().objects.ref(object_entry.second);
 	}
 
-	ref<light_source> section::light_source_id_to_ref(id<light_source> light_source_id)
-	{
+	ref<light_source> section::light_source_id_to_ref(id<light_source> light_source_id) {
 		return the_game().light_sources.ref(light_source_id);
 	}
-	cref<light_source> section::light_source_id_to_cref(id<light_source> light_source_id)
-	{
+	cref<light_source> section::light_source_id_to_cref(id<light_source> light_source_id) {
 		return the_game().light_sources.ref(light_source_id);
 	}
 
-	region_section::point section::region_section_coords(region_tile::point region_tile_coords)
-	{
+	region_section::point section::region_section_coords(region_tile::point region_tile_coords) {
 		int q = region_tile_coords.q >= 0
 			? (region_tile_coords.q + section::radius) / section::diameter
 			: (region_tile_coords.q - section::radius) / section::diameter
@@ -96,8 +89,7 @@ namespace ql
 		}
 	}
 	
-	void section::save(char const* filename)
-	{
+	void section::save(char const* filename) {
 		std::ofstream fout{filename};
 		for (auto& r_row : _tiles) {
 			for (auto& tile : r_row) {
@@ -106,34 +98,29 @@ namespace ql
 		}
 	}
 
-	std::optional<id<being>> section::being_id(region_tile::point tile_coords) const
-	{
+	std::optional<id<being>> section::being_id(region_tile::point tile_coords) const {
 		auto it = _being_map.find(tile_coords);
 		return it != _being_map.end() ? std::make_optional(it->second) : std::nullopt;
 	}
 
-	std::optional<id<object>> section::object_id(region_tile::point tile_coords) const
-	{
+	std::optional<id<object>> section::object_id(region_tile::point tile_coords) const {
 		auto it = _object_map.find(tile_coords);
 		return it != _object_map.end() ? std::make_optional(it->second) : std::nullopt;
 	}
 
-	bool section::try_add(being& being)
-	{
+	bool section::try_add(being& being) {
 		being.section = this;
 		auto result = _being_map.insert({being.coords, being.id});
 		return result.second;
 	}
 
-	bool section::try_add(object& object)
-	{
+	bool section::try_add(object& object) {
 		object.section = this;
 		auto result = _object_map.insert({object.coords, object.id});
 		return result.second;
 	}
 
-	typename void section::remove_being(region_tile::point coords)
-	{
+	typename void section::remove_being(region_tile::point coords) {
 		auto it = _being_map.find(coords);
 		if (it != _being_map.end()) {
 			if (being* removed_being = the_game().beings.ptr(it->second)) {
@@ -143,8 +130,7 @@ namespace ql
 		}
 	}
 
-	typename void section::remove_object(region_tile::point coords)
-	{
+	typename void section::remove_object(region_tile::point coords) {
 		auto it = _object_map.find(coords);
 		if (it != _object_map.end()) {
 			if (object* removed_object = the_game().objects.ptr(it->second)) {
@@ -154,23 +140,19 @@ namespace ql
 		}
 	}
 
-	void section::remove(being& being)
-	{
+	void section::remove(being& being) {
 		remove_being(being.coords);
 	}
 
-	void section::remove(object& object)
-	{
+	void section::remove(object& object) {
 		remove_object(object.coords);
 	}
 
-	void section::add(light_source const& light_source)
-	{
+	void section::add(light_source const& light_source) {
 		_light_source_ids.insert(light_source.id);
 	}
 
-	void section::remove(light_source const& light_source)
-	{
+	void section::remove(light_source const& light_source) {
 		_light_source_ids.erase(light_source.id);
 	}
 }

@@ -8,10 +8,8 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
-namespace sdl
-{
-	class shader_program
-	{
+namespace sdl {
+	class shader_program {
 	public:
 		//! Compiles and links the given vertex and fragment shader codes into a shader program.
 		//! @param vertex_source The GLSL source code for the vertex shader.

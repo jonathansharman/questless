@@ -10,13 +10,11 @@
 #include "utility/id.hpp"
 #include "utility/reference.hpp"
 
-namespace ql
-{
+namespace ql {
 	class item;
 
 	//! Represents a physical collection of items, e.g. the items in a being's possession.
-	class inventory
-	{
+	class inventory {
 	public:
 		static ref<item> item_id_to_ref(id<item> item_id);
 		static cref<item> item_id_to_cref(id<item> item_id);

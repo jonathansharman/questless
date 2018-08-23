@@ -18,16 +18,14 @@
 #include "units/window_space.hpp"
 #include "units/texture_space.hpp"
 
-namespace sdl
-{
+namespace sdl {
 	// Forward-declare shader type.
 	class shader_program;
 	// Forward-declare default shader accessor.
 	shader_program& dflt_program();
 
 	//! A simple wrapper around SDL_Texture.
-	class texture
-	{
+	class texture {
 	public:
 		//! Constructs a targetable, blank texture with the specified dimensions. Useful for building textures at run time.
 		//! @param size The size of this texture in screen space.
@@ -72,8 +70,7 @@ namespace sdl
 			, units::texture_space::v_align vertical_alignment = units::texture_space::align_top
 			, units::colors::color_vector color_vector = units::colors::white_vector()
 			, std::optional<units::texture_space::box> const& src_rect = std::nullopt
-			) const
-		{
+			) const {
 			switch (horizontal_alignment) {
 				case units::texture_space::align_left:
 					position.x() += width() / 2;
@@ -125,8 +122,7 @@ namespace sdl
 		//! @param f The function to be executed while the texture is the render target.
 		//! @param shader_program The shader program used in rendering calls within the body of @p f.
 		template <typename F>
-		void as_target(F&& f, shader_program const& shader_program = dflt_program())
-		{
+		void as_target(F&& f, shader_program const& shader_program = dflt_program()) {
 			GLuint fbo = as_target_prologue(shader_program);
 			std::forward<F>(f)();
 			as_target_epilogue(fbo, shader_program);

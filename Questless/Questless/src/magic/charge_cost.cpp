@@ -11,18 +11,15 @@
 #include "entities/beings/being.hpp"
 #include "items/magic/gatestone.hpp"
 
-namespace ql
-{
-	complete charge_cost::check(being& actor, cont cont) const
-	{
+namespace ql {
+	complete charge_cost::check(being& actor, cont cont) const {
 		return _gatestone.charge >= _amount
 			? cont()
 			: actor.agent().send_message(umake<message_not_enough_charge>(_amount - _gatestone.charge), [] { return complete{}; })
 			;
 	}
 
-	void charge_cost::incur(being&) const
-	{
+	void charge_cost::incur(being&) const {
 		_gatestone.charge -= _amount;
 	}
 }

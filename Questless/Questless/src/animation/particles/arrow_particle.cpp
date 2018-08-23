@@ -9,8 +9,7 @@
 
 using namespace units;
 
-namespace ql
-{
+namespace ql {
 	arrow_particle::arrow_particle(game_space::point source, game_space::point target)
 		: particle
 			{ game_space::vector::zero() // displacement
@@ -38,8 +37,7 @@ namespace ql
 		}
 	}
 
-	sdl::texture const& arrow_particle::texture() const
-	{
+	sdl::texture const& arrow_particle::texture() const {
 		static sdl::texture_handle handle = sdl::the_texture_manager().add("resources/textures/particles/arrow.png");
 		return sdl::the_texture_manager()[handle];
 	}

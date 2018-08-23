@@ -12,8 +12,7 @@ namespace ql {
 		, modal_weapon_base<quarterstaff>{durability(), umake<standard_form>(*this)}
 	{}
 
-	std::vector<uptr<action>> quarterstaff::standard_form::actions()
-	{
+	std::vector<uptr<action>> quarterstaff::standard_form::actions() {
 		std::vector<uptr<action>> actions;
 		if (weapon().equipped()) {
 			actions.push_back(_strike->launch());
@@ -28,8 +27,7 @@ namespace ql {
 		return actions;
 	}
 
-	std::vector<uptr<action>> quarterstaff::half_staff_form::actions()
-	{
+	std::vector<uptr<action>> quarterstaff::half_staff_form::actions() {
 		std::vector<uptr<action>> actions;
 		if (weapon().equipped()) {
 			actions.push_back(_strike->launch());

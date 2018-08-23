@@ -9,11 +9,9 @@
 #include "utility/reference.hpp"
 #include "units/window_space.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! Draws items to the screen.
-	class item_renderer : public item_const_visitor
-	{
+	class item_renderer : public item_const_visitor {
 	public:
 		//! @param position The coordinates at which the item should be drawn to the screen.
 		item_renderer(units::window_space::point position) : _position{position} {}

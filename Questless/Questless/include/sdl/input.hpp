@@ -12,13 +12,11 @@
 
 #include "units/window_space.hpp"
 
-namespace sdl
-{
+namespace sdl {
 	enum class mouse_button { left, right, middle };
 
 	//! Handles mouse and keyboard input as well as other SDL events.
-	class input
-	{
+	class input {
 	public:
 		//! The number key corresponding to the given index, with the number keys ordered 1 to 9 and then 0.
 		static decltype(SDLK_1) index_to_num_key(size_t index);

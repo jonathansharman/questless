@@ -9,8 +9,7 @@
 
 using namespace units;
 
-namespace ql
-{
+namespace ql {
 	yellow_magic_particle::yellow_magic_particle() : particle
 		{ game_space::vector::zero()
 		, game_space::vector{random_angle(), 100.0} / 1.0s
@@ -24,15 +23,13 @@ namespace ql
 		}
 	{}
 
-	void yellow_magic_particle::particle_subupdate()
-	{
+	void yellow_magic_particle::particle_subupdate() {
 		constexpr game_space::radians max_turn_rate = game_space::radians::circle() / 6.0;
 		_velocity.step().rotate(uniform(-1.0, 1.0) * max_turn_rate);
 		_angle = _velocity.step().angle();
 	}
 
-	sdl::texture const& yellow_magic_particle::texture() const
-	{
+	sdl::texture const& yellow_magic_particle::texture() const {
 		static auto texture_handle = sdl::the_texture_manager().add("resources/textures/particles/magic/yellow.png");
 		return sdl::the_texture_manager()[texture_handle];
 	}

@@ -9,13 +9,11 @@
 
 #include "utility/complete.hpp"
 
-namespace ql
-{
+namespace ql {
 	class being;
 
 	//! The cost of performing an action.
-	class cost
-	{
+	class cost {
 	public:
 		using cont = std::function<complete()>;
 
@@ -34,8 +32,7 @@ namespace ql
 		//! Checks that the actor is able to pay the cost and if so, incurs cost and then executes the continuation.
 		//! @param actor The being that is performing the action.
 		//! @param cont The continuation function to call if the cost is satisfied.
-		complete check_and_incur(being& actor, cont cont) const
-		{
+		complete check_and_incur(being& actor, cont cont) const {
 			return check(actor, [&, this]() {
 				incur(actor);
 				return cont();
@@ -44,8 +41,7 @@ namespace ql
 	};
 
 	//! The trivial cost, for actions that don't require anything.
-	class free : public cost
-	{
+	class free : public cost {
 	public:
 		complete check(being&, cont cont) const final { return cont(); }
 

@@ -4,10 +4,8 @@
 
 #include "sdl/resources.hpp"
 
-namespace sdl
-{
-	namespace
-	{
+namespace sdl {
+	namespace {
 		SDL_GLContext _opengl_context;
 		std::unique_ptr<shader_program> _dflt_program;
 		std::unique_ptr<shader_program> _solid_program;
@@ -24,8 +22,7 @@ namespace sdl
 	void set_solid_program(std::unique_ptr<shader_program> shader_program) { _solid_program = std::move(shader_program); }
 
 	renderer& the_renderer() { return *_renderer; }
-	void set_the_renderer(std::unique_ptr<renderer> renderer)
-	{
+	void set_the_renderer(std::unique_ptr<renderer> renderer) {
 		bool initializing = _renderer == nullptr;
 		_renderer = std::move(renderer);
 		if (!initializing && _renderer != nullptr) {
@@ -35,31 +32,26 @@ namespace sdl
 	}
 
 	window& the_window() { return *_window; }
-	void set_the_window(std::unique_ptr<window> the_window)
-	{
+	void set_the_window(std::unique_ptr<window> the_window) {
 		_window = std::move(the_window);
 	}
 
-	input& the_input() 
-	{
+	input& the_input() {
 		static input _input;
 		return _input;
 	}
 
-	resource_manager<texture>& the_texture_manager()
-	{
+	resource_manager<texture>& the_texture_manager() {
 		static resource_manager<texture> _texture_manager;
 		return _texture_manager;
 	}
 
-	resource_manager<font>& the_font_manager()
-	{
+	resource_manager<font>& the_font_manager() {
 		static resource_manager<font> _font_manager;
 		return _font_manager;
 	}
 
-	resource_manager<sound>& the_sound_manager()
-	{
+	resource_manager<sound>& the_sound_manager() {
 		static resource_manager<sound> _sound_manager;
 		return _sound_manager;
 	}

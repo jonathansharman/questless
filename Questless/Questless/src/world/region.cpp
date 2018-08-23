@@ -12,10 +12,13 @@
 #include "agents/basic_ai.hpp"
 #include "effects/effect.hpp"
 #include "entities/all_entities.hpp"
+#include "entities/beings/being.hpp"
+#include "entities/objects/object.hpp"
 #include "game.hpp"
 #include "items/weapons/quarterstaff.hpp"
 #include "units/constants.hpp"
 #include "utility/random.hpp"
+#include "utility/utility.hpp"
 #include "world/light_source.hpp"
 #include "world/region.hpp"
 
@@ -26,10 +29,8 @@ namespace fs = std::experimental::filesystem; //! @todo Replace this with std::f
 
 using namespace sdl;
 
-namespace ql
-{
-	bool turn_order_function(being const& first, being const& second)
-	{
+namespace ql {
+	bool turn_order_function(being const& first, being const& second) {
 		// Sort beings in the turn queue by lower busy-time first, then lower entity ID.
 		double f_b = first.busy_time;
 		double s_b = second.busy_time;
@@ -147,8 +148,7 @@ namespace ql
 		}
 	}
 
-	void region::save(char const* /*save_name*/)
-	{
+	void region::save(char const* /*save_name*/) {
 		//! @todo Reenable someday. Use SQLite or something to save games.
 
 #if 0
@@ -170,28 +170,29 @@ namespace ql
 			_section_map[region_tile_coords]->save((region_path / hex_filename).string());
 		}
 
-		fs::path entities_filename{"entities.dat"};
-		{
-			std::ofstream fout{(region_path / entities_filename).string()};
-			if (fout.fail()) {
-				throw std::logic_error("Could not open region's entities file.");
-			}
-			for (auto const& coords_and_section : _section_map) {
-				auto const& section = coords_and_section.second;
+		fs::path const entities_filename{"entities.dat"};
+		std::ofstream fout{(region_path / entities_filename).string()};
+		if (fout.fail()) {
+			throw std::logic_error("Could not open region's entities file.");
+		}
+		for (auto const& coords_and_section : _section_map) {
+			auto const& section = coords_and_section.second;
 
-				for (auto const& being : section->beings()) {
-					being->serialize(fout);
-				}
-				for (auto const& object : section->objects()) {
-					object->serialize(fout);
-				}
+			for (auto const& being : section->beings()) {
+				being->serialize(fout);
+			}
+			for (auto const& object : section->objects()) {
+				object->serialize(fout);
 			}
 		}
 #endif
 	}
 
-	being* region::next_ready_being()
-	{
+	void region::remove_from_turn_queue(being& being) { if (being.busy_time <= 0.0) _turn_queue.erase(being); }
+
+	void region::add_to_turn_queue(being& being) { if (being.busy_time <= 0.0) _turn_queue.insert(being); }
+
+	being* region::next_ready_being() {
 		if (_turn_queue.empty()) {
 			return nullptr;
 		} else {
@@ -200,8 +201,7 @@ namespace ql
 		}
 	}
 
-	std::optional<id<being>> region::being_id_at(region_tile::point region_tile_coords) const
-	{
+	std::optional<id<being>> region::being_id_at(region_tile::point region_tile_coords) const {
 		if (section const* section = containing_section(region_tile_coords)) {
 			return section->being_id(region_tile_coords);
 		} else {
@@ -209,8 +209,7 @@ namespace ql
 		}
 	}
 
-	std::optional<id<object>> region::object_id_at(region_tile::point region_tile_coords) const
-	{
+	std::optional<id<object>> region::object_id_at(region_tile::point region_tile_coords) const {
 		if (section const* section = containing_section(region_tile_coords)) {
 			return section->object_id(region_tile_coords);
 		} else {
@@ -218,8 +217,7 @@ namespace ql
 		}
 	}
 
-	void region::spawn_player(uptr<being> player_being)
-	{
+	void region::spawn_player(uptr<being> player_being) {
 		//! @todo More advanced player spawning.
 
 		// Put the player's character somewhere in the middle section.
@@ -235,8 +233,7 @@ namespace ql
 		spawn(std::move(player_being), player_coords);
 	}
 
-	void region::add(being& being, region_tile::point region_tile_coords)
-	{
+	void region::add(being& being, region_tile::point region_tile_coords) {
 		if (section* section = containing_section(region_tile_coords)) {
 			being.region = this;
 			being.section = section;
@@ -249,8 +246,7 @@ namespace ql
 		}
 	}
 
-	void region::add(ql::object& object, region_tile::point region_tile_coords)
-	{
+	void region::add(ql::object& object, region_tile::point region_tile_coords) {
 		if (section* section = containing_section(region_tile_coords)) {
 			object.region = this;
 			object.section = section;
@@ -262,18 +258,15 @@ namespace ql
 		}
 	}
 
-	void region::spawn(uptr<being> being, region_tile::point region_tile_coords)
-	{
+	void region::spawn(uptr<being> being, region_tile::point region_tile_coords) {
 		add(the_game().beings.add(std::move(being)), region_tile_coords);
 	}
 
-	void region::spawn(uptr<ql::object> object, region_tile::point region_tile_coords)
-	{
+	void region::spawn(uptr<ql::object> object, region_tile::point region_tile_coords) {
 		add(the_game().objects.add(std::move(object)), region_tile_coords);
 	}
 
-	bool region::move(being& being, region_tile::point region_tile_coords)
-	{
+	bool region::move(being& being, region_tile::point region_tile_coords) {
 		section& src_section = *being.section;
 		section* dst_section = containing_section(region_tile_coords);
 		if (dst_section != &src_section) {
@@ -314,8 +307,7 @@ namespace ql
 		return true;
 	}
 
-	bool region::move(ql::object& object, region_tile::point region_tile_coords)
-	{
+	bool region::move(ql::object& object, region_tile::point region_tile_coords) {
 		section& src_section = *object.section;
 		section* dst_section = containing_section(region_tile_coords);
 		if (dst_section != &src_section) {
@@ -343,8 +335,7 @@ namespace ql
 		return true;
 	}
 	
-	void region::remove(being& being)
-	{
+	void region::remove(being& being) {
 		section& section = *being.section;
 
 		being.region = nullptr;
@@ -354,8 +345,7 @@ namespace ql
 		section.remove(being);
 	}
 
-	void region::remove(ql::object& object)
-	{
+	void region::remove(ql::object& object) {
 		section& section = *object.section;
 
 		object.region = nullptr;
@@ -364,8 +354,7 @@ namespace ql
 		section.remove(object);
 	}
 
-	void region::add(light_source const& light_source)
-	{
+	void region::add(light_source const& light_source) {
 		int range = light_source.range();
 		int const min_q = light_source.coords().q - range;
 		int const min_r = light_source.coords().r - range;
@@ -387,8 +376,7 @@ namespace ql
 		}
 	}
 
-	void region::remove(light_source const& light_source)
-	{
+	void region::remove(light_source const& light_source) {
 		int const min_q = light_source.coords().q - light_source.range();
 		int const min_r = light_source.coords().r - light_source.range();
 		region_tile::point const min_region_tile_coords{min_q, min_r};
@@ -409,8 +397,7 @@ namespace ql
 		}
 	}
 
-	double region::illuminance(region_tile::point region_tile_coords) const
-	{
+	double region::illuminance(region_tile::point region_tile_coords) const {
 		double result = _ambient_illuminance;
 		if (section const* s = containing_section(region_tile_coords)) {
 			for (light_source const& light_source : s->light_sources) {
@@ -420,13 +407,11 @@ namespace ql
 		return result;
 	}
 
-	double region::temperature(region_tile::point region_tile_coords) const
-	{
+	double region::temperature(region_tile::point region_tile_coords) const {
 		return tile_at(region_tile_coords)->temperature_offset;
 	}
 
-	double region::occlusion(region_tile::point start, region_tile::point end) const
-	{
+	double region::occlusion(region_tile::point start, region_tile::point end) const {
 		auto line = start.line_to(end);
 		double result = 1.0;
 		for (std::size_t i = 1; i < line.size() - 1; ++i) {
@@ -440,8 +425,7 @@ namespace ql
 		return result;
 	}
 
-	void region::update()
-	{
+	void region::update() {
 		// Advance local time by one time unit per update.
 		_time += 1.0;
 		_time_of_day = get_time_of_day();
@@ -471,8 +455,7 @@ namespace ql
 		}
 	}
 
-	void region::add_effect(sptr<effect> const& effect)
-	{
+	void region::add_effect(sptr<effect> const& effect) {
 		int range = effect->range();
 		auto origin = effect->origin();
 
@@ -495,8 +478,7 @@ namespace ql
 		}
 	}
 
-	period_of_day region::get_period_of_day() const
-	{
+	period_of_day region::get_period_of_day() const {
 		if (_time_of_day <= _end_of_morning) {
 			return period_of_day::morning;
 		} else if (_time_of_day <= _end_of_afternoon) {
@@ -512,8 +494,7 @@ namespace ql
 		}
 	}
 
-	double region::get_ambient_illuminance()
-	{
+	double region::get_ambient_illuminance() {
 		constexpr double night_light = 25.0;
 		constexpr double dawn_and_dusk_light = 75.0;
 		constexpr double noon_light = 115.0;
@@ -545,8 +526,8 @@ namespace ql
 		}
 	}
 
-	void region::for_each_loaded_section(function<void(section&)> const& f) //! @todo Replace with function_reference or whatever if that becomes available sometime.
-	{
+	void region::for_each_loaded_section(function<void(section&)> const& f) {
+		//! @todo Replace parameter type with function_reference or whatever if that becomes available sometime.
 		for (int r = -_loaded_sections_q_radius; r <= _loaded_sections_q_radius; ++r) {
 			for (int q = -_loaded_sections_r_radius; q <= _loaded_sections_r_radius; ++q) {
 				region_section::point section_coords{q, r};
@@ -557,8 +538,7 @@ namespace ql
 		}
 	}
 
-	being* region::being_helper(region_tile::point region_tile_coords) const
-	{
+	being* region::being_helper(region_tile::point region_tile_coords) const {
 		if (auto opt_id = being_id_at(region_tile_coords)) {
 			return the_game().beings.ptr(*opt_id);
 		} else {
@@ -566,8 +546,7 @@ namespace ql
 		}
 	}
 
-	object* region::object_helper(region_tile::point region_tile_coords) const
-	{
+	object* region::object_helper(region_tile::point region_tile_coords) const {
 		if (auto opt_id = object_id_at(region_tile_coords)) {
 			return the_game().objects.ptr(*opt_id);
 		} else {
@@ -575,8 +554,7 @@ namespace ql
 		}
 	}
 
-	tile* region::tile_helper(region_tile::point region_tile_coords) const
-	{
+	tile* region::tile_helper(region_tile::point region_tile_coords) const {
 		section* section = containing_section_helper(region_tile_coords);
 		if (section) {
 			section_tile::point section_tile_coords = section::section_tile_coords(region_tile_coords);

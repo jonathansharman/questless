@@ -11,11 +11,9 @@
 #include "units/window_space.hpp"
 #include "sdl/resources.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! Retrieves the player's choice from a list of options.
-	class list_dialog : public dialog
-	{
+	class list_dialog : public dialog {
 	public:
 		list_dialog
 			( units::window_space::point origin
@@ -32,8 +30,7 @@ namespace ql
 			load_textures();
 		}
 
-		state update() final
-		{
+		state update() final {
 			if (sdl::the_input().presses(SDLK_BACKSPACE) || sdl::the_input().presses(SDLK_ESCAPE)) {
 				return _cont(std::nullopt);
 			}
@@ -67,8 +64,7 @@ namespace ql
 			return state::open;
 		}
 
-		void draw() const final
-		{
+		void draw() const final {
 			// Draw background.
 			sdl::the_renderer().draw_box(_bounds, 1, units::colors::black(), units::colors::color{1.0f, 0.75f, 0.6f, 1.0f});
 
@@ -85,10 +81,10 @@ namespace ql
 
 			// Draw options.
 			for (size_t i = 0; i < _options.size(); ++i) {
-				_txt_options[i].draw(units::window_space::point
-					{ left(_bounds) + _x_padding
-					, top(_bounds) + _y_padding + _title_height + static_cast<int>(i) * _option_height
-					});
+				_txt_options[i].draw(units::window_space::point {
+					left(_bounds) + _x_padding,
+					top(_bounds) + _y_padding + _title_height + static_cast<int>(i) * _option_height,
+				});
 			}
 		}
 	private:
@@ -107,8 +103,7 @@ namespace ql
 
 		int _selection;
 
-		void load_textures()
-		{
+		void load_textures() {
 			static auto list_option_font_handle = sdl::the_font_manager().add("resources/fonts/dumbledor1.ttf", 20);
 
 			_txt_title = make_title(_title.c_str(), units::colors::black());

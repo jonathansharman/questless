@@ -5,10 +5,8 @@
 #include "entities/beings/statuses/sleeping.hpp"
 #include "entities/beings/being.hpp"
 
-namespace ql
-{
-	void sleeping::subupdate(being& target)
-	{
+namespace ql {
+	void sleeping::subupdate(being& target) {
 		for (body_part& part : target.body.parts()) { //! @todo How should body parts regen while sleeping? Percentage? Flat amount?
 			part.health += target.stats.health_regen * being::health_regen_asleep_factor;
 		}

@@ -9,11 +9,9 @@
 #include "utility/static_bounded.hpp"
 #include "utility/dynamic_bounded.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! A gem that can hold spell charges.
-	class gatestone : public equipment_base<gatestone>
-	{
+	class gatestone : public equipment_base<gatestone> {
 	public:
 		gatestone(double capacity, double charge, double cooldown, magic::color color, ql::id<item> id = ql::id<item>::make())
 			: item{id}
@@ -47,8 +45,7 @@ namespace ql
 		//! Time left before this gem can be used again.
 		double cooldown() const { return _cooldown; }
 	private:
-		class incant : public action
-		{
+		class incant : public action {
 		public:
 			incant(gatestone& gatestone) : _gatestone_id{gatestone.id} {}
 			static auto make(gatestone& gatestone) { return umake<incant>(gatestone); }

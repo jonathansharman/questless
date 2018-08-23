@@ -7,10 +7,8 @@
 #include "agents/agent.hpp"
 #include "world/region.hpp"
 
-namespace ql
-{
-	void abilities::update(being& being)
-	{
+namespace ql {
+	void abilities::update(being& being) {
 		auto& body = being.body;
 
 		// Flying

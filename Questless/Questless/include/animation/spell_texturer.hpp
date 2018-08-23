@@ -8,11 +8,9 @@
 #include "sdl/resources.hpp"
 #include "utility/reference.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! Creates textures for items.
-	class spell_texturer : public magic::spell_const_visitor
-	{
+	class spell_texturer : public magic::spell_const_visitor {
 	public:
 		void visit(magic::eagle_eye const&) final;
 		void visit(magic::heal const&) final;

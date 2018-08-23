@@ -7,8 +7,7 @@
 #include "animation/particles/flame_particle.hpp"
 
 namespace ql {
-	void flame::particle_animation_subupdate()
-	{
+	void flame::particle_animation_subupdate() {
 		constexpr int n_flames = 2;
 		for (int i = 0; i < n_flames; ++i) {
 			push_front(umake<flame_particle>());

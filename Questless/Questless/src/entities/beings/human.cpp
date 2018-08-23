@@ -8,8 +8,7 @@
 
 using namespace units;
 
-namespace ql
-{
+namespace ql {
 	human::human(const std::function<uptr<ql::agent>(being&)>& make_agent, ql::id<being> id)
 		: corporeal_being_base<human>{make_agent, id, make_body(id), [] {
 			return ql::stats
@@ -42,19 +41,16 @@ namespace ql
 
 	human::human(std::istream& in) : corporeal_being_base<human>{in, make_body(ql::id<being>{999})} {} //! @todo using ID 999 here to allow compilation. Will need to extract ID from stream.
 
-	void human::serialize(std::ostream& out) const
-	{
+	void human::serialize(std::ostream& out) const {
 		being::serialize(out);
 		
 		out << std::endl;
 	}
 
-	body human::make_body(ql::id<being> owner_id)
-	{
+	body human::make_body(ql::id<being> owner_id) {
 		// Hands
 
-		class human_hand : public hand
-		{
+		class human_hand : public hand {
 		public:
 			human_hand(ql::id<being> owner_id) : hand
 				{ owner_id
@@ -67,12 +63,10 @@ namespace ql
 			int layer() const final { return 3; };
 		protected:
 		};
-		class human_left_hand : public human_hand
-		{
+		class human_left_hand : public human_hand {
 		public:
 			using human_hand::human_hand;
-			view_space::polygon const& hitbox() const final
-			{
+			view_space::polygon const& hitbox() const final {
 				static auto result = view_space::polygon
 					{ view_space::point{-10.0f, -5.0f}
 					, view_space::point{-7.0f, 10.0f}
@@ -82,12 +76,10 @@ namespace ql
 				return result;
 			}
 		};
-		class human_right_hand : public human_hand
-		{
+		class human_right_hand : public human_hand {
 		public:
 			using human_hand::human_hand;
-			view_space::polygon const& hitbox() const final
-			{
+			view_space::polygon const& hitbox() const final {
 				static auto result = view_space::polygon
 					{ view_space::point{-10.0f, -5.0f}
 					, view_space::point{-7.0f, 10.0f}
@@ -100,8 +92,7 @@ namespace ql
 
 		// Arms
 
-		class human_arm : public arm
-		{
+		class human_arm : public arm {
 		public:
 			human_arm(ql::id<being> owner_id, std::vector<uptr<attachment>> attachments) : arm
 				{ owner_id
@@ -111,8 +102,7 @@ namespace ql
 				, std::move(attachments)
 				}
 			{}
-			view_space::polygon const& hitbox() const final
-			{
+			view_space::polygon const& hitbox() const final {
 				static auto result = view_space::polygon
 					{ view_space::point{-7.0f, -5.0f}
 					, view_space::point{-7.0f, 55.0f}
@@ -123,16 +113,14 @@ namespace ql
 			}
 			int layer() const final { return 2; };
 		};
-		class left_arm_attachment : public attachment
-		{
+		class left_arm_attachment : public attachment {
 		public:
 			using attachment::attachment;
 			virtual view_space::vector offset() const final { return view_space::vector{0.0f, 55.0f}; }
 			virtual view_space::radians rotation() const final { return view_space::radians::zero(); }
 			uptr<body_part> default_part(ql::id<being> owner_id) const final { return umake<human_left_hand>(owner_id); }
 		};
-		class human_left_arm : public human_arm
-		{
+		class human_left_arm : public human_arm {
 		public:
 			human_left_arm(ql::id<being> owner_id) : human_arm
 				{ owner_id
@@ -140,16 +128,14 @@ namespace ql
 				}
 			{}
 		};
-		class right_arm_attachment : public attachment
-		{
+		class right_arm_attachment : public attachment {
 		public:
 			using attachment::attachment;
 			virtual view_space::vector offset() const final { return view_space::vector{0.0f, 55.0f}; }
 			virtual view_space::radians rotation() const final { return view_space::radians::zero(); }
 			uptr<body_part> default_part(ql::id<being> owner_id) const final { return umake<human_right_hand>(owner_id); }
 		};
-		class human_right_arm : public human_arm
-		{
+		class human_right_arm : public human_arm {
 		public:
 			human_right_arm(ql::id<being> owner_id) : human_arm
 				{ owner_id
@@ -160,8 +146,7 @@ namespace ql
 
 		// Feet
 
-		class human_foot : public foot
-		{
+		class human_foot : public foot {
 		public:
 			human_foot(ql::id<being> owner_id) : foot
 				{ owner_id
@@ -174,12 +159,10 @@ namespace ql
 			int layer() const final { return 1; };
 		protected:
 		};
-		class human_left_foot : public human_foot
-		{
+		class human_left_foot : public human_foot {
 		public:
 			using human_foot::human_foot;
-			view_space::polygon const& hitbox() const final
-			{
+			view_space::polygon const& hitbox() const final {
 				static auto result = view_space::polygon
 					{ view_space::point{-10.0f, 10.0f}
 					, view_space::point{-10.0f, -5.0f}
@@ -188,12 +171,10 @@ namespace ql
 				return result;
 			}
 		};
-		class human_right_foot : public human_foot
-		{
+		class human_right_foot : public human_foot {
 		public:
 			using human_foot::human_foot;
-			view_space::polygon const& hitbox() const final
-			{
+			view_space::polygon const& hitbox() const final {
 				static auto result = view_space::polygon
 					{ view_space::point{10.0f, -5.0f}
 					, view_space::point{10.0f, 10.0f}
@@ -205,8 +186,7 @@ namespace ql
 
 		// Legs
 
-		class human_leg : public leg
-		{
+		class human_leg : public leg {
 		public:
 			human_leg(ql::id<being> owner_id, std::vector<uptr<attachment>> attachments) : leg
 				{ owner_id
@@ -217,8 +197,7 @@ namespace ql
 				, std::move(attachments)
 				}
 			{}
-			view_space::polygon const& hitbox() const final
-			{
+			view_space::polygon const& hitbox() const final {
 				static auto result = view_space::polygon
 					{ view_space::point{-7.0f, -5.0f}
 					, view_space::point{-7.0f, 65.0f}
@@ -229,16 +208,14 @@ namespace ql
 			}
 			int layer() const final { return 0; };
 		};
-		class left_leg_attachment : public attachment
-		{
+		class left_leg_attachment : public attachment {
 		public:
 			using attachment::attachment;
 			virtual view_space::vector offset() const final { return view_space::vector{0.0f, 60.0f}; }
 			virtual view_space::radians rotation() const final { return view_space::radians::zero(); }
 			uptr<body_part> default_part(ql::id<being> owner_id) const final { return umake<human_left_foot>(owner_id); }
 		};
-		class human_left_leg : public human_leg
-		{
+		class human_left_leg : public human_leg {
 		public:
 			human_left_leg(ql::id<being> owner_id) : human_leg
 				{ owner_id
@@ -246,16 +223,14 @@ namespace ql
 				}
 			{}
 		};
-		class right_leg_attachment : public attachment
-		{
+		class right_leg_attachment : public attachment {
 		public:
 			using attachment::attachment;
 			virtual view_space::vector offset() const final { return view_space::vector{0.0f, 60.0f}; }
 			virtual view_space::radians rotation() const final { return view_space::radians::zero(); }
 			uptr<body_part> default_part(ql::id<being> owner_id) const final { return umake<human_right_foot>(owner_id); }
 		};
-		class human_right_leg : public human_leg
-		{
+		class human_right_leg : public human_leg {
 		public:
 			human_right_leg(ql::id<being> owner_id) : human_leg
 				{ owner_id
@@ -266,8 +241,7 @@ namespace ql
 
 		// Head
 
-		class human_head : public head
-		{
+		class human_head : public head {
 		public:
 			human_head(ql::id<being> owner_id) : head
 				{ owner_id
@@ -279,8 +253,7 @@ namespace ql
 				, {}
 				}
 			{}
-			view_space::polygon const& hitbox() const final
-			{
+			view_space::polygon const& hitbox() const final {
 				static auto result = view_space::polygon
 					{ view_space::point{-10.0f, 0.0f}
 					, view_space::point{-10.0f, -20.0f}
@@ -297,48 +270,42 @@ namespace ql
 
 		// Torso
 
-		class human_torso_attachment_head : public attachment
-		{
+		class human_torso_attachment_head : public attachment {
 		public:
 			using attachment::attachment;
 			virtual view_space::vector offset() const final { return view_space::vector{0.0f, -25.0f}; }
 			virtual view_space::radians rotation() const final { return view_space::radians::zero(); }
 			uptr<body_part> default_part(ql::id<being> owner_id) const final { return umake<human_head>(owner_id); }
 		};
-		class human_torso_attachment_right_arm : public attachment
-		{
+		class human_torso_attachment_right_arm : public attachment {
 		public:
 			using attachment::attachment;
 			virtual view_space::vector offset() const final { return view_space::vector{-25.0f, -25.0f}; }
 			virtual view_space::radians rotation() const final { return view_space::radians::circle() / 20.0; }
 			uptr<body_part> default_part(ql::id<being> owner_id) const final { return umake<human_right_arm>(owner_id); }
 		};
-		class human_torso_attachment_left_arm : public attachment
-		{
+		class human_torso_attachment_left_arm : public attachment {
 		public:
 			using attachment::attachment;
 			virtual view_space::vector offset() const final { return view_space::vector{25.0f, -25.0f}; }
 			virtual view_space::radians rotation() const final { return -view_space::radians::circle() / 20.0; }
 			uptr<body_part> default_part(ql::id<being> owner_id) const final { return umake<human_left_arm>(owner_id); }
 		};
-		class human_torso_attachment_right_leg : public attachment
-		{
+		class human_torso_attachment_right_leg : public attachment {
 		public:
 			using attachment::attachment;
 			virtual view_space::vector offset() const final { return view_space::vector{-15.0f, 25.0f}; }
 			virtual view_space::radians rotation() const final { return view_space::radians::zero(); }
 			uptr<body_part> default_part(ql::id<being> owner_id) const final { return umake<human_right_leg>(owner_id); }
 		};
-		class human_torso_attachment_left_leg : public attachment
-		{
+		class human_torso_attachment_left_leg : public attachment {
 		public:
 			using attachment::attachment;
 			virtual view_space::vector offset() const final { return view_space::vector{15.0f, 25.0f}; }
 			virtual view_space::radians rotation() const final { return view_space::radians::zero(); }
 			uptr<body_part> default_part(ql::id<being> owner_id) const final { return umake<human_left_leg>(owner_id); }
 		};
-		class human_torso : public torso
-		{
+		class human_torso : public torso {
 		public:
 			human_torso(ql::id<being> owner_id) : torso
 				{ owner_id
@@ -354,8 +321,7 @@ namespace ql
 					)
 				}
 			{}
-			view_space::polygon const& hitbox() const final
-			{
+			view_space::polygon const& hitbox() const final {
 				static auto result = view_space::polygon
 					{ view_space::point{-25.0f, -25.0f}
 					, view_space::point{-15.0f, 25.0f}

@@ -5,10 +5,8 @@
 #include "damage/group.hpp"
 #include "items/armor/armor.hpp"
 
-namespace ql
-{
-	void armor::apply(dmg::group& damage)
-	{
+namespace ql {
+	void armor::apply(dmg::group& damage) {
 		// Broken armor has no effect.
 		if (!broken()) {
 			// Calcuate reduced damage.

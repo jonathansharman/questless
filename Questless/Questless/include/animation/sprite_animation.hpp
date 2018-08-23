@@ -13,14 +13,12 @@
 #include "utility/reference.hpp"
 #include "utility/tagged_type.hpp"
 
-namespace ql
-{
+namespace ql {
 	struct looping : tagged_type<bool> { using tagged_type::tagged_type; };
 	struct randomize_start_time : tagged_type<bool> { using tagged_type::tagged_type; };
 
 	//! A texture composed of a grid of animation cels.
-	class sprite_sheet
-	{
+	class sprite_sheet {
 	public:
 		sdl::texture_handle const texture_handle;
 		units::sprite_sheet_space::vector const cel_dimensions;
@@ -32,13 +30,12 @@ namespace ql
 		{}
 
 		//! The dimensions of a single cel.
-		units::window_space::vector cel_size() const
-		{
+		units::window_space::vector cel_size() const {
 			if (_need_cel_size) {
-				_cel_size = units::window_space::vector
-					{ sdl::the_texture_manager()[texture_handle].width() / cel_dimensions.x()
-					, sdl::the_texture_manager()[texture_handle].height() / cel_dimensions.y()
-					};
+				_cel_size = units::window_space::vector {
+					sdl::the_texture_manager()[texture_handle].width() / cel_dimensions.x(),
+					sdl::the_texture_manager()[texture_handle].height() / cel_dimensions.y(),
+				};
 				_need_cel_size = false;
 			}
 			return _cel_size;
@@ -55,11 +52,9 @@ namespace ql
 	};
 
 	//! A simple 2D animation.
-	class sprite_animation : public animation
-	{
+	class sprite_animation : public animation {
 	public:
-		struct frame
-		{
+		struct frame {
 			units::game_space::seconds duration;
 			units::sprite_sheet_space::point coords; //!< The cel coordinates within the sprite sheet.
 			units::texture_space::vector origin; //!< The origin of the frame's texture relative to its center.

@@ -5,8 +5,7 @@
 #include "entities/beings/statuses/status.hpp"
 #include "utility/id.hpp"
 
-namespace ql
-{
+namespace ql {
 	status::status(std::string name, int duration, std::optional<id<being>> source_id)
 		: _name{std::move(name)}
 		, _duration{duration}
@@ -15,8 +14,7 @@ namespace ql
 
 	void status::apply(being&) {}
 
-	void status::update(being& target)
-	{
+	void status::update(being& target) {
 		--_duration;
 		subupdate(target);
 		if (_duration == 0) {

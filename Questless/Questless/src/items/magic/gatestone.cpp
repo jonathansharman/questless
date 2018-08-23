@@ -9,10 +9,8 @@
 #include "entities/beings/being.hpp"
 #include "game.hpp"
 
-namespace ql
-{
-	std::vector<uptr<action>> gatestone::actions()
-	{
+namespace ql {
+	std::vector<uptr<action>> gatestone::actions() {
 		std::vector<uptr<action>> actions;
 		if (equipped()) {
 			if (_cooldown == 0.0) {
@@ -27,8 +25,7 @@ namespace ql
 		return actions;
 	}
 
-	void gatestone::update()
-	{
+	void gatestone::update() {
 		_cooldown -= 1.0;
 
 		// Charge over time.
@@ -36,8 +33,7 @@ namespace ql
 		charge += recharge_per_turn; //! @todo Should recharge rate be a fixed amount or a percentage of capacity?
 	}
 
-	complete gatestone::incant::perform(being& incanter, action::cont cont)
-	{
+	complete gatestone::incant::perform(being& incanter, action::cont cont) {
 		if (incanter.stats.mute) {
 			// Can't incant if mute.
 			return incanter.agent().send_message(umake<message_incant_failed_mute>(), [cont] { return cont(action::result::aborted); });

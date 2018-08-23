@@ -9,36 +9,32 @@
 
 #include <vector>
 #include <algorithm>
+#include <cassert> //! @todo Remove when contracts available.
 #include <exception>
 
 #include "game_space.hpp"
 #include "math.hpp"
 
-namespace units
-{
+namespace units {
 	//! A hexagonal space.
 	template <typename Tag>
-	struct hex_space
-	{
+	struct hex_space {
 		enum class direction : int { one = 1, two, three, four, five, six };
 
 		//! The shortest distance between the two given directions.
-		static int distance(direction d1, direction d2)
-		{
+		static int distance(direction d1, direction d2) {
 			int diff = static_cast<int>(d1) - static_cast<int>(d2);
 			return std::min((diff + 6) % 6, (-diff + 6) % 6);
 		}
 
 		//! Hexagonal vector type.
-		struct vector
-		{
+		struct vector {
 			int q;
 			int r;
 			int s;
 
 			//! Unit vector in the given direction.
-			constexpr static vector unit(direction direction)
-			{
+			constexpr static vector unit(direction direction) {
 				switch (direction) {
 					default: [[fallthrough]]; // Impossible case.
 					case direction::one:   return vector{ 1,  0};
@@ -100,16 +96,14 @@ namespace units
 			constexpr int length() const { return static_cast<int>((math::abs(q) + math::abs(r) + math::abs(s)) / 2); }
 
 			//! The unit vector nearest this vector. This vector must be non-zero.
-			constexpr vector unit() const
-			{
+			constexpr vector unit() const {
 				double l = length();
 				assert(l != 0.0 && "Unit vector of a zero-length vector is undefined.");
 				return *this / l;
 			}
 
 			//! The nearest direction this vector points towards. This vector must be non-zero.
-			constexpr direction direction() const
-			{
+			constexpr direction direction() const {
 				vector const u = unit();
 				switch (u.q) {
 					case -1:
@@ -137,15 +131,13 @@ namespace units
 			}
 
 			//! Simple hash function.
-			constexpr friend std::size_t hash_value(vector const& v)
-			{
+			constexpr friend std::size_t hash_value(vector const& v) {
 				return 31 * v.q + v.r;
 			}
 		};
 
 		//! Hexagonal point type.
-		struct point
-		{
+		struct point {
 			int q;
 			int r;
 			int s;
@@ -190,8 +182,7 @@ namespace units
 
 			//! @todo Make this lazy?
 
-			std::vector<point> line_to(point dest) const
-			{
+			std::vector<point> line_to(point dest) const {
 				int n = (dest - *this).length();
 				std::vector<point> results;
 				double step = 1.0 / std::max(n, 1);
@@ -201,19 +192,16 @@ namespace units
 				return results;
 			}
 
-			constexpr point lerp(point dest, double t) const
-			{
+			constexpr point lerp(point dest, double t) const {
 				return point{this->q + (dest.q - this->q) * t, this->r + (dest.r - this->r) * t, this->s + (dest.s - this->s) * t};
 			}
 
-			constexpr point lerp(vector heading, double t) const
-			{
+			constexpr point lerp(vector heading, double t) const {
 				return point{this->q + (heading.q - this->q) * t, this->r + (heading.r - this->r) * t, this->s + (heading.s - this->s) * t};
 			}
 
 			//! Neighboring point in the given direction.
-			constexpr point neighbor(direction direction) const
-			{
+			constexpr point neighbor(direction direction) const {
 				switch (direction) {
 					default: [[fallthrough]]; // Impossible case.
 					case direction::one:   return point{q + 1, r + 0};
@@ -226,15 +214,13 @@ namespace units
 			}
 
 			//! Simple hash function.
-			constexpr friend std::size_t hash_value(point const& p)
-			{
+			constexpr friend std::size_t hash_value(point const& p) {
 				return 31 * p.q + p.r;
 			}
 		};
 	};
 
-	struct hex_orientation
-	{
+	struct hex_orientation {
 		// Forward matrix, used to go from hex coords to world coords.
 		//  [[f0 f1]
 		//   [f2 f2]]
@@ -268,8 +254,7 @@ namespace units
 		constexpr static auto flat() { return hex_orientation{3.0 / 2.0, 0.0, math::sqrt(3.0) / 2.0, math::sqrt(3.0), 0.0}; }
 	};
 
-	struct hex_layout
-	{
+	struct hex_layout {
 		hex_orientation orientation;
 		game_space::vector size;
 		game_space::point origin;
@@ -279,8 +264,8 @@ namespace units
 		{}
 
 		template <typename HexCoordsType>
-		constexpr game_space::point to_world(HexCoordsType h) const //! @todo This function should just work for region_tile::point.
-		{
+		constexpr game_space::point to_world(HexCoordsType h) const {
+			//! @todo This function should just work for region_tile::point.
 			return game_space::point
 				{ ((orientation.f0 * h.q + orientation.f1 * h.r) * size.x() + origin.x())
 				, ((orientation.f2 * h.q + orientation.f3 * h.r) * size.y() + origin.y())
@@ -288,23 +273,22 @@ namespace units
 		}
 
 		template <typename HexCoordsType>
-		constexpr HexCoordsType to_hex_coords(game_space::point p) const //! @todo This function should just work for region_tile::point.
-		{
+		constexpr HexCoordsType to_hex_coords(game_space::point p) const {
+			//! @todo This function should just work for region_tile::point.
 			return HexCoordsType
 				{ orientation.b0 * (p.x() - origin.x()) / size.x() + orientation.b1 * (p.y() - origin.y()) / size.y()
 				, orientation.b2 * (p.x() - origin.x()) / size.x() + orientation.b3 * (p.y() - origin.y()) / size.y()
 				};
 		}
 
-		game_space::point hex_corner_offset(int corner)
-		{
+		game_space::point hex_corner_offset(int corner) {
 			game_space::radians angle = game_space::radians::circle() * (corner + orientation.start_angle) / 6.0;
 			return game_space::point{size.x() * cos(angle.count()), size.y() * sin(angle.count())};
 		}
 
 		template <typename HexCoordsType>
-		std::vector<game_space::point> corner_points(HexCoordsType h) //! @todo This function should just work for region_tile::point.
-		{
+		std::vector<game_space::point> corner_points(HexCoordsType h) {
+			//! @todo This function should just work for region_tile::point.
 			std::vector<game_space::point> corners;
 			game_space::point const center = to_world_f(h);
 			for (int i = 0; i < 6; i++) {
@@ -324,63 +308,53 @@ namespace units
 int const even = 1;
 int const odd = -1;
 
-void complain(string_view name)
-{
+void complain(string_view name) {
 	cerr << "FAIL " << name << endl;
 }
 
-void equal_hex(string_view name, HexCoords a, HexCoords b)
-{
+void equal_hex(string_view name, HexCoords a, HexCoords b) {
 	if (!(a.q == b.q && a.s == b.s && a.r == b.r)) {
 		complain(name);
 	}
 }
 
-void equal_offsetcoord(const char* name, OffsetCoords a, OffsetCoords b)
-{
+void equal_offsetcoord(const char* name, OffsetCoords a, OffsetCoords b) {
 	if (!(a.col == b.col && a.row == b.row)) {
 		complain(name);
 	}
 }
 
-void equal_int(string_view name, int a, int b)
-{
+void equal_int(string_view name, int a, int b) {
 	if (a != b) {
 		complain(name);
 	}
 }
 
-void equal_hex_array(string_view name, vector<HexCoords> a, vector<HexCoords> b)
-{
+void equal_hex_array(string_view name, vector<HexCoords> a, vector<HexCoords> b) {
 	equal_int(name, a.size(), b.size());
 	for (int i = 0; i < a.size(); i++) {
 		equal_hex(name, a[i], b[i]);
 	}
 }
 
-void test_hex_arithmetic()
-{
+void test_hex_arithmetic() {
 	equal_hex("hex_add", HexCoords{4, -10, 6}, HexCoords{1, -3, 2} +HexCoords{3, -7, 4});
 	equal_hex("hex_subtract", HexCoords{-2, 4, -2}, HexCoords{1, -3, 2} -HexCoords{3, -7, 4});
 }
 
-void test_hex_neighbor()
-{
+void test_hex_neighbor() {
 	equal_hex("hex_neighbor", HexCoords{1, -3, 2}, HexCoords{1, -2, 1}.neighbor(HexCoords::direction::three));
 }
 
-void test_hex_diagonal()
-{
+void test_hex_diagonal() {
 	equal_hex("hex_diagonal", HexCoords{-1, -1, 2}, HexCoords{1, -2, 1}.diagonal_neighbor(HexCoords::direction::four));
 }
 
-void test_hex_distance()
-{
+void test_hex_distance() {
 	equal_int("hex_distance", 7, HexCoords{3, -7, 4}.distance_to(HexCoords{0, 0, 0}));
 }
 
-void test_hex_round()
-{
+void test_hex_round() {
 	HexCoords a{0, 0, 0};
 	HexCoords b{1, -1, 0};
 	HexCoords c{0, -1, 1};
@@ -391,13 +365,11 @@ void test_hex_round()
 	equal_hex("hex_round 5", c, HexCoords{a.q * 0.3 + b.q * 0.3 + c.q * 0.4, a.r * 0.3 + b.r * 0.3 + c.r * 0.4, a.s * 0.3 + b.s * 0.3 + c.s * 0.4});
 }
 
-void test_hex_linedraw()
-{
+void test_hex_linedraw() {
 	equal_hex_array("hex_linedraw", {HexCoords(0, 0, 0), HexCoords(0, -1, 1), HexCoords(0, -2, 2), HexCoords(1, -3, 2), HexCoords(1, -4, 3), HexCoords(1, -5, 4)}, HexCoords{0, 0, 0}.line_to(HexCoords{1, -5, 4}));
 }
 
-void test_layout()
-{
+void test_layout() {
 	HexCoords h{3, 4, -7};
 	layout flat{orientation_flat, units::game_space::point{10, 15}, units::game_space::point{35, 71}};
 	equal_hex("layout", h, flat.to_hex_coords(flat.to_world(h)));
@@ -407,8 +379,7 @@ void test_layout()
 
 if not main_byid_df.ix[sampleList[i], 'Grain_ID'][j] in rimVsCore
 
-void test_conversion_roundtrip()
-{
+void test_conversion_roundtrip() {
 	HexCoords a{3, 4, -7};
 	OffsetCoords b{1, -3};
 	equal_hex("conversion_roundtrip even-q", a, q_offset_to_cube(even, q_offset_from_cube(even, a)));
@@ -422,35 +393,14 @@ void test_conversion_roundtrip()
 }
 
 
-void test_offset_from_cube()
-{
+void test_offset_from_cube() {
 	equal_offsetcoord("offset_from_cube even-q", OffsetCoords{1, 3}, q_offset_from_cube(even, HexCoords{1, 2, -3}));
 	equal_offsetcoord("offset_from_cube odd-q", OffsetCoords(1, 2), q_offset_from_cube(odd, HexCoords{1, 2, -3}));
 }
 
-void test_offset_to_cube()
-{
+void test_offset_to_cube() {
 	equal_hex("offset_to_cube even-", HexCoords{1, 2, -3}, q_offset_to_cube(even, OffsetCoords{1, 3}));
 	equal_hex("offset_to_cube odd-q", HexCoords{1, 2, -3}, q_offset_to_cube(odd, OffsetCoords{1, 2}));
-}
-
-void test_all()
-{
-	test_hex_arithmetic();
-	test_hex_neighbor();
-	test_hex_diagonal();
-	test_hex_distance();
-	test_hex_round();
-	test_hex_linedraw();
-	test_layout();
-	test_conversion_roundtrip();
-	test_offset_from_cube();
-	test_offset_to_cube();
-}
-
-int main()
-{
-	test_all();
 }
 
 /**/

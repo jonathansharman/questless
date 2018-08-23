@@ -7,24 +7,20 @@
 using namespace sdl;
 using namespace units;
 
-namespace ql
-{
-	void particle_animation::draw(units::window_space::point position) const
-	{
+namespace ql {
+	void particle_animation::draw(units::window_space::point position) const {
 		for (auto& particle : _particles) {
 			particle->draw(position);
 		}
 	}
 
-	void particle_animation::draw(units::game_space::point position, camera const& camera, colors::color_vector color_vector) const
-	{
+	void particle_animation::draw(units::game_space::point position, camera const& camera, colors::color_vector color_vector) const {
 		for (auto& particle : _particles) {
 			particle->draw(position, camera, color_vector);
 		}
 	}
 
-	void particle_animation::animation_subupdate()
-	{
+	void particle_animation::animation_subupdate() {
 		for (std::size_t i = 0; i < _particles.size();) {
 			_particles[i]->update();
 			if (_particles[i]->over()) {

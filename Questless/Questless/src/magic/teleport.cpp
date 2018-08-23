@@ -12,10 +12,8 @@
 #include "game.hpp"
 #include "magic/charge_cost.hpp"
 
-namespace ql::magic
-{
-	complete teleport::perform_cast(being& caster, gatestone& gatestone, action::cont cont)
-	{
+namespace ql::magic {
+	complete teleport::perform_cast(being& caster, gatestone& gatestone, action::cont cont) {
 		return caster.agent().query_tile(umake<tile_query_teleport_target>(), std::nullopt, action::tile_in_range_predicate(caster, _range),
 			[&caster, &gatestone, cont = std::move(cont)](std::optional<region_tile::point> opt_tile_coords) {
 				if (!opt_tile_coords) {

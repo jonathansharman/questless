@@ -15,8 +15,7 @@
 using namespace sdl;
 using namespace units;
 
-namespace ql
-{
+namespace ql {
 	world_view::world_view(being const& being, bool find_bounds)
 		: _region{*being.region}
 		, _origin{being.coords}

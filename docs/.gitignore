@@ -1,0 +1,6 @@
+/work-list.txt
+/*.tmp
+/*.log
+/html/*
+/latex/*
+/species/*.svg

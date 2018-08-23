@@ -9,11 +9,9 @@
 #include "item.hpp"
 #include "magic/spell.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! A magic scroll for inscribing spells.
-	class scroll : public item_base<scroll>
-	{
+	class scroll : public item_base<scroll> {
 	public:
 		scroll(uptr<magic::spell> spell, ql::id<item> id = ql::id<item>::make()) : item_base{id}, _spell{std::move(spell)} {}
 

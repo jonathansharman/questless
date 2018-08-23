@@ -6,6 +6,5 @@
 #include "entities/beings/being.hpp"
 #include "game.hpp"
 
-namespace ql
-{
+namespace ql {
 }

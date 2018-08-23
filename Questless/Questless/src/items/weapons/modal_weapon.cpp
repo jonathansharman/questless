@@ -4,6 +4,5 @@
 
 #include "items/weapons/modal_weapon.hpp"
 
-namespace ql
-{
+namespace ql {
 }

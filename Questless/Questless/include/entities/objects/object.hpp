@@ -10,11 +10,9 @@
 #include "entities/entity.hpp"
 #include "utility/id.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! An inanimate entity.
-	class object : public entity
-	{
+	class object : public entity {
 	public:
 		///////////
 		// Types //
@@ -27,7 +25,7 @@ namespace ql
 		// Public Data //
 		/////////////////
 
-		id<object> id;
+		id<object> const id;
 
 		////////////////////
 		// Public Methods //

@@ -9,13 +9,11 @@
 #include "units/window_space.hpp"
 #include "utility/static_bounded.hpp"
 
-namespace ql
-{
+namespace ql {
 	class camera;
 
 	//! Abstract base for animations.
-	class animation
-	{
+	class animation {
 	public:
 		static constexpr double minimum_timescale = 0.0;
 

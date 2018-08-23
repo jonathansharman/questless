@@ -12,8 +12,7 @@ using std::vector;
 
 using namespace units;
 
-namespace ql
-{
+namespace ql {
 	body_part::body_part
 		( ql::id<being> owner_id
 		, ql::vitality vitality
@@ -31,8 +30,7 @@ namespace ql
 		, _weight{weight}
 	{}
 
-	void body_part::update()
-	{
+	void body_part::update() {
 		being& owner = the_game().beings.ref(_owner_id);
 
 		health += owner.stats.health_regen * vitality;
@@ -40,20 +38,17 @@ namespace ql
 		bleeding -= owner.stats.health_regen * vitality;
 	}
 
-	void body_part::take_damage(dmg::group& damage, std::optional<ql::id<being>> source_id)
-	{
+	void body_part::take_damage(dmg::group& damage, std::optional<ql::id<being>> source_id) {
 		being& owner = the_game().beings.ref(_owner_id);
 		owner.take_damage(damage, *this, source_id);
 	}
 
-	void body_part::heal(double amount, std::optional<ql::id<being>> opt_source_id)
-	{
+	void body_part::heal(double amount, std::optional<ql::id<being>> opt_source_id) {
 		being& owner = the_game().beings.ref(_owner_id);
 		owner.heal(amount, *this, opt_source_id);
 	}
 
-	void body_part::generate_attached_parts()
-	{
+	void body_part::generate_attached_parts() {
 		for (auto& attachment : _attachments) {
 			attachment->part = attachment->default_part(_owner_id);
 			attachment->part->generate_attached_parts();

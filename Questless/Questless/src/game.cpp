@@ -42,8 +42,7 @@ using namespace std::chrono;
 using namespace sdl;
 using namespace units;
 
-namespace ql
-{
+namespace ql {
 	id<being> game::get_being_id(uptr<being> const& being) { return being->id; }
 	id<object> game::get_object_id(uptr<object> const& object) { return object->id; }
 	id<item> game::get_item_id(uptr<item> const& item) { return item->id; }
@@ -116,8 +115,7 @@ namespace ql
 		_state = state::splash;
 	}
 
-	game::~game()
-	{
+	game::~game() {
 		// Need to delete all SDL-related variables prior to calling the Close/Quit functions.
 
 		// Delete sounds.
@@ -144,8 +142,7 @@ namespace ql
 		SDL_Quit();
 	}
 
-	void game::load_textures()
-	{
+	void game::load_textures() {
 		_txt_test1 = umake<texture>("resources/textures/test1.png");
 		_txt_test2 = umake<texture>("resources/textures/test2.png");
 		_txt_test3 = umake<texture>("resources/textures/test3.png");
@@ -160,8 +157,7 @@ namespace ql
 		_txt_hex_circle = umake<texture>("resources/textures/ui/hex_circle.png");
 	}
 
-	void game::initialize_opengl()
-	{
+	void game::initialize_opengl() {
 		// Create OpenGL context.
 		opengl_context() = SDL_GL_CreateContext(the_window().sdl_ptr()); //! @todo Destroy context?
 		if (!opengl_context()) {
@@ -223,21 +219,19 @@ namespace ql
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
-	complete game::add_dialog(uptr<dialog> dialog)
-	{
+	complete game::add_dialog(uptr<dialog> dialog) {
 		_dialogs.push_back(move(dialog));
 		return complete{};
 	}
 
-	void game::query_player_choice(function<void(player_action_dialog::choice)> cont)
-	{
+	complete game::query_player_choice(function<void(player_action_dialog::choice)> cont) {
 		_player_action_dialog = umake<player_action_dialog>(*_hud, move(cont));
+		return complete{};
 	}
 
 	// Main Game Logic
 
-	void game::run()
-	{
+	void game::run() {
 		game_space::seconds accrued_time = game_space::seconds::zero();
 		clock::time_point last_update_time = clock::now();
 		while (update(accrued_time, last_update_time) == update_result::continue_game) {
@@ -248,8 +242,7 @@ namespace ql
 		}
 	}
 
-	game::update_result game::update(game_space::seconds& accrued_time, clock::time_point& last_update_time)
-	{
+	game::update_result game::update(game_space::seconds& accrued_time, clock::time_point& last_update_time) {
 		the_input().update();
 
 		if (the_input().quit() || the_input().alt() && the_input().presses(SDLK_F4)) {
@@ -315,8 +308,7 @@ namespace ql
 		return update_result::continue_game;
 	}
 
-	void game::render()
-	{
+	void game::render() {
 		////////////
 		// Render //
 		////////////
@@ -353,8 +345,7 @@ namespace ql
 		SDL_GL_SwapWindow(the_window().sdl_ptr());
 	}
 
-	game::update_result game::update_splash()
-	{
+	game::update_result game::update_splash() {
 		if (!_splash_sound_played) {
 			_splash_sound_played = true;
 			_sfx_splash->play();
@@ -395,8 +386,7 @@ namespace ql
 		return update_result::continue_game;
 	}
 	
-	void game::render_splash()
-	{
+	void game::render_splash() {
 		float intensity;
 		if (clock::now() - _time_last_state_change < _splash_fade_in_duration) {
 			auto ms_fading_in = duration_cast<game_space::seconds>(clock::now() - _time_last_state_change).count();
@@ -414,8 +404,7 @@ namespace ql
 		}
 	}
 
-	game::update_result game::update_menu()
-	{
+	game::update_result game::update_menu() {
 		_main_menu.update();
 		for (auto const& option : _main_menu.poll_selections()) {
 			if (option.first == "Questless") {
@@ -464,13 +453,11 @@ namespace ql
 		return update_result::continue_game;
 	}
 
-	void game::render_menu()
-	{
+	void game::render_menu() {
 		_main_menu.draw(the_window().window_center(), window_space::align_center, window_space::align_middle);
 	}
 
-	void game::render_playing()
-	{
+	void game::render_playing() {
 		_world_renderer->draw_terrain();
 
 		if (the_input().pressed(mouse_button::right)) {
@@ -490,7 +477,7 @@ namespace ql
 			dialog->draw();
 		}
 
-		{
+		{ // Draw camera position.
 			std::ostringstream ss_cam_coords;
 			ss_cam_coords.setf(std::ios::fixed);
 			ss_cam_coords.precision(2);
@@ -499,14 +486,14 @@ namespace ql
 			texture txt_cam_coords = _fnt_20pt->render(ss_cam_coords.str().c_str(), colors::white());
 			txt_cam_coords.draw(window_space::point{0, 0});
 		}
-		{
+		{ // Draw camera hex position.
 			auto cam_hex_coords = to_region_tile(_camera->position());
 			std::ostringstream ss_cam_hex_coords;
 			ss_cam_hex_coords << "Cam hex: (" << cam_hex_coords.q << ", " << cam_hex_coords.r << ")";
 			texture txt_cam_hex_coords = _fnt_20pt->render(ss_cam_hex_coords.str().c_str(), colors::white());
 			txt_cam_hex_coords.draw(window_space::point{0, 25});
 		}
-		{
+		{ // Draw time.
 			std::ostringstream ss_time;
 			double const time_of_day = _region->time_of_day();
 			std::string time_name;
@@ -535,12 +522,13 @@ namespace ql
 			txt_turn.draw(window_space::point{0, 50});
 		}
 
-		// Draw q- and r-axes.
-		region_tile::point origin{0, 0};
-		region_tile::point q_axis{5, 0};
-		region_tile::point r_axis{0, 5};
-		camera().draw_lines({to_world(origin), to_world(q_axis)}, colors::green());
-		camera().draw_lines({to_world(origin), to_world(r_axis)}, colors::red());
+		{ // Draw q- and r-axes.
+			region_tile::point origin{0, 0};
+			region_tile::point q_axis{5, 0};
+			region_tile::point r_axis{0, 5};
+			camera().draw_lines({to_world(origin), to_world(q_axis)}, colors::green());
+			camera().draw_lines({to_world(origin), to_world(r_axis)}, colors::red());
+		}
 
 		_txt_test1->draw(window_space::point{0, 0});
 		the_renderer().draw_box(window_space::box{window_space::point{0, 0}, window_space::vector{15, 15}}, 1, colors::blue(), colors::clear());
@@ -618,8 +606,7 @@ namespace ql
 #endif
 	}
 
-	game::update_result game::update_playing()
-	{
+	game::update_result game::update_playing() {
 		// Update camera.
 		_camera->update();
 
@@ -732,8 +719,7 @@ namespace ql
 		return update_result::continue_game;
 	}
 
-	void game::update_player_view()
-	{
+	void game::update_player_view() {
 		//! @todo Do something reasonable with the player view when the player dies.
 		being const* player_being = beings.cptr(*_player_being_id);
 		if (player_being && player_being->mortality != ql::mortality::dead) {

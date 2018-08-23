@@ -6,11 +6,9 @@
 
 #include "animation/particles/particle.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! A particle for effects involving red magic.
-	class red_magic_particle : public particle
-	{
+	class red_magic_particle : public particle {
 	public:
 		red_magic_particle();
 	private:

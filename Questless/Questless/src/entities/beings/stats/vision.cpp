@@ -5,10 +5,8 @@
 #include "entities/beings/stats/vision.hpp"
 using namespace units::math;
 
-namespace ql
-{
-	double vision::visibility(double illuminance, int distance) const
-	{
+namespace ql {
+	double vision::visibility(double illuminance, int distance) const {
 		constexpr double darkness_factor = 0.05;
 		constexpr double glare_factor = 0.015;
 

@@ -9,11 +9,9 @@
 #include "sdl/texture.hpp"
 #include "utility/reference.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! A UI element used to exchange information with the player.
-	class dialog
-	{
+	class dialog {
 	public:
 		enum class state { open, closed };
 
@@ -25,13 +23,11 @@ namespace ql
 		virtual void draw() const = 0;
 	protected:
 		template <typename... Args>
-		class continuation
-		{
+		class continuation {
 		public:
 			continuation(std::function<void(Args...)> cont) : _cont{ std::move(cont) } {}
 
-			state operator ()(Args&&... args)
-			{
+			state operator ()(Args&&... args) {
 				_cont(std::forward<Args>(args)...);
 				return state::closed;
 			}

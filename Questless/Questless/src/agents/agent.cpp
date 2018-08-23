@@ -8,32 +8,27 @@
 #include "utility/random.hpp"
 #include "world/region.hpp"
 
-namespace ql
-{
+namespace ql {
 	// Quick Time Events
 	
-	complete agent::aim_missile(region_tile::point /*source_coords*/, ql::being& target_being, std::function<complete(body_part*)> cont) const
-	{
+	complete agent::aim_missile(region_tile::point /*source_coords*/, ql::being& target_being, std::function<complete(body_part*)> cont) const {
 		//! @todo There should be a miss chance based on distance and some internal skill stat. The agent should also prioritize certain parts depending on goals. Return a random body part for now.
 		auto it = target_being.body.parts().begin();
 		std::advance(it, uniform(std::size_t{0}, target_being.body.parts().size() - 1));
 		return cont(&it->get());
 	}
 
-	complete agent::get_shock_quality(region_tile::point /*target_coords*/, std::function<complete(double)> cont) const
-	{
+	complete agent::get_shock_quality(region_tile::point /*target_coords*/, std::function<complete(double)> cont) const {
 		return cont(1.0);
 	}
 
-	complete agent::incant(gatestone& /*gatestone*/, std::function<complete(uptr<magic::spell>)> cont) const
-	{
+	complete agent::incant(gatestone& /*gatestone*/, std::function<complete(uptr<magic::spell>)> cont) const {
 		return cont(nullptr);
 	}
 
 	// Actions
 
-	complete agent::idle(action::cont cont)
-	{
+	complete agent::idle(action::cont cont) {
 		return query_magnitude(umake<magnitude_query_wait_time>(), 10.0, 0.0, std::nullopt,
 			[this, cont](std::optional<double> duration) {
 				if (duration) {
@@ -46,14 +41,12 @@ namespace ql
 		);
 	}
 
-	complete agent::idle(double duration)
-	{
+	complete agent::idle(double duration) {
 		being.busy_time += duration;
 		return complete{};
 	}
 
-	complete agent::turn(region_tile::direction direction, action::cont cont)
-	{
+	complete agent::turn(region_tile::direction direction, action::cont cont) {
 		if (being.stats.agility > 0.0) {
 			// Base cost of turning any amount, as a percentage of the agility factor.
 			constexpr double base_cost_factor = 0.1;
@@ -73,8 +66,7 @@ namespace ql
 		}
 	}
 
-	complete agent::walk(region_tile::direction direction, action::cont cont)
-	{
+	complete agent::walk(region_tile::direction direction, action::cont cont) {
 		if (being.stats.agility > 0.0) {
 			// Base cost of moving, as a percentage of the agility factor.
 			constexpr double base_cost_factor = 1.0;
@@ -93,8 +85,7 @@ namespace ql
 		return cont(action::result::aborted);
 	}
 
-	complete agent::fly()
-	{
+	complete agent::fly() {
 		//! @todo This.
 		return complete{};
 	}

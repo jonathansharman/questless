@@ -6,11 +6,9 @@
 
 #include "entities/beings/statuses/status.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! Decreases visual acuity.
-	class blind : public status
-	{
+	class blind : public status {
 	public:
 		//! @param magnitude How powerful the status modifier is.
 		//! @param duration The number of turns remaining before the status modifier expires.

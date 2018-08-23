@@ -8,8 +8,7 @@
 #include <chrono>
 #include <functional>
 
-namespace ql
-{
+namespace ql {
 	//! Executes and times the function @p f.
 	//! @return The time it took to execute @p f, in nanoseconds.
 	std::chrono::nanoseconds time(std::function<void()> f);

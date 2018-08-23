@@ -9,8 +9,7 @@
 
 using namespace units;
 
-namespace ql
-{
+namespace ql {
 	red_magic_particle::red_magic_particle() : particle
 		{ game_space::vector::zero()
 		, (random_displacement(200.0) + game_space::vector{0.0, 150.0}) / 1.0s
@@ -22,8 +21,7 @@ namespace ql
 		, lifetime{game_space::seconds{uniform(0.6, 1.0)}}
 		}
 	{}
-	sdl::texture const& red_magic_particle::texture() const
-	{
+	sdl::texture const& red_magic_particle::texture() const {
 		static auto texture_handle = sdl::the_texture_manager().add("resources/textures/particles/magic/red.png");
 		return sdl::the_texture_manager()[texture_handle];
 	}

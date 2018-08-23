@@ -4,8 +4,7 @@
 
 #pragma once
 
-namespace ql
-{
+namespace ql {
 	//! @brief Supports creation of strongly typed wrappers around MoveConstructible types.
 	//!
 	//! An object of type tagged_type<T> can be used like an object of type T, but passing a T as a
@@ -16,8 +15,7 @@ namespace ql
 	//! struct meters : tagged_type<double> { using tagged_type::tagged_type; };
 	//! @endcode
 	template <typename RawType>
-	struct tagged_type
-	{
+	struct tagged_type {
 		using raw_type = RawType;
 
 		raw_type value;

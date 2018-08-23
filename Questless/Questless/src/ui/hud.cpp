@@ -12,15 +12,12 @@
 using namespace sdl;
 using namespace units;
 
-namespace ql
-{
-	namespace
-	{
+namespace ql {
+	namespace {
 		constexpr window_space::vector item_icon_size{55, 55};
 	}
 	
-	void hud::update()
-	{
+	void hud::update() {
 		if (_player_being_id) {
 			if (being const* player_being = the_game().beings.cptr(*_player_being_id)) {
 				update_displayed_items(*player_being);
@@ -77,8 +74,7 @@ namespace ql
 		}
 	}
 
-	void hud::set_player_being_id(id<being> player_being_id)
-	{
+	void hud::set_player_being_id(id<being> player_being_id) {
 		_player_being_id = player_being_id;
 		_inv_page = 0;
 
@@ -100,8 +96,7 @@ namespace ql
 		}
 	}
 
-	void hud::draw()
-	{
+	void hud::draw() {
 		constexpr int item_count_font_size = 10;
 		static auto fnt_item_count = umake<font>("resources/fonts/dumbledor1.ttf", item_count_font_size, SDL_BLENDMODE_BLEND);
 
@@ -255,8 +250,7 @@ namespace ql
 		}
 	}
 
-	void hud::update_displayed_items(being const& player_being)
-	{
+	void hud::update_displayed_items(being const& player_being) {
 		_displayed_items = {player_being.inventory.items.begin(), player_being.inventory.items.end()};
 		// Sort displayed items alphabetically.
 		//! @todo Custom displayed items order and cache the displayed items (only need to regenerate list if a turn has been taken).

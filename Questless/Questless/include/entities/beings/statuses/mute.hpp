@@ -6,11 +6,9 @@
 
 #include "entities/beings/statuses/status.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! Causes muteness.
-	class mute : public status
-	{
+	class mute : public status {
 	public:
 		//! @param duration The number of turns remaining before the status modifier expires.
 		//! @param source_id The ID of the being that caused the status modifier, if any.

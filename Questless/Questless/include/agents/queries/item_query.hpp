@@ -6,15 +6,13 @@
 
 #include "utility/visitor_pattern.hpp"
 
-namespace ql
-{
+namespace ql {
 	using item_query_subtype_list = type_list::empty;
 
 	DEFINE_VISITORS(item_query, item_query_subtype_list)
 
 	//! A request to an agent for an item from an inventory.
-	struct item_query : public element<item_query_subtype_list>
-	{
+	struct item_query : public element<item_query_subtype_list> {
 		virtual ~item_query() = default;
 	};
 

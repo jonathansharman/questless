@@ -7,11 +7,9 @@
 #include "animation/particles/particle.hpp"
 #include "utility/utility.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! A particle for effects involving black magic.
-	class black_magic_particle : public particle
-	{
+	class black_magic_particle : public particle {
 	public:
 		black_magic_particle();
 	private:

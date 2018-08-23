@@ -6,8 +6,7 @@
 
 #include <istream>
 
-namespace ql
-{
+namespace ql {
 	//! @brief A property type, inspired by C#-style properties. Supports only static mutators.
 	//! @tparam ValueType The underlying value type.
 	//! @tparam mutator The mutator function to call when the property is changed.
@@ -19,8 +18,7 @@ namespace ql
 	//! The mutator takes the current value by reference and the new value by const-reference and is responsible for assigning the new value to
 	//! the current value, handling any domain errors appropriately.
 	template <typename ValueType, void (*mutator)(ValueType&, ValueType const&)>
-	class property
-	{
+	class property {
 	public:
 		using value_type = ValueType;
 
@@ -59,13 +57,11 @@ namespace ql
 		// Asignment //
 		///////////////
 
-		property& operator =(property const& property)
-		{
+		property& operator =(property const& property) {
 			set_value(property._value);
 			return *this;
 		}
-		property& operator =(value_type value)
-		{
+		property& operator =(value_type value) {
 			set_value(value);
 			return *this;
 		}
@@ -75,32 +71,27 @@ namespace ql
 		/////////////////////////////////////
 
 		template <typename T>
-		property& operator +=(T const& that)
-		{
+		property& operator +=(T const& that) {
 			set_value(_value + that);
 			return *this;
 		}
 		template <typename T>
-		property& operator -=(T const& that)
-		{
+		property& operator -=(T const& that) {
 			set_value(_value - that);
 			return *this;
 		}
 		template <typename T>
-		property& operator *=(T const& that)
-		{
+		property& operator *=(T const& that) {
 			set_value(_value * that);
 			return *this;
 		}
 		template <typename T>
-		property& operator /=(T const& that)
-		{
+		property& operator /=(T const& that) {
 			set_value(_value / that);
 			return *this;
 		}
 		template <typename T>
-		property& operator %=(T const& that)
-		{
+		property& operator %=(T const& that) {
 			set_value(_value % that);
 			return *this;
 		}
@@ -110,32 +101,27 @@ namespace ql
 		//////////////////////////////////
 
 		template <typename T>
-		property& operator &=(T const& that)
-		{
+		property& operator &=(T const& that) {
 			set_value(_value & that);
 			return *this;
 		}
 		template <typename T>
-		property& operator |=(T const& that)
-		{
+		property& operator |=(T const& that) {
 			set_value(_value | that);
 			return *this;
 		}
 		template <typename T>
-		property& operator ^=(T const& that)
-		{
+		property& operator ^=(T const& that) {
 			set_value(_value | that);
 			return *this;
 		}
 		template <typename T>
-		property& operator <<=(T const& that)
-		{
+		property& operator <<=(T const& that) {
 			set_value(_value << that);
 			return *this;
 		}
 		template <typename T>
-		property& operator >>=(T const& that)
-		{
+		property& operator >>=(T const& that) {
 			set_value(_value >> that);
 			return *this;
 		}
@@ -144,24 +130,20 @@ namespace ql
 		// Increment/decrement Operators //
 		///////////////////////////////////
 
-		property& operator ++()
-		{
+		property& operator ++() {
 			set_value(_value + 1);
 			return *this;
 		}
-		property& operator --()
-		{
+		property& operator --() {
 			set_value(_value - 1);
 			return *this;
 		}
-		property operator ++(int)
-		{
+		property operator ++(int) {
 			value_type value = _value;
 			set_value(_value + 1);
 			return value;
 		}
-		property operator --(int)
-		{
+		property operator --(int) {
 			value_type value = _value;
 			set_value(_value - 1);
 			return value;
@@ -171,8 +153,7 @@ namespace ql
 		// Stream Extraction Operator //
 		////////////////////////////////
 
-		friend std::istream& operator >>(std::istream& in, property& property)
-		{
+		friend std::istream& operator >>(std::istream& in, property& property) {
 			value_type value;
 			in >> value;
 			property.set_value(value);

@@ -9,13 +9,11 @@
 
 #include "agents/action.hpp"
 
-namespace ql
-{
+namespace ql {
 	class being;
 
 	//! The list of actions a being is able to perform.
-	class abilities
-	{
+	class abilities {
 	public:
 		bool can_swim() const { return _can_swim; }
 		bool can_fly() const { return _can_fly; }

@@ -7,11 +7,9 @@
 #include "animation/particles/particle.hpp"
 #include "utility/utility.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! A particle for effects involving white magic.
-	class white_magic_particle : public particle
-	{
+	class white_magic_particle : public particle {
 	public:
 		white_magic_particle();
 	private:

@@ -5,6 +5,5 @@
 #include "utility/utility.hpp"
 #include "game.hpp"
 
-namespace ql
-{
+namespace ql {
 }

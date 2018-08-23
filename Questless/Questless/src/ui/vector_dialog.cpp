@@ -3,15 +3,14 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include "ui/vector_dialog.hpp"
+
 #include "game.hpp"
 
 using namespace sdl;
 using namespace units;
 
-namespace ql
-{
-	dialog::state vector_dialog::update()
-	{
+namespace ql {
+	dialog::state vector_dialog::update() {
 		if (the_input().presses(SDLK_BACKSPACE) || the_input().presses(SDLK_ESCAPE)) {
 			return _cont(std::nullopt);
 		}
@@ -45,8 +44,7 @@ namespace ql
 		return state::open;
 	}
 
-	void vector_dialog::draw() const
-	{
+	void vector_dialog::draw() const {
 		draw_title(*_txt_title);
 		draw_prompt(*_txt_prompt);
 
@@ -54,8 +52,7 @@ namespace ql
 		//! @todo This.
 	}
 
-	void vector_dialog::load_textures()
-	{
+	void vector_dialog::load_textures() {
 		_txt_title = make_title(_title.c_str());
 		_txt_prompt = make_prompt(_prompt.c_str());
 	}

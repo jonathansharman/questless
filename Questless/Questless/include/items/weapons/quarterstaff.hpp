@@ -6,10 +6,8 @@
 
 #include "items/weapons/modal_weapon.hpp"
 
-namespace ql
-{
-	class quarterstaff : public modal_weapon_base<quarterstaff>
-	{
+namespace ql {
+	class quarterstaff : public modal_weapon_base<quarterstaff> {
 	public:
 		quarterstaff(ql::id<item> id = ql::id<item>::make());
 
@@ -24,8 +22,7 @@ namespace ql
 
 		double switch_time() const final { return 0.25; }
 	private:
-		class standard_form : public form
-		{
+		class standard_form : public form {
 		public:
 			standard_form(modal_weapon& weapon)
 				: form{weapon}
@@ -37,8 +34,7 @@ namespace ql
 
 			std::vector<uptr<action>> actions() final;
 		private:
-			class strike : public melee_attack
-			{
+			class strike : public melee_attack {
 			public:
 				using melee_attack::melee_attack;
 				std::string name() const final { return "Strike"; }
@@ -50,8 +46,7 @@ namespace ql
 			private:
 				sptr<effect> get_effect(region_tile::point source, region_tile::point target) final { return nullptr; } // @todo This.
 			};
-			class jab : public melee_attack
-			{
+			class jab : public melee_attack {
 			public:
 				using melee_attack::melee_attack;
 				std::string name() const final { return "Jab"; }
@@ -68,8 +63,7 @@ namespace ql
 			sptr<jab> _jab;
 		};
 
-		class half_staff_form : public form
-		{
+		class half_staff_form : public form {
 		public:
 			half_staff_form(modal_weapon& weapon)
 				: form{weapon}
@@ -81,13 +75,11 @@ namespace ql
 
 			std::vector<uptr<action>> actions() final;
 		private:
-			class strike : public melee_attack
-			{
+			class strike : public melee_attack {
 			public:
 				using melee_attack::melee_attack;
 				std::string name() const final { return "Strike"; }
-				dmg::group base_damage() const final
-				{
+				dmg::group base_damage() const final {
 					return dmg::group
 						{ dmg::bludgeon{18.0}
 						, dmg::protect{dmg::pad{6.0}} + dmg::protect{dmg::deflect{6.0}}
@@ -100,13 +92,11 @@ namespace ql
 			private:
 				sptr<effect> get_effect(region_tile::point source, region_tile::point target) final { return nullptr; } // @todo This.
 			};
-			class jab : public melee_attack
-			{
+			class jab : public melee_attack {
 			public:
 				using melee_attack::melee_attack;
 				std::string name() const final { return "Jab"; }
-				dmg::group base_damage() const final
-				{
+				dmg::group base_damage() const final {
 					return dmg::group
 						{ dmg::bludgeon{9.0}
 						, dmg::protect{dmg::pad{6.0}} + dmg::protect{dmg::deflect{6.0}}

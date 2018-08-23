@@ -6,8 +6,7 @@
 
 #include "utility/visitor_pattern.hpp"
 
-namespace ql
-{
+namespace ql {
 	struct being_query_heal_target;
 
 	using being_query_subtype_list = type_list::of_t<being_query_heal_target>;
@@ -15,8 +14,7 @@ namespace ql
 	DEFINE_VISITORS(being_query, being_query_subtype_list)
 
 	//! A request to an agent to specify a being.
-	struct being_query : public element<being_query_subtype_list>
-	{
+	struct being_query : public element<being_query_subtype_list> {
 		virtual ~being_query() = default;
 	};
 

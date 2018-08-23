@@ -7,13 +7,11 @@
 #include "sdl/texture.hpp"
 #include "utility/reference.hpp"
 
-namespace ql
-{
+namespace ql {
 	class body;
 
 	//! Creates textures for bodies.
-	class body_texturer
-	{
+	class body_texturer {
 	public:
 		void visit(body const& body);
 

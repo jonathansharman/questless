@@ -6,8 +6,7 @@
 
 #include "utility/visitor_pattern.hpp"
 
-namespace ql
-{
+namespace ql {
 	#define MESSAGE_FIRST \
 		X(message_arrow_miss)
 	#define MESSAGE_REST \
@@ -28,6 +27,7 @@ namespace ql
 	using message_subtype_list = type_list::of_t
 		#define X(subtype) < subtype
 		MESSAGE_FIRST
+		#undef X
 		#define X(subtype) , subtype
 		MESSAGE_REST
 		>;
@@ -36,8 +36,7 @@ namespace ql
 	DEFINE_VISITORS(message, message_subtype_list)
 
 	//! A message that can be sent to an agent.
-	struct message : public element<message_subtype_list>
-	{
+	struct message : public element<message_subtype_list> {
 		virtual ~message() = default;
 	};
 
@@ -49,8 +48,7 @@ namespace ql
 	struct message_incant_failed_mute : message_base<message_incant_failed_mute> {};
 	struct message_melee_miss : message_base<message_melee_miss> {};
 	struct message_not_enough_ammo : message_base<message_not_enough_ammo> {};
-	struct message_not_enough_charge : message_base<message_not_enough_charge>
-	{
+	struct message_not_enough_charge : message_base<message_not_enough_charge> {
 		double charge_deficit;
 		message_not_enough_charge(double charge_deficit) : charge_deficit{charge_deficit} {}
 	};

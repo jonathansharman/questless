@@ -9,11 +9,9 @@
 #include "items/item.hpp"
 #include "items/craftable.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! A drinkable magic concoction.
-	class potion : public item, public craftable
-	{
+	class potion : public item, public craftable {
 	public:
 		virtual ~potion() = 0 {}
 	protected:

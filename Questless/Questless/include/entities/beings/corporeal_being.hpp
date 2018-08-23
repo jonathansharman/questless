@@ -6,11 +6,9 @@
 
 #include "being.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! A being with a physical body.
-	class corporeal_being : public being
-	{
+	class corporeal_being : public being {
 	public:
 		bool corporeal() const final { return true; }
 	protected:

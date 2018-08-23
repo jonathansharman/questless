@@ -9,14 +9,11 @@
 #include <optional>
 
 #include "dialog.hpp"
-#include "animation/camera.hpp"
 #include "world/coordinates.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! Retrieves region tile coordinates from the player.
-	class tile_dialog : public dialog
-	{
+	class tile_dialog : public dialog {
 	public:
 		tile_dialog
 			( std::string title

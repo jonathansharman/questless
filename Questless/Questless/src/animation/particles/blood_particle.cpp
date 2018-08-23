@@ -9,8 +9,7 @@
 
 using namespace units;
 
-namespace ql
-{
+namespace ql {
 	blood_particle::blood_particle() : particle
 		{ game_space::vector::zero() // displacement
 		, game_space::vector::zero() / 1.0s // velocity
@@ -28,8 +27,7 @@ namespace ql
 		_scale_velocity = game_space::scale_velocity{scale{-_scale / _lifetime.count()}};
 	}
 
-	sdl::texture const& blood_particle::texture() const
-	{
+	sdl::texture const& blood_particle::texture() const {
 		static sdl::texture_handle handle = sdl::the_texture_manager().add("resources/textures/particles/blood.png");
 		return sdl::the_texture_manager()[handle];
 	}

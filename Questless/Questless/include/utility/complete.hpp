@@ -4,8 +4,7 @@
 
 #pragma once
 
-namespace ql
-{
+namespace ql {
 	//! Trivial type to use as the return type from functions with callbacks that don't need to return anything.
 	//! The purpose of returning a @p complete value, rather than void, from a function that takes a callback is
 	//! to enforce either (1) calling the callback at the end of the function or (2) effectively documenting

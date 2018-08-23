@@ -7,14 +7,11 @@
 #include "entities/beings/being.hpp"
 #include "items/weapons/weapon.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! A weapon with different forms or modes of use.
-	class modal_weapon : public weapon
-	{
+	class modal_weapon : public weapon {
 	public:
-		class form
-		{
+		class form {
 		public:
 			form(modal_weapon& weapon) : _weapon{weapon} {}
 
@@ -37,22 +34,19 @@ namespace ql
 		std::vector<uptr<action>> actions() final { return _form->actions(); }
 	protected:
 		template <typename TargetForm>
-		class switch_form : public action
-		{
+		class switch_form : public action {
 		public:
 			switch_form(modal_weapon& weapon, std::string name)
 				: _weapon{weapon}, _form{weapon._form}, _name{std::move(name)}
 			{}
 
-			static auto make(modal_weapon& weapon, std::string name)
-			{
+			static auto make(modal_weapon& weapon, std::string name) {
 				return umake<switch_form<TargetForm>>(weapon, name);
 			}
 
 			std::string name() const final { return _name; }
 
-			complete perform(being& actor, cont cont) final
-			{
+			complete perform(being& actor, cont cont) final {
 				_form = umake<TargetForm>(_weapon);
 				actor.busy_time += _weapon.switch_time();
 				return cont(result::success);

@@ -8,12 +8,9 @@
 
 #include "space.hpp"
 
-namespace units
-{
-	namespace detail
-	{
-		class view_space_buffer : public buffer_base<float, 2>
-		{
+namespace units {
+	namespace detail {
+		class view_space_buffer : public buffer_base<float, 2> {
 		public:
 			auto& x() & { return _elements[0]; }
 			constexpr auto const& x() const& { return _elements[0]; }
@@ -26,8 +23,7 @@ namespace units
 		};
 	}
 
-	struct view_space : space<struct view_space_tag, float, 2, detail::view_space_buffer>
-	{
+	struct view_space : space<struct view_space_tag, float, 2, detail::view_space_buffer> {
 		using h_align = axis<0>::align;
 		using v_align = axis<1>::align;
 

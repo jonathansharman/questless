@@ -7,26 +7,21 @@
 #include <cstdint>
 
 // Specialize std::hash.
-namespace ql
-{
+namespace ql {
 	template <typename T>
 	class id;
 }
-namespace std
-{
+namespace std {
 	template <typename T>
-	struct hash<ql::id<T>>
-	{
+	struct hash<ql::id<T>> {
 		size_t operator ()(ql::id<T> const& id) const;
 	};
 }
 
-namespace ql
-{
+namespace ql {
 	//! Uniquely identifies an object of type T.
 	template <typename T>
-	class id
-	{
+	class id {
 	public:
 		using key_t = uint64_t;
 
@@ -46,8 +41,7 @@ namespace ql
 		bool operator ==(id that) const { return _key == that._key; }
 
 		//! Inserts the ID's key into the stream.
-		friend std::ostream& operator <<(std::ostream& out, id id)
-		{
+		friend std::ostream& operator <<(std::ostream& out, id id) {
 			out << id._key;
 			return out;
 		}
@@ -57,16 +51,14 @@ namespace ql
 		friend size_t std::hash<id>::operator ()(const id&) const;
 
 		//! The next unused ID key.
-		static key_t next()
-		{
+		static key_t next() {
 			//! @todo This won't work once saving and loading are in place.
 			static key_t next_key = 0;
 			return next_key++;
 		}
 
 		//! Returns an ID key read from the given stream.
-		static key_t read_key(std::istream& in)
-		{
+		static key_t read_key(std::istream& in) {
 			key_t key;
 			in >> key;
 			return key;
@@ -75,11 +67,9 @@ namespace ql
 }
 
 // Define std::hash specialization.
-namespace std
-{
+namespace std {
 	template <typename T>
-	size_t hash<ql::id<T>>::operator ()(ql::id<T> const& id) const
-	{
+	size_t hash<ql::id<T>>::operator ()(ql::id<T> const& id) const {
 		return hash<ql::id<T>::key_t>{}(id._key);
 	}
 }

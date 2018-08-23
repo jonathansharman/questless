@@ -13,16 +13,13 @@
 #include "items/weapons/weapon.hpp"
 #include "utility/random.hpp"
 
-namespace ql
-{
-	dmg::group attack::damage() const
-	{
+namespace ql {
+	dmg::group attack::damage() const {
 		auto& weapon = the_game().items.cref_as<ql::weapon>(weapon_id);
 		return base_damage() * (0.5 + weapon.integrity / weapon.durability() / 2.0);
 	}
 
-	complete melee_attack::launch::perform(being& actor, cont cont)
-	{
+	complete melee_attack::launch::perform(being& actor, cont cont) {
 		return _attack->cost().check(actor, [&] {
 			return actor.agent().query_vector(umake<vector_query_melee_attack>(), actor.coords, [](region_tile::vector v) { return v.length() != 0; },
 				[&actor, cont, attack = _attack](std::optional<region_tile::vector> opt_vector) {
@@ -38,8 +35,7 @@ namespace ql
 		});
 	}
 
-	complete melee_attack::finish::perform(being& actor, cont cont)
-	{
+	complete melee_attack::finish::perform(being& actor, cont cont) {
 		if (weapon* weapon = the_game().items.ptr_as<ql::weapon>(_attack->weapon_id)) {
 			if (weapon->equipped() && *weapon->opt_bearer_id() == actor.id) {
 				_attack->cost().incur(actor);
@@ -72,8 +68,7 @@ namespace ql
 		}
 	}
 
-	complete ranged_attack::launch::perform(being& actor, cont cont)
-	{
+	complete ranged_attack::launch::perform(being& actor, cont cont) {
 		return _attack->cost().check(actor, [&] {
 			weapon const& weapon = the_game().items.cref_as<ql::weapon>(_attack->weapon_id);
 			double const delay = weapon.active_cooldown + _attack->wind_up();
@@ -81,8 +76,7 @@ namespace ql
 		});
 	}
 
-	complete ranged_attack::finish::perform(being& actor, cont cont)
-	{
+	complete ranged_attack::finish::perform(being& actor, cont cont) {
 		if (weapon* weapon = the_game().items.ptr_as<ql::weapon>(_attack->weapon_id)) {
 			if (weapon->equipped() && *weapon->opt_bearer_id() == actor.id) {
 				return _attack->cost().check(actor, [&] {

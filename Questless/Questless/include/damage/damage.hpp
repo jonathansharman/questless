@@ -8,20 +8,16 @@
 
 #include "utility/static_bounded.hpp"
 
-namespace ql::dmg
-{
-	namespace detail
-	{
+namespace ql::dmg {
+	namespace detail {
 		//! @todo Replace with C++17 inline variable when supported.
 		struct minimum { static constexpr double value = 0.0; };
 
-		struct type : public static_bounded<double, minimum::value>
-		{
+		struct type : public static_bounded<double, minimum::value> {
 			explicit constexpr type(double amount) : static_bounded(amount) {}
 		};
 
-		struct factor_type : public static_bounded<double, minimum::value>
-		{
+		struct factor_type : public static_bounded<double, minimum::value> {
 			explicit constexpr factor_type(double amount) : static_bounded(amount) {}
 		};
 	}

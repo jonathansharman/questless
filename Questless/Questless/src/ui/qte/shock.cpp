@@ -12,8 +12,7 @@ using namespace sdl;
 using namespace units;
 using namespace units::math;
 
-namespace ql::qte
-{
+namespace ql::qte {
 	shock::shock(region_tile::point target_coords, std::function<void(double)> cont)
 		: _target_point{to_world(target_coords)}
 		, _cont{std::move(cont)}
@@ -22,8 +21,7 @@ namespace ql::qte
 		_txt_prompt = make_prompt("Circle the target counter-clockwise as fast as you can!");
 	}
 
-	dialog::state shock::update()
-	{
+	dialog::state shock::update() {
 		static constexpr units::game_space::seconds time_limit = 5.0s;
 		static constexpr int charges_per_quadrant = 4;
 		static constexpr double expected_charges = charges_per_quadrant * 70.0;
@@ -33,10 +31,9 @@ namespace ql::qte
 			return _cont(_charges.size() / expected_charges);
 		}
 
-		// Acclerate only when the mouse moves to the next quadrant over.
 		bool accelerate = false;
-		{
-			game_space::vector v = the_game().camera().point_hovered() - _target_point;
+		{ // Acclerate only when the mouse moves to the next quadrant over.
+			game_space::vector const v = the_game().camera().point_hovered() - _target_point;
 			switch (_quadrant) {
 				case 0:
 					if (v.x() > 0.0 && v.y() > 0.0) {
@@ -96,8 +93,7 @@ namespace ql::qte
 		return state::open;
 	}
 
-	void shock::draw() const
-	{
+	void shock::draw() const {
 		//! @todo Refactor point charge to use a particle animation?
 
 		static auto point_charge_texture_handle = the_texture_manager().add("resources/textures/particles/glow-large.png");

@@ -6,13 +6,11 @@
 
 #include "agents/cost.hpp"
 
-namespace ql
-{
+namespace ql {
 	class gatestone;
 
 	//! The cost of performing an action.
-	class charge_cost : public cost
-	{
+	class charge_cost : public cost {
 	public:
 		charge_cost(gatestone& gatestone, double amount)
 			: _gatestone{gatestone}

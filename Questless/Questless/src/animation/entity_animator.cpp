@@ -15,15 +15,13 @@
 using namespace sdl;
 using namespace units;
 
-namespace ql
-{
+namespace ql {
 	entity_animator::entity_animator() = default;
 	entity_animator::~entity_animator() = default;
 
 	// Beings
 
-	void entity_animator::visit(human const& human)
-	{
+	void entity_animator::visit(human const& human) {
 		auto animation_stack = umake<ql::animation_stack>();
 
 		// Sprite animation
@@ -57,8 +55,7 @@ namespace ql
 
 		_animation = std::move(animation_stack);
 	}
-	void entity_animator::visit(goblin const& goblin)
-	{
+	void entity_animator::visit(goblin const& goblin) {
 		auto animation_stack = umake<ql::animation_stack>();
 
 		// Sprite animation
@@ -95,8 +92,7 @@ namespace ql
 
 	// Objects
 	
-	void entity_animator::visit(campfire const&)
-	{
+	void entity_animator::visit(campfire const&) {
 		static auto texture_handle = the_texture_manager().add("resources/textures/entities/objects/campfire.png");
 		auto animation_stack = umake<ql::animation_stack>();
 		animation_stack->add(umake<still>(texture_handle, texture_space::vector{0, 0}));
@@ -109,13 +105,11 @@ namespace ql
 		animation_stack->add(std::move(flame));
 		_animation = std::move(animation_stack);
 	}
-	void entity_animator::visit(corpse const&)
-	{
+	void entity_animator::visit(corpse const&) {
 		static auto texture_handle = the_texture_manager().add("resources/textures/entities/objects/grave.png");
 		_animation = umake<still>(texture_handle, texture_space::vector{0, 12});
 	}
-	void entity_animator::visit(item_box const&)
-	{
+	void entity_animator::visit(item_box const&) {
 		static auto texture_handle = the_texture_manager().add("resources/textures/entities/objects/item-box.png");
 		_animation = umake<still>(texture_handle, texture_space::vector{0, 8});
 	}

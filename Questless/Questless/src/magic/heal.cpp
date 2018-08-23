@@ -13,10 +13,8 @@
 
 //! @todo double check all the captures to make sure they're the proper type.
 
-namespace ql::magic
-{
-	complete heal::perform_cast(being& caster, gatestone& gatestone, action::cont cont)
-	{
+namespace ql::magic {
+	complete heal::perform_cast(being& caster, gatestone& gatestone, action::cont cont) {
 		return caster.agent().query_being(umake<being_query_heal_target>(), action::being_in_range_predicate(caster, _range),
 			[&caster, &gatestone, cont = std::move(cont)](std::optional<being*> opt_target) {
 				if (!opt_target) {

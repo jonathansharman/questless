@@ -8,11 +8,9 @@
 
 #include "dialog.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! Displays a message to the player.
-	class message_dialog : public dialog
-	{
+	class message_dialog : public dialog {
 	public:
 		message_dialog(std::string title, std::string prompt, std::function<void()> cont)
 			: _title{std::move(title)}, _prompt{std::move(prompt)}, _cont{std::move(cont)}

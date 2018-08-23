@@ -6,10 +6,8 @@
 
 #include "items/weapons/weapon.hpp"
 
-namespace ql
-{
-	class bow : public weapon_base<bow>
-	{
+namespace ql {
+	class bow : public weapon_base<bow> {
 	public:
 		bow(ql::id<item> id = ql::id<item>::make())
 			: item{id}
@@ -28,8 +26,7 @@ namespace ql
 
 		std::vector<uptr<action>> actions() final;
 	private:
-		class shoot : public ranged_attack
-		{
+		class shoot : public ranged_attack {
 		public:
 			shoot(ql::id<item> weapon_id) : ranged_attack{weapon_id} {}
 			std::string name() const final { return "Shoot"; }
@@ -41,8 +38,7 @@ namespace ql
 			ql::cost const& cost() const final { return _cost; }
 			int range() const final { return 7; }
 		private:
-			class arrow_cost : public cost
-			{
+			class arrow_cost : public cost {
 			public:
 				complete check(being& actor, cont cont) const final;
 				void incur(being& actor) const final;

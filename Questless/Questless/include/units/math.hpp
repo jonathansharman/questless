@@ -7,14 +7,11 @@
 
 #include <type_traits>
 
-namespace units::math
-{
-	namespace detail
-	{
+namespace units::math {
+	namespace detail {
 		//! @todo Replace sqrt_iterative with constexpr lambda if recursive lambdas are added. Also, reimplement as a loop once supported.
 		template <typename Floating>
-		constexpr Floating sqrt_iterative(Floating x, Floating current, Floating previous)
-		{
+		constexpr Floating sqrt_iterative(Floating const& x, Floating const& current, Floating const& previous) {
 			return current == previous
 				? current
 				: sqrt_iterative(x, static_cast<Floating>(0.5 * (current + x / current)), current);
@@ -26,8 +23,7 @@ namespace units::math
 
 	//! The square root of the integral number @p x.
 	template <typename Arithmetic>
-	constexpr Arithmetic sqrt(Arithmetic x)
-	{
+	constexpr Arithmetic sqrt(Arithmetic x) {
 		if constexpr (std::is_integral_v<Arithmetic>) {
 			return static_cast<Arithmetic>(sqrt(static_cast<double>(x)));
 		} else if constexpr (std::is_floating_point_v<Arithmetic>) {
@@ -39,22 +35,20 @@ namespace units::math
 
 	//! The square of @p value.
 	template <typename T>
-	constexpr T square(T value) { return value * value; }
+	constexpr T square(T const& value) { return value * value; }
 
 	//! The cube of the @p value.
 	template <typename T>
-	constexpr T cube(T value) { return value * value * value; }
+	constexpr T cube(T const& value) { return value * value * value; }
 
 	//! The absolute value of @p value.
 	template <typename T>
-	constexpr T abs(T value)
-	{
+	constexpr T abs(T const& value) {
 		return value < static_cast<T>(0) ? -value : value;
 	}
 
 	template <typename Floating, typename = std::enable_if_t<std::is_floating_point<Floating>::value>>
-	constexpr long lround(Floating x)
-	{
+	constexpr long lround(Floating const& x) {
 		return x > 0 ? static_cast<long>(x + 0.5) : static_cast<long>(x - 0.5);
 	}
 }

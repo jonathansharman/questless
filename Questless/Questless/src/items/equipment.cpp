@@ -11,10 +11,8 @@
 #include "entities/beings/being.hpp"
 #include "game.hpp"
 
-namespace ql
-{
-	complete equipment::equip::perform(being& actor, cont cont)
-	{
+namespace ql {
+	complete equipment::equip::perform(being& actor, cont cont) {
 		//! @todo Allow bearer to choose where to equip item.
 
 		//! @todo Report failure to equip.
@@ -168,8 +166,7 @@ namespace ql
 		return cont(result::success);
 	}
 
-	complete equipment::unequip::perform(being& actor, cont cont)
-	{
+	complete equipment::unequip::perform(being& actor, cont cont) {
 		actor.busy_time += _equipment.unequip_time();
 
 		_equipment.unequip();
@@ -177,8 +174,7 @@ namespace ql
 		return cont(result::success);
 	}
 
-	void equipment::unequip()
-	{
+	void equipment::unequip() {
 		if (_opt_bearer_id) {
 			if (being* bearer = the_game().beings.ptr(*_opt_bearer_id)) {
 				for (auto head_id : _head_ids) {

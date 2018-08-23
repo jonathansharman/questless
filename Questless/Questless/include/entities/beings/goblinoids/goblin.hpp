@@ -6,10 +6,8 @@
 
 #include "entities/beings/corporeal_being.hpp"
 
-namespace ql
-{
-	class goblin : public corporeal_being_base<goblin>
-	{
+namespace ql {
+	class goblin : public corporeal_being_base<goblin> {
 	public:
 		goblin(const std::function<uptr<ql::agent>(being&)>& make_agent, ql::id<being> id = ql::id<being>::make());
 		goblin(std::istream& in);
@@ -20,8 +18,7 @@ namespace ql
 
 		double transparency() const final { return 0.5; }
 
-		std::string const& description() const
-		{
+		std::string const& description() const {
 			return "The goblins are a diminutive and simpleminded humanoid race, known particularly for their bad "
 				"tempers and love of mischief. Goblins rarely form large communities, preferring small family groups "
 				"or solitude. They are remarkably sneaky, and many an unwary traveller through goblin territory has "

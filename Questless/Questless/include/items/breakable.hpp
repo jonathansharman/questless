@@ -7,11 +7,9 @@
 #include "items/item.hpp"
 #include "utility/lazy_bounded.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! Abstract base class for items which can be worn down and broken.
-	class breakable : public virtual item
-	{
+	class breakable : public virtual item {
 	public:
 		virtual ~breakable() = default;
 

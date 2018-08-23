@@ -7,11 +7,9 @@
 
 #include <gsl/span>
 
-namespace sdl
-{
+namespace sdl {
 	namespace {
-		gsl::span<Uint8 const> const& keyboard_state()
-		{
+		gsl::span<Uint8 const> const& keyboard_state() {
 			static int key_count;
 			static gsl::span<Uint8 const> result;
 			static bool first_call = true;
@@ -24,8 +22,7 @@ namespace sdl
 		}
 	}
 
-	decltype(SDLK_1) input::index_to_num_key(size_t index)
-	{
+	decltype(SDLK_1) input::index_to_num_key(size_t index) {
 		switch (index) {
 			case 0: return SDLK_1;
 			case 1: return SDLK_2;
@@ -51,8 +48,7 @@ namespace sdl
 		, _prev_mouse_position{0, 0}
 	{}
 
-	void input::update()
-	{
+	void input::update() {
 		for (std::size_t i = 0; i < _prev_keyboard_state.size(); ++i) {
 			_prev_keyboard_state[i] = keyboard_state()[i];
 		}
@@ -111,28 +107,23 @@ namespace sdl
 		}
 	}
 
-	int input::presses(SDL_Keycode key) const
-	{
+	int input::presses(SDL_Keycode key) const {
 		return static_cast<int>(_presses.count(key));
 	}
 
-	int input::releases(SDL_Keycode key) const
-	{
+	int input::releases(SDL_Keycode key) const {
 		return static_cast<int>(_releases.count(key));
 	}
 
-	bool input::up(SDL_Keycode key) const
-	{
+	bool input::up(SDL_Keycode key) const {
 		return !keyboard_state()[SDL_GetScancodeFromKey(key)];
 	}
 
-	bool input::down(SDL_Keycode key) const
-	{
+	bool input::down(SDL_Keycode key) const {
 		return keyboard_state()[SDL_GetScancodeFromKey(key)] == 1;
 	}
 
-	int input::any_presses(bool include_mouse_buttons) const
-	{
+	int input::any_presses(bool include_mouse_buttons) const {
 		//! @todo This is returning a bool...
 
 		if (include_mouse_buttons && _curr_mouse_state & (_curr_mouse_state ^ _prev_mouse_state)) {
@@ -141,8 +132,7 @@ namespace sdl
 		return !_press_buffer.empty();
 	}
 
-	int input::any_releases(bool include_mouse_buttons) const
-	{
+	int input::any_releases(bool include_mouse_buttons) const {
 		//! @todo This is also returning a bool...
 
 		if (include_mouse_buttons && ~_curr_mouse_state & (_curr_mouse_state ^ _prev_mouse_state)) {
@@ -151,8 +141,7 @@ namespace sdl
 		return !_release_buffer.empty();
 	}
 
-	bool input::any_down(bool include_mouse_buttons) const
-	{
+	bool input::any_down(bool include_mouse_buttons) const {
 		if (include_mouse_buttons && _curr_mouse_state) {
 			return true;
 		}
@@ -164,8 +153,7 @@ namespace sdl
 		return false;
 	}
 
-	bool input::any_up(bool include_mouse_buttons) const
-	{
+	bool input::any_up(bool include_mouse_buttons) const {
 		if (include_mouse_buttons && !_curr_mouse_state) {
 			return true;
 		}
@@ -177,28 +165,23 @@ namespace sdl
 		return false;
 	}
 
-	bool input::shift() const
-	{
+	bool input::shift() const {
 		return keyboard_state()[SDL_SCANCODE_LSHIFT] || keyboard_state()[SDL_SCANCODE_RSHIFT];
 	}
 
-	bool input::ctrl() const
-	{
+	bool input::ctrl() const {
 		return keyboard_state()[SDL_SCANCODE_LCTRL] || keyboard_state()[SDL_SCANCODE_RCTRL];
 	}
 
-	bool input::alt() const
-	{
+	bool input::alt() const {
 		return keyboard_state()[SDL_SCANCODE_LALT] || keyboard_state()[SDL_SCANCODE_RALT];
 	}
 
-	bool input::meta() const
-	{
+	bool input::meta() const {
 		return keyboard_state()[SDL_SCANCODE_LGUI] || keyboard_state()[SDL_SCANCODE_RGUI];
 	}
 
-	bool input::pressed(mouse_button button) const
-	{
+	bool input::pressed(mouse_button button) const {
 		switch(button) {
 			case mouse_button::left:
 				return (_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT)) && !(_prev_mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT));
@@ -211,8 +194,7 @@ namespace sdl
 		}
 	}
 
-	bool input::released(mouse_button button) const
-	{
+	bool input::released(mouse_button button) const {
 		switch(button) {
 			case mouse_button::left:
 				return !(_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT)) && (_prev_mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT));
@@ -225,8 +207,7 @@ namespace sdl
 		}
 	}
 
-	bool input::down(mouse_button button) const
-	{
+	bool input::down(mouse_button button) const {
 		switch(button) {
 			case mouse_button::left:
 				return (_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0;
@@ -239,8 +220,7 @@ namespace sdl
 		}
 	}
 
-	bool input::up(mouse_button button) const
-	{
+	bool input::up(mouse_button button) const {
 		switch(button) {
 			case mouse_button::left:
 				return !(_curr_mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT));
@@ -253,8 +233,7 @@ namespace sdl
 		}
 	}
 
-	void input::move_mouse(units::window_space::point const& position)
-	{
+	void input::move_mouse(units::window_space::point const& position) {
 		SDL_WarpMouseInWindow(the_window().sdl_ptr(), position.x(), position.y());
 		_mouse_position = position;
 	}

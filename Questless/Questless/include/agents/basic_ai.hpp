@@ -8,11 +8,9 @@
 #include "effects/effect_visitor.hpp"
 #include "utility/id.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! A basic AI, suitable for most NPCs.
-	class basic_ai : public agent, public effect_const_visitor
-	{
+	class basic_ai : public agent, public effect_const_visitor {
 	public:
 		basic_ai(ql::being& being) : agent{being} {}
 
@@ -85,15 +83,13 @@ namespace ql
 		void visit(lightning_bolt_effect const&) override {} // Ignore.
 	private:
 		friend class state;
-		struct state
-		{
+		struct state {
 			virtual ~state() = default;
 			virtual complete act(basic_ai& ai) = 0;
 		};
 		struct idle_state : public state { complete act(basic_ai& ai) override; };
 		struct walk_state : public state { complete act(basic_ai& ai) override; };
-		struct attack_state : public state
-		{
+		struct attack_state : public state {
 			id<ql::being> target_id;
 			attack_state(id<ql::being> target_id) : target_id{target_id} {}
 			complete act(basic_ai& ai) override;

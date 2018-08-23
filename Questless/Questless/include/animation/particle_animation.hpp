@@ -10,11 +10,9 @@
 #include "particles/particle.hpp"
 #include "utility/reference.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! Abstract base for animations composed of particle effects.
-	class particle_animation : public animation
-	{
+	class particle_animation : public animation {
 	public:
 		virtual ~particle_animation() = default;
 
@@ -23,14 +21,12 @@ namespace ql
 		void draw(units::game_space::point position, camera const& camera, units::colors::color_vector color_vector = units::colors::white_vector()) const final;
 	protected:
 		//! Adds @p particle to the front of the list of particles.
-		void push_front(uptr<particle> particle)
-		{
+		void push_front(uptr<particle> particle) {
 			_particles.push_front(std::move(particle));
 		}
 
 		//! Adds @p particle to the back of the list of particles.
-		void push_back(uptr<particle> particle)
-		{
+		void push_back(uptr<particle> particle) {
 			_particles.push_back(std::move(particle));
 		}
 

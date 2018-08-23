@@ -9,8 +9,7 @@
 #include "utility/tagged_type.hpp"
 #include "utility/static_bounded.hpp"
 
-namespace ql::dmg
-{
+namespace ql::dmg {
 	struct pad : tagged_type<double> { using tagged_type::tagged_type; };
 	struct deflect : tagged_type<double> { using tagged_type::tagged_type; };
 	struct fireproof : tagged_type<double> { using tagged_type::tagged_type; };
@@ -20,8 +19,7 @@ namespace ql::dmg
 	struct insulate : tagged_type<double> { using tagged_type::tagged_type; };
 
 	//! A fixed reduction to damage, by type.
-	class protect
-	{
+	class protect {
 	public:
 		constexpr protect() = default;
 
@@ -45,8 +43,7 @@ namespace ql::dmg
 
 		static constexpr protect zero() { return protect{}; }
 
-		friend std::ostream& operator <<(std::ostream& out, protect const& p)
-		{
+		friend std::ostream& operator <<(std::ostream& out, protect const& p) {
 			out << p._pad.value() << ' '
 				<< p._deflect.value() << ' '
 				<< p._fireproof.value() << ' '
@@ -57,75 +54,68 @@ namespace ql::dmg
 			return out;
 		}
 
-		friend std::istream& operator >> (std::istream& in, protect& p)
-		{
+		friend std::istream& operator >> (std::istream& in, protect& p) {
 			in >> p._pad >> p._deflect >> p._fireproof >> p._frostproof >> p._fortify >> p._immunize >> p._insulate;
 			return in;
 		}
 		
-		friend protect operator +(protect const& p1, protect const& p2)
-		{
-			return protect
-				{ dmg::pad{p1._pad + p2._pad}
-				, dmg::deflect{p1._deflect + p2._deflect}
-				, dmg::fireproof{p1._fireproof + p2._fireproof}
-				, dmg::frostproof{p1._frostproof + p2._frostproof}
-				, dmg::fortify{p1._fortify + p2._fortify}
-				, dmg::immunize{p1._immunize + p2._immunize}
-				, dmg::insulate{p1._insulate + p2._insulate}
+		friend protect operator +(protect const& p1, protect const& p2) {
+			return protect {
+				dmg::pad{p1._pad + p2._pad},
+				dmg::deflect{p1._deflect + p2._deflect},
+				dmg::fireproof{p1._fireproof + p2._fireproof},
+				dmg::frostproof{p1._frostproof + p2._frostproof},
+				dmg::fortify{p1._fortify + p2._fortify},
+				dmg::immunize{p1._immunize + p2._immunize},
+				dmg::insulate{p1._insulate + p2._insulate},
 			};
 		}
-		friend protect operator -(protect const& p1, protect const& p2)
-		{
-			return protect
-				{ dmg::pad{p1._pad - p2._pad}
-				, dmg::deflect{p1._deflect - p2._deflect}
-				, dmg::fireproof{p1._fireproof - p2._fireproof}
-				, dmg::frostproof{p1._frostproof - p2._frostproof}
-				, dmg::fortify{p1._fortify - p2._fortify}
-				, dmg::immunize{p1._immunize - p2._immunize}
-				, dmg::insulate{p1._insulate - p2._insulate}
-				};
+		friend protect operator -(protect const& p1, protect const& p2) {
+			return protect {
+				dmg::pad{p1._pad - p2._pad},
+				dmg::deflect{p1._deflect - p2._deflect},
+				dmg::fireproof{p1._fireproof - p2._fireproof},
+				dmg::frostproof{p1._frostproof - p2._frostproof},
+				dmg::fortify{p1._fortify - p2._fortify},
+				dmg::immunize{p1._immunize - p2._immunize},
+				dmg::insulate{p1._insulate - p2._insulate},
+			};
 		}
-		friend protect operator *(protect const& p, double k)
-		{
-			return protect
-				{ dmg::pad{k * p._pad}
-				, dmg::deflect{k * p._deflect}
-				, dmg::fireproof{k * p._fireproof}
-				, dmg::frostproof{k * p._frostproof}
-				, dmg::fortify{k * p._fortify}
-				, dmg::immunize{k * p._immunize}
-				, dmg::insulate{k * p._insulate}
-				};
+		friend protect operator *(protect const& p, double k) {
+			return protect {
+				dmg::pad{k * p._pad},
+				dmg::deflect{k * p._deflect},
+				dmg::fireproof{k * p._fireproof},
+				dmg::frostproof{k * p._frostproof},
+				dmg::fortify{k * p._fortify},
+				dmg::immunize{k * p._immunize},
+				dmg::insulate{k * p._insulate},
+			};
 		}
-		friend protect operator *(double k, protect const& p)
-		{
-			return protect
-				{ dmg::pad{k * p._pad}
-				, dmg::deflect{k * p._deflect}
-				, dmg::fireproof{k * p._fireproof}
-				, dmg::frostproof{k * p._frostproof}
-				, dmg::fortify{k * p._fortify}
-				, dmg::immunize{k * p._immunize}
-				, dmg::insulate{k * p._insulate}
-				};
+		friend protect operator *(double k, protect const& p) {
+			return protect {
+				dmg::pad{k * p._pad},
+				dmg::deflect{k * p._deflect},
+				dmg::fireproof{k * p._fireproof},
+				dmg::frostproof{k * p._frostproof},
+				dmg::fortify{k * p._fortify},
+				dmg::immunize{k * p._immunize},
+				dmg::insulate{k * p._insulate},
+			};
 		}
-		friend protect operator /(protect const& p, double k)
-		{
-			return protect
-				{ dmg::pad{p._pad / k}
-				, dmg::deflect{p._deflect / k}
-				, dmg::fireproof{p._fireproof / k}
-				, dmg::frostproof{p._frostproof / k}
-				, dmg::fortify{p._fortify / k}
-				, dmg::immunize{p._immunize / k}
-				, dmg::insulate{p._insulate / k}
-				};
+		friend protect operator /(protect const& p, double k) {
+			return protect {
+				dmg::pad{p._pad / k},
+				dmg::deflect{p._deflect / k},
+				dmg::fireproof{p._fireproof / k},
+				dmg::frostproof{p._frostproof / k},
+				dmg::fortify{p._fortify / k},
+				dmg::immunize{p._immunize / k},
+				dmg::insulate{p._insulate / k},
+			};
 		}
 
-		protect& operator +=(protect const& p)
-		{
+		protect& operator +=(protect const& p) {
 			_pad += p._pad;
 			_deflect += p._deflect;
 			_fireproof += p._fireproof;
@@ -135,8 +125,7 @@ namespace ql::dmg
 			_insulate += p._insulate;
 			return *this;
 		}
-		protect& operator -=(protect const& p)
-		{
+		protect& operator -=(protect const& p) {
 			_pad -= p._pad;
 			_deflect -= p._deflect;
 			_fireproof -= p._fireproof;
@@ -146,8 +135,7 @@ namespace ql::dmg
 			_insulate -= p._insulate;
 			return *this;
 		}
-		protect& operator *=(double k)
-		{
+		protect& operator *=(double k) {
 			_pad *= k;
 			_deflect *= k;
 			_fireproof *= k;
@@ -157,8 +145,7 @@ namespace ql::dmg
 			_insulate *= k;
 			return *this;
 		}
-		protect& operator /=(double k)
-		{
+		protect& operator /=(double k) {
 			_pad /= k;
 			_deflect /= k;
 			_fireproof /= k;

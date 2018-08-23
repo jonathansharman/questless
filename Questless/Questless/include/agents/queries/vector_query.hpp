@@ -6,8 +6,7 @@
 
 #include "utility/visitor_pattern.hpp"
 
-namespace ql
-{
+namespace ql {
 	struct vector_query_melee_attack;
 
 	using vector_query_subtype_list = type_list::of_t<vector_query_melee_attack>;
@@ -15,8 +14,7 @@ namespace ql
 	DEFINE_VISITORS(vector_query, vector_query_subtype_list)
 
 	//! A request to an agent for a vector in region tile space.
-	struct vector_query : public element<vector_query_subtype_list>
-	{
+	struct vector_query : public element<vector_query_subtype_list> {
 		virtual ~vector_query() = default;
 	};
 

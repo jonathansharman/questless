@@ -14,10 +14,8 @@
 using namespace sdl;
 using namespace units;
 
-namespace
-{
-	colors::color get_color(ql::body_part const& part)
-	{
+namespace {
+	colors::color get_color(ql::body_part const& part) {
 		double const pct_health = part.health / part.vitality;
 		constexpr double threshold = 0.5f;
 		bool const below_threshold = pct_health < threshold;
@@ -32,22 +30,19 @@ namespace
 		return colors::color{red, green, 0.0f, 1.0f};
 	};
 
-	struct render_data
-	{
+	struct render_data {
 		std::unordered_multimap<int, std::tuple<view_space::polygon, colors::color>> colored_hitboxes;
 		view_space::box bounds;
 	};
 
-	render_data get_render_data(ql::body_part const& root)
-	{
+	render_data get_render_data(ql::body_part const& root) {
 		std::unordered_multimap<int, std::tuple<view_space::polygon, colors::color>> colored_hitboxes;
 
 		// Initialize bounds to just the first vertex of the root part.
 		view_space::box bounds{root.hitbox().front(), view_space::vector::zero()};
 
 		std::function<void(ql::body_part const&, view_space::vector, view_space::radians)>
-		traverse = [&](ql::body_part const& part, view_space::vector parent_offset, view_space::radians parent_rotation)
-		{
+		traverse = [&](ql::body_part const& part, view_space::vector parent_offset, view_space::radians parent_rotation) {
 			// Adjust hitbox and extend body bounds.
 			auto hitbox = part.hitbox();
 			for (auto& vertex : hitbox) {
@@ -74,10 +69,8 @@ namespace
 	}
 }
 
-namespace ql
-{
-	void body_texturer::visit(body const& body)
-	{
+namespace ql {
+	void body_texturer::visit(body const& body) {
 		render_data data = get_render_data(body.root());
 
 		window_space::vector const texture_size

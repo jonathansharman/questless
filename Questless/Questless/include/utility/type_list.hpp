@@ -7,18 +7,15 @@
 
 #include <type_traits>
 
-namespace ql::type_list
-{
+namespace ql::type_list {
 	//! The empty type list.
-	struct empty
-	{
+	struct empty {
 		using length_type = std::integral_constant<int, 0>;
 	};
 
 	//! Constructs a linked type list from @p HeadType and @p TailType.
 	template <typename HeadType, typename TailType>
-	struct cons
-	{
+	struct cons {
 		using head_type = HeadType;
 		using tail_type = TailType;
 
@@ -35,15 +32,13 @@ namespace ql::type_list
 
 	//! Constructs an empty type list.
 	template <>
-	struct of<>
-	{
+	struct of<> {
 		using type = empty;
 	};
 
 	//! Constructs a linked type list from @p HeadType and @p TailTypes.
 	template <typename HeadType, typename... TailTypes>
-	struct of<HeadType, TailTypes...>
-	{
+	struct of<HeadType, TailTypes...> {
 		using type = cons<HeadType, of_t<TailTypes...>>;
 	};
 
@@ -57,15 +52,13 @@ namespace ql::type_list
 
 	//! Applies @p Xform to the empty type list, which results in the empty type list again.
 	template <template <typename> typename Xform>
-	struct apply_xform<Xform, empty>
-	{
+	struct apply_xform<Xform, empty> {
 		using type = empty;
 	};
 
 	//! Applies @p Xform to the linked type list with @p HeadType and @p TailType.
 	template <template <typename> typename Xform, typename HeadType, typename TailType>
-	struct apply_xform<Xform, cons<HeadType, TailType>>
-	{
+	struct apply_xform<Xform, cons<HeadType, TailType>> {
 		using type = cons<typename Xform<HeadType>::type, type_list::apply_xform_t<Xform, TailType>>;
 	};
 

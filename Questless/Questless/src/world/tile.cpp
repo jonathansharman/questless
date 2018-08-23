@@ -4,6 +4,5 @@
 
 #include "world/tile.hpp"
 
-namespace ql
-{
+namespace ql {
 }

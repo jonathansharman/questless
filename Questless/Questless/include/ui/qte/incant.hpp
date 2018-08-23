@@ -7,20 +7,16 @@
 #include "ui/dialog.hpp"
 #include "units/game_space.hpp"
 
-namespace ql
-{
+namespace ql {
 	class gatestone;
-	namespace magic
-	{
+	namespace magic {
 		class spell;
 	}
 }
 
-namespace ql::qte
-{
+namespace ql::qte {
 	//! Quick time event for incanting a spell.
-	class incant : public dialog
-	{
+	class incant : public dialog {
 	public:
 		//! @param gatestone The gatestone used for incantation.
 		//! @param cont The dialog continuation function.

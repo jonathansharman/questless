@@ -7,8 +7,7 @@
 
 #include <string>
 
-namespace ql
-{
+namespace ql {
 	//! The contents, as a string, of the file with filename @p filename.
 	std::string contents_of_file(char const* filename);
 }

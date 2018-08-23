@@ -15,8 +15,7 @@
 #include "world/coordinates.hpp"
 #include "world/tile_visitor.hpp"
 
-namespace ql
-{
+namespace ql {
 	class being;
 	class effect;
 	class entity;
@@ -27,8 +26,7 @@ namespace ql
 	class world_view;
 
 	//! Draws the elements of the world that the player can see.
-	class world_renderer : public effect_const_visitor
-	{
+	class world_renderer : public effect_const_visitor {
 	public:
 		//! @param world_view The initial world view to render.
 		world_renderer(world_view const& world_view);

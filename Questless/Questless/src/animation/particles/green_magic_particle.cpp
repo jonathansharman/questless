@@ -10,8 +10,7 @@
 
 using namespace units;
 
-namespace ql
-{
+namespace ql {
 	green_magic_particle::green_magic_particle()
 		: particle
 			{ game_space::vector::zero()
@@ -28,8 +27,7 @@ namespace ql
 		_scale_velocity = game_space::scale_velocity{scale{-_scale / _lifetime.count()}};
 	}
 
-	void green_magic_particle::particle_subupdate()
-	{
+	void green_magic_particle::particle_subupdate() {
 		constexpr double inflection_probability = 0.1;
 		if (bernoulli_trial(inflection_probability)) {
 			_turning_right = !_turning_right;
@@ -43,8 +41,7 @@ namespace ql
 		}
 	}
 
-	sdl::texture const& green_magic_particle::texture() const
-	{
+	sdl::texture const& green_magic_particle::texture() const {
 		static auto texture_handle = sdl::the_texture_manager().add("resources/textures/particles/magic/green.png");
 		return sdl::the_texture_manager()[texture_handle];
 	}

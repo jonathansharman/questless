@@ -9,14 +9,11 @@
 #include <optional>
 
 #include "dialog.hpp"
-#include "animation/camera.hpp"
 #include "world/coordinates.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! Retrieves a region tile vector from the player.
-	class vector_dialog : public dialog
-	{
+	class vector_dialog : public dialog {
 	public:
 		vector_dialog
 			( std::string title

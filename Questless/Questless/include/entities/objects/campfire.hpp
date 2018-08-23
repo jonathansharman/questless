@@ -5,13 +5,10 @@
 #pragma once
 
 #include "object.hpp"
-#include "entities/beings/being.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! A simple source of heat and light.
-	class campfire : public object_base<campfire>
-	{
+	class campfire : public object_base<campfire> {
 	public:
 		campfire(ql::region& region, region_tile::point coords, ql::id<object> id = ql::id<object>::make());
 		campfire(std::istream& in);

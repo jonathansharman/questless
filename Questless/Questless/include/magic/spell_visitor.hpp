@@ -6,8 +6,7 @@
 
 #include "utility/visitor_pattern.hpp"
 
-namespace ql::magic
-{
+namespace ql::magic {
 	class eagle_eye;
 	class heal;
 	class shock;

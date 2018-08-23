@@ -6,11 +6,9 @@
 
 #include "animation/particles/particle.hpp"
 
-namespace ql
-{
+namespace ql {
 	//! A particle for effects involving blue magic.
-	class blue_magic_particle : public particle
-	{
+	class blue_magic_particle : public particle {
 	public:
 		blue_magic_particle();
 	private:

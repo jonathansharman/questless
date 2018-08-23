@@ -9,13 +9,11 @@
 #include "utility/id.hpp"
 #include "utility/reference.hpp"
 
-namespace ql
-{
+namespace ql {
 	class being;
 
 	//! An item that can be picked up, used by beings, etc.
-	class item : public element<item_subtype_list>
-	{
+	class item : public element<item_subtype_list> {
 	public:
 		id<item> const id;
 
@@ -33,8 +31,7 @@ namespace ql
 		//! Advances the item one time unit.
 		virtual void update() {}
 	protected:
-		class drop : public action
-		{
+		class drop : public action {
 		public:
 			drop(item& item) : _item{item} {}
 			static auto make(item& item) { return umake<drop>(item); }
@@ -44,8 +41,7 @@ namespace ql
 			item& _item;
 		};
 
-		class toss : public action
-		{
+		class toss : public action {
 		public:
 			toss(item& item) : _item{item} {}
 			static auto make(item& item) { return umake<toss>(item); }

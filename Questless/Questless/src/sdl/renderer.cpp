@@ -22,12 +22,9 @@ using namespace units;
 
 //! @todo Can use ranges algorithms for the various vector<window_space::point> -> vector<ViewSpace::point> conversions, when available.
 
-namespace sdl
-{
-	namespace
-	{
-		bool has_positive_winding_order(view_space::polygon const& polygon)
-		{
+namespace sdl {
+	namespace {
+		bool has_positive_winding_order(view_space::polygon const& polygon) {
 			// Winding order is positive iff "winding" is positive.
 			float winding = 0.0f;
 			for (std::size_t i = 0; i < polygon.size(); ++i) {
@@ -39,8 +36,7 @@ namespace sdl
 			return winding >= 0.0f;
 		}
 
-		bool is_convex(vector<view_space::point> const& vertices)
-		{
+		bool is_convex(vector<view_space::point> const& vertices) {
 			float last_cross_product = 0.0f;
 			for (std::size_t i = 0; i < vertices.size(); ++i) {
 				auto const p0 = i == 0 ? vertices.back() : vertices[i - 1];
@@ -57,15 +53,13 @@ namespace sdl
 			return true;
 		}
 
-		vector<vector<view_space::point>> convex_components(vector<view_space::point> polygon)
-		{
+		vector<vector<view_space::point>> convex_components(vector<view_space::point> polygon) {
 			//! @todo Implement.
 			return {polygon};
 		}
 	}
 
-	renderer::renderer(window& the_window, int width, int height) : _w{width}, _h{height}, _target{nullptr}
-	{
+	renderer::renderer(window& the_window, int width, int height) : _w{width}, _h{height}, _target{nullptr} {
 		_renderer = SDL_CreateRenderer(the_window.sdl_ptr(), -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_TARGETTEXTURE);
 		if (_renderer == nullptr) {
 			throw runtime_error{"Failed to create renderer."};
@@ -90,8 +84,7 @@ namespace sdl
 		glGenBuffers(1, &_ibo);
 	}
 
-	renderer::~renderer()
-	{
+	renderer::~renderer() {
 		SDL_DestroyRenderer(_renderer);
 
 		// Delete buffer objects.
@@ -99,13 +92,11 @@ namespace sdl
 		glDeleteBuffers(1, &_ibo);
 	}
 
-	SDL_Texture* renderer::target() const
-	{
+	SDL_Texture* renderer::target() const {
 		return _target;
 	}
 
-	void renderer::target(SDL_Texture* target)
-	{
+	void renderer::target(SDL_Texture* target) {
 		if (SDL_SetRenderTarget(_renderer, target)) {
 			throw runtime_error("Failed to set render target.");
 		} else {
@@ -113,14 +104,12 @@ namespace sdl
 		}
 	}
 
-	void renderer::clear(colors::color color)
-	{
+	void renderer::clear(colors::color color) {
 		set_draw_color(color);
 		SDL_RenderClear(_renderer);
 	}
 
-	void renderer::draw_lines(vector<view_space::point> const& vertices, colors::color color)
-	{
+	void renderer::draw_lines(vector<view_space::point> const& vertices, colors::color color) {
 		// Bind program.
 		solid_program().use();
 
@@ -168,8 +157,7 @@ namespace sdl
 		glDisableVertexAttribArray(position_attribute);
 	}
 	
-	void renderer::draw_lines(vector<window_space::point> const& vertices, colors::color color)
-	{
+	void renderer::draw_lines(vector<window_space::point> const& vertices, colors::color color) {
 		vector<view_space::point> view_space_vertices;
 		for (auto const& vertex : vertices) {
 			view_space_vertices.push_back(to_view_space(vertex));
@@ -177,8 +165,7 @@ namespace sdl
 		draw_lines(view_space_vertices, color);
 	}
 
-	void renderer::draw_polygon(view_space::polygon const& polygon, colors::color color)
-	{
+	void renderer::draw_polygon(view_space::polygon const& polygon, colors::color color) {
 		// Don't bother rendering transparent polygons.
 		if (color.alpha() == 0.0f) { return; }
 
@@ -239,8 +226,7 @@ namespace sdl
 		glDisableVertexAttribArray(position_attribute);
 	}
 
-	void renderer::draw_polygon(window_space::polygon const& polygon, colors::color color)
-	{
+	void renderer::draw_polygon(window_space::polygon const& polygon, colors::color color) {
 		view_space::polygon view_space_polygon;
 		for (auto const& vertex : polygon) {
 			view_space_polygon.push_back(to_view_space(vertex));
@@ -333,8 +319,7 @@ namespace sdl
 		draw_polygon(view_space::polygon{top_left(box), top_right(box), bottom_right(box), bottom_left(box)}, color);
 	}
 
-	void renderer::draw_box(window_space::box const& box, colors::color color)
-	{
+	void renderer::draw_box(window_space::box const& box, colors::color color) {
 		draw_box(to_view_space(box), color);
 	}
 
@@ -343,8 +328,7 @@ namespace sdl
 		, window_space::scalar border_width
 		, colors::color border_color
 		, colors::color fill_color
-		)
-	{
+		) {
 		if (units::width(box) > 0 && units::height(box) > 0) {
 			draw_box(to_view_space(box), to_view_space(border_width), border_color, fill_color);
 		}
@@ -355,8 +339,7 @@ namespace sdl
 		, view_space::scalar border_width
 		, colors::color border_color
 		, colors::color fill_color
-		)
-	{
+		) {
 		if (units::width(box) > 0.0f && units::height(box) > 0.0f) {
 			draw_polygon(view_space::polygon{top_left(box), top_right(box), bottom_right(box), bottom_left(box)}, border_width, border_color, fill_color);
 		}
@@ -368,8 +351,7 @@ namespace sdl
 		, colors::color border_color
 		, colors::color fill_color
 		, float segments_per_radius
-		)
-	{
+		) {
 		view_space::polygon polygon;
 		int segments_count = lround(boundary.radius * segments_per_radius);
 		for (int i = 0; i < segments_count; ++i) {
@@ -387,12 +369,10 @@ namespace sdl
 		, colors::color fill_color
 		, float segments_per_radius
 		)
-	{
 		draw_disc(to_view_space(boundary), to_view_space(border_width), border_color, fill_color, segments_per_radius);
 	}
 
-	void renderer::set_draw_color(colors::color color)
-	{
+	void renderer::set_draw_color(colors::color color) {
 		auto error = SDL_SetRenderDrawColor
 			( _renderer
 			, static_cast<uint8_t>(255 * color.red())
@@ -406,8 +386,7 @@ namespace sdl
 		}
 	}
 
-	void renderer::draw_triangle_strip(vector<view_space::point> const& vertices, colors::color color)
-	{
+	void renderer::draw_triangle_strip(vector<view_space::point> const& vertices, colors::color color) {
 		// Bind program.
 		solid_program().use();
 

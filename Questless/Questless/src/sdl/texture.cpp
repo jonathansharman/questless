@@ -17,15 +17,12 @@
 using namespace units;
 using namespace units::colors;
 
-namespace
-{
+namespace {
 	//! @todo This is not completely portable. Find a fully portable way to translate an SDL surface format into a GL texture format.
 
 	//! The OpenGL texture format corresponding to the format of @p surface.
-	GLenum get_gl_format(SDL_Surface* surface)
-	{
-		if (surface->format->BytesPerPixel == 4)
-		{
+	GLenum get_gl_format(SDL_Surface* surface) {
+		if (surface->format->BytesPerPixel == 4) {
 			if (surface->format->Rshift == 24 && surface->format->Aloss == 0) {
 				return GL_ABGR_EXT;
 			} else if (surface->format->Rshift == 16 && surface->format->Aloss == 8) {
@@ -46,10 +43,8 @@ namespace
 	}
 }
 
-namespace sdl
-{
-	texture::texture(window_space::vector size, colors::color color) : _size{size}
-	{
+namespace sdl {
+	texture::texture(window_space::vector size, colors::color color) : _size{size} {
 		if (width() != 0 && height() != 0) {
 			// Generate texture.
 			glGenTextures(1, &_texture);
@@ -82,8 +77,7 @@ namespace sdl
 		}
 	}
 
-	texture::texture(char const* filename)
-	{
+	texture::texture(char const* filename) {
 		// Load image into a surface.
 		SDL_Surface* surface = IMG_Load(filename);
 		if (!surface) {
@@ -120,8 +114,7 @@ namespace sdl
 		}
 	}
 
-	texture::texture(SDL_Surface* surface)
-	{
+	texture::texture(SDL_Surface* surface) {
 		// Store width and height;
 		_size = window_space::vector{surface->w, surface->h};
 
@@ -158,15 +151,13 @@ namespace sdl
 		that._texture = NULL;
 	}
 
-	texture::~texture()
-	{
+	texture::~texture() {
 		if (_texture) {
 			glDeleteTextures(1, &_texture);
 		}
 	}
 
-	texture& texture::operator =(texture&& that) &
-	{
+	texture& texture::operator =(texture&& that) & {
 		_texture = that._texture;
 		that._texture = NULL;
 
@@ -211,13 +202,11 @@ namespace sdl
 			glm::mat4 model_matrix;
 			// Position. Correct for odd width/height in window space by nudging position by half a pixel.
 			auto const view_space_position = [&] {
-				struct to_float_coords
-				{
+				struct to_float_coords {
 					int const width;
 					int const height;
 					auto operator ()(view_space::point position) { return position; }
-					auto operator ()(window_space::point position)
-					{
+					auto operator ()(window_space::point position) {
 						return view_space::point
 							{ position.x() + ((width & 1) ? 0.5f : 0.0f)
 							, position.y() + ((height & 1) ? 0.5f : 0.0f)
@@ -269,8 +258,7 @@ namespace sdl
 		glDisableVertexAttribArray(texture_coords_attribute);
 	}
 
-	GLuint texture::as_target_prologue(shader_program const& shader_program)
-	{
+	GLuint texture::as_target_prologue(shader_program const& shader_program) {
 		shader_program.use();
 
 		// Turn on y-flipping.
@@ -305,8 +293,7 @@ namespace sdl
 		return fbo;
 	}
 
-	void texture::as_target_epilogue(GLuint fbo, shader_program const& shader_program)
-	{
+	void texture::as_target_epilogue(GLuint fbo, shader_program const& shader_program) {
 		shader_program.use();
 
 		// Reset minification and magnification filters.

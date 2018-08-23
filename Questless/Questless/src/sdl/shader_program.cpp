@@ -6,8 +6,7 @@
 
 #include <stdexcept>
 
-namespace sdl
-{
+namespace sdl {
 	shader_program::shader_program(char const* vertex_source, char const* fragment_source)
 		: _program{glCreateProgram()}
 	{
@@ -56,13 +55,11 @@ namespace sdl
 		glDeleteShader(fragment_shader);
 	}
 
-	shader_program::~shader_program()
-	{
+	shader_program::~shader_program() {
 		glDeleteProgram(_program);
 	}
 
-	GLint shader_program::get_attribute_handle(char const* attribute_name) const
-	{
+	GLint shader_program::get_attribute_handle(char const* attribute_name) const {
 		GLint result = glGetAttribLocation(_program, attribute_name);
 		if (result == -1) {
 			throw std::runtime_error{"GLSL program attribute not found."};
@@ -73,8 +70,7 @@ namespace sdl
 		return result;
 	}
 
-	GLint shader_program::get_uniform_handle(char const* uniform_name) const
-	{
+	GLint shader_program::get_uniform_handle(char const* uniform_name) const {
 		GLint result = glGetUniformLocation(_program, uniform_name);
 		if (result == -1) {
 			throw std::runtime_error{"GLSL program uniform not found."};

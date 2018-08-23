@@ -10,15 +10,13 @@
 #include "utility/id.hpp"
 #include "utility/reference.hpp"
 
-namespace ql
-{
+namespace ql {
 	class effect;
 	class item;
 	class weapon;
 
 	//! An attack that a weapon can perform.
-	class attack : public std::enable_shared_from_this<attack>
-	{
+	class attack : public std::enable_shared_from_this<attack> {
 	public:
 		id<item> const weapon_id;
 
@@ -57,25 +55,21 @@ namespace ql
 	};
 
 	//! A close-range attack.
-	class melee_attack : public attack
-	{
+	class melee_attack : public attack {
 	public:
 		melee_attack(id<item> weapon_id) : attack{weapon_id} {}
 		virtual ~melee_attack() = default;
 
-		ql::cost const& cost() const override
-		{
+		ql::cost const& cost() const override {
 			static free free;
 			return free;
 		}
 
-		uptr<action> launch() final
-		{
+		uptr<action> launch() final {
 			return launch::make(std::dynamic_pointer_cast<melee_attack>(shared_from_this()));
 		}
 	private:
-		class launch : public action
-		{
+		class launch : public action {
 		public:
 			launch(sptr<melee_attack> attack) : _attack{std::move(attack)} {}
 			static uptr<launch> make(sptr<melee_attack> attack) { return umake<launch>(std::move(attack)); }
@@ -85,8 +79,7 @@ namespace ql
 			sptr<melee_attack> _attack;
 		};
 
-		class finish : public action
-		{
+		class finish : public action {
 		public:
 			finish(sptr<melee_attack> attack, region_tile::vector vector)
 				: _attack{std::move(attack)}, _vector{vector}
@@ -100,21 +93,18 @@ namespace ql
 	};
 
 	//! A long-range attack.
-	class ranged_attack : public attack
-	{
+	class ranged_attack : public attack {
 	public:
 		ranged_attack(id<item> weapon_id) : attack{weapon_id} {}
 		virtual ~ranged_attack() = default;
 
-		uptr<action> launch() final
-		{
+		uptr<action> launch() final {
 			return launch::make(std::dynamic_pointer_cast<ranged_attack>(shared_from_this()));
 		}
 
 		virtual int range() const = 0;
 	private:
-		class launch : public action
-		{
+		class launch : public action {
 		public:
 			launch(sptr<ranged_attack> attack) : _attack{std::move(attack)} {}
 			static uptr<launch> make(sptr<ranged_attack> attack) { return umake<launch>(std::move(attack)); }
@@ -124,8 +114,7 @@ namespace ql
 			sptr<ranged_attack> _attack;
 		};
 
-		class finish : public action
-		{
+		class finish : public action {
 		public:
 			finish(sptr<ranged_attack> attack) : _attack{std::move(attack)} {}
 			static auto make(sptr<ranged_attack> attack) { return umake<finish>(attack); }

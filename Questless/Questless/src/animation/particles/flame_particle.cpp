@@ -11,8 +11,7 @@
 using namespace sdl;
 using namespace units;
 
-namespace ql
-{
+namespace ql {
 	flame_particle::flame_particle() : particle
 		{ game_space::vector::zero()
 		, game_space::velocity::zero()
@@ -27,8 +26,7 @@ namespace ql
 	{
 		_color_vector = colors::orange_vector();
 	}
-	void flame_particle::particle_subupdate()
-	{
+	void flame_particle::particle_subupdate() {
 		_velocity.step().x() *= 1.0 - _vx_pct_drag_rate * game::frame_duration;
 
 		float pct_left = static_cast<float>(_time_left.count() / _lifetime.count());
@@ -45,8 +43,7 @@ namespace ql
 		}
 	}
 
-	texture const& flame_particle::texture() const
-	{
+	texture const& flame_particle::texture() const {
 		static auto texture_handle = the_texture_manager().add("resources/textures/particles/glow-small.png");
 		return the_texture_manager()[texture_handle];
 	}

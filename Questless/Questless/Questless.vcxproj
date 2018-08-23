@@ -128,15 +128,15 @@
     <Import Project="library-paths.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(RANGE_V3_PATH)include;$(ProjectDir)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Temp|Win32'">
-    <IncludePath>$(RANGE_V3_PATH)include;$(ProjectDir)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">
-    <IncludePath>$(RANGE_V3_PATH)include;$(ProjectDir)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -152,7 +152,7 @@
     <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(RANGE_V3_PATH)include;$(ProjectDir)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -292,10 +292,11 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>/std:c++latest /permissive- %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/permissive- %(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
       <DisableSpecificWarnings>4268;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -583,6 +584,7 @@
     <ClCompile Include="src\ui\tile_dialog.cpp" />
     <ClCompile Include="src\ui\vector_dialog.cpp" />
     <ClCompile Include="src\utility\debug.cpp" />
+    <ClCompile Include="src\utility\event.cpp" />
     <ClCompile Include="src\utility\io.cpp" />
     <ClCompile Include="src\utility\random.cpp" />
     <ClCompile Include="src\utility\utility.cpp" />

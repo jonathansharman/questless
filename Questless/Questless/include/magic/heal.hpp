@@ -6,11 +6,9 @@
 
 #include "spell.hpp"
 
-namespace ql::magic
-{
+namespace ql::magic {
 	//! Heals a being.
-	class heal : public spell_base<heal>
-	{
+	class heal : public spell_base<heal> {
 	public:
 		std::string name() const final { return "Heal"; }
 
