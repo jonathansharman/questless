@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "sdl/renderer.hpp"
+#include "renderer.hpp"
 
 #include <numeric>
 
@@ -12,8 +12,9 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 
-#include "sdl/resources.hpp"
 #include "units/math.hpp"
+
+#include "resources.hpp"
 
 using std::vector;
 using std::runtime_error;
@@ -369,6 +370,7 @@ namespace sdl {
 		, colors::color fill_color
 		, float segments_per_radius
 		)
+	{
 		draw_disc(to_view_space(boundary), to_view_space(border_width), border_color, fill_color, segments_per_radius);
 	}
 

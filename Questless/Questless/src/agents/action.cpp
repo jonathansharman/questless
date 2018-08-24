@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "agents/action.hpp"
+#include "action.hpp"
 
 #include "entities/beings/being.hpp"
 #include "agents/agent.hpp"

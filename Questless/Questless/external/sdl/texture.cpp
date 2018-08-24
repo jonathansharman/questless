@@ -40,6 +40,7 @@ namespace {
 			}
 		}
 		assert(false && "Unsupported pixel format.");
+		return GLenum{};
 	}
 }
 
