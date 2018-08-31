@@ -5,16 +5,16 @@
 
 #pragma once
 
-#include <memory>
-
-#include "shader_program.hpp"
 #include "font.hpp"
 #include "input.hpp"
 #include "renderer.hpp"
 #include "resource_manager.hpp"
+#include "shader_program.hpp"
 #include "sound.hpp"
 #include "texture.hpp"
 #include "window.hpp"
+
+#include <memory>
 
 namespace sdl {
 	//! The OpenGL context.

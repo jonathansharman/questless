@@ -4,6 +4,9 @@
 
 #pragma once
 
+#include "constants.hpp"
+#include "math.hpp"
+
 #include <algorithm>
 #include <array>
 #include <initializer_list>
@@ -11,9 +14,6 @@
 #include <ratio>
 #include <type_traits>
 #include <vector>
-
-#include "constants.hpp"
-#include "math.hpp"
 
 namespace units {
 	namespace detail {

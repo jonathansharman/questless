@@ -2,8 +2,10 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "agents/agent.hpp"
-#include "agents/queries/all_queries.hpp"
+#include "agent.hpp"
+
+#include "queries/all_queries.hpp"
+
 #include "entities/beings/being.hpp"
 #include "utility/random.hpp"
 #include "world/region.hpp"

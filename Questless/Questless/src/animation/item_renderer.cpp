@@ -2,12 +2,14 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
+#include "item_renderer.hpp"
+
 #include <unordered_map>
 
 #include <boost/functional/hash.hpp>
 
-#include "animation/item_renderer.hpp"
-#include "animation/spell_texturer.hpp"
+#include "spell_texturer.hpp"
+
 #include "sdl/resources.hpp"
 #include "items/magic/gatestone.hpp"
 #include "items/scroll.hpp"

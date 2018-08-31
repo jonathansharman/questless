@@ -26,14 +26,38 @@ namespace ql {
 		public:
 			part_attacher(body& body) : _body{body} {}
 
-			void visit(head& head) final { _body._heads.push_back(head); }
-			void visit(torso& torso) final { _body._torsos.push_back(torso); }
-			void visit(arm& arm) final { _body._arms.push_back(arm); }
-			void visit(hand& hand) final { _body._hands.push_back(hand); }
-			void visit(leg& leg) final { _body._legs.push_back(leg); }
-			void visit(foot& foot) final { _body._feet.push_back(foot); }
-			void visit(wing& wing) final { _body._wings.push_back(wing); }
-			void visit(tail& tail) final { _body._tails.push_back(tail); }
+			void visit(head& head) final {
+				_body._heads.push_back(head);
+				_body._c_heads.push_back(head);
+			}
+			void visit(torso& torso) final {
+				_body._torsos.push_back(torso);
+				_body._c_torsos.push_back(torso);
+			}
+			void visit(arm& arm) final {
+				_body._arms.push_back(arm);
+				_body._c_arms.push_back(arm);
+			}
+			void visit(hand& hand) final {
+				_body._hands.push_back(hand);
+				_body._c_hands.push_back(hand);
+			}
+			void visit(leg& leg) final {
+				_body._legs.push_back(leg);
+				_body._c_legs.push_back(leg);
+			}
+			void visit(foot& foot) final {
+				_body._feet.push_back(foot);
+				_body._c_feet.push_back(foot);
+			}
+			void visit(wing& wing) final {
+				_body._wings.push_back(wing);
+				_body._c_wings.push_back(wing);
+			}
+			void visit(tail& tail) final {
+				_body._tails.push_back(tail);
+				_body._c_tails.push_back(tail);
+			}
 		private:
 			body& _body;
 		};
@@ -44,6 +68,7 @@ namespace ql {
 		while (!work_list.empty()) {
 			body_part& part = work_list.front();
 			_parts.push_back(part);
+			_c_parts.push_back(part);
 			part_attacher attacher{*this};
 			part.accept(attacher);
 
@@ -62,16 +87,6 @@ namespace ql {
 		// Start with maximum blood.
 		blood = _total_vitality;
 	}
-
-	auto body::parts() const { return _parts | cast_transform<cref<body_part>>(); }
-	auto body::heads() const { return _heads | cast_transform<cref<head>>(); }
-	auto body::torsos() const { return _torsos | cast_transform<cref<torso>>(); }
-	auto body::arms() const { return _arms | cast_transform<cref<arm>>(); }
-	auto body::hands() const { return _hands | cast_transform<cref<hand>>(); }
-	auto body::legs() const { return _legs | cast_transform<cref<leg>>(); }
-	auto body::feet() const { return _feet | cast_transform<cref<foot>>(); }
-	auto body::wings() const { return _wings | cast_transform<cref<wing>>(); }
-	auto body::tails() const { return _tails | cast_transform<cref<tail>>(); }
 
 	body_part* body::find_part(id<body_part> id) {
 		for (body_part& part : _parts) {

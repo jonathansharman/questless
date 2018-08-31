@@ -2,9 +2,10 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "agents/basic_ai.hpp"
+#include "basic_ai.hpp"
 
-#include "agents/queries/all_queries.hpp"
+#include "queries/all_queries.hpp"
+
 #include "effects/effect.hpp"
 #include "game.hpp"
 #include "utility/random.hpp"

@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include <vector>
+#include "game_space.hpp"
+#include "math.hpp"
+
 #include <algorithm>
 #include <cassert> //! @todo Remove when contracts available.
 #include <exception>
-
-#include "game_space.hpp"
-#include "math.hpp"
+#include <vector>
 
 namespace units {
 	//! A hexagonal space.

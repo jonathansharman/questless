@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <glew.h>
+#include <glew.h> // Must include before gl/Gl.h and gl/GLU.h.
 #include <gl/GL.h>
 #include <gl/GLU.h>
 

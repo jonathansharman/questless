@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include <range/v3/all.hpp>
-
 #include "reference.hpp"
 #include "units/game_space.hpp"
 
@@ -57,11 +55,14 @@ namespace ql {
 		return result;
 	}
 
+	//! @todo Reenable when ranges is support in VS again, if desired.
+	/*
 	//! Returns a transform view to statically cast elements to type @p T.
 	template <typename T>
 	static auto cast_transform() {
 		return ranges::view::transform([](auto arg) { return static_cast<T>(arg); });
 	}
+	*/
 
 	//! @todo Why do the following lambda overload helpers not work?
 

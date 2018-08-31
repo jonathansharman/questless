@@ -4,11 +4,12 @@
 
 #pragma once
 
+#include "texture.hpp"
+
+#include "units/color_space.hpp"
+
 #include <SDL.h>
 #include <SDL_ttf.h>
-
-#include "texture.hpp"
-#include "units/color_space.hpp"
 
 namespace sdl {
 	//! A simple wrapper around TTF_Font.

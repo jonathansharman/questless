@@ -4,20 +4,11 @@
 
 #include "game.hpp"
 
-#include <sstream>
-#include <thread>
-
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_mixer.h>
-#include <SDL_ttf.h>
-
 #include "animation/entity_animator.hpp"
 #include "utility/io.hpp"
 #include "utility/random.hpp"
 #include "world/coordinates.hpp"
 #include "world/light_source.hpp"
-
 //! @todo The following are needed only for player spawning. Perhaps this should be the responsibility of a different class.
 #include "agents/agent.hpp"
 #include "agents/player.hpp"
@@ -29,8 +20,17 @@
 #include "items/weapons/bow.hpp"
 #include "items/weapons/quarterstaff.hpp"
 #include "items/weapons/quiver.hpp"
-#include "sdl/shader_program.hpp"
 #include "magic/all_spells.hpp"
+
+#include "sdl/shader_program.hpp"
+
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_mixer.h>
+#include <SDL_ttf.h>
+
+#include <sstream>
+#include <thread>
 
 using std::move;
 using std::dynamic_pointer_cast;

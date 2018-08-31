@@ -2,14 +2,16 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "animation/entity_animator.hpp"
+#include "entity_animator.hpp"
 
-#include "animation/animation_stack.hpp"
-#include "animation/bleeding.hpp"
-#include "animation/flame.hpp"
-#include "animation/sprite_animation.hpp"
-#include "animation/still.hpp"
+#include "animation_stack.hpp"
+#include "bleeding.hpp"
+#include "flame.hpp"
+#include "sprite_animation.hpp"
+#include "still.hpp"
+
 #include "entities/all_entities.hpp"
+
 #include "sdl/resources.hpp"
 
 using namespace sdl;

@@ -4,19 +4,19 @@
 
 #pragma once
 
-#include <functional>
-#include <memory>
-#include <optional>
-#include <variant>
-
 #include <glew.h>
 #include <SDL.h>
 #include <SDL_image.h>
 
 #include "units/colors.hpp"
 #include "units/game_space.hpp"
-#include "units/window_space.hpp"
 #include "units/texture_space.hpp"
+#include "units/window_space.hpp"
+
+#include <functional>
+#include <memory>
+#include <optional>
+#include <variant>
 
 namespace sdl {
 	// Forward-declare shader type.

@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "animation/camera.hpp"
+#include "camera.hpp"
 
 #include <cmath>
 

@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "animation/animation.hpp"
+#include "animation.hpp"
 
 #include "game.hpp"
 

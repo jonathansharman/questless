@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "sdl/sound.hpp"
+#include "sound.hpp"
 
 #include <string>
 

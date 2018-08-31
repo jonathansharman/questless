@@ -4,16 +4,15 @@
 
 #pragma once
 
-#include <vector>
-#include <stdexcept>
-
-#include <glew.h>
-
-#include <SDL.h>
-
 #include "units/colors.hpp"
 #include "units/window_space.hpp"
 #include "units/view_space.hpp"
+
+#include <glew.h>
+#include <SDL.h>
+
+#include <stdexcept>
+#include <vector>
 
 namespace sdl {
 	class window;

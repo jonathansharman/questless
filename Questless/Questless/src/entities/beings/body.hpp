@@ -7,8 +7,6 @@
 #include <memory>
 #include <vector>
 
-#include <range/v3/all.hpp>
-
 #include "entities/beings/body_part.hpp"
 #include "units/window_space.hpp"
 
@@ -35,15 +33,15 @@ namespace ql {
 		//! The cumulative vitality of all parts of this body.
 		double total_vitality() const { return _total_vitality; }
 
-		std::vector<cref<body_part>> const& parts() const;
-		std::vector<cref<head>> const& heads() const;
-		std::vector<cref<torso>> const& torsos() const;
-		std::vector<cref<arm>> const& arms() const;
-		std::vector<cref<hand>> const& hands() const;
-		std::vector<cref<leg>> const& legs() const;
-		std::vector<cref<foot>> const& feet() const;
-		std::vector<cref<wing>> const& wings() const;
-		std::vector<cref<tail>> const& tails() const;
+		std::vector<cref<body_part>> const& parts() const { return _c_parts; }
+		std::vector<cref<head>> const& heads() const { return _c_heads; }
+		std::vector<cref<torso>> const& torsos() const { return _c_torsos; }
+		std::vector<cref<arm>> const& arms() const { return _c_arms; }
+		std::vector<cref<hand>> const& hands() const { return _c_hands; }
+		std::vector<cref<leg>> const& legs() const { return _c_legs; }
+		std::vector<cref<foot>> const& feet() const { return _c_feet; }
+		std::vector<cref<wing>> const& wings() const { return _c_wings; }
+		std::vector<cref<tail>> const& tails() const { return _c_tails; }
 
 		std::vector<ref<body_part>> const& parts() { return _parts; }
 		std::vector<ref<head>> const& heads() { return _heads; }
@@ -92,6 +90,7 @@ namespace ql {
 		uptr<body_part> _root;
 
 		std::vector<ref<body_part>> _parts;
+		std::vector<cref<body_part>> _c_parts;
 
 		std::vector<ref<head>> _heads;
 		std::vector<ref<torso>> _torsos;
@@ -101,6 +100,15 @@ namespace ql {
 		std::vector<ref<foot>> _feet;
 		std::vector<ref<wing>> _wings;
 		std::vector<ref<tail>> _tails;
+
+		std::vector<cref<head>> _c_heads;
+		std::vector<cref<torso>> _c_torsos;
+		std::vector<cref<arm>> _c_arms;
+		std::vector<cref<hand>> _c_hands;
+		std::vector<cref<leg>> _c_legs;
+		std::vector<cref<foot>> _c_feet;
+		std::vector<cref<wing>> _c_wings;
+		std::vector<cref<tail>> _c_tails;
 
 		// Cumulative attributes
 		double _total_vitality;

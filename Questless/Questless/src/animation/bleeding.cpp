@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "animation/bleeding.hpp"
+#include "bleeding.hpp"
 
 #include "animation/particles/blood_particle.hpp"
 

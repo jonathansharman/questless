@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <ratio>
 #include <chrono>
+#include <ratio>
 
 namespace units {
 	//! A frequency data type designed to complement std::chrono::duration.

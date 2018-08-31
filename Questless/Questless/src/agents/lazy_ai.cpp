@@ -2,8 +2,9 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "agents/lazy_ai.hpp"
-#include "agents/queries/all_queries.hpp"
+#include "lazy_ai.hpp"
+
+#include "queries/all_queries.hpp"
 
 #include "game.hpp"
 #include "utility/random.hpp"

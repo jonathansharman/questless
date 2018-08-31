@@ -570,14 +570,6 @@
     <ClCompile Include="src\magic\spell.cpp" />
     <ClCompile Include="src\magic\teleport.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\sdl\font.cpp" />
-    <ClCompile Include="src\sdl\input.cpp" />
-    <ClCompile Include="src\sdl\renderer.cpp" />
-    <ClCompile Include="src\sdl\resources.cpp" />
-    <ClCompile Include="src\sdl\shader_program.cpp" />
-    <ClCompile Include="src\sdl\sound.cpp" />
-    <ClCompile Include="src\sdl\texture.cpp" />
-    <ClCompile Include="src\sdl\window.cpp" />
     <ClCompile Include="src\ui\count_dialog.cpp" />
     <ClCompile Include="src\ui\dialog.cpp" />
     <ClCompile Include="src\ui\digraph_menu.cpp" />

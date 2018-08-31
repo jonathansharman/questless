@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "animation/particles/green_magic_particle.hpp"
+#include "green_magic_particle.hpp"
 
 #include "game.hpp"
 #include "sdl/resources.hpp"

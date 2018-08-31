@@ -4,13 +4,13 @@
 
 #pragma once
 
-#include <stdexcept>
-#include <vector>
-#include <unordered_map>
+#include "units/window_space.hpp"
 
 #include <SDL.h>
 
-#include "units/window_space.hpp"
+#include <stdexcept>
+#include <unordered_map>
+#include <vector>
 
 namespace sdl {
 	enum class mouse_button { left, right, middle };

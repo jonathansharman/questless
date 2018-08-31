@@ -52,9 +52,6 @@
     <Filter Include="src\ui\qte">
       <UniqueIdentifier>{2ce5f407-28a1-4ae5-8c92-0ad7b2916a65}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\sdl">
-      <UniqueIdentifier>{b3472b87-ac58-4240-8805-baf8a893ea93}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\entities\beings\stats">
       <UniqueIdentifier>{0d52b999-0390-4620-a144-cc22ec627c51}</UniqueIdentifier>
     </Filter>
@@ -763,30 +760,6 @@
     </ClCompile>
     <ClCompile Include="src\magic\eagle_eye.cpp">
       <Filter>src\magic</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sdl\resources.cpp">
-      <Filter>src\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sdl\shader_program.cpp">
-      <Filter>src\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sdl\sound.cpp">
-      <Filter>src\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sdl\texture.cpp">
-      <Filter>src\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sdl\window.cpp">
-      <Filter>src\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sdl\font.cpp">
-      <Filter>src\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sdl\input.cpp">
-      <Filter>src\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sdl\renderer.cpp">
-      <Filter>src\sdl</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\player_action_dialog.cpp">
       <Filter>src\ui</Filter>

@@ -4,11 +4,10 @@
 
 #pragma once
 
-#include <vector>
-
 #include "space.hpp"
-
 #include "view_space.hpp" // for conversions
+
+#include <vector>
 
 namespace units {
 	namespace detail {

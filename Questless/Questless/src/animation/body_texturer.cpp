@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "animation/body_texturer.hpp"
+#include "body_texturer.hpp"
 
 #include <unordered_map>
 

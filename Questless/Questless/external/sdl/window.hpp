@@ -4,13 +4,13 @@
 
 #pragma once
 
-#include <string>
-#include <memory>
+#include "units/screen_space.hpp"
+#include "units/window_space.hpp"
 
 #include <SDL.h>
 
-#include "units/screen_space.hpp"
-#include "units/window_space.hpp"
+#include <string>
+#include <memory>
 
 namespace sdl {
 	//! A simple wrapper around SDL_Window.

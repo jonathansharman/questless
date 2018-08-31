@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "animation/particles/flame_particle.hpp"
+#include "flame_particle.hpp"
 
 #include "game.hpp"
 #include "sdl/resources.hpp"

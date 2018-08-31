@@ -2,9 +2,10 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "agents/player.hpp"
+#include "player.hpp"
 
-#include "agents/queries/all_queries.hpp"
+#include "queries/all_queries.hpp"
+
 #include "entities/beings/world_view.hpp"
 #include "game.hpp"
 #include "sdl/resources.hpp"

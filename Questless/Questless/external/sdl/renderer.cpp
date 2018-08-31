@@ -4,7 +4,9 @@
 
 #include "renderer.hpp"
 
-#include <numeric>
+#include "resources.hpp"
+
+#include "units/math.hpp"
 
 #include <gl/GL.h>
 #include <gl/GLU.h>
@@ -12,9 +14,7 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 
-#include "units/math.hpp"
-
-#include "resources.hpp"
+#include <numeric>
 
 using std::vector;
 using std::runtime_error;

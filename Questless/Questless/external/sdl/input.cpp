@@ -2,8 +2,9 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "sdl/input.hpp"
-#include "sdl/resources.hpp"
+#include "input.hpp"
+
+#include "resources.hpp"
 
 #include <gsl/span>
 

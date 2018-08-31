@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include <vector>
-
 #include "space.hpp"
+
+#include <vector>
 
 namespace units {
 	namespace detail {

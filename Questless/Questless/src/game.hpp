@@ -4,6 +4,17 @@
 
 #pragma once
 
+#include "animation/camera.hpp"
+#include "animation/world_renderer.hpp"
+#include "entities/beings/being.hpp"
+#include "ui/digraph_menu.hpp"
+#include "ui/hud.hpp"
+#include "ui/player_action_dialog.hpp"
+#include "utility/cache.hpp"
+#include "world/region.hpp"
+
+#include "units/frequency.hpp"
+
 #include <chrono>
 #include <deque>
 #include <memory>
@@ -14,16 +25,6 @@
 #include <type_traits>
 #include <unordered_map>
 #include <vector>
-
-#include "animation/camera.hpp"
-#include "animation/world_renderer.hpp"
-#include "entities/beings/being.hpp"
-#include "ui/digraph_menu.hpp"
-#include "ui/hud.hpp"
-#include "ui/player_action_dialog.hpp"
-#include "units/frequency.hpp"
-#include "utility/cache.hpp"
-#include "world/region.hpp"
 
 namespace sdl {
 	class font;
