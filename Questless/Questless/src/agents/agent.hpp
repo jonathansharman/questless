@@ -59,13 +59,13 @@ namespace ql {
 			, std::function<complete()> cont
 			) const = 0;
 
-		virtual complete query_count
-			( uptr<count_query> query
-			, int default_value
-			, std::optional<int> min
-			, std::optional<int> max
-			, std::function<complete(std::optional<int>)> cont
-			) const = 0;
+		//virtual complete query_count
+		//	( uptr<count_query> query
+		//	, int default_value
+		//	, std::optional<int> min
+		//	, std::optional<int> max
+		//	, std::function<complete(std::optional<int>)> cont
+		//	) const = 0;
 
 		virtual complete query_magnitude
 			( uptr<magnitude_query>
@@ -82,10 +82,10 @@ namespace ql {
 			, std::function<complete(std::optional<region_tile::point>)> cont
 			) const = 0;
 
-		virtual complete query_direction
-			( uptr<direction_query> query
-			, std::function<complete(std::optional<region_tile::direction>)> cont
-			) const = 0;
+		//virtual complete query_direction
+		//	( uptr<direction_query> query
+		//	, std::function<complete(std::optional<region_tile::direction>)> cont
+		//	) const = 0;
 
 		virtual complete query_vector
 			( uptr<vector_query> query
@@ -100,12 +100,12 @@ namespace ql {
 			, std::function<complete(std::optional<ql::being*>)> cont
 			) const = 0;
 
-		virtual complete query_item
-			( uptr<item_query> query
-			, ql::being& source
-			, std::function<bool(ql::being&)> predicate
-			, std::function<complete(std::optional<item*>)> cont
-			) const = 0;
+		//virtual complete query_item
+		//	( uptr<item_query> query
+		//	, ql::being& source
+		//	, std::function<bool(ql::being&)> predicate
+		//	, std::function<complete(std::optional<item*>)> cont
+		//	) const = 0;
 
 		// Quick Time Events
 

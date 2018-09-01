@@ -102,34 +102,34 @@ namespace ql {
 		return cont();
 	}
 
-	complete basic_ai::query_count
-		( uptr<count_query> query
-		, int default_value
-		, std::optional<int> min
-		, std::optional<int> max
-		, std::function<complete(std::optional<int>)> cont
-		) const
-	{
-		struct count_query_handler : count_query_const_visitor {
-			int default_value;
-			std::optional<int> min;
-			std::optional<int> max;
-			std::function<complete(std::optional<int>)> cont;
+	//complete basic_ai::query_count
+	//	( uptr<count_query> query
+	//	, int default_value
+	//	, std::optional<int> min
+	//	, std::optional<int> max
+	//	, std::function<complete(std::optional<int>)> cont
+	//	) const
+	//{
+	//	struct count_query_handler : count_query_const_visitor {
+	//		int default_value;
+	//		std::optional<int> min;
+	//		std::optional<int> max;
+	//		std::function<complete(std::optional<int>)> cont;
 
-			count_query_handler
-				( int default_value
-				, std::optional<int> min
-				, std::optional<int> max
-				, std::function<complete(std::optional<int>)> cont
-				)
-				: default_value{default_value}, min{min}, max{max}, cont{std::move(cont)}
-			{}
-		};
+	//		count_query_handler
+	//			( int default_value
+	//			, std::optional<int> min
+	//			, std::optional<int> max
+	//			, std::function<complete(std::optional<int>)> cont
+	//			)
+	//			: default_value{default_value}, min{min}, max{max}, cont{std::move(cont)}
+	//		{}
+	//	};
 
-		count_query_handler handler{std::move(default_value), min, max, std::move(cont)};
-		query->accept(handler);
-		return complete{};
-	}
+	//	count_query_handler handler{std::move(default_value), min, max, std::move(cont)};
+	//	query->accept(handler);
+	//	return complete{};
+	//}
 
 	complete basic_ai::query_magnitude
 		( uptr<magnitude_query> query
@@ -220,28 +220,28 @@ namespace ql {
 		return handler.return_value;
 	}
 
-	complete basic_ai::query_direction
-		( uptr<direction_query> query
-		, std::function<complete(std::optional<region_tile::direction>)> cont
-		) const
-	{
-		struct direction_query_handler : direction_query_const_visitor {
-			basic_ai const& ai;
-			std::function<complete(std::optional<region_tile::direction>)> cont;
+	//complete basic_ai::query_direction
+	//	( uptr<direction_query> query
+	//	, std::function<complete(std::optional<region_tile::direction>)> cont
+	//	) const
+	//{
+	//	struct direction_query_handler : direction_query_const_visitor {
+	//		basic_ai const& ai;
+	//		std::function<complete(std::optional<region_tile::direction>)> cont;
 
-			direction_query_handler
-				( basic_ai const& ai
-				, std::function<complete(std::optional<region_tile::direction>)> cont
-				)
-				: ai{ai}
-				, cont{std::move(cont)}
-			{}
-		};
+	//		direction_query_handler
+	//			( basic_ai const& ai
+	//			, std::function<complete(std::optional<region_tile::direction>)> cont
+	//			)
+	//			: ai{ai}
+	//			, cont{std::move(cont)}
+	//		{}
+	//	};
 
-		direction_query_handler handler{*this, std::move(cont)};
-		query->accept(handler);
-		return complete{};
-	}
+	//	direction_query_handler handler{*this, std::move(cont)};
+	//	query->accept(handler);
+	//	return complete{};
+	//}
 
 	complete basic_ai::query_vector
 		( uptr<vector_query> query
@@ -287,15 +287,15 @@ namespace ql {
 		return cont(std::nullopt);
 	}
 
-	complete basic_ai::query_item
-		( uptr<item_query> //query
-		, ql::being& //source
-		, std::function<bool(ql::being&)> //predicate
-		, std::function<complete(std::optional<item*>)> cont
-		) const
-	{
-		return cont(std::nullopt);
-	}
+	//complete basic_ai::query_item
+	//	( uptr<item_query> //query
+	//	, ql::being& //source
+	//	, std::function<bool(ql::being&)> //predicate
+	//	, std::function<complete(std::optional<item*>)> cont
+	//	) const
+	//{
+	//	return cont(std::nullopt);
+	//}
 
 	////////////////////////////
 	// Effect Visitor Methods //

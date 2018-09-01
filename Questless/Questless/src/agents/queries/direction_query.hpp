@@ -7,14 +7,14 @@
 #include "utility/visitor_pattern.hpp"
 
 namespace ql {
-	using drection_query_subtype_list = type_list::of_t<>;
+	//using drection_query_subtype_list = type_list::of_t<>;
 
-	DEFINE_VISITORS(direction_query, drection_query_subtype_list)
+	//DEFINE_VISITORS(direction_query, drection_query_subtype_list)
 
-	//! A request to an agent for a direction.
-	struct direction_query : public element<drection_query_subtype_list> {
-		virtual ~direction_query() = default;
-	};
+	////! A request to an agent for a direction.
+	//struct direction_query : public element<drection_query_subtype_list> {
+	//	virtual ~direction_query() = default;
+	//};
 
-	DEFINE_ELEMENT_BASE(direction_query, direction_query)
+	//DEFINE_ELEMENT_BASE(direction_query, direction_query)
 }

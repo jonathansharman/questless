@@ -7,14 +7,14 @@
 #include "utility/visitor_pattern.hpp"
 
 namespace ql {
-	using count_query_subtype_list = type_list::empty;
+	//using count_query_subtype_list = type_list::of_t<>;
 
-	DEFINE_VISITORS(count_query, count_query_subtype_list)
+	//DEFINE_VISITORS(count_query, count_query_subtype_list)
 
-	//! A request to an agent for a count.
-	struct count_query : public element<count_query_subtype_list> {
-		virtual ~count_query() = default;
-	};
+	////! A request to an agent for a count.
+	//struct count_query : public element<count_query_subtype_list> {
+	//	virtual ~count_query() = default;
+	//};
 
-	DEFINE_ELEMENT_BASE(count_query, count_query)
+	//DEFINE_ELEMENT_BASE(count_query, count_query)
 }

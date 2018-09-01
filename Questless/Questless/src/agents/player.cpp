@@ -166,28 +166,28 @@ namespace ql {
 		return the_game().add_dialog(std::move(dialog));
 	}
 
-	complete player::query_count
-		( uptr<count_query> query
-		, int default_value
-		, std::optional<int> min
-		, std::optional<int> max
-		, function<complete(std::optional<int>)> cont
-		) const
-	{
-		struct count_query_titler : count_query_const_visitor {
-			std::string title;
-		};
-		struct count_query_prompter : count_query_const_visitor {
-			std::string prompt;
-		};
+	//complete player::query_count
+	//	( uptr<count_query> query
+	//	, int default_value
+	//	, std::optional<int> min
+	//	, std::optional<int> max
+	//	, function<complete(std::optional<int>)> cont
+	//	) const
+	//{
+	//	struct count_query_titler : count_query_const_visitor {
+	//		std::string title;
+	//	};
+	//	struct count_query_prompter : count_query_const_visitor {
+	//		std::string prompt;
+	//	};
 
-		count_query_titler titler;
-		query->accept(titler);
-		count_query_prompter prompter;
-		query->accept(prompter);
-		auto dialog = umake<count_dialog>(std::move(titler.title), std::move(prompter.prompt), default_value, min, max, std::move(cont));
-		return the_game().add_dialog(std::move(dialog));
-	}
+	//	count_query_titler titler;
+	//	query->accept(titler);
+	//	count_query_prompter prompter;
+	//	query->accept(prompter);
+	//	auto dialog = umake<count_dialog>(std::move(titler.title), std::move(prompter.prompt), default_value, min, max, std::move(cont));
+	//	return the_game().add_dialog(std::move(dialog));
+	//}
 
 	complete player::query_magnitude
 		( uptr<magnitude_query> query
@@ -252,25 +252,25 @@ namespace ql {
 		return the_game().add_dialog(std::move(dialog));
 	}
 
-	complete player::query_direction
-		( uptr<direction_query> query
-		, function<complete(std::optional<region_tile::direction>)> cont
-		) const
-	{
-		struct direction_query_titler : direction_query_const_visitor {
-			std::string title;
-		};
-		struct direction_query_prompter : direction_query_const_visitor {
-			std::string prompt;
-		};
+	//complete player::query_direction
+	//	( uptr<direction_query> query
+	//	, function<complete(std::optional<region_tile::direction>)> cont
+	//	) const
+	//{
+	//	struct direction_query_titler : direction_query_const_visitor {
+	//		std::string title;
+	//	};
+	//	struct direction_query_prompter : direction_query_const_visitor {
+	//		std::string prompt;
+	//	};
 
-		direction_query_titler titler;
-		query->accept(titler);
-		direction_query_prompter prompter;
-		query->accept(prompter);
-		auto dialog = umake<direction_dialog>(std::move(titler.title), std::move(prompter.prompt), std::move(cont));
-		return the_game().add_dialog(std::move(dialog));
-	}
+	//	direction_query_titler titler;
+	//	query->accept(titler);
+	//	direction_query_prompter prompter;
+	//	query->accept(prompter);
+	//	auto dialog = umake<direction_dialog>(std::move(titler.title), std::move(prompter.prompt), std::move(cont));
+	//	return the_game().add_dialog(std::move(dialog));
+	//}
 
 	complete player::query_vector
 		( uptr<vector_query> query
@@ -307,16 +307,16 @@ namespace ql {
 		return cont(std::nullopt);
 	}
 
-	complete player::query_item
-		( uptr<item_query> //query
-		, ql::being& //source
-		, function<bool(ql::being&)> //predicate
-		, function<complete(std::optional<item*>)> cont
-		) const
-	{
-		//! @todo This.
-		return cont(std::nullopt);
-	}
+	//complete player::query_item
+	//	( uptr<item_query> //query
+	//	, ql::being& //source
+	//	, function<bool(ql::being&)> //predicate
+	//	, function<complete(std::optional<item*>)> cont
+	//	) const
+	//{
+	//	//! @todo This.
+	//	return cont(std::nullopt);
+	//}
 
 	// Quick Time Events
 

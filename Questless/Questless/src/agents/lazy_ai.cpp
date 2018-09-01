@@ -10,7 +10,7 @@
 #include "utility/random.hpp"
 
 namespace ql {
-	void lazy_ai::act() { being.busy_time += uniform(1.0, 2.0); }
+	complete lazy_ai::act() { being.busy_time += uniform(1.0, 2.0); }
 
 	complete lazy_ai::send_message
 		( uptr<message>
@@ -20,16 +20,16 @@ namespace ql {
 		return cont();
 	}
 
-	complete lazy_ai::query_count
-		( uptr<count_query>
-		, int
-		, std::optional<int>
-		, std::optional<int>
-		, std::function<complete(std::optional<int>)> cont
-		) const
-	{
-		return cont(std::nullopt);
-	}
+	//complete lazy_ai::query_count
+	//	( uptr<count_query>
+	//	, int
+	//	, std::optional<int>
+	//	, std::optional<int>
+	//	, std::function<complete(std::optional<int>)> cont
+	//	) const
+	//{
+	//	return cont(std::nullopt);
+	//}
 
 	complete lazy_ai::query_magnitude
 		( uptr<magnitude_query>
@@ -52,13 +52,13 @@ namespace ql {
 		return cont(std::nullopt);
 	}
 
-	complete lazy_ai::query_direction
-		( uptr<direction_query>
-		, std::function<complete(std::optional<region_tile::direction>)> cont
-		) const
-	{
-		return cont(std::nullopt);
-	}
+	//complete lazy_ai::query_direction
+	//	( uptr<direction_query>
+	//	, std::function<complete(std::optional<region_tile::direction>)> cont
+	//	) const
+	//{
+	//	return cont(std::nullopt);
+	//}
 
 	complete lazy_ai::query_vector
 		( uptr<vector_query>
@@ -79,13 +79,13 @@ namespace ql {
 		return cont(std::nullopt);
 	}
 
-	complete lazy_ai::query_item
-		( uptr<item_query>
-		, ql::being&
-		, std::function<bool(ql::being&)>
-		, std::function<complete(std::optional<item*>)> cont
-		) const
-	{
-		return cont(std::nullopt);
-	}
+	//complete lazy_ai::query_item
+	//	( uptr<item_query>
+	//	, ql::being&
+	//	, std::function<bool(ql::being&)>
+	//	, std::function<complete(std::optional<item*>)> cont
+	//	) const
+	//{
+	//	return cont(std::nullopt);
+	//}
 }

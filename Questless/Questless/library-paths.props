@@ -6,7 +6,7 @@
     <SDL_IMAGE_PATH>D:\vc-libs\SDL2_image-2.0.1\</SDL_IMAGE_PATH>
     <SDL_MIXER_PATH>D:\vc-libs\SDL2_mixer-2.0.1\</SDL_MIXER_PATH>
     <SDL_TTF_PATH>D:\vc-libs\SDL2_ttf-2.0.14\</SDL_TTF_PATH>
-    <BOOST_PATH>D:\vc-libs\boost_1_65_1\</BOOST_PATH>
+    <BOOST_PATH>D:\vc-libs\boost_1_68_0</BOOST_PATH>
     <DOCTEST_PATH>D:\vc-libs\doctest\</DOCTEST_PATH>
     <GLEW_PATH>D:\vc-libs\glew-2.0.0\</GLEW_PATH>
     <GLM_PATH>D:\vc-libs\glm\</GLM_PATH>
