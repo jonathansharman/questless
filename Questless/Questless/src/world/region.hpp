@@ -4,16 +4,17 @@
 
 #pragma once
 
+#include "section.hpp"
+
 #include <functional>
 #include <map>
 #include <memory>
 #include <set>
 #include <string>
 
-#include "section.hpp"
-
 namespace ql {
 	class being;
+	class effect;
 	class game;
 	class object;
 
@@ -67,24 +68,24 @@ namespace ql {
 		void spawn_player(uptr<being> player_being);
 
 		//! Adds @p being to the region, setting its coordinates to @p region_tile_coords.
-		void add(being& being, region_tile::point region_tile_coords);
+		[[nodiscard]] bool try_add(being& being, region_tile::point region_tile_coords);
 
 		//! Adds @p object to the region, setting its coordinates to @p region_tile_coords.
-		void add(ql::object& object, region_tile::point region_tile_coords);
+		[[nodiscard]] bool try_add(ql::object& object, region_tile::point region_tile_coords);
 
 		//! Spawns @p being in the region, setting its coordinates to @p region_tile_coords and adding it to the being cache.
-		void spawn(uptr<being> being, region_tile::point region_tile_coords);
+		[[nodiscard]] bool try_spawn(uptr<being> being, region_tile::point region_tile_coords);
 
 		//! Spawns @p object in the region, setting its coordinates to @p region_tile_coords and adding it to the object cache.
-		void spawn(uptr<ql::object> object, region_tile::point region_tile_coords);
+		[[nodiscard]] bool try_spawn(uptr<ql::object> object, region_tile::point region_tile_coords);
 
 		//! Moves @p being to the tile at @p region_tile_coords.
 		//! @return Whether @p being was successfully moved.
-		bool move(being& being, region_tile::point region_tile_coords);
+		[[nodiscard]] bool try_move(being& being, region_tile::point region_tile_coords);
 
 		//! Moves @p object to the tile at @p region_tile_coords.
 		//! @return Whether @p object was successfully moved.
-		bool move(ql::object& object, region_tile::point region_tile_coords);
+		[[nodiscard]] bool try_move(ql::object& object, region_tile::point region_tile_coords);
 
 		//! Removes @p being from the region, if present.
 		void remove(being& being);

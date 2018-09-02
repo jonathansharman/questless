@@ -29,7 +29,8 @@ namespace ql {
 			// Nothing on the ground yet. Make a new box, and put the item in it.
 			auto new_box = umake<item_box>();
 			new_box->items().push_back(_item.id);
-			actor.region->spawn(std::move(new_box), actor.coords);
+			bool const success = actor.region->try_spawn(std::move(new_box), actor.coords);
+			assert(success);
 			return cont(result::success);
 		}
 	}

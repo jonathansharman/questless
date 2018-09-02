@@ -445,6 +445,7 @@
     <ClInclude Include="src\items\weapons\weapon.hpp" />
     <ClInclude Include="src\magic\all_spells.hpp" />
     <ClInclude Include="src\magic\charge_cost.hpp" />
+    <ClInclude Include="src\magic\color.hpp" />
     <ClInclude Include="src\magic\eagle_eye.hpp" />
     <ClInclude Include="src\magic\heal.hpp" />
     <ClInclude Include="src\magic\shock.hpp" />
@@ -484,6 +485,7 @@
     <ClInclude Include="src\utility\tagged_type.hpp" />
     <ClInclude Include="src\utility\type_list.hpp" />
     <ClInclude Include="src\utility\utility.hpp" />
+    <ClInclude Include="src\utility\type_switch.hpp" />
     <ClInclude Include="src\utility\visitor_pattern.hpp" />
     <ClInclude Include="src\world\coordinates.hpp" />
     <ClInclude Include="src\world\light_source.hpp" />
@@ -511,12 +513,12 @@
     <ClCompile Include="src\animation\body_texturer.cpp" />
     <ClCompile Include="src\animation\camera.cpp" />
     <ClCompile Include="src\animation\entity_animator.cpp" />
+    <ClCompile Include="src\animation\flame.cpp" />
     <ClCompile Include="src\animation\item_renderer.cpp" />
     <ClCompile Include="src\animation\particles\arrow_particle.cpp" />
     <ClCompile Include="src\animation\particles\black_magic_particle.cpp" />
     <ClCompile Include="src\animation\particles\blood_particle.cpp" />
     <ClCompile Include="src\animation\particles\blue_magic_particle.cpp" />
-    <ClCompile Include="src\animation\particles\flame.cpp" />
     <ClCompile Include="src\animation\particles\flame_particle.cpp" />
     <ClCompile Include="src\animation\particles\green_magic_particle.cpp" />
     <ClCompile Include="src\animation\particles\particle.cpp" />
@@ -584,7 +586,6 @@
     <ClCompile Include="src\ui\tile_dialog.cpp" />
     <ClCompile Include="src\ui\vector_dialog.cpp" />
     <ClCompile Include="src\utility\debug.cpp" />
-    <ClCompile Include="src\utility\event.cpp" />
     <ClCompile Include="src\utility\io.cpp" />
     <ClCompile Include="src\utility\random.cpp" />
     <ClCompile Include="src\utility\utility.cpp" />

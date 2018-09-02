@@ -10,7 +10,10 @@
 #include "utility/random.hpp"
 
 namespace ql {
-	complete lazy_ai::act() { being.busy_time += uniform(1.0, 2.0); }
+	complete lazy_ai::act() {
+		being.busy_time += uniform(1.0, 2.0);
+		return complete{};
+	}
 
 	complete lazy_ai::send_message
 		( uptr<message>

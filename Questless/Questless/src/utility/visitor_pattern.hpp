@@ -55,8 +55,7 @@ using ElementType##_const_visitor = visitor<type_list::add_const_t<ElementSubtyp
 //! Defines ParentType##_base, implementing const and non-const ElementType::accept for ParentType using CRTP. Pulls in the visible ParentClass constructors as protected.
 #define DEFINE_ELEMENT_BASE(ParentType, ElementType) \
 template <typename Derived> \
-class ParentType##_base : public ParentType \
-{ \
+class ParentType##_base : public ParentType { \
 public: \
 	void accept(ElementType##_mutable_visitor& visitor) final { visitor.visit(static_cast<Derived&>(*this)); } \
 	void accept(ElementType##_const_visitor& visitor) const final { visitor.visit(static_cast<Derived const&>(*this)); } \
@@ -67,8 +66,7 @@ protected: \
 //! Defines ParentType##_base, implementing const and non-const ElementType::accept for ParentType using CRTP. Makes a trivial protected default constructor.
 #define DEFINE_ELEMENT_BASE_MAKE_CTOR(ParentType, ElementType) \
 template <typename Derived> \
-class ParentType##_base : public ParentType \
-{ \
+class ParentType##_base : public ParentType { \
 public: \
 	void accept(ElementType##_mutable_visitor& visitor) final { visitor.visit(static_cast<Derived&>(*this)); } \
 	void accept(ElementType##_const_visitor& visitor) const final { visitor.visit(static_cast<Derived const&>(*this)); } \

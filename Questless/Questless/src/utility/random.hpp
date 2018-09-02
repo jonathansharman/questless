@@ -5,16 +5,15 @@
 
 #pragma once
 
-#include <random>
-#include <type_traits>
+#include "utility.hpp"
 
 #include "units/game_space.hpp"
 
+#include <random>
+#include <type_traits>
+
 namespace ql {
 	namespace detail {
-		template <typename T>
-		struct dependent_false_type : std::false_type {};
-
 		extern std::mt19937_64 rng;
 	}
 
@@ -31,7 +30,7 @@ namespace ql {
 		} else if constexpr (std::is_floating_point_v<Arithmetic>) {
 			return std::uniform_real_distribution<Arithmetic>(min, max)(detail::rng);
 		} else {
-			static_assert(detail::dependent_false_type<Arithmetic>::value, "Bounds type must be integral or floating-point.");
+			static_assert(dependent_false_type<Arithmetic>::value, "Bounds type must be integral or floating-point.");
 		}
 	}
 

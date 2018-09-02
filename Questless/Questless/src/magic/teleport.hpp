@@ -12,7 +12,7 @@ namespace ql::magic {
 	public:
 		std::string name() const final { return "Teleport"; }
 
-		magic::color color() const final { return color::yellow; }\
+		magic::color color() const final { return color::yellow; }
 
 		double cooldown() const final { return 15.0; }
 	private:

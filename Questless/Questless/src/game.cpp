@@ -5,6 +5,7 @@
 #include "game.hpp"
 
 #include "animation/entity_animator.hpp"
+#include "entities/objects/object.hpp"
 #include "utility/io.hpp"
 #include "utility/random.hpp"
 #include "world/coordinates.hpp"
@@ -635,7 +636,7 @@ namespace ql {
 					// Update the player view before the player acts.
 					update_player_view();
 				}
-				next_ready_being->act();
+				[[maybe_unused]] auto complete = next_ready_being->act();
 				if (next_ready_being->id == _player_being_id) {
 					// Update the player view after the player acts.
 					update_player_view();

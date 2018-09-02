@@ -20,6 +20,8 @@
 #include "ui/tile_dialog.hpp"
 #include "ui/vector_dialog.hpp"
 #include "utility/reference.hpp"
+#include "utility/type_switch.hpp"
+#include "utility/utility.hpp"
 
 using std::function;
 
@@ -37,86 +39,169 @@ namespace ql {
 
 	complete player::act() {
 		return the_game().query_player_choice([this](player_action_dialog::choice player_choice) {
-			struct player_choice_executor {
-				player& player;
-
-				complete operator ()(player_action_dialog::idle const& i) {
-					if (i.prolonged) {
-						return player.idle([&player = player](action::result result) {
-							if (result == action::result::aborted) {
-								// Chosen action aborted. Player must try to act again.
-								return player.act();
-							}
-							return complete{};
-						});
-					} else {
-						return player.idle(1.0);
-					}
-				}
-				complete operator ()(player_action_dialog::move const& m) {
-					if (m.strafe) {
-						// Strafe.
-						return player.walk(m.direction, [&player = player](action::result result) {
-							if (result == action::result::aborted) {
-								// Chosen action aborted. Player must try to act again.
-								return player.act();
-							}
-							return complete{};
-						});
-					} else {
-						// Turn towards the chosen direction or move in that direction if already facing that way.
-						if (player.being.direction == m.direction) {
-							return player.walk(m.direction, [&player = player](action::result result) {
+			return std::visit([this](auto&& player_choice) {
+				SWITCH_TYPE(player_choice) {
+					MATCH_TYPE(player_action_dialog::idle) {
+						if (player_choice.prolonged) {
+							return this->idle([this](action::result result) {
 								if (result == action::result::aborted) {
 									// Chosen action aborted. Player must try to act again.
-									return player.act();
+									return this->act();
 								}
 								return complete{};
 							});
 						} else {
-							return player.turn(m.direction, [&player = player](action::result result) {
+							return this->idle(1.0);
+						}
+					}
+					MATCH_TYPE(player_action_dialog::move) {
+						if (player_choice.strafe) {
+							// Strafe.
+							return this->walk(player_choice.direction, [this](action::result result) {
 								if (result == action::result::aborted) {
 									// Chosen action aborted. Player must try to act again.
-									return player.act();
+									return this->act();
 								}
 								return complete{};
 							});
+						} else {
+							// Turn towards the chosen direction or move in that direction if already facing that way.
+							if (this->being.direction == player_choice.direction) {
+								return this->walk(player_choice.direction, [this](action::result result) {
+									if (result == action::result::aborted) {
+										// Chosen action aborted. Player must try to act again.
+										return this->act();
+									}
+									return complete{};
+								});
+							} else {
+								return this->turn(player_choice.direction, [this](action::result result) {
+									if (result == action::result::aborted) {
+										// Chosen action aborted. Player must try to act again.
+										return this->act();
+									}
+									return complete{};
+								});
+							}
 						}
 					}
-				}
-				complete operator ()(player_action_dialog::use const& u) {
-					//! @todo Sync the hotbar with changes to the inventory.
-					if (std::optional<id<item>> opt_item_id = the_game().hud().hotbar()[u.index]) {
-						item& item = the_game().items.ref(*opt_item_id);
-						// Get a list of the item's actions. It's shared so the lambda that captures it is copyable, so the lambda can be passed as a std::function.
-						auto actions = smake<std::vector<uptr<action>>>(item.actions());
-						// Get the action names from the list of actions.
-						std::vector<std::string> action_names;
-						std::transform(actions->begin(), actions->end(), std::back_inserter(action_names), [](uptr<action> const& action) { return action->name(); });
-						// Open list dialog for the player to choose an action.
-						auto dialog = umake<list_dialog>(sdl::the_input().mouse_position(), item.name(), std::move(action_names),
-							[&player = player, actions](std::optional<int> opt_action_idx) {
-								if (!opt_action_idx) {
-									// No action selected. Player must try to act again.
-									return player.act();
-								} else {
-									// Perform the chosen action.
-									int action_idx = *opt_action_idx;
-									return (*actions)[action_idx]->perform(player.being, [&player = player](action::result result) {
-										if (result == action::result::aborted) {
-											// Chosen action aborted. Player must try to act again.
-											return player.act();
-										}
-										return complete{};
-									});
+					MATCH_TYPE(player_action_dialog::use) {
+						//! @todo Sync the hotbar with changes to the inventory.
+						if (std::optional<id<item>> opt_item_id = the_game().hud().hotbar()[player_choice.index]) {
+							item& item = the_game().items.ref(*opt_item_id);
+							// Get a list of the item's actions. It's shared, so the lambda that captures it is copyable, so the lambda can be passed as a std::function.
+							auto actions = smake<std::vector<uptr<action>>>(item.actions());
+							// Get the action names from the list of actions.
+							std::vector<std::string> action_names;
+							std::transform(actions->begin(), actions->end(), std::back_inserter(action_names), [](uptr<action> const& action) { return action->name(); });
+							// Open list dialog for the player to choose an action.
+							auto dialog = umake<list_dialog>(sdl::the_input().mouse_position(), item.name(), std::move(action_names),
+								[this, actions = std::move(actions)](std::optional<int> opt_action_idx) {
+									if (!opt_action_idx) {
+										// No action selected. Player must try to act again.
+										return this->act();
+									} else {
+										// Perform the chosen action.
+										int action_idx = *opt_action_idx;
+										return (*actions)[action_idx]->perform(this->being, [this](action::result result) {
+											if (result == action::result::aborted) {
+												// Chosen action aborted. Player must try to act again.
+												return this->act();
+											}
+											return complete{};
+										});
+									}
 								}
-							}
-						);
-						return the_game().add_dialog(std::move(dialog));
+							);
+							return the_game().add_dialog(std::move(dialog));
+						}
 					}
+					throw std::logic_error{"Invalid player choice."};
 				}
-			};
-			return std::visit(player_choice_executor{*this}, player_choice);
+			}, std::move(player_choice));
+
+			//! @todo Why doesn't the "overloaded" version work?
+
+			//return std::visit(
+			//	overloaded(
+			//		[this](player_action_dialog::idle i) {
+			//			if (i.prolonged) {
+			//				return this->idle([this](action::result result) {
+			//					if (result == action::result::aborted) {
+			//						// Chosen action aborted. Player must try to act again.
+			//						return this->act();
+			//					}
+			//					return complete{};
+			//				});
+			//			} else {
+			//				return this->idle(1.0);
+			//			}
+			//		},
+			//		[this](player_action_dialog::move m) {
+			//			if (m.strafe) {
+			//				// Strafe.
+			//				return this->walk(m.direction, [this](action::result result) {
+			//					if (result == action::result::aborted) {
+			//						// Chosen action aborted. Player must try to act again.
+			//						return this->act();
+			//					}
+			//					return complete{};
+			//				});
+			//			} else {
+			//				// Turn towards the chosen direction or move in that direction if already facing that way.
+			//				if (this->being.direction == m.direction) {
+			//					return this->walk(m.direction, [this](action::result result) {
+			//						if (result == action::result::aborted) {
+			//							// Chosen action aborted. Player must try to act again.
+			//							return this->act();
+			//						}
+			//						return complete{};
+			//					});
+			//				} else {
+			//					return this->turn(m.direction, [this](action::result result) {
+			//						if (result == action::result::aborted) {
+			//							// Chosen action aborted. Player must try to act again.
+			//							return this->act();
+			//						}
+			//						return complete{};
+			//					});
+			//				}
+			//			}
+			//		},
+			//		[this](player_action_dialog::use u) {
+			//			//! @todo Sync the hotbar with changes to the inventory.
+			//			if (std::optional<id<item>> opt_item_id = the_game().hud().hotbar()[u.index]) {
+			//				item& item = the_game().items.ref(*opt_item_id);
+			//				// Get a list of the item's actions. It's shared so the lambda that captures it is copyable, so the lambda can be passed as a std::function.
+			//				auto actions = smake<std::vector<uptr<action>>>(item.actions());
+			//				// Get the action names from the list of actions.
+			//				std::vector<std::string> action_names;
+			//				std::transform(actions->begin(), actions->end(), std::back_inserter(action_names), [](uptr<action> const& action) { return action->name(); });
+			//				// Open list dialog for the player to choose an action.
+			//				auto dialog = umake<list_dialog>(sdl::the_input().mouse_position(), item.name(), std::move(action_names),
+			//					[this, actions = std::move(actions)](std::optional<int> opt_action_idx) {
+			//						if (!opt_action_idx) {
+			//							// No action selected. Player must try to act again.
+			//							return this->act();
+			//						} else {
+			//							// Perform the chosen action.
+			//							int action_idx = *opt_action_idx;
+			//							return (*actions)[action_idx]->perform(this->being, [this](action::result result) {
+			//								if (result == action::result::aborted) {
+			//									// Chosen action aborted. Player must try to act again.
+			//									return this->act();
+			//								}
+			//								return complete{};
+			//							});
+			//						}
+			//					}
+			//				);
+			//				return the_game().add_dialog(std::move(dialog));
+			//			}
+			//		}
+			//	),
+			//	std::move(player_choice)
+			//);
 		});
 	}
 
@@ -140,6 +225,7 @@ namespace ql {
 			void visit(message_arrow_miss const&) final { title = "Ranged Attack"; }
 			void visit(message_cannot_equip const&) final { title = "Cannot Equip"; }
 			void visit(message_entity_in_the_way const&) final { title = "Obstruction"; }
+			void visit(message_gatestone_missing const&) final { title = "Gatestone Missing"; }
 			void visit(message_incant_failed_mute const&) final { title = "Incantation"; }
 			void visit(message_melee_miss const&) final { title = "Melee Attack"; }
 			void visit(message_not_enough_ammo const&) final { title = "Attack"; }
@@ -150,6 +236,7 @@ namespace ql {
 			void visit(message_arrow_miss const&) final { prompt = "Miss!"; }
 			void visit(message_cannot_equip const&) final { prompt = "You don't have the requisite free body parts to equip this."; }
 			void visit(message_entity_in_the_way const&) final { prompt = "There's something in the way!"; }
+			void visit(message_gatestone_missing const&) final { prompt = "Your gatestone went missing."; }
 			void visit(message_incant_failed_mute const&) final { prompt = "You can't perform an incantation while mute!"; }
 			void visit(message_melee_miss const&) final { prompt = "Miss!"; }
 			void visit(message_not_enough_ammo const&) final { prompt = "Not enough ammo!"; }

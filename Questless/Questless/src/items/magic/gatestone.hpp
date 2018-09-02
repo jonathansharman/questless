@@ -5,7 +5,7 @@
 #pragma once
 
 #include "items/equipment.hpp"
-#include "magic/spell.hpp"
+#include "magic/color.hpp"
 #include "utility/static_bounded.hpp"
 #include "utility/dynamic_bounded.hpp"
 

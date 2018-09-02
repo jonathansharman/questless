@@ -7,7 +7,7 @@
 #include <boost/iterator/transform_iterator.hpp>
 
 namespace ql {
-	//! @todo Get rid of MutableViewType and ConstViewType and just use auto for mutable_xform and const_xform, whenever template parameter auto is supported.
+	//! @todo Replace with ranges when available.
 
 	//! Stores a reference to a @p Container and allows const and mutable iteration through a transformed view.
 	//! @tparam Container A containter type supporting forward iteration.
@@ -19,15 +19,12 @@ namespace ql {
 		< typename Container
 		, typename MutableViewType
 		, typename ConstViewType
-		, MutableViewType (*mutable_xform)(typename Container::value_type)
-		, ConstViewType (*const_xform)(typename Container::value_type)
+		, MutableViewType(*mutable_xform)(typename Container::value_type)
+		, ConstViewType(*const_xform)(typename Container::value_type)
 		>
 	struct container_view {
 		//! The underlying container.
 		Container& container;
-
-		//! @param container The underlying container.
-		container_view(Container& container) : container{container} {}
 
 		//! Iterator to the beginning of the transformed container.
 		auto begin() {

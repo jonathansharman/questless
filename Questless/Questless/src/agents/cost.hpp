@@ -15,6 +15,7 @@ namespace ql {
 	//! The cost of performing an action.
 	class cost {
 	public:
+		//! Type of continuations to call when a cost is satisfied.
 		using cont = std::function<complete()>;
 
 		virtual ~cost() = default;

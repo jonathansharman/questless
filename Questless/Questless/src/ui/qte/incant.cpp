@@ -19,6 +19,8 @@ namespace ql::qte {
 		load_textures();
 	}
 
+	incant::~incant() {}
+
 	dialog::state incant::update() {
 		_elapsed_time += game::frame_duration;
 
@@ -56,13 +58,13 @@ namespace ql::qte {
 				uptr<magic::spell> spell = nullptr;
 				if (_notes.size() > 0) {
 					if (_notes.front() == note::left) {
-						spell = umake<magic::heal>(_gatestone.id);
+						spell = umake<magic::heal>();
 					} else if (_notes.front() == note::right) {
-						spell = umake<magic::shock>(_gatestone.id);
+						spell = umake<magic::shock>();
 					} else if (_notes.front() == note::up) {
-						spell = umake<magic::teleport>(_gatestone.id);
+						spell = umake<magic::teleport>();
 					} else if (_notes.front() == note::down) {
-						spell = umake<magic::eagle_eye>(_gatestone.id);
+						spell = umake<magic::eagle_eye>();
 					}
 				}
 				return _cont(std::move(spell));

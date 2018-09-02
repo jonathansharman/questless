@@ -100,8 +100,9 @@ namespace ql {
 					case magic::color::yellow: return colors::yellow_vector(alpha);
 					case magic::color::violet: return colors::purple_vector(alpha);
 					case magic::color::orange: return colors::orange_vector(alpha);
-					default: assert(false && "Invalid spell color.");
+					default: assert(false && "Invalid spell color."); //! @todo Replace with precondition when available and remove dummy return value.
 				}
+				return colors::color_vector{};
 			}();
 			// Draw the gatestone.
 			the_texture_manager()[empty_texture_handle].draw(_position, texture_space::align_left, texture_space::align_top);

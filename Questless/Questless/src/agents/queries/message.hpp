@@ -10,10 +10,10 @@ namespace ql {
 	#define MESSAGE_FIRST \
 		X(message_arrow_miss)
 	#define MESSAGE_REST \
-		X(message_cannot_equip) \
 		X(message_arrow_miss) \
 		X(message_cannot_equip) \
 		X(message_entity_in_the_way) \
+		X(message_gatestone_missing) \
 		X(message_incant_failed_mute) \
 		X(message_melee_miss) \
 		X(message_not_enough_ammo) \
@@ -45,6 +45,7 @@ namespace ql {
 	struct message_arrow_miss : message_base<message_arrow_miss> {};
 	struct message_cannot_equip : message_base<message_cannot_equip> {};
 	struct message_entity_in_the_way : message_base<message_entity_in_the_way> {};
+	struct message_gatestone_missing : message_base<message_gatestone_missing> {};
 	struct message_incant_failed_mute : message_base<message_incant_failed_mute> {};
 	struct message_melee_miss : message_base<message_melee_miss> {};
 	struct message_not_enough_ammo : message_base<message_not_enough_ammo> {};
@@ -52,4 +53,7 @@ namespace ql {
 		double charge_deficit;
 		message_not_enough_charge(double charge_deficit) : charge_deficit{charge_deficit} {}
 	};
+
+	#undef MESSAGE_FIRST
+	#undef MESSAGE_REST
 }

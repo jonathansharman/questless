@@ -7,15 +7,25 @@
 #include "utility/visitor_pattern.hpp"
 
 namespace ql {
-	struct tile_query_ranged_attack_target;
-	struct tile_query_shock_target;
-	struct tile_query_teleport_target;
+	#define TILE_QUERY_FIRST \
+		X(tile_query_ranged_attack_target)
+	#define TILE_QUERY_REST \
+		X(tile_query_shock_target) \
+		X(tile_query_teleport_target)
+
+	#define X(subtype) struct subtype;
+		TILE_QUERY_FIRST
+		TILE_QUERY_REST
+	#undef X
 
 	using tile_query_subtype_list = type_list::of_t
-		< tile_query_ranged_attack_target
-		, tile_query_shock_target
-		, tile_query_teleport_target
+		#define X(subtype) < subtype
+		TILE_QUERY_FIRST
+		#undef X
+		#define X(subtype) , subtype
+		TILE_QUERY_REST
 		>;
+		#undef X
 
 	DEFINE_VISITORS(tile_query, tile_query_subtype_list)
 
@@ -32,4 +42,7 @@ namespace ql {
 	};
 	struct tile_query_shock_target : tile_query_base<tile_query_shock_target> {};
 	struct tile_query_teleport_target : tile_query_base<tile_query_teleport_target> {};
+
+	#undef TILE_QUERY_FIRST
+	#undef TILE_QUERY_REST
 }

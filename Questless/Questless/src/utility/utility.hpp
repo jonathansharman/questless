@@ -9,6 +9,10 @@
 #include "units/game_space.hpp"
 
 namespace ql {
+	//! Useful for selectively disabling constexpr branches.
+	template <typename T>
+	struct dependent_false_type : std::false_type {};
+
 	//! Conditionally removes elements from a container.
 	//! @param container An iterable container.
 	//! @param predicate A predicate over elements of the container. Elements for which the predicate is true are erased.
@@ -37,8 +41,8 @@ namespace ql {
 	auto make_uptr_vector(First first, Rest... rest) {
 		std::vector<uptr<T>> modifiers;
 		modifiers.push_back(std::move(first));
-		auto rest = make_uptr_vector<T>(std::forward<Rest>(rest)...);
-		modifiers.insert(modifiers.end(), std::make_move_iterator(rest.begin()), std::make_move_iterator(rest.end()));
+		auto restVector = make_uptr_vector<T>(std::forward<Rest>(rest)...);
+		modifiers.insert(modifiers.end(), std::make_move_iterator(restVector.begin()), std::make_move_iterator(restVector.end()));
 		return modifiers;
 	}
 
@@ -64,14 +68,6 @@ namespace ql {
 	}
 	*/
 
-	//! @todo Why do the following lambda overload helpers not work?
-
-	//template<typename... Ts>
-	//struct overloaded : Ts... {
-	//	overloaded(Ts... t) : Ts(t)... {};
-	//	using typename Ts::operator()...;
-	//};
-
-	//template<typename... Ts>
-	//overloaded(Ts...) -> overloaded<Ts...>;
+	template <typename... Ts> struct overloaded : Ts... { using Ts::operator ()...; };
+	template <typename... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 }

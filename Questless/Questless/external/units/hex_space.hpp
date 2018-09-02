@@ -127,7 +127,9 @@ namespace units {
 					default:
 						break;
 				}
+				//! @todo Replace with precondition when available, and remove dummy return statement.
 				assert(false && "Vector has no direction.");
+				return direction::one;
 			}
 
 			//! Simple hash function.

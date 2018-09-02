@@ -25,7 +25,9 @@ namespace ql::magic {
 					[&caster, cont = std::move(cont), tile_coords] {
 						caster.region->add_effect(smake<lightning_bolt_effect>(caster.coords));
 						caster.region->add_effect(smake<lightning_bolt_effect>(tile_coords));
-						caster.region->move(caster, tile_coords);
+						if (!caster.region->try_move(caster, tile_coords)) {
+							//! @todo Try to move to the nearest free location.
+						}
 						return cont(action::result::success);
 					}
 				);

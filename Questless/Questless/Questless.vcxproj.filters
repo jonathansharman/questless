@@ -588,6 +588,12 @@
     <ClInclude Include="external\units\hex_space.hpp">
       <Filter>external\units</Filter>
     </ClInclude>
+    <ClInclude Include="src\magic\color.hpp">
+      <Filter>src\magic</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utility\type_switch.hpp">
+      <Filter>src\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -842,9 +848,6 @@
     <ClCompile Include="src\ui\qte\aim_missile.cpp">
       <Filter>src\ui\qte</Filter>
     </ClCompile>
-    <ClCompile Include="src\animation\particles\flame.cpp">
-      <Filter>src\animation</Filter>
-    </ClCompile>
     <ClCompile Include="src\animation\bleeding.cpp">
       <Filter>src\animation</Filter>
     </ClCompile>
@@ -859,9 +862,6 @@
     </ClCompile>
     <ClCompile Include="src\magic\charge_cost.cpp">
       <Filter>src\magic</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utility\event.cpp">
-      <Filter>src\utility</Filter>
     </ClCompile>
     <ClCompile Include="external\sdl\resources.cpp">
       <Filter>external\sdl</Filter>
@@ -886,6 +886,9 @@
     </ClCompile>
     <ClCompile Include="external\sdl\renderer.cpp">
       <Filter>external\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\flame.cpp">
+      <Filter>src\animation</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

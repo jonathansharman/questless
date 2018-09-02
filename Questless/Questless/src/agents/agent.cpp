@@ -7,6 +7,7 @@
 #include "queries/all_queries.hpp"
 
 #include "entities/beings/being.hpp"
+#include "magic/spell.hpp"
 #include "utility/random.hpp"
 #include "world/region.hpp"
 
@@ -77,7 +78,7 @@ namespace ql {
 			constexpr double cost_factor_per_turn = 0.1;
 
 			double const agility_factor = 100.0 / being.stats.agility;
-			if (being.region->move(being, being.coords.neighbor(direction))) {
+			if (being.region->try_move(being, being.coords.neighbor(direction))) {
 				double const strafe_cost_factor = cost_factor_per_turn * region_tile::distance(being.direction, direction);
 				being.busy_time += agility_factor * (base_cost_factor + strafe_cost_factor); //! @todo Account for terrain.
 				

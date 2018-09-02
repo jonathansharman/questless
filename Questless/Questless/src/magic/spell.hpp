@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <string>
+#include "color.hpp"
 
 #include "agents/action.hpp"
 #include "items/magic/gatestone.hpp"
@@ -12,28 +12,16 @@
 #include "utility/id.hpp"
 #include "utility/reference.hpp"
 
-namespace ql::magic {
-	enum class color
-		{ white
-		, black
-		, green
-		, red
-		, blue
-		, yellow
-		, violet
-		, orange
-		};
+#include <string>
 
+namespace ql::magic {
 	//! A magical spell that can be cast by a being.
 	class spell : public element<spell_subtype_list> {
 	public:
-		//! @param gatestone_id The ID of the gatestone used to cast this spell.
-		spell(id<item> gatestone_id) : _gatestone_id{gatestone_id} {}
-
 		virtual ~spell() = default;
 
-		//! An action that casts @p spell.
-		static uptr<action> cast(uptr<spell> spell);
+		//! An action that casts @p spell using @p gatestone.
+		static uptr<action> cast(uptr<spell> spell, id<item> gatestone_id);
 
 		//! The amount of time @p caster takes to incant this spell.
 		double incant_time(being& caster) const;
@@ -48,8 +36,6 @@ namespace ql::magic {
 		virtual double cooldown() const = 0;
 	private:
 		friend class cast;
-
-		id<item> _gatestone_id;
 
 		//! The base amount of time it takes to incant this spell, ignoring the skill of the caster.
 		virtual double base_incant_time() const = 0;

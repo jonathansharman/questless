@@ -5,6 +5,7 @@
 #pragma once
 
 #include "items/weapons/modal_weapon.hpp"
+#include "utility/id.hpp"
 
 namespace ql {
 	class quarterstaff : public modal_weapon_base<quarterstaff> {

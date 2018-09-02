@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "ui/hud.hpp"
+#include "hud.hpp"
 
 #include "game.hpp"
 #include "entities/beings/being.hpp"
@@ -217,7 +217,6 @@ namespace ql {
 						, window_space::vector{_inv_column_count * item_icon_size.x(), _inv_row_count * item_icon_size.y()}
 						, {window_space::align_center, window_space::align_middle}
 						};
-				}
 
 				the_renderer().draw_box(_inv_layout, 1, colors::black(), colors::gray());
 

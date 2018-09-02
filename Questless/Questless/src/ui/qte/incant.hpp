@@ -5,14 +5,9 @@
 #pragma once
 
 #include "ui/dialog.hpp"
-#include "units/game_space.hpp"
 
-namespace ql {
-	class gatestone;
-	namespace magic {
-		class spell;
-	}
-}
+#include "magic/spell.hpp"
+#include "units/game_space.hpp"
 
 namespace ql::qte {
 	//! Quick time event for incanting a spell.
@@ -21,6 +16,8 @@ namespace ql::qte {
 		//! @param gatestone The gatestone used for incantation.
 		//! @param cont The dialog continuation function.
 		incant(gatestone& gatestone, std::function<void(uptr<magic::spell>)> cont);
+
+		~incant();
 
 		state update() final;
 

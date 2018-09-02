@@ -8,6 +8,7 @@
 #include "agents/queries/message.hpp"
 #include "entities/beings/being.hpp"
 #include "game.hpp"
+#include "magic/spell.hpp"
 
 namespace ql {
 	std::vector<uptr<action>> gatestone::actions() {
@@ -45,7 +46,7 @@ namespace ql {
 					if (spell) {
 						// Incanter successfully incanted a spell. Cast it after the incantation delay.
 						double const incant_time = spell->incant_time(incanter);
-						return incanter.add_delayed_action(incant_time, std::move(cont), magic::spell::cast(std::move(spell)));
+						return incanter.add_delayed_action(incant_time, std::move(cont), magic::spell::cast(std::move(spell), gatestone->id));
 					} else {
 						// Incanter failed to incant a spell.
 						//! @todo Time penalty for a failed or aborted cast?

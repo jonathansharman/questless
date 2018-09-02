@@ -4,18 +4,19 @@
 
 #pragma once
 
-#include <string>
-#include <array>
-#include <unordered_map>
-#include <unordered_set>
-#include <memory>
-#include <iostream>
-
 #include "units/hex_space.hpp"
 #include "utility/container_view.hpp"
 #include "utility/id.hpp"
 #include "utility/reference.hpp"
 #include "world/coordinates.hpp"
+
+#include <array>
+#include <iostream>
+#include <memory>
+#include <optional>
+#include <string>
+#include <unordered_map>
+#include <unordered_set>
 
 namespace ql {
 	class being;
@@ -79,17 +80,12 @@ namespace ql {
 		section(region_section::point coords, std::istream& data_stream);
 
 		section(section const& that) = delete;
+		section(section&& that);
 
-		section(section&& that)
-			: beings{_being_map}
-			, objects{_object_map}
-			, light_sources{_light_source_ids}
-			, _tiles{std::move(that._tiles)}
-			, _coords{std::move(that._coords)}
-			, _being_map{std::move(that._being_map)}
-			, _object_map{std::move(that._object_map)}
-			, _light_source_ids{std::move(that._light_source_ids)}
-		{}
+		section& operator =(section&) = delete;
+		section& operator =(section&& that);
+
+		~section();
 
 		//! Saves the section to the specified file.
 		//! @param filename The section's filename.

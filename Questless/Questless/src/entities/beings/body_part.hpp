@@ -4,18 +4,20 @@
 
 #pragma once
 
-#include <memory>
-#include <optional>
-#include <string>
-#include <vector>
-
 #include "body_part_visitor.hpp"
+
+#include "agents/action.hpp"
 #include "damage/group.hpp"
 #include "stats/modifier.hpp"
 #include "units/view_space.hpp"
 #include "utility/id.hpp"
 #include "utility/lazy_bounded.hpp"
 #include "utility/utility.hpp"
+
+#include <memory>
+#include <optional>
+#include <string>
+#include <vector>
 
 namespace ql {
 	class being;

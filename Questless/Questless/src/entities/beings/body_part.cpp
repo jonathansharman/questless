@@ -39,8 +39,9 @@ namespace ql {
 	}
 
 	void body_part::take_damage(dmg::group& damage, std::optional<ql::id<being>> source_id) {
-		being& owner = the_game().beings.ref(_owner_id);
-		owner.take_damage(damage, *this, source_id);
+		if (being* owner = the_game().beings.ptr(_owner_id)) {
+			owner->take_damage(damage, *this, source_id);
+		}
 	}
 
 	void body_part::heal(double amount, std::optional<ql::id<being>> opt_source_id) {

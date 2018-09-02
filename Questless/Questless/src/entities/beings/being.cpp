@@ -82,7 +82,7 @@ namespace ql {
 	}
 
 	perception being::perception_of(region_tile::point region_tile_coords) const {
-		bool in_front;
+		bool in_front = false;
 		auto offset = region_tile_coords - coords;
 		switch (direction) {
 			case region_tile::direction::one:
@@ -119,17 +119,19 @@ namespace ql {
 	complete being::act() {
 		if (_delayed_actions.empty()) {
 			// No delayed actions; have agent choose a new action to perform.
-			agent().act();
+			return agent().act();
 		} else {
 			// Pop and execute the oldest delayed action, with its continuation.
 			auto [action, cont] = std::move(_delayed_actions.front());
 			_delayed_actions.pop_front();
-			action->perform(*this, std::move(cont));
-			// If there are additional delayed actions, pop and execute the next delay.
-			if (!_action_delays.empty()) {
-				busy_time += _action_delays.front();
-				_action_delays.pop_front();
-			}
+			return action->perform(*this, [&, this, cont = std::move(cont)](action::result result) {
+				// If there are additional delayed actions, pop and execute the next delay.
+				if (!_action_delays.empty()) {
+					this->busy_time += _action_delays.front();
+					_action_delays.pop_front();
+				}
+				return cont(result);
+			});
 		}
 	}
 
@@ -338,7 +340,9 @@ namespace ql {
 				ql::region& corpse_region = *region; // Save region since the being's region pointer will be nulled when it's removed.
 				region->remove(*this);
 				auto corpse = umake<ql::corpse>(id);
-				corpse_region.add(*corpse, coords);
+				if (!corpse_region.try_add(*corpse, coords)) {
+					//! @todo What to do in the unlikely event that the corpse can't be spawned?
+				}
 				the_game().objects.add(std::move(corpse));
 			} else {
 				region->remove(*this);
@@ -348,7 +352,7 @@ namespace ql {
 			if (!source || source->after_kill(id)) {
 				// Target has died.
 				if (!after_die(opt_source_id)) return;
-				return;
+				else return;
 			}
 		}
 	}

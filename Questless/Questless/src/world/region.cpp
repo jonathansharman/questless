@@ -21,6 +21,7 @@
 #include "utility/utility.hpp"
 #include "world/light_source.hpp"
 #include "world/region.hpp"
+#include "world/tile.hpp"
 
 using std::string;
 using std::vector;
@@ -72,11 +73,13 @@ namespace ql {
 						if ((section_r != 0 || section_q != 0) && uniform(0, 10) == 0) {
 							auto entity_coords = section::region_tile_coords(section_coords, section_tile::point{q, r});
 							if (!uniform(0, 12)) {
-								spawn(umake<campfire>(*this, entity_coords), entity_coords);
+								bool const success = try_spawn(umake<campfire>(*this, entity_coords), entity_coords);
+								assert(success);
 							} else {
 								auto new_being = umake<goblin>(agent::make<basic_ai>);
 								new_being->inventory.add(the_game().items.add(umake<quarterstaff>()).id);
-								spawn(std::move(new_being), entity_coords);
+								bool const success = try_spawn(std::move(new_being), entity_coords);
+								assert(success);
 							}
 						}
 					}
@@ -137,7 +140,9 @@ namespace ql {
 				case entity_subtype::goblin_class:
 				{
 					being& goblin = the_game().beings.add(umake<ql::goblin>(sin));
-					add(goblin, goblin.coords);
+					if (!try_add(goblin, goblin.coords)) {
+						throw std::logic_error("Overlapping beings in save file.");
+					}
 					break;
 				}
 				case entity_subtype::troll_class:
@@ -230,43 +235,46 @@ namespace ql {
 		section* section = containing_section(player_coords);
 		section->remove_being(player_coords);
 
-		spawn(std::move(player_being), player_coords);
+		bool const success = try_spawn(std::move(player_being), player_coords);
+		assert(success);
 	}
 
-	void region::add(being& being, region_tile::point region_tile_coords) {
+	bool region::try_add(being& being, region_tile::point region_tile_coords) {
 		if (section* section = containing_section(region_tile_coords)) {
 			being.region = this;
 			being.section = section;
 			being.coords = region_tile_coords;
 
 			add_to_turn_queue(being);
-			section->add(being);
+			return section->try_add(being);
 		} else {
 			//! @todo What to do when adding outside current sections?
+			return false;
 		}
 	}
 
-	void region::add(ql::object& object, region_tile::point region_tile_coords) {
+	bool region::try_add(ql::object& object, region_tile::point region_tile_coords) {
 		if (section* section = containing_section(region_tile_coords)) {
 			object.region = this;
 			object.section = section;
 			object.coords = region_tile_coords;
 
-			section->add(object);
+			return section->try_add(object);
 		} else {
 			//! @todo What to do when adding outside current sections?
+			return false;
 		}
 	}
 
-	void region::spawn(uptr<being> being, region_tile::point region_tile_coords) {
-		add(the_game().beings.add(std::move(being)), region_tile_coords);
+	bool region::try_spawn(uptr<being> being, region_tile::point region_tile_coords) {
+		return try_add(the_game().beings.add(std::move(being)), region_tile_coords);
 	}
 
-	void region::spawn(uptr<ql::object> object, region_tile::point region_tile_coords) {
-		add(the_game().objects.add(std::move(object)), region_tile_coords);
+	bool region::try_spawn(uptr<ql::object> object, region_tile::point region_tile_coords) {
+		return try_add(the_game().objects.add(std::move(object)), region_tile_coords);
 	}
 
-	bool region::move(being& being, region_tile::point region_tile_coords) {
+	bool region::try_move(being& being, region_tile::point region_tile_coords) {
 		section& src_section = *being.section;
 		section* dst_section = containing_section(region_tile_coords);
 		if (dst_section != &src_section) {
@@ -284,7 +292,7 @@ namespace ql {
 
 				src_section.remove(being);
 				being.coords = region_tile_coords;
-				dst_section->add(being);
+				return dst_section->try_add(being);
 			} else {
 				//! @todo Need to deal with null destination case.
 				return false;
@@ -302,12 +310,12 @@ namespace ql {
 			}
 			src_section.remove(being);
 			being.coords = region_tile_coords;
-			src_section.add(being);
+			return src_section.try_add(being);
 		}
 		return true;
 	}
 
-	bool region::move(ql::object& object, region_tile::point region_tile_coords) {
+	bool region::try_move(ql::object& object, region_tile::point region_tile_coords) {
 		section& src_section = *object.section;
 		section* dst_section = containing_section(region_tile_coords);
 		if (dst_section != &src_section) {
@@ -318,7 +326,7 @@ namespace ql {
 				}
 				src_section.remove(object);
 				object.coords = region_tile_coords;
-				dst_section->add(object);
+				return dst_section->try_add(object);
 			} else {
 				//! @todo Need to deal with null destination case.
 				return false;
@@ -330,9 +338,8 @@ namespace ql {
 			}
 			src_section.remove(object);
 			object.coords = region_tile_coords;
-			src_section.add(object);
+			return src_section.try_add(object);
 		}
-		return true;
 	}
 	
 	void region::remove(being& being) {
@@ -459,17 +466,16 @@ namespace ql {
 		int range = effect->range();
 		auto origin = effect->origin();
 
-		region_tile::point min_tile_coords{origin.q - range, origin.r - range};
-		region_tile::point max_tile_coords{origin.q + range, origin.r + range};
+		region_tile::point const min_tile_coords{origin.q - range, origin.r - range};
+		region_tile::point const max_tile_coords{origin.q + range, origin.r + range};
 
-		region_section::point min_section_coords = section::region_section_coords(min_tile_coords);
-		region_section::point max_section_coords = section::region_section_coords(max_tile_coords);
+		region_section::point const min_section_coords = section::region_section_coords(min_tile_coords);
+		region_section::point const max_section_coords = section::region_section_coords(max_tile_coords);
 
 		for (int r = min_section_coords.r; r <= max_section_coords.r; ++r) {
 			for (int q = min_section_coords.q; q <= max_section_coords.q; ++q) {
 				region_section::point section_coords{q, r};
-				section* section = section_at(section_coords);
-				if (section) {
+				if (section* section = section_at(section_coords)) {
 					for (being& being : section->beings) {
 						being.agent().perceive(effect);
 					}
@@ -521,8 +527,7 @@ namespace ql {
 				double const dawn_progress = (_time_of_day - _end_of_night) / (_day_length - _end_of_night);
 				return dawn_progress * dawn_and_dusk_light + (1.0 - dawn_progress) * night_light;
 			}
-			default:
-				assert(false && "Invalid period of day.");
+			default: throw std::logic_error{"Invalid period of day."};
 		}
 	}
 

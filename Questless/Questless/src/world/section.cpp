@@ -2,16 +2,18 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "world/section.hpp"
+#include "section.hpp"
 
-#include <fstream>
+#include "tile.hpp"
 
 #include "game.hpp"
 #include "entities/beings/being.hpp"
 #include "entities/objects/object.hpp"
-#include "tile.hpp"
+#include "magic/spell.hpp"
 #include "world/light_source.hpp"
 #include "world/region.hpp"
+
+#include <fstream>
 
 namespace ql {
 	ref<being> section::being_entry_to_ref(std::pair<region_tile::point const, id<being>> being_entry) {
@@ -88,6 +90,29 @@ namespace ql {
 			}
 		}
 	}
+
+	section::section(section&& that)
+		: beings{_being_map}
+		, objects{_object_map}
+		, light_sources{_light_source_ids}
+		, _tiles{std::move(that._tiles)}
+		, _coords{that._coords}
+		, _being_map{std::move(that._being_map)}
+		, _object_map{std::move(that._object_map)}
+	{}
+
+	section& section::operator =(section&& that) {
+		beings.container = _being_map;
+		objects.container = _object_map;
+		light_sources.container = _light_source_ids;
+		_tiles = std::move(that._tiles);
+		_coords = that._coords;
+		_being_map = std::move(that._being_map);
+		_object_map = std::move(that._object_map);
+		return *this;
+	}
+
+	section::~section() {}
 	
 	void section::save(char const* filename) {
 		std::ofstream fout{filename};

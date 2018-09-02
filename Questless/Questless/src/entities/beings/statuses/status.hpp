@@ -4,17 +4,17 @@
 
 #pragma once
 
+#include "entities/beings/stats/modifier.hpp"
+#include "entities/beings/stats/stats.hpp"
+#include "utility/id.hpp"
+
 #include <optional>
 #include <string>
 #include <vector>
 #include <memory>
 
-#include "entities/beings/stats/stats.hpp"
-#include "utility/id.hpp"
-
 namespace ql {
 	class being;
-	class modifier;
 
 	enum class status_type { bane, neutral, boon };
 

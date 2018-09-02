@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "particles/arrow_particle.hpp"
+#include "arrow_particle.hpp"
 
 #include "sdl/resources.hpp"
 #include "utility/random.hpp"

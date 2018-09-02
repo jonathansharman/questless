@@ -5,8 +5,10 @@
 #pragma once
 
 #include "damage.hpp"
-#include "utility/tagged_type.hpp"
+
 #include "utility/static_bounded.hpp"
+#include "utility/tagged_type.hpp"
+#include "utility/utility.hpp"
 
 namespace ql::dmg {
 	//! Base type for resist and vuln, using CRTP.
@@ -38,20 +40,17 @@ namespace ql::dmg {
 		{}
 
 		constexpr multiplier(factor factor) {
-			friend struct part_factor_assigner {
-				multiplier& multiplier;
-
-				void operator ()(slash_factor slash_factor) { multiplier._slash = slash_factor; }
-				void operator ()(pierce_factor pierce_factor) { multiplier._pierce = pierce_factor; }
-				void operator ()(cleave_factor cleave_factor) { multiplier._cleave = cleave_factor; }
-				void operator ()(bludgeon_factor bludgeon_factor) { multiplier._bludgeon = bludgeon_factor; }
-				void operator ()(burn_factor burn_factor) { multiplier._burn = burn_factor; }
-				void operator ()(freeze_factor freeze_factor) { multiplier._freeze = freeze_factor; }
-				void operator ()(blight_factor blight_factor) { multiplier._blight = blight_factor; }
-				void operator ()(poison_factor poison_factor) { multiplier._poison = poison_factor; }
-				void operator ()(shock_factor shock_factor) { multiplier._shock = shock_factor; }
-			};
-			std::visit(part_factor_assigner{*this}, factor);
+			std::visit(overloaded
+				( [this](slash_factor slash_factor) { _slash = slash_factor; }
+				, [this](pierce_factor pierce_factor) { _pierce = pierce_factor; }
+				, [this](cleave_factor cleave_factor) { _cleave = cleave_factor; }
+				, [this](bludgeon_factor bludgeon_factor) { _bludgeon = bludgeon_factor; }
+				, [this](burn_factor burn_factor) { _burn = burn_factor; }
+				, [this](freeze_factor freeze_factor) { _freeze = freeze_factor; }
+				, [this](blight_factor blight_factor) { _blight = blight_factor; }
+				, [this](poison_factor poison_factor) { _poison = poison_factor; }
+				, [this](shock_factor shock_factor) { _shock = shock_factor; }
+			), factor);
 		}
 
 		static constexpr Derived zero() { return Derived{}; }
