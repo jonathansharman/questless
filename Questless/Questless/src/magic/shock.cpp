@@ -5,9 +5,9 @@
 #include "magic/shock.hpp"
 
 #include "agents/agent.hpp"
-#include "agents/queries/magnitude_query.hpp"
+#include "agents/queries/magnitude.hpp"
 #include "agents/queries/message.hpp"
-#include "agents/queries/tile_query.hpp"
+#include "agents/queries/tile.hpp"
 #include "game.hpp"
 #include "entities/beings/being.hpp"
 #include "effects/effect.hpp"
@@ -21,13 +21,13 @@
 
 namespace ql::magic {
 	complete shock::perform_cast(being& caster, gatestone& gatestone, action::cont cont) {
-		return caster.agent().query_tile(umake<tile_query_shock_target>(), caster.coords, action::tile_in_range_predicate(caster, _range),
+		return caster.agent().query_tile(queries::tile::shock_target{}, caster.coords, action::tile_in_range_predicate(caster, _range),
 			[&caster, &gatestone, cont = std::move(cont)](std::optional<region_tile::point> opt_tile_coords) {
 				if (!opt_tile_coords) {
 					return cont(action::result::aborted);
 				}
 				region_tile::point tile_coords = *opt_tile_coords;
-				return caster.agent().query_magnitude(umake<magnitude_query_shock>(), 20.0, 0.0, std::nullopt,
+				return caster.agent().query_magnitude(queries::magnitude::shock{}, 20.0, 0.0, std::nullopt,
 					[&caster, &gatestone, cont = std::move(cont), tile_coords](std::optional<double> opt_magnitude) {
 						if (!opt_magnitude) {
 							return cont(action::result::aborted);

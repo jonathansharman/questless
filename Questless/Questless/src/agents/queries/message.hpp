@@ -4,56 +4,26 @@
 
 #pragma once
 
-#include "utility/visitor_pattern.hpp"
+#include <variant>
 
-namespace ql {
-	#define MESSAGE_FIRST \
-		X(message_arrow_miss)
-	#define MESSAGE_REST \
-		X(message_arrow_miss) \
-		X(message_cannot_equip) \
-		X(message_entity_in_the_way) \
-		X(message_gatestone_missing) \
-		X(message_incant_failed_mute) \
-		X(message_melee_miss) \
-		X(message_not_enough_ammo) \
-		X(message_not_enough_charge)
+namespace ql::queries::message {
+	struct arrow_miss {};
+	struct cannot_equip {};
+	struct entity_in_the_way {};
+	struct gatestone_missing {};
+	struct incant_failed_mute {};
+	struct melee_miss {};
+	struct not_enough_ammo {};
+	struct not_enough_charge { double charge_deficit; };
 
-	#define X(subtype) struct subtype;
-	MESSAGE_FIRST
-	MESSAGE_REST
-	#undef X
-
-	using message_subtype_list = type_list::of_t
-		#define X(subtype) < subtype
-		MESSAGE_FIRST
-		#undef X
-		#define X(subtype) , subtype
-		MESSAGE_REST
+	using any = std::variant
+		< arrow_miss
+		, cannot_equip
+		, entity_in_the_way
+		, gatestone_missing
+		, incant_failed_mute
+		, melee_miss
+		, not_enough_ammo
+		, not_enough_charge
 		>;
-		#undef X
-
-	DEFINE_VISITORS(message, message_subtype_list)
-
-	//! A message that can be sent to an agent.
-	struct message : public element<message_subtype_list> {
-		virtual ~message() = default;
-	};
-
-	DEFINE_ELEMENT_BASE(message, message)
-
-	struct message_arrow_miss : message_base<message_arrow_miss> {};
-	struct message_cannot_equip : message_base<message_cannot_equip> {};
-	struct message_entity_in_the_way : message_base<message_entity_in_the_way> {};
-	struct message_gatestone_missing : message_base<message_gatestone_missing> {};
-	struct message_incant_failed_mute : message_base<message_incant_failed_mute> {};
-	struct message_melee_miss : message_base<message_melee_miss> {};
-	struct message_not_enough_ammo : message_base<message_not_enough_ammo> {};
-	struct message_not_enough_charge : message_base<message_not_enough_charge> {
-		double charge_deficit;
-		message_not_enough_charge(double charge_deficit) : charge_deficit{charge_deficit} {}
-	};
-
-	#undef MESSAGE_FIRST
-	#undef MESSAGE_REST
 }

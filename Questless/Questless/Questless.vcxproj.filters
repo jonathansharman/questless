@@ -144,31 +144,7 @@
     <ClInclude Include="src\utility\cache.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\agents\queries\direction_query.hpp">
-      <Filter>src\agents\queries</Filter>
-    </ClInclude>
-    <ClInclude Include="src\agents\queries\item_query.hpp">
-      <Filter>src\agents\queries</Filter>
-    </ClInclude>
-    <ClInclude Include="src\agents\queries\magnitude_query.hpp">
-      <Filter>src\agents\queries</Filter>
-    </ClInclude>
     <ClInclude Include="src\agents\queries\message.hpp">
-      <Filter>src\agents\queries</Filter>
-    </ClInclude>
-    <ClInclude Include="src\agents\queries\tile_query.hpp">
-      <Filter>src\agents\queries</Filter>
-    </ClInclude>
-    <ClInclude Include="src\agents\queries\vector_query.hpp">
-      <Filter>src\agents\queries</Filter>
-    </ClInclude>
-    <ClInclude Include="src\agents\queries\all_queries.hpp">
-      <Filter>src\agents\queries</Filter>
-    </ClInclude>
-    <ClInclude Include="src\agents\queries\being_query.hpp">
-      <Filter>src\agents\queries</Filter>
-    </ClInclude>
-    <ClInclude Include="src\agents\queries\count_query.hpp">
       <Filter>src\agents\queries</Filter>
     </ClInclude>
     <ClInclude Include="src\agents\player.hpp">
@@ -593,6 +569,30 @@
     </ClInclude>
     <ClInclude Include="src\utility\type_switch.hpp">
       <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\agents\queries\being.hpp">
+      <Filter>src\agents\queries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\agents\queries\count.hpp">
+      <Filter>src\agents\queries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\agents\queries\direction.hpp">
+      <Filter>src\agents\queries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\agents\queries\item.hpp">
+      <Filter>src\agents\queries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\agents\queries\magnitude.hpp">
+      <Filter>src\agents\queries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\agents\queries\tile.hpp">
+      <Filter>src\agents\queries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\agents\queries\vector.hpp">
+      <Filter>src\agents\queries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\agents\queries\all.hpp">
+      <Filter>src\agents\queries</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

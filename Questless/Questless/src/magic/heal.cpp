@@ -5,8 +5,8 @@
 #include "magic/heal.hpp"
 
 #include "agents/agent.hpp"
-#include "agents/queries/being_query.hpp"
-#include "agents/queries/magnitude_query.hpp"
+#include "agents/queries/being.hpp"
+#include "agents/queries/magnitude.hpp"
 #include "agents/queries/message.hpp"
 #include "entities/beings/being.hpp"
 #include "magic/charge_cost.hpp"
@@ -15,13 +15,13 @@
 
 namespace ql::magic {
 	complete heal::perform_cast(being& caster, gatestone& gatestone, action::cont cont) {
-		return caster.agent().query_being(umake<being_query_heal_target>(), action::being_in_range_predicate(caster, _range),
+		return caster.agent().query_being(queries::being::heal_target{}, action::being_in_range_predicate(caster, _range),
 			[&caster, &gatestone, cont = std::move(cont)](std::optional<being*> opt_target) {
 				if (!opt_target) {
 					return cont(action::result::aborted);
 				}
 				being* target = *opt_target;
-				return caster.agent().query_magnitude(umake<magnitude_query_heal>(), 100.0, 0.0, std::nullopt,
+				return caster.agent().query_magnitude(queries::magnitude::heal{}, 100.0, 0.0, std::nullopt,
 					[&caster, &gatestone, cont = std::move(cont), target](std::optional<double> opt_magnitude) {
 						if (!opt_magnitude) {
 							return cont(action::result::aborted);

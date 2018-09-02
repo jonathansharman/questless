@@ -15,7 +15,7 @@ namespace ql {
 	complete charge_cost::check(being& actor, cont cont) const {
 		return _gatestone.charge >= _amount
 			? cont()
-			: actor.agent().send_message(umake<message_not_enough_charge>(_amount - _gatestone.charge), [] { return complete{}; })
+			: actor.agent().send_message(queries::message::not_enough_charge{_amount - _gatestone.charge}, [] { return complete{}; })
 			;
 	}
 

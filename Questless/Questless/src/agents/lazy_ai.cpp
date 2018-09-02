@@ -4,8 +4,6 @@
 
 #include "lazy_ai.hpp"
 
-#include "queries/all_queries.hpp"
-
 #include "game.hpp"
 #include "utility/random.hpp"
 
@@ -16,7 +14,7 @@ namespace ql {
 	}
 
 	complete lazy_ai::send_message
-		( uptr<message>
+		( queries::message::any
 		, std::function<complete()> cont
 		) const
 	{
@@ -24,7 +22,7 @@ namespace ql {
 	}
 
 	//complete lazy_ai::query_count
-	//	( uptr<count_query>
+	//	( queries::count::any
 	//	, int
 	//	, std::optional<int>
 	//	, std::optional<int>
@@ -35,7 +33,7 @@ namespace ql {
 	//}
 
 	complete lazy_ai::query_magnitude
-		( uptr<magnitude_query>
+		( queries::magnitude::any
 		, double
 		, std::optional<double>
 		, std::optional<double>
@@ -46,7 +44,7 @@ namespace ql {
 	}
 
 	complete lazy_ai::query_tile
-		( uptr<tile_query>
+		( queries::tile::any
 		, std::optional<region_tile::point>
 		, std::function<bool(region_tile::point)>
 		, std::function<complete(std::optional<region_tile::point>)> cont
@@ -56,7 +54,7 @@ namespace ql {
 	}
 
 	//complete lazy_ai::query_direction
-	//	( uptr<direction_query>
+	//	( queries::direction::any
 	//	, std::function<complete(std::optional<region_tile::direction>)> cont
 	//	) const
 	//{
@@ -64,7 +62,7 @@ namespace ql {
 	//}
 
 	complete lazy_ai::query_vector
-		( uptr<vector_query>
+		( queries::vector::any
 		, std::optional<region_tile::point>
 		, std::function<bool(region_tile::vector)>
 		, std::function<complete(std::optional<region_tile::vector>)> cont
@@ -74,7 +72,7 @@ namespace ql {
 	}
 
 	complete lazy_ai::query_being
-		( uptr<being_query>
+		( queries::being::any
 		, std::function<bool(ql::being&)>
 		, std::function<complete(std::optional<ql::being*>)> cont
 		) const
@@ -83,7 +81,7 @@ namespace ql {
 	}
 
 	//complete lazy_ai::query_item
-	//	( uptr<item_query>
+	//	( queries::item::any
 	//	, ql::being&
 	//	, std::function<bool(ql::being&)>
 	//	, std::function<complete(std::optional<item*>)> cont

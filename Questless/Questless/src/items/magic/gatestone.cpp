@@ -37,7 +37,7 @@ namespace ql {
 	complete gatestone::incant::perform(being& incanter, action::cont cont) {
 		if (incanter.stats.mute) {
 			// Can't incant if mute.
-			return incanter.agent().send_message(umake<message_incant_failed_mute>(), [cont] { return cont(action::result::aborted); });
+			return incanter.agent().send_message(queries::message::incant_failed_mute{}, [cont] { return cont(action::result::aborted); });
 		}
 		// Ensure the gatestone still exists and is equipped to the incanter.
 		if (auto gatestone = the_game().items.ptr_as<ql::gatestone>(_gatestone_id)) {

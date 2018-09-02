@@ -4,11 +4,10 @@
 
 #include "basic_ai.hpp"
 
-#include "queries/all_queries.hpp"
-
 #include "effects/effect.hpp"
 #include "game.hpp"
 #include "utility/random.hpp"
+#include "utility/type_switch.hpp"
 
 namespace ql {
 	complete basic_ai::act() {
@@ -98,12 +97,12 @@ namespace ql {
 
 	void basic_ai::perceive(sptr<effect> const& effect) { effect->accept(*this); }
 
-	complete basic_ai::send_message(uptr<message> /*message*/, std::function<complete()> cont) const {
+	complete basic_ai::send_message(queries::message::any /*message*/, std::function<complete()> cont) const {
 		return cont();
 	}
 
 	//complete basic_ai::query_count
-	//	( uptr<count_query> query
+	//	( queries::count::any query
 	//	, int default_value
 	//	, std::optional<int> min
 	//	, std::optional<int> max
@@ -132,96 +131,49 @@ namespace ql {
 	//}
 
 	complete basic_ai::query_magnitude
-		( uptr<magnitude_query> query
+		( queries::magnitude::any query
 		, double default_value
-		, std::optional<double> min
-		, std::optional<double> max
+		, std::optional<double> /*min*/
+		, std::optional<double> /*max*/
 		, std::function<complete(std::optional<double>)> cont
 		) const
 	{
-		struct magnitude_query_handler : magnitude_query_const_visitor {
-			double default_value;
-			std::optional<double> min;
-			std::optional<double> max;
-			std::function<complete(std::optional<double>)> cont;
-			complete result;
-
-			magnitude_query_handler
-				( double default_value
-				, std::optional<double> min
-				, std::optional<double> max
-				, std::function<complete(std::optional<double>)> cont
-				)
-				: default_value{default_value}, min{min}, max{max}, cont{std::move(cont)}
-			{}
-
-			void visit(magnitude_query_wait_time const&) final {
-				result = cont(default_value);
+		return std::visit([&](auto&& query) {
+			SWITCH_TYPE(query) {
+				MATCH_TYPE(queries::magnitude::heal) return cont(default_value);
+				MATCH_TYPE(queries::magnitude::shock) return cont(default_value);
+				MATCH_TYPE(queries::magnitude::wait_time) return cont(default_value);
 			}
-			void visit(magnitude_query_shock const&) final {
-				result = cont(default_value);
-			}
-			void visit(magnitude_query_heal const&) final {
-				result = cont(default_value);
-			}
-		};
-
-		magnitude_query_handler handler{std::move(default_value), min, max, std::move(cont)};
-		query->accept(handler);
-		return handler.result;
+		}, query);
 	}
 
 	complete basic_ai::query_tile
-		( uptr<tile_query> query
-		, std::optional<region_tile::point> origin
+		( queries::tile::any query
+		, std::optional<region_tile::point> /*origin*/
 		, std::function<bool(region_tile::point)> predicate
 		, std::function<complete(std::optional<region_tile::point>)> cont
 		) const
 	{
-		struct tile_query_handler : tile_query_const_visitor {
-			basic_ai const& ai;
-			std::optional<region_tile::point> origin;
-			std::function<bool(region_tile::point)> predicate;
-			std::function<complete(std::optional<region_tile::point>)> cont;
-			complete return_value;
-
-			tile_query_handler
-				( basic_ai const& ai
-				, std::optional<region_tile::point> origin
-				, std::function<bool(region_tile::point)> predicate
-				, std::function<complete(std::optional<region_tile::point>)> cont
-				)
-				: ai{ai}
-				, origin{std::move(origin)}
-				, predicate{std::move(predicate)}
-				, cont{std::move(cont)}
-			{}
-
-			void visit(tile_query_ranged_attack_target const& query) final {
-				auto target_id = dynamic_cast<attack_state*>(ai._state.get())->target_id;
-				if (ql::being* target = the_game().beings.ptr(target_id)) {
-					if ((target->coords - ai.being.coords).length() <= query.range) {
-						// If in range, shoot the target.
-						return_value = cont(target->coords);
+		return std::visit([&](auto&& query) {
+			SWITCH_TYPE(query) {
+				MATCH_TYPE(queries::tile::ranged_attack_target) {
+					auto target_id = dynamic_cast<attack_state*>(_state.get())->target_id;
+					if (ql::being* target = the_game().beings.ptr(target_id)) {
+						if ((target->coords - being.coords).length() <= query.range) {
+							// If in range, shoot the target.
+							return cont(target->coords);
+						}
 					}
+					return cont(std::nullopt);
 				}
-				return_value = cont(std::nullopt);
+				MATCH_TYPE(queries::tile::shock_target) return cont(std::nullopt);
+				MATCH_TYPE(queries::tile::teleport_target) return cont(std::nullopt);
 			}
-			void visit(tile_query_shock_target const&) final {
-				return_value = cont(std::nullopt);
-			}
-			void visit(tile_query_teleport_target const&) final {
-				return_value = cont(std::nullopt);
-			}
-		};
-
-		tile_query_handler handler{*this, std::move(origin), std::move(predicate), std::move(cont)};
-		query->accept(handler);
-		return handler.return_value;
+		}, query);
 	}
 
 	//complete basic_ai::query_direction
-	//	( uptr<direction_query> query
+	//	( queries::direction::any query
 	//	, std::function<complete(std::optional<region_tile::direction>)> cont
 	//	) const
 	//{
@@ -244,42 +196,28 @@ namespace ql {
 	//}
 
 	complete basic_ai::query_vector
-		( uptr<vector_query> query
+		( queries::vector::any query
 		, std::optional<region_tile::point>
 		, std::function<bool(region_tile::vector)> predicate
 		, std::function<complete(std::optional<region_tile::vector>)> cont
 		) const
 	{
-		struct vector_query_handler : vector_query_const_visitor {
-			basic_ai const& ai;
-			std::function<complete(std::optional<region_tile::vector>)> cont;
-			complete return_value;
-
-			vector_query_handler
-				( basic_ai const& ai
-				, std::function<complete(std::optional<region_tile::vector>)> cont
-				)
-				: ai{ai}
-				, cont{std::move(cont)}
-			{}
-
-			void visit(vector_query_melee_attack const&) final {
-				auto target_id = dynamic_cast<attack_state*>(ai._state.get())->target_id;
-				if (ql::being* target = the_game().beings.ptr(target_id)) {
-					// Attack towards the target.
-					return_value = cont((target->coords - ai.being.coords).unit());
+		return std::visit([&](auto&& query) {
+			SWITCH_TYPE(query) {
+				MATCH_TYPE(queries::vector::melee_attack) {
+					auto target_id = dynamic_cast<attack_state*>(_state.get())->target_id;
+					if (ql::being* target = the_game().beings.ptr(target_id)) {
+						// Attack towards the target.
+						return cont((target->coords - being.coords).unit());
+					}
+					return cont(std::nullopt);
 				}
-				return_value = cont(std::nullopt);
 			}
-		};
-
-		vector_query_handler handler{*this, std::move(cont)};
-		query->accept(handler);
-		return handler.return_value;
+		}, query);
 	}
 
 	complete basic_ai::query_being
-		( uptr<being_query> //query
+		( queries::being::any //query
 		, std::function<bool(ql::being&)> //predicate
 		, std::function<complete(std::optional<ql::being*>)> cont
 		) const
@@ -288,7 +226,7 @@ namespace ql {
 	}
 
 	//complete basic_ai::query_item
-	//	( uptr<item_query> //query
+	//	( queries::item::any //query
 	//	, ql::being& //source
 	//	, std::function<bool(ql::being&)> //predicate
 	//	, std::function<complete(std::optional<item*>)> cont

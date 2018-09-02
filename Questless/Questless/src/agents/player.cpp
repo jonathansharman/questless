@@ -4,8 +4,6 @@
 
 #include "player.hpp"
 
-#include "queries/all_queries.hpp"
-
 #include "entities/beings/world_view.hpp"
 #include "game.hpp"
 #include "sdl/resources.hpp"
@@ -114,13 +112,14 @@ namespace ql {
 								}
 							);
 							return the_game().add_dialog(std::move(dialog));
+						} else {
+							return complete{};
 						}
 					}
-					throw std::logic_error{"Invalid player choice."};
 				}
 			}, std::move(player_choice));
 
-			//! @todo Why doesn't the "overloaded" version work?
+			//! @todo Why doesn't the "overloaded" version work here?
 
 			//return std::visit(
 			//	overloaded(
@@ -216,45 +215,30 @@ namespace ql {
 	}
 
 	complete player::send_message
-		( uptr<message> message
+		( queries::message::any message
 		, function<complete()> cont
 		) const
 	{
-		struct message_titler : message_const_visitor {
-			std::string title;
-			void visit(message_arrow_miss const&) final { title = "Ranged Attack"; }
-			void visit(message_cannot_equip const&) final { title = "Cannot Equip"; }
-			void visit(message_entity_in_the_way const&) final { title = "Obstruction"; }
-			void visit(message_gatestone_missing const&) final { title = "Gatestone Missing"; }
-			void visit(message_incant_failed_mute const&) final { title = "Incantation"; }
-			void visit(message_melee_miss const&) final { title = "Melee Attack"; }
-			void visit(message_not_enough_ammo const&) final { title = "Attack"; }
-			void visit(message_not_enough_charge const&) final { title = "Spell Cast"; }
-		};
-		struct message_prompter : message_const_visitor {
-			std::string prompt;
-			void visit(message_arrow_miss const&) final { prompt = "Miss!"; }
-			void visit(message_cannot_equip const&) final { prompt = "You don't have the requisite free body parts to equip this."; }
-			void visit(message_entity_in_the_way const&) final { prompt = "There's something in the way!"; }
-			void visit(message_gatestone_missing const&) final { prompt = "Your gatestone went missing."; }
-			void visit(message_incant_failed_mute const&) final { prompt = "You can't perform an incantation while mute!"; }
-			void visit(message_melee_miss const&) final { prompt = "Miss!"; }
-			void visit(message_not_enough_ammo const&) final { prompt = "Not enough ammo!"; }
-			void visit(message_not_enough_charge const& m) final {
-				prompt = "Not enough charge! Your gatestone needs " + std::to_string(m.charge_deficit) + " more charge to cast this.";
+		std::array<std::string, 2> const title_prompt = std::visit([&](auto&& message) -> std::array<std::string, 2> {
+			SWITCH_TYPE(message) {
+				MATCH_TYPE(queries::message::arrow_miss) return {"Ranged Attack", "Miss!"};
+				MATCH_TYPE(queries::message::cannot_equip) return {"Cannot Equip", "You don't have the requisite free body parts to equip this."};
+				MATCH_TYPE(queries::message::entity_in_the_way) return {"Obstruction", "There's something in the way."};
+				MATCH_TYPE(queries::message::gatestone_missing) return {"Gatestone Missing", "Your gatestone is missing."};
+				MATCH_TYPE(queries::message::incant_failed_mute) return {"Incantation", "You cannot perform an incantation while mute."};
+				MATCH_TYPE(queries::message::melee_miss) return {"Melee Attack", "Miss!"};
+				MATCH_TYPE(queries::message::not_enough_ammo) return {"Attack", "Not enough ammo!"};
+				MATCH_TYPE(queries::message::not_enough_charge)
+					return {"Spell Cast", "Not enough charge! Your gatestone needs " + std::to_string(message.charge_deficit) + " more charge to cast this."};
 			}
-		};
+		}, message);
 
-		message_titler titler;
-		message->accept(titler);
-		message_prompter prompter;
-		message->accept(prompter);
-		auto dialog = umake<message_dialog>(std::move(titler.title), std::move(prompter.prompt), std::move(cont));
+		auto dialog = umake<message_dialog>(std::move(title_prompt[0]), std::move(title_prompt[1]), std::move(cont));
 		return the_game().add_dialog(std::move(dialog));
 	}
 
 	//complete player::query_count
-	//	( uptr<count_query> query
+	//	( queries::count::any query
 	//	, int default_value
 	//	, std::optional<int> min
 	//	, std::optional<int> max
@@ -277,61 +261,43 @@ namespace ql {
 	//}
 
 	complete player::query_magnitude
-		( uptr<magnitude_query> query
+		( queries::magnitude::any query
 		, double default_value
 		, std::optional<double> min
 		, std::optional<double> max
 		, function<complete(std::optional<double>)> cont
 		) const
 	{
-		struct magnitude_query_titler : magnitude_query_const_visitor {
-			std::string title;
-			void visit(magnitude_query_heal const&) final { title = "Heal Amount"; }
-			void visit(magnitude_query_shock const&) final { title = "Lightning Bolt Strength"; }
-			void visit(magnitude_query_wait_time const&) final { title = "Wait"; }
-		};
-		struct magnitude_query_prompter : magnitude_query_const_visitor {
-			std::string prompt;
-			void visit(magnitude_query_heal const&) final { prompt = "Choose how much health to restore."; }
-			void visit(magnitude_query_shock const&) final { prompt = "Choose how strong to make the lightning bolt."; }
-			void visit(magnitude_query_wait_time const&) final { prompt = "Enter wait time."; }
-		};
+		std::array<std::string, 2> const title_prompt = std::visit([&](auto&& query) -> std::array<std::string, 2> {
+			SWITCH_TYPE(query) {
+				MATCH_TYPE(queries::magnitude::heal) return {"Heal Amount", "Choose how much health to restore."};
+				MATCH_TYPE(queries::magnitude::shock) return {"Lightning Bolt Strength", "Choose how strong to make the lightning bolt."};
+				MATCH_TYPE(queries::magnitude::wait_time) return {"Wait", "Enter wait time."};
+			}
+		}, query);
 
-		magnitude_query_titler titler;
-		query->accept(titler);
-		magnitude_query_prompter prompter;
-		query->accept(prompter);
-		auto dialog = umake<magnitude_dialog>(std::move(titler.title), std::move(prompter.prompt), default_value, min, max, std::move(cont));
+		auto dialog = umake<magnitude_dialog>(std::move(title_prompt[0]), std::move(title_prompt[1]), default_value, min, max, std::move(cont));
 		return the_game().add_dialog(std::move(dialog));
 	}
 	
 	complete player::query_tile
-		( uptr<tile_query> query
+		( queries::tile::any query
 		, std::optional<region_tile::point> origin
 		, function<bool(region_tile::point)> predicate
 		, function<complete(std::optional<region_tile::point>)> cont
 		) const
 	{
-		struct tile_query_titler : tile_query_const_visitor {
-			std::string title;
-			void visit(tile_query_ranged_attack_target const&) final { title = "Ranged Attack"; }
-			void visit(tile_query_shock_target const&) final { title = "Shock Target"; }
-			void visit(tile_query_teleport_target const&) final { title = "Teleport Target"; }
-		};
-		struct tile_query_prompter : tile_query_const_visitor {
-			std::string prompt;
-			void visit(tile_query_ranged_attack_target const&) final { prompt = "Choose attack target."; }
-			void visit(tile_query_shock_target const&) final { prompt = "Select a tile to be zapped with an electric discharge."; }
-			void visit(tile_query_teleport_target const&) final { prompt = "Select a tile to teleport to."; }
-		};
+		std::array<std::string, 2> const title_prompt = std::visit([&](auto&& query) -> std::array<std::string, 2> {
+			SWITCH_TYPE(query) {
+				MATCH_TYPE(queries::tile::ranged_attack_target) return {"Ranged Attack", "Choose attack target."};
+				MATCH_TYPE(queries::tile::shock_target) return {"Shock Target", "Select a tile to be zapped with an electric discharge."};
+				MATCH_TYPE(queries::tile::teleport_target) return {"Teleport Target", "Select a tile to teleport to."};
+			}
+		}, query);
 
-		tile_query_titler titler;
-		query->accept(titler);
-		tile_query_prompter prompter;
-		query->accept(prompter);
 		auto dialog = umake<tile_dialog>
-			( std::move(titler.title)
-			, std::move(prompter.prompt)
+			( std::move(title_prompt[0])
+			, std::move(title_prompt[1])
 			, std::move(origin)
 			, std::move(predicate)
 			, std::move(cont)
@@ -340,7 +306,7 @@ namespace ql {
 	}
 
 	//complete player::query_direction
-	//	( uptr<direction_query> query
+	//	( queries::direction::any query
 	//	, function<complete(std::optional<region_tile::direction>)> cont
 	//	) const
 	//{
@@ -360,31 +326,24 @@ namespace ql {
 	//}
 
 	complete player::query_vector
-		( uptr<vector_query> query
+		( queries::vector::any query
 		, std::optional<region_tile::point> origin
 		, std::function<bool(region_tile::vector)> predicate
 		, std::function<complete(std::optional<region_tile::vector>)> cont
 		) const
 	{
-		struct vector_query_titler : vector_query_const_visitor {
-			std::string title;
-			void visit(vector_query_melee_attack const&) final { title = "Melee Attack"; }
-		};
-		struct vector_query_prompter : vector_query_const_visitor {
-			std::string prompt;
-			void visit(vector_query_melee_attack const&) final { prompt = "Choose attack direction."; }
-		};
+		std::array<std::string, 2> const title_prompt = std::visit([&](auto&& query) -> std::array<std::string, 2> {
+			SWITCH_TYPE(query) {
+				MATCH_TYPE(queries::vector::melee_attack) return {"Melee Attack", "Choose attack direction."};
+			}
+		}, query);
 
-		vector_query_titler titler;
-		query->accept(titler);
-		vector_query_prompter prompter;
-		query->accept(prompter);
-		auto dialog = umake<vector_dialog>(std::move(titler.title), std::move(prompter.prompt), origin, std::move(predicate), std::move(cont));
+		auto dialog = umake<vector_dialog>(std::move(title_prompt[0]), std::move(title_prompt[1]), origin, std::move(predicate), std::move(cont));
 		return the_game().add_dialog(std::move(dialog));
 	}
 
 	complete player::query_being
-		( uptr<being_query> //query
+		( queries::being::any //query
 		, function<bool(ql::being&)> //predicate
 		, function<complete(std::optional<ql::being*>)> cont
 		) const
@@ -395,7 +354,7 @@ namespace ql {
 	}
 
 	//complete player::query_item
-	//	( uptr<item_query> //query
+	//	( queries::item::any //query
 	//	, ql::being& //source
 	//	, function<bool(ql::being&)> //predicate
 	//	, function<complete(std::optional<item*>)> cont
@@ -408,20 +367,14 @@ namespace ql {
 	// Quick Time Events
 
 	complete player::aim_missile(region_tile::point source_coords, ql::being& target_being, std::function<complete(body_part*)> cont) const {
-		return the_game().add_dialog
-			( umake<qte::aim_missile>(source_coords, target_being, std::move(cont))
-			);
+		return the_game().add_dialog(umake<qte::aim_missile>(source_coords, target_being, std::move(cont)));
 	}
 
 	complete player::get_shock_quality(region_tile::point target_coords, std::function<complete(double)> cont) const {
-		return the_game().add_dialog
-			( umake<qte::shock>(target_coords, std::move(cont))
-			);
+		return the_game().add_dialog(umake<qte::shock>(target_coords, std::move(cont)));
 	}
 
 	complete player::incant(gatestone& gatestone, std::function<complete(uptr<magic::spell>)> cont) const {
-		return the_game().add_dialog
-			( umake<qte::incant>(gatestone, std::move(cont))
-			);
+		return the_game().add_dialog(umake<qte::incant>(gatestone, std::move(cont)));
 	}
 }

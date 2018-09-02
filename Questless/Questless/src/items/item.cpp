@@ -21,7 +21,7 @@ namespace ql {
 				return cont(result::success);
 			} else {
 				// There's another object in the way at the drop location.
-				return actor.agent().send_message(umake<message_entity_in_the_way>(), [cont] { return cont(result::aborted); });
+				return actor.agent().send_message(queries::message::entity_in_the_way{}, [cont] { return cont(result::aborted); });
 
 				//! @todo It should probably always be possible to drop stuff. This by itself is a good reason to allow multiple objects on a tile.
 			}

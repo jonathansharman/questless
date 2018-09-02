@@ -45,7 +45,7 @@ namespace ql {
 				double cooldown() const final { return 2.0; }
 				double wear_ratio() const final { return 0.001; }
 			private:
-				sptr<effect> get_effect(region_tile::point source, region_tile::point target) final { return nullptr; } // @todo This.
+				sptr<effect> get_effect(region_tile::point /*source*/, region_tile::point /*target*/) final { return nullptr; } // @todo This.
 			};
 			class jab : public melee_attack {
 			public:
@@ -57,7 +57,7 @@ namespace ql {
 				double cooldown() const final { return 1.3; }
 				double wear_ratio() const final { return 0.001; }
 			private:
-				sptr<effect> get_effect(region_tile::point source, region_tile::point target) final { return nullptr; } // @todo This.
+				sptr<effect> get_effect(region_tile::point /*source*/, region_tile::point /*target*/) final { return nullptr; } // @todo This.
 			};
 
 			sptr<strike> _strike;
@@ -91,7 +91,7 @@ namespace ql {
 				double cooldown() const final { return 1.6; }
 				double wear_ratio() const final { return 0.001; }
 			private:
-				sptr<effect> get_effect(region_tile::point source, region_tile::point target) final { return nullptr; } // @todo This.
+				sptr<effect> get_effect(region_tile::point /*source*/, region_tile::point /*target*/) final { return nullptr; } // @todo This.
 			};
 			class jab : public melee_attack {
 			public:
@@ -108,7 +108,7 @@ namespace ql {
 				double cooldown() const final { return 1.04; }
 				double wear_ratio() const final { return 0.001; }
 			private:
-				sptr<effect> get_effect(region_tile::point source, region_tile::point target) final { return nullptr; } // @todo This.
+				sptr<effect> get_effect(region_tile::point /*source*/, region_tile::point /*target*/) final { return nullptr; } // @todo This.
 			};
 
 			sptr<strike> _strike;

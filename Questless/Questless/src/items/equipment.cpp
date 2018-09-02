@@ -18,7 +18,7 @@ namespace ql {
 		//! @todo Report failure to equip.
 
 		auto fail = [&] {
-			return actor.agent().send_message(umake<message_cannot_equip>(), [cont] { return cont(result::aborted); });
+			return actor.agent().send_message(queries::message::cannot_equip{}, [cont] { return cont(result::aborted); });
 		};
 
 		_equipment._opt_bearer_id = actor.id;

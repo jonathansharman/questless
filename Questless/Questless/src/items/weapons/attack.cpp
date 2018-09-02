@@ -6,8 +6,8 @@
 
 #include "agents/agent.hpp"
 #include "agents/queries/message.hpp"
-#include "agents/queries/tile_query.hpp"
-#include "agents/queries/vector_query.hpp"
+#include "agents/queries/tile.hpp"
+#include "agents/queries/vector.hpp"
 #include "entities/beings/being.hpp"
 #include "game.hpp"
 #include "items/weapons/weapon.hpp"
@@ -21,7 +21,7 @@ namespace ql {
 
 	complete melee_attack::launch::perform(being& actor, cont cont) {
 		return _attack->cost().check(actor, [&] {
-			return actor.agent().query_vector(umake<vector_query_melee_attack>(), actor.coords, [](region_tile::vector v) { return v.length() != 0; },
+			return actor.agent().query_vector(queries::vector::melee_attack{}, actor.coords, [](region_tile::vector v) { return v.length() != 0; },
 				[&actor, cont, attack = _attack](std::optional<region_tile::vector> opt_vector) {
 					if (opt_vector) {
 						auto& weapon = the_game().items.cref_as<ql::weapon>(attack->weapon_id);
@@ -56,7 +56,7 @@ namespace ql {
 					}
 					return cont(result::success);
 				} else {
-					return actor.agent().send_message(umake<message_melee_miss>(), [cont] { return cont(result::success); });
+					return actor.agent().send_message(queries::message::melee_miss{}, [cont] { return cont(result::success); });
 				}
 			} else {
 				// Weapon has been unequipped from the actor.
@@ -81,7 +81,7 @@ namespace ql {
 			if (weapon->equipped() && *weapon->opt_bearer_id() == actor.id) {
 				return _attack->cost().check(actor, [&] {
 					int const range = _attack->range();
-					return actor.agent().query_tile(umake<tile_query_ranged_attack_target>(range), actor.coords, tile_in_range_predicate(actor, range),
+					return actor.agent().query_tile(queries::tile::ranged_attack_target{range}, actor.coords, tile_in_range_predicate(actor, range),
 						// Okay to capture weapon by reference; already checked that it's still there, and callback is synchronous here.
 						[&actor, cont, attack = _attack, &weapon = *weapon](std::optional<region_tile::point> opt_coords) {
 							if (opt_coords) {
@@ -102,7 +102,7 @@ namespace ql {
 										return cont(result::success);
 									});
 								} else {
-									return actor.agent().send_message(umake<message_arrow_miss>(), [cont] { return cont(result::success); });
+									return actor.agent().send_message(queries::message::arrow_miss{}, [cont] { return cont(result::success); });
 								}
 							} else {
 								return cont(result::aborted);

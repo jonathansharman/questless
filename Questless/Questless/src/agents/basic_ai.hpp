@@ -21,12 +21,12 @@ namespace ql {
 		// Queries and messages
 
 		complete send_message
-			( uptr<message> message
+			( queries::message::any message
 			, std::function<complete()> cont
 			) const override;
 
 		//complete query_count
-		//	( uptr<count_query> query
+		//	( queries::count::any query
 		//	, int default_value
 		//	, std::optional<int> min
 		//	, std::optional<int> max
@@ -34,7 +34,7 @@ namespace ql {
 		//	) const override;
 
 		complete query_magnitude
-			( uptr<magnitude_query> query
+			( queries::magnitude::any query
 			, double default_value
 			, std::optional<double> min
 			, std::optional<double> max
@@ -42,32 +42,32 @@ namespace ql {
 			) const override;
 
 		complete query_tile
-			( uptr<tile_query> query
+			( queries::tile::any query
 			, std::optional<region_tile::point> origin
 			, std::function<bool(region_tile::point)> predicate
 			, std::function<complete(std::optional<region_tile::point>)> cont
 			) const override;
 
 		//complete query_direction
-		//	( uptr<direction_query> query
+		//	( queries::direction::any query
 		//	, std::function<complete(std::optional<region_tile::direction>)> cont
 		//	) const override;
 
 		complete query_vector
-			( uptr<vector_query> query
+			( queries::vector::any query
 			, std::optional<region_tile::point> origin
 			, std::function<bool(region_tile::vector)> predicate
 			, std::function<complete(std::optional<region_tile::vector>)> cont
 			) const override;
 
 		complete query_being
-			( uptr<being_query> query
+			( queries::being::any query
 			, std::function<bool(ql::being&)> predicate
 			, std::function<complete(std::optional<ql::being*>)> cont
 			) const override;
 
 		//complete query_item
-		//	( uptr<item_query> query
+		//	( queries::item::any query
 		//	, ql::being& source
 		//	, std::function<bool(ql::being&)> predicate
 		//	, std::function<complete(std::optional<item*>)> cont

@@ -51,7 +51,7 @@ namespace ql {
 				return cont();
 			}
 		}
-		return actor.agent().send_message(umake<message_not_enough_ammo>(), [] { return complete{}; });
+		return actor.agent().send_message(queries::message::not_enough_ammo{}, [] { return complete{}; });
 	}
 
 	void bow::shoot::arrow_cost::incur(being& actor) const {

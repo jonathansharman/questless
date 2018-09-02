@@ -21,7 +21,7 @@ namespace ql::magic {
 				if (auto gatestone = the_game().items.ptr_as<ql::gatestone>(_gatestone_id)) {
 					return _spell->perform_cast(actor, *gatestone, std::move(cont));
 				} else {
-					return actor.agent().send_message(umake<message_gatestone_missing>(), [cont] { return cont(result::aborted); });
+					return actor.agent().send_message(queries::message::gatestone_missing{}, [cont] { return cont(result::aborted); });
 				}
 			}
 		private:
