@@ -16,9 +16,9 @@ namespace ql {
 		, game_space::acceleration::zero()
 		, random_angle()
 		, game_space::radians{0.0} / 1.0s
-		, scale{1.0}
+		, 1.0
 		, game_space::scale_velocity::zero()
-		, lifetime{game_space::seconds{uniform(0.8, 1.2)}}
+		, game_space::seconds{uniform(0.8, 1.2)}
 		, max_displacement{30.0}
 		}
 	{}

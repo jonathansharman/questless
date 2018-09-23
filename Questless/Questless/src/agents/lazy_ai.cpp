@@ -9,7 +9,7 @@
 
 namespace ql {
 	complete lazy_ai::act() {
-		being.busy_time += uniform(1.0, 2.0);
+		being.busy_time += ticks{uniform(1.0, 2.0)};
 		return complete{};
 	}
 

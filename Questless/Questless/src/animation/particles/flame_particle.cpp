@@ -18,9 +18,9 @@ namespace ql {
 		, game_space::vector{0.0, 30.0} / 1.0s / 1.0s
 		, game_space::radians::zero()
 		, game_space::radians_per_sec::zero()
-		, scale{0.75}
+		, 0.75
 		, game_space::scale_velocity::zero()
-		, lifetime{game_space::seconds{uniform(1.0, 1.5)}}
+		, game_space::seconds{uniform(1.0, 1.5)}
 		, max_displacement{5.0}
 		}
 	{

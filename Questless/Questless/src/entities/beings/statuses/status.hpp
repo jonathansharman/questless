@@ -5,7 +5,7 @@
 #pragma once
 
 #include "entities/beings/stats/modifier.hpp"
-#include "entities/beings/stats/stats.hpp"
+#include "entities/beings/stats/being.hpp"
 #include "utility/id.hpp"
 
 #include <optional>
@@ -34,9 +34,9 @@ namespace ql {
 		virtual status_type type() const = 0;
 
 		//! The list of stat modifiers associated with this status.
-		virtual std::vector<uptr<modifier>> const& modifiers() const {
+		virtual std::vector<uptr<stats::modifier>> const& modifiers() const {
 			// No modifiers by default.
-			static std::vector<uptr<modifier>> modifiers;
+			static std::vector<uptr<stats::modifier>> modifiers;
 			return modifiers;
 		}
 

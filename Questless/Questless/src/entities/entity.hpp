@@ -32,9 +32,6 @@ namespace ql {
 		//! The entity's class's enumerated value.
 		virtual entity_subtype entity_subtype() const = 0;
 
-		//! @param out A stream object into which the serialized entity is inserted.
-		virtual void serialize(std::ostream& out) const;
-
 		//! Advances this entity one time unit.
 		virtual void update() = 0;
 
@@ -42,7 +39,6 @@ namespace ql {
 		virtual double transparency() const = 0;
 	protected:
 		entity() : region{}, section{}, coords{} {}
-		entity(std::istream& in);
 	};
 
 	DEFINE_ELEMENT_BASE(entity, entity)

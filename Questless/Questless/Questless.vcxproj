@@ -128,15 +128,15 @@
     <Import Project="library-paths.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(TYPE_SAFE_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Temp|Win32'">
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(TYPE_SAFE_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(TYPE_SAFE_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -152,7 +152,7 @@
     <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(TYPE_SAFE_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -169,6 +169,7 @@
       <AdditionalOptions>/std:c++latest /permissive- %(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
       <DisableSpecificWarnings>4268;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <EnableModules>true</EnableModules>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -199,6 +200,7 @@
       </FunctionLevelLinking>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <MinimalRebuild>true</MinimalRebuild>
+      <EnableModules>true</EnableModules>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -223,6 +225,7 @@
       <AdditionalOptions>/std:c++latest /permissive- %(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
       <DisableSpecificWarnings>4268;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <EnableModules>true</EnableModules>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -297,6 +300,7 @@
       <DisableSpecificWarnings>4268;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <EnableModules>true</EnableModules>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -323,6 +327,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="external\meta\list.hpp" />
+    <ClInclude Include="external\meta\meta.hpp" />
+    <ClInclude Include="external\meta\algebra.hpp" />
+    <ClInclude Include="external\meta\quantity.hpp" />
+    <ClInclude Include="external\meta\unit.hpp" />
     <ClInclude Include="external\sdl\font.hpp" />
     <ClInclude Include="external\sdl\input.hpp" />
     <ClInclude Include="external\sdl\renderer.hpp" />
@@ -393,17 +402,15 @@
     <ClInclude Include="src\effects\effect.hpp" />
     <ClInclude Include="src\effects\effect_visitor.hpp" />
     <ClInclude Include="src\entities\all_entities.hpp" />
-    <ClInclude Include="src\entities\beings\abilities.hpp" />
     <ClInclude Include="src\entities\beings\being.hpp" />
     <ClInclude Include="src\entities\beings\body.hpp" />
     <ClInclude Include="src\entities\beings\body_part.hpp" />
-    <ClInclude Include="src\entities\beings\body_part_visitor.hpp" />
-    <ClInclude Include="src\entities\beings\corporeal_being.hpp" />
     <ClInclude Include="src\entities\beings\goblinoids\goblin.hpp" />
     <ClInclude Include="src\entities\beings\human.hpp" />
-    <ClInclude Include="src\entities\beings\incorporeal_being.hpp" />
+    <ClInclude Include="src\entities\beings\stats\aggregate.hpp" />
     <ClInclude Include="src\entities\beings\stats\modifier.hpp" />
-    <ClInclude Include="src\entities\beings\stats\stats.hpp" />
+    <ClInclude Include="src\entities\beings\stats\part.hpp" />
+    <ClInclude Include="src\entities\beings\stats\being.hpp" />
     <ClInclude Include="src\entities\beings\stats\vision.hpp" />
     <ClInclude Include="src\entities\beings\statuses\blind.hpp" />
     <ClInclude Include="src\entities\beings\statuses\confused.hpp" />
@@ -478,12 +485,13 @@
     <ClInclude Include="src\utility\initializer.hpp" />
     <ClInclude Include="src\utility\io.hpp" />
     <ClInclude Include="src\utility\lazy_bounded.hpp" />
+    <ClInclude Include="src\utility\nonnegative.hpp" />
     <ClInclude Include="src\utility\property.hpp" />
     <ClInclude Include="src\utility\random.hpp" />
     <ClInclude Include="src\utility\reference.hpp" />
     <ClInclude Include="src\utility\static_bounded.hpp" />
-    <ClInclude Include="src\utility\tagged_type.hpp" />
     <ClInclude Include="src\utility\type_list.hpp" />
+    <ClInclude Include="src\utility\quantities.hpp" />
     <ClInclude Include="src\utility\utility.hpp" />
     <ClInclude Include="src\utility\type_switch.hpp" />
     <ClInclude Include="src\utility\visitor_pattern.hpp" />
@@ -534,14 +542,11 @@
     <ClCompile Include="src\animation\world_renderer.cpp" />
     <ClCompile Include="src\damage\damage.cpp" />
     <ClCompile Include="src\damage\group.cpp" />
-    <ClCompile Include="src\entities\beings\abilities.cpp" />
     <ClCompile Include="src\entities\beings\being.cpp" />
     <ClCompile Include="src\entities\beings\body.cpp" />
     <ClCompile Include="src\entities\beings\body_part.cpp" />
-    <ClCompile Include="src\entities\beings\corporeal_being.cpp" />
     <ClCompile Include="src\entities\beings\goblinoids\goblin.cpp" />
     <ClCompile Include="src\entities\beings\human.cpp" />
-    <ClCompile Include="src\entities\beings\incorporeal_being.cpp" />
     <ClCompile Include="src\entities\beings\stats\vision.cpp" />
     <ClCompile Include="src\entities\beings\statuses\healing.cpp" />
     <ClCompile Include="src\entities\beings\statuses\poisoned.cpp" />

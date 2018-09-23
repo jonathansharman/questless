@@ -1,0 +1,17 @@
+{ "name": "Human left foot"
+, "tags": ["foot"]
+, "stats":
+	{ "vitality": 15.0
+	, "weight": 5.0
+	, "agility": 15.0
+	}
+, "vital": false
+, "enabled": true
+, "layer": 1
+, "hitbox":
+	[ [-10.0, 10.0]
+	, [-10.0, -5.0]
+	, [20.0, 10.0]
+	]
+, "attachments": []
+}

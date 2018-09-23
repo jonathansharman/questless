@@ -18,7 +18,7 @@ namespace ql {
 	class corpse;
 	class item_box;
 
-	using entity_subtype_list = type_list::of_t
+	using entity_subtype_list = meta::list_t
 		// Beings
 		< goblin
 		, human

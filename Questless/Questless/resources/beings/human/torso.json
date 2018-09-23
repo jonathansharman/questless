@@ -1,0 +1,44 @@
+{ "name": "Human torso"
+, "tags": ["arm"]
+, "stats":
+	{ "vitality": 50.0
+	, "weight": 35.0
+	, "strength": 20.0
+	}
+, "vital": true
+, "enabled": true
+, "layer": 5
+, "hitbox":
+	[ [-25.0, -25.0]
+	, [-15.0, 25.0]
+	, [15.0, 25.0]
+	, [25.0, -25.0]
+	]
+, "attachments":
+	[ { "part": null
+	  , "offset": [0.0, -25.0]
+	  , "rotation": 0.0
+	  , "default": "resources/beings/human/head.json"
+	  }
+	, { "part": null
+	  , "offset": [25.0, -25.0]
+	  , "rotation": -0.31415926535
+	  , "default": "resources/beings/human/left_arm.json"
+	  }
+	, { "part": null
+	  , "offset": [-25.0, -25.0]
+	  , "rotation": 0.31415926535
+	  , "default": "resources/beings/human/right_arm.json"
+	  }
+	, { "part": null
+	  , "offset": [15.0, 25.0]
+	  , "rotation": 0.0
+	  , "default": "resources/beings/human/left_leg.json"
+	  }
+	, { "part": null
+	  , "offset": [-15.0, 25.0]
+	  , "rotation": 0.0
+	  , "default": "resources/beings/human/right_leg.json"
+	  }
+	]
+}

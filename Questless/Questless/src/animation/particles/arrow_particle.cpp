@@ -12,14 +12,14 @@ using namespace units;
 namespace ql {
 	arrow_particle::arrow_particle(game_space::point source, game_space::point target)
 		: particle
-			{ game_space::vector::zero() // displacement
-			, game_space::vector::zero() / 1.0s // velocity
-			, game_space::vector::zero() / 1.0s / 1.0s // acceleration
-			, random_angle() // angle
-			, game_space::radians{0.0} / 1.0s // angular velocity
-			, scale{1.0f} // scale
-			, game_space::scale_velocity{scale{0.0}} // scale velocity
-			, lifetime{game_space::seconds::zero()} // lifetime
+			{ game_space::vector::zero()
+			, game_space::vector::zero() / 1.0s
+			, game_space::vector::zero() / 1.0s / 1.0s
+			, random_angle()
+			, game_space::radians{0.0} / 1.0s
+			, 1.0
+			, game_space::scale_velocity{0.0}
+			, game_space::seconds::zero()
 			, max_displacement{0.0}
 			}
 		, _target{target}

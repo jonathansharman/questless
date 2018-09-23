@@ -4,111 +4,88 @@
 
 #pragma once
 
-#include "body_part_visitor.hpp"
-
 #include "agents/action.hpp"
 #include "damage/group.hpp"
-#include "stats/modifier.hpp"
-#include "units/view_space.hpp"
+#include "stats/part.hpp"
 #include "utility/id.hpp"
 #include "utility/lazy_bounded.hpp"
+#include "utility/reference.hpp"
 #include "utility/utility.hpp"
 
-#include <memory>
+#include "units/view_space.hpp"
+#include "utility/quantities.hpp"
+
+#include <nlohmann/json_fwd.hpp>
+
 #include <optional>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 namespace ql {
+	struct attachment;
 	class being;
-	class body_part;
 	class item;
 
-	struct dexterity : tagged_type<double> { using tagged_type::tagged_type; };
-	struct vitality : tagged_type<double> { using tagged_type::tagged_type; };
-
-	//! An attachment point on a body part.
-	class attachment {
-	public:
-		virtual ~attachment() = default;
-
-		//! The body part currently attached here or nullptr if there is no attached part.
-		uptr<body_part> part;
-
-		attachment(uptr<body_part> part) : part{std::move(part)} {}
-
-		//! The offset from the parent part's origin to the child part's origin.
-		virtual units::view_space::vector offset() const = 0;
-
-		//! The rotation of the attached part about the attachment point.
-		virtual units::view_space::radians rotation() const = 0;
-
-		//! Creates an instance of the body part that attaches here by default.
-		//! @param owner_id The ID of the being that owns the new body part.
-		virtual uptr<body_part> default_part(ql::id<being> owner_id) const = 0;
-	};
-
 	//! A being's body part.
-	class body_part : public element<body_part_subtype_list> {
+	class body_part {
 	public:
-		static constexpr double minimum_vitality = 0.0;
+		enum class tag : int { head = 0, torso, arm, hand, leg, foot, wing, tail };
 
-		id<body_part> const id;
+		static constexpr auto blood_per_vitality = 1.0_blood / 1.0_hp;
 
-		//! Determines maximum health.
-		static_bounded<double, minimum_vitality> vitality;
+		ql::id<body_part> id;
 
-		lazy_bounded<double> health;
+		//! @param owner_id The ID of the being that owns this body part.
+		ql::id<being> owner_id;
 
-		//! The amount this body part is bleeding, in the range [0, vitality].
-		lazy_bounded<double> bleeding;
-
-		//! The ID of the item equipped to this body or nullopt if none.
-		std::optional<ql::id<item>> equipped_item_id;
-
-		virtual ~body_part() = default;
+		std::unordered_set<tag> tags;
 
 		//! The player-visisble name of the body part.
-		virtual std::string name() const = 0;
+		std::string name;
 
-		//! Whether the body part is vital to its being. If true, the being dies when this body part is disabled.
-		virtual bool vital() const = 0;
+		//! This body part's contribution to its owner's stats.
+		stats::part stats{};
 
-		//! Stat modifiers to apply to the part's owner.
-		virtual std::vector<uptr<modifier>> modifiers() const = 0;
+		//! Whether this body part is vital to its being. If true, the being usually dies when this body part is disabled.
+		vital vital = ql::vital{false};
 
-		//! A list of actions that this body part enables its owner to perform.
-		virtual std::vector<uptr<action>> abilities() const = 0; //! @todo Is this useful?
+		//! Whether this body part is currently functioning. Parts can be disabled by damage or other effects.
+		enabled enabled = ql::enabled{true};
 
-		//! The body parts attached to this body part.
-		std::vector<uptr<attachment>> const& attachments() const { return _attachments; }
+		lazy_bounded<ql::health> health
+			{ 0.0_hp
+			, [] { return 0.0_hp; }
+			, [this] { return this->stats.a.vitality.value(); }
+			};
+
+		//! The rate at which this body part is losing blood.
+		lazy_bounded<blood_per_tick> bleeding
+			{ 0.0_blood_per_tick
+			, [] { return 0.0_blood_per_tick; }
+			, [this] { return this->stats.a.vitality.value() * blood_per_vitality / 1.0_tick; }
+			};
 
 		//! The region this body part occupies, for collision and display.
-		virtual units::view_space::polygon const& hitbox() const = 0;
-
-		//! The body part's contribution to its owner's weight.
-		double weight() const { return _weight; }
-
-		//! The body part's protection stat.
-		virtual dmg::protect const& protection() const {
-			static auto result = dmg::protect::zero();
-			return result;
-		}
-
-		//! The body part's resistance stat.
-		virtual dmg::resist const& resistance() const {
-			static auto result = dmg::resist::zero();
-			return result;
-		}
-
-		//! The body part's vulnerability stat.
-		virtual dmg::vuln const& vulnerability() const {
-			static auto result = dmg::vuln::zero();
-			return result;
-		}
+		units::view_space::polygon hitbox;
 
 		//! The draw layer, with smaller-numbered layers drawn first (i.e. in the background).
-		virtual int layer() const = 0;
+		int layer = 0;
+
+		//! The ID of the item equipped to this body or nullopt if none.
+		std::optional<ql::id<item>> equipped_item_id = std::nullopt;
+
+		//! The body part attachment points on this body part.
+		std::vector<uptr<attachment>> attachments;
+
+		body_part(ql::id<being> owner_id, ql::id<body_part> id) : id{id}, owner_id{owner_id} {}
+
+		//! Loads a body part from @filepath.
+		body_part(char const* filepath, ql::id<being> owner_id, ql::id<body_part> id = ql::id<body_part>::make());
+
+		friend void to_json(nlohmann::json& j, body_part const& part);
+
+		friend void from_json(nlohmann::json const& j, body_part& part);
 
 		//! Advances the body part one time unit.
 		void update();
@@ -121,304 +98,37 @@ namespace ql {
 		//! Causes the body part to be healed by the specified source being.
 		//! @param amount Health to be restored to this being.
 		//! @param opt_source_id The ID of the being which caused the healing, if any.
-		void heal(double amount, std::optional<ql::id<being>> opt_source_id);
+		void heal(ql::health amount, std::optional<ql::id<being>> opt_source_id);
 
 		//! Recursively generates each missing attached body part using default parts.
 		void generate_attached_parts();
-	protected:
-		//! @param owner_id The id of the being that owns this body part.
-		//! @param vitality The body part's vitality, which determines its maximum health.
-		//! @param weight The body part's contribution to its owner's weight.
-		//! @param attachments The list of attachments to this body part.
-		//! @param id The body part's unique ID.
-		body_part
-			( ql::id<being> owner_id
-			, ql::vitality vitality
-			, ql::weight weight
-			, std::vector<uptr<attachment>> attachments
-			, ql::id<body_part> id = ql::id<body_part>::make()
-			);
-	private:
-		ql::id<being> _owner_id;
-
-		std::vector<uptr<attachment>> _attachments;
-
-		bool _enabled;
-		double _weight;
 	};
 
-	DEFINE_ELEMENT_BASE(body_part, body_part)
+	//! An attachment point on a body part.
+	struct attachment {
+		//! @param owner_id The ID of the being that owns this body part attachment.
+		ql::id<being> owner_id;
 
-	// body_part Subtypes
+		//! The body part currently attached here or nullopt if there is no attached part.
+		std::optional<body_part> part;
 
-	class head : public body_part_base<head> {
-	public:
-		head
-			( ql::id<being> owner_id
-			, ql::vitality vitality
-			, ql::weight weight
-			, intellect intellect
-			, spirit spirit
-			, mute mute
-			, std::vector<uptr<attachment>> attachments
-			)
-			: body_part_base<head> {
-				owner_id,
-				vitality,
-				weight,
-				std::move(attachments),
-			}
-			, _intellect{intellect}
-			, _spirit{spirit}
-			, _mute{mute}
-		{}
+		//! The offset from the parent part's origin to the child part's origin.
+		units::view_space::vector offset;
 
-		std::string name() const override { return "Head"; }
+		//! The rotation of the attached part about the attachment point.
+		units::view_space::radians rotation;
 
-		bool vital() const override { return true; }
+		//! The resource filepath to the default part for this attachment.
+		std::string default_part;
 
-		std::vector<uptr<modifier>> modifiers() const override {
-			return make_uptr_vector<modifier>
-				( umake<intellect_modifier>(_intellect)
-				, umake<spirit_modifier>(_spirit)
-				, umake<mute_modifier>(_mute)
-				, umake<weight_modifier>(weight())
-				);
+		//! Creates an instance of the body part that attaches here by default.
+		//! @param owner_id The ID of the being that owns the new body part.
+		body_part make_default() {
+			return body_part{default_part.c_str(), owner_id};
 		}
 
-		virtual std::vector<uptr<action>> abilities() const { return {}; }
-	private:
-		double _intellect;
-		double _spirit;
-		bool _mute;
-	};
+		friend void to_json(nlohmann::json& j, attachment const& attachment);
 
-	class torso : public body_part_base<torso> {
-	public:
-		torso
-			( ql::id<being> owner_id
-			, ql::vitality vitality
-			, ql::weight weight
-			, strength strength
-			, std::vector<uptr<attachment>> attachments
-			)
-			: body_part_base<torso> {
-				owner_id,
-				vitality,
-				weight,
-				std::move(attachments),
-			}
-			, _strength{strength}
-		{}
-
-		std::string name() const override { return "Torso"; }
-
-		bool vital() const override { return true; }
-
-		std::vector<uptr<modifier>> modifiers() const override {
-			return make_uptr_vector<modifier>
-				( umake<strength_modifier>(_strength)
-				, umake<weight_modifier>(weight())
-				);
-		}
-
-		virtual std::vector<uptr<action>> abilities() const { return {}; }
-
-		double strength() const { return _strength; }
-	private:
-		double _strength;
-	};
-
-	class arm : public body_part_base<arm> {
-	public:
-		arm
-			( ql::id<being> owner_id
-			, ql::vitality vitality
-			, ql::weight weight
-			, strength strength
-			, std::vector<uptr<attachment>> attachments
-			)
-			: body_part_base<arm>
-				{ owner_id
-				, vitality
-				, weight
-				, std::move(attachments)
-				}
-			, _strength{strength}
-		{}
-
-		std::string name() const override { return "Arm"; }
-
-		bool vital() const override { return false; }
-
-		std::vector<uptr<modifier>> modifiers() const override {
-			return make_uptr_vector<modifier>
-				( umake<strength_modifier>(_strength)
-				, umake<weight_modifier>(weight())
-				);
-		}
-
-		virtual std::vector<uptr<action>> abilities() const { return {}; }
-
-		double strength() const { return _strength; }
-	private:
-		double _strength;
-	};
-
-	class hand : public body_part_base<hand> {
-	public:
-		hand
-			( ql::id<being> owner_id
-			, ql::vitality vitality
-			, ql::weight weight
-			, dexterity dexterity
-			, std::vector<uptr<attachment>> attachments
-			)
-			: body_part_base<hand>
-				{ owner_id
-				, vitality
-				, weight
-				, std::move(attachments)
-				}
-			, _dexterity{dexterity}
-		{}
-
-		std::string name() const override { return "Hand"; }
-
-		bool vital() const override { return false; }
-
-		std::vector<uptr<modifier>> modifiers() const override {
-			return make_uptr_vector<modifier>(umake<weight_modifier>(weight()));
-		}
-
-		virtual std::vector<uptr<action>> abilities() const { return {}; }
-
-		double dexterity() const { return _dexterity; }
-	private:
-		double _dexterity;
-	};
-
-	class leg : public body_part_base<leg> {
-	public:
-		leg
-			( ql::id<being> owner_id
-			, ql::vitality vitality
-			, ql::weight weight
-			, agility agility
-			, strength strength
-			, std::vector<uptr<attachment>> attachments
-			)
-			: body_part_base<leg>
-				{ owner_id
-				, vitality
-				, weight
-				, std::move(attachments)
-				}
-			, _agility{agility}
-			, _strength{strength}
-		{}
-
-		std::string name() const override { return "Leg"; }
-
-		bool vital() const override { return false; }
-
-		std::vector<uptr<modifier>> modifiers() const override {
-			return make_uptr_vector<modifier>
-				( umake<agility_modifier>(_agility)
-				, umake<strength_modifier>(_strength)
-				, umake<weight_modifier>(weight())
-				);
-		}
-
-		virtual std::vector<uptr<action>> abilities() const { return {}; }
-
-		double agility() const { return _agility; }
-		double strength() const { return _strength; }
-	private:
-		double _agility;
-		double _strength;
-	};
-
-	class foot : public body_part_base<foot> {
-	public:
-		foot
-			( ql::id<being> owner_id
-			, ql::vitality vitality
-			, ql::weight weight
-			, agility agility
-			, std::vector<uptr<attachment>> attachments
-			)
-			: body_part_base<foot>
-				{ owner_id
-				, vitality
-				, weight
-				, std::move(attachments)
-				}
-			, _agility{agility}
-		{}
-
-		std::string name() const override { return "Foot"; }
-
-		bool vital() const override { return false; }
-
-		std::vector<uptr<modifier>> modifiers() const override {
-			return make_uptr_vector<modifier>
-				( umake<agility_modifier>(_agility)
-				, umake<weight_modifier>(weight())
-				);
-		}
-
-		virtual std::vector<uptr<action>> abilities() const { return {}; }
-
-		double agility() const { return _agility; }
-	private:
-		double _agility;
-	};
-
-	class wing : public body_part_base<wing> {
-	public:
-		wing
-			( ql::id<being> owner_id
-			, ql::vitality vitality
-			, ql::weight weight
-			, std::vector<uptr<attachment>> attachments
-			)
-			: body_part_base<wing>
-				{ owner_id
-				, vitality
-				, weight
-				, std::move(attachments)
-				}
-			, _weight{weight}
-		{}
-
-		std::string name() const override { return "Wing"; }
-
-		bool vital() const override { return false; }
-
-		std::vector<uptr<modifier>> modifiers() const override {
-			return make_uptr_vector<modifier>(umake<weight_modifier>(weight()));
-		}
-
-		virtual std::vector<uptr<action>> abilities() const { return {}; }
-
-		double weight() const { return _weight; }
-	private:
-		double _weight;
-	};
-
-	class tail : public body_part_base<tail> {
-	public:
-		using body_part_base<tail>::body_part_base;
-
-		std::string name() const override { return "Tail"; }
-
-		bool vital() const override { return false; }
-
-		std::vector<uptr<modifier>> modifiers() const override {
-			return make_uptr_vector<modifier>(umake<weight_modifier>(weight()));
-		}
-
-		virtual std::vector<uptr<action>> abilities() const { return {}; }
+		friend void from_json(nlohmann::json const& j, attachment& attachment);
 	};
 }

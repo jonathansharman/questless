@@ -20,9 +20,9 @@ namespace ql {
 			, game_space::vector{0.0, -400.0} / 1.0s / 1.0s
 			, game_space::radians{0.0}
 			, game_space::radians{0.0} / 1.0s
-			, scale{1.0}
+			, 1.0
 			, game_space::scale_velocity{0.0}
-			, lifetime{2.0s}
+			, 2.0s
 			}
 		, _text{std::move(text)}
 		, _color{color}

@@ -18,12 +18,12 @@ namespace ql {
 		, game_space::acceleration acceleration
 		, game_space::radians angle
 		, game_space::radians_per_sec angular_velocity
-		, scale scale
+		, game_space::scalar scale
 		, game_space::scale_velocity scale_velocity
-		, lifetime lifetime
+		, game_space::seconds lifetime
 		, max_displacement max_displacement
 		)
-		: _displacement{displacement + random_displacement(max_displacement)}
+		: _displacement{displacement + random_displacement(max_displacement.value)}
 		, _velocity{std::move(velocity)}
 		, _acceleration{std::move(acceleration)}
 		, _angle{std::move(angle)}
@@ -69,7 +69,7 @@ namespace ql {
 		camera.draw
 			( texture()
 			, position + _displacement
-			, origin{texture_space::vector::zero()}
+			, texture_space::vector::zero()
 			, color_vector
 			, view_space::vector
 				{ static_cast<view_space::scalar>(_scale)

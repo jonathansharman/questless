@@ -10,10 +10,10 @@ namespace ql {
 	//! The basic unit of terrain, a hexagonal region of uniform material, temperature, etc.
 	class tile : public element<tile_subtype_list> {
 	public:
-		double temperature_offset; //!< Offset from ambient temperature at this tile.
+		ql::temperature temperature_offset; //!< Offset from ambient temperature at this tile.
 
 		//! @param temperaure_offset Offset from ambient temperature at this tile.
-		tile(double temperature_offset) : temperature_offset{temperature_offset} {}
+		tile(ql::temperature temperature_offset) : temperature_offset{temperature_offset} {}
 
 		virtual ~tile() {}
 

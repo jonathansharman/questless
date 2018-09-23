@@ -19,7 +19,7 @@ namespace ql {
 		camera.draw
 			( the_texture_manager()[_texture_handle]
 			, game_space::point{position}
-			, origin{_origin}
+			, _origin
 			, color
 			, view_space::vector{1.0f, 1.0f}
 			, game_space::radians{0.0}

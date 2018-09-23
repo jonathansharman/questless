@@ -1,0 +1,24 @@
+{ "name": "Goblin left arm"
+, "tags": ["arm"]
+, "stats":
+	{ "vitality": 25.0
+	, "weight": 10.0
+	, "strength": 15.0
+	}
+, "vital": false
+, "enabled": true
+, "layer": 2
+, "hitbox":
+	[ [-7.0, -5.0]
+	, [-7.0, 55.0]
+	, [7.0, 55.0]
+	, [7.0, -5.0]
+	]
+, "attachments":
+	[ { "part": null
+	  , "offset": [0.0, 55.0]
+	  , "rotation": 0.0
+	  , "default": "resources/beings/goblin/left_hand.json"
+	  }
+	]
+}

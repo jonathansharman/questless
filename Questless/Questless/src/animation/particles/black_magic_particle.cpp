@@ -17,9 +17,9 @@ namespace ql {
 		, game_space::acceleration::zero()
 		, random_angle()
 		, uniform(-1.0, 1.0) * _dtheta_max / 1.0s
-		, scale{1.0}
+		, 1.0
 		, game_space::scale_velocity{0.0}
-		, lifetime{2.0s}
+		, 2.0s
 		}
 	{}
 

@@ -20,31 +20,31 @@ namespace ql::dmg {
 				protect const& reduced_protection;
 
 				void operator ()(slash& slash) const {
-					slash -= reduced_protection.pad() * pct_pad_to_slash + reduced_protection.deflect() * pct_deflect_to_slash;
+					slash -= reduced_protection.pad.value() * slash_per_pad + reduced_protection.deflect.value() * slash_per_deflect;
 				}
 				void operator ()(pierce& pierce) const {
-					pierce -= reduced_protection.pad() * pct_pad_to_pierce + reduced_protection.deflect() * pct_deflect_to_pierce;
+					pierce -= reduced_protection.pad.value() * pierce_per_pad + reduced_protection.deflect.value() * pierce_per_deflect;
 				}
 				void operator ()(cleave& cleave) const {
-					cleave -= reduced_protection.pad() * pct_pad_to_cleave + reduced_protection.deflect() * pct_deflect_to_cleave;
+					cleave -= reduced_protection.pad.value() * cleave_per_pad + reduced_protection.deflect.value() * cleave_per_deflect;
 				}
 				void operator ()(bludgeon& bludgeon) const {
-					bludgeon -= reduced_protection.pad() * pct_pad_to_bludgeon + reduced_protection.deflect() * pct_deflect_to_bludgeon;
+					bludgeon -= reduced_protection.pad.value() * bludgeon_per_pad + reduced_protection.deflect.value() * bludgeon_per_deflect;
 				}
 				void operator ()(burn& burn) const {
-					burn -= reduced_protection.fireproof() * pct_fireproof_to_burn;
+					burn -= reduced_protection.fireproof.value() * burn_per_fireproof;
 				}
 				void operator ()(freeze& freeze) const {
-					freeze -= reduced_protection.frostproof() * pct_frostproof_to_freeze;
+					freeze -= reduced_protection.frostproof.value() * freeze_per_frostproof;
 				}
 				void operator ()(blight& blight) const {
-					blight -= reduced_protection.fortify() * pct_fortify_to_blight;
+					blight -= reduced_protection.fortify.value() * blight_per_fortify;
 				}
 				void operator ()(poison& poison) const {
-					poison -= reduced_protection.immunize() * pct_immunize_to_poison;
+					poison -= reduced_protection.immunize.value() * poison_per_immunize;
 				}
 				void operator ()(shock& shock) const {
-					shock -= reduced_protection.insulate() * pct_insulate_to_shock;
+					shock -= reduced_protection.insulate.value() * shock_per_insulate;
 				}
 			};
 			std::visit(protection_applier{reduced_protection}, part);
@@ -54,31 +54,31 @@ namespace ql::dmg {
 				vuln const& vulnerability;
 
 				void operator ()(slash& slash) const {
-					slash = dmg::slash{std::max(0.0, slash * (1.0 + (vulnerability.slash() - resistance.slash()) / 100.0))};
+					slash *= 1.0 + (vulnerability.slash.value() - resistance.slash.value()) / 100.0_slash_factor;
 				}
 				void operator ()(pierce& pierce) const {
-					pierce = dmg::pierce{std::max(0.0, pierce * (1.0 + (vulnerability.pierce() - resistance.pierce()) / 100.0))};
+					pierce *= 1.0 + (vulnerability.pierce.value() - resistance.pierce.value()) / 100.0_pierce_factor;
 				}
 				void operator ()(cleave& cleave) const {
-					cleave = dmg::cleave{std::max(0.0, cleave * (1.0 + (vulnerability.cleave() - resistance.cleave()) / 100.0))};
+					cleave *= 1.0 + (vulnerability.cleave.value() - resistance.cleave.value()) / 100.0_cleave_factor;
 				}
 				void operator ()(bludgeon& bludgeon) const {
-					bludgeon = dmg::bludgeon{std::max(0.0, bludgeon * (1.0 + (vulnerability.bludgeon() - resistance.bludgeon()) / 100.0))};
+					bludgeon *= 1.0 + (vulnerability.bludgeon.value() - resistance.bludgeon.value()) / 100.0_bludgeon_factor;
 				}
 				void operator ()(burn& burn) const {
-					burn = dmg::burn{std::max(0.0, burn * (1.0 + (vulnerability.burn() - resistance.burn()) / 100.0))};
+					burn *= 1.0 + (vulnerability.burn.value() - resistance.burn.value()) / 100.0_burn_factor;
 				}
 				void operator ()(freeze& freeze) const {
-					freeze = dmg::freeze{std::max(0.0, freeze * (1.0 + (vulnerability.freeze() - resistance.freeze()) / 100.0))};
+					freeze *= 1.0 + (vulnerability.freeze.value() - resistance.freeze.value()) / 100.0_freeze_factor;
 				}
 				void operator ()(blight& blight) const {
-					blight = dmg::blight{std::max(0.0, blight * (1.0 + (vulnerability.blight() - resistance.blight()) / 100.0))};
+					blight *= 1.0 + (vulnerability.blight.value() - resistance.blight.value()) / 100.0_blight_factor;
 				}
 				void operator ()(poison& poison) const {
-					poison = dmg::poison{std::max(0.0, poison * (1.0 + (vulnerability.poison() - resistance.poison()) / 100.0))};
+					poison *= 1.0 + (vulnerability.poison.value() - resistance.poison.value()) / 100.0_poison_factor;
 				}
 				void operator ()(shock& shock) const {
-					shock = dmg::shock{std::max(0.0, shock * (1.0 + (vulnerability.shock() - resistance.shock()) / 100.0))};
+					shock *= 1.0 + (vulnerability.shock.value() - resistance.shock.value()) / 100.0_shock_factor;
 				}
 			};
 			std::visit(damage_multiplier_applier{resistance, vulnerability}, part);

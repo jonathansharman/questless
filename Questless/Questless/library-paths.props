@@ -12,6 +12,8 @@
     <GLM_PATH>D:\vc-libs\glm\</GLM_PATH>
     <GSL_PATH>D:\vc-libs\GSL\</GSL_PATH>
     <RANGE_V3_PATH>D:\vc-libs\range-v3\</RANGE_V3_PATH>
+    <NLOHMANN_JSON_PATH>D:\vc-libs\json\</NLOHMANN_JSON_PATH>
+    <TYPE_SAFE_PATH>D:\vc-libs\type_safe\</TYPE_SAFE_PATH>
   </PropertyGroup>
   <PropertyGroup />
   <ItemDefinitionGroup />
@@ -53,6 +55,14 @@
     </BuildMacro>
     <BuildMacro Include="RANGE_V3_PATH">
       <Value>$(RANGE_V3_PATH)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="NLOHMANN_JSON_PATH">
+      <Value>$(NLOHMANN_JSON_PATH)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="TYPE_SAFE_PATH">
+      <Value>$(TYPE_SAFE_PATH)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
   </ItemGroup>

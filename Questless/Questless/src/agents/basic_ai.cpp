@@ -17,7 +17,7 @@ namespace ql {
 		// Walk next time.
 		ai._state = umake<walk_state>();
 		// Wait for up to 10 time units.
-		return ai.idle(uniform(0.0, 10.0));
+		return ai.idle(ticks{uniform(0.0, 10.0)});
 	}
 	complete basic_ai::walk_state::act(basic_ai& ai) {
 		// Move or turn at random.
@@ -27,7 +27,7 @@ namespace ql {
 				ai._state = umake<idle_state>();
 				if (result == action::result::aborted) {
 					// Walk failed. Wait for up to 10 time units instead.
-					return ai.idle(uniform(0.0, 10.0));
+					return ai.idle(ticks{uniform(0.0, 10.0)});
 				}
 				return complete{};
 			});
@@ -38,7 +38,7 @@ namespace ql {
 				ai._state = umake<idle_state>();
 				if (result == action::result::aborted) {
 					// Turn failed. Wait for up to 10 time units instead.
-					return ai.idle(uniform(0.0, 10.0));
+					return ai.idle(ticks{uniform(0.0, 10.0)});
 				}
 				return complete{};
 			});
@@ -59,7 +59,7 @@ namespace ql {
 					return ai.turn(target_direction, [&ai](action::result result) {
 						if (result == action::result::aborted) {
 							// Turn failed. Wait for up to 10 time units instead.
-							return ai.idle(uniform(0.0, 10.0));
+							return ai.idle(ticks{uniform(0.0, 10.0)});
 						}
 						return complete{};
 					});
@@ -72,7 +72,7 @@ namespace ql {
 						return item.actions().front()->perform(ai.being, [&ai](action::result result) {
 							if (result == action::result::aborted) {
 								// Attack failed. Wait for up to 10 time units instead.
-								return ai.idle(uniform(0.0, 10.0));
+								return ai.idle(ticks{uniform(0.0, 10.0)});
 							}
 							return complete{};
 						});
@@ -81,7 +81,7 @@ namespace ql {
 						return ai.walk(target_direction, [&ai](action::result result) {
 							if (result == action::result::aborted) {
 								// Walk failed. Wait for up to 10 time units instead.
-								return ai.idle(uniform(0.0, 10.0));
+								return ai.idle(ticks{uniform(0.0, 10.0)});
 							}
 							return complete{};
 						});

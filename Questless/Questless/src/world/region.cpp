@@ -414,7 +414,7 @@ namespace ql {
 		return result;
 	}
 
-	double region::temperature(region_tile::point region_tile_coords) const {
+	ql::temperature region::temperature(region_tile::point region_tile_coords) const {
 		return tile_at(region_tile_coords)->temperature_offset;
 	}
 
@@ -531,8 +531,7 @@ namespace ql {
 		}
 	}
 
-	void region::for_each_loaded_section(function<void(section&)> const& f) {
-		//! @todo Replace parameter type with function_reference or whatever if that becomes available sometime.
+	void region::for_each_loaded_section(std::function<void(section&)> const& f) {
 		for (int r = -_loaded_sections_q_radius; r <= _loaded_sections_q_radius; ++r) {
 			for (int q = -_loaded_sections_r_radius; q <= _loaded_sections_r_radius; ++q) {
 				region_section::point section_coords{q, r};

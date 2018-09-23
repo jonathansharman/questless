@@ -26,19 +26,21 @@ namespace ql {
 		using key_t = uint64_t;
 
 		id() = delete;
-		id(id const&) = default;
+		constexpr id(id const&) = default;
 		constexpr explicit id(key_t key) : _key{key} {}
 
 		//! Constructs an ID from a key read from the stream.
 		id(std::istream& in) : _key{read_key(in)} {}
 
-		id& operator =(id const&) & = default;
+		constexpr id& operator =(id const&) & = default;
 
 		//! A new unique ID.
 		static id make() { return id{next()}; }
 
-		bool operator <(id that) const { return _key < that._key; }
-		bool operator ==(id that) const { return _key == that._key; }
+		constexpr bool operator <(id that) const { return _key < that._key; }
+		constexpr bool operator ==(id that) const { return _key == that._key; }
+
+		constexpr key_t key() const { return _key; }
 
 		//! Inserts the ID's key into the stream.
 		friend std::ostream& operator <<(std::ostream& out, id id) {

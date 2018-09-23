@@ -33,8 +33,6 @@ namespace ql {
 
 		virtual ~object() = default;
 
-		void serialize(std::ostream& out) const override;
-
 		//! Whether the object blocks the movement of other entities.
 		virtual bool blocks_movement() const = 0;
 

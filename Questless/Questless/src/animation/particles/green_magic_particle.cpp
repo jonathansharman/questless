@@ -18,13 +18,13 @@ namespace ql {
 			, game_space::acceleration::zero()
 			, random_angle()
 			, uniform(-2.0, 2.0) * units::game_space::radians::circle() / 1.0s
-			, scale{1.0}
+			, 1.0
 			, game_space::scale_velocity{0.0}
-			, lifetime{game_space::seconds{uniform(1.8, 2.2)}}
+			, game_space::seconds{uniform(1.8, 2.2)}
 			}
 		, _turning_right{random_bool()}
 	{
-		_scale_velocity = game_space::scale_velocity{scale{-_scale / _lifetime.count()}};
+		_scale_velocity = game_space::scale_velocity{-_scale / _lifetime.count()};
 	}
 
 	void green_magic_particle::particle_subupdate() {
@@ -33,7 +33,7 @@ namespace ql {
 			_turning_right = !_turning_right;
 		}
 
-		constexpr game_space::radians_per_sec turn_rate = game_space::radians::circle() / 1.0s;
+		constexpr auto turn_rate = game_space::radians::circle() / 1.0s;
 		if (_turning_right) {
 			_velocity.step().rotate(game_space::radians{-1.0 * turn_rate * game::frame_duration});
 		} else {

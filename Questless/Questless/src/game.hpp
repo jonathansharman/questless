@@ -113,7 +113,7 @@ namespace ql {
 		// Splash screen
 
 		static constexpr int _splash_flames_count = 20;
-		static constexpr units::game_space::speed _splash_flames_vy{-2800.0};
+		static constexpr auto _splash_flames_vy = units::game_space::speed{-2800.0};
 		static constexpr int _splash_logo_jiggle = 3;
 
 		//////////

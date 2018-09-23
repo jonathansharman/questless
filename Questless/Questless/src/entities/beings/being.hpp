@@ -4,36 +4,30 @@
 
 #pragma once
 
-#include <vector>
-#include <deque>
-#include <utility>
-#include <functional>
-#include <memory>
-
 #include "entities/entity.hpp"
-#include "entities/beings/abilities.hpp"
 #include "entities/beings/body.hpp"
 #include "entities/perception.hpp"
 #include "items/armor/armor.hpp"
 #include "items/inventory.hpp"
 #include "items/weapons/weapon.hpp"
-#include "stats/stats.hpp"
+#include "stats/being.hpp"
 #include "utility/event.hpp"
 #include "utility/dynamic_property.hpp"
 #include "utility/lazy_bounded.hpp"
 #include "utility/static_bounded.hpp"
 #include "utility/id.hpp"
 
+#include "utility/quantities.hpp"
+
+#include <vector>
+#include <deque>
+#include <utility>
+#include <functional>
+#include <memory>
+
 namespace ql {
 	class agent;
 	class status;
-
-	struct health : tagged_type<double> { using tagged_type::tagged_type; };
-	struct energy : tagged_type<double> { using tagged_type::tagged_type; };
-	struct satiety : tagged_type<double> { using tagged_type::tagged_type; };
-	struct alertness : tagged_type<double> { using tagged_type::tagged_type; };
-	struct busy_time : tagged_type<double> { using tagged_type::tagged_type; };
-	struct dead : tagged_type<bool> { using tagged_type::tagged_type; };
 
 	enum class mortality : int { alive = 0, dead, undead, immortal };
 
@@ -54,43 +48,35 @@ namespace ql {
 		//! @todo Probably move some of these to private? (Sleeping stuff goes in sleeping?)
 
 		// Energy
-		static constexpr double energy_rate = 1.0; //!< Energy gained per turn (awake or asleep).
-		static constexpr double energy_rate_asleep = 2.0; //!< Additional energy gained per turn asleep.
+		static constexpr auto energy_rate = 1.0_ep / 1.0_tick; //!< Energy gained per turn (awake or asleep).
+		static constexpr auto energy_rate_asleep = 2.0_ep / 1.0_tick; //!< Additional energy gained per turn asleep.
 		static constexpr double energy_strength_penalty = 0.5; //!< Proportion of base strength removed at zero energy.
 		static constexpr double energy_endurance_penalty = 0.5; //!< Proportion of base endurance removed at zero energy.
 
 		// Satiety
-		static constexpr double min_satiety = 0.0;
-		static constexpr double max_satiety = 100.0;
-		static constexpr double satiety_rate = -0.05; //!< Satiety gained per turn (awake or asleep).
-		static constexpr double satiety_rate_asleep = 0.025; //!< Additional satiety gained per turn asleep.
-		static constexpr double satiety_health_regen_penalty = 1.0; //!< Proportion of base health regeneration removed at zero satiety.
+		static constexpr auto min_satiety = 0.0_sat;
+		static constexpr auto max_satiety = 100.0_sat;
+		static constexpr auto satiety_rate = -0.05_sat / 1.0_tick; //!< Satiety gained per turn (awake or asleep).
+		static constexpr auto satiety_rate_asleep = 0.025_sat / 1.0_tick; //!< Additional satiety gained per turn asleep.
+		static constexpr auto satiety_regen_penalty = 1.0; //!< Proportion of base health regeneration removed at zero satiety.
 
 		// Alertness
-		static constexpr double min_alertness = 0.0;
-		static constexpr double max_alertness = 100.0;
-		static constexpr double alertness_rate = -0.1; //!< Alertness gained per turn (awake or asleep).
-		static constexpr double alertness_rate_asleep = 0.3; //!< Additional alertness gained per turn asleep.
-		static constexpr double alertness_agility_penalty = 0.75; //!< Proportion of base agility removed at zero alertness.
-		static constexpr double alertness_dexterity_penalty = 0.75; //!< Proportion of base dexterity removed at zero alertness.
-		static constexpr double alertness_intellect_penalty = 0.75; //!< Proportion of base intellect removed at zero alertness.
+		static constexpr auto min_alertness = 0.0_alert;
+		static constexpr auto max_alertness = 100.0_alert;
+		static constexpr auto alertness_rate = -0.1_alert / 1.0_tick; //!< Alertness gained per turn (awake or asleep).
+		static constexpr auto alertness_rate_asleep = 0.3; //!< Additional alertness gained per turn asleep.
+		static constexpr auto alertness_agility_penalty = 0.75; //!< Proportion of base agility removed at zero alertness.
+		static constexpr auto alertness_dexterity_penalty = 0.75; //!< Proportion of base dexterity removed at zero alertness.
+		static constexpr auto alertness_intellect_penalty = 0.75; //!< Proportion of base intellect removed at zero alertness.
 		static constexpr double health_regen_asleep_factor = 1.0; //!< Additional health regeneration multiplier while asleep.
 
 		// Mood
-		static constexpr double min_mood = -100.0;
-		static constexpr double max_mood = 100.0;
-
-		// Strength
-		static constexpr double strength_factor = 0.01; //!< Proportion of strength by which base damage is multiplied.
-
-		// Endurance
-		static constexpr double endurance_factor = 0.01; //!< Proportion of endurance by which damage after armor is divided.
-
-		// Intellect
-		static constexpr double intellect_factor = 0.01; //!< Proportion of intelligence by which spell incantations are divided.
+		static constexpr auto min_mood = -100.0_mood;
+		static constexpr auto max_mood = 100.0_mood;
 
 		// Temperature
-		static constexpr double temperature_damage_factor = 1.0; //!< Burn damage taken = (temp - max) / (max - min)) * factor. Freeze damage taken = (min - temp) / (max - min)) * factor.
+		static constexpr auto temperature_burn_factor = 1.0_burn / 1.0_temp; //!< Burn damage taken = (temp - max) * factor.
+		static constexpr auto temperature_freeze_factor = 1.0_freeze / 1.0_temp; //!< Freeze damage taken = (min - temp) * factor.
 
 		/////////////////
 		// Public Data //
@@ -104,22 +90,19 @@ namespace ql {
 
 		// Stats
 
-		stats base_stats; //!< Base stats, prior to application of status modifiers.
-		stats stats; //!< Effective stats, accounting for all modifiers from base.
+		stats::being base_stats; //!< Base stats, prior to application of status modifiers.
+		stats::being stats; //!< Effective stats, accounting for all modifiers from base.
 
 		// Conditions
 
-		lazy_bounded<double> energy;
-		static_bounded<double, min_satiety, max_satiety> satiety;
-		static_bounded<double, min_alertness, max_alertness> alertness;
-		static_bounded<double, min_mood, max_mood> mood;
-		dynamic_property<double> busy_time;
+		lazy_bounded<ql::energy> energy;
+		static_bounded<ql::satiety, min_satiety, max_satiety> satiety;
+		static_bounded<ql::alertness, min_alertness, max_alertness> alertness;
+		static_bounded<ql::mood, min_mood, max_mood> mood;
+		dynamic_property<ql::ticks> busy_time;
 		mortality mortality;
 		region_tile::direction direction;
-
-		// Abilities
-
-		abilities abilities;
+		ql::corporeal corporeal;
 
 		// Event Handlers
 
@@ -129,11 +112,11 @@ namespace ql {
 		event<dmg::group&, body_part&, ql::id<being>> before_deal_damage;
 		event<dmg::group&, body_part&, ql::id<being>> after_deal_damage;
 
-		event<double&, body_part&, std::optional<ql::id<being>>> before_receive_heal;
-		event<double&, body_part&, std::optional<ql::id<being>>> after_receive_heal;
+		event<ql::health&, body_part&, std::optional<ql::id<being>>> before_receive_heal;
+		event<ql::health&, body_part&, std::optional<ql::id<being>>> after_receive_heal;
 
-		event<double&, body_part&, ql::id<being>> after_give_heal;
-		event<double&, body_part&, ql::id<being>> before_give_heal;
+		event<ql::health&, body_part&, ql::id<being>> after_give_heal;
+		event<ql::health&, body_part&, ql::id<being>> before_give_heal;
 
 		event<std::optional<ql::id<being>>> before_die;
 		event<std::optional<ql::id<being>>> after_die;
@@ -147,14 +130,8 @@ namespace ql {
 
 		virtual ~being();
 
-		//! @param out A stream object into which the serialized being is inserted.
-		void serialize(std::ostream& out) const override;
-
 		//! The agent responsible for this being.
 		agent& agent() { return *_agent; }
-
-		//! Whether the being is corporeal.
-		virtual bool corporeal() const = 0;
 
 		//! This being's perception of the tile at @p region_tile_coords in its region.
 		perception perception_of(region_tile::point region_tile_coords) const;
@@ -166,7 +143,7 @@ namespace ql {
 		//! @param delay The delay before the action is performed.
 		//! @param cont The continuation function to call once the action completes.
 		//! @param action The action to perform after the delay.
-		complete add_delayed_action(double delay, action::cont cont, uptr<action> action);
+		complete add_delayed_action(ticks delay, action::cont cont, uptr<action> action);
 
 		//! Clears the being's delayed actions queue.
 		void clear_delayed_actions();
@@ -190,7 +167,7 @@ namespace ql {
 		//! @param amount Health to be restored to this being.
 		//! @param part The body part to heal.
 		//! @param opt_source_id The ID of the being which caused the healing, if any.
-		void heal(double amount, body_part& part, std::optional<ql::id<being>> opt_source_id);
+		void heal(ql::health amount, body_part& part, std::optional<ql::id<being>> opt_source_id);
 
 		void add_status(uptr<status> status);
 	protected:
@@ -198,16 +175,16 @@ namespace ql {
 			( const std::function<uptr<ql::agent>(being&)>& make_agent
 			, ql::id<being> id
 			, ql::body body
-			, std::function<ql::stats()> const& make_base_stats
+			, std::function<stats::being()> const& make_base_stats
 			);
 
-		being(std::istream& in, ql::body body);
-
 		virtual ql::body make_body(ql::id<being> owner_id) = 0;
+
+		static stats::being load_stats(char const* filepath);
 	private:
 		uptr<ql::agent> _agent; //!< The agent responsible for this being.
 
-		std::deque<double> _action_delays; //!< The queue of delays before the next action in the delayed actions queue should begin.
+		std::deque<ticks> _action_delays; //!< The queue of delays before the next action in the delayed actions queue should begin.
 		std::deque<std::tuple<uptr<action>, action::cont>> _delayed_actions; //!< The queue of delayed actions and continuations to occur when this being is not busy.
 
 		// Statuses
@@ -221,10 +198,9 @@ namespace ql {
 
 		// Methods
 
-		ql::stats get_base_stats_plus_body_stats();
-		ql::stats get_stats();
+		stats::being get_stats();
 
-		std::function<void(double&, double const&)> busy_time_mutator();
+		std::function<void(ticks&, ticks const&)> busy_time_mutator();
 	};
 
 	DEFINE_ELEMENT_BASE(being, entity)

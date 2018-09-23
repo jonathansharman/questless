@@ -346,7 +346,7 @@ namespace ql {
 
 		being const* const target_being = the_game().beings.cptr(e.target_being_id);
 		body_part const* const target_part = target_being ? target_being->body.find_part(e.target_part_id) : nullptr;
-		double const target_vitality = target_part ? target_part->vitality.value() : 100.0; // Assume vitality = 100 if being no longer exists to check.
+		auto const target_vitality = target_part ? target_part->stats.a.vitality.value() : 100.0_hp; // Assume vitality = 100 if being no longer exists to check.
 		//! @todo Pass along the vitality in the event object if it's needed here (to avoid having to make up a number).
 
 		game_space::point const position = to_world(e.origin());
@@ -357,11 +357,11 @@ namespace ql {
 			struct damage_renderer {
 				std::vector<std::pair<uptr<animation>, units::game_space::point>>& animations;
 				game_space::point const position;
-				double const target_vitality;
+				ql::health const target_vitality;
 
-				void spawn_blood(double const lost_health) {
+				void spawn_blood(double const damage) {
 					constexpr double scaling_factor = 20.0;
-					int const n = static_cast<int>(lost_health / target_vitality * scaling_factor);
+					int const n = static_cast<int>(damage / target_vitality.value * scaling_factor);
 					for (int i = 0; i < n; ++i) {
 						animations.push_back(std::make_pair(umake<blood_particle>(), position));
 					}
@@ -385,37 +385,37 @@ namespace ql {
 					the_sound_manager()[hit_sound_handle].play();
 				}
 
-				void operator ()(dmg::slash const& slash) { render_slash_or_pierce(slash.value()); }
-				void operator ()(dmg::pierce const& pierce) { render_slash_or_pierce(pierce.value()); }
-				void operator ()(dmg::cleave const& cleave) { render_cleave_or_bludgeon(cleave.value()); }
-				void operator ()(dmg::bludgeon const& bludgeon) { render_cleave_or_bludgeon(bludgeon.value()); }
+				void operator ()(dmg::slash const& slash) { render_slash_or_pierce(slash.value); }
+				void operator ()(dmg::pierce const& pierce) { render_slash_or_pierce(pierce.value); }
+				void operator ()(dmg::cleave const& cleave) { render_cleave_or_bludgeon(cleave.value); }
+				void operator ()(dmg::bludgeon const& bludgeon) { render_cleave_or_bludgeon(bludgeon.value); }
 				void operator ()(dmg::burn const& burn) {
 					animations.push_back(std::make_pair
-						( umake<text_particle>(std::to_string(lround(burn.value())), colors::orange())
+						( umake<text_particle>(std::to_string(lround(burn.value)), colors::orange())
 						, position
 						));
 				}
 				void operator ()(dmg::freeze const& freeze) {
 					animations.push_back(std::make_pair
-						( umake<text_particle>(std::to_string(lround(freeze.value())), colors::cyan())
+						( umake<text_particle>(std::to_string(lround(freeze.value)), colors::cyan())
 						, position
 						));
 				}
 				void operator ()(dmg::blight const& blight) {
 					animations.push_back(std::make_pair
-						( umake<text_particle>(std::to_string(lround(blight.value())), colors::black())
+						( umake<text_particle>(std::to_string(lround(blight.value)), colors::black())
 						, position
 						));
 				}
 				void operator ()(dmg::poison const& poison) {
 					animations.push_back(std::make_pair
-						( umake<text_particle>(std::to_string(lround(poison.value())), colors::purple())
+						( umake<text_particle>(std::to_string(lround(poison.value)), colors::purple())
 						, position
 						));
 				}
 				void operator ()(dmg::shock const& shock) {
 					animations.push_back(std::make_pair
-						( umake<text_particle>(std::to_string(lround(shock.value())), colors::yellow())
+						( umake<text_particle>(std::to_string(lround(shock.value)), colors::yellow())
 						, position
 						));
 				}

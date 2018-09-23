@@ -4,25 +4,22 @@
 
 #pragma once
 
-#include <optional>
+#include "utility/utility.hpp"
+#include "world/coordinates.hpp"
 
 #include "units/colors.hpp"
 #include "units/game_space.hpp"
 #include "units/texture_space.hpp"
 #include "units/view_space.hpp"
 #include "units/window_space.hpp"
-#include "utility/utility.hpp"
-#include "utility/tagged_type.hpp"
-#include "world/coordinates.hpp"
+
+#include <optional>
 
 namespace sdl {
 	class texture;
 }
 
 namespace ql {
-	struct origin : tagged_type<units::texture_space::vector> { using tagged_type::tagged_type; };
-	struct src_rect : tagged_type<std::optional<units::texture_space::box>> { using tagged_type::tagged_type; };
-
 	//! A simple 2D camera, useful for panning, zooming, and rotating around a scene.
 	class camera {
 	public:
@@ -96,11 +93,11 @@ namespace ql {
 		void draw
 			( sdl::texture const& texture
 			, units::game_space::point position
-			, origin origin = origin{units::texture_space::vector::zero()}
+			, units::texture_space::vector origin = units::texture_space::vector::zero()
 			, units::colors::color_vector color_vector = units::colors::white_vector()
 			, units::view_space::vector scale = units::view_space::vector{1.0f, 1.0f}
 			, units::game_space::radians angle = units::game_space::radians{0.0}
-			, src_rect const& src_rect = src_rect{std::nullopt}
+			, std::optional<units::texture_space::box> const& src_rect = std::nullopt
 			) const;
 
 		//! Draws lines relative to the camera connecting the series of points contained in the vector.

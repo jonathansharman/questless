@@ -82,6 +82,9 @@
     <Filter Include="external\units">
       <UniqueIdentifier>{e28e69fb-5e3a-4825-a4da-5520c4b1eb45}</UniqueIdentifier>
     </Filter>
+    <Filter Include="external\meta">
+      <UniqueIdentifier>{79f9aee3-ec16-49c7-83d6-43cfc5feddf4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\utility\complete.hpp">
@@ -127,9 +130,6 @@
       <Filter>src\utility</Filter>
     </ClInclude>
     <ClInclude Include="src\utility\static_bounded.hpp">
-      <Filter>src\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utility\tagged_type.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
     <ClInclude Include="src\utility\type_list.hpp">
@@ -405,58 +405,10 @@
     <ClInclude Include="src\entities\beings\stats\modifier.hpp">
       <Filter>src\entities\beings\stats</Filter>
     </ClInclude>
-    <ClInclude Include="src\entities\beings\stats\stats.hpp">
-      <Filter>src\entities\beings\stats</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\status.hpp">
-      <Filter>src\entities\beings\stats</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\blind.hpp">
-      <Filter>src\entities\beings\stats</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\confused.hpp">
-      <Filter>src\entities\beings\stats</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\deaf.hpp">
-      <Filter>src\entities\beings\stats</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\eagle_eyed.hpp">
-      <Filter>src\entities\beings\stats</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\healing.hpp">
-      <Filter>src\entities\beings\stats</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\illuminated.hpp">
-      <Filter>src\entities\beings\stats</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\mute.hpp">
-      <Filter>src\entities\beings\stats</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\nauseated.hpp">
-      <Filter>src\entities\beings\stats</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\numb.hpp">
-      <Filter>src\entities\beings\stats</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\poisoned.hpp">
-      <Filter>src\entities\beings\stats</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\sleeping.hpp">
-      <Filter>src\entities\beings\stats</Filter>
-    </ClInclude>
     <ClInclude Include="src\entities\beings\world_view.hpp">
       <Filter>src\entities\beings</Filter>
     </ClInclude>
-    <ClInclude Include="src\entities\beings\incorporeal_being.hpp">
-      <Filter>src\entities\beings</Filter>
-    </ClInclude>
     <ClInclude Include="src\entities\beings\human.hpp">
-      <Filter>src\entities\beings</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\corporeal_being.hpp">
-      <Filter>src\entities\beings</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\body_part_visitor.hpp">
       <Filter>src\entities\beings</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\beings\body_part.hpp">
@@ -466,9 +418,6 @@
       <Filter>src\entities\beings</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\beings\being.hpp">
-      <Filter>src\entities\beings</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\abilities.hpp">
       <Filter>src\entities\beings</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\objects\object.hpp">
@@ -594,6 +543,72 @@
     <ClInclude Include="src\agents\queries\all.hpp">
       <Filter>src\agents\queries</Filter>
     </ClInclude>
+    <ClInclude Include="src\entities\beings\statuses\healing.hpp">
+      <Filter>src\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\statuses\blind.hpp">
+      <Filter>src\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\statuses\confused.hpp">
+      <Filter>src\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\statuses\deaf.hpp">
+      <Filter>src\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\statuses\eagle_eyed.hpp">
+      <Filter>src\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\statuses\illuminated.hpp">
+      <Filter>src\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\statuses\mute.hpp">
+      <Filter>src\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\statuses\nauseated.hpp">
+      <Filter>src\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\statuses\numb.hpp">
+      <Filter>src\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\statuses\poisoned.hpp">
+      <Filter>src\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\statuses\sleeping.hpp">
+      <Filter>src\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\statuses\status.hpp">
+      <Filter>src\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utility\nonnegative.hpp">
+      <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\stats\being.hpp">
+      <Filter>src\entities\beings\stats</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\stats\aggregate.hpp">
+      <Filter>src\entities\beings\stats</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\stats\part.hpp">
+      <Filter>src\entities\beings\stats</Filter>
+    </ClInclude>
+    <ClInclude Include="external\meta\list.hpp">
+      <Filter>external\meta</Filter>
+    </ClInclude>
+    <ClInclude Include="external\meta\meta.hpp">
+      <Filter>external\meta</Filter>
+    </ClInclude>
+    <ClInclude Include="external\meta\unit.hpp">
+      <Filter>external\meta</Filter>
+    </ClInclude>
+    <ClInclude Include="external\meta\quantity.hpp">
+      <Filter>external\meta</Filter>
+    </ClInclude>
+    <ClInclude Include="external\meta\algebra.hpp">
+      <Filter>external\meta</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utility\quantities.hpp">
+      <Filter>src\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -698,19 +713,10 @@
     <ClCompile Include="src\entities\beings\statuses\status.cpp">
       <Filter>src\entities\beings\statuses</Filter>
     </ClCompile>
-    <ClCompile Include="src\entities\beings\corporeal_being.cpp">
-      <Filter>src\entities\beings</Filter>
-    </ClCompile>
     <ClCompile Include="src\entities\beings\human.cpp">
       <Filter>src\entities\beings</Filter>
     </ClCompile>
-    <ClCompile Include="src\entities\beings\incorporeal_being.cpp">
-      <Filter>src\entities\beings</Filter>
-    </ClCompile>
     <ClCompile Include="src\entities\beings\world_view.cpp">
-      <Filter>src\entities\beings</Filter>
-    </ClCompile>
-    <ClCompile Include="src\entities\beings\abilities.cpp">
       <Filter>src\entities\beings</Filter>
     </ClCompile>
     <ClCompile Include="src\entities\beings\being.cpp">

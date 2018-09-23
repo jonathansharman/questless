@@ -8,6 +8,7 @@
 #include "queries/all.hpp"
 
 #include "utility/complete.hpp"
+#include "utility/quantities.hpp"
 #include "utility/reference.hpp"
 #include "world/coordinates.hpp"
 
@@ -108,7 +109,7 @@ namespace ql {
 		virtual complete incant(gatestone& gatestone, std::function<complete(uptr<magic::spell>)> cont) const;
 	protected:
 		complete idle(action::cont cont);
-		complete idle(double duration);
+		complete idle(ticks duration);
 		complete turn(region_tile::direction direction, action::cont cont);
 		complete walk(region_tile::direction direction, action::cont cont);
 		complete fly();

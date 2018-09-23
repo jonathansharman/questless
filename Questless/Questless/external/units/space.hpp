@@ -150,6 +150,7 @@ namespace units {
 			}
 
 			// Closed under addition.
+
 			constexpr angle& operator +=(angle const& that) & {
 				for (std::size_t i = 0; i < n - 1; ++i) {
 					this->_components[i] += that._components[i];
@@ -163,6 +164,7 @@ namespace units {
 			}
 
 			// Closed under substraction.
+
 			constexpr angle& operator -=(angle const& that) & {
 				for (std::size_t i = 0; i < n - 1; ++i) {
 					this->_components[i] -= that._components[i];
@@ -176,6 +178,7 @@ namespace units {
 			}
 
 			// Closed under negation.
+
 			constexpr friend angle operator -(angle const& phi) {
 				angle result = phi;
 				for (std::size_t i = 0; i < n - 1; ++i) {
@@ -185,6 +188,7 @@ namespace units {
 			}
 
 			// Closed under scalar multiplication.
+
 			constexpr angle& operator *=(scalar k) & {
 				for (scalar& component : _components) {
 					component = component * k;
@@ -205,6 +209,7 @@ namespace units {
 			}
 
 			// Closed under scalar division.
+
 			constexpr angle& operator /=(scalar k) & {
 				for (scalar& component : _components) {
 					component = component / k;
@@ -216,6 +221,8 @@ namespace units {
 				result /= k;
 				return result;
 			}
+			
+			constexpr std::array<scalar, n - 1> const& components() const { return _components; }
 
 			//! Scalar value accessor for 2D spaces, for convenience.
 			template <typename = std::enable_if_t<n == 2>>

@@ -4,10 +4,11 @@
 
 #pragma once
 
-#include <optional>
-
 #include "items/item.hpp"
-#include "utility/tagged_type.hpp"
+
+#include "meta/quantity.hpp"
+
+#include <optional>
 
 namespace ql {
 	class body_part;
@@ -29,65 +30,33 @@ namespace ql {
 		//! The ID of the being bearing this equipment or nullopt if it's currently unequipped.
 		std::optional<ql::id<being>> opt_bearer_id() const { return _opt_bearer_id; }
 	protected:
-		struct heads : tagged_type<int> { using tagged_type::tagged_type; };
-		struct torsos : tagged_type<int> { using tagged_type::tagged_type; };
-		struct arms : tagged_type<int> { using tagged_type::tagged_type; };
-		struct hands : tagged_type<int> { using tagged_type::tagged_type; };
-		struct legs : tagged_type<int> { using tagged_type::tagged_type; };
-		struct feet : tagged_type<int> { using tagged_type::tagged_type; };
-		struct wings : tagged_type<int> { using tagged_type::tagged_type; };
-		struct tails : tagged_type<int> { using tagged_type::tagged_type; };
+		using heads = meta::quantity<int, meta::unit_t<struct heads_tag>>;
+		using torsos = meta::quantity<int, meta::unit_t<struct torsos_tag>>;
+		using arms = meta::quantity<int, meta::unit_t<struct arms_tag>>;
+		using hands = meta::quantity<int, meta::unit_t<struct hands_tag>>;
+		using legs = meta::quantity<int, meta::unit_t<struct legs_tag>>;
+		using feet = meta::quantity<int, meta::unit_t<struct feet_tag>>;
+		using wings = meta::quantity<int, meta::unit_t<struct wings_tag>>;
+		using tails = meta::quantity<int, meta::unit_t<struct tails_tag>>;
 
-		class body_part_counts {
-		public:
-			constexpr body_part_counts() : _heads{0}, _torsos{0}, _arms{0}, _hands{0}, _legs{0}, _feet{0}, _wings{0}, _tails{0} {}
+		struct body_part_counts {
+			heads heads{0};
+			torsos torsos{0};
+			arms arms{0};
+			hands hands{0};
+			legs legs{0};
+			feet feet{0};
+			wings wings{0};
+			tails tails{0};
 
-			constexpr body_part_counts
-				( heads heads
-				, torsos torsos
-				, arms arms
-				, hands hands
-				, legs legs
-				, feet feet
-				, wings wings
-				, tails tails
-				)
-				: _heads{std::move(heads)}
-				, _torsos{std::move(torsos)}
-				, _arms{std::move(arms)}
-				, _hands{std::move(hands)}
-				, _legs{std::move(legs)}
-				, _feet{std::move(feet)}
-				, _wings{std::move(wings)}
-				, _tails{std::move(tails)}
-			{}
-
-			constexpr body_part_counts(heads heads) : _heads{std::move(heads)}, _torsos{0}, _arms{0}, _hands{0}, _legs{0}, _feet{0}, _wings{0}, _tails{0} {}
-			constexpr body_part_counts(torsos torsos) : _heads{0}, _torsos{std::move(torsos)}, _arms{0}, _hands{0}, _legs{0}, _feet{0}, _wings{0}, _tails{0} {}
-			constexpr body_part_counts(arms arms) : _heads{0}, _torsos{0}, _arms{std::move(arms)}, _hands{0}, _legs{0}, _feet{0}, _wings{0}, _tails{0} {}
-			constexpr body_part_counts(hands hands) : _heads{0}, _torsos{0}, _arms{0}, _hands{std::move(hands)}, _legs{0}, _feet{0}, _wings{0}, _tails{0} {}
-			constexpr body_part_counts(legs legs) : _heads{0}, _torsos{0}, _arms{0}, _hands{0}, _legs{std::move(legs)}, _feet{0}, _wings{0}, _tails{0} {}
-			constexpr body_part_counts(feet feet) : _heads{0}, _torsos{0}, _arms{0}, _hands{0}, _legs{0}, _feet{std::move(feet)}, _wings{0}, _tails{0} {}
-			constexpr body_part_counts(wings wings) : _heads{0}, _torsos{0}, _arms{0}, _hands{0}, _legs{0}, _feet{0}, _wings{std::move(wings)}, _tails{0} {}
-			constexpr body_part_counts(tails tails) : _heads{0}, _torsos{0}, _arms{0}, _hands{0}, _legs{0}, _feet{0}, _wings{0}, _tails{std::move(tails)} {}
-
-			constexpr int heads() const { return _heads; }
-			constexpr int torsos() const { return _torsos; }
-			constexpr int arms() const { return _arms; }
-			constexpr int hands() const { return _hands; }
-			constexpr int legs() const { return _legs; }
-			constexpr int feet() const { return _feet; }
-			constexpr int wings() const { return _wings; }
-			constexpr int tails() const { return _tails; }
-		private:
-			int _heads;
-			int _torsos;
-			int _arms;
-			int _hands;
-			int _legs;
-			int _feet;
-			int _wings;
-			int _tails;
+			constexpr body_part_counts(equipment::heads heads) : heads{heads} {}
+			constexpr body_part_counts(equipment::torsos torsos) : torsos{torsos} {}
+			constexpr body_part_counts(equipment::arms arms) : arms{arms} {}
+			constexpr body_part_counts(equipment::hands hands) : hands{hands} {}
+			constexpr body_part_counts(equipment::legs legs) : legs{legs} {}
+			constexpr body_part_counts(equipment::feet feet) : feet{feet} {}
+			constexpr body_part_counts(equipment::wings wings) : wings{wings} {}
+			constexpr body_part_counts(equipment::tails tails) : tails{tails} {}
 		};
 
 		friend class equip;

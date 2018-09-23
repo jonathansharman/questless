@@ -8,7 +8,7 @@
 namespace ql {
 	void sleeping::subupdate(being& target) {
 		for (body_part& part : target.body.parts()) { //! @todo How should body parts regen while sleeping? Percentage? Flat amount?
-			part.health += target.stats.health_regen * being::health_regen_asleep_factor;
+			part.health += target.stats.regen * being::health_regen_asleep_factor;
 		}
 		target.alertness += being::alertness_rate_asleep;
 		target.satiety += being::satiety_rate_asleep;

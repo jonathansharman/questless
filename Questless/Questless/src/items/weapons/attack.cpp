@@ -48,7 +48,7 @@ namespace ql {
 					dmg::group damage = _attack->damage();
 					damage *= 1.0 - pct_penalty_per_turn * region_tile::distance(actor.direction, _vector.direction());
 
-					weapon->integrity -= _attack->wear_ratio() * damage.total();
+					weapon->integrity -= _attack->wear_ratio() * damage.health_loss();
 					{ //! @todo Part targeting. Apply damage to random body part for now.
 						auto it = target->body.parts().begin();
 						std::advance(it, uniform(std::size_t{0}, target->body.parts().size() - 1));
@@ -95,7 +95,7 @@ namespace ql {
 								if (being* target = actor.region->being_at(*opt_coords)) {
 									return actor.agent().aim_missile(actor.coords, *target, [id = actor.id, cont, &weapon, attack, &target = *target](body_part* body_part) {
 										dmg::group damage = attack->damage();
-										weapon.integrity -= attack->wear_ratio() * damage.total();
+										weapon.integrity -= attack->wear_ratio() * damage.health_loss();
 										if (body_part) {
 											target.take_damage(damage, *body_part, id);
 										}

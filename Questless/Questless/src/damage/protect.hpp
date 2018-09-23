@@ -4,174 +4,156 @@
 
 #pragma once
 
-#include <iostream>
+#include "utility/nonnegative.hpp"
 
-#include "utility/tagged_type.hpp"
-#include "utility/static_bounded.hpp"
+#include "meta/quantity.hpp"
 
-namespace ql::dmg {
-	struct pad : tagged_type<double> { using tagged_type::tagged_type; };
-	struct deflect : tagged_type<double> { using tagged_type::tagged_type; };
-	struct fireproof : tagged_type<double> { using tagged_type::tagged_type; };
-	struct frostproof : tagged_type<double> { using tagged_type::tagged_type; };
-	struct fortify : tagged_type<double> { using tagged_type::tagged_type; };
-	struct immunize : tagged_type<double> { using tagged_type::tagged_type; };
-	struct insulate : tagged_type<double> { using tagged_type::tagged_type; };
+#include <nlohmann/json.hpp>
 
-	//! A fixed reduction to damage, by type.
-	class protect {
-	public:
-		constexpr protect() = default;
+namespace ql {
+	namespace dmg {
+		using pad = meta::quantity<double, meta::unit_t<struct pad_tag>>;
+		using deflect = meta::quantity<double, meta::unit_t<struct deflect_tag>>;
+		using fireproof = meta::quantity<double, meta::unit_t<struct fireproof_tag>>;
+		using frostproof = meta::quantity<double, meta::unit_t<struct frostproof_tag>>;
+		using fortify = meta::quantity<double, meta::unit_t<struct fortify_tag>>;
+		using immunize = meta::quantity<double, meta::unit_t<struct immunize_tag>>;
+		using insulate = meta::quantity<double, meta::unit_t<struct _tag>>;
 
-		constexpr protect(pad pad, deflect deflect, fireproof fireproof, frostproof frostproof, fortify fortify, immunize immunize, insulate insulate)
-			: _pad{std::move(pad)}
-			, _deflect{std::move(deflect)}
-			, _fireproof{std::move(fireproof)}
-			, _frostproof{std::move(frostproof)}
-			, _fortify{std::move(fortify)}
-			, _immunize{std::move(immunize)}
-			, _insulate{std::move(insulate)}
-		{}
+		//! A fixed reduction to damage, by type.
+		struct protect {
+			nonnegative<dmg::pad> pad = dmg::pad{0.0};
+			nonnegative<dmg::deflect> deflect = dmg::deflect{0.0};
+			nonnegative<dmg::fireproof> fireproof = dmg::fireproof{0.0};
+			nonnegative<dmg::frostproof> frostproof = dmg::frostproof{0.0};
+			nonnegative<dmg::fortify> fortify = dmg::fortify{0.0};
+			nonnegative<dmg::immunize> immunize = dmg::immunize{0.0};
+			nonnegative<dmg::insulate> insulate = dmg::insulate{0.0};
 
-		constexpr protect(pad pad) : _pad{std::move(pad)} {}
-		constexpr protect(deflect deflect) : _deflect{std::move(deflect)} {}
-		constexpr protect(fireproof fireproof) : _fireproof{std::move(fireproof)} {}
-		constexpr protect(frostproof frostproof) : _frostproof{std::move(frostproof)} {}
-		constexpr protect(fortify fortify) : _fortify{std::move(fortify)} {}
-		constexpr protect(immunize immunize) : _immunize{std::move(immunize)} {}
-		constexpr protect(insulate insulate) : _insulate{std::move(insulate)} {}
+			constexpr protect() = default;
 
-		static constexpr protect zero() { return protect{}; }
+			constexpr protect(protect&&) = default;
+			constexpr protect(protect const&) = default;
 
-		friend std::ostream& operator <<(std::ostream& out, protect const& p) {
-			out << p._pad.value() << ' '
-				<< p._deflect.value() << ' '
-				<< p._fireproof.value() << ' '
-				<< p._frostproof.value() << ' '
-				<< p._fortify.value() << ' '
-				<< p._immunize << ' '
-				<< p._insulate << ' ';
-			return out;
-		}
+			constexpr protect& operator =(protect&&) = default;
+			constexpr protect& operator =(protect const&) = default;
 
-		friend std::istream& operator >> (std::istream& in, protect& p) {
-			in >> p._pad >> p._deflect >> p._fireproof >> p._frostproof >> p._fortify >> p._immunize >> p._insulate;
-			return in;
-		}
+			constexpr protect(dmg::pad pad) : pad{pad} {}
+			constexpr protect(dmg::deflect deflect) : deflect{deflect} {}
+			constexpr protect(dmg::fireproof fireproof) : fireproof{fireproof} {}
+			constexpr protect(dmg::frostproof frostproof) : frostproof{frostproof} {}
+			constexpr protect(dmg::fortify fortify) : fortify{fortify} {}
+			constexpr protect(dmg::immunize immunize) : immunize{immunize} {}
+			constexpr protect(dmg::insulate insulate) : insulate{insulate} {}
+
+			static constexpr protect zero() { return protect{}; }
+
+			protect& operator +=(protect const& p) {
+				pad += p.pad;
+				deflect += p.deflect;
+				fireproof += p.fireproof;
+				frostproof += p.frostproof;
+				fortify += p.fortify;
+				immunize += p.immunize;
+				insulate += p.insulate;
+				return *this;
+			}
+			protect& operator -=(protect const& p) {
+				pad -= p.pad;
+				deflect -= p.deflect;
+				fireproof -= p.fireproof;
+				frostproof -= p.frostproof;
+				fortify -= p.fortify;
+				immunize -= p.immunize;
+				insulate -= p.insulate;
+				return *this;
+			}
+			protect& operator *=(double k) {
+				pad *= k;
+				deflect *= k;
+				fireproof *= k;
+				frostproof *= k;
+				fortify *= k;
+				immunize *= k;
+				insulate *= k;
+				return *this;
+			}
+			protect& operator /=(double k) {
+				pad /= k;
+				deflect /= k;
+				fireproof /= k;
+				frostproof /= k;
+				fortify /= k;
+				immunize /= k;
+				insulate /= k;
+				return *this;
+			}
 		
-		friend protect operator +(protect const& p1, protect const& p2) {
-			return protect {
-				dmg::pad{p1._pad + p2._pad},
-				dmg::deflect{p1._deflect + p2._deflect},
-				dmg::fireproof{p1._fireproof + p2._fireproof},
-				dmg::frostproof{p1._frostproof + p2._frostproof},
-				dmg::fortify{p1._fortify + p2._fortify},
-				dmg::immunize{p1._immunize + p2._immunize},
-				dmg::insulate{p1._insulate + p2._insulate},
-			};
-		}
-		friend protect operator -(protect const& p1, protect const& p2) {
-			return protect {
-				dmg::pad{p1._pad - p2._pad},
-				dmg::deflect{p1._deflect - p2._deflect},
-				dmg::fireproof{p1._fireproof - p2._fireproof},
-				dmg::frostproof{p1._frostproof - p2._frostproof},
-				dmg::fortify{p1._fortify - p2._fortify},
-				dmg::immunize{p1._immunize - p2._immunize},
-				dmg::insulate{p1._insulate - p2._insulate},
-			};
-		}
-		friend protect operator *(protect const& p, double k) {
-			return protect {
-				dmg::pad{k * p._pad},
-				dmg::deflect{k * p._deflect},
-				dmg::fireproof{k * p._fireproof},
-				dmg::frostproof{k * p._frostproof},
-				dmg::fortify{k * p._fortify},
-				dmg::immunize{k * p._immunize},
-				dmg::insulate{k * p._insulate},
-			};
-		}
-		friend protect operator *(double k, protect const& p) {
-			return protect {
-				dmg::pad{k * p._pad},
-				dmg::deflect{k * p._deflect},
-				dmg::fireproof{k * p._fireproof},
-				dmg::frostproof{k * p._frostproof},
-				dmg::fortify{k * p._fortify},
-				dmg::immunize{k * p._immunize},
-				dmg::insulate{k * p._insulate},
-			};
-		}
-		friend protect operator /(protect const& p, double k) {
-			return protect {
-				dmg::pad{p._pad / k},
-				dmg::deflect{p._deflect / k},
-				dmg::fireproof{p._fireproof / k},
-				dmg::frostproof{p._frostproof / k},
-				dmg::fortify{p._fortify / k},
-				dmg::immunize{p._immunize / k},
-				dmg::insulate{p._insulate / k},
-			};
+			friend protect operator +(protect const& p1, protect const& p2) {
+				protect result = p1;
+				result += p2;
+				return result;
+			}
+			friend protect operator -(protect const& p1, protect const& p2) {
+				protect result = p1;
+				result -= p2;
+				return result;
+			}
+			friend protect operator *(protect const& p, double k) {
+				protect result = p;
+				result *= k;
+				return result;
+			}
+			friend protect operator *(double k, protect const& p) {
+				// Multiplication of double is commutative.
+				return p * k;
+			}
+			friend protect operator /(protect const& p, double k) {
+				protect result = p;
+				result /= k;
+				return result;
+			}
+		};
+
+		void to_json(nlohmann::json& j, protect const& protect) {
+			if (protect.pad != pad{0.0}) j["pad"] = protect.pad.value().value;
+			if (protect.deflect != deflect{0.0}) j["deflect"] = protect.deflect.value().value;
+			if (protect.fireproof != fireproof{0.0}) j["fireproof"] = protect.fireproof.value().value;
+			if (protect.frostproof != frostproof{0.0}) j["frostproof"] = protect.frostproof.value().value;
+			if (protect.fortify != fortify{0.0}) j["fortify"] = protect.fortify.value().value;
+			if (protect.immunize != immunize{0.0}) j["immunize"] = protect.immunize.value().value;
+			if (protect.insulate != insulate{0.0}) j["insulate"] = protect.insulate.value().value;
 		}
 
-		protect& operator +=(protect const& p) {
-			_pad += p._pad;
-			_deflect += p._deflect;
-			_fireproof += p._fireproof;
-			_frostproof += p._frostproof;
-			_fortify += p._fortify;
-			_immunize += p._immunize;
-			_insulate += p._insulate;
-			return *this;
-		}
-		protect& operator -=(protect const& p) {
-			_pad -= p._pad;
-			_deflect -= p._deflect;
-			_fireproof -= p._fireproof;
-			_frostproof -= p._frostproof;
-			_fortify -= p._fortify;
-			_immunize -= p._immunize;
-			_insulate -= p._insulate;
-			return *this;
-		}
-		protect& operator *=(double k) {
-			_pad *= k;
-			_deflect *= k;
-			_fireproof *= k;
-			_frostproof *= k;
-			_fortify *= k;
-			_immunize *= k;
-			_insulate *= k;
-			return *this;
-		}
-		protect& operator /=(double k) {
-			_pad /= k;
-			_deflect /= k;
-			_fireproof /= k;
-			_frostproof /= k;
-			_fortify /= k;
-			_immunize /= k;
-			_insulate /= k;
-			return *this;
-		}
+		void from_json(nlohmann::json const& j, protect& protect) {
+			auto pad = j.find("pad");
+			if (pad != j.end()) protect.pad = dmg::pad{pad.value().get<double>()};
 
-		constexpr double pad() const { return _pad; }
-		constexpr double deflect() const { return _deflect; }
-		constexpr double fireproof() const { return _fireproof; }
-		constexpr double frostproof() const { return _frostproof; }
-		constexpr double fortify() const { return _fortify; }
-		constexpr double immunize() const { return _immunize; }
-		constexpr double insulate() const { return _insulate; }
-	private:
-		static constexpr double minimum_value = 0.0;
+			auto deflect = j.find("deflect");
+			if (deflect != j.end()) protect.deflect = dmg::deflect{deflect.value().get<double>()};
 
-		static_bounded<double, minimum_value> _pad = 0.0;
-		static_bounded<double, minimum_value> _deflect = 0.0;
-		static_bounded<double, minimum_value> _fireproof = 0.0;
-		static_bounded<double, minimum_value> _frostproof = 0.0;
-		static_bounded<double, minimum_value> _fortify = 0.0;
-		static_bounded<double, minimum_value> _immunize = 0.0;
-		static_bounded<double, minimum_value> _insulate = 0.0;
-	};
+			auto fireproof = j.find("fireproof");
+			if (fireproof != j.end()) protect.fireproof = dmg::fireproof{fireproof.value().get<double>()};
+
+			auto frostproof = j.find("frostproof");
+			if (frostproof != j.end()) protect.frostproof = dmg::frostproof{frostproof.value().get<double>()};
+
+			auto fortify = j.find("fortify");
+			if (fortify != j.end()) protect.fortify = dmg::fortify{fortify.value().get<double>()};
+
+			auto immunize = j.find("immunize");
+			if (immunize != j.end()) protect.immunize = dmg::immunize{immunize.value().get<double>()};
+
+			auto insulate = j.find("insulate");
+			if (insulate != j.end()) protect.insulate = dmg::insulate{insulate.value().get<double>()};
+		}
+	}
+
+	constexpr dmg::pad operator "" _pad(long double value) { return dmg::pad{static_cast<double>(value)}; }
+	constexpr dmg::deflect operator "" _deflect(long double value) { return dmg::deflect{static_cast<double>(value)}; }
+	constexpr dmg::fireproof operator "" _fireproof(long double value) { return dmg::fireproof{static_cast<double>(value)}; }
+	constexpr dmg::frostproof operator "" _frostproof(long double value) { return dmg::frostproof{static_cast<double>(value)}; }
+	constexpr dmg::fortify operator "" _fortify(long double value) { return dmg::fortify{static_cast<double>(value)}; }
+	constexpr dmg::immunize operator "" _immunize(long double value) { return dmg::immunize{static_cast<double>(value)}; }
+	constexpr dmg::insulate operator "" _insulate(long double value) { return dmg::insulate{static_cast<double>(value)}; }
 }

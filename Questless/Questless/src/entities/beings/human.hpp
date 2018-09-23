@@ -4,17 +4,14 @@
 
 #pragma once
 
-#include "entities/beings/corporeal_being.hpp"
+#include "entities/beings/being.hpp"
 
 namespace ql {
-	class human : public corporeal_being_base<human> {
+	class human : public being_base<human> {
 	public:
 		human(const std::function<uptr<ql::agent>(being&)>& make_agent, ql::id<being> id = ql::id<being>::make());
-		human(std::istream& in);
 
 		ql::entity_subtype entity_subtype() const final { return entity_subtype::human_class; }
-
-		void serialize(std::ostream& out) const final;
 
 		double transparency() const final { return 0.5; }
 

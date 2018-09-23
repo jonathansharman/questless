@@ -19,7 +19,7 @@ namespace ql {
 	world_view::world_view(being const& being, bool find_bounds)
 		: _region{*being.region}
 		, _origin{being.coords}
-		, _visual_range{being.stats.vision.max_range()}
+		, _visual_range{being.stats.a.vision.max_range()}
 		, _bounds{std::nullopt}
 	{
 		ql::region const& region = _region;

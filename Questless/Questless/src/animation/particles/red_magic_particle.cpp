@@ -16,9 +16,9 @@ namespace ql {
 		, game_space::vector{0.0, -300.0} / 1.0s / 1.0s
 		, random_angle()
 		, uniform(-2.0, 2.0) * units::game_space::radians::circle() / 1.0s
-		, scale{1.0}
+		, 1.0
 		, game_space::scale_velocity{0.0}
-		, lifetime{game_space::seconds{uniform(0.6, 1.0)}}
+		, game_space::seconds{uniform(0.6, 1.0)}
 		}
 	{}
 	sdl::texture const& red_magic_particle::texture() const {

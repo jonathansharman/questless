@@ -4,35 +4,37 @@
 
 #pragma once
 
-#include <cmath>
-#include <vector>
-
 #include "damage.hpp"
 #include "multiplier.hpp"
 #include "protect.hpp"
+
+#include "utility/quantities.hpp"
+
+#include <cmath>
+#include <vector>
 
 namespace ql::dmg {
 	//! Represents a single group of damage to a being, possibly including multiple types and quantities of damage and protection bypass.
 	class group {
 	public:
-		static constexpr double pct_pad_to_slash = 0.50;
-		static constexpr double pct_pad_to_pierce = 0.25;
-		static constexpr double pct_pad_to_cleave = 0.75;
-		static constexpr double pct_pad_to_bludgeon = 1.00;
+		static constexpr auto slash_per_pad = 0.50_slash / 1.0_pad;
+		static constexpr auto pierce_per_pad = 0.25_pierce / 1.0_pad;
+		static constexpr auto cleave_per_pad = 0.75_cleave / 1.0_pad;
+		static constexpr auto bludgeon_per_pad = 1.00_bludgeon / 1.0_pad;
 
-		static constexpr double pct_deflect_to_slash = 1.00;
-		static constexpr double pct_deflect_to_pierce = 0.50;
-		static constexpr double pct_deflect_to_cleave = 0.75;
-		static constexpr double pct_deflect_to_bludgeon = 0.25;
+		static constexpr auto slash_per_deflect = 1.00_slash / 1.0_deflect;
+		static constexpr auto pierce_per_deflect = 0.50_pierce / 1.0_deflect;
+		static constexpr auto cleave_per_deflect = 0.75_cleave / 1.0_deflect;
+		static constexpr auto bludgeon_per_deflect = 0.25_bludgeon / 1.0_deflect;
 
-		static constexpr double pct_fireproof_to_burn = 1.00;
-		static constexpr double pct_frostproof_to_freeze = 1.00;
+		static constexpr auto burn_per_fireproof = 1.00_burn / 1.0_fireproof;
+		static constexpr auto freeze_per_frostproof = 1.00_freeze / 1.0_frostproof;
 
-		static constexpr double pct_fortify_to_blight = 1.00;
+		static constexpr auto blight_per_fortify = 1.00_blight / 1.0_fortify;
 
-		static constexpr double pct_immunize_to_poison = 1.00;
+		static constexpr auto poison_per_immunize = 1.00_poison / 1.0_immunize;
 
-		static constexpr double pct_insulate_to_shock = 1.00;
+		static constexpr auto shock_per_insulate = 1.00_shock / 1.0_insulate;
 
 		group() = default;
 
@@ -101,11 +103,11 @@ namespace ql::dmg {
 		//! The amount of protection this damage group is capable of bypassing.
 		protect const& protection_bypass() const { return _protection_bypass; }
 
-		//! The sum of the damage components.
-		double total() const {
-			double result = 0;
+		//! The amount of health loss this damage group causes, defined as the sum of its damage component values.
+		health health_loss() const {
+			health result = 0.0_hp;
 			for (auto const& part : _parts) {
-				std::visit([&result](auto&& part) { result += std::forward<decltype(part)>(part); }, part);
+				std::visit([&result](auto const& part) { result += health{part.value}; }, part);
 			}
 			return result;
 		}

@@ -7,103 +7,100 @@
 #include <memory>
 #include <vector>
 
-#include "stats.hpp" //! @todo This could be forward-declared, but it would require practically doubling the amount of code in this file. Move inclusion to .cpp if ever added for another reason.
+#include "being.hpp" //! @todo This could be forward-declared, but it would require practically doubling the amount of code in this file. Move inclusion to .cpp if ever added for another reason.
+
 #include "utility/reference.hpp"
 
-namespace ql {
+namespace ql::stats {
 	//! A modification to a stat of a being.
 	struct modifier {
 		//! Modifies the stat according to the given modifiers.
 		//! @param modifiers A vector of stat modifiers.
-		static void apply_all(std::vector<uptr<modifier>> const& modifiers, stats& stats) {
+		static void apply_all(std::vector<uptr<modifier>> const& modifiers, being& stats) {
 			for (auto const& modifier : modifiers) {
 				modifier->apply(stats);
 			}
 		}
 
-		virtual void apply(stats& stats) = 0;
+		virtual void apply(being& stats) = 0;
 	};
 
 	//! Overrides whether the being is mute.
 	class mute_modifier : public modifier {
 	public:
-		constexpr mute_modifier(bool mute) : _mute{mute} {}
-		static auto make(bool mute) { return umake<mute_modifier>(mute); }
-		void apply(stats& stats) final { stats.mute = _mute; }
+		constexpr mute_modifier(ql::mute mute) : _mute{mute} {}
+		static auto make(ql::mute mute) { return umake<mute_modifier>(mute); }
+		void apply(being& stats) final { stats.a.mute = _mute; }
 	private:
-		bool _mute;
+		ql::mute _mute;
 	};
 
-	//! Adjusts a scalar stat by some magnitude.
-	class scalar_modifier : public modifier {
-	public:
-		constexpr scalar_modifier(double magnitude) : _magnitude{magnitude} {}
-		constexpr double magnitude() const { return _magnitude; }
-	private:
-		double _magnitude;
+	struct spirit_modifier : public modifier {
+		ql::mana modifier;
+		void apply(being& stats) final { stats.a.spirit += modifier; }
 	};
-	struct spirit_modifier : public scalar_modifier {
-		using scalar_modifier::scalar_modifier;
-		void apply(stats& stats) final { stats.spirit += magnitude(); }
+	struct regen_modifier : public modifier {
+		ql::per_tick modifier;
+		void apply(being& stats) final { stats.regen += modifier; }
 	};
-	struct health_regen_modifier : public scalar_modifier {
-		using scalar_modifier::scalar_modifier;
-		void apply(stats& stats) final { stats.health_regen += magnitude(); }
+	struct strength_modifier : public modifier {
+		ql::strength modifier;
+		void apply(being& stats) final { stats.a.strength += modifier; }
 	};
-	struct strength_modifier : public scalar_modifier {
-		using scalar_modifier::scalar_modifier;
-		void apply(stats& stats) final { stats.strength += magnitude(); }
+	struct toughness_modifier : public modifier {
+		ql::toughness modifier;
+		void apply(being& stats) final { stats.toughness += modifier; }
 	};
-	struct endurance_modifier : public scalar_modifier {
-		using scalar_modifier::scalar_modifier;
-		void apply(stats& stats) final { stats.endurance += magnitude(); }
+	struct stamina_modifier : public modifier {
+		ql::energy modifier;
+		void apply(being& stats) final { stats.a.stamina += modifier; }
 	};
-	struct stamina_modifier : public scalar_modifier {
-		using scalar_modifier::scalar_modifier;
-		void apply(stats& stats) final { stats.stamina += magnitude(); }
+	struct agility_modifier : public modifier {
+		ql::agility modifier;
+		void apply(being& stats) final { stats.a.agility += modifier; }
 	};
-	struct agility_modifier : public scalar_modifier {
-		using scalar_modifier::scalar_modifier;
-		void apply(stats& stats) final { stats.agility += magnitude(); }
-	};
-	struct stealth_modifier : public scalar_modifier {
-		using scalar_modifier::scalar_modifier;
-		void apply(stats& stats) final { stats.stealth += magnitude(); }
+	struct stealth_modifier : public modifier {
+		ql::stealth modifier;
+		void apply(being& stats) final { stats.stealth += modifier; }
 	};
 
 	// Vision Modifiers
 
-	struct visual_acuity_modifier : public scalar_modifier {
-		using scalar_modifier::scalar_modifier;
-		void apply(stats& stats) final { stats.vision.acuity += magnitude(); }
+	struct visual_acuity_modifier : public modifier {
+		ql::acuity modifier;
+		void apply(being& stats) final { stats.a.vision.acuity += modifier; }
 	};
-	struct ideal_luminance_modifier : public scalar_modifier {
-		using scalar_modifier::scalar_modifier;
-		void apply(stats& stats) final { stats.vision.ideal_illuminance += magnitude(); }
+	struct min_luminance_modifier : public modifier {
+		ql::illuminance modifier;
+		void apply(being& stats) final { stats.a.vision.min_illuminance += modifier; }
 	};
-	struct light_tolerance_modifier : public scalar_modifier {
-		using scalar_modifier::scalar_modifier;
-		void apply(stats& stats) final { stats.vision.darkness_tolerance += magnitude(); }
+	struct max_luminance_modifier : public modifier {
+		ql::illuminance modifier;
+		void apply(being& stats) final { stats.a.vision.max_illuminance += modifier; }
+	};
+	struct light_tolerance_modifier : public modifier {
+		ql::darkness_tolerance modifier;
+		void apply(being& stats) final { stats.a.vision.darkness_tolerance += modifier; }
 	};
 
-	struct hearing_modifier : public scalar_modifier {
-		using scalar_modifier::scalar_modifier;
-		void apply(stats& stats) final { stats.hearing += magnitude(); }
+	struct hearing_modifier : public modifier {
+		ql::hearing modifier;
+		void apply(being& stats) final { stats.a.hearing += modifier; }
 	};
-	struct intellect_modifier : public scalar_modifier {
-		using scalar_modifier::scalar_modifier;
-		void apply(stats& stats) final { stats.intellect += magnitude(); }
+	struct intellect_modifier : public modifier {
+		ql::intellect modifier;
+		void apply(being& stats) final { stats.a.intellect += modifier; }
 	};
-	struct weight_modifier : public scalar_modifier {
-		using scalar_modifier::scalar_modifier;
-		void apply(stats& stats) final { stats.weight += magnitude(); }
+	struct weight_modifier : public modifier {
+		ql::weight modifier;
+		void apply(being& stats) final { stats.a.weight += modifier; }
 	};
-	struct min_temp_modifier : public scalar_modifier {
-		using scalar_modifier::scalar_modifier;
-		void apply(stats& stats) final { stats.min_temp += magnitude(); }
+	struct min_temp_modifier : public modifier {
+		ql::temperature modifier;
+		void apply(being& stats) final { stats.min_temp += modifier; }
 	};
-	struct max_temp_modifier : public scalar_modifier {
-		using scalar_modifier::scalar_modifier;
-		void apply(stats& stats) final { stats.max_temp += magnitude(); }
+	struct max_temp_modifier : public modifier {
+		ql::temperature modifier;
+		void apply(being& stats) final { stats.max_temp += modifier; }
 	};
 }

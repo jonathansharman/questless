@@ -33,6 +33,6 @@ namespace ql::magic {
 	}
 	
 	double spell::incant_time(being& caster) const {
-		return base_incant_time() / (1.0 + being::intellect_factor * caster.stats.intellect);
+		return base_incant_time() / (1.0 + caster.stats.a.intellect.value() / 100.0_int);
 	}
 }

@@ -125,10 +125,10 @@ namespace ql {
 		period_of_day period_of_day() const { return _period_of_day; }
 
 		//! The illuminance of the tile at @p region_tile_coords.
-		double illuminance(region_tile::point region_tile_coords) const;
+		ql::illuminance illuminance(region_tile::point region_tile_coords) const;
 
 		//! The temperature of the tile at @p region_tile_coords.
-		double temperature(region_tile::point region_tile_coords) const;
+		ql::temperature temperature(region_tile::point region_tile_coords) const;
 
 		//! The proportion of light/vision occluded between @p start and @p end, as a number in [0, 1].
 		double occlusion(region_tile::point start, region_tile::point end) const;

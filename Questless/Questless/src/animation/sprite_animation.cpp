@@ -12,7 +12,7 @@ using namespace units;
 
 namespace ql {
 	sprite_animation::sprite_animation(sptr<sprite_sheet> sprite_sheet, std::vector<frame> frames, ql::looping looping)
-		: looping{looping}
+		: looping{looping.value}
 		, in_reverse{false}
 		, _sprite_sheet{std::move(sprite_sheet)}
 		, _frames{std::move(frames)}
@@ -41,10 +41,10 @@ namespace ql {
 			, colors::white_vector()
 			, view_space::vector{1.0f, 1.0f}
 			, game_space::radians{0.0}
-			, src_rect{texture_space::box
+			, texture_space::box
 				{ texture_space::point{_sprite_sheet->cel_width() * frame.coords.x(), _sprite_sheet->cel_height() * frame.coords.y()}
 				, texture_space::vector{_sprite_sheet->cel_width(), _sprite_sheet->cel_height()}
-				}}
+				}
 			);
 	}
 
@@ -53,14 +53,14 @@ namespace ql {
 		camera.draw
 			( the_texture_manager()[_sprite_sheet->texture_handle]
 			, game_space::point{position}
-			, origin{frame.origin}
+			, frame.origin
 			, color_vector
 			, view_space::vector{1.0f, 1.0f}
 			, game_space::radians{0.0}
-			, src_rect{texture_space::box
+			, texture_space::box
 				{ texture_space::point{_sprite_sheet->cel_width() * frame.coords.x(), _sprite_sheet->cel_height() * frame.coords.y()}
 				, texture_space::vector{_sprite_sheet->cel_width(), _sprite_sheet->cel_height()}
-				}}
+				}
 			);
 	}
 
@@ -73,7 +73,7 @@ namespace ql {
 	}
 
 	void sprite_animation::reset(randomize_start_time randomize_starting_time) {
-		if (randomize_starting_time) {
+		if (randomize_starting_time.value) {
 			// The next time update() is called, the animation will advance to a random point.
 			_accrued_time = uniform(0.0, 1.0) * duration();
 		}

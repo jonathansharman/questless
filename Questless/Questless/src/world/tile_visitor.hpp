@@ -15,7 +15,7 @@ namespace ql {
 	class stone_tile;
 	class water_tile;
 
-	using tile_subtype_list = type_list::of_t
+	using tile_subtype_list = meta::list_t
 		< dirt_tile
 		, edge_tile
 		, grass_tile

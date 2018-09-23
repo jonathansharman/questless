@@ -4,18 +4,20 @@
 
 #pragma once
 
-#include <vector>
-
 #include "animation.hpp"
+#include "utility/reference.hpp"
+
+#include "meta/quantity.hpp"
+
 #include "sdl/resources.hpp"
 #include "units/sprite_sheet_space.hpp"
 #include "units/texture_space.hpp"
-#include "utility/reference.hpp"
-#include "utility/tagged_type.hpp"
+
+#include <vector>
 
 namespace ql {
-	struct looping : tagged_type<bool> { using tagged_type::tagged_type; };
-	struct randomize_start_time : tagged_type<bool> { using tagged_type::tagged_type; };
+	using looping = meta::quantity<bool, meta::unit_t<struct looping_tag>>;
+	using randomize_start_time = meta::quantity<bool, meta::unit_t<struct randomize_start_time_tag>>;
 
 	//! A texture composed of a grid of animation cels.
 	class sprite_sheet {

@@ -41,11 +41,11 @@ namespace ql {
 	void camera::draw
 		( texture const& texture
 		, game_space::point position
-		, origin origin
+		, texture_space::vector origin
 		, colors::color_vector draw_color_vector
 		, view_space::vector scale
 		, game_space::radians angle
-		, src_rect const& src_rect
+		, std::optional<texture_space::box> const& src_rect
 		) const
 	{
 		texture.draw_transformed

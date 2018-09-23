@@ -52,7 +52,7 @@ namespace ql::magic {
 												struck_parts.push_back(part);
 											}
 											for (auto struck_part : struck_parts) {
-												dmg::group shock = dmg::shock{shock_magnitude * uniform(0.5, 1.5) * part->vitality / (4.0 * struck_parts.size())};
+												dmg::group shock = dmg::shock{shock_magnitude * uniform(0.5, 1.5) * part->vitality.value / (4.0 * struck_parts.size())};
 												struck_part->take_damage(shock, caster.id);
 											}
 										}

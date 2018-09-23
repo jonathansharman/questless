@@ -1,0 +1,21 @@
+{ "spirit": 0.0
+, "regen": 0.001
+, "strength": 0.0
+, "tough": 100.0
+, "stamina": 100.0
+, "agility": 0.0
+, "stealth": 300.0
+, "vision":
+	{ "acuity": 60.0
+	, "min_illuminance": 100.0
+	, "max_illuminance": 100.0
+	, "darkness_tolerance": 100.0
+	, "glare_tolerance": 25.0
+	}
+, "hearing": 180.0
+, "intellect": 0.0
+, "weight": 0.0
+, "min_temp": -100.0
+, "max_temp": 100.0
+, "mute": true
+}

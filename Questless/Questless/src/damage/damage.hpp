@@ -4,65 +4,82 @@
 
 #pragma once
 
+#include "meta/quantity.hpp"
+
 #include <variant>
 
-#include "utility/static_bounded.hpp"
+namespace ql {
+	namespace dmg {
+		// Damage
 
-namespace ql::dmg {
-	namespace detail {
-		//! @todo Replace with C++17 inline variable when supported.
-		struct minimum { static constexpr double value = 0.0; };
+		using slash = meta::quantity<double, meta::unit_t<struct slash_tag>>;
+		using pierce = meta::quantity<double, meta::unit_t<struct pierce_tag>>;
+		using cleave = meta::quantity<double, meta::unit_t<struct cleave_tag>>;
+		using bludgeon = meta::quantity<double, meta::unit_t<struct bludgeon_tag>>;
+		using burn = meta::quantity<double, meta::unit_t<struct burn_tag>>;
+		using freeze = meta::quantity<double, meta::unit_t<struct freeze_tag>>;
+		using blight = meta::quantity<double, meta::unit_t<struct blight_tag>>;
+		using poison = meta::quantity<double, meta::unit_t<struct poison_tag>>;
+		using shock = meta::quantity<double, meta::unit_t<struct shock_tag>>;
 
-		struct type : public static_bounded<double, minimum::value> {
-			explicit constexpr type(double amount) : static_bounded(amount) {}
-		};
+		using damage = std::variant
+			< slash
+			, pierce
+			, cleave
+			, bludgeon
+			, burn
+			, freeze
+			, blight
+			, poison
+			, shock
+			>;
 
-		struct factor_type : public static_bounded<double, minimum::value> {
-			explicit constexpr factor_type(double amount) : static_bounded(amount) {}
-		};
+		// Damage factors
+
+		using slash_factor = meta::quantity<double, meta::unit_t<struct slash_factor_tag>>;
+		using pierce_factor = meta::quantity<double, meta::unit_t<struct pierce_factor_tag>>;
+		using cleave_factor = meta::quantity<double, meta::unit_t<struct cleave_factor_tag>>;
+		using bludgeon_factor = meta::quantity<double, meta::unit_t<struct bludgeon_factor_tag>>;
+		using burn_factor = meta::quantity<double, meta::unit_t<struct burn_factor_tag>>;
+		using freeze_factor = meta::quantity<double, meta::unit_t<struct freeze_factor_tag>>;
+		using blight_factor = meta::quantity<double, meta::unit_t<struct blight_factor_tag>>;
+		using poison_factor = meta::quantity<double, meta::unit_t<struct poison_factor_tag>>;
+		using shock_factor = meta::quantity<double, meta::unit_t<struct shock_factor_tag>>;
+
+		using factor = std::variant
+			< slash_factor
+			, pierce_factor
+			, cleave_factor
+			, bludgeon_factor
+			, burn_factor
+			, freeze_factor
+			, blight_factor
+			, poison_factor
+			, shock_factor
+			>;
 	}
+	
+	// Damage literals
 
-	struct slash : detail::type { using detail::type::type; };
-	struct pierce : detail::type { using detail::type::type; };
-	struct cleave : detail::type { using detail::type::type; };
-	struct bludgeon : detail::type { using detail::type::type; };
-	struct burn : detail::type { using detail::type::type; };
-	struct freeze : detail::type { using detail::type::type; };
-	struct blight : detail::type { using detail::type::type; };
-	struct poison : detail::type { using detail::type::type; };
-	struct shock : detail::type { using detail::type::type; };
+	constexpr dmg::slash operator "" _slash(long double value) { return dmg::slash{static_cast<double>(value)}; }
+	constexpr dmg::pierce operator "" _pierce(long double value) { return dmg::pierce{static_cast<double>(value)}; }
+	constexpr dmg::cleave operator "" _cleave(long double value) { return dmg::cleave{static_cast<double>(value)}; }
+	constexpr dmg::bludgeon operator "" _bludgeon(long double value) { return dmg::bludgeon{static_cast<double>(value)}; }
+	constexpr dmg::burn operator "" _burn(long double value) { return dmg::burn{static_cast<double>(value)}; }
+	constexpr dmg::freeze operator "" _freeze(long double value) { return dmg::freeze{static_cast<double>(value)}; }
+	constexpr dmg::blight operator "" _blight(long double value) { return dmg::blight{static_cast<double>(value)}; }
+	constexpr dmg::poison operator "" _poison(long double value) { return dmg::poison{static_cast<double>(value)}; }
+	constexpr dmg::shock operator "" _shock(long double value) { return dmg::shock{static_cast<double>(value)}; }
 
-	struct slash_factor : detail::factor_type { using detail::factor_type::factor_type; };
-	struct pierce_factor : detail::factor_type { using detail::factor_type::factor_type; };
-	struct cleave_factor : detail::factor_type { using detail::factor_type::factor_type; };
-	struct bludgeon_factor : detail::factor_type { using detail::factor_type::factor_type; };
-	struct burn_factor : detail::factor_type { using detail::factor_type::factor_type; };
-	struct freeze_factor : detail::factor_type { using detail::factor_type::factor_type; };
-	struct blight_factor : detail::factor_type { using detail::factor_type::factor_type; };
-	struct poison_factor : detail::factor_type { using detail::factor_type::factor_type; };
-	struct shock_factor : detail::factor_type { using detail::factor_type::factor_type; };
+	// Damage factor literals
 
-	using damage = std::variant
-		< slash
-		, pierce
-		, cleave
-		, bludgeon
-		, burn
-		, freeze
-		, blight
-		, poison
-		, shock
-		>;
-
-	using factor = std::variant
-		< slash_factor
-		, pierce_factor
-		, cleave_factor
-		, bludgeon_factor
-		, burn_factor
-		, freeze_factor
-		, blight_factor
-		, poison_factor
-		, shock_factor
-		>;
+	constexpr dmg::slash_factor operator "" _slash_factor(long double value) { return dmg::slash_factor{static_cast<double>(value)}; }
+	constexpr dmg::pierce_factor operator "" _pierce_factor(long double value) { return dmg::pierce_factor{static_cast<double>(value)}; }
+	constexpr dmg::cleave_factor operator "" _cleave_factor(long double value) { return dmg::cleave_factor{static_cast<double>(value)}; }
+	constexpr dmg::bludgeon_factor operator "" _bludgeon_factor(long double value) { return dmg::bludgeon_factor{static_cast<double>(value)}; }
+	constexpr dmg::burn_factor operator "" _burn_factor(long double value) { return dmg::burn_factor{static_cast<double>(value)}; }
+	constexpr dmg::freeze_factor operator "" _freeze_factor(long double value) { return dmg::freeze_factor{static_cast<double>(value)}; }
+	constexpr dmg::blight_factor operator "" _blight_factor(long double value) { return dmg::blight_factor{static_cast<double>(value)}; }
+	constexpr dmg::poison_factor operator "" _poison_factor(long double value) { return dmg::poison_factor{static_cast<double>(value)}; }
+	constexpr dmg::shock_factor operator "" _shock_factor(long double value) { return dmg::shock_factor{static_cast<double>(value)}; }
 }

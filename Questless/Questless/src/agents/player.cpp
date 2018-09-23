@@ -49,7 +49,7 @@ namespace ql {
 								return complete{};
 							});
 						} else {
-							return this->idle(1.0);
+							return this->idle(1.0_tick);
 						}
 					}
 					MATCH_TYPE(player_action_dialog::move) {

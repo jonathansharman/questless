@@ -10,76 +10,50 @@
 #include "entities/objects/corpse.hpp"
 #include "game.hpp"
 #include "agents/agent.hpp"
+#include "utility/io.hpp"
 #include "utility/random.hpp"
 #include "world/section.hpp"
 #include "world/region.hpp"
 
 using std::function;
+using namespace nlohmann;
 
 namespace ql {
 	being::being
 		( const function<uptr<ql::agent>(being&)>& make_agent
 		, ql::id<being> id
 		, ql::body body
-		, function<ql::stats()> const& make_base_stats
+		, function<stats::being()> const& make_base_stats
 		)
 		: entity{}
 		, id{id}
 		, body{std::move(body)}
 		, base_stats{make_base_stats()}
-		, stats{get_base_stats_plus_body_stats()}
-		, energy{stats.stamina, [] { return 0.0; }, [this] { return stats.stamina.value(); }}
+		, stats{base_stats}
+		, energy{[] { return 0.0_ep; }, [this] { return stats.a.stamina; }}
 		, satiety{max_satiety}
 		, alertness{max_alertness}
-		, mood{0.0}
-		, busy_time{0.0}
+		, mood{0.0_mood}
+		, busy_time{0.0_tick}
 		, mortality{ql::mortality::alive}
 		, direction{static_cast<region_tile::direction>(uniform(1, 6))}
+		, corporeal{true}
 		, _agent{make_agent(*this)}
 	{
 		refresh_stats();
+		energy = stats.a.stamina;
 
 		// Only set busy time mutator after initialization so that it won't try to access the being's region before it's placed in one.
 		busy_time.set_mutator(busy_time_mutator(), false);
 	}
 
-	being::being(std::istream& in, ql::body body) //! @todo Load agent.
-		: entity{in}
-		, id{in}
-		, body{std::move(body)}
-		, energy{[] { return 0.0; }, [this] { return stats.stamina.value(); }}
-		, busy_time{busy_time_mutator()}
-	{
-		//! @todo Read body.
-
-		in >> base_stats;
-		in >> stats;
-
-		in >> energy >> satiety >> alertness >> mood >> busy_time;
-		//! @todo Is there a better way to extract into an enum class?
-		int mortality_int;
-		in >> mortality_int;
-		mortality = static_cast<ql::mortality>(mortality_int);
-		int direction_int;
-		in >> direction_int;
-		direction = static_cast<region_tile::direction>(direction_int);
+	stats::being being::load_stats(char const* filepath) {
+		stats::being result;
+		from_json(json::parse(contents_of_file(filepath)), result);
+		return result;
 	}
 
 	being::~being() = default;
-
-	void being::serialize(std::ostream& out) const {
-		entity::serialize(out);
-
-		out << id << ' ';
-
-		//! @todo Write body.
-
-		out << energy << ' ' << satiety << ' ' << alertness << ' ' << mood << ' '
-			<< busy_time << ' ' << static_cast<int>(mortality) << ' ' << static_cast<int>(direction);
-
-		out << base_stats << ' ';
-		out << stats << ' ';
-	}
 
 	perception being::perception_of(region_tile::point region_tile_coords) const {
 		bool in_front = false;
@@ -106,11 +80,11 @@ namespace ql {
 			default:
 				assert(false && "Invalid direction.");
 		}
-		if (in_front && (region_tile_coords - coords).length() <= stats.vision.max_range()) {
-			double const illuminance = region->illuminance(region_tile_coords);
+		if (in_front && (region_tile_coords - coords).length() <= stats.a.vision.max_range()) {
+			auto const illuminance = region->illuminance(region_tile_coords);
 			int const distance = (region_tile_coords - coords).length();
 			double const occlusion = region->occlusion(coords, region_tile_coords);
-			return stats.vision.visibility(illuminance, distance) * occlusion;
+			return stats.a.vision.visibility(illuminance, distance) * occlusion;
 		} else {
 			return 0.0;
 		}
@@ -135,7 +109,7 @@ namespace ql {
 		}
 	}
 
-	complete being::add_delayed_action(double delay, action::cont cont, uptr<action> action) {
+	complete being::add_delayed_action(ticks delay, action::cont cont, uptr<action> action) {
 		// If there are no enqueued delayed actions, just incur the delay immediately instead of enqueueing it.
 		if (_delayed_actions.empty()) {
 			busy_time += delay;
@@ -162,23 +136,23 @@ namespace ql {
 		erase_if(_statuses, [](auto const& status) { return status->duration() == 0; });
 
 		// Update conditions.
-		satiety += satiety_rate;
-		energy += energy_rate;
-		alertness += alertness_rate;
-		busy_time -= 1.0;
+		satiety += satiety_rate * 1.0_tick;
+		energy += energy_rate * 1.0_tick;
+		alertness += alertness_rate * 1.0_tick;
+		busy_time -= 1.0_tick;
 
 		// Update body.
 		body.update();
 
 		{ // Handle temperature damage.
-			double const temp = region->temperature(coords);
+			auto const temp = region->temperature(coords);
 			if (temp > stats.max_temp) {
-				dmg::group burn = dmg::burn{(temp - stats.max_temp) / (stats.max_temp - stats.min_temp) * temperature_damage_factor};
+				dmg::group burn = (temp - stats.max_temp) * temperature_burn_factor;
 				for (body_part& part : body.parts()) {
 					take_damage(burn, part, std::nullopt);
 				}
 			} else if (temp < stats.min_temp) {
-				dmg::group freeze = dmg::freeze{(stats.min_temp - temp) / (stats.max_temp - stats.min_temp) * temperature_damage_factor};
+				dmg::group freeze = (stats.min_temp - temp) * temperature_freeze_factor;
 				for (body_part& part : body.parts()) {
 					take_damage(freeze, part, std::nullopt);
 				}
@@ -190,47 +164,44 @@ namespace ql {
 			constexpr double stage_2_max = 0.3;
 			constexpr double stage_3_max = 0.4;
 
-			double const pct_blood_lost = 1.0 - body.blood / body.total_vitality();
+			double const pct_blood_lost = 1.0 - body.blood.value() / body.total_vitality().value() / body_part::blood_per_vitality;
 
 			// No effects for stage 1 blood loss.
 			if (pct_blood_lost > stage_1_max) {
 				// Stage 2: anxiety
 
-				// Mood loss per unit time as a factor of stage-2 blood loss.
-				constexpr double mood_loss_factor = 1.0;
+				// Mood loss as a factor of stage-2 blood loss.
+				constexpr auto mood_loss_factor = 1.0_mood;
 				mood -= (pct_blood_lost - stage_1_max) / (1.0 - stage_1_max) * mood_loss_factor;
 			}
 			if (pct_blood_lost > stage_2_max) {
 				// Stage 3: confusion
 				
 				// Intellect loss as a factor of stage-3 blood loss.
-				constexpr double intellect_loss_factor = 50.0;
-				stats.intellect -= (pct_blood_lost - stage_2_max) / (1.0 - stage_2_max) * intellect_loss_factor;
+				constexpr auto intellect_loss_factor = 50.0_int;
+				stats.a.intellect -= (pct_blood_lost - stage_2_max) / (1.0 - stage_2_max) * intellect_loss_factor;
 			}
 			if (pct_blood_lost > stage_3_max) {
 				// Stage 4: lethargy, loss of consciousness, damage
 
 				double const pct_stage_4_blood_lost = (pct_blood_lost - stage_3_max) / (1.0 - stage_3_max);
 
-				// Energy loss per unit time as a factor of stage-4 blood loss.
-				constexpr double energy_loss_factor = 1.0;
+				// Energy loss as a factor of stage-4 blood loss.
+				constexpr auto energy_loss_factor = 1.0_ep;
 				energy -= pct_stage_4_blood_lost * energy_loss_factor;
 
-				// Alertness loss per unit time as a factor of stage-4 blood loss.
-				constexpr double alertness_loss_factor = 1.0;
+				// Alertness loss as a factor of stage-4 blood loss.
+				constexpr auto alertness_loss_factor = 1.0_alert;
 				alertness -= pct_stage_4_blood_lost * alertness_loss_factor;
 
 				// Percent of each part's vitality dealt to it as blight damage as a factor of stage-4 blood loss.
-				constexpr double damage_factor = 0.1;
+				constexpr auto damage_factor = 0.1_blight / 1.0_hp;
 				for (body_part& part : body.parts()) {
-					dmg::group blight = dmg::blight{part.vitality * pct_stage_4_blood_lost * damage_factor};
+					dmg::group blight = part.stats.a.vitality.value() * pct_stage_4_blood_lost * damage_factor;
 					part.take_damage(blight, std::nullopt);
 				}
 			}
 		}
-
-		// Update abilities.
-		abilities.update(*this);
 
 		// Update items.
 		for (item& item : inventory.items) {
@@ -265,9 +236,9 @@ namespace ql {
 		}
 
 		{ // Apply part's and being's protection, resistance, and vulnerability.
-			dmg::protect const total_protection = target_part.protection() + stats.protection;
-			dmg::resist const total_resistance = stats.resistance + target_part.resistance();
-			dmg::vuln const total_vulnerability = stats.vulnerability + target_part.vulnerability();
+			dmg::protect const total_protection = target_part.stats.protect + stats.protect;
+			dmg::resist const total_resistance = stats.resist + target_part.stats.resist;
+			dmg::vuln const total_vulnerability = stats.vuln + target_part.stats.vuln;
 			damage = damage.with(total_protection, total_resistance, total_vulnerability);
 		}
 
@@ -276,23 +247,23 @@ namespace ql {
 			struct damage_effect_applier {
 				body_part& body_part;
 				void operator ()(dmg::slash const& slash) {
-					constexpr double bleeding_per_slash = 0.1;
+					constexpr auto bleeding_per_slash = 0.1_blood_per_tick / 1.0_slash;
 					body_part.bleeding += slash * bleeding_per_slash;
 				}
 				void operator ()(dmg::pierce const& pierce) {
-					constexpr double bleeding_per_pierce = 0.1;
+					constexpr auto bleeding_per_pierce = 0.2_blood_per_tick / 1.0_pierce;
 					body_part.bleeding += pierce * bleeding_per_pierce;
 				}
 				void operator ()(dmg::cleave const& cleave) {
-					constexpr double bleeding_per_cleave = 0.1;
+					constexpr auto bleeding_per_cleave = 0.1_blood_per_tick / 1.0_cleave;
 					body_part.bleeding += cleave * bleeding_per_cleave;
 				}
 				void operator ()(dmg::bludgeon const& bludgeon) {
-					constexpr double bleeding_per_bludgeon = 0.05;
+					constexpr auto bleeding_per_bludgeon = 0.05_blood_per_tick / 1.0_bludgeon;
 					body_part.bleeding += bludgeon * bleeding_per_bludgeon;
 				}
 				void operator ()(dmg::burn const& burn) {
-					constexpr double cauterization_per_burn = 1.0;
+					constexpr auto cauterization_per_burn = 1.0_blood_per_tick / 1.0_burn;
 					body_part.bleeding -= burn * cauterization_per_burn;
 				}
 				void operator ()(dmg::freeze const& /*freeze*/) {}
@@ -306,12 +277,12 @@ namespace ql {
 		}
 
 		// Part loses health.
-		target_part.health -= damage.total() / (1.0 + endurance_factor * stats.endurance);
+		target_part.health -= damage.health_loss() / (1.0 + stats.toughness.value() / 100.0_tgh);
 
 		// Check for part disability.
-		if (target_part.health <= 0) {
+		if (target_part.health.value() <= 0.0_hp) {
 			//! @todo Disable target_part.
-			if (target_part.vital()) {
+			if (target_part.vital.value) {
 				// A vital part has been disabled. Kill target.
 				mortality = ql::mortality::dead;
 			}
@@ -335,7 +306,7 @@ namespace ql {
 			if (source && !source->before_kill(id)) return;
 
 			// Target's death succeeded.
-			if (corporeal()) {
+			if (corporeal.value) {
 				// Spawn corpse.
 				ql::region& corpse_region = *region; // Save region since the being's region pointer will be nulled when it's removed.
 				region->remove(*this);
@@ -357,7 +328,7 @@ namespace ql {
 		}
 	}
 
-	void being::heal(double amount, body_part& part, std::optional<ql::id<being>> opt_source_id) {
+	void being::heal(ql::health amount, body_part& part, std::optional<ql::id<being>> opt_source_id) {
 		//! @todo heal the part, if present.
 
 		// Get source.
@@ -390,47 +361,39 @@ namespace ql {
 	// Stats and Status Modifiers //
 	////////////////////////////////
 
-	stats being::get_base_stats_plus_body_stats() {
-		ql::stats result = base_stats;
+	stats::being being::get_stats() {
+		stats::being result = base_stats;
 
-		// Apply body part stat modifiers, and sum weight.
+		// Add body part stats to being stats.
 		for (body_part const& part : body.parts()) {
-			modifier::apply_all(part.modifiers(), result);
-
-			result.weight += part.weight();
+			result.a += part.stats.a;
 		}
-
-		return result;
-	}
-
-	stats being::get_stats() {
-		ql::stats result = get_base_stats_plus_body_stats();
 
 		// Apply status stat modifiers after body part modifiers.
 		for (auto const& status : _statuses) {
-			modifier::apply_all(status->modifiers(), result);
+			stats::modifier::apply_all(status->modifiers(), result);
 		}
 
 		// Apply condition effects.
 
-		double pct_weary = 1.0 - energy / result.stamina;
-		result.strength -= pct_weary * energy_strength_penalty * base_stats.strength;
-		result.endurance -= pct_weary * energy_endurance_penalty * base_stats.endurance;
+		double pct_weary = 1.0 - energy.value() / result.a.stamina.value();
+		result.a.strength -= pct_weary * energy_strength_penalty * base_stats.a.strength;
+		result.toughness -= pct_weary * energy_endurance_penalty * base_stats.toughness;
 
-		double pct_sleepy = 1.0 - alertness / max_alertness;
-		result.agility -= pct_sleepy * alertness_agility_penalty * base_stats.agility;
+		double pct_sleepy = 1.0 - alertness.value() / max_alertness;
+		result.a.agility -= pct_sleepy * alertness_agility_penalty * base_stats.a.agility;
 		//! @todo How to apply sleepy penalty to body part dexterities?
 		//result.dexterity -= pct_sleepy * alertness_dexterity_penalty * base_stats.dexterity;
-		result.intellect -= pct_sleepy * alertness_intellect_penalty * base_stats.intellect;
+		result.a.intellect -= pct_sleepy * alertness_intellect_penalty * base_stats.a.intellect;
 
-		double pct_hungry = 1.0 - satiety / max_satiety;
-		result.health_regen -= pct_hungry * satiety_health_regen_penalty * base_stats.health_regen;
+		double pct_hungry = 1.0 - satiety.value() / max_satiety;
+		result.regen -= pct_hungry * satiety_regen_penalty * base_stats.regen.value();
 
 		return result;
 	}
 
-	std::function<void(double&, double const&)> being::busy_time_mutator() {
-		return [this](double& busy_time, double const& new_busy_time) {
+	std::function<void(ticks&, ticks const&)> being::busy_time_mutator() {
+		return [this](ticks& busy_time, ticks const& new_busy_time) {
 			this->region->remove_from_turn_queue(*this);
 			busy_time = new_busy_time;
 			this->region->add_to_turn_queue(*this);

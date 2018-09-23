@@ -35,7 +35,7 @@ namespace ql {
 		return query_magnitude(queries::magnitude::wait_time{}, 10.0, 0.0, std::nullopt,
 			[this, cont](std::optional<double> duration) {
 				if (duration) {
-					this->being.busy_time += *duration;
+					this->being.busy_time += ticks{*duration}; //! @todo Ticks query?
 					return cont(action::result::success);
 				} else {
 					return cont(action::result::aborted);
@@ -44,23 +44,23 @@ namespace ql {
 		);
 	}
 
-	complete agent::idle(double duration) {
+	complete agent::idle(ticks duration) {
 		being.busy_time += duration;
 		return complete{};
 	}
 
 	complete agent::turn(region_tile::direction direction, action::cont cont) {
-		if (being.stats.agility > 0.0) {
-			// Base cost of turning any amount, as a percentage of the agility factor.
-			constexpr double base_cost_factor = 0.1;
+		if (being.stats.a.agility > 0.0_agi) {
+			// Base cost of turning any amount.
+			constexpr auto base_delay = 0.1_tick;
 			
-			// Cost per turning distance from current direction to new direction, as a percentage of the agility factor.
-			constexpr double cost_factor_per_turn = 0.1;
+			// Cost per turning distance from current direction to new direction.
+			constexpr auto delay_per_turn = 0.1_tick;
 
-			double const agility_factor = 100.0 / being.stats.agility;
+			double const agility_factor = 100.0_agi / being.stats.a.agility.value();
 			//! @todo Account for terrain.
-			double const turn_cost_factor = cost_factor_per_turn * region_tile::distance(being.direction, direction);
-			being.busy_time += agility_factor * (base_cost_factor + turn_cost_factor);
+			auto const turn_delay = delay_per_turn * static_cast<double>(region_tile::distance(being.direction, direction));
+			being.busy_time += agility_factor * (base_delay + turn_delay);
 			being.direction = direction;
 
 			return cont(action::result::success);
@@ -70,17 +70,17 @@ namespace ql {
 	}
 
 	complete agent::walk(region_tile::direction direction, action::cont cont) {
-		if (being.stats.agility > 0.0) {
-			// Base cost of moving, as a percentage of the agility factor.
-			constexpr double base_cost_factor = 1.0;
+		if (being.stats.a.agility > 0.0_agi) {
+			// Base cost of moving.
+			constexpr auto base_delay = 1.0_tick;
 
-			// Cost per turning distance from direction faced to direction moved, as a percentage of the agility factor.
-			constexpr double cost_factor_per_turn = 0.1;
+			// Cost per turning distance from direction faced to direction moved.
+			constexpr auto delay_per_turn = 0.1_tick;
 
-			double const agility_factor = 100.0 / being.stats.agility;
+			double const agility_factor = 100.0_agi / being.stats.a.agility.value();
 			if (being.region->try_move(being, being.coords.neighbor(direction))) {
-				double const strafe_cost_factor = cost_factor_per_turn * region_tile::distance(being.direction, direction);
-				being.busy_time += agility_factor * (base_cost_factor + strafe_cost_factor); //! @todo Account for terrain.
+				auto const strafe_delay = delay_per_turn * static_cast<double>(region_tile::distance(being.direction, direction));
+				being.busy_time += agility_factor * (base_delay + strafe_delay); //! @todo Account for terrain.
 				
 				return cont(action::result::success);
 			}

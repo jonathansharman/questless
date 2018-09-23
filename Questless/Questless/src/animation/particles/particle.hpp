@@ -5,13 +5,13 @@
 #pragma once
 
 #include "animation/animation.hpp"
+
+#include "meta/quantity.hpp"
+
 #include "sdl/texture.hpp"
-#include "utility/tagged_type.hpp"
 
 namespace ql {
-	struct scale : tagged_type<double> { using tagged_type::tagged_type; };
-	struct lifetime : tagged_type<units::game_space::seconds> { using tagged_type::tagged_type; };
-	struct max_displacement : tagged_type<double> { using tagged_type::tagged_type; };
+	using max_displacement = meta::quantity<double, meta::unit_t<struct max_displacement_tag>>;
 
 	class camera;
 
@@ -33,10 +33,10 @@ namespace ql {
 			, units::game_space::acceleration acceleration
 			, units::game_space::radians angle
 			, units::game_space::radians_per_sec angular_velocity
-			, scale scale
+			, units::game_space::scalar scale
 			, units::game_space::scale_velocity scale_velocity
-			, lifetime lifetime
-			, max_displacement max_displacement = max_displacement{_dflt_max_displacement}
+			, units::game_space::seconds lifetime
+			, max_displacement max_displacement = max_displacement{15.0}
 			);
 
 		virtual ~particle() = default;
@@ -61,8 +61,6 @@ namespace ql {
 		//! The texture to be used when drawing a particle.
 		virtual sdl::texture const& texture() const = 0;
 	private:
-		static constexpr double _dflt_max_displacement = 15.0;
-
 		//! Whether the particle should fade out as it nears expiration.
 		virtual bool fade_out() const { return true; };
 
