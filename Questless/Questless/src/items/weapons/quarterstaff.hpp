@@ -16,12 +16,12 @@ namespace ql {
 
 		load mass() const final { return 10.0_load; }
 
-		tick equip_time() const final { return 2_tick; }
-		tick unequip_time() const final { return 1_tick; }
+		tick equip_time() const final { return 15_tick; }
+		tick unequip_time() const final { return 10_tick; }
 
 		ql::integrity durability() const final { return 500.0_integrity; }
 
-		tick switch_time() const final { return 1_tick; }
+		tick switch_time() const final { return 3_tick; }
 	private:
 		class standard_form : public form {
 		public:
@@ -40,9 +40,9 @@ namespace ql {
 				using melee_attack::melee_attack;
 				std::string name() const final { return "Strike"; }
 				dmg::group base_damage() const final { return 24.0_bludgeon; }
-				tick wind_up() const final { return 1_tick; }
-				tick follow_through() const final { return 1_tick; }
-				tick cooldown() const final { return 2_tick; }
+				tick wind_up() const final { return 10_tick; }
+				tick follow_through() const final { return 10_tick; }
+				tick cooldown() const final { return 20_tick; }
 				decltype(ql::integrity{} / ql::health{}) wear_ratio() const final { return 0.001_integrity / 1.0_hp; }
 			private:
 				sptr<effect> get_effect(region_tile::point /*source*/, region_tile::point /*target*/) final { return nullptr; } // @todo This.
@@ -52,9 +52,9 @@ namespace ql {
 				using melee_attack::melee_attack;
 				std::string name() const final { return "Jab"; }
 				dmg::group base_damage() const final { return 12.0_bludgeon; }
-				tick wind_up() const final { return 1_tick; }
-				tick follow_through() const final { return 1_tick; }
-				tick cooldown() const final { return 1_tick; }
+				tick wind_up() const final { return 2_tick; }
+				tick follow_through() const final { return 8_tick; }
+				tick cooldown() const final { return 13_tick; }
 				decltype(ql::integrity{} / ql::health{}) wear_ratio() const final { return 0.001_integrity / 1.0_hp; }
 			private:
 				sptr<effect> get_effect(region_tile::point /*source*/, region_tile::point /*target*/) final { return nullptr; } // @todo This.
@@ -86,9 +86,9 @@ namespace ql {
 						, dmg::protect{6.0_pad} + dmg::protect{6.0_deflect}
 						};
 				}
-				tick wind_up() const final { return 1_tick; }
-				tick follow_through() const final { return 1_tick; }
-				tick cooldown() const final { return 1_tick; }
+				tick wind_up() const final { return 8_tick; }
+				tick follow_through() const final { return 8_tick; }
+				tick cooldown() const final { return 16_tick; }
 				decltype(ql::integrity{} / ql::health{}) wear_ratio() const final { return 0.001_integrity / 1.0_hp; }
 			private:
 				sptr<effect> get_effect(region_tile::point /*source*/, region_tile::point /*target*/) final { return nullptr; } // @todo This.
@@ -103,9 +103,9 @@ namespace ql {
 						, dmg::protect{6.0_pad} + dmg::protect{6.0_deflect}
 						};
 				}
-				tick wind_up() const final { return 1_tick; }
-				tick follow_through() const final { return 1_tick; }
-				tick cooldown() const final { return 1_tick; }
+				tick wind_up() const final { return 2_tick; }
+				tick follow_through() const final { return 6_tick; }
+				tick cooldown() const final { return 10_tick; }
 				decltype(ql::integrity{} / ql::health{}) wear_ratio() const final { return 0.001_integrity / 1.0_hp; }
 			private:
 				sptr<effect> get_effect(region_tile::point /*source*/, region_tile::point /*target*/) final { return nullptr; } // @todo This.

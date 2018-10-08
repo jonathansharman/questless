@@ -29,9 +29,9 @@ namespace ql {
 
 		void update(tick elapsed) final;
 
-		tick equip_time() const final { return 1_tick; }
+		tick equip_time() const final { return 10_tick; }
 
-		tick unequip_time() const final { return 1_tick; }
+		tick unequip_time() const final { return 10_tick; }
 
 		//! The amount of mana this gatestone currently holds.
 		dynamic_bounded<mana> charge;
