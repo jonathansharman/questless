@@ -8,21 +8,37 @@
 #include "meta/quantity.hpp"
 
 namespace ql {
-	// General quantities
+	// General
+
+	//! In-game distance, defined as the distance between adjacent tiles.
+	using span = meta::quantity<int, meta::unit_t<struct span_tag>>;
+	constexpr span operator "" _span(unsigned long long value) { return span{static_cast<int>(value)}; }
+
+	//! Distance between sections.
+	using section_span = meta::quantity<int, meta::unit_t<struct section_span_tag>>;
+	constexpr section_span operator "" _section_span(unsigned long long value) { return section_span{static_cast<int>(value)}; }
 
 	//! In-game time duration.
-	using ticks = meta::quantity<double, meta::unit_t<struct tick_tag>>;
-	constexpr ticks operator "" _tick(long double value) { return ticks{static_cast<double>(value)}; }
+	using tick = meta::quantity<int, meta::unit_t<struct tick_tag>>;
+	constexpr tick operator "" _tick(unsigned long long value) { return tick{static_cast<int>(value)}; }
+
+	//! In-game mass.
+	using load = meta::quantity<double, meta::unit_t<struct load_tag>>;
+	constexpr load operator "" _load(long double value) { return load{static_cast<double>(value)}; }
 
 	//! In-game rate.
-	using per_tick = decltype(1.0 / 1.0_tick);
-	constexpr per_tick operator "" _per_tick(long double value) { return per_tick{static_cast<double>(value)}; }
+	using per_tick = decltype(1 / 1_tick);
+	constexpr per_tick operator "" _per_tick(unsigned long long value) { return per_tick{static_cast<int>(value)}; }
 
 	//! In-game temperature.
 	using temperature = meta::quantity<double, meta::unit_t<struct temperature_tag>>;
 	constexpr temperature operator "" _temp(long double value) { return temperature{static_cast<double>(value)}; }
 
-	// Being quantities
+	//! In-game unit of illuminance.
+	using lum = meta::quantity<double, meta::unit_t<struct illuminance_tag>>;
+	constexpr lum operator "" _lum(long double value) { return lum{static_cast<double>(value)}; }
+
+	// Beings
 
 	using health = meta::quantity<double, meta::unit_t<struct health_tag>>;
 	constexpr health operator "" _hp(long double value) { return health{static_cast<double>(value)}; }
@@ -57,21 +73,11 @@ namespace ql {
 	using acuity = meta::quantity<double, meta::unit_t<struct acuity_tag>>;
 	constexpr acuity operator "" _acuity(long double value) { return acuity{static_cast<double>(value)}; }
 
-	using illuminance = meta::quantity<double, meta::unit_t<struct illuminance_tag>>;
-	constexpr illuminance operator "" _illuminance(long double value) { return illuminance{static_cast<double>(value)}; }
-
-	using darkness_tolerance = meta::quantity<double, meta::unit_t<struct darkness_tolerance_tag>>;
-	constexpr darkness_tolerance operator "" _darkness_tolerance(long double value) { return darkness_tolerance{static_cast<double>(value)}; }
-
-	using glare_tolerance = meta::quantity<double, meta::unit_t<struct glare_tolerance_tag>>;
-	constexpr glare_tolerance operator "" _glare_tolerance(long double value) { return glare_tolerance{static_cast<double>(value)}; }
-
-	using weight = meta::quantity<double, meta::unit_t<struct weight_tag>>;
-	constexpr weight operator "" _wt(long double value) { return weight{static_cast<double>(value)}; }
+	using acuity_per_lum = decltype(0.0_acuity / 1.0_lum);
 
 	using mute = meta::quantity<bool, meta::unit_t<struct mute_tag>>;
 
-	using health_per_tick = meta::quantity<double, meta::quotient_t<health::unit, ticks::unit>>;
+	using health_per_tick = meta::quantity<double, meta::quotient_t<health::unit, tick::unit>>;
 	constexpr health_per_tick operator "" _hp_per_tick(long double value) { return health_per_tick{static_cast<double>(value)}; }
 
 	using vital = meta::quantity<bool, meta::unit_t<struct vital_tag>>;
@@ -81,7 +87,7 @@ namespace ql {
 	using blood = meta::quantity<double, meta::unit_t<struct blood_tag>>;
 	constexpr blood operator "" _blood(long double value) { return blood{static_cast<double>(value)}; }
 
-	using blood_per_tick = meta::quantity<double, meta::quotient_t<typename blood::unit, typename ticks::unit>>;
+	using blood_per_tick = meta::quantity<double, meta::quotient_t<typename blood::unit, typename tick::unit>>;
 	constexpr blood_per_tick operator "" _blood_per_tick(long double value) { return blood_per_tick{static_cast<double>(value)}; }
 
 	using satiety = meta::quantity<double, meta::unit_t<struct satiety_tag>>;
@@ -93,5 +99,12 @@ namespace ql {
 	using mood = meta::quantity<double, meta::unit_t<struct mood_tag>>;
 	constexpr mood operator "" _mood(long double value) { return mood{static_cast<double>(value)}; }
 
+	using awake = meta::quantity<bool, meta::unit_t<struct awake_tag>>;
+
 	using corporeal = meta::quantity<bool, meta::unit_t<struct corporeal_tag>>;
+
+	// Items
+
+	using integrity = meta::quantity<double, meta::unit_t<struct integrity_tag>>;
+	constexpr integrity operator "" _integrity(long double value) { return integrity{static_cast<double>(value)}; }
 }

@@ -5,14 +5,15 @@
 #pragma once
 
 #include "agents/cost.hpp"
+#include "utility/quantities.hpp"
 
 namespace ql {
 	class gatestone;
 
-	//! The cost of performing an action.
+	//! The cost of .
 	class charge_cost : public cost {
 	public:
-		charge_cost(gatestone& gatestone, double amount)
+		charge_cost(gatestone& gatestone, mana amount)
 			: _gatestone{gatestone}
 			, _amount{amount}
 		{}
@@ -22,6 +23,6 @@ namespace ql {
 		void incur(being& actor) const final;
 	private:
 		gatestone& _gatestone;
-		double _amount;
+		mana _amount;
 	};
 }

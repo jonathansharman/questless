@@ -16,8 +16,4 @@ namespace ql {
 		region.add(*light_source);
 		the_game().light_sources.add(std::move(light_source));
 	}
-
-	campfire::campfire(std::istream& in) : object_base<campfire>{in} {
-		//! @todo Light source.
-	}
 }

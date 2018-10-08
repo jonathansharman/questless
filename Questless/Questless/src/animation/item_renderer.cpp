@@ -85,12 +85,12 @@ namespace ql {
 
 	void item_renderer::visit(gatestone const& gatestone) {
 		static auto empty_texture_handle = the_texture_manager().add("resources/textures/items/soul-gem-empty.png");
-		if (gatestone.charge == 0.0) {
+		if (gatestone.charge == 0.0_mp) {
 			the_texture_manager()[empty_texture_handle].draw(_position);
 		} else {
 			static auto non_empty_texture_handle = the_texture_manager().add("resources/textures/items/soul-gem.png");
 			colors::color_vector const draw_color_vector = [&] {
-				float const alpha = static_cast<float>(gatestone.charge / gatestone.capacity());
+				float const alpha = static_cast<float>((gatestone.charge.value() / gatestone.capacity()).value);
 				switch (gatestone.color()) {
 					case magic::color::white:  return colors::white_vector(alpha);
 					case magic::color::black:  return colors::color_vector{0.2f, 0.2f, 0.2f, alpha};
@@ -110,7 +110,7 @@ namespace ql {
 			// Draw charge bar.
 			the_renderer().draw_box(window_space::box{_position, window_space::vector{6, 55}}, colors::black());
 			colors::color const fill_color{draw_color_vector.red(), draw_color_vector.green(), draw_color_vector.blue(), 1.0f};
-			the_renderer().draw_box(window_space::box{_position, window_space::vector{6, static_cast<int>(55 * gatestone.charge / gatestone.capacity())}}, 1, colors::black(), fill_color);
+			the_renderer().draw_box(window_space::box{_position, window_space::vector{6, static_cast<int>(55.0 * (gatestone.charge.value() / gatestone.capacity()).value)}}, 1, colors::black(), fill_color);
 
 			//! @todo Clean this up. Remove magic numbers.
 		}

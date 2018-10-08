@@ -10,6 +10,7 @@
 #include "items/magic/gatestone.hpp"
 #include "spell_visitor.hpp"
 #include "utility/id.hpp"
+#include "utility/quantities.hpp"
 #include "utility/reference.hpp"
 
 #include <string>
@@ -24,7 +25,7 @@ namespace ql::magic {
 		static uptr<action> cast(uptr<spell> spell, id<item> gatestone_id);
 
 		//! The amount of time @p caster takes to incant this spell.
-		double incant_time(being& caster) const;
+		tick incant_time(being& caster) const;
 
 		//! This spell's name.
 		virtual std::string name() const = 0;
@@ -33,12 +34,12 @@ namespace ql::magic {
 		virtual color color() const = 0;
 
 		//! Time after casting this spell before the gatestone used to cast it can be used again.
-		virtual double cooldown() const = 0;
+		virtual tick cooldown() const = 0;
 	private:
 		friend class cast;
 
 		//! The base amount of time it takes to incant this spell, ignoring the skill of the caster.
-		virtual double base_incant_time() const = 0;
+		virtual tick base_incant_time() const = 0;
 
 		virtual complete perform_cast(being& actor, gatestone& gatestone, action::cont cont) = 0;
 	};

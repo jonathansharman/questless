@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <iostream>
 #include <memory>
 
 #include "entities/entity.hpp"
@@ -36,10 +35,10 @@ namespace ql {
 		//! Whether the object blocks the movement of other entities.
 		virtual bool blocks_movement() const = 0;
 
-		void update() final;
+		//! Advanced this object in time by @p elapsed.
+		void update(tick elapsed) final;
 	protected:
 		object(ql::id<object> id) : entity{}, id{id} {}
-		object(std::istream& in);
 	};
 
 	DEFINE_ELEMENT_BASE(object, entity)

@@ -4,103 +4,86 @@
 
 #pragma once
 
-#include <memory>
-#include <vector>
-
 #include "being.hpp" //! @todo This could be forward-declared, but it would require practically doubling the amount of code in this file. Move inclusion to .cpp if ever added for another reason.
 
 #include "utility/reference.hpp"
+#include "utility/type_switch.hpp"
+#include "utility/utility.hpp"
+
+#include <variant>
+#include <vector>
 
 namespace ql::stats {
-	//! A modification to a stat of a being.
-	struct modifier {
-		//! Modifies the stat according to the given modifiers.
-		//! @param modifiers A vector of stat modifiers.
-		static void apply_all(std::vector<uptr<modifier>> const& modifiers, being& stats) {
-			for (auto const& modifier : modifiers) {
-				modifier->apply(stats);
+	struct mute_modifier { ql::mute mute; };
+	struct spirit_modifier { ql::mana amount; };
+	struct regen_modifier { ql::per_tick amount; };
+	struct strength_modifier { ql::strength amount; };
+	struct toughness_modifier { ql::toughness amount; };
+	struct stamina_modifier { ql::energy amount; };
+	struct agility_modifier { ql::agility amount; };
+	struct stealth_modifier { ql::stealth amount; };
+	struct acuity_modifier { ql::acuity amount; };
+	struct min_illuminance_modifier { ql::lum amount; };
+	struct max_illuminance_modifier { ql::lum amount; };
+	struct darkness_penalty_modifier { ql::acuity_per_lum amount; };
+	struct glare_penalty_modifier { ql::acuity_per_lum amount; };
+	struct hearing_modifier { ql::hearing amount; };
+	struct intellect_modifier { ql::intellect amount; };
+	struct mass_modifier { ql::load amount; };
+	struct min_temp_modifier { ql::temperature amount; };
+	struct max_temp_modifier { ql::temperature amount; };
+
+	using modifier = std::variant
+		< mute_modifier
+		, spirit_modifier
+		, regen_modifier
+		, strength_modifier
+		, toughness_modifier
+		, stamina_modifier
+		, agility_modifier
+		, stealth_modifier
+		, acuity_modifier
+		, min_illuminance_modifier
+		, max_illuminance_modifier
+		, darkness_penalty_modifier
+		, glare_penalty_modifier
+		, hearing_modifier
+		, intellect_modifier
+		, mass_modifier
+		, min_temp_modifier
+		, max_temp_modifier
+		>;
+
+	//! Modifies @p stats according to @p modifier.
+	inline void apply(modifier const& modifier, being& stats) {
+		std::visit([&](auto&& mod) {
+			SWITCH_TYPE(mod) {
+				MATCH_TYPE(mute_modifier) stats.a.mute = mod.mute;
+				MATCH_TYPE(spirit_modifier) stats.a.spirit += mod.amount;
+				MATCH_TYPE(regen_modifier) stats.regen += mod.amount;
+				MATCH_TYPE(strength_modifier) stats.a.strength += mod.amount;
+				MATCH_TYPE(toughness_modifier) stats.toughness += mod.amount;
+				MATCH_TYPE(stamina_modifier) stats.a.stamina += mod.amount;
+				MATCH_TYPE(agility_modifier) stats.a.agility += mod.amount;
+				MATCH_TYPE(stealth_modifier) stats.stealth += mod.amount;
+				MATCH_TYPE(acuity_modifier) stats.a.vision.acuity += mod.amount;
+				MATCH_TYPE(min_illuminance_modifier) stats.a.vision.min_illuminance += mod.amount;
+				MATCH_TYPE(max_illuminance_modifier) stats.a.vision.max_illuminance += mod.amount;
+				MATCH_TYPE(darkness_penalty_modifier) stats.a.vision.darkness_penalty += mod.amount;
+				MATCH_TYPE(glare_penalty_modifier) stats.a.vision.glare_penalty += mod.amount;
+				MATCH_TYPE(hearing_modifier) stats.a.hearing += mod.amount;
+				MATCH_TYPE(intellect_modifier) stats.a.intellect += mod.amount;
+				MATCH_TYPE(mass_modifier) stats.a.mass += mod.amount;
+				MATCH_TYPE(min_temp_modifier) stats.min_temp += mod.amount;
+				MATCH_TYPE(max_temp_modifier) stats.max_temp += mod.amount;
 			}
+		}, modifier);
+	}
+
+	//! Modifies @p stats according to @p modifiers.
+	inline void apply_all(std::vector<modifier> const& modifiers, being& stats) {
+		for (auto const& modifier : modifiers) {
+			apply(modifier, stats);
 		}
-
-		virtual void apply(being& stats) = 0;
-	};
-
-	//! Overrides whether the being is mute.
-	class mute_modifier : public modifier {
-	public:
-		constexpr mute_modifier(ql::mute mute) : _mute{mute} {}
-		static auto make(ql::mute mute) { return umake<mute_modifier>(mute); }
-		void apply(being& stats) final { stats.a.mute = _mute; }
-	private:
-		ql::mute _mute;
-	};
-
-	struct spirit_modifier : public modifier {
-		ql::mana modifier;
-		void apply(being& stats) final { stats.a.spirit += modifier; }
-	};
-	struct regen_modifier : public modifier {
-		ql::per_tick modifier;
-		void apply(being& stats) final { stats.regen += modifier; }
-	};
-	struct strength_modifier : public modifier {
-		ql::strength modifier;
-		void apply(being& stats) final { stats.a.strength += modifier; }
-	};
-	struct toughness_modifier : public modifier {
-		ql::toughness modifier;
-		void apply(being& stats) final { stats.toughness += modifier; }
-	};
-	struct stamina_modifier : public modifier {
-		ql::energy modifier;
-		void apply(being& stats) final { stats.a.stamina += modifier; }
-	};
-	struct agility_modifier : public modifier {
-		ql::agility modifier;
-		void apply(being& stats) final { stats.a.agility += modifier; }
-	};
-	struct stealth_modifier : public modifier {
-		ql::stealth modifier;
-		void apply(being& stats) final { stats.stealth += modifier; }
-	};
-
-	// Vision Modifiers
-
-	struct visual_acuity_modifier : public modifier {
-		ql::acuity modifier;
-		void apply(being& stats) final { stats.a.vision.acuity += modifier; }
-	};
-	struct min_luminance_modifier : public modifier {
-		ql::illuminance modifier;
-		void apply(being& stats) final { stats.a.vision.min_illuminance += modifier; }
-	};
-	struct max_luminance_modifier : public modifier {
-		ql::illuminance modifier;
-		void apply(being& stats) final { stats.a.vision.max_illuminance += modifier; }
-	};
-	struct light_tolerance_modifier : public modifier {
-		ql::darkness_tolerance modifier;
-		void apply(being& stats) final { stats.a.vision.darkness_tolerance += modifier; }
-	};
-
-	struct hearing_modifier : public modifier {
-		ql::hearing modifier;
-		void apply(being& stats) final { stats.a.hearing += modifier; }
-	};
-	struct intellect_modifier : public modifier {
-		ql::intellect modifier;
-		void apply(being& stats) final { stats.a.intellect += modifier; }
-	};
-	struct weight_modifier : public modifier {
-		ql::weight modifier;
-		void apply(being& stats) final { stats.a.weight += modifier; }
-	};
-	struct min_temp_modifier : public modifier {
-		ql::temperature modifier;
-		void apply(being& stats) final { stats.min_temp += modifier; }
-	};
-	struct max_temp_modifier : public modifier {
-		ql::temperature modifier;
-		void apply(being& stats) final { stats.max_temp += modifier; }
-	};
+	}
 }

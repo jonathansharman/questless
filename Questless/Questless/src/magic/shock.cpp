@@ -21,7 +21,7 @@
 
 namespace ql::magic {
 	complete shock::perform_cast(being& caster, gatestone& gatestone, action::cont cont) {
-		return caster.agent().query_tile(queries::tile::shock_target{}, caster.coords, action::tile_in_range_predicate(caster, _range),
+		return caster.agent().query_tile(queries::tile::shock_target{}, caster.coords, action::tile_in_range_predicate(caster, 3_span),
 			[&caster, &gatestone, cont = std::move(cont)](std::optional<region_tile::point> opt_tile_coords) {
 				if (!opt_tile_coords) {
 					return cont(action::result::aborted);
@@ -32,27 +32,25 @@ namespace ql::magic {
 						if (!opt_magnitude) {
 							return cont(action::result::aborted);
 						}
-						double magnitude = *opt_magnitude;
-						return charge_cost{gatestone, _cost_factor * magnitude * log2(magnitude + _cost_log)}.check_and_incur(caster,
-							[&caster, &gatestone, cont = std::move(cont), tile_coords, magnitude] {
+						dmg::shock damage{*opt_magnitude};
+						constexpr auto cost_factor = 0.2_mp / 1.0_shock / 1.0_shock;
+						return charge_cost{gatestone, cost_factor * damage * damage}.check_and_incur(caster,
+							[&caster, &gatestone, cont = std::move(cont), tile_coords, damage] {
 								return caster.agent().get_shock_quality(tile_coords,
-									[&caster, &gatestone, cont = std::move(cont), tile_coords, magnitude](double quality) {
+									[&caster, &gatestone, cont = std::move(cont), tile_coords, damage](double quality) {
 										caster.region->add_effect(smake<lightning_bolt_effect>(tile_coords));
 										if (being* target = caster.region->being_at(tile_coords)) {
-											double shock_magnitude = magnitude * quality;
-
 											//! @todo Experimental body part stuff here... Delete or fix.
 
 											// Pick a random strike path from the root to a leaf part.
 											body_part* part = &target->body.root();
 											std::vector<body_part*> struck_parts{part};
-											while (!part->attachments().empty()) {
-												auto& attachments = part->attachments();
-												part = attachments[uniform(std::size_t{0}, attachments.size() - 1)]->part.get();
+											while (!part->attachments.empty()) {
+												part = &*part->attachments[uniform(std::size_t{0}, part->attachments.size() - 1)]->part;
 												struck_parts.push_back(part);
 											}
 											for (auto struck_part : struck_parts) {
-												dmg::group shock = dmg::shock{shock_magnitude * uniform(0.5, 1.5) * part->vitality.value / (4.0 * struck_parts.size())};
+												dmg::group shock = damage * quality * uniform(0.5, 1.5) * part->stats.a.vitality.value() / (4.0_hp * struck_parts.size());
 												struck_part->take_damage(shock, caster.id);
 											}
 										}

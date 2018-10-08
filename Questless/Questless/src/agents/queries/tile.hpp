@@ -4,10 +4,12 @@
 
 #pragma once
 
+#include "utility/quantities.hpp"
+
 #include <variant>
 
 namespace ql::queries::tile {
-	struct ranged_attack_target { int range; };
+	struct ranged_attack_target { span range; };
 	struct shock_target {};
 	struct teleport_target {};
 

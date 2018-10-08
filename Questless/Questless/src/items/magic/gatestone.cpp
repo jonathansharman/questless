@@ -14,7 +14,7 @@ namespace ql {
 	std::vector<uptr<action>> gatestone::actions() {
 		std::vector<uptr<action>> actions;
 		if (equipped()) {
-			if (_cooldown == 0.0) {
+			if (_cooldown == 0_tick) {
 				actions.push_back(incant::make(*this));
 			}
 			actions.push_back(unequip::make(*this));
@@ -26,12 +26,12 @@ namespace ql {
 		return actions;
 	}
 
-	void gatestone::update() {
-		_cooldown -= 1.0;
+	void gatestone::update(tick elapsed) {
+		_cooldown -= elapsed;
 
 		// Charge over time.
-		constexpr double recharge_per_turn = 1.0;
-		charge += recharge_per_turn; //! @todo Should recharge rate be a fixed amount or a percentage of capacity?
+		constexpr auto recharge_per_tick = 1.0_mp / 1_tick;
+		charge += recharge_per_tick * elapsed; //! @todo Should recharge rate be a fixed amount or a percentage of capacity?
 	}
 
 	complete gatestone::incant::perform(being& incanter, action::cont cont) {
@@ -45,7 +45,7 @@ namespace ql {
 				return incanter.agent().incant(*gatestone, [this, &incanter, gatestone, cont = std::move(cont)](uptr<magic::spell> spell) {
 					if (spell) {
 						// Incanter successfully incanted a spell. Cast it after the incantation delay.
-						double const incant_time = spell->incant_time(incanter);
+						tick const incant_time = spell->incant_time(incanter);
 						return incanter.add_delayed_action(incant_time, std::move(cont), magic::spell::cast(std::move(spell), gatestone->id));
 					} else {
 						// Incanter failed to incant a spell.

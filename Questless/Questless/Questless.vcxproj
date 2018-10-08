@@ -128,15 +128,15 @@
     <Import Project="library-paths.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(TYPE_SAFE_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Temp|Win32'">
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(TYPE_SAFE_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(TYPE_SAFE_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -152,7 +152,7 @@
     <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(TYPE_SAFE_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -422,7 +422,6 @@
     <ClInclude Include="src\entities\beings\statuses\nauseated.hpp" />
     <ClInclude Include="src\entities\beings\statuses\numb.hpp" />
     <ClInclude Include="src\entities\beings\statuses\poisoned.hpp" />
-    <ClInclude Include="src\entities\beings\statuses\sleeping.hpp" />
     <ClInclude Include="src\entities\beings\statuses\status.hpp" />
     <ClInclude Include="src\entities\beings\world_view.hpp" />
     <ClInclude Include="src\entities\entity.hpp" />
@@ -473,6 +472,7 @@
     <ClInclude Include="src\ui\qte\shock.hpp" />
     <ClInclude Include="src\ui\tile_dialog.hpp" />
     <ClInclude Include="src\ui\vector_dialog.hpp" />
+    <ClInclude Include="src\utility\bounded.hpp" />
     <ClInclude Include="src\utility\cache.hpp" />
     <ClInclude Include="src\utility\complete.hpp" />
     <ClInclude Include="src\utility\container_view.hpp" />
@@ -550,7 +550,6 @@
     <ClCompile Include="src\entities\beings\stats\vision.cpp" />
     <ClCompile Include="src\entities\beings\statuses\healing.cpp" />
     <ClCompile Include="src\entities\beings\statuses\poisoned.cpp" />
-    <ClCompile Include="src\entities\beings\statuses\sleeping.cpp" />
     <ClCompile Include="src\entities\beings\statuses\status.cpp" />
     <ClCompile Include="src\entities\beings\world_view.cpp" />
     <ClCompile Include="src\entities\entity.cpp" />
@@ -558,7 +557,6 @@
     <ClCompile Include="src\entities\objects\object.cpp" />
     <ClCompile Include="src\game.cpp" />
     <ClCompile Include="src\items\armor\armor.cpp" />
-    <ClCompile Include="src\items\breakable.cpp" />
     <ClCompile Include="src\items\equipment.cpp" />
     <ClCompile Include="src\items\inventory.cpp" />
     <ClCompile Include="src\items\item.cpp" />

@@ -102,6 +102,12 @@ namespace units {
 				static_assert(sizeof...(args) == n - 1, "All components of an angle must be initialized.");
 			}
 
+			template <typename Archive>
+			void save(Archive& archive) const { archive(_components); }
+
+			template <typename Archive>
+			void load(Archive& archive) { archive(_components); }
+
 			constexpr angle& operator =(angle const&) & = default;
 			constexpr angle& operator =(angle&&) & = default;
 
@@ -110,13 +116,6 @@ namespace units {
 
 			constexpr scalar& operator [](std::size_t index) { return _components[index]; }
 			constexpr scalar operator [](std::size_t index) const { return _components[index]; }
-
-			friend std::ostream& operator <<(std::ostream& out, angle const& phi) {
-				for (angle component : phi._components) {
-					out << component << ' ';
-				}
-				return out;
-			}
 
 			//! phi1 < phi2 iff phi1[i] < phi2[i] for all i in [0, n - 1).
 			constexpr friend bool operator <(angle const& lhs, angle const& rhs) {
@@ -292,6 +291,12 @@ namespace units {
 				}
 			}
 
+			template <typename Archive>
+			void save(Archive& archive) const { archive(this->_elements); }
+
+			template <typename Archive>
+			void load(Archive& archive) { archive(this->_elements); }
+
 			vector& operator =(vector const&) & = default;
 			vector& operator =(vector&&) & = default;
 
@@ -300,15 +305,6 @@ namespace units {
 
 			constexpr scalar& operator [](std::size_t index) { return this->_elements[index]; }
 			constexpr scalar operator [](std::size_t index) const { return this->_elements[index]; }
-
-			friend std::ostream& operator <<(std::ostream& out, vector const& v) {
-				out << '(';
-				for (std::size_t i = 0; i < v._elements.size() - 1; ++i) {
-					out << v[i] << ", ";
-				}
-				out << v._elements.back() << ')';
-				return out;
-			}
 
 			bool operator ==(vector const& that) const { return this->_elements == that._elements; }
 			bool operator !=(vector const& that) const { return this->_elements != that._elements; }
@@ -466,14 +462,11 @@ namespace units {
 			constexpr scalar& operator [](std::size_t index) { return this->_elements[index]; }
 			constexpr scalar operator [](std::size_t index) const { return this->_elements[index]; }
 
-			friend std::ostream& operator <<(std::ostream& out, point const& p) {
-				out << '(';
-				for (std::size_t i = 0; i < n - 1; ++i) {
-					out << p[i] << ", ";
-				}
-				out << p[n - 1] << ')';
-				return out;
-			}
+			template <typename Archive>
+			void save(Archive& archive) const { archive(this->_elements); }
+
+			template <typename Archive>
+			void load(Archive& archive) { archive(this->_elements); }
 
 			constexpr bool operator ==(point const& that) const {
 				for (int i = 0; i < n; ++i) {
@@ -627,13 +620,18 @@ namespace units {
 				, size{std::move(size)}
 			{}
 
+			template <typename Archive>
+			void save(Archive& archive) const {
+				archive(position, size);
+			}
+
+			template <typename Archive>
+			void load(Archive& archive) {
+				archive(position, size);
+			}
+
 			box& operator =(box const&) & = default;
 			box& operator =(box&&) & = default;
-
-			friend std::ostream& operator <<(std::ostream& out, box const& box) {
-				out << '(' << box.origin << ", " << box.size << ')';
-				return out;
-			}
 
 			constexpr friend bool operator ==(box const& left, box const& right) {
 				return left.origin == right.origin && left.size == right.size;
@@ -719,13 +717,18 @@ namespace units {
 				, radius{std::move(radius)}
 			{}
 
+			template <typename Archive>
+			void save(Archive& archive) const {
+				archive(center, radius);
+			}
+
+			template <typename Archive>
+			void load(Archive& archive) {
+				archive(center, radius);
+			}
+
 			sphere& operator =(sphere const&) & = default;
 			sphere& operator =(sphere&&) & = default;
-
-			friend std::ostream& operator <<(std::ostream& out, sphere const& sphere) {
-				out << '(' << sphere.center << ", " << box.radius << ')';
-				return out;
-			}
 
 			constexpr friend bool operator ==(sphere const& left, sphere const& right) {
 				return left.center == right.center && left.radius == right.radius;

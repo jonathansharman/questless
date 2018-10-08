@@ -14,13 +14,13 @@ namespace ql::magic {
 
 		magic::color color() const final { return color::yellow; }
 
-		double cooldown() const final { return 15.0; }
+		tick cooldown() const final { return 15_tick; }
 	private:
-		static constexpr double _cost_factor = 5.0;
-		static constexpr int _range = 15;
+		static constexpr auto _cost_factor = 5.0_mp / 1_span;
+		static constexpr span _range = 15_span;
 
 		complete perform_cast(being& caster, gatestone& gatestone, action::cont cont) final;
 
-		double base_incant_time() const final { return 20.0; }
+		tick base_incant_time() const final { return 20_tick; }
 	};
 }

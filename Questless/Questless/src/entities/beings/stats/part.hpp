@@ -8,7 +8,8 @@
 
 #include "damage/protect.hpp"
 #include "damage/multiplier.hpp"
-#include "utility/io.hpp"
+
+#include <cereal/cereal.hpp>
 
 namespace ql::stats {
 	//! Stats belonging only to a particular body part.
@@ -36,24 +37,27 @@ namespace ql::stats {
 			, resist{resist}
 			, vuln{vuln}
 		{}
+
+		template <typename Archive>
+		void save(Archive& archive) const {
+			archive
+				( CEREAL_NVP(a)
+				, CEREAL_NVP(dexterity)
+				, CEREAL_NVP(protect)
+				, CEREAL_NVP(resist)
+				, CEREAL_NVP(vuln)
+				);
+		}
+
+		template <typename Archive>
+		void load(Archive& archive) {
+			archive
+				( CEREAL_NVP(a)
+				, CEREAL_NVP(dexterity)
+				, CEREAL_NVP(protect)
+				, CEREAL_NVP(resist)
+				, CEREAL_NVP(vuln)
+				);
+		}
 	};
-
-	void to_json(nlohmann::json& j, part const& part) {
-		to_json(j["a"], part.a);
-		if (part.dexterity != dexterity{0.0}) to_json(j["dexterity"], part.dexterity);
-		to_json(j["protect"], part.protect);
-		to_json(j["resist"], part.resist);
-		to_json(j["vuln"], part.vuln);
-	}
-
-	void from_json(nlohmann::json const& j, part& part) {
-		from_json(j["a"], part.a);
-
-		auto dexterity = j.find("dexterity");
-		if (dexterity != j.end()) from_json(dexterity.value(), part.dexterity);
-		
-		from_json(j["protect"], part.protect);
-		from_json(j["resist"], part.resist);
-		from_json(j["vuln"], part.vuln);
-	}
 }

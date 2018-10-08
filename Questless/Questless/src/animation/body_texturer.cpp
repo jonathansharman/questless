@@ -18,7 +18,7 @@ using namespace units;
 namespace ql {
 	namespace {
 		colors::color get_color(ql::body_part const& part) {
-			double const pct_health = part.health.value() / part.stats.a.vitality.value();
+			double const pct_health = (part.health.value() / part.stats.a.vitality.value()).value;
 			constexpr auto threshold = 0.5;
 			bool const below_threshold = pct_health < threshold;
 			float const red = below_threshold

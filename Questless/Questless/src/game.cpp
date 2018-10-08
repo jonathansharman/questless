@@ -431,7 +431,7 @@ namespace ql {
 							}
 							player_being->inventory.add(items.add(umake<quiver>(std::move(inventory))).id);
 						}
-						player_being->inventory.add(items.add(umake<gatestone>(100.0, 100.0, 0.0, magic::color::green)).id);
+						player_being->inventory.add(items.add(umake<gatestone>(100.0_mp, 100.0_mp, 0_tick, magic::color::green)).id);
 						_region->spawn_player(move(player_being));
 					}
 					// Create the HUD and pass the player's being ID to it.
@@ -464,7 +464,7 @@ namespace ql {
 		if (the_input().pressed(mouse_button::right)) {
 			_point_clicked_rounded = to_world(_camera->tile_hovered());
 		}
-		_camera->draw(*_txt_hex_highlight, to_world(_camera->tile_hovered()), origin{texture_space::vector::zero()}, colors::white_vector(0.5f));
+		_camera->draw(*_txt_hex_highlight, to_world(_camera->tile_hovered()), texture_space::vector::zero(), colors::white_vector(0.5f));
 		_camera->draw(*_txt_hex_circle, _point_clicked_rounded);
 
 		_world_renderer->draw_entities();
@@ -490,13 +490,13 @@ namespace ql {
 		{ // Draw camera hex position.
 			auto cam_hex_coords = to_region_tile(_camera->position());
 			std::ostringstream ss_cam_hex_coords;
-			ss_cam_hex_coords << "Cam hex: (" << cam_hex_coords.q << ", " << cam_hex_coords.r << ")";
+			ss_cam_hex_coords << "Cam hex: (" << cam_hex_coords.q.value << ", " << cam_hex_coords.r.value << ")";
 			texture txt_cam_hex_coords = _fnt_20pt->render(ss_cam_hex_coords.str().c_str(), colors::white());
 			txt_cam_hex_coords.draw(window_space::point{0, 25});
 		}
 		{ // Draw time.
 			std::ostringstream ss_time;
-			double const time_of_day = _region->time_of_day();
+			tick const time_of_day = _region->time_of_day();
 			std::string time_name;
 			switch (_region->period_of_day()) {
 				case period_of_day::morning:
@@ -518,7 +518,7 @@ namespace ql {
 					time_name = "Dawn";
 					break;
 			}
-			ss_time << "Time: " << _region->time() << " (" << time_of_day << ", " << time_name << ')';
+			ss_time << "Time: " << _region->time().value << " (" << time_of_day.value << ", " << time_name << ')';
 			texture txt_turn = _fnt_20pt->render(ss_time.str().c_str(), colors::white());
 			txt_turn.draw(window_space::point{0, 50});
 		}
@@ -608,6 +608,8 @@ namespace ql {
 	}
 
 	game::update_result game::update_playing() {
+		constexpr tick ticks_per_turn = 10_tick;
+
 		// Update camera.
 		_camera->update();
 
@@ -649,7 +651,7 @@ namespace ql {
 			}
 			if (!_player_action_dialog && _dialogs.empty()) {
 				// Update the region.
-				_region->update();
+				_region->update(ticks_per_turn);
 				// Update the player view after each time unit passes.
 				update_player_view();
 			}

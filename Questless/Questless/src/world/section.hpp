@@ -57,8 +57,8 @@ namespace ql {
 			, light_source_id_to_cref
 			>;
 
-		static constexpr int radius = 10;
-		static constexpr int diameter = 2 * radius + 1;
+		static constexpr span radius = 10_span;
+		static constexpr span diameter = 2 * radius + 1_span;
 
 		//! The coordinates of the section that contains the tile at @p region_tile_coords.
 		static region_section::point region_section_coords(region_tile::point region_tile_coords);
@@ -66,8 +66,8 @@ namespace ql {
 		//! The coordinates of @p region_tile_coords relative to the section that contains them.
 		static section_tile::point section_tile_coords(region_tile::point region_tile_coords) {
 			return section_tile::point
-				{ ((region_tile_coords.q + section::radius) % section::diameter + section::diameter) % section::diameter
-				, ((region_tile_coords.r + section::radius) % section::diameter + section::diameter) % section::diameter
+				{ ((region_tile_coords.q + section::radius) % section::diameter.value + section::diameter) % section::diameter.value
+				, ((region_tile_coords.r + section::radius) % section::diameter.value + section::diameter) % section::diameter.value
 				};
 		}
 
@@ -128,8 +128,8 @@ namespace ql {
 
 		//! Region tile coordinates from @p region_section_coords and @p section_tile_coords.
 		static region_tile::point region_tile_coords(region_section::point region_section_coords, section_tile::point section_tile_coords) {
-			int q = region_section_coords.q * diameter + section_tile_coords.q - radius;
-			int r = region_section_coords.r * diameter + section_tile_coords.r - radius;
+			span q = region_section_coords.q.value * diameter + section_tile_coords.q - radius;
+			span r = region_section_coords.r.value * diameter + section_tile_coords.r - radius;
 			return region_tile::point{q, r};
 		}
 
@@ -140,15 +140,15 @@ namespace ql {
 
 		//! The tile at @p section_tile_coords in this section.
 		ql::tile const& tile_at(section_tile::point section_tile_coords) const {
-			return *_tiles[section_tile_coords.q][section_tile_coords.r];
+			return *_tiles[section_tile_coords.q.value][section_tile_coords.r.value];
 		}
 		//! The tile at @p section_tile_coords in this section.
 		ql::tile& tile_at(section_tile::point section_tile_coords) {
-			return *_tiles[section_tile_coords.q][section_tile_coords.r];
+			return *_tiles[section_tile_coords.q.value][section_tile_coords.r.value];
 		}
 	private:
 		//! A q-major array of tiles, representing a rhomboid section of world data centered around the section's hex coordinates.
-		std::array<std::array<uptr<ql::tile>, diameter>, diameter> _tiles;
+		std::array<std::array<uptr<ql::tile>, diameter.value>, diameter.value> _tiles;
 		//! The hex coordinates of the section within the region. The section's center's region tile coordinates are _coords * section_diameter.
 		region_section::point _coords;
 

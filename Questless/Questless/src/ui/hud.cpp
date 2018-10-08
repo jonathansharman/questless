@@ -114,67 +114,35 @@ namespace ql {
 			constexpr int hotbar_slot_h_padding = 5;
 			constexpr int hotbar_slot_v_padding = 5;
 
+			// Draw condition bars.
 			int const screen_bottom = the_window().height() - 1;
-
-			{ // Draw the condition bars.
-				int left = 0;
+			the_renderer().draw_box
+				( window_space::box
+					{ window_space::point{0, screen_bottom}
+					, window_space::vector{condition_bar_width * conditions_count, condition_bar_height}
+					, { window_space::align_left, window_space::align_bottom }
+					}
+				, colors::black()
+				);
+			auto draw_bar = [condition_bar_width, condition_bar_height, screen_bottom, left = 0](double ratio, colors::color const& color) mutable {
 				the_renderer().draw_box
 					( window_space::box
-						{ window_space::point{left, screen_bottom}
-						, window_space::vector{condition_bar_width * conditions_count, condition_bar_height}
+						{ window_space::point{left + 1, screen_bottom}
+						, window_space::vector{condition_bar_width - 2, lround(condition_bar_height * ratio) - 1}
 						, { window_space::align_left, window_space::align_bottom }
 						}
-					, colors::black()
+					, color
 					);
-				{ // Blood.
-					int const blood_bar_height = lround(condition_bar_height * player_being->body.blood / player_being->body.total_vitality());
-					the_renderer().draw_box
-						( window_space::box
-							{ window_space::point{left + 1, screen_bottom}
-							, window_space::vector{condition_bar_width - 2, blood_bar_height - 1}
-							, { window_space::align_left, window_space::align_bottom }
-							}
-						, colors::red()
-						);
-					left += condition_bar_width;
-				}
-				{ // Energy
-					int const energy_bar_height = lround(condition_bar_height * player_being->energy / player_being->stats.stamina);
-					the_renderer().draw_box
-						( window_space::box
-							{ window_space::point{left + 1, screen_bottom}
-							, window_space::vector{condition_bar_width - 2, energy_bar_height - 1}
-							, { window_space::align_left, window_space::align_bottom }
-							}
-						, colors::cyan()
-						);
-					left += condition_bar_width;
-				}
-				{ // Satiety
-					int const satiety_bar_height = lround(condition_bar_height * player_being->satiety / being::max_satiety);
-					the_renderer().draw_box
-						( window_space::box
-							{ window_space::point{left + 1, screen_bottom}
-							, window_space::vector{condition_bar_width - 2, satiety_bar_height - 1}
-							, { window_space::align_left, window_space::align_bottom }
-							}
-						, colors::brown()
-						);
-					left += condition_bar_width;
-				}
-				{ // Alertness
-					int const alertness_bar_height = lround(condition_bar_height * player_being->alertness / being::max_alertness);
-					the_renderer().draw_box
-						( window_space::box
-							{ window_space::point{left + 1, screen_bottom}
-							, window_space::vector{condition_bar_width - 2, alertness_bar_height - 1}
-							, { window_space::align_left, window_space::align_bottom }
-							}
-						, colors::yellow()
-						);
-					left += condition_bar_width;
-				}
-			}
+				left += condition_bar_width;
+			};
+			// Blood
+			draw_bar((player_being->body.blood.value() / player_being->body.total_vitality().value() / body_part::blood_per_vitality).value, colors::red());
+			// Energy
+			draw_bar((player_being->energy.value() / player_being->stats.a.stamina.value()).value, colors::cyan());
+			// Satiety
+			draw_bar((player_being->satiety.value() / being::max_satiety).value, colors::brown());
+			// Alertness
+			draw_bar((player_being->alertness.value() / being::max_alertness).value, colors::yellow());
 
 			{ // Draw the body.
 				body_texturer texturer;

@@ -10,17 +10,17 @@ namespace ql {
 	//! Causes a being to gain health over time.
 	class healing : public status {
 	public:
-		//! @param magnitude How powerful the status modifier is.
+		//! @param rate The rate of healing.
 		//! @param duration The number of turns remaining before the status modifier expires.
 		//! @param source_id The ID of the being that caused the status modifier, if any.
-		healing(double magnitude, int duration, std::optional<id<being>> source_id = std::nullopt)
-			: status("Healing", duration, source_id), _magnitude{magnitude}
+		healing(health_per_tick rate, tick duration, std::optional<id<being>> source_id = std::nullopt)
+			: status("Healing", duration, source_id), _rate{rate}
 		{}
 
 		virtual status_type type() const { return status_type::boon; }
 
 		void subupdate(being& target) final;
 	private:
-		double _magnitude;
+		ql::health_per_tick _rate;
 	};
 }

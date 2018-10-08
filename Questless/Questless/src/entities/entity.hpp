@@ -32,8 +32,8 @@ namespace ql {
 		//! The entity's class's enumerated value.
 		virtual entity_subtype entity_subtype() const = 0;
 
-		//! Advances this entity one time unit.
-		virtual void update() = 0;
+		//! Advances this entity in time by @elapsed.
+		virtual void update(tick elapsed) = 0;
 
 		//! The proportion of light or visual information this entity allows through, in the range [0, 1].
 		virtual double transparency() const = 0;

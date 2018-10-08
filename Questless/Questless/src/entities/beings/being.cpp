@@ -16,7 +16,6 @@
 #include "world/region.hpp"
 
 using std::function;
-using namespace nlohmann;
 
 namespace ql {
 	being::being
@@ -34,9 +33,10 @@ namespace ql {
 		, satiety{max_satiety}
 		, alertness{max_alertness}
 		, mood{0.0_mood}
-		, busy_time{0.0_tick}
+		, busy_time{0_tick}
 		, mortality{ql::mortality::alive}
 		, direction{static_cast<region_tile::direction>(uniform(1, 6))}
+		, awake{true}
 		, corporeal{true}
 		, _agent{make_agent(*this)}
 	{
@@ -49,44 +49,44 @@ namespace ql {
 
 	stats::being being::load_stats(char const* filepath) {
 		stats::being result;
-		from_json(json::parse(contents_of_file(filepath)), result);
+		load_from_json(filepath, result);
 		return result;
 	}
 
 	being::~being() = default;
 
-	perception being::perception_of(region_tile::point region_tile_coords) const {
+	perception::level being::perception_of(region_tile::point region_tile_coords) const {
 		bool in_front = false;
 		auto offset = region_tile_coords - coords;
 		switch (direction) {
 			case region_tile::direction::one:
-				in_front = offset.q >= 0 && offset.q + offset.r >= 0;
+				in_front = offset.q >= 0_span && offset.q + offset.r >= 0_span;
 				break;
 			case region_tile::direction::two:
-				in_front = offset.r >= 0 && offset.q + offset.r >= 0;
+				in_front = offset.r >= 0_span && offset.q + offset.r >= 0_span;
 				break;
 			case region_tile::direction::three:
-				in_front = offset.q <= 0 && offset.r >= 0;
+				in_front = offset.q <= 0_span && offset.r >= 0_span;
 				break;
 			case region_tile::direction::four:
-				in_front = offset.q <= 0 && offset.q + offset.r <= 0;
+				in_front = offset.q <= 0_span && offset.q + offset.r <= 0_span;
 				break;
 			case region_tile::direction::five:
-				in_front = offset.r <= 0 && offset.q + offset.r <= 0;
+				in_front = offset.r <= 0_span && offset.q + offset.r <= 0_span;
 				break;
 			case region_tile::direction::six:
-				in_front = offset.q >= 0 && offset.r <= 0;
+				in_front = offset.q >= 0_span && offset.r <= 0_span;
 				break;
 			default:
 				assert(false && "Invalid direction.");
 		}
 		if (in_front && (region_tile_coords - coords).length() <= stats.a.vision.max_range()) {
 			auto const illuminance = region->illuminance(region_tile_coords);
-			int const distance = (region_tile_coords - coords).length();
+			span const distance{(region_tile_coords - coords).length()};
 			double const occlusion = region->occlusion(coords, region_tile_coords);
-			return stats.a.vision.visibility(illuminance, distance) * occlusion;
+			return stats.a.vision.perception(illuminance, distance, occlusion);
 		} else {
-			return 0.0;
+			return 0.0_perception;
 		}
 	}
 
@@ -109,7 +109,7 @@ namespace ql {
 		}
 	}
 
-	complete being::add_delayed_action(ticks delay, action::cont cont, uptr<action> action) {
+	complete being::add_delayed_action(tick delay, action::cont cont, uptr<action> action) {
 		// If there are no enqueued delayed actions, just incur the delay immediately instead of enqueueing it.
 		if (_delayed_actions.empty()) {
 			busy_time += delay;
@@ -125,34 +125,36 @@ namespace ql {
 		_delayed_actions.clear();
 	}
 
-	void being::update() {
+	void being::update(tick elapsed) {
 		refresh_stats();
 		
 		// Update status modifiers.
 		for (auto& status : _statuses) {
-			status->update(*this);
+			status->update(*this, elapsed);
 		}
 		// Remove expired status modifiers.
-		erase_if(_statuses, [](auto const& status) { return status->duration() == 0; });
+		erase_if(_statuses, [](auto const& status) { return status->duration() == 0_tick; });
 
 		// Update conditions.
-		satiety += satiety_rate * 1.0_tick;
-		energy += energy_rate * 1.0_tick;
-		alertness += alertness_rate * 1.0_tick;
-		busy_time -= 1.0_tick;
+		satiety -= (awake.value ? 0.05_sat : 0.025_sat) / 1_tick * elapsed;
+		energy += (awake.value ? 1.0_ep : 3.0_ep) / 1_tick * elapsed;
+		alertness += (awake.value ? -0.1_alert : 0.2_alert) / 1_tick * elapsed;
+		busy_time -= elapsed;
 
 		// Update body.
-		body.update();
+		body.update(elapsed);
 
 		{ // Handle temperature damage.
+			constexpr auto temperature_burn_rate = 1.0_burn / 1.0_temp / 1_tick;
+			constexpr auto temperature_freeze_rate = 1.0_freeze / 1.0_temp / 1_tick;
 			auto const temp = region->temperature(coords);
 			if (temp > stats.max_temp) {
-				dmg::group burn = (temp - stats.max_temp) * temperature_burn_factor;
+				dmg::group burn = (temp - stats.max_temp) * temperature_burn_rate * elapsed;
 				for (body_part& part : body.parts()) {
 					take_damage(burn, part, std::nullopt);
 				}
 			} else if (temp < stats.min_temp) {
-				dmg::group freeze = (stats.min_temp - temp) * temperature_freeze_factor;
+				dmg::group freeze = (stats.min_temp - temp) * temperature_freeze_rate * elapsed;
 				for (body_part& part : body.parts()) {
 					take_damage(freeze, part, std::nullopt);
 				}
@@ -164,22 +166,22 @@ namespace ql {
 			constexpr double stage_2_max = 0.3;
 			constexpr double stage_3_max = 0.4;
 
-			double const pct_blood_lost = 1.0 - body.blood.value() / body.total_vitality().value() / body_part::blood_per_vitality;
+			double const pct_blood_lost = 1.0 - (body.blood.value() / body.total_vitality().value() / body_part::blood_per_vitality).value;
 
 			// No effects for stage 1 blood loss.
 			if (pct_blood_lost > stage_1_max) {
 				// Stage 2: anxiety
 
 				// Mood loss as a factor of stage-2 blood loss.
-				constexpr auto mood_loss_factor = 1.0_mood;
-				mood -= (pct_blood_lost - stage_1_max) / (1.0 - stage_1_max) * mood_loss_factor;
+				constexpr auto mood_loss_rate = 1.0_mood / 1_tick;
+				mood -= (pct_blood_lost - stage_1_max) / (1.0 - stage_1_max) * mood_loss_rate * elapsed;
 			}
 			if (pct_blood_lost > stage_2_max) {
 				// Stage 3: confusion
 				
 				// Intellect loss as a factor of stage-3 blood loss.
-				constexpr auto intellect_loss_factor = 50.0_int;
-				stats.a.intellect -= (pct_blood_lost - stage_2_max) / (1.0 - stage_2_max) * intellect_loss_factor;
+				constexpr auto intellect_loss_rate = 50.0_int / 1_tick;
+				stats.a.intellect -= (pct_blood_lost - stage_2_max) / (1.0 - stage_2_max) * intellect_loss_rate * elapsed;
 			}
 			if (pct_blood_lost > stage_3_max) {
 				// Stage 4: lethargy, loss of consciousness, damage
@@ -187,17 +189,17 @@ namespace ql {
 				double const pct_stage_4_blood_lost = (pct_blood_lost - stage_3_max) / (1.0 - stage_3_max);
 
 				// Energy loss as a factor of stage-4 blood loss.
-				constexpr auto energy_loss_factor = 1.0_ep;
-				energy -= pct_stage_4_blood_lost * energy_loss_factor;
+				constexpr auto energy_loss_rate = 1.0_ep / 1_tick;
+				energy -= pct_stage_4_blood_lost * energy_loss_rate * elapsed;
 
 				// Alertness loss as a factor of stage-4 blood loss.
-				constexpr auto alertness_loss_factor = 1.0_alert;
-				alertness -= pct_stage_4_blood_lost * alertness_loss_factor;
+				constexpr auto alertness_loss_rate = 1.0_alert / 1_tick;
+				alertness -= pct_stage_4_blood_lost * alertness_loss_rate * elapsed;
 
 				// Percent of each part's vitality dealt to it as blight damage as a factor of stage-4 blood loss.
-				constexpr auto damage_factor = 0.1_blight / 1.0_hp;
+				constexpr auto damage_rate = 0.1_blight / 1.0_hp / 1_tick;
 				for (body_part& part : body.parts()) {
-					dmg::group blight = part.stats.a.vitality.value() * pct_stage_4_blood_lost * damage_factor;
+					dmg::group blight = part.stats.a.vitality.value() * pct_stage_4_blood_lost * damage_rate * elapsed;
 					part.take_damage(blight, std::nullopt);
 				}
 			}
@@ -205,7 +207,7 @@ namespace ql {
 
 		// Update items.
 		for (item& item : inventory.items) {
-			item.update();
+			item.update(elapsed);
 		}
 	}
 
@@ -277,7 +279,7 @@ namespace ql {
 		}
 
 		// Part loses health.
-		target_part.health -= damage.health_loss() / (1.0 + stats.toughness.value() / 100.0_tgh);
+		target_part.health -= damage.health_loss() / (1.0 + (stats.toughness.value() / 100.0_tgh).value);
 
 		// Check for part disability.
 		if (target_part.health.value() <= 0.0_hp) {
@@ -371,29 +373,32 @@ namespace ql {
 
 		// Apply status stat modifiers after body part modifiers.
 		for (auto const& status : _statuses) {
-			stats::modifier::apply_all(status->modifiers(), result);
+			stats::apply_all(status->modifiers(), result);
 		}
 
 		// Apply condition effects.
 
-		double pct_weary = 1.0 - energy.value() / result.a.stamina.value();
-		result.a.strength -= pct_weary * energy_strength_penalty * base_stats.a.strength;
-		result.toughness -= pct_weary * energy_endurance_penalty * base_stats.toughness;
-
-		double pct_sleepy = 1.0 - alertness.value() / max_alertness;
-		result.a.agility -= pct_sleepy * alertness_agility_penalty * base_stats.a.agility;
-		//! @todo How to apply sleepy penalty to body part dexterities?
-		//result.dexterity -= pct_sleepy * alertness_dexterity_penalty * base_stats.dexterity;
-		result.a.intellect -= pct_sleepy * alertness_intellect_penalty * base_stats.a.intellect;
-
-		double pct_hungry = 1.0 - satiety.value() / max_satiety;
-		result.regen -= pct_hungry * satiety_regen_penalty * base_stats.regen.value();
+		if (weary()) {
+			result.a.strength *= 0.5;
+			result.toughness *= 0.5;
+		}
+		if (sleepy()) {
+			result.a.agility *= 0.5;
+			//! @todo How to apply sleepy penalty to body part dexterities?
+			//result.dexterity *= 0.5;
+			result.a.intellect *= 0.75;
+		}
+		if (starving()) {
+			result.regen = 0_per_tick;
+		} else if (hungry()) {
+			result.regen /= 2;
+		}
 
 		return result;
 	}
 
-	std::function<void(ticks&, ticks const&)> being::busy_time_mutator() {
-		return [this](ticks& busy_time, ticks const& new_busy_time) {
+	std::function<void(tick&, tick const&)> being::busy_time_mutator() {
+		return [this](tick& busy_time, tick const& new_busy_time) {
 			this->region->remove_from_turn_queue(*this);
 			busy_time = new_busy_time;
 			this->region->add_to_turn_queue(*this);

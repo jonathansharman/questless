@@ -6,9 +6,10 @@
 
 #include "damage.hpp"
 
-#include "utility/io.hpp"
 #include "utility/nonnegative.hpp"
 #include "utility/utility.hpp"
+
+#include <cereal/cereal.hpp>
 
 namespace ql::dmg {
 	//! Base type for resist and vuln, using CRTP.
@@ -172,93 +173,71 @@ namespace ql::dmg {
 	class resist : public multiplier<resist> {
 	public:
 		using multiplier<resist>::multiplier;
+
+		template <typename Archive>
+		void save(Archive& archive) const {
+			archive
+				( CEREAL_NVP(slash)
+				, CEREAL_NVP(pierce)
+				, CEREAL_NVP(cleave)
+				, CEREAL_NVP(bludgeon)
+				, CEREAL_NVP(burn)
+				, CEREAL_NVP(freeze)
+				, CEREAL_NVP(blight)
+				, CEREAL_NVP(poison)
+				, CEREAL_NVP(shock)
+				);
+		}
+
+		template <typename Archive>
+		void load(Archive& archive) {
+			archive
+				( CEREAL_NVP(slash)
+				, CEREAL_NVP(pierce)
+				, CEREAL_NVP(cleave)
+				, CEREAL_NVP(bludgeon)
+				, CEREAL_NVP(burn)
+				, CEREAL_NVP(freeze)
+				, CEREAL_NVP(blight)
+				, CEREAL_NVP(poison)
+				, CEREAL_NVP(shock)
+				);
+		}
 	};
 
 	//! Increases the percentage of damage taken.
 	class vuln : public multiplier<vuln> {
 	public:
 		using multiplier<vuln>::multiplier;
+
+		template <typename Archive>
+		void save(Archive& archive) const {
+			archive
+				( CEREAL_NVP(slash)
+				, CEREAL_NVP(pierce)
+				, CEREAL_NVP(cleave)
+				, CEREAL_NVP(bludgeon)
+				, CEREAL_NVP(burn)
+				, CEREAL_NVP(freeze)
+				, CEREAL_NVP(blight)
+				, CEREAL_NVP(poison)
+				, CEREAL_NVP(shock)
+				);
+		}
+
+		template <typename Archive>
+		void load(Archive& archive) {
+			archive
+				( CEREAL_NVP(slash)
+				, CEREAL_NVP(pierce)
+				, CEREAL_NVP(cleave)
+				, CEREAL_NVP(bludgeon)
+				, CEREAL_NVP(burn)
+				, CEREAL_NVP(freeze)
+				, CEREAL_NVP(blight)
+				, CEREAL_NVP(poison)
+				, CEREAL_NVP(shock)
+				);
+		}
 	};
-
-	void to_json(nlohmann::json& j, resist const& resist) {
-		if (resist.slash != 0.0_slash_factor) to_json(j["slash"], resist.slash);
-		if (resist.pierce != 0.0_pierce_factor) to_json(j["pierce"], resist.pierce);
-		if (resist.cleave != 0.0_cleave_factor) to_json(j["cleave"], resist.cleave);
-		if (resist.bludgeon != 0.0_bludgeon_factor) to_json(j["bludgeon"], resist.bludgeon);
-		if (resist.burn != 0.0_burn_factor) to_json(j["burn"], resist.burn);
-		if (resist.freeze != 0.0_freeze_factor) to_json(j["freeze"], resist.freeze);
-		if (resist.blight != 0.0_blight_factor) to_json(j["blight"], resist.blight);
-		if (resist.poison != 0.0_poison_factor) to_json(j["poison"], resist.poison);
-		if (resist.shock != 0.0_shock_factor) to_json(j["shock"], resist.shock);
-	}
-
-	void from_json(nlohmann::json const& j, resist& resist) {
-		auto const slash = j.find("slash");
-		if (slash != j.end()) from_json(slash.value(), resist.slash);
-
-		auto const pierce = j.find("pierce");
-		if (pierce != j.end()) from_json(pierce.value(), resist.pierce);
-
-		auto const cleave = j.find("cleave");
-		if (cleave != j.end()) from_json(cleave.value(), resist.cleave);
-
-		auto const bludgeon = j.find("bludgeon");
-		if (bludgeon != j.end()) from_json(bludgeon.value(), resist.bludgeon);
-
-		auto const burn = j.find("burn");
-		if (burn != j.end()) from_json(burn.value(), resist.burn);
-
-		auto const freeze = j.find("freeze");
-		if (freeze != j.end()) from_json(freeze.value(), resist.freeze);
-
-		auto const blight = j.find("blight");
-		if (blight != j.end()) from_json(blight.value(), resist.blight);
-
-		auto const poison = j.find("poison");
-		if (poison != j.end()) from_json(poison.value(), resist.poison);
-
-		auto const shock = j.find("shock");
-		if (shock != j.end()) from_json(shock.value(), resist.shock);
-	}
-
-	void to_json(nlohmann::json& j, vuln const& vuln) {
-		if (vuln.slash != 0.0_slash_factor) to_json(j["slash"], vuln.slash);
-		if (vuln.pierce != 0.0_pierce_factor) to_json(j["pierce"], vuln.pierce);
-		if (vuln.cleave != 0.0_cleave_factor) to_json(j["cleave"], vuln.cleave);
-		if (vuln.bludgeon != 0.0_bludgeon_factor) to_json(j["bludgeon"], vuln.bludgeon);
-		if (vuln.burn != 0.0_burn_factor) to_json(j["burn"], vuln.burn);
-		if (vuln.freeze != 0.0_freeze_factor) to_json(j["freeze"], vuln.freeze);
-		if (vuln.blight != 0.0_blight_factor) to_json(j["blight"], vuln.blight);
-		if (vuln.poison != 0.0_poison_factor) to_json(j["poison"], vuln.poison);
-		if (vuln.shock != 0.0_shock_factor) to_json(j["shock"], vuln.shock);
-	}
-
-	void from_json(nlohmann::json const& j, vuln& vuln) {
-		auto const slash = j.find("slash");
-		if (slash != j.end()) from_json(slash.value(), vuln.slash);
-
-		auto const pierce = j.find("pierce");
-		if (pierce != j.end()) from_json(pierce.value(), vuln.pierce);
-
-		auto const cleave = j.find("cleave");
-		if (cleave != j.end()) from_json(cleave.value(), vuln.cleave);
-
-		auto const bludgeon = j.find("bludgeon");
-		if (bludgeon != j.end()) from_json(bludgeon.value(), vuln.bludgeon);
-
-		auto const burn = j.find("burn");
-		if (burn != j.end()) from_json(burn.value(), vuln.burn);
-
-		auto const freeze = j.find("freeze");
-		if (freeze != j.end()) from_json(freeze.value(), vuln.freeze);
-
-		auto const blight = j.find("blight");
-		if (blight != j.end()) from_json(blight.value(), vuln.blight);
-
-		auto const poison = j.find("poison");
-		if (poison != j.end()) from_json(poison.value(), vuln.poison);
-
-		auto const shock = j.find("shock");
-		if (shock != j.end()) from_json(shock.value(), vuln.shock);
-	}
 }

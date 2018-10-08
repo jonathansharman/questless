@@ -10,6 +10,8 @@
 #include "game_space.hpp"
 #include "math.hpp"
 
+#include "meta/quantity.hpp"
+
 #include <algorithm>
 #include <cassert> //! @todo Remove when contracts available.
 #include <exception>
@@ -17,8 +19,12 @@
 
 namespace units {
 	//! A hexagonal space.
-	template <typename Tag>
+	//! @tparam LengthQuantity A quantity type representing a distance in this hex space.
+	template <typename Tag, typename DistanceQuantity>
 	struct hex_space {
+		//! A distance in this space.
+		using dist_t = DistanceQuantity;
+
 		enum class direction : int { one = 1, two, three, four, five, six };
 
 		//! The shortest distance between the two given directions.
@@ -29,26 +35,26 @@ namespace units {
 
 		//! Hexagonal vector type.
 		struct vector {
-			int q;
-			int r;
-			int s;
+			dist_t q;
+			dist_t r;
+			dist_t s;
 
 			//! Unit vector in the given direction.
 			constexpr static vector unit(direction direction) {
 				switch (direction) {
 					default: [[fallthrough]]; // Impossible case.
-					case direction::one:   return vector{ 1,  0};
-					case direction::two:   return vector{ 0,  1};
-					case direction::three: return vector{-1,  1};
-					case direction::four:  return vector{-1,  0};
+					case direction::one:   return vector{1, 0};
+					case direction::two:   return vector{0, 1};
+					case direction::three: return vector{-1, 1};
+					case direction::four:  return vector{-1, 0};
 					case direction::five:  return vector{ 0, -1};
 					case direction::six:   return vector{ 1, -1};
 				};
 			}
 
 			constexpr explicit vector() = default;
-			constexpr explicit vector(int q, int r) : q{q}, r{r}, s{-q - r} {}
-			constexpr explicit vector(int q, int r, int s) : q{q}, r{r}, s{s} {}
+			constexpr explicit vector(dist_t q, dist_t r) : q{q}, r{r}, s{-q - r} {}
+			constexpr explicit vector(dist_t q, dist_t r, dist_t s) : q{q}, r{r}, s{s} {}
 			constexpr explicit vector(double q, double r)
 				: vector{q, r, -q - r}
 			{}
@@ -78,14 +84,14 @@ namespace units {
 
 			friend constexpr vector operator -(vector v1, vector v2) { return vector{v1.q - v2.q, v1.r - v2.r, v1.s - v2.s}; }
 		
-			friend constexpr vector operator *(vector h, int k) { return vector{k * h.q, k * h.r, k * h.s}; }
-			friend constexpr vector operator *(int k, vector h) { return vector{k * h.q, k * h.r, k * h.s}; }
+			friend constexpr vector operator *(vector h, int k) { return vector{k * h.q.value, k * h.r.value, k * h.s.value}; }
+			friend constexpr vector operator *(int k, vector h) { return vector{k * h.q.value, k * h.r.value, k * h.s.value}; }
 
-			friend constexpr vector operator *(vector h, double k) { return vector{k * h.q, k * h.r, k * h.s}; }
-			friend constexpr vector operator *(double k, vector h) { return vector{k * h.q, k * h.r, k * h.s}; }
+			friend constexpr vector operator *(vector h, double k) { return vector{k * h.q.value, k * h.r.value, k * h.s.value}; }
+			friend constexpr vector operator *(double k, vector h) { return vector{k * h.q.value, k * h.r.value, k * h.s.value}; }
 
-			friend constexpr vector operator /(vector h, int k) { return vector{h.q / k, h.r / k, h.s / k}; }
-			friend constexpr vector operator /(vector h, double k) { return vector{h.q / k, h.r / k, h.s / k}; }
+			friend constexpr vector operator /(vector h, int k) { return vector{h.q.value / k, h.r.value / k, h.s.value / k}; }
+			friend constexpr vector operator /(vector h, double k) { return vector{h.q.value / k, h.r.value / k, h.s.value / k}; }
 
 			friend constexpr bool operator ==(vector v1, vector v2) { return v1.q == v2.q && v1.r == v2.r && v1.s == v2.s; }
 			friend constexpr bool operator !=(vector v1, vector v2) { return v1.q != v2.q || v1.r != v2.r || v1.s != v2.s; }
@@ -93,11 +99,11 @@ namespace units {
 			//! Arbitrary less-than function so that HexCoords are comparable.
 			friend constexpr bool operator <(vector v1, vector v2) { return v1.q < v2.q || (v1.q == v2.q && v1.r < v2.r); }
 
-			constexpr int length() const { return static_cast<int>((math::abs(q) + math::abs(r) + math::abs(s)) / 2); }
+			constexpr dist_t length() const { return static_cast<dist_t>((math::abs(q) + math::abs(r) + math::abs(s)) / 2); }
 
 			//! The unit vector nearest this vector. This vector must be non-zero.
 			constexpr vector unit() const {
-				double l = length();
+				auto const l = static_cast<double>(length().value);
 				assert(l != 0.0 && "Unit vector of a zero-length vector is undefined.");
 				return *this / l;
 			}
@@ -105,21 +111,21 @@ namespace units {
 			//! The nearest direction this vector points towards. This vector must be non-zero.
 			constexpr direction direction() const {
 				vector const u = unit();
-				switch (u.q) {
+				switch (u.q.value) {
 					case -1:
-						switch (u.r) {
+						switch (u.r.value) {
 							case  0: return direction::four;
 							case  1: return direction::three;
 							default: break;
 						}
 					case  0:
-						switch (u.r) {
+						switch (u.r.value) {
 							case -1: return direction::five;
 							case  1: return direction::two;
 							default: break;
 						}
 					case  1:
-						switch (u.r) {
+						switch (u.r.value) {
 							case -1: return direction::six;
 							case  0: return direction::one;
 							default: break;
@@ -134,19 +140,19 @@ namespace units {
 
 			//! Simple hash function.
 			constexpr friend std::size_t hash_value(vector const& v) {
-				return 31 * v.q + v.r;
+				return 31 * v.q.value + v.r.value;
 			}
 		};
 
 		//! Hexagonal point type.
 		struct point {
-			int q;
-			int r;
-			int s;
+			dist_t q;
+			dist_t r;
+			dist_t s;
 
 			constexpr explicit point() = default;
-			constexpr explicit point(int q, int r) : q{q}, r{r}, s{-q - r} {}
-			constexpr explicit point(int q, int r, int s) : q{q}, r{r}, s{s} {}
+			constexpr explicit point(dist_t q, dist_t r) : q{q}, r{r}, s{-q - r} {}
+			constexpr explicit point(dist_t q, dist_t r, dist_t s) : q{q}, r{r}, s{s} {}
 			constexpr explicit point(double q, double r)
 				: point{q, r, -q - r}
 			{}
@@ -185,7 +191,7 @@ namespace units {
 			//! @todo Make this lazy?
 
 			std::vector<point> line_to(point dest) const {
-				int n = (dest - *this).length();
+				int n = (dest - *this).length().value;
 				std::vector<point> results;
 				double step = 1.0 / std::max(n, 1);
 				for (int i = 0; i <= n; i++) {
@@ -195,7 +201,7 @@ namespace units {
 			}
 
 			constexpr point lerp(point dest, double t) const {
-				return point{this->q + (dest.q - this->q) * t, this->r + (dest.r - this->r) * t, this->s + (dest.s - this->s) * t};
+				return point{(this->q + (dest.q - this->q)).value * t, (this->r + (dest.r - this->r)).value * t, (this->s + (dest.s - this->s)).value * t};
 			}
 
 			constexpr point lerp(vector heading, double t) const {
@@ -206,18 +212,18 @@ namespace units {
 			constexpr point neighbor(direction direction) const {
 				switch (direction) {
 					default: [[fallthrough]]; // Impossible case.
-					case direction::one:   return point{q + 1, r + 0};
-					case direction::two:   return point{q + 0, r + 1};
-					case direction::three: return point{q - 1, r + 1};
-					case direction::four:  return point{q - 1, r + 0};
-					case direction::five:  return point{q + 0, r - 1};
-					case direction::six:   return point{q + 1, r - 1};
+					case direction::one:   return point{q + dist_t{1}, r + dist_t{0}};
+					case direction::two:   return point{q + dist_t{0}, r + dist_t{1}};
+					case direction::three: return point{q - dist_t{1}, r + dist_t{1}};
+					case direction::four:  return point{q - dist_t{1}, r + dist_t{0}};
+					case direction::five:  return point{q + dist_t{0}, r - dist_t{1}};
+					case direction::six:   return point{q + dist_t{1}, r - dist_t{1}};
 				};
 			}
 
 			//! Simple hash function.
 			constexpr friend std::size_t hash_value(point const& p) {
-				return 31 * p.q + p.r;
+				return 31 * p.q.value + p.r.value;
 			}
 		};
 	};

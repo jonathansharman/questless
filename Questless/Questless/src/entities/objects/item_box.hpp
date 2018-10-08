@@ -13,7 +13,6 @@ namespace ql {
 	class item_box : public object_base<item_box> {
 	public:
 		item_box(ql::id<object> id = ql::id<object>::make()) : object_base<item_box>{id} {}
-		item_box(std::istream& in) : object_base<item_box>{in} {}
 
 		virtual ql::entity_subtype entity_subtype() const { return entity_subtype::item_box_class; }
 

@@ -13,8 +13,6 @@ namespace ql {
 	//! A drinkable magic concoction.
 	class potion : public item, public craftable {
 	public:
-		virtual ~potion() = 0 {}
-	protected:
-		std::function<void> _effect;
+		virtual ~potion() = default;
 	};
 }

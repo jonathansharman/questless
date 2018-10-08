@@ -16,16 +16,16 @@
 namespace ql {
 	dmg::group attack::damage() const {
 		auto& weapon = the_game().items.cref_as<ql::weapon>(weapon_id);
-		return base_damage() * (0.5 + weapon.integrity / weapon.durability() / 2.0);
+		return base_damage() * (0.5 + 0.5 * (weapon.integrity.value() / weapon.durability()).value);
 	}
 
 	complete melee_attack::launch::perform(being& actor, cont cont) {
 		return _attack->cost().check(actor, [&] {
-			return actor.agent().query_vector(queries::vector::melee_attack{}, actor.coords, [](region_tile::vector v) { return v.length() != 0; },
+			return actor.agent().query_vector(queries::vector::melee_attack{}, actor.coords, [](region_tile::vector v) { return v.length() != 0_span; },
 				[&actor, cont, attack = _attack](std::optional<region_tile::vector> opt_vector) {
 					if (opt_vector) {
 						auto& weapon = the_game().items.cref_as<ql::weapon>(attack->weapon_id);
-						double delay = weapon.active_cooldown + attack->wind_up();
+						tick const delay = weapon.active_cooldown.value() + attack->wind_up();
 						return actor.add_delayed_action(delay, std::move(cont), umake<finish>(attack, *opt_vector));
 					} else {
 						return cont(result::aborted);
@@ -71,7 +71,7 @@ namespace ql {
 	complete ranged_attack::launch::perform(being& actor, cont cont) {
 		return _attack->cost().check(actor, [&] {
 			weapon const& weapon = the_game().items.cref_as<ql::weapon>(_attack->weapon_id);
-			double const delay = weapon.active_cooldown + _attack->wind_up();
+			tick const delay = weapon.active_cooldown.value() + _attack->wind_up();
 			return actor.add_delayed_action(delay, std::move(cont), umake<finish>(_attack));
 		});
 	}
@@ -80,7 +80,7 @@ namespace ql {
 		if (weapon* weapon = the_game().items.ptr_as<ql::weapon>(_attack->weapon_id)) {
 			if (weapon->equipped() && *weapon->opt_bearer_id() == actor.id) {
 				return _attack->cost().check(actor, [&] {
-					int const range = _attack->range();
+					span const range = _attack->range();
 					return actor.agent().query_tile(queries::tile::ranged_attack_target{range}, actor.coords, tile_in_range_predicate(actor, range),
 						// Okay to capture weapon by reference; already checked that it's still there, and callback is synchronous here.
 						[&actor, cont, attack = _attack, &weapon = *weapon](std::optional<region_tile::point> opt_coords) {

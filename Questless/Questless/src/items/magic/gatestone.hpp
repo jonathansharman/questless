@@ -6,16 +6,16 @@
 
 #include "items/equipment.hpp"
 #include "magic/color.hpp"
-#include "utility/static_bounded.hpp"
+#include "utility/nonnegative.hpp"
 #include "utility/dynamic_bounded.hpp"
 
 namespace ql {
 	//! A gem that can hold spell charges.
 	class gatestone : public equipment_base<gatestone> {
 	public:
-		gatestone(double capacity, double charge, double cooldown, magic::color color, ql::id<item> id = ql::id<item>::make())
+		gatestone(mana capacity, mana charge, tick cooldown, magic::color color, ql::id<item> id = ql::id<item>::make())
 			: item{id}
-			, charge{charge, 0.0, capacity}
+			, charge{charge, 0.0_mp, capacity}
 			, _capacity{capacity}
 			, _cooldown{cooldown}
 			, _color{color}
@@ -23,27 +23,27 @@ namespace ql {
 
 		std::string name() const final { return "Gatestone"; }
 
-		double weight() const final { return 0.1; }
+		load mass() const final { return 0.1_load; }
 
 		std::vector<uptr<action>> actions() final;
 
-		void update() final;
+		void update(tick elapsed) final;
 
-		double equip_time() const final { return 1.0; }
+		tick equip_time() const final { return 1_tick; }
 
-		double unequip_time() const final { return 1.0; }
+		tick unequip_time() const final { return 1_tick; }
 
-		//! The amount of charge this gatestone currently holds.
-		dynamic_bounded<double> charge;
+		//! The amount of mana this gatestone currently holds.
+		dynamic_bounded<mana> charge;
 
 		//! The maximum charge this gem can hold.
-		double capacity() const { return _capacity; }
+		mana capacity() const { return _capacity; }
 
 		//! The color of spell with which this gem may be enchanted.
 		magic::color color() const { return _color; }
 
 		//! Time left before this gem can be used again.
-		double cooldown() const { return _cooldown; }
+		tick cooldown() const { return _cooldown; }
 	private:
 		class incant : public action {
 		public:
@@ -55,10 +55,8 @@ namespace ql {
 			ql::id<item> _gatestone_id;
 		};
 
-		static constexpr double _minimum_cooldown = 0.0;
-
-		double const _capacity;
-		static_bounded<double, _minimum_cooldown> _cooldown;
+		mana _capacity;
+		nonnegative<tick> _cooldown;
 		magic::color _color;
 
 		body_part_counts requirements() const final { return body_part_counts{hands{1}}; };

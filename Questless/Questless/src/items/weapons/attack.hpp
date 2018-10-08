@@ -33,16 +33,16 @@ namespace ql {
 		virtual dmg::group base_damage() const = 0;
 
 		//! Busy time incurred before the attack connects.
-		virtual double wind_up() const = 0;
+		virtual tick wind_up() const = 0;
 
 		//! Busy time incurred after the attack connects.
-		virtual double follow_through() const = 0;
+		virtual tick follow_through() const = 0;
 
 		//! Time after using the attack before its weapon can be used again.
-		virtual double cooldown() const = 0;
+		virtual tick cooldown() const = 0;
 
-		//! The proportion of attack damage to be applied to the attack weapon as wear.
-		virtual double wear_ratio() const = 0;
+		//! Integrity removed from the weapon per HP the attack removes.
+		virtual decltype(ql::integrity{} / ql::health{}) wear_ratio() const = 0;
 
 		//! The cost of performing the attack.
 		virtual cost const& cost() const = 0;
@@ -102,7 +102,7 @@ namespace ql {
 			return launch::make(std::dynamic_pointer_cast<ranged_attack>(shared_from_this()));
 		}
 
-		virtual int range() const = 0;
+		virtual span range() const = 0;
 	private:
 		class launch : public action {
 		public:

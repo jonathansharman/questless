@@ -7,22 +7,16 @@
 
 namespace ql {
 	namespace {
-		constexpr double distance_factor = 0.25;
-
-		// Use a cutoff to limit range.
-		constexpr double cutoff = 1.0;
+		constexpr auto range_per_lum = 1_span / 10.0_lum;
 	}
-	int light_source::range() const {
-		return static_cast<int>(sqrt((std::max(0.0, std::abs(_luminance) - cutoff)) / distance_factor)) + 1;
+	span light_source::range() const {
+		return meta::quantity_cast<span>(_luminance * range_per_lum);
 	}
 
-	double light_source::luminance(region const& region, region_tile::point region_tile_coords) const {
+	lum light_source::luminance(region const& region, region_tile::point region_tile_coords) const {
 		// Compute light source's luminance at this distance.
-		int const distance = (region_tile_coords - _coords).length();
+		span const distance = (region_tile_coords - _coords).length();
 		double const occlusion = region.occlusion(_coords, region_tile_coords);
-		double const result = _luminance / (1.0 + distance * distance * distance_factor) * occlusion;
-
-		// Clamp values below the cutoff to zero.
-		return std::abs(result) >= cutoff ? result : 0.0;
+		return std::max(0.0_lum, _luminance - distance * range_per_lum * occlusion);
 	}
 }

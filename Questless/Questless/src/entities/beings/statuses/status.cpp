@@ -6,7 +6,7 @@
 #include "utility/id.hpp"
 
 namespace ql {
-	status::status(std::string name, int duration, std::optional<id<being>> source_id)
+	status::status(std::string name, tick duration, std::optional<id<being>> source_id)
 		: _name{std::move(name)}
 		, _duration{duration}
 		, _source_id{source_id}
@@ -14,10 +14,10 @@ namespace ql {
 
 	void status::apply(being&) {}
 
-	void status::update(being& target) {
-		--_duration;
+	void status::update(being& target, tick elapsed) {
+		_duration -= elapsed;
 		subupdate(target);
-		if (_duration == 0) {
+		if (_duration <= 0_tick) {
 			expire(target);
 		}
 	}

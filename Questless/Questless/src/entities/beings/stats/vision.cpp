@@ -7,17 +7,16 @@
 using namespace units::math;
 
 namespace ql::stats {
-	double vision::visibility(ql::illuminance illuminance, int distance) const {
-		constexpr double darkness_factor = 0.05;
-		constexpr double glare_factor = 0.015;
-
-		double const illuminance_penalty = illuminance < min_illuminance.value()
-			? square(min_illuminance.value() - illuminance) / (1.0_darkness_tolerance + darkness_tolerance.value()) * darkness_factor // Too dark
+	perception::level vision::perception(ql::lum illuminance, span distance, double occlusion) const {
+		ql::acuity const illuminance_penalty = illuminance < min_illuminance.value()
+			? (min_illuminance.value() - illuminance) * darkness_penalty.value() // Too dark
 			: illuminance > max_illuminance.value()
-				? square(illuminance - max_illuminance.value()) / (1.0_glare_tolerance + glare_tolerance.value()) * glare_factor // Too bright
-				: 0.0 // Ideal illuminance range
+				? (illuminance - max_illuminance.value()) * glare_penalty.value() // Too bright
+				: 0.0_acuity // Ideal illuminance range
 			;
-		double const distance_penalty = distance * distance * _distance_factor;
-		return acuity.value() / (1.0 + illuminance_penalty + distance_penalty);
+		ql::acuity const distance_penalty = distance * acuity_loss_per_span;
+		ql::acuity const effective_acuity = acuity.value() - illuminance_penalty - distance_penalty;
+		constexpr auto perception_per_acuity = 1.0_perception / 1.0_acuity;
+		return effective_acuity * perception_per_acuity * occlusion;
 	}
 }

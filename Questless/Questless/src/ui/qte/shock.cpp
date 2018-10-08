@@ -105,7 +105,7 @@ namespace ql::qte {
 			the_game().camera().draw
 				( the_texture_manager()[point_charge_texture_handle]
 				, point_charge.position
-				, origin{texture_space::vector::zero()}
+				, texture_space::vector::zero()
 				, colors::color_vector{1.0f, intensity, intensity, 1.0f}
 				, view_space::vector{scale, scale}
 				, game_space::radians{0.0}

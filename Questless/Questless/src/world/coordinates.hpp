@@ -5,18 +5,20 @@
 
 #pragma once
 
+#include "utility/quantities.hpp"
+
 #include "units/game_space.hpp"
 #include "units/hex_space.hpp"
 
 namespace ql {
 	//! The space of tiles in a section.
-	using section_tile = units::hex_space<struct section_tile_tag>;
+	using section_tile = units::hex_space<struct section_tile_tag, span>;
 
 	//! The space of tiles in a region.
-	using region_tile = units::hex_space<struct region_tile_tag>;
+	using region_tile = units::hex_space<struct region_tile_tag, span>;
 
 	//! The space of sections in a region.
-	using region_section = units::hex_space<struct region_section_tag>;
+	using region_section = units::hex_space<struct region_section_tag, section_span>;
 
 	//! Location within the entire world.
 	struct global_coords {
@@ -43,15 +45,15 @@ namespace ql {
 	//! Converts @p p to a game space point.
 	constexpr auto to_world(region_tile::point p) {
 		return units::game_space::point
-			{ ((hex_layout.orientation.f0 * p.q + hex_layout.orientation.f1 * p.r) * hex_layout.size.x() + hex_layout.origin.x())
-			, ((hex_layout.orientation.f2 * p.q + hex_layout.orientation.f3 * p.r) * hex_layout.size.y() + hex_layout.origin.y())
+			{ ((hex_layout.orientation.f0 * p.q.value + hex_layout.orientation.f1 * p.r.value) * hex_layout.size.x() + hex_layout.origin.x())
+			, ((hex_layout.orientation.f2 * p.q.value + hex_layout.orientation.f3 * p.r.value) * hex_layout.size.y() + hex_layout.origin.y())
 			};
 	}
 	//! Converts @p v to a game space vector.
 	constexpr auto to_world(region_tile::vector v) {
 		return units::game_space::point
-			{ ((hex_layout.orientation.f0 * v.q + hex_layout.orientation.f1 * v.r) * hex_layout.size.x())
-			, ((hex_layout.orientation.f2 * v.q + hex_layout.orientation.f3 * v.r) * hex_layout.size.y())
+			{ ((hex_layout.orientation.f0 * v.q.value + hex_layout.orientation.f1 * v.r.value) * hex_layout.size.x())
+			, ((hex_layout.orientation.f2 * v.q.value + hex_layout.orientation.f3 * v.r.value) * hex_layout.size.y())
 			};
 	}
 

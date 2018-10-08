@@ -6,8 +6,9 @@
 
 #include "vision.hpp"
 
-#include "utility/io.hpp"
 #include "utility/quantities.hpp"
+
+#include <cereal/cereal.hpp>
 
 namespace ql::stats {
 	//! The stats of a being that are based on aggregating stats of different body parts.
@@ -19,7 +20,7 @@ namespace ql::stats {
 		nonnegative<agility> agility = 0.0_agi;
 		nonnegative<hearing> hearing = 0.0_hear;
 		nonnegative<intellect> intellect = 0.0_int;
-		nonnegative<weight> weight = 0.0_wt;
+		nonnegative<load> mass = 0.0_load;
 		mute mute{true};
 		vision vision{};
 
@@ -33,7 +34,7 @@ namespace ql::stats {
 			, ql::agility agility
 			, ql::hearing hearing
 			, ql::intellect intellect
-			, ql::weight weight
+			, ql::load mass
 			, ql::mute mute
 			, stats::vision vision
 			)
@@ -44,10 +45,44 @@ namespace ql::stats {
 			, agility{agility}
 			, hearing{hearing}
 			, intellect{intellect}
-			, weight{weight}
+			, mass{mass}
 			, mute{mute}
 			, vision{std::move(vision)}
 		{}
+
+		template <typename Archive>
+		void save(Archive& archive) const {
+			archive
+				( CEREAL_NVP(vitality)
+				, CEREAL_NVP(spirit)
+				, CEREAL_NVP(strength)
+				, CEREAL_NVP(stamina)
+				, CEREAL_NVP(agility)
+				, CEREAL_NVP(vision)
+				, CEREAL_NVP(hearing)
+				, CEREAL_NVP(intellect)
+				, CEREAL_NVP(mass)
+				, CEREAL_NVP(mute)
+				, CEREAL_NVP(vision)
+				);
+		}
+
+		template <typename Archive>
+		void load(Archive& archive) {
+			archive
+				( CEREAL_NVP(vitality)
+				, CEREAL_NVP(spirit)
+				, CEREAL_NVP(strength)
+				, CEREAL_NVP(stamina)
+				, CEREAL_NVP(agility)
+				, CEREAL_NVP(vision)
+				, CEREAL_NVP(hearing)
+				, CEREAL_NVP(intellect)
+				, CEREAL_NVP(mass)
+				, CEREAL_NVP(mute)
+				, CEREAL_NVP(vision)
+				);
+		}
 
 		aggregate& operator +=(aggregate const& that) {
 			vitality += that.vitality;
@@ -57,9 +92,10 @@ namespace ql::stats {
 			agility += that.agility;
 			hearing += that.hearing;
 			intellect += that.intellect;
-			weight += that.weight;
+			mass += that.mass;
 			if (that.mute.value) mute = ql::mute{true};
 			vision += that.vision;
+			return *this;
 		}
 
 		aggregate operator +(aggregate const& that) {
@@ -68,49 +104,4 @@ namespace ql::stats {
 			return result;
 		}
 	};
-
-	void to_json(nlohmann::json& j, aggregate const& a) {
-		if (a.vitality != 0.0_hp) to_json(j["vitality"], a.vitality);
-		if (a.spirit != 0.0_mp) to_json(j["spirit"], a.spirit);
-		if (a.strength != 0.0_str) to_json(j["strength"], a.strength);
-		if (a.stamina != 0.0_ep) to_json(j["stamina"], a.stamina);
-		if (a.agility != 0.0_agi) to_json(j["agility"], a.agility);
-		if (a.hearing != 0.0_hear) to_json(j["hearing"], a.hearing);
-		if (a.intellect != 0.0_int) to_json(j["intellect"], a.intellect);
-		if (a.weight != 0.0_wt) to_json(j["weight"], a.weight);
-		to_json(j["mute"], a.mute);
-		to_json(j["vision"], a.vision);
-	}
-
-	void from_json(nlohmann::json const& j, aggregate& a) {
-		auto const vitality = j.find("vitality");
-		if (vitality != j.end()) from_json(vitality.value(), a.vitality);
-
-		auto const spirit = j.find("spirit");
-		if (spirit != j.end()) from_json(spirit.value(), a.spirit);
-
-		auto const strength = j.find("strength");
-		if (strength != j.end()) from_json(strength.value(), a.strength);
-
-		auto const stamina = j.find("stamina");
-		if (stamina != j.end()) from_json(stamina.value(), a.stamina);
-
-		auto const agility = j.find("agility");
-		if (agility != j.end()) from_json(agility.value(), a.agility);
-
-		auto const vision = j.find("vision");
-		if (vision != j.end()) from_json(vitality.value(), a.vision);
-
-		auto const hearing = j.find("hearing");
-		if (hearing != j.end()) from_json(hearing.value(), a.hearing);
-
-		auto const intellect = j.find("intellect");
-		if (intellect != j.end()) from_json(intellect.value(), a.intellect);
-
-		auto const weight = j.find("weight");
-		if (weight != j.end()) from_json(weight.value(), a.weight);
-
-		auto const mute = j.find("mute");
-		if (mute != j.end()) from_json(mute.value(), a.mute);
-	}
 }

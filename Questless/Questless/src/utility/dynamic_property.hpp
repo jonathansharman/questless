@@ -5,7 +5,6 @@
 #pragma once
 
 #include <functional>
-#include <istream>
 
 namespace ql {
 	//! @brief A property type, inspired by C#-style properties. Supports dynamic mutators.
@@ -18,14 +17,10 @@ namespace ql {
 	//! The mutator takes the current value by reference and the new value by const-reference and is responsible for assigning the new value to
 	//! the current value, handling any domain errors appropriately.
 	template <typename ValueType>
-	class dynamic_property {
+	class dynamic_property : public bounded<ValueType, dynamic_property<ValueType>> {
 	public:
 		using value_type = ValueType;
 		using mutator_type = std::function<void(value_type&, value_type const&)>;
-
-		//////////////////
-		// Constructors //
-		//////////////////
 
 		//! Constructs a property using the default value of its value type and an empty mutator.
 		//! @note Calling a property mutator without first setting the mutator results in a run-time error.
@@ -55,21 +50,25 @@ namespace ql {
 			_mutator(_value, _value);
 		}
 
-		////////////////////////////
-		// Accessors and Mutators //
-		////////////////////////////
-
-		//! The property's underlying value.
-		constexpr operator value_type const&() const { return _value; }
+		constexpr dynamic_property& operator =(dynamic_property const& bounded) {
+			set_value(bounded.value());
+			return *this;
+		}
+		constexpr dynamic_property& operator =(dynamic_property&& bounded) {
+			set_value(std::move(bounded.value()));
+			return *this;
+		}
+		constexpr dynamic_property& operator =(value_type const& value) {
+			set_value(value);
+			return *this;
+		}
+		constexpr dynamic_property& operator =(value_type&& value) {
+			set_value(std::move(value));
+			return *this;
+		}
 
 		//! The property's underlying value.
 		constexpr value_type const& value() const { return _value; }
-
-		//! The property's underlying value, dereferenced. Requires an underlying type that supports dereference.
-		constexpr decltype(auto) operator *() const { return *_value; }
-
-		//! The address of the property's underlying value.
-		constexpr const value_type* operator ->() const { return &_value; }
 
 		//! Sets the property's underlying value to the given value and calls the mutator on it.
 		//! @param value The property's new value.
@@ -83,113 +82,6 @@ namespace ql {
 			if (mutate_now) {
 				_mutator(_value, _value);
 			}
-		}
-
-		///////////////
-		// Asignment //
-		///////////////
-
-		dynamic_property& operator =(dynamic_property const& property) {
-			set_value(property._value);
-			return *this;
-		}
-		dynamic_property& operator =(value_type value) {
-			set_value(value);
-			return *this;
-		}
-
-		/////////////////////////////////////
-		// Arithmetic Assignment Operators //
-		/////////////////////////////////////
-
-		template <typename T>
-		dynamic_property& operator +=(T const& that) {
-			set_value(_value + that);
-			return *this;
-		}
-		template <typename T>
-		dynamic_property& operator -=(T const& that) {
-			set_value(_value - that);
-			return *this;
-		}
-		template <typename T>
-		dynamic_property& operator *=(T const& that) {
-			set_value(_value * that);
-			return *this;
-		}
-		template <typename T>
-		dynamic_property& operator /=(T const& that) {
-			set_value(_value / that);
-			return *this;
-		}
-		template <typename T>
-		dynamic_property& operator %=(T const& that) {
-			set_value(_value % that);
-			return *this;
-		}
-
-		//////////////////////////////////
-		// Bitwise Assignment Operators //
-		//////////////////////////////////
-
-		template <typename T>
-		dynamic_property& operator &=(T const& that) {
-			set_value(_value & that);
-			return *this;
-		}
-		template <typename T>
-		dynamic_property& operator |=(T const& that) {
-			set_value(_value | that);
-			return *this;
-		}
-		template <typename T>
-		dynamic_property& operator ^=(T const& that) {
-			set_value(_value | that);
-			return *this;
-		}
-		template <typename T>
-		dynamic_property& operator <<=(T const& that) {
-			set_value(_value << that);
-			return *this;
-		}
-		template <typename T>
-		dynamic_property& operator >>=(T const& that) {
-			set_value(_value >> that);
-			return *this;
-		}
-
-		///////////////////////////////////
-		// Increment/decrement Operators //
-		///////////////////////////////////
-
-		dynamic_property& operator ++() {
-			set_value(_value + 1);
-			return *this;
-		}
-		dynamic_property& operator --() {
-			set_value(_value - 1);
-			return *this;
-		}
-		dynamic_property operator ++(int) {
-			value_type value = _value;
-			set_value(_value + 1);
-			return value;
-		}
-		dynamic_property operator --(int) {
-			value_type value = _value;
-			set_value(_value - 1);
-			return value;
-		}
-
-		////////////////////////////////
-		// Stream Extraction Operator //
-		////////////////////////////////
-
-		friend std::istream& operator >>(std::istream& in, dynamic_property& property) {
-			value_type value;
-			in >> value;
-			property.set_value(value);
-			return in;
 		}
 	private:
 		mutator_type _mutator;

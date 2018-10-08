@@ -34,7 +34,7 @@ namespace ql {
 		virtual complete perform(being& actor, cont cont) = 0;
 
 		//! @todo Do these belong here?
-		static std::function<bool(region_tile::point)> tile_in_range_predicate(being& actor, int range);
-		static std::function<bool(being&)> being_in_range_predicate(being& actor, int range);
+		static std::function<bool(region_tile::point)> tile_in_range_predicate(being& actor, span range);
+		static std::function<bool(being&)> being_in_range_predicate(being& actor, span range);
 	};
 }

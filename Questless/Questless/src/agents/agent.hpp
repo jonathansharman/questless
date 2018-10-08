@@ -53,13 +53,13 @@ namespace ql {
 			, std::function<complete()> cont
 			) const = 0;
 
-		//virtual complete query_count
-		//	( queries::count::any query
-		//	, int default_value
-		//	, std::optional<int> min
-		//	, std::optional<int> max
-		//	, std::function<complete(std::optional<int>)> cont
-		//	) const = 0;
+		virtual complete query_count
+			( queries::count::any query
+			, int default_value
+			, std::optional<int> min
+			, std::optional<int> max
+			, std::function<complete(std::optional<int>)> cont
+			) const = 0;
 
 		virtual complete query_magnitude
 			( queries::magnitude::any
@@ -109,7 +109,7 @@ namespace ql {
 		virtual complete incant(gatestone& gatestone, std::function<complete(uptr<magic::spell>)> cont) const;
 	protected:
 		complete idle(action::cont cont);
-		complete idle(ticks duration);
+		complete idle(tick duration);
 		complete turn(region_tile::direction direction, action::cont cont);
 		complete walk(region_tile::direction direction, action::cont cont);
 		complete fly();

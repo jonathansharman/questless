@@ -14,7 +14,7 @@ namespace ql::stats {
 	struct being {
 		aggregate a{};
 
-		nonnegative<ql::per_tick> regen = 0.0_per_tick;
+		nonnegative<ql::per_tick> regen = 0_per_tick;
 		nonnegative<ql::toughness> toughness = 0.0_tgh;
 		ql::temperature min_temp{0.0};
 		ql::temperature max_temp{0.0};
@@ -46,40 +46,35 @@ namespace ql::stats {
 			, resist{resist}
 			, vuln{vuln}
 		{}
+
+		template <typename Archive>
+		void save(Archive& archive) const {
+			archive
+				( CEREAL_NVP(a)
+				, CEREAL_NVP(regen)
+				, CEREAL_NVP(toughness)
+				, CEREAL_NVP(min_temp)
+				, CEREAL_NVP(max_temp)
+				, CEREAL_NVP(stealth)
+				, CEREAL_NVP(protect)
+				, CEREAL_NVP(resist)
+				, CEREAL_NVP(vuln)
+				);
+		}
+
+		template <typename Archive>
+		void load(Archive& archive) {
+			archive
+				( CEREAL_NVP(a)
+				, CEREAL_NVP(regen)
+				, CEREAL_NVP(toughness)
+				, CEREAL_NVP(min_temp)
+				, CEREAL_NVP(max_temp)
+				, CEREAL_NVP(stealth)
+				, CEREAL_NVP(protect)
+				, CEREAL_NVP(resist)
+				, CEREAL_NVP(vuln)
+				);
+		}
 	};
-
-	void to_json(nlohmann::json& j, being const& being) {
-		to_json(j["a"], being.a);
-		if (being.regen != 0.0_per_tick) to_json(j["regen"], being.regen);
-		if (being.toughness != 0.0_tgh) to_json(j["toughness"], being.toughness);
-		to_json(j["min_temp"], being.min_temp);
-		to_json(j["max_temp"], being.max_temp);
-		if (being.stealth != 0.0_stl) to_json(j["stealth"], being.stealth);
-		to_json(j["protect"], being.protect);
-		to_json(j["resist"], being.resist);
-		to_json(j["vuln"], being.vuln);
-	}
-
-	void from_json(nlohmann::json const& j, being& being) {
-		from_json(j["a"], being.a);
-
-		auto regen = j.find("regen");
-		if (regen != j.end()) from_json(regen.value(), being.regen);
-
-		auto toughness = j.find("toughness");
-		if (toughness != j.end()) from_json(toughness.value(), being.toughness);
-
-		auto min_temp = j.find("min_temp");
-		if (min_temp != j.end()) from_json(min_temp.value(), being.min_temp);
-
-		auto max_temp = j.find("max_temp");
-		if (max_temp != j.end()) from_json(max_temp.value(), being.max_temp);
-
-		auto stealth = j.find("stealth");
-		if (stealth != j.end()) from_json(stealth.value(), being.stealth);
-
-		from_json(j["protect"], being.protect);
-		from_json(j["resist"], being.resist);
-		from_json(j["vuln"], being.vuln);
-	}
 }

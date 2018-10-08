@@ -4,28 +4,27 @@
 
 #pragma once
 
+#include "bounded.hpp"
+
 #include <functional>
 #include <istream>
 
 namespace ql {
 	//! An inclusive range of arithmetic values bounded lazily to limits defined by function results.
 	//! Values outside the range are clamped to the nearest valid value on read.
-	//! @tparam ArithmeticType An arithmetic type, i.e. a type that supports arithmetic operations.
+	//! @tparam ArithmeticType The underlying type.
 	//! @note See also @p static_bounded and @p dynamic_bounded.
 	template <typename ArithmeticType>
-	class lazy_bounded {
+	class lazy_bounded : public bounded<ArithmeticType, lazy_bounded<ArithmeticType>> {
 	public:
 		using arithmetic_type = ArithmeticType;
+
 		using bound_getter_type = std::function<arithmetic_type()>;
 
 		//! The function for getting the inclusive minimum value in the range.
 		std::function<arithmetic_type()> lower_bound_getter;
 		//! The function for getting the inclusive maximum value in the range.
 		std::function<arithmetic_type()> upper_bound_getter;
-
-		//////////////////
-		// Constructors //
-		//////////////////
 
 		constexpr lazy_bounded(bound_getter_type lower_bound_getter, bound_getter_type upper_bound_getter)
 			: lower_bound_getter{std::move(lower_bound_getter)}
@@ -46,12 +45,22 @@ namespace ql {
 			, _value{std::move(other._value)}
 		{}
 
-		////////////////////////////
-		// Accessors and Mutators //
-		////////////////////////////
-
-		//! The contained value.
-		constexpr operator arithmetic_type() const { return value(); }
+		constexpr lazy_bounded& operator =(lazy_bounded const& bounded) {
+			set_value(bounded.value());
+			return *this;
+		}
+		constexpr lazy_bounded& operator =(lazy_bounded&& bounded) {
+			set_value(std::move(bounded.value()));
+			return *this;
+		}
+		constexpr lazy_bounded& operator =(arithmetic_type const& value) {
+			set_value(value);
+			return *this;
+		}
+		constexpr lazy_bounded& operator =(arithmetic_type&& value) {
+			set_value(std::move(value));
+			return *this;
+		}
 
 		//! The contained value.
 		constexpr arithmetic_type value() const {
@@ -60,78 +69,10 @@ namespace ql {
 		}
 
 		//! Sets the contained value to the given new value, clamped to the valid range.
-		void set_value(arithmetic_type value) { _value = std::move(value); }
+		constexpr void set_value(arithmetic_type const& value) { _value = value; }
 
-		///////////////
-		// Asignment //
-		///////////////
-
-		lazy_bounded& operator =(lazy_bounded const& bounded) {
-			_value = bounded._value;
-			return *this;
-		}
-		lazy_bounded& operator =(arithmetic_type value) {
-			_value = std::move(value);
-			return *this;
-		}
-
-		template <typename T>
-		lazy_bounded& operator +=(T const& that) {
-			_value = value() + that;
-			return *this;
-		}
-		template <typename T>
-		lazy_bounded& operator -=(T const& that) {
-			_value = value() - that;
-			return *this;
-		}
-		template <typename T>
-		lazy_bounded& operator *=(T const& that) {
-			_value = value() * that;
-			return *this;
-		}
-		template <typename T>
-		lazy_bounded& operator /=(T const& that) {
-			_value = value() / that;
-			return *this;
-		}
-		template <typename T>
-		lazy_bounded& operator %=(T const& that) {
-			_value = value() % that;
-			return *this;
-		}
-
-		///////////////////////////////////
-		// Increment/decrement Operators //
-		///////////////////////////////////
-
-		lazy_bounded& operator ++() {
-			_value = value() + 1;
-			return *this;
-		}
-		lazy_bounded& operator --() {
-			_value = value() - 1;
-			return *this;
-		}
-		lazy_bounded operator ++(int) {
-			arithmetic_type old_value = value();
-			_value = old_value + 1;
-			return old_value;
-		}
-		lazy_bounded operator --(int) {
-			arithmetic_type old_value = value();
-			_value = old_value - 1;
-			return old_value;
-		}
-
-		////////////////////////////////
-		// Stream Extraction Operator //
-		////////////////////////////////
-
-		friend std::istream& operator >>(std::istream& in, lazy_bounded& bounded) {
-			in >> bounded._value;
-			return in;
-		}
+		//! Sets the contained value to the given new value, clamped to the valid range.
+		constexpr void set_value(arithmetic_type&& value) { _value = std::move(value); }
 	private:
 		arithmetic_type _value;
 	};

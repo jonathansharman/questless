@@ -6,6 +6,8 @@
 
 #include "tile_visitor.hpp"
 
+#include "utility/quantities.hpp"
+
 namespace ql {
 	//! The basic unit of terrain, a hexagonal region of uniform material, temperature, etc.
 	class tile : public element<tile_subtype_list> {

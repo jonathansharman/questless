@@ -32,7 +32,7 @@ namespace ql::magic {
 		return umake<cast>(std::move(spell), gatestone_id);
 	}
 	
-	double spell::incant_time(being& caster) const {
-		return base_incant_time() / (1.0 + caster.stats.a.intellect.value() / 100.0_int);
+	tick spell::incant_time(being& caster) const {
+		return meta::quantity_cast<tick>(base_incant_time() / (1.0 + (caster.stats.a.intellect.value() / 100.0_int).value));
 	}
 }

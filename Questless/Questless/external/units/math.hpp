@@ -35,11 +35,11 @@ namespace units::math {
 
 	//! The square of @p value.
 	template <typename T>
-	constexpr T square(T const& value) { return value * value; }
+	constexpr auto square(T const& value) { return value * value; }
 
 	//! The cube of the @p value.
 	template <typename T>
-	constexpr T cube(T const& value) { return value * value * value; }
+	constexpr auto cube(T const& value) { return value * value * value; }
 
 	//! The absolute value of @p value.
 	template <typename T>

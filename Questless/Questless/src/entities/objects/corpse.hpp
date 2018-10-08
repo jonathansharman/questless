@@ -16,10 +16,6 @@ namespace ql {
 			: object_base<corpse>{id}
 			, _being_id{being_id}
 		{}
-		corpse(std::istream& in)
-			: object_base<corpse>{in}
-			, _being_id{in}
-		{}
 
 		virtual ql::entity_subtype entity_subtype() const { return entity_subtype::corpse_class; }
 

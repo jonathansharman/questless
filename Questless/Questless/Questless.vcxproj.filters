@@ -102,9 +102,6 @@
     <ClInclude Include="src\utility\dynamic_bounded.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\utility\dynamic_property.hpp">
-      <Filter>src\utility</Filter>
-    </ClInclude>
     <ClInclude Include="src\utility\event.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
@@ -118,9 +115,6 @@
       <Filter>src\utility</Filter>
     </ClInclude>
     <ClInclude Include="src\utility\lazy_bounded.hpp">
-      <Filter>src\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utility\property.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
     <ClInclude Include="src\utility\random.hpp">
@@ -573,9 +567,6 @@
     <ClInclude Include="src\entities\beings\statuses\poisoned.hpp">
       <Filter>src\entities\beings\statuses</Filter>
     </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\sleeping.hpp">
-      <Filter>src\entities\beings\statuses</Filter>
-    </ClInclude>
     <ClInclude Include="src\entities\beings\statuses\status.hpp">
       <Filter>src\entities\beings\statuses</Filter>
     </ClInclude>
@@ -607,6 +598,15 @@
       <Filter>external\meta</Filter>
     </ClInclude>
     <ClInclude Include="src\utility\quantities.hpp">
+      <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utility\property.hpp">
+      <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utility\dynamic_property.hpp">
+      <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utility\bounded.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
   </ItemGroup>
@@ -707,9 +707,6 @@
     <ClCompile Include="src\entities\beings\statuses\poisoned.cpp">
       <Filter>src\entities\beings\statuses</Filter>
     </ClCompile>
-    <ClCompile Include="src\entities\beings\statuses\sleeping.cpp">
-      <Filter>src\entities\beings\statuses</Filter>
-    </ClCompile>
     <ClCompile Include="src\entities\beings\statuses\status.cpp">
       <Filter>src\entities\beings\statuses</Filter>
     </ClCompile>
@@ -738,9 +735,6 @@
       <Filter>src\items</Filter>
     </ClCompile>
     <ClCompile Include="src\items\scroll.cpp">
-      <Filter>src\items</Filter>
-    </ClCompile>
-    <ClCompile Include="src\items\breakable.cpp">
       <Filter>src\items</Filter>
     </ClCompile>
     <ClCompile Include="src\items\armor\armor.cpp">

@@ -7,7 +7,6 @@
 #include "entities/beings/body_part.hpp"
 
 using namespace units;
-using namespace nlohmann;
 
 namespace ql {
 	human::human(const std::function<uptr<ql::agent>(being&)>& make_agent, ql::id<being> id)

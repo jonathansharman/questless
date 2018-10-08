@@ -41,8 +41,8 @@ namespace ql {
 		//! The body part on this body with the given ID or nullptr if none exists.
 		body_part const* find_part(id<body_part> id) const;
 
-		//! Advances the body and all its parts one time unit.
-		void update();
+		//! Advances this body and all its parts by @p elapsed.
+		void update(tick elapsed);
 	private:
 		being& _owner; // Okay to store reference here. A body's lifetime is a subset of its owning being's lifetime.
 

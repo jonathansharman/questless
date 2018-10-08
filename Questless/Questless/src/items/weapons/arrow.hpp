@@ -13,7 +13,7 @@ namespace ql {
 
 		std::string name() const final { return "Arrow"; }
 
-		double weight() const final { return 0.1; }
+		load mass() const final { return 0.1_load; }
 
 		std::vector<uptr<action>> actions() final {
 			std::vector<uptr<action>> actions;

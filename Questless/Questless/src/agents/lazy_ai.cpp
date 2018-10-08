@@ -9,7 +9,7 @@
 
 namespace ql {
 	complete lazy_ai::act() {
-		being.busy_time += ticks{uniform(1.0, 2.0)};
+		being.busy_time += tick{uniform(1, 3)};
 		return complete{};
 	}
 
@@ -21,16 +21,16 @@ namespace ql {
 		return cont();
 	}
 
-	//complete lazy_ai::query_count
-	//	( queries::count::any
-	//	, int
-	//	, std::optional<int>
-	//	, std::optional<int>
-	//	, std::function<complete(std::optional<int>)> cont
-	//	) const
-	//{
-	//	return cont(std::nullopt);
-	//}
+	complete lazy_ai::query_count
+		( queries::count::any
+		, int
+		, std::optional<int>
+		, std::optional<int>
+		, std::function<complete(std::optional<int>)> cont
+		) const
+	{
+		return cont(std::nullopt);
+	}
 
 	complete lazy_ai::query_magnitude
 		( queries::magnitude::any

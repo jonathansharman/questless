@@ -26,8 +26,8 @@ namespace ql {
 
 		// Find the set of coordinates of sections plausibly visible to the being.
 		std::set<region_section::point> section_coords_set;
-		for (int q = -_visual_range; q <= _visual_range; ++q) {
-			for (int r = -_visual_range; r <= _visual_range; ++r) {
+		for (span q = -_visual_range; q <= _visual_range; ++q) {
+			for (span r = -_visual_range; r <= _visual_range; ++r) {
 				region_tile::vector const offset{q, r};
 				if (offset.length() <= _visual_range) {
 					if (section const* section = region.containing_section(being.coords + offset)) {
@@ -42,13 +42,13 @@ namespace ql {
 			section_view section_view;
 			section_view.coords = section_coords;
 
-			for (int q = 0; q < section::diameter; ++q) {
-				for (int r = 0; r < section::diameter; ++r) {
+			for (span q = 0_span; q < section::diameter; ++q) {
+				for (span r = 0_span; r < section::diameter; ++r) {
 					auto region_tile_coords = section::region_tile_coords(section_coords, section_tile::point{q, r});
 
-					perception tile_perception = being.perception_of(region_tile_coords);
+					perception::level tile_perception = being.perception_of(region_tile_coords);
 
-					if (find_bounds && tile_perception.level > 0.0) {
+					if (find_bounds && tile_perception > 0.0_perception) {
 						// Update bounding rectangle.
 						game_space::point tile_game_point = to_world(region_tile_coords);
 						if (!_bounds) {
@@ -57,7 +57,7 @@ namespace ql {
 							_bounds->extend(tile_game_point);
 						}	
 					}
-					section_view.tile_perceptions[q][r] = tile_perception;
+					section_view.tile_perceptions[q.value][r.value] = tile_perception;
 				}
 			}
 
@@ -67,12 +67,12 @@ namespace ql {
 			for (ql::being const& other_being : region.section_at(section_coords)->beings) {
 				if (other_being.id == being.id) {
 					// Can always perceive self fully.
-					_entity_views.emplace_back(other_being.id, perception::maximum());
+					_entity_views.emplace_back(other_being.id, perception::maximum_level);
 				} else {
 					region_tile::point other_coords = other_being.coords;
 					if ((being.coords - other_coords).length() <= _visual_range) {
 						section_tile::point other_section_coords = section::section_tile_coords(other_coords);
-						perception tile_perception = section_view.tile_perceptions[other_section_coords.q][other_section_coords.r];
+						perception::level tile_perception = section_view.tile_perceptions[other_section_coords.q.value][other_section_coords.r.value];
 
 						_entity_views.emplace_back(other_being.id, tile_perception);
 					}
@@ -84,7 +84,7 @@ namespace ql {
 				region_tile::point other_coords = object.coords;
 				if ((being.coords - other_coords).length() <= _visual_range) {
 					section_tile::point other_section_coords = section::section_tile_coords(other_coords);
-					perception tile_perception = section_view.tile_perceptions[other_section_coords.q][other_section_coords.r];
+					perception::level tile_perception = section_view.tile_perceptions[other_section_coords.q.value][other_section_coords.r.value];
 					_entity_views.emplace_back(object.id, tile_perception);
 				}
 			}

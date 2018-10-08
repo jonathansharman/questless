@@ -11,6 +11,7 @@
 #include "game.hpp"
 
 namespace ql {
+	void item::update(tick /*elapsed*/) {}
 	complete item::drop::perform(being& actor, cont cont) {
 		actor.inventory.remove(_item.id);
 

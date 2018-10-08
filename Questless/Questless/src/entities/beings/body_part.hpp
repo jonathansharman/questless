@@ -15,7 +15,7 @@
 #include "units/view_space.hpp"
 #include "utility/quantities.hpp"
 
-#include <nlohmann/json_fwd.hpp>
+#include <cereal/cereal.hpp>
 
 #include <optional>
 #include <string>
@@ -63,7 +63,7 @@ namespace ql {
 		lazy_bounded<blood_per_tick> bleeding
 			{ 0.0_blood_per_tick
 			, [] { return 0.0_blood_per_tick; }
-			, [this] { return this->stats.a.vitality.value() * blood_per_vitality / 1.0_tick; }
+			, [this] { return this->stats.a.vitality.value() * blood_per_vitality / 1_tick; }
 			};
 
 		//! The region this body part occupies, for collision and display.
@@ -83,9 +83,63 @@ namespace ql {
 		//! Loads a body part from @filepath.
 		body_part(char const* filepath, ql::id<being> owner_id, ql::id<body_part> id = ql::id<body_part>::make());
 
-		friend void to_json(nlohmann::json& j, body_part const& part);
+		template <typename Archive>
+		friend constexpr std::string save_minimal(Archive const&, tag const& t) {
+			switch (t) {
+				case tag::head: return "head";
+				case tag::torso: return "torso";
+				case tag::arm: return "arm";
+				case tag::hand: return "hand";
+				case tag::leg: return "leg";
+				case tag::foot: return "foot";
+				case tag::wing: return "wing";
+				default: return "tail";
+			}
+		}
 
-		friend void from_json(nlohmann::json const& j, body_part& part);
+		template <typename Archive>
+		friend constexpr void load_minimal(Archive const&, tag& t, std::string const& name) {
+			t = [] {
+				if constexpr (name == "head") return tag::head;
+				else if constexpr (name == "torso") return tag::torso;
+				else if constexpr (name == "arm") return tag::arm;
+				else if constexpr (name == "hand") return tag::hand;
+				else if constexpr (name == "leg") return tag::leg;
+				else if constexpr (name == "foot") return tag::foot;
+				else if constexpr (name == "wing") return tag::wing;
+				else return tag::tail;
+			}();
+		}
+
+		template <typename Archive>
+		void save(Archive& archive) const {
+			archive
+				( CEREAL_NVP(name)
+//				, CEREAL_NVP(tags)
+//				, CEREAL_NVP(stats)
+//				, CEREAL_NVP(vital)
+//				, CEREAL_NVP(enabled)
+//				, CEREAL_NVP(layer)
+//				, CEREAL_NVP(hitbox)
+//				, CEREAL_NVP(equipped_item_id)
+//				, CEREAL_NVP(attachments)
+				);
+		}
+
+		template <typename Archive>
+		void load(Archive& archive) {
+			archive
+				( CEREAL_NVP(name)
+//				, CEREAL_NVP(tags)
+//				, CEREAL_NVP(stats)
+//				, CEREAL_NVP(vital)
+//				, CEREAL_NVP(enabled)
+//				, CEREAL_NVP(layer)
+//				, CEREAL_NVP(hitbox)
+//				, CEREAL_NVP(equipped_item_id)
+//				, CEREAL_NVP(attachments)
+				);
+		}
 
 		//! Advances the body part one time unit.
 		void update();
@@ -127,8 +181,14 @@ namespace ql {
 			return body_part{default_part.c_str(), owner_id};
 		}
 
-		friend void to_json(nlohmann::json& j, attachment const& attachment);
+		template <typename Archive>
+		void save(Archive& archive) const {
+			archive(CEREAL_NVP(part), CEREAL_NVP(offset), CEREAL_NVP(rotation), CEREAL_NVP(default_part));
+		}
 
-		friend void from_json(nlohmann::json const& j, attachment& attachment);
+		template <typename Archive>
+		void load(Archive& archive) {
+			archive(CEREAL_NVP(part), CEREAL_NVP(offset), CEREAL_NVP(rotation), CEREAL_NVP(default_part));
+		}
 	};
 }

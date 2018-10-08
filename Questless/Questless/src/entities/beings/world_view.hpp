@@ -25,14 +25,14 @@ namespace ql {
 	public:
 		struct section_view {
 			region_section::point coords;
-			std::array<std::array<perception, section::diameter>, section::diameter> tile_perceptions;
+			std::array<std::array<perception::bounded_level, section::diameter.value>, section::diameter.value> tile_perceptions;
 		};
 
 		struct entity_view {
 			std::variant<id<being>, id<object>> id;
-			perception perception;
+			perception::bounded_level perception;
 
-			entity_view(std::variant<ql::id<being>, ql::id<object>> id, ql::perception perception)
+			entity_view(std::variant<ql::id<being>, ql::id<object>> id, ql::perception::level perception)
 				: id{id}, perception{perception}
 			{}
 		};
@@ -58,7 +58,7 @@ namespace ql {
 		std::vector<entity_view> const& entity_views() const { return _entity_views; }
 		ql::region const& region() const { return _region; }
 		region_tile::point origin() const { return _origin; }
-		int visual_range() const { return _visual_range; }
+		span visual_range() const { return _visual_range; }
 
 		//! A bounding box around the visible tiles or nullopt if initialized with find_bounds set to false or if no tiles are visible.
 		std::optional<units::game_space::box> bounds() const { return _bounds; }
@@ -67,7 +67,7 @@ namespace ql {
 		std::vector<entity_view> _entity_views;
 		std::reference_wrapper<const ql::region> _region;
 		region_tile::point _origin;
-		int _visual_range;
+		span _visual_range;
 
 		std::optional<units::game_space::box> _bounds;
 	};

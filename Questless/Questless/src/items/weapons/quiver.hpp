@@ -17,12 +17,12 @@ namespace ql {
 
 		std::string name() const final { return "Quiver"; }
 
-		double weight() const final { return 0.5; }
+		load mass() const final { return 0.5_load; }
 
 		std::vector<uptr<action>> actions() final;
 
-		double equip_time() const final { return 1.0; }
-		double unequip_time() const final { return 1.0; }
+		tick equip_time() const final { return 1_tick; }
+		tick unequip_time() const final { return 1_tick; }
 	private:
 		body_part_counts requirements() const final { return body_part_counts{torsos{1}}; }
 	};

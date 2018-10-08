@@ -26,35 +26,35 @@
 using std::string;
 using std::vector;
 using std::function;
-namespace fs = std::experimental::filesystem; //! @todo Replace this with std::filesystem when available.
+namespace fs = std::filesystem;
 
 using namespace sdl;
 
 namespace ql {
 	bool turn_order_function(being const& first, being const& second) {
 		// Sort beings in the turn queue by lower busy-time first, then lower entity ID.
-		double f_b = first.busy_time;
-		double s_b = second.busy_time;
+		tick f_b = first.busy_time;
+		tick s_b = second.busy_time;
 		return f_b < s_b || (f_b == s_b && first.id < second.id);
 	}
 
 	region::region(string region_name)
 		: _name{std::move(region_name)}
-		, _time{0.0}
+		, _time{0}
 		, _turn_queue{turn_order_function}
 		, _ambient_illuminance{get_ambient_illuminance()}
 	{
-		int const r_radius = 1;
-		int const q_radius = 1;
+		auto const r_radius = 1_section_span;
+		auto const q_radius = 1_section_span;
 
-		for (int section_r = -r_radius; section_r <= r_radius; ++section_r) {
-			for (int section_q = -q_radius; section_q <= q_radius; ++section_q) {
+		for (section_span section_r = -r_radius; section_r <= r_radius; ++section_r) {
+			for (section_span section_q = -q_radius; section_q <= q_radius; ++section_q) {
 				region_section::point section_coords{section_q, section_r};
 
 				// Create a section with random terrain.
 				string data;
-				for (int q = 0; q < section::diameter; ++q) {
-					for (int r = 0; r < section::diameter; ++r) {
+				for (span q = 0_span; q < section::diameter; ++q) {
+					for (span r = 0_span; r < section::diameter; ++r) {
 						//if (r == section::diameter - 1 || q == section::diameter - 1) {
 						//	data += std::to_string(static_cast<int>(ql::subtype::edge)) + ' ' + std::to_string(0.0) + ' ';
 						//} else {
@@ -68,9 +68,9 @@ namespace ql {
 				std::istringstream data_stream{data};
 				_section_map.insert(std::make_pair(section_coords, section{section_coords, data_stream}));
 				// Add beings randomly.
-				for (int q = 0; q < section::diameter; ++q) {
-					for (int r = 0; r < section::diameter; ++r) {
-						if ((section_r != 0 || section_q != 0) && uniform(0, 10) == 0) {
+				for (span q = 0_span; q < section::diameter; ++q) {
+					for (span r = 0_span; r < section::diameter; ++r) {
+						if ((section_r != 0_section_span || section_q != 0_section_span) && uniform(0, 10) == 0) {
 							auto entity_coords = section::region_tile_coords(section_coords, section_tile::point{q, r});
 							if (!uniform(0, 12)) {
 								bool const success = try_spawn(umake<campfire>(*this, entity_coords), entity_coords);
@@ -90,7 +90,7 @@ namespace ql {
 
 	region::region(char const* save_name, string region_name)
 		: _name{std::move(region_name)}
-		, _time{0.0}
+		, _time{0}
 		, _turn_queue{turn_order_function}
 		, _ambient_illuminance{get_ambient_illuminance()}
 	{
@@ -113,8 +113,8 @@ namespace ql {
 					r_string += c;
 				}
 			}
-			int section_q = std::stoi(q_string);
-			int section_r = std::stoi(r_string);
+			section_span section_q{std::stoi(q_string)};
+			section_span section_r{std::stoi(r_string)};
 			region_section::point section_coords{section_q, section_r};
 
 			std::ifstream data_stream{(region_path / it->path()).string()};
@@ -139,10 +139,10 @@ namespace ql {
 			switch (static_cast<entity_subtype>(entity_id)) {
 				case entity_subtype::goblin_class:
 				{
-					being& goblin = the_game().beings.add(umake<ql::goblin>(sin));
-					if (!try_add(goblin, goblin.coords)) {
-						throw std::logic_error("Overlapping beings in save file.");
-					}
+					//being& goblin = the_game().beings.add(umake<ql::goblin>(sin));
+					//if (!try_add(goblin, goblin.coords)) {
+					//	throw std::logic_error("Overlapping beings in save file.");
+					//}
 					break;
 				}
 				case entity_subtype::troll_class:
@@ -193,9 +193,9 @@ namespace ql {
 #endif
 	}
 
-	void region::remove_from_turn_queue(being& being) { if (being.busy_time <= 0.0) _turn_queue.erase(being); }
+	void region::remove_from_turn_queue(being& being) { if (being.busy_time <= 0_tick) _turn_queue.erase(being); }
 
-	void region::add_to_turn_queue(being& being) { if (being.busy_time <= 0.0) _turn_queue.insert(being); }
+	void region::add_to_turn_queue(being& being) { if (being.busy_time <= 0_tick) _turn_queue.insert(being); }
 
 	being* region::next_ready_being() {
 		if (_turn_queue.empty()) {
@@ -227,8 +227,8 @@ namespace ql {
 
 		// Put the player's character somewhere in the middle section.
 
-		int q = uniform(-section::radius, section::radius);
-		int r = uniform(-section::radius, section::radius);
+		span q{uniform(-section::radius.value, section::radius.value)};
+		span r{uniform(-section::radius.value, section::radius.value)};
 		region_tile::point player_coords{q, r};
 
 		// Erase the being currently there, if any.
@@ -362,19 +362,19 @@ namespace ql {
 	}
 
 	void region::add(light_source const& light_source) {
-		int range = light_source.range();
-		int const min_q = light_source.coords().q - range;
-		int const min_r = light_source.coords().r - range;
+		span range = light_source.range();
+		span const min_q = light_source.coords().q - range;
+		span const min_r = light_source.coords().r - range;
 		region_tile::point const min_region_tile_coords{min_q, min_r};
 		region_section::point const min_section_coords = section::region_section_coords(min_region_tile_coords);
 
-		int const max_q = light_source.coords().q + range;
-		int const max_r = light_source.coords().r + range;
+		span const max_q = light_source.coords().q + range;
+		span const max_r = light_source.coords().r + range;
 		region_tile::point const max_region_tile_coords{max_q, max_r};
 		region_section::point const max_section_coords = section::region_section_coords(max_region_tile_coords);
 
-		for (int section_q = min_section_coords.q; section_q <= max_section_coords.q; ++section_q) {
-			for (int section_r = min_section_coords.r; section_r <= max_section_coords.r; ++section_r) {
+		for (section_span section_q = min_section_coords.q; section_q <= max_section_coords.q; ++section_q) {
+			for (section_span section_r = min_section_coords.r; section_r <= max_section_coords.r; ++section_r) {
 				region_section::point section_coords{section_q, section_r};
 				if (section* s = section_at(section_coords)) {
 					s->add(light_source);
@@ -384,18 +384,18 @@ namespace ql {
 	}
 
 	void region::remove(light_source const& light_source) {
-		int const min_q = light_source.coords().q - light_source.range();
-		int const min_r = light_source.coords().r - light_source.range();
+		span const min_q = light_source.coords().q - light_source.range();
+		span const min_r = light_source.coords().r - light_source.range();
 		region_tile::point const min_region_tile_coords{min_q, min_r};
 		region_section::point const min_section_coords = section::region_section_coords(min_region_tile_coords);
 
-		int const max_q = light_source.coords().q + light_source.range();
-		int const max_r = light_source.coords().r + light_source.range();
+		span const max_q = light_source.coords().q + light_source.range();
+		span const max_r = light_source.coords().r + light_source.range();
 		region_tile::point const max_region_tile_coords{max_q, max_r};
 		region_section::point const max_section_coords = section::region_section_coords(max_region_tile_coords);
 
-		for (int section_q = max_section_coords.q; section_q <= max_section_coords.q; ++section_q) {
-			for (int section_r = max_section_coords.r; section_r <= max_section_coords.r; ++section_r) {
+		for (section_span section_q = max_section_coords.q; section_q <= max_section_coords.q; ++section_q) {
+			for (section_span section_r = max_section_coords.r; section_r <= max_section_coords.r; ++section_r) {
 				region_section::point section_coords{section_q, section_r};
 				if (section* s = section_at(section_coords)) {
 					s->remove(light_source);
@@ -404,8 +404,8 @@ namespace ql {
 		}
 	}
 
-	double region::illuminance(region_tile::point region_tile_coords) const {
-		double result = _ambient_illuminance;
+	lum region::illuminance(region_tile::point region_tile_coords) const {
+		lum result = _ambient_illuminance;
 		if (section const* s = containing_section(region_tile_coords)) {
 			for (light_source const& light_source : s->light_sources) {
 				result += light_source.luminance(*this, region_tile_coords);
@@ -432,9 +432,9 @@ namespace ql {
 		return result;
 	}
 
-	void region::update() {
+	void region::update(tick elapsed) {
 		// Advance local time by one time unit per update.
-		_time += 1.0;
+		_time += elapsed;
 		_time_of_day = get_time_of_day();
 		_period_of_day = get_period_of_day();
 
@@ -452,19 +452,19 @@ namespace ql {
 		});
 		for (id<being> being_id : beings_to_update) {
 			if (being* being = the_game().beings.ptr(being_id)) {
-				being->update();
+				being->update(elapsed);
 			}
 		}
 		for (id<object> object_id : objects_to_update) {
 			if (object* object = the_game().objects.ptr(object_id)) {
-				object->update();
+				object->update(elapsed);
 			}
 		}
 	}
 
 	void region::add_effect(sptr<effect> const& effect) {
-		int range = effect->range();
-		auto origin = effect->origin();
+		span range = effect->range();
+		region_tile::point const origin = effect->origin();
 
 		region_tile::point const min_tile_coords{origin.q - range, origin.r - range};
 		region_tile::point const max_tile_coords{origin.q + range, origin.r + range};
@@ -472,8 +472,8 @@ namespace ql {
 		region_section::point const min_section_coords = section::region_section_coords(min_tile_coords);
 		region_section::point const max_section_coords = section::region_section_coords(max_tile_coords);
 
-		for (int r = min_section_coords.r; r <= max_section_coords.r; ++r) {
-			for (int q = min_section_coords.q; q <= max_section_coords.q; ++q) {
+		for (section_span r = min_section_coords.r; r <= max_section_coords.r; ++r) {
+			for (section_span q = min_section_coords.q; q <= max_section_coords.q; ++q) {
 				region_section::point section_coords{q, r};
 				if (section* section = section_at(section_coords)) {
 					for (being& being : section->beings) {
@@ -500,22 +500,22 @@ namespace ql {
 		}
 	}
 
-	double region::get_ambient_illuminance() {
-		constexpr double night_light = 25.0;
-		constexpr double dawn_and_dusk_light = 75.0;
-		constexpr double noon_light = 115.0;
+	lum region::get_ambient_illuminance() {
+		constexpr auto night_light = 25.0_lum;
+		constexpr auto dawn_and_dusk_light = 75.0_lum;
+		constexpr auto noon_light = 115.0_lum;
 
 		switch (_period_of_day) {
 			case period_of_day::morning:
 				[[fallthrough]];
 			case period_of_day::afternoon:
 			{
-				double const daylight_progress = sin(_time / _day_length * units::constants::tau);
+				double const daylight_progress = sin((_time / _day_length).value * units::constants::tau);
 				return dawn_and_dusk_light + daylight_progress * (noon_light - dawn_and_dusk_light);
 			}
 			case period_of_day::dusk:
 			{
-				double const dusk_progress = (_time_of_day - _end_of_afternoon) / (_end_of_dusk - _end_of_afternoon);
+				double const dusk_progress = ((_time_of_day - _end_of_afternoon) / (_end_of_dusk - _end_of_afternoon)).value;
 				return (1.0 - dusk_progress) * dawn_and_dusk_light + dusk_progress * night_light;
 			}
 			case period_of_day::evening:
@@ -524,7 +524,7 @@ namespace ql {
 				return night_light;
 			case period_of_day::dawn:
 			{
-				double const dawn_progress = (_time_of_day - _end_of_night) / (_day_length - _end_of_night);
+				double const dawn_progress = ((_time_of_day - _end_of_night) / (_day_length - _end_of_night)).value;
 				return dawn_progress * dawn_and_dusk_light + (1.0 - dawn_progress) * night_light;
 			}
 			default: throw std::logic_error{"Invalid period of day."};
@@ -532,8 +532,8 @@ namespace ql {
 	}
 
 	void region::for_each_loaded_section(std::function<void(section&)> const& f) {
-		for (int r = -_loaded_sections_q_radius; r <= _loaded_sections_q_radius; ++r) {
-			for (int q = -_loaded_sections_r_radius; q <= _loaded_sections_r_radius; ++q) {
+		for (section_span r = -_loaded_sections_q_radius; r <= _loaded_sections_q_radius; ++r) {
+			for (section_span q = -_loaded_sections_r_radius; q <= _loaded_sections_r_radius; ++q) {
 				region_section::point section_coords{q, r};
 				if (section* s = section_at(section_coords)) {
 					f(*s);

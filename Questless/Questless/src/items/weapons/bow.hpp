@@ -17,12 +17,12 @@ namespace ql {
 
 		std::string name() const final { return "Bow"; }
 
-		double weight() const final { return 3.5; }
+		load mass() const final { return 3.5_load; }
 
-		double equip_time() const final { return 12.0; }
-		double unequip_time() const final { return 3.0; }
+		tick equip_time() const final { return 12_tick; }
+		tick unequip_time() const final { return 3_tick; }
 
-		double durability() const final { return 400.0; }
+		ql::integrity durability() const final { return 400.0_integrity; }
 
 		std::vector<uptr<action>> actions() final;
 	private:
@@ -31,12 +31,12 @@ namespace ql {
 			shoot(ql::id<item> weapon_id) : ranged_attack{weapon_id} {}
 			std::string name() const final { return "Shoot"; }
 			dmg::group base_damage() const final { return dmg::pierce{30.0}; }
-			double wind_up() const final { return 5.0; }
-			double follow_through() const final { return 0.5; }
-			double cooldown() const final { return 1.0; }
-			double wear_ratio() const final { return 0.002; };
+			tick wind_up() const final { return 5_tick; }
+			tick follow_through() const final { return 1_tick; }
+			tick cooldown() const final { return 1_tick; }
+			decltype(ql::integrity{} / ql::health{}) wear_ratio() const final { return 0.002_integrity / 1.0_hp; };
 			ql::cost const& cost() const final { return _cost; }
-			int range() const final { return 7; }
+			span range() const final { return 7_span; }
 		private:
 			class arrow_cost : public cost {
 			public:

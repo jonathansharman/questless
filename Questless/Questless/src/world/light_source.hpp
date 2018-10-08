@@ -28,12 +28,12 @@ namespace ql {
 		region_tile::point coords() const { return _coords; }
 
 		//! The distance this light source's light reaches.
-		int range() const;
+		span range() const;
 
 		//! How brightly this light source shines at @p region_tile_coords in @p region.
-		double luminance(region const& region, region_tile::point region_tile_coords) const;
+		lum luminance(region const& region, region_tile::point region_tile_coords) const;
 	private:
 		region_tile::point _coords;
-		double _luminance;
+		lum _luminance;
 	};
 }

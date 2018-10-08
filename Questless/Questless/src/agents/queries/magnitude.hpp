@@ -9,11 +9,9 @@
 namespace ql::queries::magnitude {
 	struct heal {};
 	struct shock {};
-	struct wait_time {};
 
 	using any = std::variant
 		< heal
 		, shock
-		, wait_time
 		>;
 }

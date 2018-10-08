@@ -24,8 +24,8 @@ namespace ql {
 		//! The name of the status modifier displayed to the player.
 		std::string name() const { return _name; }
 
-		//! The number of turns remaining before the status expires.
-		int duration() const { return _duration; }
+		//! The number of ticks remaining before the status expires.
+		tick duration() const { return _duration; }
 
 		//! The ID of the being that caused the status or nullopt if none did.
 		std::optional<id<being>> source() const { return _source_id; }
@@ -34,10 +34,9 @@ namespace ql {
 		virtual status_type type() const = 0;
 
 		//! The list of stat modifiers associated with this status.
-		virtual std::vector<uptr<stats::modifier>> const& modifiers() const {
+		virtual std::vector<stats::modifier> modifiers() const {
 			// No modifiers by default.
-			static std::vector<uptr<stats::modifier>> modifiers;
-			return modifiers;
+			return {};
 		}
 
 		//! Carries out any effects that should occur when the status is initially applied.
@@ -46,15 +45,16 @@ namespace ql {
 
 		//! Carries out any effects that should occur each update cycle and decrements the duration of the status.
 		//! @param target The being affected by the status.
-		void update(being& target);
+		//! elapsed Time since the last update.
+		void update(being& target, tick elapsed);
 	protected:
 		//! @param name The name of the status modifier displayed to the player.
-		//! @param duration The number of turns remaining before the status modifier expires.
+		//! @param duration The number of ticks remaining before the status modifier expires.
 		//! @param source The ID of the being that caused the status modifier, if any.
-		status(std::string name, int duration, std::optional<id<being>> source_id = std::nullopt);
+		status(std::string name, tick duration, std::optional<id<being>> source_id = std::nullopt);
 	private:
 		std::string _name;
-		int _duration;
+		nonnegative<tick> _duration;
 		std::optional<id<being>> _source_id;
 
 		//! Carries out status subtype-specific effects that should occur each update cycle.

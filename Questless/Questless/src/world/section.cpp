@@ -38,13 +38,13 @@ namespace ql {
 	}
 
 	region_section::point section::region_section_coords(region_tile::point region_tile_coords) {
-		int q = region_tile_coords.q >= 0
-			? (region_tile_coords.q + section::radius) / section::diameter
-			: (region_tile_coords.q - section::radius) / section::diameter
+		auto q = region_tile_coords.q >= 0_span
+			? 1_section_span * (region_tile_coords.q + section::radius) / section::diameter
+			: 1_section_span * (region_tile_coords.q - section::radius) / section::diameter
 			;
-		int r = region_tile_coords.r >= 0
-			? (region_tile_coords.r + section::radius) / section::diameter
-			: (region_tile_coords.r - section::radius) / section::diameter
+		auto r = region_tile_coords.r >= 0_span
+			? 1_section_span * (region_tile_coords.r + section::radius) / section::diameter
+			: 1_section_span * (region_tile_coords.r - section::radius) / section::diameter
 			;
 		return region_section::point{q, r};
 	}
@@ -58,9 +58,9 @@ namespace ql {
 		for (auto& slice : _tiles) {
 			for (auto& tile : slice) {
 				int c;
-				double temperature_offset;
+				temperature temperature_offset;
 
-				data_stream >> c >> temperature_offset;
+				data_stream >> c >> temperature_offset.value;
 
 				switch (static_cast<tile_subtype>(c)) {
 					case tile_subtype::dirt:
@@ -118,7 +118,7 @@ namespace ql {
 		std::ofstream fout{filename};
 		for (auto& r_row : _tiles) {
 			for (auto& tile : r_row) {
-				fout << static_cast<char>(tile->subtype()) << ' ' << tile->temperature_offset << ' ';
+				fout << static_cast<char>(tile->subtype()) << ' ' << tile->temperature_offset.value << ' ';
 			}
 		}
 	}

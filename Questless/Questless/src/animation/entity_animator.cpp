@@ -50,7 +50,7 @@ namespace ql {
 			total_bleeding += part.bleeding.value();
 		}
 		if (total_bleeding > blood_per_tick{0.0}) {
-			constexpr auto bleeding_scaling_factor = 5.0_tick * 1.0_hp / 1.0_blood;
+			constexpr auto bleeding_scaling_factor = 5_tick * 1.0_hp / 1.0_blood;
 			auto bleeding = umake<ql::bleeding>((total_bleeding / human.body.total_vitality().value() * bleeding_scaling_factor).value);
 			animation_stack->add(std::move(bleeding));
 		}

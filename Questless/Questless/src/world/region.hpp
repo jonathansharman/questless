@@ -6,6 +6,8 @@
 
 #include "section.hpp"
 
+#include "utility/quantities.hpp"
+
 #include <functional>
 #include <map>
 #include <memory>
@@ -116,16 +118,16 @@ namespace ql {
 		section const* containing_section(region_tile::point region_tile_coords) const { return containing_section_helper(region_tile_coords); }
 
 		//! The total in-game time in this region.
-		double time() const { return _time; }
+		tick time() const { return _time; }
 
 		//! The time of day in this region.
-		double time_of_day() const { return _time_of_day; }
+		tick time_of_day() const { return _time_of_day; }
 
 		//! The period of day in this region.
 		period_of_day period_of_day() const { return _period_of_day; }
 
 		//! The illuminance of the tile at @p region_tile_coords.
-		ql::illuminance illuminance(region_tile::point region_tile_coords) const;
+		lum illuminance(region_tile::point region_tile_coords) const;
 
 		//! The temperature of the tile at @p region_tile_coords.
 		ql::temperature temperature(region_tile::point region_tile_coords) const;
@@ -133,8 +135,8 @@ namespace ql {
 		//! The proportion of light/vision occluded between @p start and @p end, as a number in [0, 1].
 		double occlusion(region_tile::point start, region_tile::point end) const;
 
-		//! Advances local time by one unit then updates everything contained in the region.
-		void update();
+		//! Advances local time by @elapsed then updates everything contained in the region.
+		void update(tick elapsed);
 
 		//! Adds an effect to this region, notifying beings within range of its occurrence.
 		//! @param effect The effect to add.
@@ -146,18 +148,18 @@ namespace ql {
 
 		// These define the maximum size of the sections rhomboid that should be loaded at any given time.
 
-		static int const _loaded_sections_q_radius = 1;
-		static int const _loaded_sections_r_radius = 1;
+		static constexpr auto _loaded_sections_q_radius = 1_section_span;
+		static constexpr auto _loaded_sections_r_radius = 1_section_span;
 
 		// Time Constants
 
-		static double constexpr _day_length = 1200.0;
-		static double constexpr _twilight_pct = 0.05;
-		static double constexpr _end_of_morning = 0.25 * _day_length;
-		static double constexpr _end_of_afternoon = 0.5 * _day_length;
-		static double constexpr _end_of_dusk = (0.5 + _twilight_pct) * _day_length;
-		static double constexpr _end_of_evening = (2.0 / 3.0) * _day_length;
-		static double constexpr _end_of_night = (1.0 - _twilight_pct) * _day_length;
+		static constexpr tick _day_length = 12'000_tick;
+		static constexpr double _twilight_pct = 0.05;
+		static constexpr tick _end_of_morning = _day_length / 4;
+		static constexpr tick _end_of_afternoon = _day_length / 2;
+		static constexpr tick _end_of_dusk = meta::quantity_cast<tick>((0.5 + _twilight_pct) * _day_length);
+		static constexpr tick _end_of_evening = 2 * _day_length / 3;
+		static constexpr tick _end_of_night = meta::quantity_cast<tick>((1.0 - _twilight_pct) * _day_length);
 
 		/////////////////
 		// Member Data //
@@ -167,21 +169,21 @@ namespace ql {
 		std::map<region_section::point, section> _section_map;
 		region_section::point center_section_coords = region_section::point{0, 0};
 
-		double _time;
-		double _time_of_day;
+		tick _time;
+		tick _time_of_day;
 		ql::period_of_day _period_of_day;
 
 		std::set<ref<being>, bool(*)(being const&, being const&)> _turn_queue;
-		double _ambient_illuminance;
+		lum _ambient_illuminance;
 
 		//////////////////////
 		// Member Functions //
 		//////////////////////
 
-		double get_time_of_day() const { return fmod(_time, _day_length); }
+		tick get_time_of_day() const { return _time % _day_length; }
 		ql::period_of_day get_period_of_day() const;
 
-		double get_ambient_illuminance();
+		lum get_ambient_illuminance();
 
 		//! Performs some operation on each section in the loaded rhomboid of sections.
 		//! @param f The operation to perform on each section.

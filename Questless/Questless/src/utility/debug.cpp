@@ -6,7 +6,7 @@
 #include "game.hpp"
 
 namespace ql {
-	std::chrono::nanoseconds time(type_safe::function_ref<void()> f) {
+	std::chrono::nanoseconds time(std::function<void()> const& f) {
 		auto start_time = game::clock::now();
 		f();
 		return std::chrono::duration_cast<std::chrono::nanoseconds>(game::clock::now() - start_time);

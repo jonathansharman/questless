@@ -29,7 +29,7 @@ namespace ql {
 		virtual ~modal_weapon() = default;
 
 		//! The amount of time required to switch from one form to another.
-		virtual double switch_time() const = 0;
+		virtual tick switch_time() const = 0;
 
 		std::vector<uptr<action>> actions() final { return _form->actions(); }
 	protected:
@@ -57,7 +57,7 @@ namespace ql {
 			std::string const _name;
 		};
 
-		modal_weapon(double integrity, uptr<form> initial_form) : weapon{integrity}, _form{std::move(initial_form)} {}
+		modal_weapon(ql::integrity integrity, uptr<form> initial_form) : weapon{integrity}, _form{std::move(initial_form)} {}
 
 		//! This weapon's current form.
 		form const& current_form() const { return *_form; }

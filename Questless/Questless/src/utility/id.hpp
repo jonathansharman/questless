@@ -5,11 +5,12 @@
 #pragma once
 
 #include <cstdint>
+#include <utility>
 
 // Specialize std::hash.
 namespace ql {
 	template <typename T>
-	class id;
+	struct id;
 }
 namespace std {
 	template <typename T>
@@ -21,50 +22,36 @@ namespace std {
 namespace ql {
 	//! Uniquely identifies an object of type T.
 	template <typename T>
-	class id {
-	public:
+	struct id {
 		using key_t = uint64_t;
+
+		key_t key;
 
 		id() = delete;
 		constexpr id(id const&) = default;
-		constexpr explicit id(key_t key) : _key{key} {}
+		constexpr explicit id(key_t key) : key{key} {}
 
-		//! Constructs an ID from a key read from the stream.
-		id(std::istream& in) : _key{read_key(in)} {}
-
-		constexpr id& operator =(id const&) & = default;
+		constexpr id& operator =(id const&) = default;
 
 		//! A new unique ID.
-		static id make() { return id{next()}; }
-
-		constexpr bool operator <(id that) const { return _key < that._key; }
-		constexpr bool operator ==(id that) const { return _key == that._key; }
-
-		constexpr key_t key() const { return _key; }
-
-		//! Inserts the ID's key into the stream.
-		friend std::ostream& operator <<(std::ostream& out, id id) {
-			out << id._key;
-			return out;
-		}
-	private:
-		key_t _key;
-		
-		friend size_t std::hash<id>::operator ()(const id&) const;
-
-		//! The next unused ID key.
-		static key_t next() {
+		static id make() {
 			//! @todo This won't work once saving and loading are in place.
 			static key_t next_key = 0;
-			return next_key++;
+			return id{next_key++};
 		}
 
-		//! Returns an ID key read from the given stream.
-		static key_t read_key(std::istream& in) {
-			key_t key;
-			in >> key;
-			return key;
-		}
+		template <typename Archive>
+		key_t save_minimal(Archive const&) const { return key; }
+
+		template <typename Archive>
+		void load_minimal(Archive const&, key_t const& key) { this->key = key; }
+
+		constexpr bool operator <(id const& that) const { return key < that.key; }
+		constexpr bool operator <=(id const& that) const { return key <= that.key; }
+		constexpr bool operator ==(id const& that) const { return key == that.key; }
+		constexpr bool operator !=(id const& that) const { return key != that.key; }
+		constexpr bool operator >(id const& that) const { return key > that.key; }
+		constexpr bool operator >=(id const& that) const { return key >= that.key; }
 	};
 }
 
@@ -72,6 +59,6 @@ namespace ql {
 namespace std {
 	template <typename T>
 	size_t hash<ql::id<T>>::operator ()(ql::id<T> const& id) const {
-		return hash<ql::id<T>::key_t>{}(id._key);
+		return hash<typename ql::id<T>::key_t>{}(id.key);
 	}
 }

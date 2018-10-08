@@ -17,7 +17,7 @@ namespace ql {
 		// Walk next time.
 		ai._state = umake<walk_state>();
 		// Wait for up to 10 time units.
-		return ai.idle(ticks{uniform(0.0, 10.0)});
+		return ai.idle(tick{uniform(0, 10)});
 	}
 	complete basic_ai::walk_state::act(basic_ai& ai) {
 		// Move or turn at random.
@@ -27,7 +27,7 @@ namespace ql {
 				ai._state = umake<idle_state>();
 				if (result == action::result::aborted) {
 					// Walk failed. Wait for up to 10 time units instead.
-					return ai.idle(ticks{uniform(0.0, 10.0)});
+					return ai.idle(tick{uniform(0, 10)});
 				}
 				return complete{};
 			});
@@ -38,7 +38,7 @@ namespace ql {
 				ai._state = umake<idle_state>();
 				if (result == action::result::aborted) {
 					// Turn failed. Wait for up to 10 time units instead.
-					return ai.idle(ticks{uniform(0.0, 10.0)});
+					return ai.idle(tick{uniform(0, 10)});
 				}
 				return complete{};
 			});
@@ -46,7 +46,7 @@ namespace ql {
 	}
 	complete basic_ai::attack_state::act(basic_ai& ai) {
 		if (ql::being* target = the_game().beings.ptr(target_id)) {
-			if (ai.being.perception_of(target->coords).category() == perception::category::none) {
+			if (perception::get_category(ai.being.perception_of(target->coords)) == perception::category::none) {
 				// Target not visible. Switch to idle state.
 				ai._state = umake<idle_state>();
 				return ai.act();
@@ -59,20 +59,20 @@ namespace ql {
 					return ai.turn(target_direction, [&ai](action::result result) {
 						if (result == action::result::aborted) {
 							// Turn failed. Wait for up to 10 time units instead.
-							return ai.idle(ticks{uniform(0.0, 10.0)});
+							return ai.idle(tick{uniform(0, 10)});
 						}
 						return complete{};
 					});
 				} else {
 					// Facing towards target.
-					if ((target->coords - ai.being.coords).length() == 1) {
+					if ((target->coords - ai.being.coords).length() == 1_span) {
 						// Within striking distance of target.
 						//! @todo This is a hack that assumes the first item in the inventory is a melee weapon.
 						item& item = *ai.being.inventory.items.begin();
 						return item.actions().front()->perform(ai.being, [&ai](action::result result) {
 							if (result == action::result::aborted) {
 								// Attack failed. Wait for up to 10 time units instead.
-								return ai.idle(ticks{uniform(0.0, 10.0)});
+								return ai.idle(tick{uniform(0, 10)});
 							}
 							return complete{};
 						});
@@ -81,7 +81,7 @@ namespace ql {
 						return ai.walk(target_direction, [&ai](action::result result) {
 							if (result == action::result::aborted) {
 								// Walk failed. Wait for up to 10 time units instead.
-								return ai.idle(ticks{uniform(0.0, 10.0)});
+								return ai.idle(tick{uniform(0, 10)});
 							}
 							return complete{};
 						});
@@ -101,34 +101,20 @@ namespace ql {
 		return cont();
 	}
 
-	//complete basic_ai::query_count
-	//	( queries::count::any query
-	//	, int default_value
-	//	, std::optional<int> min
-	//	, std::optional<int> max
-	//	, std::function<complete(std::optional<int>)> cont
-	//	) const
-	//{
-	//	struct count_query_handler : count_query_const_visitor {
-	//		int default_value;
-	//		std::optional<int> min;
-	//		std::optional<int> max;
-	//		std::function<complete(std::optional<int>)> cont;
-
-	//		count_query_handler
-	//			( int default_value
-	//			, std::optional<int> min
-	//			, std::optional<int> max
-	//			, std::function<complete(std::optional<int>)> cont
-	//			)
-	//			: default_value{default_value}, min{min}, max{max}, cont{std::move(cont)}
-	//		{}
-	//	};
-
-	//	count_query_handler handler{std::move(default_value), min, max, std::move(cont)};
-	//	query->accept(handler);
-	//	return complete{};
-	//}
+	complete basic_ai::query_count
+		( queries::count::any query
+		, int default_value
+		, std::optional<int> /*min*/
+		, std::optional<int> /*max*/
+		, std::function<complete(std::optional<int>)> cont
+		) const
+	{
+		return std::visit([&](auto&& query) {
+			SWITCH_TYPE(query) {
+				MATCH_TYPE(queries::count::wait_time) return cont(default_value);
+			}
+		}, query);
+	}
 
 	complete basic_ai::query_magnitude
 		( queries::magnitude::any query
@@ -142,7 +128,6 @@ namespace ql {
 			SWITCH_TYPE(query) {
 				MATCH_TYPE(queries::magnitude::heal) return cont(default_value);
 				MATCH_TYPE(queries::magnitude::shock) return cont(default_value);
-				MATCH_TYPE(queries::magnitude::wait_time) return cont(default_value);
 			}
 		}, query);
 	}

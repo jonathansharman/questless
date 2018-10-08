@@ -11,11 +11,11 @@ namespace units {
 	namespace detail {
 		class game_space_buffer : public buffer_base<double, 2> {
 		public:
-			double& x() & { return _elements[0]; }
-			constexpr double const& x() const& { return _elements[0]; }
+			double& x() { return _elements[0]; }
+			constexpr double const& x() const { return _elements[0]; }
 
-			double& y() & { return _elements[1]; }
-			constexpr double const& y() const& { return _elements[1]; }
+			double& y() { return _elements[1]; }
+			constexpr double const& y() const { return _elements[1]; }
 		protected:
 			using buffer_base::buffer_base;
 			using buffer_base::operator =;

@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "utility/quantities.hpp"
+
 #include <variant>
 
 namespace ql::queries::message {
@@ -14,7 +16,7 @@ namespace ql::queries::message {
 	struct incant_failed_mute {};
 	struct melee_miss {};
 	struct not_enough_ammo {};
-	struct not_enough_charge { double charge_deficit; };
+	struct not_enough_charge { mana charge_deficit; };
 
 	using any = std::variant
 		< arrow_miss

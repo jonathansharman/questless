@@ -7,6 +7,7 @@
 #include "item_visitor.hpp"
 #include "agents/action.hpp"
 #include "utility/id.hpp"
+#include "utility/quantities.hpp"
 #include "utility/reference.hpp"
 
 namespace ql {
@@ -22,14 +23,14 @@ namespace ql {
 		//! The item's name.
 		virtual std::string name() const = 0;
 
-		//! The item's weight.
-		virtual double weight() const = 0;
+		//! The item's mass.
+		virtual load mass() const = 0;
 
 		//! The list of actions that can be performed with the item.
 		virtual std::vector<uptr<action>> actions() = 0;
 
-		//! Advances the item one time unit.
-		virtual void update() {}
+		//! Advances this item by @p elapsed.
+		virtual void update(tick elapsed);
 	protected:
 		class drop : public action {
 		public:

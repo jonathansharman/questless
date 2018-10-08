@@ -25,13 +25,13 @@ namespace ql {
 			, std::function<complete()> cont
 			) const final;
 
-		//complete query_count
-		//	( queries::count::any
-		//	, int
-		//	, std::optional<int>
-		//	, std::optional<int>
-		//	, std::function<complete(std::optional<int>)> cont
-		//	) const final;
+		complete query_count
+			( queries::count::any
+			, int
+			, std::optional<int>
+			, std::optional<int>
+			, std::function<complete(std::optional<int>)> cont
+			) const final;
 
 		complete query_magnitude
 			( queries::magnitude::any

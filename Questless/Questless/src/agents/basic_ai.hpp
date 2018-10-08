@@ -25,13 +25,13 @@ namespace ql {
 			, std::function<complete()> cont
 			) const override;
 
-		//complete query_count
-		//	( queries::count::any query
-		//	, int default_value
-		//	, std::optional<int> min
-		//	, std::optional<int> max
-		//	, std::function<complete(std::optional<int>)> cont
-		//	) const override;
+		complete query_count
+			( queries::count::any query
+			, int default_value
+			, std::optional<int> min
+			, std::optional<int> max
+			, std::function<complete(std::optional<int>)> cont
+			) const override;
 
 		complete query_magnitude
 			( queries::magnitude::any query

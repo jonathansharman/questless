@@ -54,31 +54,31 @@ namespace ql::dmg {
 				vuln const& vulnerability;
 
 				void operator ()(slash& slash) const {
-					slash *= 1.0 + (vulnerability.slash.value() - resistance.slash.value()) / 100.0_slash_factor;
+					slash += slash * (vulnerability.slash.value() - resistance.slash.value()) / 100.0_slash_factor;
 				}
 				void operator ()(pierce& pierce) const {
-					pierce *= 1.0 + (vulnerability.pierce.value() - resistance.pierce.value()) / 100.0_pierce_factor;
+					pierce += pierce * (vulnerability.pierce.value() - resistance.pierce.value()) / 100.0_pierce_factor;
 				}
 				void operator ()(cleave& cleave) const {
-					cleave *= 1.0 + (vulnerability.cleave.value() - resistance.cleave.value()) / 100.0_cleave_factor;
+					cleave += cleave * (vulnerability.cleave.value() - resistance.cleave.value()) / 100.0_cleave_factor;
 				}
 				void operator ()(bludgeon& bludgeon) const {
-					bludgeon *= 1.0 + (vulnerability.bludgeon.value() - resistance.bludgeon.value()) / 100.0_bludgeon_factor;
+					bludgeon += bludgeon * (vulnerability.bludgeon.value() - resistance.bludgeon.value()) / 100.0_bludgeon_factor;
 				}
 				void operator ()(burn& burn) const {
-					burn *= 1.0 + (vulnerability.burn.value() - resistance.burn.value()) / 100.0_burn_factor;
+					burn += burn * (vulnerability.burn.value() - resistance.burn.value()) / 100.0_burn_factor;
 				}
 				void operator ()(freeze& freeze) const {
-					freeze *= 1.0 + (vulnerability.freeze.value() - resistance.freeze.value()) / 100.0_freeze_factor;
+					freeze += freeze * (vulnerability.freeze.value() - resistance.freeze.value()) / 100.0_freeze_factor;
 				}
 				void operator ()(blight& blight) const {
-					blight *= 1.0 + (vulnerability.blight.value() - resistance.blight.value()) / 100.0_blight_factor;
+					blight += blight * (vulnerability.blight.value() - resistance.blight.value()) / 100.0_blight_factor;
 				}
 				void operator ()(poison& poison) const {
-					poison *= 1.0 + (vulnerability.poison.value() - resistance.poison.value()) / 100.0_poison_factor;
+					poison += poison * (vulnerability.poison.value() - resistance.poison.value()) / 100.0_poison_factor;
 				}
 				void operator ()(shock& shock) const {
-					shock *= 1.0 + (vulnerability.shock.value() - resistance.shock.value()) / 100.0_shock_factor;
+					shock += shock * (vulnerability.shock.value() - resistance.shock.value()) / 100.0_shock_factor;
 				}
 			};
 			std::visit(damage_multiplier_applier{resistance, vulnerability}, part);

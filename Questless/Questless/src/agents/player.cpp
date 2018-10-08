@@ -49,7 +49,7 @@ namespace ql {
 								return complete{};
 							});
 						} else {
-							return this->idle(1.0_tick);
+							return this->idle(1_tick);
 						}
 					}
 					MATCH_TYPE(player_action_dialog::move) {
@@ -229,7 +229,7 @@ namespace ql {
 				MATCH_TYPE(queries::message::melee_miss) return {"Melee Attack", "Miss!"};
 				MATCH_TYPE(queries::message::not_enough_ammo) return {"Attack", "Not enough ammo!"};
 				MATCH_TYPE(queries::message::not_enough_charge)
-					return {"Spell Cast", "Not enough charge! Your gatestone needs " + std::to_string(message.charge_deficit) + " more charge to cast this."};
+					return {"Spell Cast", "Not enough charge! Your gatestone needs " + std::to_string(message.charge_deficit.value) + " more charge to cast this."};
 			}
 		}, message);
 
@@ -237,28 +237,23 @@ namespace ql {
 		return the_game().add_dialog(std::move(dialog));
 	}
 
-	//complete player::query_count
-	//	( queries::count::any query
-	//	, int default_value
-	//	, std::optional<int> min
-	//	, std::optional<int> max
-	//	, function<complete(std::optional<int>)> cont
-	//	) const
-	//{
-	//	struct count_query_titler : count_query_const_visitor {
-	//		std::string title;
-	//	};
-	//	struct count_query_prompter : count_query_const_visitor {
-	//		std::string prompt;
-	//	};
+	complete player::query_count
+		( queries::count::any query
+		, int default_value
+		, std::optional<int> min
+		, std::optional<int> max
+		, function<complete(std::optional<int>)> cont
+		) const
+	{
+		std::array<std::string, 2> const title_prompt = std::visit([&](auto&& query)->std::array<std::string, 2> {
+			SWITCH_TYPE(query) {
+				MATCH_TYPE(queries::count::wait_time) return {"Wait", "Enter wait time."};
+			}
+		}, query);
 
-	//	count_query_titler titler;
-	//	query->accept(titler);
-	//	count_query_prompter prompter;
-	//	query->accept(prompter);
-	//	auto dialog = umake<count_dialog>(std::move(titler.title), std::move(prompter.prompt), default_value, min, max, std::move(cont));
-	//	return the_game().add_dialog(std::move(dialog));
-	//}
+		auto dialog = umake<count_dialog>(std::move(title_prompt[0]), std::move(title_prompt[1]), default_value, min, max, std::move(cont));
+		return the_game().add_dialog(std::move(dialog));
+	}
 
 	complete player::query_magnitude
 		( queries::magnitude::any query
@@ -272,7 +267,6 @@ namespace ql {
 			SWITCH_TYPE(query) {
 				MATCH_TYPE(queries::magnitude::heal) return {"Heal Amount", "Choose how much health to restore."};
 				MATCH_TYPE(queries::magnitude::shock) return {"Lightning Bolt Strength", "Choose how strong to make the lightning bolt."};
-				MATCH_TYPE(queries::magnitude::wait_time) return {"Wait", "Enter wait time."};
 			}
 		}, query);
 

@@ -4,12 +4,14 @@
 
 #pragma once
 
-#include <optional>
-
 #include "effect_visitor.hpp"
+
 #include "damage/group.hpp"
 #include "utility/id.hpp"
+#include "utility/quantities.hpp"
 #include "world/coordinates.hpp"
+
+#include <optional>
 
 namespace ql {
 	class being;
@@ -24,7 +26,7 @@ namespace ql {
 		virtual ~effect() = default;
 
 		//! The maximum distance from the origin at which this effect may be perceived.
-		virtual int range() const = 0;
+		virtual span range() const = 0;
 
 		region_tile::point origin() const { return _origin; }
 	private:
@@ -46,7 +48,7 @@ namespace ql {
 			, target{target}
 		{}
 
-		int range() const final { return 2 * (target - origin()).length(); }
+		span range() const final { return 2 * (target - origin()).length(); }
 	};
 
 	class eagle_eye_effect : public effect_base<eagle_eye_effect> {
@@ -60,7 +62,7 @@ namespace ql {
 			, caster_id{caster_id}
 		{}
 
-		int range() const final { return 3; }
+		span range() const final { return 3_span; }
 	};
 
 	class injury_effect : public effect_base<injury_effect> {
@@ -89,13 +91,13 @@ namespace ql {
 			, opt_source_id{opt_source_id}
 		{}
 
-		int range() const final { return 7; }
+		span range() const final { return 7_span; }
 	};
 
 	class lightning_bolt_effect : public effect_base<lightning_bolt_effect> {
 	public:
 		using effect_base<lightning_bolt_effect>::effect_base;
 
-		int range() const final { return 10; }
+		span range() const final { return 10_span; }
 	};
 }

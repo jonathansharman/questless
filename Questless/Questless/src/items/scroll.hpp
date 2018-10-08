@@ -17,7 +17,7 @@ namespace ql {
 
 		std::string name() const final { return blank() ? "Blank Scroll" : "Scroll: " + _spell->name(); }
 
-		double weight() const final { return 0.1; }
+		load mass() const final { return 0.1_load; }
 
 		bool blank() const { return _spell == nullptr; }
 

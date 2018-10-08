@@ -15,9 +15,9 @@ namespace ql {
 		virtual ~weapon() = default;
 
 		//! Time left before the weapon can be used again.
-		double active_cooldown = 0.0; //! @todo Replace with a non-negative double property.
+		nonnegative<tick> active_cooldown = 0_tick;
 	protected:
-		weapon(double integrity) : breakable{integrity} {}
+		weapon(ql::integrity integrity) : breakable{integrity} {}
 	};
 
 	DEFINE_ELEMENT_BASE(weapon, item)

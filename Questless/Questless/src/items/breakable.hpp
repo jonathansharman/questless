@@ -6,6 +6,7 @@
 
 #include "items/item.hpp"
 #include "utility/lazy_bounded.hpp"
+#include "utility/quantities.hpp"
 
 namespace ql {
 	//! Abstract base class for items which can be worn down and broken.
@@ -13,20 +14,18 @@ namespace ql {
 	public:
 		virtual ~breakable() = default;
 
-		//! The item's durability, which is its maximum integrity.
-		virtual double durability() const = 0;
+		//! The item's durability, i.e. its maximum integrity.
+		virtual ql::integrity durability() const = 0;
 
-		//! Whether the item is broken, i.e., integrity is zero.
-		bool broken() const { return integrity <= 0.0; }
+		//! Whether the item is broken, i.e. integrity is zero.
+		bool broken() const { return integrity.value() <= 0.0_integrity; }
 
 		//! The item's integrity, which ranges from zero to its durability. The item is broken if integrity is zero.
-		lazy_bounded<double> integrity;
+		lazy_bounded<ql::integrity> integrity;
 	protected:
-		breakable(double integrity)
-			: integrity{integrity, [] { return 0.0; }, [this] { return durability(); }}
+		breakable(ql::integrity integrity)
+			: integrity{integrity, [] { return 0.0_integrity; }, [this] { return durability(); }}
 		{}
-	private:
-		std::function<void(double&, double const&)> integrity_mutator();
 	};
 
 	DEFINE_ELEMENT_BASE_MAKE_CTOR(breakable, item)

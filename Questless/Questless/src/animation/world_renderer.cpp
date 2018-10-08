@@ -126,9 +126,9 @@ namespace ql {
 		}
 		// Draw tile highlights, if active.
 		if (_highlight_predicate) {
-			int const visual_range = _world_view->visual_range();
-			for (int q = -visual_range; q <= visual_range; ++q) {
-				for (int r = -visual_range; r <= visual_range; ++r) {
+			span const visual_range = _world_view->visual_range();
+			for (span q = -visual_range; q <= visual_range; ++q) {
+				for (span r = -visual_range; r <= visual_range; ++r) {
 					region_tile::vector const offset{q, r};
 					if (offset.length() <= visual_range) {
 						auto tile_coords = _world_view->origin() + offset;
@@ -170,8 +170,8 @@ namespace ql {
 
 				auto& entity_animation = get_animation(entity_view.id);
 
-				float intensity = static_cast<float>((entity_view.perception.level - perception::minimum_level) / (perception::maximum_level - perception::minimum_level));
-				switch (entity_view.perception.category()) {
+				float const intensity = static_cast<float>(((entity_view.perception.value() - perception::minimum_level) / (perception::maximum_level - perception::minimum_level)).value);
+				switch (perception::get_category(entity_view.perception)) {
 					case perception::category::none:
 						break;
 					case perception::category::low:
@@ -283,11 +283,11 @@ namespace ql {
 				auto opt_section = _world_view->region().section_at(section_view.coords);
 				if (opt_section) {
 					ql::section const& section = *opt_section;
-					for (int q = 0; q < section::diameter; ++q) {
-						for (int r = 0; r < section::diameter; ++r) {
+					for (span q = 0_span; q < section::diameter; ++q) {
+						for (span r = 0_span; r < section::diameter; ++r) {
 							section_tile::point section_tile_coords{q, r};
-							perception tile_perception = section_view.tile_perceptions[section_tile_coords.q][section_tile_coords.r];
-							if (tile_perception.category() != perception::category::none) {
+							perception::level tile_perception = section_view.tile_perceptions[section_tile_coords.q.value][section_tile_coords.r.value];
+							if (perception::get_category(tile_perception) != perception::category::none) {
 								region_tile::point const region_tile_coords = section.region_tile_coords(section_tile_coords);
 								game_space::point const tile_game_point = to_world(region_tile_coords);
 								game_space::point const terrain_game_point = _terrain_bounds.position;
@@ -303,7 +303,7 @@ namespace ql {
 								// If it's there, use it. Otherwise, create the texture and cache it.
 								texture& tile_texture = it != _tile_textures.end() ? *it->second : cache_tile_texture(tile);
 
-								float const intensity = static_cast<float>((tile_perception.level - perception::minimum_level) / (perception::maximum_level - perception::minimum_level));
+								float const intensity = static_cast<float>(((tile_perception - perception::minimum_level) / (perception::maximum_level - perception::minimum_level)).value);
 								tile_texture.draw_transformed
 									( tile_screen_point
 									, texture_space::vector::zero()

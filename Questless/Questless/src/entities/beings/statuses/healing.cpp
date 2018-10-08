@@ -8,7 +8,7 @@
 namespace ql {
 	void healing::subupdate(being& target) {
 		for (body_part& part : target.body.parts()) {
-			target.heal(_magnitude, part, source());
+			target.heal(_rate * 1_tick, part, source());
 		}
 	}
 }

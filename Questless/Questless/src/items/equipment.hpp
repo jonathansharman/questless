@@ -19,10 +19,10 @@ namespace ql {
 		virtual ~equipment() = default;
 
 		//! The amount of time required to equip the item.
-		virtual double equip_time() const = 0;
+		virtual tick equip_time() const = 0;
 
 		//! The amount of time required to unequip the item.
-		virtual double unequip_time() const = 0;
+		virtual tick unequip_time() const = 0;
 
 		//! Whether the item is currently equipped to a being.
 		bool equipped() const { return _opt_bearer_id.has_value(); }

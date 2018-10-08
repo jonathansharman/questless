@@ -20,7 +20,7 @@ namespace ql::magic {
 					return cont(action::result::aborted);
 				}
 				region_tile::point const tile_coords = *opt_tile_coords;
-				int const distance = (tile_coords - caster.coords).length();
+				span const distance = (tile_coords - caster.coords).length();
 				return charge_cost{gatestone, _cost_factor * distance}.check_and_incur(caster,
 					[&caster, cont = std::move(cont), tile_coords] {
 						caster.region->add_effect(smake<lightning_bolt_effect>(caster.coords));

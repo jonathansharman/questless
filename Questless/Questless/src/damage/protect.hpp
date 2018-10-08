@@ -8,7 +8,7 @@
 
 #include "meta/quantity.hpp"
 
-#include <nlohmann/json.hpp>
+#include <cereal/cereal.hpp>
 
 namespace ql {
 	namespace dmg {
@@ -48,7 +48,39 @@ namespace ql {
 
 			static constexpr protect zero() { return protect{}; }
 
+			template <typename Archive>
+			void save(Archive& archive) const {
+				archive
+					( CEREAL_NVP(pad)
+					, CEREAL_NVP(deflect)
+					, CEREAL_NVP(fireproof)
+					, CEREAL_NVP(frostproof)
+					, CEREAL_NVP(fortify)
+					, CEREAL_NVP(immunize)
+					, CEREAL_NVP(insulate)
+					);
+			}
+
+			template <typename Archive>
+			void load(Archive& archive) {
+				archive
+					( CEREAL_NVP(pad)
+					, CEREAL_NVP(deflect)
+					, CEREAL_NVP(fireproof)
+					, CEREAL_NVP(frostproof)
+					, CEREAL_NVP(fortify)
+					, CEREAL_NVP(immunize)
+					, CEREAL_NVP(insulate)
+					);
+			}
+
 			protect& operator +=(protect const& p) {
+				dmg::pad whatever{2.0};
+				whatever += dmg::pad{3.0};
+				nonnegative<double> whatever2{2.0};
+				whatever2 += nonnegative<double>{3.0};
+				nonnegative<dmg::pad> whatever3{dmg::pad{2.0}};
+				whatever3 += nonnegative<dmg::pad>{dmg::pad{3.0}};
 				pad += p.pad;
 				deflect += p.deflect;
 				fireproof += p.fireproof;
@@ -114,39 +146,6 @@ namespace ql {
 				return result;
 			}
 		};
-
-		void to_json(nlohmann::json& j, protect const& protect) {
-			if (protect.pad != pad{0.0}) j["pad"] = protect.pad.value().value;
-			if (protect.deflect != deflect{0.0}) j["deflect"] = protect.deflect.value().value;
-			if (protect.fireproof != fireproof{0.0}) j["fireproof"] = protect.fireproof.value().value;
-			if (protect.frostproof != frostproof{0.0}) j["frostproof"] = protect.frostproof.value().value;
-			if (protect.fortify != fortify{0.0}) j["fortify"] = protect.fortify.value().value;
-			if (protect.immunize != immunize{0.0}) j["immunize"] = protect.immunize.value().value;
-			if (protect.insulate != insulate{0.0}) j["insulate"] = protect.insulate.value().value;
-		}
-
-		void from_json(nlohmann::json const& j, protect& protect) {
-			auto pad = j.find("pad");
-			if (pad != j.end()) protect.pad = dmg::pad{pad.value().get<double>()};
-
-			auto deflect = j.find("deflect");
-			if (deflect != j.end()) protect.deflect = dmg::deflect{deflect.value().get<double>()};
-
-			auto fireproof = j.find("fireproof");
-			if (fireproof != j.end()) protect.fireproof = dmg::fireproof{fireproof.value().get<double>()};
-
-			auto frostproof = j.find("frostproof");
-			if (frostproof != j.end()) protect.frostproof = dmg::frostproof{frostproof.value().get<double>()};
-
-			auto fortify = j.find("fortify");
-			if (fortify != j.end()) protect.fortify = dmg::fortify{fortify.value().get<double>()};
-
-			auto immunize = j.find("immunize");
-			if (immunize != j.end()) protect.immunize = dmg::immunize{immunize.value().get<double>()};
-
-			auto insulate = j.find("insulate");
-			if (insulate != j.end()) protect.insulate = dmg::insulate{insulate.value().get<double>()};
-		}
 	}
 
 	constexpr dmg::pad operator "" _pad(long double value) { return dmg::pad{static_cast<double>(value)}; }
