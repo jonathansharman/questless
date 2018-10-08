@@ -33,6 +33,6 @@ namespace ql::magic {
 	}
 	
 	tick spell::incant_time(being& caster) const {
-		return meta::quantity_cast<tick>(base_incant_time() / (1.0 + (caster.stats.a.intellect.value() / 100.0_int).value));
+		return meta::quantity_cast<tick>(base_incant_time() / (1.0 + (caster.stats.a.speech.value() / 100.0_speech).value));
 	}
 }

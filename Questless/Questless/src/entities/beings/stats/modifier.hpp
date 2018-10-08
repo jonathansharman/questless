@@ -8,13 +8,13 @@
 
 #include "utility/reference.hpp"
 #include "utility/type_switch.hpp"
+#include "utility/quantities.hpp"
 #include "utility/utility.hpp"
 
 #include <variant>
 #include <vector>
 
 namespace ql::stats {
-	struct mute_modifier { ql::mute mute; };
 	struct spirit_modifier { ql::mana amount; };
 	struct regen_modifier { ql::per_tick amount; };
 	struct strength_modifier { ql::strength amount; };
@@ -29,13 +29,13 @@ namespace ql::stats {
 	struct glare_penalty_modifier { ql::acuity_per_lum amount; };
 	struct hearing_modifier { ql::hearing amount; };
 	struct intellect_modifier { ql::intellect amount; };
+	struct speech_modifier { ql::speech amount; };
 	struct mass_modifier { ql::load amount; };
 	struct min_temp_modifier { ql::temperature amount; };
 	struct max_temp_modifier { ql::temperature amount; };
 
 	using modifier = std::variant
-		< mute_modifier
-		, spirit_modifier
+		< spirit_modifier
 		, regen_modifier
 		, strength_modifier
 		, toughness_modifier
@@ -48,6 +48,7 @@ namespace ql::stats {
 		, darkness_penalty_modifier
 		, glare_penalty_modifier
 		, hearing_modifier
+		, speech_modifier
 		, intellect_modifier
 		, mass_modifier
 		, min_temp_modifier
@@ -58,7 +59,6 @@ namespace ql::stats {
 	inline void apply(modifier const& modifier, being& stats) {
 		std::visit([&](auto&& mod) {
 			SWITCH_TYPE(mod) {
-				MATCH_TYPE(mute_modifier) stats.a.mute = mod.mute;
 				MATCH_TYPE(spirit_modifier) stats.a.spirit += mod.amount;
 				MATCH_TYPE(regen_modifier) stats.regen += mod.amount;
 				MATCH_TYPE(strength_modifier) stats.a.strength += mod.amount;
@@ -72,6 +72,7 @@ namespace ql::stats {
 				MATCH_TYPE(darkness_penalty_modifier) stats.a.vision.darkness_penalty += mod.amount;
 				MATCH_TYPE(glare_penalty_modifier) stats.a.vision.glare_penalty += mod.amount;
 				MATCH_TYPE(hearing_modifier) stats.a.hearing += mod.amount;
+				MATCH_TYPE(speech_modifier) stats.a.speech += mod.amount;
 				MATCH_TYPE(intellect_modifier) stats.a.intellect += mod.amount;
 				MATCH_TYPE(mass_modifier) stats.a.mass += mod.amount;
 				MATCH_TYPE(min_temp_modifier) stats.min_temp += mod.amount;

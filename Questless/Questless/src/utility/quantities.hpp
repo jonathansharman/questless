@@ -67,6 +67,9 @@ namespace ql {
 	using hearing = meta::quantity<double, meta::unit_t<struct hearing_tag>>;
 	constexpr hearing operator "" _hear(long double value) { return hearing{static_cast<double>(value)}; }
 
+	using speech = meta::quantity<double, meta::unit_t<struct speech_tag>>;
+	constexpr speech operator "" _speech(long double value) { return speech{static_cast<double>(value)}; }
+
 	using intellect = meta::quantity<double, meta::unit_t<struct intellect_tag>>;
 	constexpr intellect operator "" _int(long double value) { return intellect{static_cast<double>(value)}; }
 
@@ -74,8 +77,6 @@ namespace ql {
 	constexpr acuity operator "" _acuity(long double value) { return acuity{static_cast<double>(value)}; }
 
 	using acuity_per_lum = decltype(0.0_acuity / 1.0_lum);
-
-	using mute = meta::quantity<bool, meta::unit_t<struct mute_tag>>;
 
 	using health_per_tick = meta::quantity<double, meta::quotient_t<health::unit, tick::unit>>;
 	constexpr health_per_tick operator "" _hp_per_tick(long double value) { return health_per_tick{static_cast<double>(value)}; }

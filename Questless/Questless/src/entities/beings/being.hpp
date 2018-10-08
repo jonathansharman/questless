@@ -55,7 +55,7 @@ namespace ql {
 		// Conditions
 
 		lazy_bounded<ql::energy> energy;
-		constexpr bool weary() const { return energy.value() < stats.a.stamina.value(); }
+		constexpr bool weary() const { return energy.value() < 0.5 * stats.a.stamina.value(); }
 
 		static constexpr auto min_satiety = 0.0_sat;
 		static constexpr auto max_satiety = 100.0_sat;

@@ -35,7 +35,7 @@ namespace ql {
 	}
 
 	complete gatestone::incant::perform(being& incanter, action::cont cont) {
-		if (incanter.stats.a.mute.value) {
+		if (incanter.stats.a.speech == 0.0_speech) {
 			// Can't incant if mute.
 			return incanter.agent().send_message(queries::message::incant_failed_mute{}, [cont] { return cont(action::result::aborted); });
 		}
