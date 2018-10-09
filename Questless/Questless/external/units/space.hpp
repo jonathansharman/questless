@@ -9,7 +9,6 @@
 
 #include <algorithm>
 #include <array>
-#include <initializer_list>
 #include <numeric>
 #include <ratio>
 #include <type_traits>

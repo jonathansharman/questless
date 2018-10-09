@@ -16,68 +16,30 @@
 using namespace units;
 
 namespace ql {
-	body::body(being& owner, uptr<body_part> root)
-		: blood{0.0, [] { return 0.0; }, [&owner = owner] { return owner.body.total_vitality(); }}
+	body::body(being& owner, body_part root)
+		: blood
+			{ 0.0_blood
+			, [] { return 0.0_blood; }
+			, [&owner = owner] { return owner.body.total_vitality() * body_part::blood_per_vitality; }
+			}
 		, _owner{owner}
 		, _root{std::move(root)}
-		, _total_vitality{0.0}
+		, _total_vitality{0.0_hp}
 	{
-		class part_attacher : public body_part_mutable_visitor {
-		public:
-			part_attacher(body& body) : _body{body} {}
-
-			void visit(head& head) final {
-				_body._heads.push_back(head);
-				_body._c_heads.push_back(head);
-			}
-			void visit(torso& torso) final {
-				_body._torsos.push_back(torso);
-				_body._c_torsos.push_back(torso);
-			}
-			void visit(arm& arm) final {
-				_body._arms.push_back(arm);
-				_body._c_arms.push_back(arm);
-			}
-			void visit(hand& hand) final {
-				_body._hands.push_back(hand);
-				_body._c_hands.push_back(hand);
-			}
-			void visit(leg& leg) final {
-				_body._legs.push_back(leg);
-				_body._c_legs.push_back(leg);
-			}
-			void visit(foot& foot) final {
-				_body._feet.push_back(foot);
-				_body._c_feet.push_back(foot);
-			}
-			void visit(wing& wing) final {
-				_body._wings.push_back(wing);
-				_body._c_wings.push_back(wing);
-			}
-			void visit(tail& tail) final {
-				_body._tails.push_back(tail);
-				_body._c_tails.push_back(tail);
-			}
-		private:
-			body& _body;
-		};
-
 		// Walk the parts tree to build the parts lists and compute cumulative values.
 		std::queue<ref<body_part>> work_list;
-		work_list.push(*_root);
+		work_list.push(_root);
 		while (!work_list.empty()) {
 			body_part& part = work_list.front();
 			_parts.push_back(part);
 			_c_parts.push_back(part);
-			part_attacher attacher{*this};
-			part.accept(attacher);
 
 			// Add part values to totals.
-			_total_vitality += part.vitality;
+			_total_vitality += part.stats.a.vitality.value();
 
 			// Remove current part from work list and add its children.
 			work_list.pop();
-			for (auto const& attachment : part.attachments()) {
+			for (auto const& attachment : part.attachments) {
 				if (attachment->part) {
 					work_list.push(*attachment->part);
 				}
@@ -85,7 +47,7 @@ namespace ql {
 		}
 
 		// Start with maximum blood.
-		blood = _total_vitality;
+		blood = _total_vitality * body_part::blood_per_vitality;
 	}
 
 	body_part* body::find_part(id<body_part> id) {
@@ -105,88 +67,16 @@ namespace ql {
 		return nullptr;
 	}
 
-	head* body::find_head(id<body_part> id) {
-		for (head& head : _heads) {
-			if (head.id == id) {
-				return &head;
-			}
-		}
-		return nullptr;
-	}
-
-	torso* body::find_torso(id<body_part> id) {
-		for (torso& torso : _torsos) {
-			if (torso.id == id) {
-				return &torso;
-			}
-		}
-		return nullptr;
-	}
-
-	arm* body::find_arm(id<body_part> id) {
-		for (arm& arm : _arms) {
-			if (arm.id == id) {
-				return &arm;
-			}
-		}
-		return nullptr;
-	}
-
-	hand* body::find_hand(id<body_part> id) {
-		for (hand& hand : _hands) {
-			if (hand.id == id) {
-				return &hand;
-			}
-		}
-		return nullptr;
-	}
-
-	leg* body::find_leg(id<body_part> id) {
-		for (leg& leg : _legs) {
-			if (leg.id == id) {
-				return &leg;
-			}
-		}
-		return nullptr;
-	}
-
-	foot* body::find_foot(id<body_part> id) {
-		for (foot& foot : _feet) {
-			if (foot.id == id) {
-				return &foot;
-			}
-		}
-		return nullptr;
-	}
-
-	wing* body::find_wing(id<body_part> id) {
-		for (wing& wing : _wings) {
-			if (wing.id == id) {
-				return &wing;
-			}
-		}
-		return nullptr;
-	}
-
-	tail* body::find_tail(id<body_part> id) {
-		for (tail& tail : _tails) {
-			if (tail.id == id) {
-				return &tail;
-			}
-		}
-		return nullptr;
-	}
-
-	void body::update() {
+	void body::update(tick elapsed) {
 		// Update cumulative values.
-		_total_vitality = 0.0;
+		_total_vitality = 0.0_hp;
 		for (body_part const& part : _parts) {
-			_total_vitality += part.vitality;
+			_total_vitality += part.stats.a.vitality.value();
 		}
 
 		// Bleed and regenerate blood.
 		for (body_part const& part : _parts) {
-			blood += _owner.stats.health_regen * part.vitality - part.bleeding;
+			blood += (_owner.stats.regen.value() * part.stats.a.vitality.value() * body_part::blood_per_vitality - part.bleeding.value()) * elapsed;
 		}
 
 		// Update parts.
