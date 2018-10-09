@@ -81,7 +81,7 @@ namespace ql {
 
 		// Update parts.
 		for (body_part& part : _parts) {
-			part.update();
+			part.update(elapsed);
 		}
 	}
 }

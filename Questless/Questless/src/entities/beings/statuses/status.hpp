@@ -45,7 +45,7 @@ namespace ql {
 
 		//! Carries out any effects that should occur each update cycle and decrements the duration of the status.
 		//! @param target The being affected by the status.
-		//! elapsed Time since the last update.
+		//! @param elapsed Time since the last update.
 		void update(being& target, tick elapsed);
 	protected:
 		//! @param name The name of the status modifier displayed to the player.
@@ -58,7 +58,9 @@ namespace ql {
 		std::optional<id<being>> _source_id;
 
 		//! Carries out status subtype-specific effects that should occur each update cycle.
-		virtual void subupdate(being& target);
+		//! @param target The being affected by the status.
+		//! @param elapsed Time since the last update.
+		virtual void subupdate(being& target, tick elapsed);
 
 		//! Carries out any effects that should occur when the status expires.
 		//! @param target The being affected by the status.

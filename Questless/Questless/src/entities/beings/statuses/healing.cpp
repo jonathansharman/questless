@@ -6,9 +6,9 @@
 #include "entities/beings/being.hpp"
 
 namespace ql {
-	void healing::subupdate(being& target) {
+	void healing::subupdate(being& target, tick elapsed) {
 		for (body_part& part : target.body.parts()) {
-			target.heal(_rate * 1_tick, part, source());
+			target.heal(_rate * elapsed, part, source());
 		}
 	}
 }

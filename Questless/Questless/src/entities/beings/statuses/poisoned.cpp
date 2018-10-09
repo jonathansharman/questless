@@ -6,10 +6,10 @@
 #include "entities/beings/being.hpp"
 
 namespace ql {
-	void poisoned::subupdate(being& target) {
-		dmg::group poison{dmg::poison{_magnitude}};
+	void poisoned::subupdate(being& target, tick elapsed) {
 		for (body_part& part : target.body.parts()) {
-			target.take_damage(poison, part, source());
+			dmg::group damage = _rate * elapsed;
+			target.take_damage(damage, part, source());
 		}
 	}
 }

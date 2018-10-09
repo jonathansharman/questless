@@ -141,8 +141,8 @@ namespace ql {
 				);
 		}
 
-		//! Advances the body part one time unit.
-		void update();
+		//! Advances the body part by @p elapsed.
+		void update(tick elapsed);
 
 		//! Causes the body part to take damage from the specified source being.
 		//! @param damage Damage group to be applied to this being.

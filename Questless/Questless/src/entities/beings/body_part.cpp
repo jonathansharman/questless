@@ -17,12 +17,12 @@ namespace ql {
 		load_from_json(filepath, *this);
 	}
 	
-	void body_part::update() {
+	void body_part::update(tick elapsed) {
 		being& owner = the_game().beings.ref(owner_id);
 
-		health += (owner.awake.value ? 1.0 : 1.5) * owner.stats.regen.value() * stats.a.vitality.value() * 1_tick;
+		health += (owner.awake.value ? 1.0 : 1.5) * owner.stats.regen.value() * stats.a.vitality.value() * elapsed;
 
-		bleeding -= owner.stats.regen.value() * stats.a.vitality.value() * blood_per_vitality;
+		bleeding -= owner.stats.regen.value() * stats.a.vitality.value() * blood_per_vitality * elapsed;
 	}
 
 	void body_part::take_damage(dmg::group& damage, std::optional<ql::id<being>> source_id) {

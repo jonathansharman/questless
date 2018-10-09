@@ -16,7 +16,7 @@ namespace ql {
 
 	void status::update(being& target, tick elapsed) {
 		_duration -= elapsed;
-		subupdate(target);
+		subupdate(target, elapsed);
 		if (_duration <= 0_tick) {
 			expire(target);
 		}
@@ -24,5 +24,5 @@ namespace ql {
 
 	void status::expire(being&) {}
 
-	void status::subupdate(being&) {}
+	void status::subupdate(being&, tick) {}
 }

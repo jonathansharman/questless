@@ -19,7 +19,7 @@ namespace ql {
 
 		virtual status_type type() const { return status_type::boon; }
 
-		void subupdate(being& target) final;
+		void subupdate(being& target, tick elapsed) final;
 	private:
 		ql::health_per_tick _rate;
 	};
