@@ -27,7 +27,7 @@ namespace ql {
 	constexpr load operator "" _load(long double value) { return load{static_cast<double>(value)}; }
 
 	//! In-game rate.
-	using per_tick = decltype(1 / 1_tick);
+	using per_tick = meta::inverse_t<tick>;
 	constexpr per_tick operator "" _per_tick(unsigned long long value) { return per_tick{static_cast<int>(value)}; }
 
 	//! In-game temperature.
@@ -76,7 +76,7 @@ namespace ql {
 	using acuity = meta::quantity<double, meta::unit_t<struct acuity_tag>>;
 	constexpr acuity operator "" _acuity(long double value) { return acuity{static_cast<double>(value)}; }
 
-	using acuity_per_lum = decltype(0.0_acuity / 1.0_lum);
+	using acuity_per_lum = meta::quotient_t<acuity, lum>;
 
 	using health_per_tick = meta::quantity<double, meta::quotient_t<health::unit, tick::unit>>;
 	constexpr health_per_tick operator "" _hp_per_tick(long double value) { return health_per_tick{static_cast<double>(value)}; }

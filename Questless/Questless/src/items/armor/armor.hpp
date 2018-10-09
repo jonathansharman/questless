@@ -31,7 +31,7 @@ namespace ql {
 		virtual dmg::resist base_resistance() const = 0;
 
 		//! Reduction in integrity per HP saved by this armor.
-		virtual decltype(ql::integrity{} / ql::health{}) wear_ratio() const = 0;
+		virtual meta::quotient_t<ql::integrity, ql::health> wear_ratio() const = 0;
 
 		//! Applies the armor's protection and resistance to the given damage, possibly reducing the damage and causing the armor to wear.
 		void apply(dmg::group& damage);

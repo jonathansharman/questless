@@ -43,7 +43,7 @@ namespace ql {
 				tick wind_up() const final { return 10_tick; }
 				tick follow_through() const final { return 10_tick; }
 				tick cooldown() const final { return 20_tick; }
-				decltype(ql::integrity{} / ql::health{}) wear_ratio() const final { return 0.001_integrity / 1.0_hp; }
+				meta::quotient_t<ql::integrity, ql::health> wear_ratio() const final { return 0.001_integrity / 1.0_hp; }
 			private:
 				sptr<effect> get_effect(region_tile::point /*source*/, region_tile::point /*target*/) final { return nullptr; } // @todo This.
 			};
@@ -55,7 +55,7 @@ namespace ql {
 				tick wind_up() const final { return 2_tick; }
 				tick follow_through() const final { return 8_tick; }
 				tick cooldown() const final { return 13_tick; }
-				decltype(ql::integrity{} / ql::health{}) wear_ratio() const final { return 0.001_integrity / 1.0_hp; }
+				meta::quotient_t<ql::integrity, ql::health> wear_ratio() const final { return 0.001_integrity / 1.0_hp; }
 			private:
 				sptr<effect> get_effect(region_tile::point /*source*/, region_tile::point /*target*/) final { return nullptr; } // @todo This.
 			};
@@ -89,7 +89,7 @@ namespace ql {
 				tick wind_up() const final { return 8_tick; }
 				tick follow_through() const final { return 8_tick; }
 				tick cooldown() const final { return 16_tick; }
-				decltype(ql::integrity{} / ql::health{}) wear_ratio() const final { return 0.001_integrity / 1.0_hp; }
+				meta::quotient_t<ql::integrity, ql::health> wear_ratio() const final { return 0.001_integrity / 1.0_hp; }
 			private:
 				sptr<effect> get_effect(region_tile::point /*source*/, region_tile::point /*target*/) final { return nullptr; } // @todo This.
 			};
@@ -106,7 +106,7 @@ namespace ql {
 				tick wind_up() const final { return 2_tick; }
 				tick follow_through() const final { return 6_tick; }
 				tick cooldown() const final { return 10_tick; }
-				decltype(ql::integrity{} / ql::health{}) wear_ratio() const final { return 0.001_integrity / 1.0_hp; }
+				meta::quotient_t<ql::integrity, ql::health> wear_ratio() const final { return 0.001_integrity / 1.0_hp; }
 			private:
 				sptr<effect> get_effect(region_tile::point /*source*/, region_tile::point /*target*/) final { return nullptr; } // @todo This.
 			};

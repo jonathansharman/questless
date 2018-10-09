@@ -84,14 +84,14 @@ namespace ql::dmg {
 		}
 		group& operator *=(double k) {
 			for (auto& part : _parts) {
-				std::visit([k](auto&& part) { std::forward<decltype(part)>(part) *= k; }, part);
+				std::visit([k](auto& part) { part *= k; }, part);
 			}
 			_protection_bypass *= k;
 			return *this;
 		}
 		group& operator /=(double k) {
 			for (auto& part : _parts) {
-				std::visit([k](auto&& part) { std::forward<decltype(part)>(part) /= k; }, part);
+				std::visit([k](auto& part) { part /= k; }, part);
 			}
 			_protection_bypass /= k;
 			return *this;
