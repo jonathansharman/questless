@@ -166,7 +166,7 @@ namespace ql {
 			constexpr double stage_2_max = 0.3;
 			constexpr double stage_3_max = 0.4;
 
-			double const pct_blood_lost = 1.0 - (body.blood.value() / body.total_vitality().value() / body_part::blood_per_vitality).value;
+			double const pct_blood_lost = 1.0 - (body.blood.value() / body.total_vitality() / body_part::blood_per_vitality).value;
 
 			// No effects for stage 1 blood loss.
 			if (pct_blood_lost > stage_1_max) {

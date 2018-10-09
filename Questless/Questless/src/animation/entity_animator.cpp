@@ -51,7 +51,7 @@ namespace ql {
 		}
 		if (total_bleeding > blood_per_tick{0.0}) {
 			constexpr auto bleeding_scaling_factor = 5_tick * 1.0_hp / 1.0_blood;
-			auto bleeding = umake<ql::bleeding>((total_bleeding / human.body.total_vitality().value() * bleeding_scaling_factor).value);
+			auto bleeding = umake<ql::bleeding>((total_bleeding / human.body.total_vitality() * bleeding_scaling_factor).value);
 			animation_stack->add(std::move(bleeding));
 		}
 
@@ -85,7 +85,7 @@ namespace ql {
 		}
 		if (total_bleeding > 0.0_blood_per_tick) {
 			constexpr double bleeding_scaling_factor = 5.0;
-			auto bleeding = umake<ql::bleeding>((total_bleeding / goblin.body.total_vitality().value() / body_part::blood_per_vitality * bleeding_scaling_factor).value);
+			auto bleeding = umake<ql::bleeding>((total_bleeding / goblin.body.total_vitality() / body_part::blood_per_vitality * bleeding_scaling_factor).value);
 			animation_stack->add(std::move(bleeding));
 		}
 

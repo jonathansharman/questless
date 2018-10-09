@@ -31,7 +31,7 @@ namespace ql {
 		body_part& root() { return _root; }
 
 		//! The cumulative vitality of all parts of this body.
-		nonnegative<ql::health> total_vitality() const { return _total_vitality; }
+		ql::health total_vitality() const { return _total_vitality; }
 
 		std::vector<cref<body_part>> const& parts() const { return _c_parts; }
 		std::vector<ref<body_part>> const& parts() { return _parts; }
@@ -52,6 +52,6 @@ namespace ql {
 		std::vector<cref<body_part>> _c_parts;
 
 		// Cumulative attributes
-		nonnegative<ql::health> _total_vitality;
+		ql::health _total_vitality;
 	};
 }

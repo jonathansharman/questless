@@ -136,7 +136,7 @@ namespace ql {
 				left += condition_bar_width;
 			};
 			// Blood
-			draw_bar((player_being->body.blood.value() / player_being->body.total_vitality().value() / body_part::blood_per_vitality).value, colors::red());
+			draw_bar((player_being->body.blood.value() / player_being->body.total_vitality() / body_part::blood_per_vitality).value, colors::red());
 			// Energy
 			draw_bar((player_being->energy.value() / player_being->stats.a.stamina.value()).value, colors::cyan());
 			// Satiety
