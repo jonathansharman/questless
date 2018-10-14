@@ -90,9 +90,7 @@ namespace ql {
 				}
 			}
 		} else {
-			for (size_t i = 0; i < _hotbar_size; ++i) {
-				_hotbar[i] = std::nullopt;
-			}
+			std::fill(_hotbar.begin(), _hotbar.end(), std::nullopt);
 		}
 	}
 

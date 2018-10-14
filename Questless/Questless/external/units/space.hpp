@@ -179,8 +179,8 @@ namespace units {
 
 			constexpr friend angle operator -(angle const& phi) {
 				angle result = phi;
-				for (std::size_t i = 0; i < n - 1; ++i) {
-					result._components[i] = -result._components[i];
+				for (auto& component : result._components) {
+					component = -component;
 				}
 				return result;
 			}
@@ -240,7 +240,7 @@ namespace units {
 			using from_scalar = typename FromAngle::scalar;
 			using to_scalar = typename ToAngle::scalar;
 
-			if constexpr(std::is_same_v<std::decay_t<ToAngle>, std::decay_t<FromAngle>>) {
+			if constexpr (std::is_same_v<std::decay_t<ToAngle>, std::decay_t<FromAngle>>) {
 				return phi;
 			} else {
 				auto result = typename ToAngle::zero();
@@ -468,18 +468,14 @@ namespace units {
 			void load(Archive& archive) { archive(this->_elements); }
 
 			constexpr bool operator ==(point const& that) const {
-				for (int i = 0; i < n; ++i) {
-					if (this->_elements[i] != that[i]) {
-						return false;
-					}
+				for (std::size_t i = 0; i < n; ++i) {
+					if (this->_elements[i] != that._elements[i]) return false;
 				}
 				return true;
 			}
 			constexpr bool operator !=(point const& that) const {
-				for (int i = 0; i < n; ++i) {
-					if (this->_elements[i] != that[i]) {
-						return true;
-					}
+				for (std::size_t i = 0; i < n; ++i) {
+					if (this->_elements[i] != that._elements[i]) return true;
 				}
 				return false;
 			}

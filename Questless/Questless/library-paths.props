@@ -2,18 +2,18 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-    <SDL_PATH>D:\vc-libs\SDL2-2.0.4\</SDL_PATH>
-    <SDL_IMAGE_PATH>D:\vc-libs\SDL2_image-2.0.1\</SDL_IMAGE_PATH>
-    <SDL_MIXER_PATH>D:\vc-libs\SDL2_mixer-2.0.1\</SDL_MIXER_PATH>
-    <SDL_TTF_PATH>D:\vc-libs\SDL2_ttf-2.0.14\</SDL_TTF_PATH>
-    <BOOST_PATH>D:\vc-libs\boost_1_68_0</BOOST_PATH>
-    <DOCTEST_PATH>D:\vc-libs\doctest\</DOCTEST_PATH>
-    <GLEW_PATH>D:\vc-libs\glew-2.0.0\</GLEW_PATH>
-    <GLM_PATH>D:\vc-libs\glm\</GLM_PATH>
-    <GSL_PATH>D:\vc-libs\GSL\</GSL_PATH>
-    <RANGE_V3_PATH>D:\vc-libs\range-v3\</RANGE_V3_PATH>
-    <CEREAL_PATH>D:\vc-libs\cereal\</CEREAL_PATH>
-    <NLOHMANN_JSON_PATH>D:\vc-libs\json\</NLOHMANN_JSON_PATH>
+    <SDL_PATH>C:\vc-libs\SDL2-2.0.4\</SDL_PATH>
+    <SDL_IMAGE_PATH>C:\vc-libs\SDL2_image-2.0.1\</SDL_IMAGE_PATH>
+    <SDL_MIXER_PATH>C:\vc-libs\SDL2_mixer-2.0.1\</SDL_MIXER_PATH>
+    <SDL_TTF_PATH>C:\vc-libs\SDL2_ttf-2.0.14\</SDL_TTF_PATH>
+    <BOOST_PATH>C:\vc-libs\boost_1_68_0</BOOST_PATH>
+    <DOCTEST_PATH>C:\vc-libs\doctest\</DOCTEST_PATH>
+    <GLEW_PATH>C:\vc-libs\glew-2.0.0\</GLEW_PATH>
+    <GLM_PATH>C:\vc-libs\glm\</GLM_PATH>
+    <GSL_PATH>C:\vc-libs\GSL\</GSL_PATH>
+    <RANGE_V3_PATH>C:\vc-libs\range-v3\</RANGE_V3_PATH>
+    <CEREAL_PATH>C:\vc-libs\cereal\</CEREAL_PATH>
+    <NLOHMANN_JSON_PATH>C:\vc-libs\json\</NLOHMANN_JSON_PATH>
   </PropertyGroup>
   <PropertyGroup />
   <ItemDefinitionGroup />

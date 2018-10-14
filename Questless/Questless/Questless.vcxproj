@@ -38,7 +38,7 @@
     <ProjectGuid>{D44739D1-4AB7-4180-BCAE-393BA1F74BDA}</ProjectGuid>
     <RootNamespace>questless</RootNamespace>
     <ProjectName>Questless</ProjectName>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

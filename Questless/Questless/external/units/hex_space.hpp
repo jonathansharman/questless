@@ -52,7 +52,7 @@ namespace units {
 				};
 			}
 
-			constexpr explicit vector() = default;
+			constexpr explicit vector() : q{0}, r{0}, s{0} {}
 			constexpr explicit vector(dist_t q, dist_t r) : q{q}, r{r}, s{-q - r} {}
 			constexpr explicit vector(dist_t q, dist_t r, dist_t s) : q{q}, r{r}, s{s} {}
 			constexpr explicit vector(double q, double r)
@@ -150,7 +150,7 @@ namespace units {
 			dist_t r;
 			dist_t s;
 
-			constexpr explicit point() = default;
+			constexpr explicit point() : q{0}, r{0}, s{0} {}
 			constexpr explicit point(dist_t q, dist_t r) : q{q}, r{r}, s{-q - r} {}
 			constexpr explicit point(dist_t q, dist_t r, dist_t s) : q{q}, r{r}, s{s} {}
 			constexpr explicit point(double q, double r)

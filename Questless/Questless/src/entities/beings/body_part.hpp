@@ -15,7 +15,13 @@
 #include "units/view_space.hpp"
 #include "utility/quantities.hpp"
 
+#include <cereal/access.hpp>
 #include <cereal/cereal.hpp>
+#include <cereal/types/array.hpp>
+#include <cereal/types/memory.hpp>
+#include <cereal/types/optional.hpp>
+#include <cereal/types/unordered_set.hpp>
+#include <cereal/types/vector.hpp>
 
 #include <optional>
 #include <string>
@@ -39,10 +45,11 @@ namespace ql {
 		//! @param owner_id The ID of the being that owns this body part.
 		ql::id<being> owner_id;
 
-		std::unordered_set<tag> tags;
-
 		//! The player-visisble name of the body part.
 		std::string name;
+
+		//! The tags that determine what kind of part this is.
+		std::unordered_set<tag> tags;
 
 		//! This body part's contribution to its owner's stats.
 		stats::part stats{};
@@ -78,7 +85,7 @@ namespace ql {
 		//! The body part attachment points on this body part.
 		std::vector<uptr<attachment>> attachments;
 
-		body_part(ql::id<being> owner_id, ql::id<body_part> id) : id{id}, owner_id{owner_id} {}
+		body_part() = default;
 
 		//! Loads a body part from @filepath.
 		body_part(char const* filepath, ql::id<being> owner_id, ql::id<body_part> id = ql::id<body_part>::make());
@@ -98,15 +105,15 @@ namespace ql {
 		}
 
 		template <typename Archive>
-		friend constexpr void load_minimal(Archive const&, tag& t, std::string const& name) {
-			t = [] {
-				if constexpr (name == "head") return tag::head;
-				else if constexpr (name == "torso") return tag::torso;
-				else if constexpr (name == "arm") return tag::arm;
-				else if constexpr (name == "hand") return tag::hand;
-				else if constexpr (name == "leg") return tag::leg;
-				else if constexpr (name == "foot") return tag::foot;
-				else if constexpr (name == "wing") return tag::wing;
+		friend void load_minimal(Archive const&, tag& t, std::string const& name) {
+			t = [&name] {
+				if (name == "head") return tag::head;
+				else if (name == "torso") return tag::torso;
+				else if (name == "arm") return tag::arm;
+				else if (name == "hand") return tag::hand;
+				else if (name == "leg") return tag::leg;
+				else if (name == "foot") return tag::foot;
+				else if (name == "wing") return tag::wing;
 				else return tag::tail;
 			}();
 		}
@@ -114,30 +121,34 @@ namespace ql {
 		template <typename Archive>
 		void save(Archive& archive) const {
 			archive
-				( CEREAL_NVP(name)
-//				, CEREAL_NVP(tags)
-//				, CEREAL_NVP(stats)
-//				, CEREAL_NVP(vital)
-//				, CEREAL_NVP(enabled)
-//				, CEREAL_NVP(layer)
-//				, CEREAL_NVP(hitbox)
-//				, CEREAL_NVP(equipped_item_id)
-//				, CEREAL_NVP(attachments)
+				( CEREAL_NVP(id)
+				, CEREAL_NVP(owner_id)
+				, CEREAL_NVP(name)
+				, CEREAL_NVP(tags)
+				, CEREAL_NVP(stats)
+				, CEREAL_NVP(vital)
+				, CEREAL_NVP(enabled)
+				, CEREAL_NVP(layer)
+				, CEREAL_NVP(hitbox)
+				, CEREAL_NVP(equipped_item_id)
+				, CEREAL_NVP(attachments)
 				);
 		}
 
 		template <typename Archive>
 		void load(Archive& archive) {
 			archive
-				( CEREAL_NVP(name)
-//				, CEREAL_NVP(tags)
-//				, CEREAL_NVP(stats)
-//				, CEREAL_NVP(vital)
-//				, CEREAL_NVP(enabled)
-//				, CEREAL_NVP(layer)
-//				, CEREAL_NVP(hitbox)
-//				, CEREAL_NVP(equipped_item_id)
-//				, CEREAL_NVP(attachments)
+				( CEREAL_NVP(id)
+				, CEREAL_NVP(owner_id)
+				, CEREAL_NVP(name)
+				, CEREAL_NVP(tags)
+				, CEREAL_NVP(stats)
+				, CEREAL_NVP(vital)
+				, CEREAL_NVP(enabled)
+				, CEREAL_NVP(layer)
+				, CEREAL_NVP(hitbox)
+				, CEREAL_NVP(equipped_item_id)
+				, CEREAL_NVP(attachments)
 				);
 		}
 
@@ -183,12 +194,12 @@ namespace ql {
 
 		template <typename Archive>
 		void save(Archive& archive) const {
-			archive(CEREAL_NVP(part), CEREAL_NVP(offset), CEREAL_NVP(rotation), CEREAL_NVP(default_part));
+			archive(CEREAL_NVP(owner_id), CEREAL_NVP(part), CEREAL_NVP(offset), CEREAL_NVP(rotation), CEREAL_NVP(default_part));
 		}
 
 		template <typename Archive>
 		void load(Archive& archive) {
-			archive(CEREAL_NVP(part), CEREAL_NVP(offset), CEREAL_NVP(rotation), CEREAL_NVP(default_part));
+			archive(CEREAL_NVP(owner_id), CEREAL_NVP(part), CEREAL_NVP(offset), CEREAL_NVP(rotation), CEREAL_NVP(default_part));
 		}
 	};
 }

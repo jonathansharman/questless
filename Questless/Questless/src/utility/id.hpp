@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <cereal/access.hpp>
+
 #include <cstdint>
 #include <utility>
 
@@ -27,7 +29,7 @@ namespace ql {
 
 		key_t key;
 
-		id() = delete;
+		id() : key{0} {}
 		constexpr id(id const&) = default;
 		constexpr explicit id(key_t key) : key{key} {}
 
@@ -36,7 +38,7 @@ namespace ql {
 		//! A new unique ID.
 		static id make() {
 			//! @todo This won't work once saving and loading are in place.
-			static key_t next_key = 0;
+			static key_t next_key = 1;
 			return id{next_key++};
 		}
 
