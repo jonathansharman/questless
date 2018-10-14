@@ -37,7 +37,7 @@ Ingredients
 	Liquids
 		Water
 		Blood
-			Blood of suffering - Blood obtained by confining a being to a black altar and then slaying it after its mood goes below a certain threshold. Used for black magic.
+			Blood of suffering - Blood obtained by confining a being to a black altar and then slaying it after its joy goes below a certain threshold. Used for black magic.
 	Solids
 	Powders
 		Gatestone dust
@@ -46,7 +46,9 @@ Actions
 	Slice
 	Mix
 	Boil
+	Roast
 	Smoke
+	Burn
 	Incant
 		Each magic color has a potion enchantment spell
 		Always the final step for any magical potion
@@ -62,11 +64,11 @@ Recipes
 		Effect: mana regeneration, mana poisoning
 	Happiness Incense
 		Ingredients: ???
-		Effect: poisoning, mental impairment, mood elevation
+		Effect: poisoning, -intellect, +joy, +courage, +serenity
 	Lich Potion
 		Ingredients: blood of suffering, black gatestone, ???
 		Incantation: black
-		Effect: Curse of the Lich: drinker becomes a lich if it dies while the curse within a set time after consumption
+		Effect: Curse of the Lich: drinker becomes a lich if it dies while the curse is active
 		Steps:
 			1) Add blood of suffering.
 			2) Crush black gatestone into powder.
@@ -319,7 +321,7 @@ Weapons
 			Fireblade
 				Deals burn and slash or pierce damage
 				Very low weight
-				Costs mana over time while equipped
+				Powered by a green gatestone
 				Cannot parry
 			Push-daggers
 		Hacking weapons
@@ -384,6 +386,8 @@ White - good - light - revelation
 		Light mage
 			Light, detection, alertness
 	Celestial
+		Comfort - Increase a being's joy.
+		Encourage - Increase a being's courage.
 		Exorcise - Drain a being's black gatestones and remove possession from it.
 		Immortalize - Make a being temporarily immortal.
 		Divine - Temporarily gain complete perception of a being.
@@ -409,6 +413,8 @@ Black - evil - darkness - illusion
 		Shadow mage
 			Darkness, stealth, sleep
 	Demonic
+		Terrify - Lower another being's courage.
+		Depress - Reduce a being's joy.
 		Corrupt - Drain a being's white gatestones.
 		Possess - Channeled, interrupted by taking 10% of vitality in damage at once. Take control of a being for X ticks. Mana cost is proportional to the target's intellect.
 		Damn - Choose a being. If you are alive after X ticks, deal Y blight damage to that being.
@@ -524,7 +530,7 @@ Violet - peace - order
 	Specializations
 		Peacekeeper
 	Peace
-		Encourage - Increase a being's mood.
+		Calm - Increase a being's serenity.
 		Imprison - For a certain duration, prevent a being from moving.
 		Silence - Mute a being for X ticks.
 		Disarmament - Unequip all weapons within a certain range, including your own. Unequip times are not incurred; the effect is immediate. Any weapons being readied will not connect with their targets. Recovery times from weapons used prior to casting are unaffected.
@@ -536,7 +542,8 @@ Orange - war - strife
 		Battle mage
 	Battle
 		Battle Cry - Temporarily empower your strength and endurance.
-		Demoralize - Reduce a being's mood.
+		Rage - Lower caster's serenity.
+		Provoke - Lower another being's serenity.
 		Duel - Chose a being. For X ticks, you and that being become immune to weapon-based attacks from all other beings except each other and unable to deal damage to other beings.
 			Exploitable with allies?
 				How about, "when it expires, the one with the lowest health percentage dies"? Still exploitable using a weak minion.

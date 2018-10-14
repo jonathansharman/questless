@@ -68,11 +68,23 @@ namespace ql {
 		static_bounded<ql::alertness, min_alertness, max_alertness> alertness;
 		constexpr bool sleepy() const { return alertness.value() < min_alertness + 0.5 * (max_alertness - min_alertness); }
 
-		static constexpr auto min_mood = -100.0_mood;
-		static constexpr auto max_mood = 100.0_mood;
-		static_bounded<ql::mood, min_mood, max_mood> mood;
-		constexpr bool unhappy() const { return mood.value() < min_mood + 0.25 * (max_mood - min_mood); }
-		constexpr bool happy() const { return mood.value() > min_mood + 0.75 * (max_mood - min_mood); }
+		static constexpr auto min_joy = -100.0_joy;
+		static constexpr auto max_joy = 100.0_joy;
+		static_bounded<ql::joy, min_joy, max_joy> joy;
+		constexpr bool sad() const { return joy.value() < min_joy + 0.25 * (max_joy - min_joy); }
+		constexpr bool happy() const { return joy.value() > min_joy + 0.75 * (max_joy - min_joy); }
+
+		static constexpr auto min_courage = -100.0_courage;
+		static constexpr auto max_courage = 100.0_courage;
+		static_bounded<ql::courage, min_courage, max_courage> courage;
+		constexpr bool afraid() const { return courage.value() < min_courage + 0.25 * (max_courage - min_courage); }
+		constexpr bool brave() const { return courage.value() > min_courage + 0.75 * (max_courage - min_courage); }
+
+		static constexpr auto min_serenity = -100.0_serenity;
+		static constexpr auto max_serenity = 100.0_serenity;
+		static_bounded<ql::serenity, min_serenity, max_serenity> serenity;
+		constexpr bool angry() const { return serenity.value() < min_serenity + 0.25 * (max_serenity - min_serenity); }
+		constexpr bool calm() const { return serenity.value() > min_serenity + 0.75 * (max_serenity - min_serenity); }
 
 		dynamic_property<ql::tick> busy_time;
 

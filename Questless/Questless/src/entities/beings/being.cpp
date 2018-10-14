@@ -32,7 +32,9 @@ namespace ql {
 		, energy{[] { return 0.0_ep; }, [this] { return stats.a.stamina; }}
 		, satiety{max_satiety}
 		, alertness{max_alertness}
-		, mood{0.0_mood}
+		, joy{0.0_joy}
+		, courage{0.0_courage}
+		, serenity{0.0_serenity}
 		, busy_time{0_tick}
 		, mortality{ql::mortality::alive}
 		, direction{static_cast<region_tile::direction>(uniform(1, 6))}
@@ -172,13 +174,17 @@ namespace ql {
 			if (pct_blood_lost > stage_1_max) {
 				// Stage 2: anxiety
 
-				// Mood loss as a factor of stage-2 blood loss.
-				constexpr auto mood_loss_rate = 1.0_mood / 1_tick;
-				mood -= (pct_blood_lost - stage_1_max) / (1.0 - stage_1_max) * mood_loss_rate * elapsed;
+				// Joy loss as a factor of stage-2 blood loss.
+				constexpr auto joy_loss_rate = 1.0_joy / 1_tick;
+				joy -= (pct_blood_lost - stage_1_max) / (1.0 - stage_1_max) * joy_loss_rate * elapsed;
+
+				// Courage loss as a factor of stage-2 blood loss.
+				constexpr auto courage_loss_rate = 1.0_courage / 1_tick;
+				courage -= (pct_blood_lost - stage_1_max) / (1.0 - stage_1_max) * courage_loss_rate * elapsed;
 			}
 			if (pct_blood_lost > stage_2_max) {
 				// Stage 3: confusion
-				
+
 				// Intellect loss as a factor of stage-3 blood loss.
 				constexpr auto intellect_loss_rate = 50.0_int / 1_tick;
 				stats.a.intellect -= (pct_blood_lost - stage_2_max) / (1.0 - stage_2_max) * intellect_loss_rate * elapsed;

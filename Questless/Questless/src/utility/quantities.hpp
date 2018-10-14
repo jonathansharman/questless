@@ -97,8 +97,14 @@ namespace ql {
 	using alertness = meta::quantity<double, meta::unit_t<struct alertness_tag>>;
 	constexpr alertness operator "" _alert(long double value) { return alertness{static_cast<double>(value)}; }
 
-	using mood = meta::quantity<double, meta::unit_t<struct mood_tag>>;
-	constexpr mood operator "" _mood(long double value) { return mood{static_cast<double>(value)}; }
+	using joy = meta::quantity<double, meta::unit_t<struct joy_tag>>;
+	constexpr joy operator "" _joy(long double value) { return joy{static_cast<double>(value)}; }
+
+	using courage = meta::quantity<double, meta::unit_t<struct courage_tag>>;
+	constexpr courage operator "" _courage(long double value) { return courage{static_cast<double>(value)}; }
+
+	using serenity = meta::quantity<double, meta::unit_t<struct serenity_tag>>;
+	constexpr serenity operator "" _serenity(long double value) { return serenity{static_cast<double>(value)}; }
 
 	using awake = meta::quantity<bool, meta::unit_t<struct awake_tag>>;
 
