@@ -1,4 +1,4 @@
-{ "name": "Human left leg"
+{ "name": "Human right leg"
 , "tags": ["leg"]
 , "stats":
 	{ "vitality": 25.0
@@ -19,7 +19,7 @@
 	[ { "part": null
 	  , "offset": [0.0, 60.0]
 	  , "rotation": 0.0
-	  , "default": "resources/beings/human/left_foot.json"
+	  , "default": "resources/beings/human/parts/right_foot.json"
 	  }
 	]
 }

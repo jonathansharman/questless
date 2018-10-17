@@ -26,7 +26,7 @@ namespace ql {
 		//! The function for getting the inclusive maximum value in the range.
 		std::function<arithmetic_type()> upper_bound_getter;
 
-		constexpr lazy_bounded(bound_getter_type lower_bound_getter, bound_getter_type upper_bound_getter)
+		constexpr lazy_bounded(bound_getter_type lower_bound_getter, bound_getter_type upper_bound_getter) noexcept
 			: lower_bound_getter{std::move(lower_bound_getter)}
 			, upper_bound_getter{std::move(upper_bound_getter)}
 		{}
@@ -39,7 +39,7 @@ namespace ql {
 
 		constexpr lazy_bounded(lazy_bounded const&) = default;
 
-		constexpr lazy_bounded(lazy_bounded&& other)
+		constexpr lazy_bounded(lazy_bounded&& other) noexcept
 			: lower_bound_getter{std::move(other.lower_bound_getter)}
 			, upper_bound_getter{std::move(other.upper_bound_getter)}
 			, _value{std::move(other._value)}

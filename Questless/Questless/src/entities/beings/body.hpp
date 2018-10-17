@@ -23,7 +23,7 @@ namespace ql {
 		//! @param root The root of the body parts tree.
 		body(being& owner, body_part root);
 
-		body(body&&) = default;
+		body(body&& that) noexcept;
 
 		//! The root body part, to which all other body parts are attached.
 		body_part const& root() const { return _root; }
@@ -37,9 +37,9 @@ namespace ql {
 		std::vector<ref<body_part>> const& parts() { return _parts; }
 
 		//! The body part on this body with the given ID or nullptr if none exists.
-		body_part* find_part(id<body_part> id);
-		//! The body part on this body with the given ID or nullptr if none exists.
 		body_part const* find_part(id<body_part> id) const;
+		//! The body part on this body with the given ID or nullptr if none exists.
+		body_part* find_part(id<body_part> id);
 
 		//! Advances this body and all its parts by @p elapsed.
 		void update(tick elapsed);
@@ -53,5 +53,7 @@ namespace ql {
 
 		// Cumulative attributes
 		ql::health _total_vitality;
+
+
 	};
 }

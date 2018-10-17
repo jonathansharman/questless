@@ -14,7 +14,7 @@ namespace units::math {
 		constexpr Floating sqrt_iterative(Floating const& x, Floating const& current, Floating const& previous) {
 			return current == previous
 				? current
-				: sqrt_iterative(x, static_cast<Floating>(0.5 * (current + x / current)), current);
+				: sqrt_iterative(x, static_cast<Floating>(0.5 * current + 0.5 * x / current), current);
 		}
 
 		template <typename T>

@@ -1,25 +1,24 @@
-{ "name": "Human right leg"
-, "tags": ["leg"]
+{ "name": "Human left arm"
+, "tags": ["arm"]
 , "stats":
 	{ "vitality": 25.0
 	, "weight": 10.0
-	, "agility": 35.0
 	, "strength": 15.0
 	}
 , "vital": false
 , "enabled": true
-, "layer": 0
-, "hitbox": [
+, "layer": 2
+, "hitbox":
 	[ [-7.0, -5.0]
-	, [-7.0, 65.0]
-	, [7.0, 65.0]
+	, [-7.0, 55.0]
+	, [7.0, 55.0]
 	, [7.0, -5.0]
 	]
 , "attachments":
 	[ { "part": null
-	  , "offset": [0.0, 60.0]
+	  , "offset": [0.0, 55.0]
 	  , "rotation": 0.0
-	  , "default": "resources/beings/human/right_foot.json"
+	  , "default": "resources/beings/human/parts/left_hand.json"
 	  }
 	]
 }

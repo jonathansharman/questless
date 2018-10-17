@@ -700,7 +700,7 @@ namespace units {
 			point center;
 
 			//! The radius of this sphere.
-			scalar radius;
+			scalar radius = scalar(0);
 
 			constexpr sphere() = default;
 			constexpr sphere(sphere const&) = default;

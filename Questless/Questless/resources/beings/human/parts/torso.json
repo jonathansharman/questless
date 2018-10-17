@@ -18,27 +18,27 @@
 	[ { "part": null
 	  , "offset": [0.0, -25.0]
 	  , "rotation": 0.0
-	  , "default": "resources/beings/human/head.json"
+	  , "default": "resources/beings/human/parts/head.json"
 	  }
 	, { "part": null
 	  , "offset": [25.0, -25.0]
 	  , "rotation": -0.31415926535
-	  , "default": "resources/beings/human/left_arm.json"
+	  , "default": "resources/beings/human/parts/left_arm.json"
 	  }
 	, { "part": null
 	  , "offset": [-25.0, -25.0]
 	  , "rotation": 0.31415926535
-	  , "default": "resources/beings/human/right_arm.json"
+	  , "default": "resources/beings/human/parts/right_arm.json"
 	  }
 	, { "part": null
 	  , "offset": [15.0, 25.0]
 	  , "rotation": 0.0
-	  , "default": "resources/beings/human/left_leg.json"
+	  , "default": "resources/beings/human/parts/left_leg.json"
 	  }
 	, { "part": null
 	  , "offset": [-15.0, 25.0]
 	  , "rotation": 0.0
-	  , "default": "resources/beings/human/right_leg.json"
+	  , "default": "resources/beings/human/parts/right_leg.json"
 	  }
 	]
 }

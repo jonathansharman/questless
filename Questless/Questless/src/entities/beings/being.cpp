@@ -280,7 +280,34 @@ namespace ql {
 				void operator ()(dmg::shock const& /*shock*/) {}
 			};
 			for (dmg::damage const& damage_part : damage.parts()) {
-				std::visit(damage_effect_applier{target_part}, damage_part);
+				std::visit([&](auto const& arg) {
+					SWITCH_TYPE(arg) {
+						MATCH_TYPE(dmg::slash) {
+							constexpr auto bleeding_per_slash = 0.1_blood_per_tick / 1.0_slash;
+							target_part.bleeding += arg * bleeding_per_slash;
+						}
+						MATCH_TYPE(dmg::pierce) {
+							constexpr auto bleeding_per_pierce = 0.2_blood_per_tick / 1.0_pierce;
+							target_part.bleeding += arg * bleeding_per_pierce;
+						}
+						MATCH_TYPE(dmg::cleave) {
+							constexpr auto bleeding_per_cleave = 0.1_blood_per_tick / 1.0_cleave;
+							target_part.bleeding += arg * bleeding_per_cleave;
+						}
+						MATCH_TYPE(dmg::bludgeon) {
+							constexpr auto bleeding_per_bludgeon = 0.05_blood_per_tick / 1.0_bludgeon;
+							target_part.bleeding += arg * bleeding_per_bludgeon;
+						}
+						MATCH_TYPE(dmg::burn) {
+							constexpr auto cauterization_per_burn = 1.0_blood_per_tick / 1.0_burn;
+							target_part.bleeding -= arg * cauterization_per_burn;
+						}
+						MATCH_TYPE(dmg::freeze) { [[maybeunused]] arg; }
+						MATCH_TYPE(dmg::blight) { [[maybeunused]] arg; }
+						MATCH_TYPE(dmg::poison) { [[maybeunused]] arg; }
+						MATCH_TYPE(dmg::shock) { [[maybeunused]] arg; }
+					}
+				}, damage_part);
 			}
 		}
 
@@ -373,9 +400,9 @@ namespace ql {
 		stats::being result = base_stats;
 
 		// Add body part stats to being stats.
-		for (body_part const& part : body.parts()) {
-			result.a += part.stats.a;
-		}
+		result.a = std::accumulate(body.parts().begin(), body.parts().end(), result.a, [](stats::aggregate acc, body_part const& p) {
+			return acc + p.stats.a;
+		});
 
 		// Apply status stat modifiers after body part modifiers.
 		for (auto const& status : _statuses) {

@@ -28,7 +28,7 @@ namespace ql {
 
 		inventory() : items{_item_ids} {}
 		inventory(inventory const&) = delete;
-		inventory(inventory&& that) : items{_item_ids}, _item_ids{std::move(that._item_ids)} {}
+		inventory(inventory&& that) noexcept : items{_item_ids}, _item_ids{std::move(that._item_ids)} {}
 
 		//! The set of IDs of items in the inventory.
 		std::unordered_set<id<item>> const& item_ids() const { return _item_ids; }

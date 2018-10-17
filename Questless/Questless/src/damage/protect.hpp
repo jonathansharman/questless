@@ -35,7 +35,7 @@ namespace ql {
 			constexpr protect(protect&&) = default;
 			constexpr protect(protect const&) = default;
 
-			constexpr protect& operator =(protect&&) = default;
+			constexpr protect& operator =(protect&&) noexcept = default;
 			constexpr protect& operator =(protect const&) = default;
 
 			constexpr protect(dmg::pad pad) : pad{pad} {}

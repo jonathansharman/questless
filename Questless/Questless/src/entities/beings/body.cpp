@@ -20,7 +20,7 @@ namespace ql {
 		: blood
 			{ 0.0_blood
 			, [] { return 0.0_blood; }
-			, [&owner = owner] { return owner.body.total_vitality() * body_part::blood_per_vitality; }
+			, [&owner = _owner] { return owner.body.total_vitality() * body_part::blood_per_vitality; }
 			}
 		, _owner{owner}
 		, _root{std::move(root)}
@@ -50,29 +50,32 @@ namespace ql {
 		blood = _total_vitality * body_part::blood_per_vitality;
 	}
 
-	body_part* body::find_part(id<body_part> id) {
-		for (body_part& part : _parts) {
-			if (part.id == id) {
-				return &part;
+	body::body(body&& that) noexcept
+		:  blood
+			{ 0.0_blood
+			, [] { return 0.0_blood; }
+			, [&owner = _owner] { return owner.body.total_vitality() * body_part::blood_per_vitality; }
 			}
-		}
-		return nullptr;
-	}
+		, _owner{that._owner}
+		, _root{std::move(that._root)}
+		, _parts{std::move(that._parts)}
+		, _c_parts{std::move(that._c_parts)}
+		, _total_vitality{std::move(that._total_vitality)}
+	{}
+
 	body_part const* body::find_part(id<body_part> id) const {
-		for (body_part& part : _parts) {
-			if (part.id == id) {
-				return &part;
-			}
-		}
-		return nullptr;
+		auto const it = std::find_if(_parts.begin(), _parts.end(), [id](body_part const& p) { return p.id == id; });
+		return it == _parts.end() ? &it->get() : nullptr;
+	}
+	body_part* body::find_part(id<body_part> id) {
+		return const_cast<body_part*>(const_cast<body const&>(*this).find_part(id));
 	}
 
 	void body::update(tick elapsed) {
 		// Update cumulative values.
-		_total_vitality = 0.0_hp;
-		for (body_part const& part : _parts) {
-			_total_vitality += part.stats.a.vitality.value();
-		}
+		_total_vitality = std::accumulate(_parts.begin(), _parts.end(), 0.0_hp, [](health acc, body_part const& p) {
+			return acc + p.stats.a.vitality.value();
+		});
 
 		// Bleed and regenerate blood.
 		for (body_part const& part : _parts) {

@@ -1,4 +1,4 @@
-{ "name": "Human left arm"
+{ "name": "Human right arm"
 , "tags": ["arm"]
 , "stats":
 	{ "vitality": 25.0
@@ -18,7 +18,7 @@
 	[ { "part": null
 	  , "offset": [0.0, 55.0]
 	  , "rotation": 0.0
-	  , "default": "resources/beings/human/left_hand.json"
+	  , "default": "resources/beings/human/parts/right_hand.json"
 	  }
 	]
 }

@@ -32,8 +32,9 @@ namespace ql {
 	}
 
 	void body_part::heal(ql::health amount, std::optional<ql::id<being>> opt_source_id) {
-		being& owner = the_game().beings.ref(owner_id);
-		owner.heal(amount, *this, opt_source_id);
+		if (being* owner = the_game().beings.ptr(owner_id)) {
+			owner->heal(amount, *this, opt_source_id);
+		}
 	}
 
 	void body_part::generate_attached_parts() {

@@ -26,7 +26,7 @@ namespace ql {
 			set_value(bounded.value());
 			return *this;
 		}
-		constexpr nonnegative& operator =(nonnegative&& bounded) {
+		constexpr nonnegative& operator =(nonnegative&& bounded) noexcept {
 			set_value(std::move(bounded.value()));
 			return *this;
 		}

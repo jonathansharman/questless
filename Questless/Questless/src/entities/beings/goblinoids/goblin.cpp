@@ -19,7 +19,7 @@ namespace ql {
 	{}
 
 	body goblin::make_body(ql::id<being> owner_id) {
-		auto root = body_part{"resources/beings/goblin/torso.json", owner_id};
+		auto root = body_part{"resources/beings/goblin/parts/torso.json", owner_id};
 		root.generate_attached_parts();
 		return ql::body{*this, std::move(root)};
 	}
