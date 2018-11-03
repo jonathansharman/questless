@@ -6,7 +6,7 @@
 
 #include "tile_visitor.hpp"
 
-#include "utility/quantities.hpp"
+#include "quantities/quantities.hpp"
 
 namespace ql {
 	//! The basic unit of terrain, a hexagonal region of uniform material, temperature, etc.

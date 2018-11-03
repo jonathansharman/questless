@@ -50,9 +50,9 @@ namespace ql {
 
 					if (find_bounds && tile_perception > 0.0_perception) {
 						// Update bounding rectangle.
-						game_space::point tile_game_point = to_world(region_tile_coords);
+						world_space::point tile_game_point = to_world(region_tile_coords);
 						if (!_bounds) {
-							_bounds = game_space::box{game_space::point{tile_game_point.x(), tile_game_point.y()}, game_space::vector::zero()};
+							_bounds = world_space::box{world_space::point{tile_game_point.x(), tile_game_point.y()}, world_space::vector::zero()};
 						} else {
 							_bounds->extend(tile_game_point);
 						}	
@@ -99,8 +99,8 @@ namespace ql {
 			//_bounds->w += double_size.x;
 			//_bounds->h += double_size.y;
 
-			game_space::vector size = hex_layout.size;
-			game_space::vector double_size = 2 * hex_layout.size;
+			world_space::vector size = hex_layout.size;
+			world_space::vector double_size = 2 * hex_layout.size;
 			left(*_bounds) -= 31.0;
 			top(*_bounds) -= 19.0;
 			width(*_bounds) += 62.0;

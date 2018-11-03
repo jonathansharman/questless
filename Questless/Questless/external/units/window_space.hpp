@@ -4,27 +4,32 @@
 
 #pragma once
 
-#include "space.hpp"
 #include "view_space.hpp" // for conversions
 
 #include <vector>
 
 namespace units {
-	namespace detail {
-		class window_space_buffer : public buffer_base<int, 2> {
-		public:
-			int& x() & { return _elements[0]; }
-			constexpr int const& x() const& { return _elements[0]; }
+	using px = meta::quantity<int, meta::unit_t<struct px_tag>>;
+	namespace literals {
+		constexpr px operator "" _px(unsigned long long value) { return px{static_cast<int>(value)}; }
+	}
+	using namespace literals;
 
-			int& y() & { return _elements[1]; }
-			constexpr int const& y() const& { return _elements[1]; }
+	namespace detail {
+		class window_space_buffer : public buffer_base<px, 2> {
+		public:
+			constexpr auto& x() { return _elements[0]; }
+			constexpr auto const& x() const { return _elements[0]; }
+
+			constexpr auto& y() { return _elements[1]; }
+			constexpr auto const& y() const { return _elements[1]; }
 		protected:
 			using buffer_base::buffer_base;
 			using buffer_base::operator =;
 		};
 	}
 
-	struct window_space : space<struct window_space_tag, int, 2, detail::window_space_buffer> {
+	struct window_space : space<struct window_space_tag, px, 2, detail::window_space_buffer> {
 		using h_align = axis<0>::align;
 		using v_align = axis<1>::align;
 
@@ -37,36 +42,53 @@ namespace units {
 		static constexpr auto align_bottom = v_align::far;
 	};
 
-	inline int& width(window_space::box& box) { return box.size.x(); }
-	inline int width(window_space::box const& box) { return box.size.x(); }
+	inline px& width(window_space::box& box) { return box.size.x(); }
+	inline px width(window_space::box const& box) { return box.size.x(); }
 
-	inline int& height(window_space::box& box) { return box.size.y(); }
-	inline int height(window_space::box const& box) { return box.size.y(); }
+	inline px& height(window_space::box& box) { return box.size.y(); }
+	inline px height(window_space::box const& box) { return box.size.y(); }
 
-	inline int& left(window_space::box& box) { return box.position.x(); }
-	inline int left(window_space::box const& box) { return box.position.x(); }
+	inline px& left(window_space::box& box) { return box.position.x(); }
+	inline px left(window_space::box const& box) { return box.position.x(); }
 
-	inline int& top(window_space::box& box) { return box.position.y(); }
-	inline int top(window_space::box const& box) { return box.position.y(); }
+	inline px& top(window_space::box& box) { return box.position.y(); }
+	inline px top(window_space::box const& box) { return box.position.y(); }
 
-	inline int right(window_space::box const& box) { return box.position.x() + box.size.x(); }
+	inline px right(window_space::box const& box) { return box.position.x() + box.size.x(); }
 
-	inline int bottom(window_space::box const& box) { return box.position.y() + box.size.y(); }
+	inline px bottom(window_space::box const& box) { return box.position.y() + box.size.y(); }
 
-	inline window_space::point top_left(window_space::box const& box) { return box.position; }
-	inline window_space::point top_right(window_space::box const& box) { return window_space::point{box.position.x() + box.size.x(), box.position.y()}; }
-	inline window_space::point bottom_left(window_space::box const& box) { return window_space::point{box.position.x(), box.position.y() + box.size.y()}; }
-	inline window_space::point bottom_right(window_space::box const& box) { return box.position + box.size; }
+	inline auto top_left(window_space::box const& box) { return box.position; }
+	inline auto top_right(window_space::box const& box) { return window_space::point{box.position.x() + box.size.x(), box.position.y()}; }
+	inline auto bottom_left(window_space::box const& box) { return window_space::point{box.position.x(), box.position.y() + box.size.y()}; }
+	inline auto bottom_right(window_space::box const& box) { return box.position + box.size; }
 
-	inline window_space::point center(window_space::box const& box) { return box.position + box.size / 2; }
+	inline auto center(window_space::box const& box) { return box.position + box.size / 2; }
 
-	inline window_space::scalar area(window_space::box const& box) { return width(box) * height(box); }
+	inline auto area(window_space::box const& box) { return width(box) * height(box); }
 
 	//! @todo Add a uniform mechanism for converting between spaces?
 
-	inline view_space::scalar to_view_space(window_space::scalar s) { return static_cast<view_space::scalar>(s); }
-	inline view_space::point to_view_space(window_space::point p) { return view_space::point{to_view_space(p.x()), to_view_space(p.y())}; }
-	inline view_space::vector to_view_space(window_space::vector v) { return view_space::vector{to_view_space(v.x()), to_view_space(v.y())}; }
-	inline view_space::box to_view_space(window_space::box b) { return view_space::box{to_view_space(b.position), to_view_space(b.size)}; }
-	inline view_space::sphere to_view_space(window_space::sphere s) { return view_space::sphere{to_view_space(s.center), to_view_space(s.radius)}; }
+	static constexpr auto px_per_view = 1_px / 1.0_view;
+	static constexpr auto view_per_px = 1.0_view / 1_px;
+
+	inline view to_view_space(px s) {
+		return s * view_per_px;
+	}
+
+	inline view_space::point to_view_space(window_space::point p) {
+		return {to_view_space(p.x()), to_view_space(p.y())};
+	}
+
+	inline view_space::vector to_view_space(window_space::vector v) {
+		return {v.x() * view_per_px, v.y() * view_per_px};
+	}
+
+	inline view_space::box to_view_space(window_space::box b) {
+		return {to_view_space(b.position), to_view_space(b.size)};
+	}
+
+	inline view_space::sphere to_view_space(window_space::sphere s) {
+		return {to_view_space(s.center), to_view_space(s.radius)};
+	}
 }

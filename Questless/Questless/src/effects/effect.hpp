@@ -7,8 +7,8 @@
 #include "effect_visitor.hpp"
 
 #include "damage/group.hpp"
+#include "quantities/quantities.hpp"
 #include "utility/id.hpp"
-#include "utility/quantities.hpp"
 #include "world/coordinates.hpp"
 
 #include <optional>

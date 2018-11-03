@@ -9,7 +9,7 @@
 #include <SDL_image.h>
 
 #include "units/colors.hpp"
-#include "units/game_space.hpp"
+#include "units/world_space.hpp"
 #include "units/texture_space.hpp"
 #include "units/window_space.hpp"
 
@@ -48,10 +48,10 @@ namespace sdl {
 		texture& operator =(texture&&) &;
 
 		//! The width of this texture.
-		int width() const { return _size.x(); }
+		units::px width() const { return _size.x(); }
 
 		//! The height of this texture.
-		int height() const { return _size.y(); }
+		units::px height() const { return _size.y(); }
 
 		//! The width and height of the texture, as a screen space vector.
 		units::window_space::vector size() const { return _size; }
@@ -96,7 +96,7 @@ namespace sdl {
 				, units::texture_space::vector::zero()
 				, color_vector
 				, units::view_space::vector{1.0f, 1.0f}
-				, units::game_space::radians::zero()
+				, units::world_space::radians::zero()
 				, src_rect
 				);
 		}
@@ -114,7 +114,7 @@ namespace sdl {
 			, units::texture_space::vector origin = units::texture_space::vector::zero()
 			, units::colors::color_vector color_vector = units::colors::white_vector()
 			, units::view_space::vector scale = units::view_space::vector{1.0f, 1.0f}
-			, units::game_space::radians angle = units::game_space::radians::zero() //! @todo This should use screen space radians.
+			, units::world_space::radians angle = units::world_space::radians::zero() //! @todo This should use screen space radians.
 			, std::optional<units::texture_space::box> const& src_rect = std::nullopt
 			) const;
 

@@ -6,8 +6,9 @@
 
 #include "item_visitor.hpp"
 #include "agents/action.hpp"
+#include "quantities/mass.hpp"
+#include "quantities/quantities.hpp"
 #include "utility/id.hpp"
-#include "utility/quantities.hpp"
 #include "utility/reference.hpp"
 
 namespace ql {

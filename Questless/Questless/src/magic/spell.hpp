@@ -8,9 +8,9 @@
 
 #include "agents/action.hpp"
 #include "items/magic/gatestone.hpp"
+#include "quantities/quantities.hpp"
 #include "spell_visitor.hpp"
 #include "utility/id.hpp"
-#include "utility/quantities.hpp"
 #include "utility/reference.hpp"
 
 #include <string>

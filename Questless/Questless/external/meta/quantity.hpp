@@ -6,14 +6,14 @@
 
 #include "unit.hpp"
 
+#include <gcem.hpp>
+
 #include <utility>
 
 namespace meta {
 	//! Represents a quantity with the given data representation and unit.
 	template <typename Rep, typename Unit>
 	struct quantity {
-		//! An alias to this type.
-		using this_type = quantity<Rep, Unit>;
 		//! The data representation of this quantity type.
 		using rep = Rep;
 		//! The unit of this quantity type.
@@ -127,7 +127,7 @@ namespace meta {
 		}
 
 		//! Post-increment.
-		constexpr auto operator ++(int) { return this_type{value++}; }
+		constexpr auto operator ++(int) { return quantity<rep, unit>{value++}; }
 
 		//! Pre-decrement.
 		constexpr auto& operator --() {
@@ -136,13 +136,15 @@ namespace meta {
 		}
 
 		//! Post-decrement.
-		constexpr auto operator --(int) { return this_type{value--}; }
+		constexpr auto operator --(int) { return quantity<rep, unit>{value--}; }
 
 		//! The negation of this quantity.
-		constexpr auto operator -() const {
-			return this_type{-value};
-		}
+		constexpr auto operator -() const { return quantity<rep, unit>{-value}; }
 	};
+
+	//! A unit-less quantity with representation @p Rep.
+	template <typename Rep>
+	using unitless = quantity<Rep, unit_t<>>;
 
 	template <typename Rep1, typename Unit1, typename Rep2, typename Unit2>
 	constexpr bool operator ==(quantity<Rep1, Unit1> const& q1, quantity<Rep2, Unit2> const& q2) {
@@ -262,9 +264,18 @@ namespace meta {
 		return quantity<result_rep, quotient_t<Unit1, Unit2>>{static_cast<result_rep>(q1.value) / static_cast<result_rep>(q2.value)};
 	}
 
+	//! The square root of a quantity.
+	//! @note The powers of the quantity's units must be divisible by two.
+	//! @note Uses ADL to find a @p sqrt() function for the quantity's representation, defaulting to @p std::sqrt().
+	template <typename Rep, typename Unit>
+	constexpr auto sqrt(quantity<Rep, Unit> const& q) {
+		using gcem::sqrt;
+		return quantity<Rep, meta::exponential_t<1, 2, Unit>>{sqrt(q.value)};
+	}
+
 	//! Cast a quantity to a quantity with the same unit but a different representation.
 	template <typename ToQuantity, typename FromRep, typename FromUnit>
-	constexpr auto quantity_cast(quantity<FromRep, FromUnit> q) {
+	constexpr auto quantity_cast(quantity<FromRep, FromUnit> const& q) {
 		static_assert(detail::is_same_unit_v<FromUnit, typename ToQuantity::unit>, "Cannot cast quantity to a different unit.");
 		return ToQuantity{static_cast<typename ToQuantity::rep>(q.value)};
 	}

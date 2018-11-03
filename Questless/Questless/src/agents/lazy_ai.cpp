@@ -4,6 +4,7 @@
 
 #include "lazy_ai.hpp"
 
+#include "entities/beings/being.hpp"
 #include "game.hpp"
 #include "utility/random.hpp"
 
@@ -16,7 +17,7 @@ namespace ql {
 	complete lazy_ai::send_message
 		( queries::message::any
 		, std::function<complete()> cont
-		) const
+		)
 	{
 		return cont();
 	}
@@ -27,7 +28,7 @@ namespace ql {
 		, std::optional<int>
 		, std::optional<int>
 		, std::function<complete(std::optional<int>)> cont
-		) const
+		)
 	{
 		return cont(std::nullopt);
 	}
@@ -38,7 +39,7 @@ namespace ql {
 		, std::optional<double>
 		, std::optional<double>
 		, std::function<complete(std::optional<double>)> cont
-		) const
+		)
 	{
 		return cont(std::nullopt);
 	}
@@ -48,25 +49,25 @@ namespace ql {
 		, std::optional<region_tile::point>
 		, std::function<bool(region_tile::point)>
 		, std::function<complete(std::optional<region_tile::point>)> cont
-		) const
+		)
 	{
 		return cont(std::nullopt);
 	}
 
-	//complete lazy_ai::query_direction
-	//	( queries::direction::any
-	//	, std::function<complete(std::optional<region_tile::direction>)> cont
-	//	) const
-	//{
-	//	return cont(std::nullopt);
-	//}
+	complete lazy_ai::query_direction
+		( queries::direction::any
+		, std::function<complete(std::optional<region_tile::direction>)> cont
+		)
+	{
+		return cont(std::nullopt);
+	}
 
 	complete lazy_ai::query_vector
 		( queries::vector::any
 		, std::optional<region_tile::point>
 		, std::function<bool(region_tile::vector)>
 		, std::function<complete(std::optional<region_tile::vector>)> cont
-		) const
+		)
 	{
 		return cont(std::nullopt);
 	}
@@ -75,18 +76,18 @@ namespace ql {
 		( queries::being::any
 		, std::function<bool(ql::being&)>
 		, std::function<complete(std::optional<ql::being*>)> cont
-		) const
+		)
 	{
 		return cont(std::nullopt);
 	}
 
-	//complete lazy_ai::query_item
-	//	( queries::item::any
-	//	, ql::being&
-	//	, std::function<bool(ql::being&)>
-	//	, std::function<complete(std::optional<item*>)> cont
-	//	) const
-	//{
-	//	return cont(std::nullopt);
-	//}
+	complete lazy_ai::query_item
+		( queries::item::any
+		, ql::being&
+		, std::function<bool(ql::being&)>
+		, std::function<complete(std::optional<item*>)> cont
+		)
+	{
+		return cont(std::nullopt);
+	}
 }

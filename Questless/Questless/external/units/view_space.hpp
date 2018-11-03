@@ -4,26 +4,88 @@
 
 #pragma once
 
-#include "space.hpp"
+#include "box.hpp"
+#include "point.hpp"
+#include "vector.hpp"
 
-#include <vector>
+namespace units ::view {
+	using distance = meta::quantity<float, meta::unit_t<struct distance_tag>>;
 
-namespace units {
-	namespace detail {
-		class view_space_buffer : public buffer_base<float, 2> {
-		public:
-			auto& x() & { return _elements[0]; }
+	namespace literals {
+		constexpr auto operator "" _view_distance(long double value) { return distance{static_cast<double>(value)}; }
+	}
+	using namespace literals;
+
+	using vector = units::vector<distance, distance>;
+	using point = units::point<distance, distance>;
+
+	constexpr auto& x(vector& v) { return v.get<0>(); }
+	constexpr auto const& x(vector const& v) { return v.get<0>(); }
+
+	constexpr auto& y(vector& v) { return v.get<1>(); }
+	constexpr auto const& y(vector const& v) { return v.get<1>(); }
+
+	constexpr auto& x(point& v) { return v.get<0>(); }
+	constexpr auto const& x(point const& v) { return v.get<0>(); }
+
+	constexpr auto& y(point& v) { return v.get<1>(); }
+	constexpr auto const& y(point const& v) { return v.get<1>(); }
+
+	using h_align = axis<0>::align;
+	using v_align = axis<1>::align;
+
+	constexpr auto align_left = h_align::near;
+	constexpr auto align_center = h_align::mid;
+	constexpr auto align_right = h_align::far;
+
+	constexpr auto align_top = v_align::near;
+	constexpr auto align_middle = v_align::mid;
+	constexpr auto align_bottom = v_align::far;
+
+	// Box Types and Functions
+
+	using box = units::box<distance, distance>;
+
+	constexpr auto& width(box& box) { return x(box.size); }
+	constexpr auto width(box const& box) { return x(box.size); }
+
+	constexpr auto& height(box& box) { return y(box.size); }
+	constexpr auto height(box const& box) { return y(box.size); }
+
+	constexpr auto& left(box& box) { return x(box.position); }
+	constexpr auto left(box const& box) { return x(box.position); }
+
+	constexpr auto& top(box& box) { return y(box.position); }
+	constexpr auto top(box const& box) { return y(box.position); }
+
+	constexpr auto right(box const& box) { return x(box.position) + x(box.size); }
+
+	constexpr auto bottom(box const& box) { return y(box.position) + y(box.size); }
+
+	constexpr auto top_left(box const& box) { return box.position; }
+	constexpr auto top_right(box const& box) { return point{x(box.position) + x(box.size), y(box.position)}; }
+	constexpr auto bottom_left(box const& box) { return point{x(box.position), y(box.position) + y(box.size)}; }
+	constexpr auto bottom_right(box const& box) { return box.position + box.size; }
+
+	constexpr auto center(box const& box) { return box.position + box.size / 2.0; }
+
+	constexpr auto area(box const& box) { return width(box) * height(box); }
+
+
+
+	using view = meta::quantity<float, meta::unit_t<struct view_tag>>;
+	namespace literals {
+		constexpr view operator "" _view(long double value) { return view{static_cast<float>(value)}; }
+	}
+	using namespace literals;
+
+			constexpr auto& x() & { return _elements[0]; }
 			constexpr auto const& x() const& { return _elements[0]; }
 
-			auto& y() & { return _elements[1]; }
+			constexpr auto& y() & { return _elements[1]; }
 			constexpr auto const& y() const& { return _elements[1]; }
-		protected:
-			using buffer_base::buffer_base;
-			using buffer_base::operator =;
-		};
-	}
 
-	struct view_space : space<struct view_space_tag, float, 2, detail::view_space_buffer> {
+	struct view_space : space<struct view_space_tag, view, 2, detail::view_space_buffer> {
 		using h_align = axis<0>::align;
 		using v_align = axis<1>::align;
 
@@ -52,12 +114,12 @@ namespace units {
 
 	inline auto bottom(view_space::box const& box) { return box.position.y() + box.size.y(); }
 
-	inline view_space::point top_left(view_space::box const& box) { return box.position; }
-	inline view_space::point top_right(view_space::box const& box) { return view_space::point{box.position.x() + box.size.x(), box.position.y()}; }
-	inline view_space::point bottom_left(view_space::box const& box) { return view_space::point{box.position.x(), box.position.y() + box.size.y()}; }
-	inline view_space::point bottom_right(view_space::box const& box) { return box.position + box.size; }
+	inline auto top_left(view_space::box const& box) { return box.position; }
+	inline auto top_right(view_space::box const& box) { return view_space::point{box.position.x() + box.size.x(), box.position.y()}; }
+	inline auto bottom_left(view_space::box const& box) { return view_space::point{box.position.x(), box.position.y() + box.size.y()}; }
+	inline auto bottom_right(view_space::box const& box) { return box.position + box.size; }
 
-	inline view_space::point center(view_space::box const& box) { return box.position + box.size / 2.0f; }
+	inline auto center(view_space::box const& box) { return box.position + box.size / 2.0f; }
 
-	inline view_space::scalar area(view_space::box const& box) { return width(box) * height(box); }
+	inline auto area(view_space::box const& box) { return width(box) * height(box); }
 }

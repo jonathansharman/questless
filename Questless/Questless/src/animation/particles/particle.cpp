@@ -13,17 +13,17 @@ using namespace units;
 
 namespace ql {
 	particle::particle
-		( game_space::vector displacement
-		, game_space::velocity velocity
-		, game_space::acceleration acceleration
-		, game_space::radians angle
-		, game_space::radians_per_sec angular_velocity
-		, game_space::scalar scale
-		, game_space::scale_velocity scale_velocity
-		, game_space::seconds lifetime
+		( world_space::vector displacement
+		, world_space::velocity velocity
+		, world_space::acceleration acceleration
+		, world_space::radians angle
+		, world_space::radians_per_sec angular_velocity
+		, world_space::scalar scale
+		, world_space::scale_velocity scale_velocity
+		, world_space::seconds lifetime
 		, max_displacement max_displacement
 		)
-		: _displacement{displacement + random_displacement(max_displacement.value)}
+		: _displacement{displacement + random_displacement<world_space>(max_displacement.value)}
 		, _velocity{std::move(velocity)}
 		, _acceleration{std::move(acceleration)}
 		, _angle{std::move(angle)}
@@ -38,14 +38,14 @@ namespace ql {
 		auto elapsed_time = animation::elapsed_time();
 
 		_time_left -= elapsed_time;
-		if (_time_left < units::game_space::seconds::zero()) {
+		if (_time_left < 0.0_s) {
 			_over = true;
 			return;
 		}
 
 		_displacement += _velocity * elapsed_time;
 		_velocity += _acceleration * elapsed_time;
-		if (face_towards_heading() && _velocity != game_space::velocity::zero()) {
+		if (face_towards_heading() && _velocity != world_space::velocity::zero()) {
 			_angle = _velocity.step().angle();
 		} else {
 			_angle += _angular_velocity * elapsed_time;
@@ -59,7 +59,7 @@ namespace ql {
 		texture().draw(position, texture_space::align_center, texture_space::align_middle);
 	}
 
-	void particle::draw(units::game_space::point position, camera const& camera, colors::color_vector color_vector) const {
+	void particle::draw(units::world_space::point position, camera const& camera, colors::color_vector color_vector) const {
 		// Determine color vector to use.
 		color_vector = ignore_color_mod() ? _color_vector : color_vector * _color_vector;
 		if (fade_out()) {

@@ -14,18 +14,18 @@
 namespace ql {
 	// Quick Time Events
 	
-	complete agent::aim_missile(region_tile::point /*source_coords*/, ql::being& target_being, std::function<complete(body_part*)> cont) const {
+	complete agent::aim_missile(region_tile::point /*source_coords*/, ql::being& target_being, std::function<complete(body_part*)> cont) {
 		//! @todo There should be a miss chance based on distance and some internal skill stat. The agent should also prioritize certain parts depending on goals. Return a random body part for now.
 		auto it = target_being.body.parts().begin();
 		std::advance(it, uniform(std::size_t{0}, target_being.body.parts().size() - 1));
 		return cont(&it->get());
 	}
 
-	complete agent::get_shock_quality(region_tile::point /*target_coords*/, std::function<complete(double)> cont) const {
+	complete agent::get_shock_quality(region_tile::point /*target_coords*/, std::function<complete(double)> cont) {
 		return cont(1.0);
 	}
 
-	complete agent::incant(gatestone& /*gatestone*/, std::function<complete(uptr<magic::spell>)> cont) const {
+	complete agent::incant(gatestone& /*gatestone*/, std::function<complete(uptr<magic::spell>)> cont) {
 		return cont(nullptr);
 	}
 

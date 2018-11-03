@@ -85,6 +85,12 @@
     <Filter Include="external\meta">
       <UniqueIdentifier>{79f9aee3-ec16-49c7-83d6-43cfc5feddf4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\quantities">
+      <UniqueIdentifier>{b8546f8c-858b-43b6-8fda-84d83cc84e11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ui\scenes">
+      <UniqueIdentifier>{bd590d8e-e85b-4688-b3a5-9824fa0f585c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\utility\complete.hpp">
@@ -465,43 +471,13 @@
     <ClInclude Include="external\sdl\resource_manager.hpp">
       <Filter>external\sdl</Filter>
     </ClInclude>
-    <ClInclude Include="external\units\math.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
     <ClInclude Include="external\units\rate.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\screen_space.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\space.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\sprite_sheet_space.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\texture_space.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\view_space.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\window_space.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\color_space.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\colors.hpp">
       <Filter>external\units</Filter>
     </ClInclude>
     <ClInclude Include="external\units\constants.hpp">
       <Filter>external\units</Filter>
     </ClInclude>
     <ClInclude Include="external\units\frequency.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\game_space.hpp">
       <Filter>external\units</Filter>
     </ClInclude>
     <ClInclude Include="external\units\hex_space.hpp">
@@ -597,17 +573,86 @@
     <ClInclude Include="external\meta\algebra.hpp">
       <Filter>external\meta</Filter>
     </ClInclude>
-    <ClInclude Include="src\utility\quantities.hpp">
-      <Filter>src\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utility\property.hpp">
-      <Filter>src\utility</Filter>
-    </ClInclude>
     <ClInclude Include="src\utility\dynamic_property.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
     <ClInclude Include="src\utility\bounded.hpp">
       <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\quantities\mass.hpp">
+      <Filter>src\quantities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\quantities\distance.hpp">
+      <Filter>src\quantities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\quantities\wall_time.hpp">
+      <Filter>src\quantities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\quantities\game_time.hpp">
+      <Filter>src\quantities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\quantities\quantities.hpp">
+      <Filter>src\quantities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utility\static_property.hpp">
+      <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="external\meta\affine_quantity.hpp">
+      <Filter>external\meta</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\scenes\playing.hpp">
+      <Filter>src\ui\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\scenes\scene.hpp">
+      <Filter>src\ui\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\scenes\splash.hpp">
+      <Filter>src\ui\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\scenes\main_menu.hpp">
+      <Filter>src\ui\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="external\units\colors.hpp">
+      <Filter>external\units</Filter>
+    </ClInclude>
+    <ClInclude Include="external\units\screen_space.hpp">
+      <Filter>external\units</Filter>
+    </ClInclude>
+    <ClInclude Include="external\units\sprite_sheet_space.hpp">
+      <Filter>external\units</Filter>
+    </ClInclude>
+    <ClInclude Include="external\units\texture_space.hpp">
+      <Filter>external\units</Filter>
+    </ClInclude>
+    <ClInclude Include="external\units\view_space.hpp">
+      <Filter>external\units</Filter>
+    </ClInclude>
+    <ClInclude Include="external\units\window_space.hpp">
+      <Filter>external\units</Filter>
+    </ClInclude>
+    <ClInclude Include="external\units\vector.hpp">
+      <Filter>external\units</Filter>
+    </ClInclude>
+    <ClInclude Include="external\units\point.hpp">
+      <Filter>external\units</Filter>
+    </ClInclude>
+    <ClInclude Include="external\units\box.hpp">
+      <Filter>external\units</Filter>
+    </ClInclude>
+    <ClInclude Include="external\units\sphere.hpp">
+      <Filter>external\units</Filter>
+    </ClInclude>
+    <ClInclude Include="external\units\angle.hpp">
+      <Filter>external\units</Filter>
+    </ClInclude>
+    <ClInclude Include="external\units\polygon.hpp">
+      <Filter>external\units</Filter>
+    </ClInclude>
+    <ClInclude Include="external\units\color.hpp">
+      <Filter>external\units</Filter>
+    </ClInclude>
+    <ClInclude Include="external\units\world.hpp">
+      <Filter>external\units</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -839,9 +884,6 @@
     <ClCompile Include="src\utility\io.cpp">
       <Filter>src\utility</Filter>
     </ClCompile>
-    <ClCompile Include="src\utility\random.cpp">
-      <Filter>src\utility</Filter>
-    </ClCompile>
     <ClCompile Include="src\animation\particles\arrow_particle.cpp">
       <Filter>src\animation\particles</Filter>
     </ClCompile>
@@ -889,6 +931,18 @@
     </ClCompile>
     <ClCompile Include="src\animation\flame.cpp">
       <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\scenes\scene.cpp">
+      <Filter>src\ui\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\scenes\splash.cpp">
+      <Filter>src\ui\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\scenes\main_menu.cpp">
+      <Filter>src\ui\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\scenes\playing.cpp">
+      <Filter>src\ui\scenes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -16,9 +16,6 @@
 #include <vector>
 
 namespace ql {
-	using looping = meta::quantity<bool, meta::unit_t<struct looping_tag>>;
-	using randomize_start_time = meta::quantity<bool, meta::unit_t<struct randomize_start_time_tag>>;
-
 	//! A texture composed of a grid of animation cels.
 	class sprite_sheet {
 	public:
@@ -56,46 +53,52 @@ namespace ql {
 	//! A simple 2D animation.
 	class sprite_animation : public animation {
 	public:
-		struct frame {
-			units::game_space::seconds duration;
-			units::sprite_sheet_space::point coords; //!< The cel coordinates within the sprite sheet.
-			units::texture_space::vector origin; //!< The origin of the frame's texture relative to its center.
+		enum class start_time { zero, random };
 
-			frame(units::game_space::seconds duration, units::sprite_sheet_space::point coords, units::texture_space::vector origin)
-				: duration{duration}, coords{coords}, origin{origin}
-			{}
+		struct frame {
+			//! How long to display this frame, at normal time scale.
+			sec duration;
+
+			//! The cel coordinates within the sprite sheet.
+			units::sprite_sheet_space::point coords;
+
+			//! The origin of the frame's texture relative to its center.
+			units::texture_space::vector origin;
 		};
 
-		//! If true, the animation starts over when it reaches the end. If false, it ends.
-		bool looping;
+		enum class loop_type { once, looping } loop;
 
-		//! If true, the animation plays backwards.
-		bool in_reverse;
+		enum class direction_type { forward, reverse } direction = direction_type::forward;
 
-		//! @param sprite_sheet The sprite sheet for this animation.
-		//! @param frames The sequence of frames that compose the animation.
-		//! @param looping Whether to loop the animation or play just once.
-		sprite_animation(sptr<sprite_sheet> sprite_sheet, std::vector<frame> frames, ql::looping looping);
+		sprite_animation
+			( sptr<sprite_sheet> sprite_sheet
+			, std::vector<frame> frames
+			, loop_type loop
+			, start_time start_time = start_time::zero
+			);
 
 		void draw(units::window_space::point position) const final;
 
-		void draw(units::game_space::point position, camera const& camera, units::colors::color_vector color_vector = units::colors::white_vector()) const final;
+		void draw
+			( units::world_space::point position
+			, camera const& camera
+			, units::colors::color_vector color_vector = units::colors::white_vector()
+			) const final;
 
 		//! The number of times the animation has looped.
 		int loops() const { return _loops; }
 
 		//! The total duration of the animation.
-		units::game_space::seconds duration() const;
+		sec duration() const;
 
 		//! Moves to the start or a random time point in the animation, sets the loop counter to zero, and sets the over flag to false.
-		//! @param randomize_start_time If true, resets the animation to a random time point.
-		void reset(randomize_start_time randomize_start_time = randomize_start_time{false});
+		void reset(start_time start_time = start_time::zero);
 	private:
 		sptr<sprite_sheet> _sprite_sheet;
 		std::vector<frame> _frames;
-		int _frame_index;
-		units::game_space::seconds _accrued_time;
-		int _loops;
+		int _frame_index = 0;
+		sec _accrued_time;
+		int _loops = 0;
 
 		void animation_subupdate() final;
 	};

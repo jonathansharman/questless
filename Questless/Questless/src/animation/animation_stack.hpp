@@ -29,7 +29,7 @@ namespace ql {
 			}
 		}
 
-		void draw(units::game_space::point position, camera const& camera, units::colors::color_vector color_vector = units::colors::white_vector()) const {
+		void draw(units::world_space::point position, camera const& camera, units::colors::color_vector color_vector = units::colors::white_vector()) const {
 			for (auto& animation : _animations) {
 				animation->draw(position, camera, color_vector);
 			}

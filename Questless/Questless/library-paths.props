@@ -14,6 +14,7 @@
     <RANGE_V3_PATH>C:\vc-libs\range-v3\</RANGE_V3_PATH>
     <CEREAL_PATH>C:\vc-libs\cereal\</CEREAL_PATH>
     <NLOHMANN_JSON_PATH>C:\vc-libs\json\</NLOHMANN_JSON_PATH>
+    <GCEM_PATH>C:\vc-libs\gcem\</GCEM_PATH>
   </PropertyGroup>
   <PropertyGroup />
   <ItemDefinitionGroup />
@@ -63,6 +64,10 @@
     </BuildMacro>
     <BuildMacro Include="NLOHMANN_JSON_PATH">
       <Value>$(NLOHMANN_JSON_PATH)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="GCEM_PATH">
+      <Value>$(GCEM_PATH)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
   </ItemGroup>

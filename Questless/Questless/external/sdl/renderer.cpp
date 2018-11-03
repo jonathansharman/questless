@@ -27,27 +27,27 @@ namespace sdl {
 	namespace {
 		bool has_positive_winding_order(view_space::polygon const& polygon) {
 			// Winding order is positive iff "winding" is positive.
-			float winding = 0.0f;
+			meta::product_t<view, view> winding{0.0f};
 			for (std::size_t i = 0; i < polygon.size(); ++i) {
 				auto const p1 = polygon[i];
 				auto const p2 = i == polygon.size() - 1 ? polygon.front() : polygon[i + 1];
 
 				winding += (p1.x() - p2.x()) * (p2.y() + p1.y());
 			}
-			return winding >= 0.0f;
+			return winding >= meta::product_t<view, view>{0.0f};
 		}
 
 		bool is_convex(vector<view_space::point> const& vertices) {
-			float last_cross_product = 0.0f;
+			auto last_cross_product = math::square(0.0_view);
 			for (std::size_t i = 0; i < vertices.size(); ++i) {
 				auto const p0 = i == 0 ? vertices.back() : vertices[i - 1];
 				auto const p1 = vertices[i];
 				auto const p2 = i == vertices.size() - 1 ? vertices.front() : vertices[i + 1];
 
-				float cross_product = (p1.x() - p0.x()) * p2.y() - p1.y() - p1.y() - p0.y() * p2.x() - p1.x();
-				if (last_cross_product == 0.0f) {
+				auto cross_product = (p1.x() - p0.x()) * p2.y() - 2 * p1.y() - p0.y() * p2.x() - p1.x();
+				if (last_cross_product == math::square(0.0_view)) {
 					last_cross_product = cross_product;
-				} else if (last_cross_product * cross_product < 0.0f) {
+				} else if (last_cross_product * cross_product < math::pow<4>(0.0_view)) {
 					return false;
 				}
 			}
@@ -129,8 +129,8 @@ namespace sdl {
 		vector<GLfloat> vertex_data;
 		vertex_data.reserve(2 * vertices.size());
 		for (auto const& vertex : vertices) {
-			vertex_data.push_back(vertex.x());
-			vertex_data.push_back(vertex.y());
+			vertex_data.push_back(vertex.x().value);
+			vertex_data.push_back(vertex.y().value);
 		}
 		glBufferData(GL_ARRAY_BUFFER, 2 * vertices.size() * sizeof(GLfloat), vertex_data.data(), GL_DYNAMIC_DRAW);
 		{
@@ -149,7 +149,7 @@ namespace sdl {
 
 		// Set color uniform.
 		GLuint color_uniform = solid_program().get_uniform_handle("color"); //! @todo Cache this, invalidating cache after window resize.
-		glUniform4f(color_uniform, color.red(), color.green(), color.blue(), color.alpha());
+		glUniform4f(color_uniform, color.red().value, color.green().value, color.blue().value, color.alpha().value);
 
 		// Render.
 		glDrawElements(GL_LINE_STRIP, vertices.size(), GL_UNSIGNED_INT, nullptr);
@@ -168,7 +168,7 @@ namespace sdl {
 
 	void renderer::draw_polygon(view_space::polygon const& polygon, colors::color color) {
 		// Don't bother rendering transparent polygons.
-		if (color.alpha() == 0.0f) { return; }
+		if (color.alpha() == color_component{0.0f}) { return; }
 
 		//! @todo Reenable after convex_components() is implemented.
 		// Break solid non-convex polygons into convex subpolygons.
@@ -197,8 +197,8 @@ namespace sdl {
 			vector<GLfloat> vertex_data;
 			vertex_data.reserve(2 * polygon.size());
 			for (auto const& vertex : polygon) {
-				vertex_data.push_back(vertex.x());
-				vertex_data.push_back(vertex.y());
+				vertex_data.push_back(vertex.x().value);
+				vertex_data.push_back(vertex.y().value);
 			}
 			glBufferData(GL_ARRAY_BUFFER, 2 * polygon.size() * sizeof(GLfloat), vertex_data.data(), GL_DYNAMIC_DRAW);
 			{
@@ -218,7 +218,7 @@ namespace sdl {
 
 		// Set color uniform.
 		GLuint const color_uniform = solid_program().get_uniform_handle("color"); //! @todo Cache this, invalidating cache after window resize.
-		glUniform4f(color_uniform, color.red(), color.green(), color.blue(), color.alpha());
+		glUniform4f(color_uniform, color.red().value, color.green().value, color.blue().value, color.alpha().value);
 
 		// Render.
 		glDrawElements(GL_TRIANGLE_FAN, polygon.size(), GL_UNSIGNED_INT, nullptr);
@@ -258,32 +258,28 @@ namespace sdl {
 			auto const p2 = positive_winding_order ? p_plus_1 : p_minus_1;
 
 			// Parametric 2D line type.
-			struct line { float x0, y0, mx, my; };
+			struct line { view_space::point p; view_space::vector m; };
 
-			line l1{p0.x(), p0.y(), p1.x() - p0.x(), p1.y() - p0.y()};
-			line l2{p1.x(), p1.y(), p2.x() - p1.x(), p2.y() - p1.y()};
+			line l1{p0, p1 - p0};
+			line l2{p1, p2 - p1};
 
-			// If the segments are precisely parallel, we can ignore this vertex.
-			if (l1.my * l2.mx == l2.my * l1.mx) { continue; }
+			// If the segments are precisely parallel, ignore this vertex.
+			if (l1.m.y() * l2.m.x() == l2.m.y() * l1.m.x()) { continue; }
 
 			auto offset_start_point = [border_width](line& l) {
 				// Find perpendicular slopes.
-				auto mx_prime = -l.my;
-				auto my_prime = l.mx;
+				view_space::vector m_prime{-l.m.y(), l.m.x()};
 				// Normalize to border width.
-				auto length = sqrt(math::square(mx_prime) + math::square(my_prime));
-				mx_prime = mx_prime * border_width / length;
-				my_prime = my_prime * border_width / length;
+				m_prime *= border_width / m_prime.length();
 				// Offset first segment's starting point.
-				l.x0 += mx_prime;
-				l.y0 += my_prime;
+				l.p += m_prime;
 			};
 			offset_start_point(l1);
 			offset_start_point(l2);
 
 			// Find the intersection and add it to fill vertices. (Guaranteed to be unique since we ignore parallel segments.)
-			auto l2_t_intersect = ((l2.y0 - l1.y0) * l1.mx - (l2.x0 - l1.x0) * l1.my) / (l2.mx * l1.my - l2.my * l1.mx);
-			fill_vertices.push_back(view_space::point{l2.x0 + l2.mx * l2_t_intersect, l2.y0 + l2.my * l2_t_intersect});
+			auto l2_t_intersect = ((l2.p.y() - l1.p.y()) * l1.m.x() - (l2.p.x() - l1.p.x()) * l1.m.y()) / (l2.m.x() * l1.m.y() - l2.m.y() * l1.m.x());
+			fill_vertices.push_back(l2.p + l2.m * l2_t_intersect);
 		}
 
 		// Draw fill color.
@@ -330,7 +326,7 @@ namespace sdl {
 		, colors::color border_color
 		, colors::color fill_color
 		) {
-		if (units::width(box) > 0 && units::height(box) > 0) {
+		if (units::width(box) > 0_px && units::height(box) > 0_px) {
 			draw_box(to_view_space(box), to_view_space(border_width), border_color, fill_color);
 		}
 	}
@@ -341,7 +337,7 @@ namespace sdl {
 		, colors::color border_color
 		, colors::color fill_color
 		) {
-		if (units::width(box) > 0.0f && units::height(box) > 0.0f) {
+		if (units::width(box) > 0.0_view && units::height(box) > 0.0_view) {
 			draw_polygon(view_space::polygon{top_left(box), top_right(box), bottom_right(box), bottom_left(box)}, border_width, border_color, fill_color);
 		}
 	}
@@ -352,9 +348,10 @@ namespace sdl {
 		, colors::color border_color
 		, colors::color fill_color
 		, float segments_per_radius
-		) {
+		)
+	{
 		view_space::polygon polygon;
-		int segments_count = lround(boundary.radius * segments_per_radius);
+		int const segments_count = lround(boundary.radius.value * segments_per_radius);
 		for (int i = 0; i < segments_count; ++i) {
 			view_space::radians const angle{static_cast<float>(constants::tau * i / segments_count)};
 			view_space::vector const offset{angle, boundary.radius};
@@ -377,10 +374,10 @@ namespace sdl {
 	void renderer::set_draw_color(colors::color color) {
 		auto error = SDL_SetRenderDrawColor
 			( _renderer
-			, static_cast<uint8_t>(255 * color.red())
-			, static_cast<uint8_t>(255 * color.green())
-			, static_cast<uint8_t>(255 * color.blue())
-			, static_cast<uint8_t>(255 * color.alpha())
+			, static_cast<uint8_t>(255 * color.red().value)
+			, static_cast<uint8_t>(255 * color.green().value)
+			, static_cast<uint8_t>(255 * color.blue().value)
+			, static_cast<uint8_t>(255 * color.alpha().value)
 			);
 		if (error) {
 			std::string message = std::string{"Failed to set renderer draw color. SDL error: "} + SDL_GetError();
@@ -407,8 +404,8 @@ namespace sdl {
 			vector<GLfloat> vertex_data;
 			vertex_data.reserve(2 * vertices.size());
 			for (auto const& vertex : vertices) {
-				vertex_data.push_back(vertex.x());
-				vertex_data.push_back(vertex.y());
+				vertex_data.push_back(vertex.x().value);
+				vertex_data.push_back(vertex.y().value);
 			}
 			glBufferData(GL_ARRAY_BUFFER, 2 * vertices.size() * sizeof(GLfloat), vertex_data.data(), GL_DYNAMIC_DRAW);
 			{
@@ -428,7 +425,7 @@ namespace sdl {
 
 		// Set color uniform.
 		GLuint const color_uniform = solid_program().get_uniform_handle("color"); //! @todo Cache this, invalidating cache after window resize.
-		glUniform4f(color_uniform, color.red(), color.green(), color.blue(), color.alpha());
+		glUniform4f(color_uniform, color.red().value, color.green().value, color.blue().value, color.alpha().value);
 
 		// Render.
 		glDrawElements(GL_TRIANGLE_STRIP, vertices.size(), GL_UNSIGNED_INT, nullptr);

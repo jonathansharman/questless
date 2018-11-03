@@ -69,11 +69,11 @@ namespace sdl {
 	}
 
 	void window::refresh_size() {
-		SDL_GetWindowSize(_sdl_window, &_layout.size.x(), &_layout.size.y());
+		SDL_GetWindowSize(_sdl_window, &_layout.size.x().value, &_layout.size.y().value);
 	}
 
 	void window::refresh_position() {
-		SDL_GetWindowPosition(_sdl_window, &_layout.position.x(), &_layout.position.y());
+		SDL_GetWindowPosition(_sdl_window, &_layout.position.x().value, &_layout.position.y().value);
 	}
 
 	bool window::maximized() const {
@@ -89,22 +89,22 @@ namespace sdl {
 	}
 
 	window_space::point window::window_center() const {
-		return window_space::point{width() / 2, height() / 2};
+		return window_space::point{width() * (1_px / 1_screen_px) / 2, height() * (1_px / 1_screen_px) / 2};
 	}
-	window_space::scalar window::window_center_x() const {
-		return width() / 2;
+	px window::window_center_x() const {
+		return width() * (1_px / 1_screen_px) / 2;
 	}
-	window_space::scalar window::window_center_y() const {
-		return height() / 2;
+	px window::window_center_y() const {
+		return height() * (1_px / 1_screen_px) / 2;
 	}
 
 	view_space::point window::view_center() const {
 		return view_space::point{width() / 2.0f, height() / 2.0f};
 	}
-	view_space::scalar window::view_center_x() const {
-		return width() / 2.0f;
+	view window::view_center_x() const {
+		return width() * (1.0_view / 1_screen_px) / 2.0f;
 	}
-	view_space::scalar window::view_center_y() const {
-		return height() / 2.0f;
+	view window::view_center_y() const {
+		return height() * (1.0_view / 1_screen_px) / 2.0f;
 	}
 }

@@ -22,7 +22,7 @@ namespace ql::qte {
 	incant::~incant() {}
 
 	dialog::state incant::update() {
-		_elapsed_time += game::frame_duration;
+		_elapsed_time += game::target_frame_duration;
 
 		_tick = false;
 

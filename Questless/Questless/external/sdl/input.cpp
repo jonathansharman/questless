@@ -8,6 +8,8 @@
 
 #include <gsl/span>
 
+using namespace units::literals;
+
 namespace sdl {
 	namespace {
 		gsl::span<Uint8 const> const& keyboard_state() {
@@ -45,8 +47,8 @@ namespace sdl {
 		, _prev_keyboard_state(keyboard_state().size(), 0)
 		, _curr_mouse_state{0}
 		, _prev_mouse_state{0}
-		, _mouse_position{0, 0}
-		, _prev_mouse_position{0, 0}
+		, _mouse_position{0_px, 0_px}
+		, _prev_mouse_position{0_px, 0_px}
 	{}
 
 	void input::update() {
@@ -59,7 +61,7 @@ namespace sdl {
 
 		_prev_mouse_state = _curr_mouse_state;
 		_prev_mouse_position = _mouse_position;
-		_curr_mouse_state = SDL_GetMouseState(&_mouse_position.x(), &_mouse_position.y());
+		_curr_mouse_state = SDL_GetMouseState(&_mouse_position.x().value, &_mouse_position.y().value);
 
 		_scroll = 0;
 
@@ -235,7 +237,7 @@ namespace sdl {
 	}
 
 	void input::move_mouse(units::window_space::point const& position) {
-		SDL_WarpMouseInWindow(the_window().sdl_ptr(), position.x(), position.y());
+		SDL_WarpMouseInWindow(the_window().sdl_ptr(), position.x().value, position.y().value);
 		_mouse_position = position;
 	}
 }

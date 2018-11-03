@@ -499,6 +499,8 @@ Blue - stasis - time
 		Banish - Banish a being to stasis for a certain duration. While banished, an impassable and indestructible stasis portal appears in its place. During banishment, the being cannot be interacted with and does not update its state.
 	Time
 		Enchant Time Amulet - Time amulets are very expensive and difficult to construct or acquire and act as "save slots". Enchanting a time amulet is also difficult/expensive and creates a restore point. Using an enchanted time amulet restores the entire world to its state immediately after the amulet was enchanted. A time amulet can be re-enchanted to overwrite its previous restore point. If the player's character dies while carrying at least one enchanted time amulet, the game will present the option to restore the game from one of the available amulets.
+		Slow/speed up time in a region
+		Slow/speed up time for a single being
 Yellow - chaos - space
 	Specializations
 		Chaos mage

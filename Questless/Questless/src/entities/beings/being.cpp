@@ -30,16 +30,7 @@ namespace ql {
 		, base_stats{make_base_stats()}
 		, stats{base_stats}
 		, energy{[] { return 0.0_ep; }, [this] { return stats.a.stamina; }}
-		, satiety{max_satiety}
-		, alertness{max_alertness}
-		, joy{0.0_joy}
-		, courage{0.0_courage}
-		, serenity{0.0_serenity}
-		, busy_time{0_tick}
-		, mortality{ql::mortality::alive}
 		, direction{static_cast<region_tile::direction>(uniform(1, 6))}
-		, awake{true}
-		, corporeal{true}
 		, _agent{make_agent(*this)}
 	{
 		refresh_stats();
@@ -138,9 +129,9 @@ namespace ql {
 		erase_if(_statuses, [](auto const& status) { return status->duration() == 0_tick; });
 
 		// Update conditions.
-		satiety -= (awake.value ? 0.05_sat : 0.025_sat) / 1_tick * elapsed;
-		energy += (awake.value ? 1.0_ep : 3.0_ep) / 1_tick * elapsed;
-		alertness += (awake.value ? -0.1_alert : 0.2_alert) / 1_tick * elapsed;
+		satiety -= (awake() ? 0.05_sat : 0.025_sat) / 1_tick * elapsed;
+		energy += (awake() ? 1.0_ep : 3.0_ep) / 1_tick * elapsed;
+		alertness += (awake() ? -0.1_alert : 0.2_alert) / 1_tick * elapsed;
 		busy_time -= elapsed;
 
 		// Update body.
@@ -317,7 +308,7 @@ namespace ql {
 		// Check for part disability.
 		if (target_part.health.value() <= 0.0_hp) {
 			//! @todo Disable target_part.
-			if (target_part.vital.value) {
+			if (target_part.vital()) {
 				// A vital part has been disabled. Kill target.
 				mortality = ql::mortality::dead;
 			}
@@ -341,7 +332,7 @@ namespace ql {
 			if (source && !source->before_kill(id)) return;
 
 			// Target's death succeeded.
-			if (corporeal.value) {
+			if (corporeal()) {
 				// Spawn corpse.
 				ql::region& corpse_region = *region; // Save region since the being's region pointer will be nulled when it's removed.
 				region->remove(*this);

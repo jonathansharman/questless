@@ -4,6 +4,7 @@
 
 #include "animation/world_renderer.hpp"
 
+#include "animation/camera.hpp"
 #include "animation/entity_animator.hpp"
 #include "animation/particles/arrow_particle.hpp"
 #include "animation/particles/blood_particle.hpp"
@@ -43,14 +44,14 @@ namespace ql {
 					, sprite_sheet_space::vector{4, 1}
 					)
 				, std::vector<sprite_animation::frame>
-					{ {game_space::seconds{0.100}, sprite_sheet_space::point{0, 0}, texture_space::vector{0, 0}}
-					, {game_space::seconds{0.075}, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 0}}
-					, {game_space::seconds{0.050}, sprite_sheet_space::point{2, 0}, texture_space::vector{0, 0}}
-					, {game_space::seconds{0.025}, sprite_sheet_space::point{3, 0}, texture_space::vector{0, 0}}
-					, {game_space::seconds{0.050}, sprite_sheet_space::point{2, 0}, texture_space::vector{0, 0}}
-					, {game_space::seconds{0.075}, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 0}}
+					{ {0.100_s, sprite_sheet_space::point{0, 0}, texture_space::vector{0, 0}}
+					, {0.075_s, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 0}}
+					, {0.050_s, sprite_sheet_space::point{2, 0}, texture_space::vector{0, 0}}
+					, {0.025_s, sprite_sheet_space::point{3, 0}, texture_space::vector{0, 0}}
+					, {0.050_s, sprite_sheet_space::point{2, 0}, texture_space::vector{0, 0}}
+					, {0.075_s, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 0}}
 					}
-				, looping{true}
+				, sprite_animation::loop_type::looping
 				}
 			}
 		, _terrain_render_is_current{false}
@@ -114,7 +115,7 @@ namespace ql {
 		}
 	}
 
-	void world_renderer::draw_terrain() {
+	void world_renderer::draw_terrain(camera const& camera) {
 		// Render if necessary.
 		if (!_terrain_render_is_current) {
 			render_terrain();
@@ -122,7 +123,7 @@ namespace ql {
 		}
 		// Draw terrain.
 		if (_terrain_texture) {
-			the_game().camera().draw(*_terrain_texture, game_space::point{center(_terrain_bounds)});
+			camera.draw(*_terrain_texture, world_space::point{center(_terrain_bounds)});
 		}
 		// Draw tile highlights, if active.
 		if (_highlight_predicate) {
@@ -133,10 +134,7 @@ namespace ql {
 					if (offset.length() <= visual_range) {
 						auto tile_coords = _world_view->origin() + offset;
 						if ((*_highlight_predicate)(tile_coords)) {
-							_tile_selector_animation.draw
-								( to_world(tile_coords)
-								, the_game().camera()
-								);
+							_tile_selector_animation.draw(to_world(tile_coords), camera);
 						}
 					}
 				}
@@ -144,7 +142,7 @@ namespace ql {
 		}
 	}
 
-	void world_renderer::draw_entities() {
+	void world_renderer::draw_entities(camera const& camera) {
 		// Created a view of the entities sorted by y-coordinates.
 		auto y_sort = [](world_view::entity_view const& a, world_view::entity_view const& b) {
 			if (entity const* entity_a = get_entity_cptr(a.id)) {
@@ -177,7 +175,7 @@ namespace ql {
 					case perception::category::low:
 						_unknown_entity_animation->draw
 							( to_world(entity->coords)
-							, the_game().camera()
+							, camera
 							, colors::color_vector{intensity, intensity, intensity, 1.0f}
 							);
 						break;
@@ -187,23 +185,24 @@ namespace ql {
 					{
 						// Draw heading.
 						struct heading_drawer {
+							ql::camera const& camera;
 							void operator ()(being const& being) {
-								game_space::point start = to_world(being.coords);
-								game_space::point end = to_world(being.coords.neighbor(being.direction));
-								the_game().camera().draw_lines({start, end}, colors::magenta());
+								world_space::point start = to_world(being.coords);
+								world_space::point end = to_world(being.coords.neighbor(being.direction));
+								camera.draw_lines({start, end}, colors::magenta());
 							}
 							void operator ()(object const&) {}
 						};
-						std::visit(heading_drawer{}, entity_var_ref);
+						std::visit(heading_drawer{camera}, entity_var_ref);
 
 						//! @todo Use the following if the overload helpers in utility.h can be repaired.
 						//std::visit
 						//	( overload
 						//		( [](being const& being)
 						//			{
-						//				game_space::point start = to_world(being.coords);
-						//				game_space::point end = to_world(being.coords.neighbor(being.direction));
-						//				the_game().camera().draw_lines({start, end}, color::magenta());
+						//				world_space::point start = to_world(being.coords);
+						//				world_space::point end = to_world(being.coords.neighbor(being.direction));
+						//				camera.draw_lines({start, end}, color::magenta());
 						//			}
 						//		, [](object const&) {}
 						//		)
@@ -212,7 +211,7 @@ namespace ql {
 
 						entity_animation.draw
 							( to_world(entity->coords)
-							, the_game().camera()
+							, camera
 							, colors::color_vector{intensity, intensity, intensity, 1.0f}
 							);
 						break;
@@ -227,10 +226,10 @@ namespace ql {
 		}
 	}
 
-	void world_renderer::draw_effects() {
+	void world_renderer::draw_effects(camera const& camera) {
 		for (auto& animation_and_coords : _animations) {
 			auto const& animation = *animation_and_coords.first;
-			animation.draw(animation_and_coords.second, the_game().camera());
+			animation.draw(animation_and_coords.second, camera);
 		}
 	}
 
@@ -269,7 +268,7 @@ namespace ql {
 	}
 
 	void world_renderer::render_terrain() {
-		std::optional<game_space::box> opt_bounds = _world_view->bounds();
+		std::optional<world_space::box> opt_bounds = _world_view->bounds();
 		if (!opt_bounds) {
 			_terrain_texture = nullptr;
 			return;
@@ -289,8 +288,8 @@ namespace ql {
 							perception::level tile_perception = section_view.tile_perceptions[section_tile_coords.q.value][section_tile_coords.r.value];
 							if (perception::get_category(tile_perception) != perception::category::none) {
 								region_tile::point const region_tile_coords = section.region_tile_coords(section_tile_coords);
-								game_space::point const tile_game_point = to_world(region_tile_coords);
-								game_space::point const terrain_game_point = _terrain_bounds.position;
+								world_space::point const tile_game_point = to_world(region_tile_coords);
+								world_space::point const terrain_game_point = _terrain_bounds.position;
 								window_space::point const tile_screen_point
 									{ lround(tile_game_point.x() - terrain_game_point.x())
 									, lround(terrain_game_point.y() - tile_game_point.y() + height(_terrain_bounds) - 1)
@@ -324,8 +323,8 @@ namespace ql {
 	void world_renderer::visit(arrow_attack_effect const& e) {
 		static auto arrow_sound_handle = the_sound_manager().add("resources/sounds/spells/eagle-eye.wav");
 
-		game_space::point source = to_world(e.origin());
-		game_space::point target = to_world(e.target);
+		world_space::point source = to_world(e.origin());
+		world_space::point target = to_world(e.target);
 		_animations.push_back(std::make_pair(umake<arrow_particle>(source, target), source));
 		the_sound_manager()[arrow_sound_handle].play();
 	}
@@ -333,7 +332,7 @@ namespace ql {
 	void world_renderer::visit(eagle_eye_effect const& e) {
 		static auto eagle_eye_sound_handle = the_sound_manager().add("resources/sounds/spells/eagle-eye.wav");
 
-		game_space::point position = to_world(e.origin());
+		world_space::point position = to_world(e.origin());
 		for (int i = 0; i < 50; ++i) {
 			_animations.push_back(std::make_pair(umake<green_magic_particle>(), position));
 		}
@@ -349,14 +348,14 @@ namespace ql {
 		auto const target_vitality = target_part ? target_part->stats.a.vitality.value() : 100.0_hp; // Assume vitality = 100 if being no longer exists to check.
 		//! @todo Pass along the vitality in the event object if it's needed here (to avoid having to make up a number).
 
-		game_space::point const position = to_world(e.origin());
+		world_space::point const position = to_world(e.origin());
 
 		dmg::group const& damage = e.damage;
 
 		for (auto const& part : damage.parts()) {
 			struct damage_renderer {
-				std::vector<std::pair<uptr<animation>, units::game_space::point>>& animations;
-				game_space::point const position;
+				std::vector<std::pair<uptr<animation>, units::world_space::point>>& animations;
+				world_space::point const position;
 				ql::health const target_vitality;
 
 				void spawn_blood(double const damage) {
@@ -427,7 +426,7 @@ namespace ql {
 	void world_renderer::visit(lightning_bolt_effect const& e) {
 		static auto lightning_bolt_sound_handle = the_sound_manager().add("resources/sounds/spells/lightning-bolt.wav");
 
-		game_space::point position = to_world(e.origin());
+		world_space::point position = to_world(e.origin());
 		for (int i = 0; i < 35; ++i) {
 			_animations.push_back(std::make_pair(umake<yellow_magic_particle>(), position));
 		}

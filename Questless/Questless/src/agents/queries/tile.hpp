@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "utility/quantities.hpp"
+#include "quantities/quantities.hpp"
 
 #include <variant>
 

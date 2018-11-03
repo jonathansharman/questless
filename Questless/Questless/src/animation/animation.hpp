@@ -4,10 +4,12 @@
 
 #pragma once
 
-#include "units/colors.hpp"
-#include "units/game_space.hpp"
-#include "units/window_space.hpp"
+#include "quantities/wall_time.hpp"
 #include "utility/static_bounded.hpp"
+
+#include "units/colors.hpp"
+#include "units/world_space.hpp"
+#include "units/window_space.hpp"
 
 namespace ql {
 	class camera;
@@ -44,12 +46,12 @@ namespace ql {
 		//! @param position The position in game space at which to draw the animation.
 		//! @param camera The camera with which to draw the animation.
 		//! @param color_vector An additional color vector, applied on top of the camera's color vector.
-		virtual void draw(units::game_space::point position, camera const& camera, units::colors::color_vector color_vector = units::colors::white_vector()) const = 0;
+		virtual void draw(units::world_space::point position, camera const& camera, units::colors::color_vector color_vector = units::colors::white_vector()) const = 0;
 	protected:
 		bool _over = false;
 
 		//! The logical amount of time elapsed since last frame, accounting for the time scale.
-		units::game_space::seconds elapsed_time() const;
+		sec elapsed_time() const;
 	private:
 		bool _paused = false;
 

@@ -46,20 +46,20 @@ namespace {
 
 namespace sdl {
 	texture::texture(window_space::vector size, colors::color color) : _size{size} {
-		if (width() != 0 && height() != 0) {
+		if (width() != 0_px && height() != 0_px) {
 			// Generate texture.
 			glGenTextures(1, &_texture);
 			// Bind texture.
 			glBindTexture(GL_TEXTURE_2D, _texture);
 			// Set texture data.
-			std::vector<GLubyte> blank_buffer(width() * height() * 4);
+			std::vector<GLubyte> blank_buffer(width().value * height().value * 4);
 			for (std::size_t i = 0; i < blank_buffer.size(); i += 4) {
-				blank_buffer[i] = static_cast<GLubyte>(255 * color.red());
-				blank_buffer[i + 1] = static_cast<GLubyte>(255 * color.green());
-				blank_buffer[i + 2] = static_cast<GLubyte>(255 * color.blue());
-				blank_buffer[i + 3] = static_cast<GLubyte>(255 * color.alpha());
+				blank_buffer[i] = static_cast<GLubyte>(255 * color.red().value);
+				blank_buffer[i + 1] = static_cast<GLubyte>(255 * color.green().value);
+				blank_buffer[i + 2] = static_cast<GLubyte>(255 * color.blue().value);
+				blank_buffer[i + 3] = static_cast<GLubyte>(255 * color.alpha().value);
 			}
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width(), height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, &blank_buffer[0]);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width().value, height().value, 0, GL_RGBA, GL_UNSIGNED_BYTE, &blank_buffer[0]);
 			// Set minification and magnification filters.
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -96,7 +96,7 @@ namespace sdl {
 		// Bind texture.
 		glBindTexture(GL_TEXTURE_2D, _texture);
 		// Set texture data.
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width(), height(), 0, format, GL_UNSIGNED_BYTE, surface->pixels);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width().value, height().value, 0, format, GL_UNSIGNED_BYTE, surface->pixels);
 		// Set minification and magnification filters.
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -127,7 +127,7 @@ namespace sdl {
 		// Bind texture.
 		glBindTexture(GL_TEXTURE_2D, _texture);
 		// Set texture data.
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width(), height(), 0, format, GL_UNSIGNED_BYTE, surface->pixels);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width().value, height().value, 0, format, GL_UNSIGNED_BYTE, surface->pixels);
 		// Set minification and magnification filters.
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -174,7 +174,7 @@ namespace sdl {
 		, texture_space::vector origin
 		, color_vector color_vector
 		, view_space::vector scale
-		, game_space::radians angle
+		, world_space::radians angle
 		, std::optional<texture_space::box> const& src_rect
 		) const
 	{
@@ -193,12 +193,12 @@ namespace sdl {
 
 		{ // Set color vector.
 			GLuint const color_vector_uniform = dflt_program().get_uniform_handle("color_vector"); //! @todo Cache this, invalidating cache after window resize.
-			glUniform4f(color_vector_uniform, color_vector.red(), color_vector.green(), color_vector.blue(), color_vector.alpha());
+			glUniform4f(color_vector_uniform, color_vector.red().value, color_vector.green().value, color_vector.blue().value, color_vector.alpha().value);
 		}
 
 		{ // Set model matrix.
-			int const width = src_rect ? units::width(*src_rect) : _size.x();
-			int const height = src_rect ? units::height(*src_rect) : _size.y();
+			int const width = src_rect ? units::width(*src_rect).value : _size.x().value;
+			int const height = src_rect ? units::height(*src_rect).value : _size.y().value;
 
 			glm::mat4 model_matrix;
 			// Position. Correct for odd width/height in window space by nudging position by half a pixel.
@@ -209,34 +209,34 @@ namespace sdl {
 					auto operator ()(view_space::point position) { return position; }
 					auto operator ()(window_space::point position) {
 						return view_space::point
-							{ position.x() + ((width & 1) ? 0.5f : 0.0f)
-							, position.y() + ((height & 1) ? 0.5f : 0.0f)
+							{ view{position.x().value + ((width & 1) ? 0.5f : 0.0f)}
+							, view{position.y().value + ((height & 1) ? 0.5f : 0.0f)}
 							};
 					}
 				};
 				return std::visit(to_float_coords{width, height}, position);
 			}();
-			model_matrix = glm::translate(model_matrix, glm::vec3{view_space_position.x(), view_space_position.y(), 0.0f});
+			model_matrix = glm::translate(model_matrix, glm::vec3{view_space_position.x().value, view_space_position.y().value, 0.0f});
 			// Orientation
 			model_matrix = glm::rotate
 				( model_matrix
-				, static_cast<float>(-angle.count())
+				, static_cast<float>(-angle.count().value)
 				, glm::vec3{0.0f, 0.0f, 1.0f}
 				);
 			// Scale
 			model_matrix = glm::scale(model_matrix, glm::vec3{scale.x() * width, scale.y() * height, 1.0f});
 			// Origin
-			model_matrix = glm::translate(model_matrix, glm::vec3{-1.0f * origin.u() / width, -1.0f * origin.v() / height, 0.0f});
+			model_matrix = glm::translate(model_matrix, glm::vec3{-1.0f * origin.u().value / width, -1.0f * origin.v().value / height, 0.0f});
 
 			GLuint const model_matrix_uniform = dflt_program().get_uniform_handle("model_matrix"); //! @todo Cache this, invalidating cache after window resize.
 			glUniformMatrix4fv(model_matrix_uniform, 1, GL_FALSE, glm::value_ptr(model_matrix));
 		}
 
 		// Get texture coordinates.
-		float const u0 = src_rect ? static_cast<float>(left(*src_rect)) / width() : 0.0f;
-		float const u1 = src_rect ? static_cast<float>(right(*src_rect)) / width() : 1.0f;
-		float const v0 = src_rect ? static_cast<float>(top(*src_rect)) / height() : 0.0f;
-		float const v1 = src_rect ? static_cast<float>(bottom(*src_rect)) / height() : 1.0f;
+		float const u0 = src_rect ? static_cast<float>(left(*src_rect).value) / width().value : 0.0f;
+		float const u1 = src_rect ? static_cast<float>(right(*src_rect).value) / width().value : 1.0f;
+		float const v0 = src_rect ? static_cast<float>(top(*src_rect).value) / height().value : 0.0f;
+		float const v1 = src_rect ? static_cast<float>(bottom(*src_rect).value) / height().value : 1.0f;
 
 		// Set vertex data.
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo);

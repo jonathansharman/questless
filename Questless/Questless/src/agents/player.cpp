@@ -4,8 +4,9 @@
 
 #include "player.hpp"
 
-#include "entities/beings/world_view.hpp"
 #include "game.hpp"
+#include "entities/beings/being.hpp"
+#include "entities/beings/world_view.hpp"
 #include "sdl/resources.hpp"
 #include "ui/count_dialog.hpp"
 #include "ui/direction_dialog.hpp"
@@ -27,16 +28,17 @@ namespace ql {
 	player::player(ql::being& being)
 		: agent{being}
 		, _world_view{nullptr}
+		, _hud{being.id}
 	{}
 
 	player::~player() = default;
 
 	world_view const& player::world_view() const { return *_world_view; }
 
-	void player::update_world_view() { _world_view = umake<ql::world_view>(being, true); }
+	void player::update_view() { _world_view = umake<ql::world_view>(being, true); }
 
 	complete player::act() {
-		return the_game().query_player_choice([this](player_action_dialog::choice player_choice) {
+		return query_player_choice([this](player_action_dialog::choice player_choice) {
 			return std::visit([this](auto&& player_choice) {
 				SWITCH_TYPE(player_choice) {
 					MATCH_TYPE(player_action_dialog::idle) {
@@ -85,7 +87,7 @@ namespace ql {
 					}
 					MATCH_TYPE(player_action_dialog::use) {
 						//! @todo Sync the hotbar with changes to the inventory.
-						if (std::optional<id<item>> opt_item_id = the_game().hud().hotbar()[player_choice.index]) {
+						if (std::optional<id<item>> opt_item_id = _hud.hotbar()[player_choice.index]) {
 							item& item = the_game().items.ref(*opt_item_id);
 							// Get a list of the item's actions. It's shared, so the lambda that captures it is copyable, so the lambda can be passed as a std::function.
 							auto actions = smake<std::vector<uptr<action>>>(item.actions());
@@ -111,10 +113,9 @@ namespace ql {
 									}
 								}
 							);
-							return the_game().add_dialog(std::move(dialog));
-						} else {
-							return complete{};
+							_dialogs.push_back(std::move(dialog));
 						}
+						return complete{};
 					}
 				}
 			}, std::move(player_choice));
@@ -217,7 +218,7 @@ namespace ql {
 	complete player::send_message
 		( queries::message::any message
 		, function<complete()> cont
-		) const
+		)
 	{
 		std::array<std::string, 2> const title_prompt = std::visit([&](auto&& message) -> std::array<std::string, 2> {
 			SWITCH_TYPE(message) {
@@ -233,8 +234,8 @@ namespace ql {
 			}
 		}, message);
 
-		auto dialog = umake<message_dialog>(std::move(title_prompt[0]), std::move(title_prompt[1]), std::move(cont));
-		return the_game().add_dialog(std::move(dialog));
+		_dialogs.push_back(umake<message_dialog>(std::move(title_prompt[0]), std::move(title_prompt[1]), std::move(cont)));
+		return complete{};
 	}
 
 	complete player::query_count
@@ -243,16 +244,16 @@ namespace ql {
 		, std::optional<int> min
 		, std::optional<int> max
 		, function<complete(std::optional<int>)> cont
-		) const
+		)
 	{
-		std::array<std::string, 2> const title_prompt = std::visit([&](auto&& query)->std::array<std::string, 2> {
+		std::array<std::string, 2> const title_prompt = std::visit([&](auto&& query) -> std::array<std::string, 2> {
 			SWITCH_TYPE(query) {
 				MATCH_TYPE(queries::count::wait_time) return {"Wait", "Enter wait time."};
 			}
 		}, query);
 
-		auto dialog = umake<count_dialog>(std::move(title_prompt[0]), std::move(title_prompt[1]), default_value, min, max, std::move(cont));
-		return the_game().add_dialog(std::move(dialog));
+		_dialogs.push_back(umake<count_dialog>(std::move(title_prompt[0]), std::move(title_prompt[1]), default_value, min, max, std::move(cont)));
+		return complete{};
 	}
 
 	complete player::query_magnitude
@@ -261,7 +262,7 @@ namespace ql {
 		, std::optional<double> min
 		, std::optional<double> max
 		, function<complete(std::optional<double>)> cont
-		) const
+		)
 	{
 		std::array<std::string, 2> const title_prompt = std::visit([&](auto&& query) -> std::array<std::string, 2> {
 			SWITCH_TYPE(query) {
@@ -270,8 +271,8 @@ namespace ql {
 			}
 		}, query);
 
-		auto dialog = umake<magnitude_dialog>(std::move(title_prompt[0]), std::move(title_prompt[1]), default_value, min, max, std::move(cont));
-		return the_game().add_dialog(std::move(dialog));
+		_dialogs.push_back(umake<magnitude_dialog>(std::move(title_prompt[0]), std::move(title_prompt[1]), default_value, min, max, std::move(cont)));
+		return complete{};
 	}
 	
 	complete player::query_tile
@@ -279,7 +280,7 @@ namespace ql {
 		, std::optional<region_tile::point> origin
 		, function<bool(region_tile::point)> predicate
 		, function<complete(std::optional<region_tile::point>)> cont
-		) const
+		)
 	{
 		std::array<std::string, 2> const title_prompt = std::visit([&](auto&& query) -> std::array<std::string, 2> {
 			SWITCH_TYPE(query) {
@@ -289,42 +290,34 @@ namespace ql {
 			}
 		}, query);
 
-		auto dialog = umake<tile_dialog>
+		_dialogs.push_back(umake<tile_dialog>
 			( std::move(title_prompt[0])
 			, std::move(title_prompt[1])
 			, std::move(origin)
 			, std::move(predicate)
 			, std::move(cont)
-			);
-		return the_game().add_dialog(std::move(dialog));
+			));
+		return complete{};
 	}
 
-	//complete player::query_direction
-	//	( queries::direction::any query
-	//	, function<complete(std::optional<region_tile::direction>)> cont
-	//	) const
-	//{
-	//	struct direction_query_titler : direction_query_const_visitor {
-	//		std::string title;
-	//	};
-	//	struct direction_query_prompter : direction_query_const_visitor {
-	//		std::string prompt;
-	//	};
+	complete player::query_direction
+		( queries::direction::any query
+		, function<complete(std::optional<region_tile::direction>)> cont
+		)
+	{
+		std::array<std::string, 2> const title_prompt = std::visit([&](auto&& query) -> std::array<std::string, 2> {
+		}, query);
 
-	//	direction_query_titler titler;
-	//	query->accept(titler);
-	//	direction_query_prompter prompter;
-	//	query->accept(prompter);
-	//	auto dialog = umake<direction_dialog>(std::move(titler.title), std::move(prompter.prompt), std::move(cont));
-	//	return the_game().add_dialog(std::move(dialog));
-	//}
+		_dialogs.push_back(umake<direction_dialog>(std::move(title_prompt[0]), std::move(title_prompt[1]), std::move(cont)));
+		return complete{};
+	}
 
 	complete player::query_vector
 		( queries::vector::any query
 		, std::optional<region_tile::point> origin
 		, std::function<bool(region_tile::vector)> predicate
 		, std::function<complete(std::optional<region_tile::vector>)> cont
-		) const
+		)
 	{
 		std::array<std::string, 2> const title_prompt = std::visit([&](auto&& query) -> std::array<std::string, 2> {
 			SWITCH_TYPE(query) {
@@ -332,43 +325,51 @@ namespace ql {
 			}
 		}, query);
 
-		auto dialog = umake<vector_dialog>(std::move(title_prompt[0]), std::move(title_prompt[1]), origin, std::move(predicate), std::move(cont));
-		return the_game().add_dialog(std::move(dialog));
+		_dialogs.push_back(umake<vector_dialog>(std::move(title_prompt[0]), std::move(title_prompt[1]), origin, std::move(predicate), std::move(cont)));
+		return complete{};
 	}
 
 	complete player::query_being
 		( queries::being::any //query
 		, function<bool(ql::being&)> //predicate
 		, function<complete(std::optional<ql::being*>)> cont
-		) const
+		)
 	{
 		// magic::heal: "heal Target", "Select a being to be healed."
 		//! @todo This.
 		return cont(std::nullopt);
 	}
 
-	//complete player::query_item
-	//	( queries::item::any //query
-	//	, ql::being& //source
-	//	, function<bool(ql::being&)> //predicate
-	//	, function<complete(std::optional<item*>)> cont
-	//	) const
-	//{
-	//	//! @todo This.
-	//	return cont(std::nullopt);
-	//}
+	complete player::query_item
+		( queries::item::any //query
+		, ql::being& //source
+		, function<bool(ql::being&)> //predicate
+		, function<complete(std::optional<item*>)> cont
+		)
+	{
+		//! @todo This.
+		return cont(std::nullopt);
+	}
+
+	complete player::query_player_choice(function<void(player_action_dialog::choice)> cont) {
+		_dialogs.push_back(umake<player_action_dialog>(_hud, move(cont)));
+		return complete{};
+	}
 
 	// Quick Time Events
 
-	complete player::aim_missile(region_tile::point source_coords, ql::being& target_being, std::function<complete(body_part*)> cont) const {
-		return the_game().add_dialog(umake<qte::aim_missile>(source_coords, target_being, std::move(cont)));
+	complete player::aim_missile(region_tile::point source_coords, ql::being& target_being, std::function<complete(body_part*)> cont) {
+		_dialogs.push_back(umake<qte::aim_missile>(source_coords, target_being, std::move(cont)));
+		return complete{};
 	}
 
-	complete player::get_shock_quality(region_tile::point target_coords, std::function<complete(double)> cont) const {
-		return the_game().add_dialog(umake<qte::shock>(target_coords, std::move(cont)));
+	complete player::get_shock_quality(region_tile::point target_coords, std::function<complete(double)> cont) {
+		_dialogs.push_back(umake<qte::shock>(target_coords, std::move(cont)));
+		return complete{};
 	}
 
-	complete player::incant(gatestone& gatestone, std::function<complete(uptr<magic::spell>)> cont) const {
-		return the_game().add_dialog(umake<qte::incant>(gatestone, std::move(cont)));
+	complete player::incant(gatestone& gatestone, std::function<complete(uptr<magic::spell>)> cont) {
+		_dialogs.push_back(umake<qte::incant>(gatestone, std::move(cont)));
+		return complete{};
 	}
 }

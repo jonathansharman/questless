@@ -19,12 +19,11 @@ namespace ql {
 	//! The head-up display controls and displays various elements, such as conditions, the hotbar, and the inventory.
 	class hud {
 	public:
+		//! @param player_being_id The ID of the player-controlled being.
+		hud(id<being> player_being_id) : _player_being_id{player_being_id} {}
+
 		//! Updates the HUD's state and animations. Should be called once per frame.
 		void update();
-
-		//! Sets the HUD's associated player being ID to the given ID.
-		//! @param player_being_id The ID of the player-controlled being.
-		void set_player_being_id(id<being> player_being_id);
 
 		//! Draws the HUD.
 		void draw();
@@ -37,7 +36,7 @@ namespace ql {
 	private:
 		static constexpr size_t _hotbar_size = 10;
 
-		std::optional<id<being>> _player_being_id = std::nullopt;
+		id<being> _player_being_id;
 		std::array<std::optional<id<item>>, _hotbar_size> _hotbar;
 		bool _inv_open = false;
 		int _inv_page = 0; //! @todo Replace with filters and a scrollable view.

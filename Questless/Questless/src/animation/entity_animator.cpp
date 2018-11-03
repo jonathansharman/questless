@@ -34,14 +34,14 @@ namespace ql {
 		auto sprite_animation = umake<ql::sprite_animation>
 			( sprite_sheet
 			, std::vector<sprite_animation::frame>
-				{ {game_space::seconds{0.2}, sprite_sheet_space::point{0, 0}, texture_space::vector{0, 12}}
-				, {game_space::seconds{0.2}, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 12}}
-				, {game_space::seconds{0.2}, sprite_sheet_space::point{2, 0}, texture_space::vector{0, 12}}
-				, {game_space::seconds{0.2}, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 12}}
+				{ {0.2_s, sprite_sheet_space::point{0, 0}, texture_space::vector{0, 12}}
+				, {0.2_s, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 12}}
+				, {0.2_s, sprite_sheet_space::point{2, 0}, texture_space::vector{0, 12}}
+				, {0.2_s, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 12}}
 				}
-			, looping{true}
+			, sprite_animation::loop_type::looping
+			, sprite_animation::start_time::random
 			);
-		sprite_animation->reset(randomize_start_time{true});
 		animation_stack->add(std::move(sprite_animation));
 
 		// Bleeding animation
@@ -68,14 +68,14 @@ namespace ql {
 		auto sprite_animation = umake<ql::sprite_animation>
 			( sprite_sheet
 			, std::vector<sprite_animation::frame>
-				{ {game_space::seconds{0.2}, sprite_sheet_space::point{0, 0}, texture_space::vector{0, 12}}
-				, {game_space::seconds{0.2}, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 12}}
-				, {game_space::seconds{0.2}, sprite_sheet_space::point{2, 0}, texture_space::vector{0, 12}}
-				, {game_space::seconds{0.2}, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 12}}
+				{ {0.2_s, sprite_sheet_space::point{0, 0}, texture_space::vector{0, 12}}
+				, {0.2_s, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 12}}
+				, {0.2_s, sprite_sheet_space::point{2, 0}, texture_space::vector{0, 12}}
+				, {0.2_s, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 12}}
 				}
-			, looping{true}
+			, sprite_animation::loop_type::looping
+			, sprite_animation::start_time::random
 			);
-		sprite_animation->reset(randomize_start_time{true});
 		animation_stack->add(std::move(sprite_animation));
 
 		// Bleeding animation

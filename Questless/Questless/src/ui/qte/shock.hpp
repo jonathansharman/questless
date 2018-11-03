@@ -5,6 +5,8 @@
 #pragma once
 
 #include "ui/dialog.hpp"
+
+#include "quantities/wall_time.hpp"
 #include "world/coordinates.hpp"
 
 namespace ql::qte {
@@ -20,15 +22,15 @@ namespace ql::qte {
 		void draw() const final;
 	private:
 		struct charge {
-			units::game_space::point position;
-			units::game_space::velocity velocity;
+			units::world_space::point position;
+			units::world_space::velocity velocity;
 		};
 
-		units::game_space::point _target_point;
+		units::world_space::point _target_point;
 		continuation<double> _cont;
 
-		units::game_space::seconds _elapsed_time = 0.0s;
-		int _quadrant = 0;
+		sec _elapsed_time = 0.0_s;
+		enum class quadrant { ur, ul, ll, lr } _quadrant = quadrant::ur;
 
 		std::vector<charge> _charges;
 

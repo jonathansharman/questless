@@ -28,14 +28,14 @@ namespace ql {
 		//! @param lifetime The duration of the particle's life, after which it is considered expired and should be removed.
 		//! @param max_displacement Maximum random displacement from the given position.
 		particle
-			( units::game_space::vector displacement
-			, units::game_space::velocity velocity
-			, units::game_space::acceleration acceleration
-			, units::game_space::radians angle
-			, units::game_space::radians_per_sec angular_velocity
-			, units::game_space::scalar scale
-			, units::game_space::scale_velocity scale_velocity
-			, units::game_space::seconds lifetime
+			( units::world_space::vector displacement
+			, units::world_space::velocity velocity
+			, units::world_space::acceleration acceleration
+			, units::world_space::radians angle
+			, units::world_space::radians_per_sec angular_velocity
+			, units::world_space::scalar scale
+			, units::world_space::scale_velocity scale_velocity
+			, units::world_space::seconds lifetime
 			, max_displacement max_displacement = max_displacement{15.0}
 			);
 
@@ -43,19 +43,19 @@ namespace ql {
 
 		void draw(units::window_space::point position) const final;
 
-		void draw(units::game_space::point position, camera const& camera, units::colors::color_vector color_vector = units::colors::white_vector()) const final;
+		void draw(units::world_space::point position, camera const& camera, units::colors::color_vector color_vector = units::colors::white_vector()) const final;
 	protected:
 		//! @todo Are these protected variables the right way to do this?
 
-		units::game_space::vector _displacement;
-		units::game_space::velocity _velocity;
-		units::game_space::acceleration _acceleration;
-		units::game_space::radians _angle;
-		units::game_space::radians_per_sec _angular_velocity;
-		units::game_space::scalar _scale;
-		units::game_space::scale_velocity _scale_velocity;
-		units::game_space::seconds _lifetime;
-		units::game_space::seconds _time_left;
+		units::world_space::vector _displacement;
+		units::world_space::velocity _velocity;
+		units::world_space::acceleration _acceleration;
+		units::world_space::radians _angle;
+		units::world_space::radians_per_sec _angular_velocity;
+		units::world_space::scalar _scale;
+		units::world_space::scale_velocity _scale_velocity;
+		sec _lifetime;
+		sec _time_left;
 		units::colors::color_vector _color_vector;
 
 		//! The texture to be used when drawing a particle.

@@ -7,5 +7,5 @@
 #include <variant>
 
 namespace ql::queries::item {
-	using any = std::variant<>;
+	using any = std::variant<std::monostate>;
 }

@@ -6,6 +6,7 @@
 
 #include "agents/action.hpp"
 #include "damage/group.hpp"
+#include "quantities/quantities.hpp"
 #include "stats/part.hpp"
 #include "utility/id.hpp"
 #include "utility/lazy_bounded.hpp"
@@ -13,7 +14,6 @@
 #include "utility/utility.hpp"
 
 #include "units/view_space.hpp"
-#include "utility/quantities.hpp"
 
 #include <cereal/access.hpp>
 #include <cereal/cereal.hpp>
@@ -45,7 +45,7 @@ namespace ql {
 		//! @param owner_id The ID of the being that owns this body part.
 		ql::id<being> owner_id;
 
-		//! The player-visisble name of the body part.
+		//! The player-visisble name of this body part.
 		std::string name;
 
 		//! The tags that determine what kind of part this is.
@@ -55,10 +55,14 @@ namespace ql {
 		stats::part stats{};
 
 		//! Whether this body part is vital to its being. If true, the being usually dies when this body part is disabled.
-		vital vital = ql::vital{false};
+		vitalness vitalness = vitalness::nonvital;
+		constexpr bool vital() const { return vitalness == vitalness::vital; }
+		constexpr bool nonvital() const { return vitalness == vitalness::nonvital; }
 
 		//! Whether this body part is currently functioning. Parts can be disabled by damage or other effects.
-		enabled enabled = ql::enabled{true};
+		ableness ableness = ableness::enabled;
+		constexpr bool enabled() const { return ableness == ableness::enabled; }
+		constexpr bool disabled() const { return ableness == ableness::disabled; }
 
 		lazy_bounded<ql::health> health
 			{ 0.0_hp
@@ -126,8 +130,8 @@ namespace ql {
 				, CEREAL_NVP(name)
 				, CEREAL_NVP(tags)
 				, CEREAL_NVP(stats)
-				, CEREAL_NVP(vital)
-				, CEREAL_NVP(enabled)
+				, CEREAL_NVP(vitalness)
+				, CEREAL_NVP(ableness)
 				, CEREAL_NVP(layer)
 				, CEREAL_NVP(hitbox)
 				, CEREAL_NVP(equipped_item_id)

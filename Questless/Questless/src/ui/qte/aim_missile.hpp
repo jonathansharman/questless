@@ -4,10 +4,9 @@
 
 #pragma once
 
-
 #include "animation/camera.hpp"
 #include "ui/dialog.hpp"
-#include "units/game_space.hpp"
+#include "units/world_space.hpp"
 #include "units/view_space.hpp"
 
 namespace ql {
@@ -29,7 +28,7 @@ namespace ql::qte {
 	private:
 		enum class aiming_state { beginning, aiming, in_flight, ending };
 
-		static constexpr units::game_space::seconds _time_limit = 5.0s;
+		static constexpr units::world_space::seconds _time_limit = 5.0s;
 
 		region_tile::point _source_tile_coords;
 		being const& _target_being;
@@ -39,7 +38,7 @@ namespace ql::qte {
 		units::view_space::sphere _aiming_circle;
 		aiming_state _aiming_state = aiming_state::beginning;
 
-		units::game_space::seconds _elapsed_time = 0.0s;
+		units::world_space::seconds _elapsed_time = 0.0s;
 
 		uptr<sdl::texture> _txt_title;
 		uptr<sdl::texture> _txt_prompt;

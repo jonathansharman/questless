@@ -6,6 +6,7 @@
 
 #include "items/equipment.hpp"
 #include "magic/color.hpp"
+#include "quantities/mass.hpp"
 #include "utility/nonnegative.hpp"
 #include "utility/dynamic_bounded.hpp"
 

@@ -10,7 +10,7 @@
 
 namespace meta {
 	namespace detail {
-		//! A list of unique type tags, representing a unit.
+		//! A list of type tags, each representing a unit.
 		template <typename... Tags>
 		struct unit;
 
@@ -37,7 +37,7 @@ namespace meta {
 
 		template <typename Head, typename Tail, typename Unit2>
 		struct is_subset_unit<cons<Head, Tail>, Unit2> {
-			static constexpr bool value = Head::power == power_v<typename Head::type, Unit2> && is_subset_unit_v<Tail, Unit2>;
+			static constexpr bool value = Head::power == get_power_v<typename Head::type, Unit2> && is_subset_unit_v<Tail, Unit2>;
 		};
 
 		template <typename Unit2>
@@ -54,7 +54,7 @@ namespace meta {
 		constexpr bool is_same_unit_v = is_same_unit<Unit1, Unit2>::value;
 	}
 
-	//! A list of unique type tags, representing a unit.
+	//! A list of type tags, each representing a unit.
 	template <typename... Tags>
 	using unit_t = typename detail::unit<Tags...>::type;
 }

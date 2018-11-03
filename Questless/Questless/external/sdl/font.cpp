@@ -10,10 +10,10 @@ namespace sdl {
 	namespace {
 		SDL_Color sdl_color(colors::color color) {
 			return SDL_Color
-				{ static_cast<uint8_t>(255.0f * color.red())
-				, static_cast<uint8_t>(255.0f * color.green())
-				, static_cast<uint8_t>(255.0f * color.blue())
-				, static_cast<uint8_t>(255.0f * color.alpha())
+				{ static_cast<uint8_t>(255.0f * color.red().value)
+				, static_cast<uint8_t>(255.0f * color.green().value)
+				, static_cast<uint8_t>(255.0f * color.blue().value)
+				, static_cast<uint8_t>(255.0f * color.alpha().value)
 				};
 		}
 	}

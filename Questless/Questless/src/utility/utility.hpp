@@ -6,7 +6,7 @@
 #pragma once
 
 #include "reference.hpp"
-#include "units/game_space.hpp"
+#include "units/world_space.hpp"
 
 namespace ql {
 	//! Useful for selectively disabling constexpr branches.

@@ -185,9 +185,6 @@ namespace ql {
 	}
 
 	void digraph_menu::draw(window_space::point origin, window_space::h_align horizontal_alignment, window_space::v_align vertical_alignment) {
-		constexpr auto unselected_color_vector = colors::black_vector();
-		constexpr auto selected_color_vector = colors::red_vector();
-
 		if (!_render_is_current) {
 			render();
 		}
@@ -222,6 +219,8 @@ namespace ql {
 
 		_page_views[_page_index].title_texture.draw(_content_position);
 
+		constexpr auto unselected_color_vector = colors::black_vector();
+		constexpr auto selected_color_vector = colors::red_vector();
 		for (int i = 0; i < static_cast<int>(_page_views[_page_index].option_textures.size()); ++i) {
 			colors::color_vector option_color_vector = _pages[_page_index].option_index == i ? selected_color_vector : unselected_color_vector;
 

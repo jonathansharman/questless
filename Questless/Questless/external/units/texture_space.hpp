@@ -5,21 +5,27 @@
 #pragma once
 
 namespace units {
-	namespace detail {
-		class texture_space_buffer : public buffer_base<int, 2> {
-		public:
-			int& u() & { return _elements[0]; }
-			constexpr int const& u() const& { return _elements[0]; }
+	using tx = meta::quantity<int, meta::unit_t<struct tx_tag>>;
+	namespace literals {
+		constexpr tx operator "" _tx(unsigned long long value) { return tx{static_cast<int>(value)}; }
+	}
+	using namespace literals;
 
-			int& v() & { return _elements[1]; }
-			constexpr int const& v() const& { return _elements[1]; }
+	namespace detail {
+		class texture_space_buffer : public buffer_base<tx, 2> {
+		public:
+			constexpr auto& u() & { return _elements[0]; }
+			constexpr auto const& u() const& { return _elements[0]; }
+
+			constexpr auto& v() & { return _elements[1]; }
+			constexpr auto const& v() const& { return _elements[1]; }
 		protected:
 			using buffer_base::buffer_base;
 			using buffer_base::operator =;
 		};
 	}
 
-	struct texture_space : space<struct texture_space_tag, int, 2, detail::texture_space_buffer> {
+	struct texture_space : space<struct texture_space_tag, tx, 2, detail::texture_space_buffer> {
 		using h_align = axis<0>::align;
 		using v_align = axis<1>::align;
 
@@ -32,28 +38,28 @@ namespace units {
 		static constexpr auto align_bottom = v_align::far;
 	};
 
-	inline int& width(texture_space::box& box) { return box.size.u(); }
-	inline int width(texture_space::box const& box) { return box.size.u(); }
+	inline auto& width(texture_space::box& box) { return box.size.u(); }
+	inline auto width(texture_space::box const& box) { return box.size.u(); }
 
-	inline int& height(texture_space::box& box) { return box.size.v(); }
-	inline int height(texture_space::box const& box) { return box.size.v(); }
+	inline auto& height(texture_space::box& box) { return box.size.v(); }
+	inline auto height(texture_space::box const& box) { return box.size.v(); }
 
-	inline int& left(texture_space::box& box) { return box.position.u(); }
-	inline int left(texture_space::box const& box) { return box.position.u(); }
+	inline auto& left(texture_space::box& box) { return box.position.u(); }
+	inline auto left(texture_space::box const& box) { return box.position.u(); }
 
-	inline int& top(texture_space::box& box) { return box.position.v(); }
-	inline int top(texture_space::box const& box) { return box.position.v(); }
+	inline auto& top(texture_space::box& box) { return box.position.v(); }
+	inline auto top(texture_space::box const& box) { return box.position.v(); }
 
-	inline int right(texture_space::box const& box) { return box.position.u() + box.size.u(); }
+	inline auto right(texture_space::box const& box) { return box.position.u() + box.size.u(); }
 
-	inline int bottom(texture_space::box const& box) { return box.position.v() + box.size.v(); }
+	inline auto bottom(texture_space::box const& box) { return box.position.v() + box.size.v(); }
 
-	inline texture_space::point top_left(texture_space::box const& box) { return box.position; }
-	inline texture_space::point top_right(texture_space::box const& box) { return texture_space::point{box.position.u() + box.size.u(), box.position.v()}; }
-	inline texture_space::point bottom_left(texture_space::box const& box) { return texture_space::point{box.position.u(), box.position.v() + box.size.v()}; }
-	inline texture_space::point bottom_right(texture_space::box const& box) { return box.position + box.size; }
+	inline auto top_left(texture_space::box const& box) { return box.position; }
+	inline auto top_right(texture_space::box const& box) { return texture_space::point{box.position.u() + box.size.u(), box.position.v()}; }
+	inline auto bottom_left(texture_space::box const& box) { return texture_space::point{box.position.u(), box.position.v() + box.size.v()}; }
+	inline auto bottom_right(texture_space::box const& box) { return box.position + box.size; }
 
-	inline texture_space::point center(texture_space::box const& box) { return box.position + box.size / 2; }
+	inline auto center(texture_space::box const& box) { return box.position + box.size / 2; }
 
-	inline texture_space::scalar area(texture_space::box const& box) { return width(box) * height(box); }
+	inline auto area(texture_space::box const& box) { return width(box) * height(box); }
 }

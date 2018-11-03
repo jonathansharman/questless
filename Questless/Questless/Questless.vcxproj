@@ -128,15 +128,15 @@
     <Import Project="library-paths.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(GCEM_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Temp|Win32'">
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(GCEM_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(GCEM_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -152,7 +152,7 @@
     <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(RANGE_V3_PATH)include;$(SDL_PATH)include;$(SDL_IMAGE_PATH)include;$(SDL_MIXER_PATH)include;$(SDL_TTF_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(GCEM_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -327,6 +327,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="external\meta\affine_quantity.hpp" />
     <ClInclude Include="external\meta\list.hpp" />
     <ClInclude Include="external\meta\meta.hpp" />
     <ClInclude Include="external\meta\algebra.hpp" />
@@ -341,20 +342,24 @@
     <ClInclude Include="external\sdl\sound.hpp" />
     <ClInclude Include="external\sdl\texture.hpp" />
     <ClInclude Include="external\sdl\window.hpp" />
+    <ClInclude Include="external\units\angle.hpp" />
+    <ClInclude Include="external\units\box.hpp" />
+    <ClInclude Include="external\units\color.hpp" />
     <ClInclude Include="external\units\colors.hpp" />
-    <ClInclude Include="external\units\color_space.hpp" />
     <ClInclude Include="external\units\constants.hpp" />
     <ClInclude Include="external\units\frequency.hpp" />
-    <ClInclude Include="external\units\game_space.hpp" />
     <ClInclude Include="external\units\hex_space.hpp" />
-    <ClInclude Include="external\units\math.hpp" />
+    <ClInclude Include="external\units\point.hpp" />
+    <ClInclude Include="external\units\polygon.hpp" />
     <ClInclude Include="external\units\rate.hpp" />
     <ClInclude Include="external\units\screen_space.hpp" />
-    <ClInclude Include="external\units\space.hpp" />
+    <ClInclude Include="external\units\sphere.hpp" />
     <ClInclude Include="external\units\sprite_sheet_space.hpp" />
     <ClInclude Include="external\units\texture_space.hpp" />
+    <ClInclude Include="external\units\vector.hpp" />
     <ClInclude Include="external\units\view_space.hpp" />
     <ClInclude Include="external\units\window_space.hpp" />
+    <ClInclude Include="external\units\world.hpp" />
     <ClInclude Include="src\agents\action.hpp" />
     <ClInclude Include="src\agents\agent.hpp" />
     <ClInclude Include="src\agents\basic_ai.hpp" />
@@ -458,6 +463,11 @@
     <ClInclude Include="src\magic\spell.hpp" />
     <ClInclude Include="src\magic\spell_visitor.hpp" />
     <ClInclude Include="src\magic\teleport.hpp" />
+    <ClInclude Include="src\quantities\distance.hpp" />
+    <ClInclude Include="src\quantities\mass.hpp" />
+    <ClInclude Include="src\quantities\game_time.hpp" />
+    <ClInclude Include="src\quantities\quantities.hpp" />
+    <ClInclude Include="src\quantities\wall_time.hpp" />
     <ClInclude Include="src\ui\count_dialog.hpp" />
     <ClInclude Include="src\ui\dialog.hpp" />
     <ClInclude Include="src\ui\digraph_menu.hpp" />
@@ -470,6 +480,10 @@
     <ClInclude Include="src\ui\qte\aim_missile.hpp" />
     <ClInclude Include="src\ui\qte\incant.hpp" />
     <ClInclude Include="src\ui\qte\shock.hpp" />
+    <ClInclude Include="src\ui\scenes\main_menu.hpp" />
+    <ClInclude Include="src\ui\scenes\playing.hpp" />
+    <ClInclude Include="src\ui\scenes\scene.hpp" />
+    <ClInclude Include="src\ui\scenes\splash.hpp" />
     <ClInclude Include="src\ui\tile_dialog.hpp" />
     <ClInclude Include="src\ui\vector_dialog.hpp" />
     <ClInclude Include="src\utility\bounded.hpp" />
@@ -486,12 +500,11 @@
     <ClInclude Include="src\utility\io.hpp" />
     <ClInclude Include="src\utility\lazy_bounded.hpp" />
     <ClInclude Include="src\utility\nonnegative.hpp" />
-    <ClInclude Include="src\utility\property.hpp" />
+    <ClInclude Include="src\utility\static_property.hpp" />
     <ClInclude Include="src\utility\random.hpp" />
     <ClInclude Include="src\utility\reference.hpp" />
     <ClInclude Include="src\utility\static_bounded.hpp" />
     <ClInclude Include="src\utility\type_list.hpp" />
-    <ClInclude Include="src\utility\quantities.hpp" />
     <ClInclude Include="src\utility\utility.hpp" />
     <ClInclude Include="src\utility\type_switch.hpp" />
     <ClInclude Include="src\utility\visitor_pattern.hpp" />
@@ -586,11 +599,14 @@
     <ClCompile Include="src\ui\qte\aim_missile.cpp" />
     <ClCompile Include="src\ui\qte\incant.cpp" />
     <ClCompile Include="src\ui\qte\shock.cpp" />
+    <ClCompile Include="src\ui\scenes\main_menu.cpp" />
+    <ClCompile Include="src\ui\scenes\playing.cpp" />
+    <ClCompile Include="src\ui\scenes\scene.cpp" />
+    <ClCompile Include="src\ui\scenes\splash.cpp" />
     <ClCompile Include="src\ui\tile_dialog.cpp" />
     <ClCompile Include="src\ui\vector_dialog.cpp" />
     <ClCompile Include="src\utility\debug.cpp" />
     <ClCompile Include="src\utility\io.cpp" />
-    <ClCompile Include="src\utility\random.cpp" />
     <ClCompile Include="src\utility\utility.cpp" />
     <ClCompile Include="src\world\light_source.cpp" />
     <ClCompile Include="src\world\region.cpp" />

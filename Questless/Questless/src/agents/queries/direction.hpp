@@ -7,5 +7,5 @@
 #include <variant>
 
 namespace ql::queries::direction {
-	using any = std::variant<>;
+	using any = std::variant<std::monostate>;
 }

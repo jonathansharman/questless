@@ -41,6 +41,8 @@ namespace ql {
 	region::region(string region_name)
 		: _name{std::move(region_name)}
 		, _time{0}
+		, _time_of_day{get_time_of_day()}
+		, _period_of_day{get_period_of_day()}
 		, _turn_queue{turn_order_function}
 		, _ambient_illuminance{get_ambient_illuminance()}
 	{
@@ -91,6 +93,8 @@ namespace ql {
 	region::region(char const* save_name, string region_name)
 		: _name{std::move(region_name)}
 		, _time{0}
+		, _time_of_day{get_time_of_day()}
+		, _period_of_day{get_period_of_day()}
 		, _turn_queue{turn_order_function}
 		, _ambient_illuminance{get_ambient_illuminance()}
 	{

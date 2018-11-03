@@ -11,14 +11,14 @@ using namespace units;
 
 namespace ql {
 	blue_magic_particle::blue_magic_particle() : particle
-		{ game_space::vector::zero()
-		, game_space::vector{game_space::radians::circle() / 6.0 * uniform(0, 6), 45.0} / 1.0s
-		, game_space::acceleration::zero()
+		{ world_space::vector::zero()
+		, world_space::vector{world_space::radians::circle() / 6.0 * uniform(0, 6), 45.0} / 1.0s
+		, world_space::acceleration::zero()
 		, random_angle()
 		, uniform(-1.0, 1.0) * _dtheta_max / 1.0s
 		, 1.0
-		, game_space::scale_velocity{0.0}
-		, game_space::seconds{uniform(2.0, 2.4)}
+		, world_space::scale_velocity{0.0}
+		, world_space::seconds{uniform(2.0, 2.4)}
 		}
 	{}
 	sdl::texture const& blue_magic_particle::texture() const {

@@ -5,6 +5,7 @@
 #include "basic_ai.hpp"
 
 #include "effects/effect.hpp"
+#include "entities/beings/being.hpp"
 #include "game.hpp"
 #include "utility/random.hpp"
 #include "utility/type_switch.hpp"
@@ -97,7 +98,7 @@ namespace ql {
 
 	void basic_ai::perceive(sptr<effect> const& effect) { effect->accept(*this); }
 
-	complete basic_ai::send_message(queries::message::any /*message*/, std::function<complete()> cont) const {
+	complete basic_ai::send_message(queries::message::any /*message*/, std::function<complete()> cont) {
 		return cont();
 	}
 
@@ -107,7 +108,7 @@ namespace ql {
 		, std::optional<int> /*min*/
 		, std::optional<int> /*max*/
 		, std::function<complete(std::optional<int>)> cont
-		) const
+		)
 	{
 		return std::visit([&](auto&& query) {
 			SWITCH_TYPE(query) {
@@ -122,7 +123,7 @@ namespace ql {
 		, std::optional<double> /*min*/
 		, std::optional<double> /*max*/
 		, std::function<complete(std::optional<double>)> cont
-		) const
+		)
 	{
 		return std::visit([&](auto&& query) {
 			SWITCH_TYPE(query) {
@@ -137,7 +138,7 @@ namespace ql {
 		, std::optional<region_tile::point> /*origin*/
 		, std::function<bool(region_tile::point)> predicate
 		, std::function<complete(std::optional<region_tile::point>)> cont
-		) const
+		)
 	{
 		return std::visit([&](auto&& query) {
 			SWITCH_TYPE(query) {
@@ -157,35 +158,20 @@ namespace ql {
 		}, query);
 	}
 
-	//complete basic_ai::query_direction
-	//	( queries::direction::any query
-	//	, std::function<complete(std::optional<region_tile::direction>)> cont
-	//	) const
-	//{
-	//	struct direction_query_handler : direction_query_const_visitor {
-	//		basic_ai const& ai;
-	//		std::function<complete(std::optional<region_tile::direction>)> cont;
-
-	//		direction_query_handler
-	//			( basic_ai const& ai
-	//			, std::function<complete(std::optional<region_tile::direction>)> cont
-	//			)
-	//			: ai{ai}
-	//			, cont{std::move(cont)}
-	//		{}
-	//	};
-
-	//	direction_query_handler handler{*this, std::move(cont)};
-	//	query->accept(handler);
-	//	return complete{};
-	//}
+	complete basic_ai::query_direction
+		( queries::direction::any //query
+		, std::function<complete(std::optional<region_tile::direction>)> cont
+		)
+	{
+		return cont(std::nullopt);
+	}
 
 	complete basic_ai::query_vector
 		( queries::vector::any query
 		, std::optional<region_tile::point>
 		, std::function<bool(region_tile::vector)> predicate
 		, std::function<complete(std::optional<region_tile::vector>)> cont
-		) const
+		)
 	{
 		return std::visit([&](auto&& query) {
 			SWITCH_TYPE(query) {
@@ -205,20 +191,20 @@ namespace ql {
 		( queries::being::any //query
 		, std::function<bool(ql::being&)> //predicate
 		, std::function<complete(std::optional<ql::being*>)> cont
-		) const
+		)
 	{
 		return cont(std::nullopt);
 	}
 
-	//complete basic_ai::query_item
-	//	( queries::item::any //query
-	//	, ql::being& //source
-	//	, std::function<bool(ql::being&)> //predicate
-	//	, std::function<complete(std::optional<item*>)> cont
-	//	) const
-	//{
-	//	return cont(std::nullopt);
-	//}
+	complete basic_ai::query_item
+		( queries::item::any //query
+		, ql::being& //source
+		, std::function<bool(ql::being&)> //predicate
+		, std::function<complete(std::optional<item*>)> cont
+		)
+	{
+		return cont(std::nullopt);
+	}
 
 	////////////////////////////
 	// Effect Visitor Methods //

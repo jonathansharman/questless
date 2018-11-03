@@ -23,7 +23,7 @@ namespace ql {
 		complete send_message
 			( queries::message::any
 			, std::function<complete()> cont
-			) const final;
+			) final;
 
 		complete query_count
 			( queries::count::any
@@ -31,7 +31,7 @@ namespace ql {
 			, std::optional<int>
 			, std::optional<int>
 			, std::function<complete(std::optional<int>)> cont
-			) const final;
+			) final;
 
 		complete query_magnitude
 			( queries::magnitude::any
@@ -39,38 +39,38 @@ namespace ql {
 			, std::optional<double>
 			, std::optional<double>
 			, std::function<complete(std::optional<double>)> cont
-			) const final;
+			) final;
 
 		complete query_tile
 			( queries::tile::any
 			, std::optional<region_tile::point>
 			, std::function<bool(region_tile::point)>
 			, std::function<complete(std::optional<region_tile::point>)> cont
-			) const final;
+			) final;
 
-		//complete query_direction
-		//	( queries::direction::any
-		//	, std::function<complete(std::optional<region_tile::direction>)> cont
-		//	) const final;
+		complete query_direction
+			( queries::direction::any
+			, std::function<complete(std::optional<region_tile::direction>)> cont
+			) final;
 
 		complete query_vector
 			( queries::vector::any
 			, std::optional<region_tile::point>
 			, std::function<bool(region_tile::vector)>
 			, std::function<complete(std::optional<region_tile::vector>)> cont
-			) const final;
+			) final;
 
 		complete query_being
 			( queries::being::any
 			, std::function<bool(ql::being&)>
 			, std::function<complete(std::optional<ql::being*>)> cont
-			) const final;
+			) final;
 
-		//complete query_item
-		//	( queries::item::any
-		//	, ql::being&
-		//	, std::function<bool(ql::being&)>
-		//	, std::function<complete(std::optional<item*>)> cont
-		//	) const final;
+		complete query_item
+			( queries::item::any
+			, ql::being&
+			, std::function<bool(ql::being&)>
+			, std::function<complete(std::optional<item*>)> cont
+			) final;
 	};
 }

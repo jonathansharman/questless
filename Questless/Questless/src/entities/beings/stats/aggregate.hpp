@@ -6,7 +6,8 @@
 
 #include "vision.hpp"
 
-#include "utility/quantities.hpp"
+#include "quantities/mass.hpp"
+#include "quantities/quantities.hpp"
 
 #include <cereal/cereal.hpp>
 

@@ -4,26 +4,24 @@
 
 #pragma once
 
-#include "space.hpp"
+#include "vector.hpp"
 
 #include <vector>
 
 namespace units {
-	namespace detail {
-		class screen_space_buffer : public buffer_base<int, 2> {
-		public:
-			int& x() & { return _elements[0]; }
-			constexpr int const& x() const& { return _elements[0]; }
-
-			int& y() & { return _elements[1]; }
-			constexpr int const& y() const& { return _elements[1]; }
-		protected:
-			using buffer_base::buffer_base;
-			using buffer_base::operator =;
-		};
+	using screen_px = meta::quantity<int, meta::unit_t<struct screen_px_tag>>;
+	namespace literals {
+		constexpr screen_px operator "" _screen_px(unsigned long long value) { return screen_px{static_cast<int>(value)}; }
 	}
+	using namespace literals;
 
-	struct screen_space : space<struct screen_space_tag, int, 2, detail::screen_space_buffer> {
+	constexpr auto& x() & { return _elements[0]; }
+	constexpr auto const& x() const& { return _elements[0]; }
+
+	constexpr auto& y() & { return _elements[1]; }
+	constexpr auto const& y() const& { return _elements[1]; }
+
+	struct screen_space : space<struct screen_space_tag, screen_px, 2, detail::screen_space_buffer> {
 		using h_align = axis<0>::align;
 		using v_align = axis<1>::align;
 
@@ -39,28 +37,28 @@ namespace units {
 		using polygon = std::vector<point>;
 	};
 
-	inline int& width(screen_space::box& box) { return box.size.x(); }
-	inline int width(screen_space::box const& box) { return box.size.x(); }
+	inline auto& width(screen_space::box& box) { return box.size.x(); }
+	inline auto width(screen_space::box const& box) { return box.size.x(); }
 
-	inline int& height(screen_space::box& box) { return box.size.y(); }
-	inline int height(screen_space::box const& box) { return box.size.y(); }
+	inline auto& height(screen_space::box& box) { return box.size.y(); }
+	inline auto height(screen_space::box const& box) { return box.size.y(); }
 
-	inline int& left(screen_space::box& box) { return box.position.x(); }
-	inline int left(screen_space::box const& box) { return box.position.x(); }
+	inline auto& left(screen_space::box& box) { return box.position.x(); }
+	inline auto left(screen_space::box const& box) { return box.position.x(); }
 
-	inline int& top(screen_space::box& box) { return box.position.y(); }
-	inline int top(screen_space::box const& box) { return box.position.y(); }
+	inline auto& top(screen_space::box& box) { return box.position.y(); }
+	inline auto top(screen_space::box const& box) { return box.position.y(); }
 
-	inline int right(screen_space::box const& box) { return box.position.x() + box.size.x(); }
+	inline auto right(screen_space::box const& box) { return box.position.x() + box.size.x(); }
 
-	inline int bottom(screen_space::box const& box) { return box.position.y() + box.size.y(); }
+	inline auto bottom(screen_space::box const& box) { return box.position.y() + box.size.y(); }
 
-	inline screen_space::point top_left(screen_space::box const& box) { return box.position; }
-	inline screen_space::point top_right(screen_space::box const& box) { return screen_space::point{box.position.x() + box.size.x(), box.position.y()}; }
-	inline screen_space::point bottom_left(screen_space::box const& box) { return screen_space::point{box.position.x(), box.position.y() + box.size.y()}; }
-	inline screen_space::point bottom_right(screen_space::box const& box) { return box.position + box.size; }
+	inline auto top_left(screen_space::box const& box) { return box.position; }
+	inline auto top_right(screen_space::box const& box) { return screen_space::point{box.position.x() + box.size.x(), box.position.y()}; }
+	inline auto bottom_left(screen_space::box const& box) { return screen_space::point{box.position.x(), box.position.y() + box.size.y()}; }
+	inline auto bottom_right(screen_space::box const& box) { return box.position + box.size; }
 
-	inline screen_space::point center(screen_space::box const& box) { return box.position + box.size / 2; }
+	inline auto center(screen_space::box const& box) { return box.position + box.size / 2; }
 
-	inline screen_space::scalar area(screen_space::box const& box) { return width(box) * height(box); }
+	inline auto area(screen_space::box const& box) { return width(box) * height(box); }
 }

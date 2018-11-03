@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "game_space.hpp"
+#include "world_space.hpp"
 #include "math.hpp"
 
 #include "meta/quantity.hpp"
@@ -264,24 +264,24 @@ namespace units {
 
 	struct hex_layout {
 		hex_orientation orientation;
-		game_space::vector size;
-		game_space::point origin;
+		world_space::vector size;
+		world_space::point origin;
 
-		constexpr hex_layout(units::hex_orientation orientation, game_space::vector size, game_space::point origin)
+		constexpr hex_layout(units::hex_orientation orientation, world_space::vector size, world_space::point origin)
 			: orientation{orientation}, size{std::move(size)}, origin{std::move(origin)}
 		{}
 
 		template <typename HexCoordsType>
-		constexpr game_space::point to_world(HexCoordsType h) const {
+		constexpr world_space::point to_world(HexCoordsType h) const {
 			//! @todo This function should just work for region_tile::point.
-			return game_space::point
+			return world_space::point
 				{ ((orientation.f0 * h.q + orientation.f1 * h.r) * size.x() + origin.x())
 				, ((orientation.f2 * h.q + orientation.f3 * h.r) * size.y() + origin.y())
 				};
 		}
 
 		template <typename HexCoordsType>
-		constexpr HexCoordsType to_hex_coords(game_space::point p) const {
+		constexpr HexCoordsType to_hex_coords(world_space::point p) const {
 			//! @todo This function should just work for region_tile::point.
 			return HexCoordsType
 				{ orientation.b0 * (p.x() - origin.x()) / size.x() + orientation.b1 * (p.y() - origin.y()) / size.y()
@@ -289,19 +289,19 @@ namespace units {
 				};
 		}
 
-		game_space::point hex_corner_offset(int corner) {
-			game_space::radians angle = game_space::radians::circle() * (corner + orientation.start_angle) / 6.0;
-			return game_space::point{size.x() * cos(angle.count()), size.y() * sin(angle.count())};
+		world_space::point hex_corner_offset(int corner) {
+			world_space::radians angle = world_space::radians::circle() * (corner + orientation.start_angle) / 6.0;
+			return world_space::point{size.x() * cos(angle.count()), size.y() * sin(angle.count())};
 		}
 
 		template <typename HexCoordsType>
-		std::vector<game_space::point> corner_points(HexCoordsType h) {
+		std::vector<world_space::point> corner_points(HexCoordsType h) {
 			//! @todo This function should just work for region_tile::point.
-			std::vector<game_space::point> corners;
-			game_space::point const center = to_world_f(h);
+			std::vector<world_space::point> corners;
+			world_space::point const center = to_world_f(h);
 			for (int i = 0; i < 6; i++) {
-				game_space::point offset = hex_corner_offset(i);
-				corners.push_back(game_space::point{center.x + offset.x, center.y + offset.y});
+				world_space::point offset = hex_corner_offset(i);
+				corners.push_back(world_space::point{center.x + offset.x, center.y + offset.y});
 			}
 			return corners;
 		}
@@ -379,9 +379,9 @@ void test_hex_linedraw() {
 
 void test_layout() {
 	HexCoords h{3, 4, -7};
-	layout flat{orientation_flat, units::game_space::point{10, 15}, units::game_space::point{35, 71}};
+	layout flat{orientation_flat, units::world_space::point{10, 15}, units::world_space::point{35, 71}};
 	equal_hex("layout", h, flat.to_hex_coords(flat.to_world(h)));
-	layout pointy = layout(orientation_pointy, units::game_space::point{10, 15}, units::game_space::point{35, 71});
+	layout pointy = layout(orientation_pointy, units::world_space::point{10, 15}, units::world_space::point{35, 71});
 	equal_hex("layout", h, pointy.to_hex_coords(pointy.to_world(h)));
 }
 

@@ -1,7 +1,6 @@
 //! @file
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
-//! @brief Defines various units and quantities used throughout the game logic.
 
 #pragma once
 

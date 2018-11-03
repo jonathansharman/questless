@@ -13,23 +13,23 @@ using namespace units;
 
 namespace ql {
 	flame_particle::flame_particle() : particle
-		{ game_space::vector::zero()
-		, game_space::velocity::zero()
-		, game_space::vector{0.0, 30.0} / 1.0s / 1.0s
-		, game_space::radians::zero()
-		, game_space::radians_per_sec::zero()
+		{ world_space::vector::zero()
+		, world_space::velocity::zero()
+		, world_space::vector{0.0, 30.0} / 1.0s / 1.0s
+		, world_space::radians::zero()
+		, world_space::radians_per_sec::zero()
 		, 0.75
-		, game_space::scale_velocity::zero()
-		, game_space::seconds{uniform(1.0, 1.5)}
+		, world_space::scale_velocity::zero()
+		, world_space::seconds{uniform(1.0, 1.5)}
 		, max_displacement{5.0}
 		}
 	{
 		_color_vector = colors::orange_vector();
 	}
 	void flame_particle::particle_subupdate() {
-		_velocity.step().x() *= 1.0 - _vx_pct_drag_rate * game::frame_duration;
+		_velocity.step().x() *= 1.0 - _vx_pct_drag_rate * target_frame_duration;
 
-		float pct_left = static_cast<float>(_time_left.count() / _lifetime.count());
+		float pct_left = (_time_left / _lifetime).value;
 
 		// Add a random "flicker".
 		pct_left = std::clamp(pct_left + uniform(-0.3f, 0.3f), 0.0f, 1.0f);

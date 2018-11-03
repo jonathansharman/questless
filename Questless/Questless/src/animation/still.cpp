@@ -15,14 +15,14 @@ namespace ql {
 		texture.draw(dst_point);
 	}
 
-	void still::draw(game_space::point position, camera const& camera, colors::color_vector color) const {
+	void still::draw(world_space::point position, camera const& camera, colors::color_vector color) const {
 		camera.draw
 			( the_texture_manager()[_texture_handle]
-			, game_space::point{position}
+			, world_space::point{position}
 			, _origin
 			, color
 			, view_space::vector{1.0f, 1.0f}
-			, game_space::radians{0.0}
+			, world_space::radians{0.0}
 			);
 	}
 }

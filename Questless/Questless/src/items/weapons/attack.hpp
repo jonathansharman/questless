@@ -60,7 +60,7 @@ namespace ql {
 		melee_attack(id<item> weapon_id) : attack{weapon_id} {}
 		virtual ~melee_attack() = default;
 
-		ql::cost const& cost() const override {
+		ql::cost const& cost() const final {
 			static free free;
 			return free;
 		}

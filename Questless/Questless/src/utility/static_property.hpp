@@ -18,30 +18,30 @@ namespace ql {
 	//! The mutator takes the current value by reference and the new value by const-reference and is responsible for assigning the new value to
 	//! the current value, handling any domain errors appropriately.
 	template <typename ValueType, void (*mutator)(ValueType&, ValueType const&)>
-	class property : public bounded<ValueType, property<ValueType, mutator>> {
+	class static_property : public bounded<ValueType, static_property<ValueType, mutator>> {
 	public:
 		using value_type = ValueType;
 
-		constexpr property() = default;
+		constexpr static_property() = default;
 
-		constexpr property(property const& property) = default;
-		constexpr property(property&& property) = default;
+		constexpr static_property(static_property const&) = default;
+		constexpr static_property(static_property&&) = default;
 
-		constexpr property(value_type value) : _value{std::move(value)} { mutator(_value, _value); }
+		constexpr static_property(value_type value) : _value{std::move(value)} { mutator(_value, _value); }
 
-		constexpr property& operator =(property const& bounded) {
+		constexpr static_property& operator =(static_property const& bounded) {
 			set_value(bounded.value());
 			return *this;
 		}
-		constexpr property& operator =(property&& bounded) {
+		constexpr static_property& operator =(static_property&& bounded) {
 			set_value(std::move(bounded.value()));
 			return *this;
 		}
-		constexpr property& operator =(value_type const& value) {
+		constexpr static_property& operator =(value_type const& value) {
 			set_value(value);
 			return *this;
 		}
-		constexpr property& operator =(value_type&& value) {
+		constexpr static_property& operator =(value_type&& value) {
 			set_value(std::move(value));
 			return *this;
 		}

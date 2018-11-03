@@ -5,8 +5,8 @@
 #pragma once
 
 #include "items/item.hpp"
+#include "quantities/quantities.hpp"
 #include "utility/lazy_bounded.hpp"
-#include "utility/quantities.hpp"
 
 namespace ql {
 	//! Abstract base class for items which can be worn down and broken.

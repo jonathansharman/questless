@@ -13,8 +13,8 @@ namespace ql {
 	public:
 		black_magic_particle();
 	private:
-		static constexpr units::game_space::radians_per_sec _turn_rate = units::game_space::radians{4.0} / 1.0s;
-		static constexpr units::game_space::radians _dtheta_max = 2.0 * units::game_space::radians::circle();
+		static constexpr units::world_space::radians_per_sec _turn_rate = units::world_space::radians{4.0} / 1.0s;
+		static constexpr units::world_space::radians _dtheta_max = 2.0 * units::world_space::radians::circle();
 		static constexpr units::hertz _acceleration_factor = 1.25_Hz;
 
 		void particle_subupdate() final;

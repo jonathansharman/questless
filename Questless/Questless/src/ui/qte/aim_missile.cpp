@@ -45,7 +45,7 @@ namespace ql::qte {
 	}
 
 	dialog::state aim_missile::update() {
-		static constexpr units::game_space::seconds time_limit = 5.0s;
+		static constexpr units::world_space::seconds time_limit = 5.0s;
 
 		switch (_aiming_state) {
 			case aiming_state::beginning:
@@ -56,7 +56,7 @@ namespace ql::qte {
 			case aiming_state::aiming:
 				// Can't hold at full draw for too long, or it's an automatic miss.
 				//! @todo This seems bow-specific.
-				_elapsed_time += game::frame_duration;
+				_elapsed_time += game::target_frame_duration;
 				if (_elapsed_time > time_limit * 10000) { // @todo Remove the factor after debugging.
 					return _cont(nullptr);
 				}

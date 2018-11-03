@@ -40,15 +40,15 @@ namespace ql {
 		void update();
 
 		//! Draws the visible terrain.
-		void draw_terrain();
+		void draw_terrain(camera const& camera);
 
 		//! @todo Combine being and object drawing so proper z-buffering is possible.
 
 		//! Draws the visible entities in the world.
-		void draw_entities();
+		void draw_entities(camera const& camera);
 
 		//! Draws visualizations of any active effects in the world.
-		void draw_effects();
+		void draw_effects(camera const& camera);
 
 		//! Causes the tiles for which @p predicate returns true to be highlighted.
 		void set_highlight_predicate(std::function<bool(region_tile::point)> predicate);
@@ -85,10 +85,10 @@ namespace ql {
 		std::unordered_map<tile_subtype, uptr<sdl::texture>> _tile_textures;
 		std::unordered_map<entity_id_var_t, uptr<animation>> _entity_animation_map;
 		uptr<sdl::texture> _terrain_texture;
-		units::game_space::box _terrain_bounds;
+		units::world_space::box _terrain_bounds{};
 		bool _terrain_render_is_current;
 
-		std::vector<std::pair<uptr<animation>, units::game_space::point>> _animations;
+		std::vector<std::pair<uptr<animation>, units::world_space::point>> _animations;
 		
 		std::optional<std::function<bool(region_tile::point)>> _highlight_predicate;
 

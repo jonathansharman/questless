@@ -7,7 +7,7 @@
 #include "entities/perception.hpp"
 #include "utility/io.hpp"
 #include "utility/nonnegative.hpp"
-#include "utility/quantities.hpp"
+#include "quantities/quantities.hpp"
 
 #include "units/constants.hpp"
 #include "units/math.hpp"

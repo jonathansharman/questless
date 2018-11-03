@@ -6,6 +6,12 @@
 
 #include "agent.hpp"
 
+#include "ui/dialog.hpp"
+#include "ui/hud.hpp"
+#include "ui/player_action_dialog.hpp"
+
+#include <deque>
+
 namespace ql {
 	class world_view;
 
@@ -20,7 +26,7 @@ namespace ql {
 		world_view const& world_view() const;
 
 		//! Updates the player's world view based on its internal being.
-		void update_world_view();
+		void update_view();
 
 		complete act() final;
 
@@ -35,7 +41,7 @@ namespace ql {
 		complete send_message
 			( queries::message::any message
 			, std::function<complete()> cont
-			) const final;
+			) final;
 
 		complete query_count
 			( queries::count::any query
@@ -43,7 +49,7 @@ namespace ql {
 			, std::optional<int> min
 			, std::optional<int> max
 			, std::function<complete(std::optional<int>)> cont
-			) const final;
+			) final;
 
 		complete query_magnitude
 			( queries::magnitude::any query
@@ -51,49 +57,56 @@ namespace ql {
 			, std::optional<double> min
 			, std::optional<double> max
 			, std::function<complete(std::optional<double>)> cont
-			) const final;
+			) final;
 
 		complete query_tile
 			( queries::tile::any query
 			, std::optional<region_tile::point> origin
 			, std::function<bool(region_tile::point)> predicate
 			, std::function<complete(std::optional<region_tile::point>)> cont
-			) const final;
+			) final;
 
-		//complete query_direction
-		//	( queries::direction::any query
-		//	, std::function<complete(std::optional<region_tile::direction>)> cont
-		//	) const final;
+		complete query_direction
+			( queries::direction::any query
+			, std::function<complete(std::optional<region_tile::direction>)> cont
+			) final;
 
 		complete query_vector
 			( queries::vector::any query
 			, std::optional<region_tile::point> origin
 			, std::function<bool(region_tile::vector)> predicate
 			, std::function<complete(std::optional<region_tile::vector>)> cont
-			) const final;
+			) final;
 
 		complete query_being
 			( queries::being::any query
 			, std::function<bool(ql::being&)> predicate
 			, std::function<complete(std::optional<ql::being*>)> cont
-			) const final;
+			) final;
 
-		//complete query_item
-		//	( queries::item::any query
-		//	, ql::being& source
-		//	, std::function<bool(ql::being&)> predicate
-		//	, std::function<complete(std::optional<item*>)> cont
-		//	) const final;
+		complete query_item
+			( queries::item::any query
+			, ql::being& source
+			, std::function<bool(ql::being&)> predicate
+			, std::function<complete(std::optional<item*>)> cont
+			) final;
 
 		// Quick Time Events
 
-		complete aim_missile(region_tile::point source_coords, ql::being& target_being, std::function<complete(body_part*)> cont) const final;
-		complete get_shock_quality(region_tile::point target_coords, std::function<complete(double)> cont) const final;
+		complete aim_missile(region_tile::point source_coords, ql::being& target_being, std::function<complete(body_part*)> cont) final;
+		complete get_shock_quality(region_tile::point target_coords, std::function<complete(double)> cont) final;
 
-		complete incant(gatestone& gatestone, std::function<complete(uptr<magic::spell>)> cont) const final;
+		complete incant(gatestone& gatestone, std::function<complete(uptr<magic::spell>)> cont) final;
 	private:
 		uptr<ql::world_view> _world_view;
 
+		uptr<player_action_dialog> _player_action_dialog;
+		std::deque<uptr<dialog>> _dialogs;
+
+		ql::hud _hud;
+
 		std::vector<sptr<effect>> _perceived_effects;
+
+		complete query_player_choice(std::function<void(player_action_dialog::choice)> cont);
 	};
 }

@@ -22,40 +22,40 @@ namespace ql::qte {
 	}
 
 	dialog::state shock::update() {
-		static constexpr units::game_space::seconds time_limit = 5.0s;
-		static constexpr int charges_per_quadrant = 4;
-		static constexpr double expected_charges = charges_per_quadrant * 70.0;
+		constexpr auto time_limit = 5.0_s;
+		constexpr int charges_per_quadrant = 4;
+		constexpr double expected_charges = charges_per_quadrant * 70.0;
 
-		_elapsed_time += game::frame_duration;
+		_elapsed_time += target_frame_duration;
 		if (_elapsed_time > time_limit) {
 			return _cont(_charges.size() / expected_charges);
 		}
 
 		bool accelerate = false;
 		{ // Acclerate only when the mouse moves to the next quadrant over.
-			game_space::vector const v = the_game().camera().point_hovered() - _target_point;
+			world_space::vector const v = the_game().camera().point_hovered() - _target_point;
 			switch (_quadrant) {
-				case 0:
+				case quadrant::ur:
 					if (v.x() > 0.0 && v.y() > 0.0) {
-						_quadrant = 1;
+						_quadrant = quadrant::ul;
 						accelerate = true;
 					}
 					break;
-				case 1:
+				case quadrant::ul:
 					if (v.x() < 0.0 && v.y() > 0.0) {
-						_quadrant = 2;
+						_quadrant = quadrant::ll;
 						accelerate = true;
 					}
 					break;
-				case 2:
+				case quadrant::ll:
 					if (v.x() < 0.0 && v.y() < 0.0) {
-						_quadrant = 3;
+						_quadrant = quadrant::lr;
 						accelerate = true;
 					}
 					break;
-				case 3:
+				case quadrant::lr:
 					if (v.x() > 0.0 && v.y() < 0.0) {
-						_quadrant = 0;
+						_quadrant = quadrant::ur;
 						accelerate = true;
 					}
 					break;
@@ -65,18 +65,18 @@ namespace ql::qte {
 			for (int i = 0; i < charges_per_quadrant; ++i) {
 				_charges.push_back(charge
 					{ _target_point + random_displacement(100.0)
-					, game_space::velocity{game_space::vector{random_angle(), 100.0}}
+					, world_space::velocity{world_space::vector{random_angle(), 100.0}}
 					});
 			}
 		}
 
 		for (auto& point_charge : _charges) {
-			game_space::vector r = _target_point - point_charge.position; // displacement to target
+			world_space::vector r = _target_point - point_charge.position; // displacement to target
 			double d = r.length(); // distance to target
 
 			if (accelerate) {
 				// Accelerate counter-clockwise from the target.
-				point_charge.velocity.step() += 7'000.0 * game_space::vector{-r.y(), r.x()} / square(d);
+				point_charge.velocity.step() += 7'000.0 * world_space::vector{-r.y(), r.x()} / square(d);
 			}
 
 			// Apply drag.
@@ -87,7 +87,7 @@ namespace ql::qte {
 			point_charge.velocity.step() += 20'000.0 * r / std::max(1.0, square(d));
 			point_charge.velocity.step() -= 800'000.0 * r / std::max(1.0, cube(d));
 			// Update position.
-			point_charge.position += point_charge.velocity * game::frame_duration;
+			point_charge.position += point_charge.velocity * target_frame_duration;
 		}
 
 		return state::open;
@@ -108,7 +108,7 @@ namespace ql::qte {
 				, texture_space::vector::zero()
 				, colors::color_vector{1.0f, intensity, intensity, 1.0f}
 				, view_space::vector{scale, scale}
-				, game_space::radians{0.0}
+				, world_space::radians{0.0}
 				);
 		}
 

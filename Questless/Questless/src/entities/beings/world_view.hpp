@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "entities/perception.hpp"
-#include "units/game_space.hpp"
+#include "units/world_space.hpp"
 #include "utility/id.hpp"
 #include "world/coordinates.hpp"
 #include "world/section.hpp"
@@ -61,7 +61,7 @@ namespace ql {
 		span visual_range() const { return _visual_range; }
 
 		//! A bounding box around the visible tiles or nullopt if initialized with find_bounds set to false or if no tiles are visible.
-		std::optional<units::game_space::box> bounds() const { return _bounds; }
+		std::optional<units::world_space::box> bounds() const { return _bounds; }
 	private:
 		std::vector<section_view> _section_views;
 		std::vector<entity_view> _entity_views;
@@ -69,6 +69,6 @@ namespace ql {
 		region_tile::point _origin;
 		span _visual_range;
 
-		std::optional<units::game_space::box> _bounds;
+		std::optional<units::world_space::box> _bounds;
 	};
 }
