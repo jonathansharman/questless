@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "space.hpp"
+#include "units/vector.hpp"
 
-namespace units {
+namespace sdl::spaces::sprite_sheet {
 	using cel = meta::quantity<int, meta::unit_t<struct cel_tag>>;
 	namespace literals {
 		constexpr cel operator "" _cel(unsigned long long value) { return cel{static_cast<int>(value)}; }

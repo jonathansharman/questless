@@ -91,6 +91,9 @@
     <Filter Include="src\ui\scenes">
       <UniqueIdentifier>{bd590d8e-e85b-4688-b3a5-9824fa0f585c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="external\sdl\spaces">
+      <UniqueIdentifier>{4ba74b55-154d-43f8-b1b1-b2c2b6456256}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\utility\complete.hpp">
@@ -597,9 +600,6 @@
     <ClInclude Include="src\utility\static_property.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
-    <ClInclude Include="external\meta\affine_quantity.hpp">
-      <Filter>external\meta</Filter>
-    </ClInclude>
     <ClInclude Include="src\ui\scenes\playing.hpp">
       <Filter>src\ui\scenes</Filter>
     </ClInclude>
@@ -613,21 +613,6 @@
       <Filter>src\ui\scenes</Filter>
     </ClInclude>
     <ClInclude Include="external\units\colors.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\screen_space.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\sprite_sheet_space.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\texture_space.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\view_space.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\window_space.hpp">
       <Filter>external\units</Filter>
     </ClInclude>
     <ClInclude Include="external\units\vector.hpp">
@@ -651,8 +636,29 @@
     <ClInclude Include="external\units\color.hpp">
       <Filter>external\units</Filter>
     </ClInclude>
-    <ClInclude Include="external\units\world.hpp">
-      <Filter>external\units</Filter>
+    <ClInclude Include="external\sdl\spaces\world.hpp">
+      <Filter>external\sdl\spaces</Filter>
+    </ClInclude>
+    <ClInclude Include="external\sdl\spaces\color.hpp">
+      <Filter>external\sdl\spaces</Filter>
+    </ClInclude>
+    <ClInclude Include="external\sdl\spaces\colors.hpp">
+      <Filter>external\sdl\spaces</Filter>
+    </ClInclude>
+    <ClInclude Include="external\sdl\spaces\window.hpp">
+      <Filter>external\sdl\spaces</Filter>
+    </ClInclude>
+    <ClInclude Include="external\sdl\spaces\view.hpp">
+      <Filter>external\sdl\spaces</Filter>
+    </ClInclude>
+    <ClInclude Include="external\sdl\spaces\texture.hpp">
+      <Filter>external\sdl\spaces</Filter>
+    </ClInclude>
+    <ClInclude Include="external\sdl\spaces\sprite_sheet.hpp">
+      <Filter>external\sdl\spaces</Filter>
+    </ClInclude>
+    <ClInclude Include="external\sdl\spaces\screen.hpp">
+      <Filter>external\sdl\spaces</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

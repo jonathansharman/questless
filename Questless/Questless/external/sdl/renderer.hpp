@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "units/colors.hpp"
-#include "units/window_space.hpp"
-#include "units/view_space.hpp"
+#include "spaces/colors.hpp"
+#include "spaces/window.hpp"
+#include "spaces/view.hpp"
 
 #include <glew.h>
 #include <SDL.h>

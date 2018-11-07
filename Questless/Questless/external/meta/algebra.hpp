@@ -98,27 +98,27 @@ namespace meta {
 		using quotient_t = typename quotient<TypePowerList1, TypePowerList2>::type;
 
 		//! A type power list to the power of a constant positive rational integral exponent.
-		template <int ExponentNumerator, int ExponentDenominator, typename... TypePowerList>
+		template <int ExpNum, int ExpDen, typename... TypePowerList>
 		struct exponential;
 
 		//! The type of a type power list to the power of a constant positive rational integral exponent.
-		template <int ExponentNumerator, int ExponentDenominator, typename... TypePowerList>
-		using exponential_t = typename exponential<ExponentNumerator, ExponentDenominator, TypePowerList...>::type;
+		template <int ExpNum, int ExpDen, typename... TypePowerList>
+		using exponential_t = typename exponential<ExpNum, ExpDen, TypePowerList...>::type;
 
-		template <int ExponentNumerator, int ExponentDenominator, typename Head, typename Tail>
-		struct exponential<ExponentNumerator, ExponentDenominator, cons<Head, Tail>> {
-			static_assert(ExponentDenominator != 0, "Exponent denominator cannot be zero.");
-			static_assert(ExponentNumerator == 0 || (ExponentNumerator < 0 == ExponentDenominator < 0), "Exponent must be nonnegative.");
-			static_assert((Head::power * ExponentNumerator) % Exponent == 0, "A type power exponential must result in integral powers.");
+		template <int ExpNum, int ExpDen, typename Head, typename Tail>
+		struct exponential<ExpNum, ExpDen, cons<Head, Tail>> {
+			static_assert(ExpDen != 0, "Exponent denominator cannot be zero.");
+			static_assert(ExpNum == 0 || (ExpNum < 0 == ExpDen < 0), "Exponent must be nonnegative.");
+			static_assert((Head::power * ExpNum) % ExpDen == 0, "A type power exponential must result in integral powers.");
 
 			using type = cons
-				< type_power<typename Head::T, Head::power * ExponentNumerator / ExponentDenominator>
-				, exponential_t<ExponentNumerator, ExponentDenominator, Tail>
+				< type_power<typename Head::type, Head::power * ExpNum / ExpDen>
+				, exponential_t<ExpNum, ExpDen, Tail>
 				>;
 		};
 
-		template <int ExponentNumerator, int ExponentDenominator>
-		struct exponential<ExponentNumerator, ExponentDenominator, empty> {
+		template <int ExpNum, int ExpDen>
+		struct exponential<ExpNum, ExpDen, empty> {
 			using type = empty;
 		};
 	}
@@ -140,6 +140,6 @@ namespace meta {
 	using quotient_t = typename detail::quotient<TypePowerList1, TypePowerList2>::type;
 
 	//! The type of a type power list to the power of a constant positive rational integral exponent.
-	template <int ExponentNumerator, int ExponentDenominator, typename... TypePowerList>
-	using exponential_t = typename detail::exponential<ExponentNumerator, ExponentDenominator, TypePowerList...>::type;
+	template <int ExpNum, int ExpDen, typename... TypePowerList>
+	using exponential_t = typename detail::exponential<ExpNum, ExpDen, TypePowerList...>::type;
 }

@@ -8,10 +8,10 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-#include "units/colors.hpp"
-#include "units/world_space.hpp"
-#include "units/texture_space.hpp"
-#include "units/window_space.hpp"
+#include "spaces/colors.hpp"
+#include "spaces/world.hpp"
+#include "spaces/texture.hpp"
+#include "spaces/window.hpp"
 
 #include <functional>
 #include <memory>

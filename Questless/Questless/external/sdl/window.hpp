@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "units/screen_space.hpp"
-#include "units/window_space.hpp"
+#include "spaces/screen.hpp"
+#include "spaces/window.hpp"
 
 #include <SDL.h>
 

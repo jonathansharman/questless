@@ -4,30 +4,20 @@
 
 #pragma once
 
-#include "view_space.hpp" // for conversions
+#include "view.hpp" // for conversions
 
-#include <vector>
-
-namespace units {
+namespace sdl::spaces::window {
 	using px = meta::quantity<int, meta::unit_t<struct px_tag>>;
 	namespace literals {
 		constexpr px operator "" _px(unsigned long long value) { return px{static_cast<int>(value)}; }
 	}
 	using namespace literals;
 
-	namespace detail {
-		class window_space_buffer : public buffer_base<px, 2> {
-		public:
-			constexpr auto& x() { return _elements[0]; }
-			constexpr auto const& x() const { return _elements[0]; }
+	constexpr auto& x() { return _elements[0]; }
+	constexpr auto const& x() const { return _elements[0]; }
 
-			constexpr auto& y() { return _elements[1]; }
-			constexpr auto const& y() const { return _elements[1]; }
-		protected:
-			using buffer_base::buffer_base;
-			using buffer_base::operator =;
-		};
-	}
+	constexpr auto& y() { return _elements[1]; }
+	constexpr auto const& y() const { return _elements[1]; }
 
 	struct window_space : space<struct window_space_tag, px, 2, detail::window_space_buffer> {
 		using h_align = axis<0>::align;

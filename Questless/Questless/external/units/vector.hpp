@@ -12,20 +12,45 @@
 #include <gcem.hpp>
 
 #include <algorithm>
-#include <tuple>
+#include <array>
 
 namespace units {
-	template <typename... Quantities>
+	//! Represents an n-dimensional vector of quantities.
+	//! @tparam Quantity The quantity type of scalars in this vector type.
+	//! @tparam N The dimension of this vector type.
+	template <typename Quantity, std::size_t N>
 	struct vector {
-		//! The number of dimensions of this vector type.
-		static constexpr std::size_t n = sizeof...(Quantities);
+		//! The type of scalars in this vector type.
+		using scalar_t = Quantity;
 
-		std::tuple<Quantities...> components;
+		//! The number of dimensions of this vector type.
+		static constexpr std::size_t n = N;
+
+		std::array<scalar_t, n> components{};
 
 		template <typename... Args>
-		constexpr vector(Args&&... args) : components{std::forward<Args>(args)...} {}
+		constexpr vector(Args&&... args) : components{{std::forward<Args>(args)...}} {}
 
-		explicit constexpr vector(std::tuple<Quantities...> components) : components{std::move(components)} {}
+		explicit constexpr vector(std::array<scalar_t, n> components) : components{std::move(components)} {}
+
+		//! The zero vector for this vector type.
+		static constexpr auto zero() { return vector<scalar_t, n>{}; }
+
+		template <typename ThatQuantity>
+		constexpr bool operator ==(vector<ThatQuantity, n> const& that) {
+			for (std::size_t i = 0; i < n; ++i) {
+				if (components[i] != that[i]) return false;
+			}
+			return true;
+		}
+
+		template <typename ThatQuantity>
+		constexpr bool operator !=(vector<ThatQuantity, n> const& that) {
+			for (std::size_t i = 0; i < n; ++i) {
+				if (components[i] != that[i]) return true;
+			}
+			return false;
+		}
 
 		template <typename Archive>
 		void save(Archive& archive) const { archive(components); }
@@ -33,32 +58,17 @@ namespace units {
 		template <typename Archive>
 		void load(Archive& archive) { archive(components); }
 
-		//! Gets the component at index @p Index.
-		template <std::size_t Index>
-		constexpr auto& get() { return std::get<Index>(components); }
+		//! Gets the component at index @p index.
+		constexpr auto& operator [](std::size_t index) { return components[index]; }
 
-		//! Gets the component at index @p Index.
-		template <std::size_t Index>
-		constexpr auto get() const { return std::get<Index>(components); }
+		//! Gets the component at index @p index.
+		constexpr auto operator [](std::size_t index) const { return components[index]; }
 
-		//! Gets the component with type @p Quantity. @p Quantity must be unique in this vector.
-		template <typename Quantity>
-		constexpr auto& get() { return std::get<Quantity>(components); }
+		auto begin() { return components.begin(); }
+		auto end() { return components.end(); }
 
-		//! Gets the component with type @p Quantity. @p Quantity must be unique in this vector.
-		template <typename Quantity>
-		constexpr auto get() const { return std::get<Quantity>(components); }
-
-		//! Calls @p f on each component of this vector, in order.
-		template <typename Consumer>
-		constexpr void for_each(Consumer const& f) const {
-			std::apply([this, f](auto const&... components) { (f(components), ...); }, components);
-		}
-		//! Calls @p f on each component of this vector, in order.
-		template <typename Consumer>
-		constexpr void for_each(Consumer const& f) {
-			std::apply([this, f](auto&... components) { (f(components), ...); }, components);
-		}
+		auto begin() const { return components.begin(); }
+		auto end() const { return components.end(); }
 
 		//! Creates a new vector by applying @p f to each component of this vector, in order.
 		template <typename MapOp>
@@ -68,118 +78,106 @@ namespace units {
 			}, components);
 		}
 
-		//! Creates a new vector from the application of @p f to the corresponding components of this vector and @p that, for each index in @p Indices.
-		template <std::size_t... Indices, typename ZipOp, typename... ThatQuantities>
-		constexpr auto zip(ZipOp const& f, vector<ThatQuantities...> const& that, std::index_sequence<Indices...>) const {
-			static_assert(n == sizeof...(ThatQuantities), "Cannot zip vectors with different numbers of dimensions.");
-			return vector{f(get<Indices>(), that.get<Indices>())...};
-		}
-
 		//! Creates a new vector from the application of @p f to the corresponding components of this vector and @p that.
-		template <typename ZipOp, typename... ThatQuantities>
-		constexpr auto zip(ZipOp const& f, vector<ThatQuantities...> const& that) const {
-			return zip(f, that, std::make_index_sequence<n>{});
-		}
-
-		//! Calls @p f on each corresponding component of this vector and @p that, for each index in @p Indices.
-		template <std::size_t... Indices, typename MergeOp, typename... ThatQuantities>
-		constexpr void for_each_pairwise(MergeOp const& f, vector<ThatQuantities...> const& that, std::index_sequence<Indices...>) {
-			static_assert(n == sizeof...(ThatQuantities), "Cannot perform pair-wise iteration on vectors with different numbers of dimensions.");
-			(f(get<Indices>(), that.get<Indices>()), ...);
-		}
-
-		//! Calls @p f on each corresponding component of this vector and @p that.
-		template <typename MergeOp, typename... ThatQuantities>
-		constexpr void for_each_pairwise(MergeOp const& f, vector<ThatQuantities...> const& that) {
-			for_each_pairwise(f, that, std::make_index_sequence<n>{});
+		template <typename ThatQuantity, typename ZipOp>
+		constexpr auto zip(vector<ThatQuantity, n> const& that, ZipOp const& f) const {
+			auto result = vector<scalar_t, n>::zero();
+			for (std::size_t i = 0; i < n; ++i) {
+				result[i] = f(components[i], that.components[i]);
+			}
+			return result;
 		}
 
 		//! Produces a left reduction/fold over this vector.
 		//! @param f The operation to apply to the accumulator and the next vector component, to produce the next accumulator value.
 		//! @param accumulator The starting value of the reduction.
-		template <std::size_t Index = 0, typename T, typename ReduceOp>
-		constexpr auto reduce(ReduceOp const& f, T const& accumulator) const {
-			return Index == n - 1
-				? f(accumulator, get<Index>()) // base case
-				: reduce<Index + 1>(f, f(accumulator, get<Index>())) // recursive case
-				;
+		template <typename T, typename ReduceOp>
+		constexpr auto reduce(T accumulator, ReduceOp const& f) const {
+			//! @todo Replace this function with std::reduce/std::accumulate once those are made constexpr.
+			for (auto const& component : components) {
+				accumulator = f(std::move(accumulator), component);
+			}
+			return accumulator;
 		}
 
-		template <typename... ThatQuantities>
-		constexpr vector<Quantities...>& operator +=(vector<ThatQuantities...> const& that) {
-			for_each_pairwise([](auto& component1, auto const& component2) {
-				component1 += component2;
-			}, that);
+		template <typename Quantity>
+		constexpr auto& operator +=(vector<Quantity, n> const& that) {
+			for (std::size_t i = 0; i < n; ++i) {
+				components[i] += that[i];
+			}
 			return *this;
 		}
 
-		template <typename... ThatQuantities>
-		constexpr vector<Quantities...>& operator -=(vector<ThatQuantities...> const& that) {
-			for_each_pairwise([](auto& component1, auto const& component2) {
-				component1 -= component2;
-			}, that);
+		template <typename Quantity>
+		constexpr auto& operator -=(vector<Quantity, n> const& that) {
+			for (std::size_t i = 0; i < n; ++i) {
+				components[i] -= that[i];
+			}
 			return *this;
 		}
 
 		template <typename K>
 		constexpr auto& operator *=(K const& k) {
-			for_each([&k](auto& component) { component *= k; });
+			for (auto& component : components) {
+				component *= k;
+			}
 			return *this;
 		}
 
 		template <typename K>
 		constexpr auto& operator /=(K const& k) {
-			for_each([&k](auto& component) { component /= k; });
+			for (auto& component : components) {
+				component /= k;
+			}
 			return *this;
 		}
 
-		//! Rotates this vector by @p angle in the @p Axis1 to @p Axis2 plane.
-		template <std::size_t Axis1 = 0, std::size_t Axis2 = Axis1 + 1>
-		constexpr void rotate(radians angle) {
+		//! Rotates this vector by @p angle in the @p axis1 to @p axis2 plane.
+		constexpr void rotate(radians angle, std::size_t axis1 = 0, std::size_t axis2 = 1) {
 			auto const cos_angle = gcem::cos(angle.value);
 			auto const sin_angle = gcem::sin(angle.value);
-			auto const old_axis1 = get<Axis1>();
-			get<Axis1>() = static_cast<decltype(get<Axis1>())>(old_axis1 * cos_angle - get<Axis2>() * sin_angle);
-			get<Axis2>() = static_cast<decltype(get<Axis2>())>(old_axis1 * sin_angle + get<Axis2>() * cos_angle);
-		}
-
-		template <std::size_t... Indices>
-		constexpr void rotate(std::array<radians, sizeof...(Indices)> angles, std::index_sequence<Indices...>) {
-			(rotate<Indices>(angles[Indices]), ...);
+			auto const old_axis1 = components[axis1];
+			components[axis1] = static_cast<scalar_t>(old_axis1 * cos_angle - components[axis2] * sin_angle);
+			components[axis2] = static_cast<scalar_t>(old_axis1 * sin_angle + components[axis2] * cos_angle);
 		}
 
 		//! Rotates this vector by each of @p angles, in successive planes.
-		template <typename... Radians>
-		constexpr void rotate(Radians... angles) {
-			rotate(std::array{angles...}, std::make_index_sequence<sizeof...(Radians)>{});
+		constexpr void rotate(std::array<radians, n - 1> const& angles) {
+			for (std::size_t i = 0; i < n; ++i) {
+				rotate(angles[i], i, i + 1);
+			}
 		}
 
-		//! Creates a copy of the vector rotated by @p angle.
-		constexpr vector<Quantities...> rotated(radians angle) const {
+		//! Creates a copy of this vector, rotated by @p angle.
+		constexpr auto rotated(radians angle) const {
 			auto result = *this;
 			result.rotate(angle);
 			return result;
 		}
 
+		//! Creates a copy of this vector, rotated by each of @p angles, in successive planes.
+		constexpr auto rotated(std::array<radians, n - 1> const& angles) const {
+			auto result = *this;
+			result.rotate(angles);
+			return result;
+		}
+
 		//! The square of the vector's length.
 		constexpr auto length_squared() const {
-			using acc_t = std::tuple_element_t<0, std::tuple<Quantities...>>;
-			return reduce([](auto const& acc, auto const& component) {
+			return reduce(scalar_t(0) * scalar_t(0), [](auto const& acc, auto const& component) {
 				return acc + component * component;
-			}, acc_t(0) * acc_t(0));
+			});
 		}
 
 		//! The vector's length. Only defined if all components have the same units.
 		//! @note For better performance, use @p length_squared if possible, avoiding a sqrt.
-		constexpr auto length() const { return sqrt(length_squared().value); }
+		constexpr auto length() const { return sqrt(length_squared()); }
 
-		//! The angle of this vector in the @p Axis1 to @p Axis2 plane, in radians.
-		template <std::size_t Axis1 = 0, std::size_t Axis2 = 1>
-		constexpr radians angle() const {
+		//! The angle of this vector in the @p axis1 to @p axis2 plane, in radians.
+		constexpr radians angle(std::size_t axis1 = 0, std::size_t axis2 = 1) const {
 			static_assert
-				( std::is_convertible_v<std::tuple_element_t<Axis1, std::tuple<Quantities...>>::rep, double>
-					&& std::is_convertible_v<std::tuple_element_t<Axis2, std::tuple<Quantities...>>::rep, double>
-				, "Both axes' quantity representations must be convertible to double to find the angle between them."
+				( std::is_convertible_v<scalar_t::rep, double>
+				, "Scalar representation must be convertible to double to find the vector angle."
 				);
 			auto atan2 = [](double x, double y) {
 				return
@@ -190,101 +188,68 @@ namespace units {
 					// On the y-axis: answer is pi or -pi.
 					y > 0.0 ? constants::pi / 2 : -constants::pi / 2;
 			};
-			return radians{atan2(static_cast<double>(get<Axis2>().value), static_cast<double>(get<Axis1>().value))};
+			return radians{atan2(static_cast<double>(components[axis2].value), static_cast<double>(components[axis1].value))};
 		}
 	};
 
-	//! Template deduction guide for variadic vector construction.
-	template <typename... Quantities>
-	vector(Quantities...) -> vector<Quantities...>;
+	template <typename T, typename... U>
+	vector(T, U...) -> vector<T, 1 + sizeof...(U)>;
 
-	//! Template deduction guide for vector construction from tuple.
-	template <typename... Quantities>
-	vector(std::tuple<Quantities...>) -> vector<Quantities...>;
-
-	//! Concatenates two vectors.
-	template <typename... Quantities1, typename... ThatQuantities>
-	auto vector_cat(vector<Quantities1...> const& v1, vector<ThatQuantities...> const& v2) {
-		return vector{std::tuple_cat(v1.components, v2.components)};
-	}
-
-	namespace detail {
-		// Used to allow expansion of variadic index template parameter with another type.
-		template <typename T, std::size_t>
-		using ignore_size_t = T;
-
-		//! Constructs a zero vector with as many axes as the size of @p Indices, with each axis of type @p Quantity.
-		template <typename Quantity, std::size_t... Indices>
-		constexpr auto make_zero_vector(std::make_index_sequence<Indices...>) {
-			return vector{detail::ignore_size_t<Quantity, Indices>(0)...};
-		}
-	}
-
-	//! Constructs a zero vector of dimension @p N, with each axis of type @p Quantity.
 	template <typename Quantity, std::size_t N>
-	constexpr auto make_zero_vector() {
-		return detail::make_zero_vector(std::make_index_sequence<N>{});
-	}
+	vector(std::array<Quantity, N>) -> vector<Quantity, N>;
 
 	//! Constructs a vector from a magnitude and direction.
 	//! @param magnitude The magnitude or length of the vector. Must be a quantity.
 	//! @param angles The counterclockwise rotations to apply to the vector, in radians, following the order of the axes.
-	template <typename Quantity, typename... Angles>
-	constexpr auto make_polar_vector(Quantity magnitude, Angles... angles) {
-		auto result = make_zero_vector<Quantity, sizeof...(Angles)>();
-		result.get<0>() = magnitude;
-		result.rotate(angles...);
-		return result;
+	template <typename Quantity, std::size_t N, typename... Angles>
+	constexpr auto make_polar_vector(Quantity const& magnitude, std::array<radians, N> const& angles) {
+		return vector<Quantity, N>{magnitude}.rotated(angles);
 	}
 
 	//! The vector sum of @p v1 and @p v2.
-	template <typename... Quantities>
-	constexpr vector<Quantities...> operator +(vector<Quantities...> const& v1, vector<Quantities...> const& v2) {
-		return v1.zip([](auto const& component1, auto const& component2) {
-			return component1 + component2;
-		}, v2);
+	template <typename Quantity1, typename Quantity2, std::size_t N>
+	constexpr auto operator +(vector<Quantity1, N> const& v1, vector<Quantity2, N> const& v2) {
+		return v1.zip(v2, std::plus{});
 	}
 
 	//! The vector difference of @p v1 and @p v2.
-	template <typename... Quantities>
-	constexpr vector<Quantities...> operator -(vector<Quantities...> const& v1, vector<Quantities...> const& v2) {
-		return v1.zip([](auto const& component1, auto const& component2) {
-			return component1 - component2;
-		}, v2);
+	template <typename Quantity1, typename Quantity2, std::size_t N>
+	constexpr auto operator -(vector<Quantity1, N> const& v1, vector<Quantity2, N> const& v2) {
+		return v1.zip(v2, std::minus{});
 	}
 
 	//! The negation of @p v.
-	template <typename... Quantities>
-	constexpr vector<Quantities...> operator -(vector<Quantities...> const& v) {
-		return v.map([](auto const& component) { return -component; });
+	template <typename Quantity, std::size_t N>
+	constexpr auto operator -(vector<Quantity, N> const& v) {
+		return v.map(std::negate{});
 	}
 
 	//! Performs component-wise multiplication of @p v1 and @p v2, returning the resulting vector.
-	template <typename... Quantities1, typename... Quantities2>
-	constexpr auto component_wise_product(vector<Quantities1...> const& v1, vector<Quantities2...> const& v2) {
-		return v1.zip(std::multiplies{}, v2);
+	template <typename Quantity1, typename Quantity2, std::size_t N>
+	constexpr auto component_wise_product(vector<Quantity1, N> const& v1, vector<Quantity2, N> const& v2) {
+		return v1.zip(v2, std::multiplies{});
 	}
 
 	//! Performs component-wise division of @p v1 and @p v2, returning the resulting vector.
-	template <typename... Quantities1, typename... Quantities2>
-	constexpr auto component_wise_division(vector<Quantities1...> const& v1, vector<Quantities2...> const& v2) {
+	template <typename Quantity1, typename Quantity2, std::size_t N>
+	constexpr auto component_wise_quotient(vector<Quantity1, N> const& v1, vector<Quantity2, N> const& v2) {
 		return v1.zip(std::divides{}, v2);
 	}
 
 	//! Multiplies a vector @p v by a scalar value @p k.
-	template <typename K, typename... Quantities>
-	constexpr auto operator *(vector<Quantities...> const& v, K const& k) {
+	template <typename Quantity, std::size_t N, typename K>
+	constexpr auto operator *(vector<Quantity, N> const& v, K const& k) {
 		return v.map([&k](auto const& component) { return component * k; });
 	}
 	//! Multiplies a scalar value @p k by a vector @p v.
-	template <typename K, typename... Quantities>
-	constexpr vector<Quantities...> operator *(K const& k, vector<Quantities...> const& v) {
+	template <typename K, typename Quantity, std::size_t N>
+	constexpr auto operator *(K const& k, vector<Quantity, N> const& v) {
 		return v.map([&k](auto const& component) { return k * component; });
 	}
 
 	//! Divides a vector @p v by a scalar value @p k.
-	template <typename T, typename... Quantities>
-	constexpr vector<Quantities...> operator /(vector<Quantities...> const& v, T const& k) {
+	template <typename Quantity, std::size_t N, typename K>
+	constexpr auto operator /(vector<Quantity, N> const& v, K const& k) {
 		return v.map([&k](auto const& component) { return component / k; });
 	}
 }
@@ -297,19 +262,20 @@ namespace units {
 #undef far // Defined in minwindef.h (!)
 
 TEST_CASE("[vector] operations") {
-	using namespace units;
 	using namespace meta;
+	using namespace units;
+	using namespace units::literals;
 
 	using u_t = unit_t<struct u_t_tag>;
 	using q_t = quantity<int, u_t>;
 	using q2_t = product_t<q_t, q_t>;
-	using v_t = vector<q_t, q_t>;
+	using v_t = vector<q_t, 2>;
 
 	v_t v1{q_t{3}, q_t{4}};
 
 	SUBCASE("length") {
-		CHECK(v1.length() == q_t{5});
-		CHECK(v1.length_squared() == q2_t{25});
+		CHECK(v1.length().value == 5);
+		CHECK(v1.length_squared().value == 25);
 	}
 	SUBCASE("angle") {
 		CHECK(v1.angle().value == doctest::Approx(0.927295218));
@@ -335,14 +301,10 @@ TEST_CASE("[vector] operations") {
 			v_t expected{q2_t{6}, q2_t{8}};
 			CHECK(k * v1 == expected);
 			CHECK(v1 * k == expected);
-			v1 *= k;
-			CHECK(v1 == expected);
 		}
 		SUBCASE("scalar division") {
 			constexpr auto expected = vector{unitless<int>{1}, unitless<int>{2}};
 			CHECK(v1 / k == expected);
-			v1 /= k;
-			CHECK(v1 == expected);
 		}
 	}
 	SUBCASE("rotations") {

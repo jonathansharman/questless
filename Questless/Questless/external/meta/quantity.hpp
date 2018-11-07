@@ -88,25 +88,39 @@ namespace meta {
 		}
 
 		//! Multiply by a scalar.
-		template <typename T>
-		constexpr auto& operator *=(T const& k) {
-			static_assert(std::is_convertible_v<T, rep>, "Argument is not convertible to quantity's representation type.");
+		template <typename K>
+		constexpr auto& operator *=(K const& k) {
+			static_assert(std::is_convertible_v<K, rep>, "Argument is not convertible to quantity's representation type.");
 			value *= static_cast<rep>(k);
+			return *this;
+		}
+		//! Multiply by a unitless quantity.
+		template <typename K>
+		constexpr auto& operator *=(quantity<K, unit_t<>> const& k) {
+			static_assert(std::is_convertible_v<K, rep>, "Argument is not convertible to quantity's representation type.");
+			value *= static_cast<rep>(k.value);
 			return *this;
 		}
 
 		//! Divide by a scalar.
-		template <typename T>
-		constexpr auto& operator /=(T const& k) {
-			static_assert(std::is_convertible_v<T, rep>, "Argument is not convertible to quantity's representation type.");
+		template <typename K>
+		constexpr auto& operator /=(K const& k) {
+			static_assert(std::is_convertible_v<K, rep>, "Argument is not convertible to quantity's representation type.");
 			value /= static_cast<rep>(k);
+			return *this;
+		}
+		//! Divide by a unitless quantity.
+		template <typename K>
+		constexpr auto& operator /=(quantity<K, unit_t<>> const& k) {
+			static_assert(std::is_convertible_v<K, rep>, "Argument is not convertible to quantity's representation type.");
+			value /= static_cast<rep>(k.value);
 			return *this;
 		}
 
 		//! Mod by a scalar.
-		template <typename T>
-		constexpr auto& operator %=(T const& k) {
-			static_assert(std::is_convertible_v<T, rep>, "Argument is not convertible to quantity's representation type.");
+		template <typename K>
+		constexpr auto& operator %=(K const& k) {
+			static_assert(std::is_convertible_v<K, rep>, "Argument is not convertible to quantity's representation type.");
 			value %= static_cast<rep>(k);
 			return *this;
 		}
@@ -208,35 +222,35 @@ namespace meta {
 	}
 
 	//! Multiply a quantity by a scalar.
-	template <typename Rep, typename Unit, typename T, typename = std::enable_if_t<std::is_convertible_v<T, Rep>>>
-	constexpr auto operator *(quantity<Rep, Unit> const& q, T const& k) {
-		using result_rep = std::common_type_t<Rep, T>;
+	template <typename Rep, typename Unit, typename K, typename = std::enable_if_t<std::is_convertible_v<K, Rep>>>
+	constexpr auto operator *(quantity<Rep, Unit> const& q, K const& k) {
+		using result_rep = std::common_type_t<Rep, K>;
 		return quantity<result_rep, Unit>{static_cast<result_rep>(q.value) * static_cast<result_rep>(k)};
 	}
 	//! Multiply a scalar by a quantity.
-	template <typename T, typename Rep, typename Unit, typename = std::enable_if_t<std::is_convertible_v<T, Rep>>>
-	constexpr auto operator *(T const& k, quantity<Rep, Unit> const& q) {
-		using result_rep = std::common_type_t<Rep, T>;
+	template <typename K, typename Rep, typename Unit, typename = std::enable_if_t<std::is_convertible_v<K, Rep>>>
+	constexpr auto operator *(K const& k, quantity<Rep, Unit> const& q) {
+		using result_rep = std::common_type_t<Rep, K>;
 		return quantity<result_rep, Unit>{static_cast<result_rep>(k) * static_cast<result_rep>(q.value)};
 	}
 
 	//! Divide a quantity by a scalar.
-	template <typename Rep, typename Unit, typename T, typename = std::enable_if_t<std::is_convertible_v<T, Rep>>>
-	constexpr auto operator /(quantity<Rep, Unit> const& q, T const& k) {
-		using result_rep = std::common_type_t<Rep, T>;
+	template <typename Rep, typename Unit, typename K, typename = std::enable_if_t<std::is_convertible_v<K, Rep>>>
+	constexpr auto operator /(quantity<Rep, Unit> const& q, K const& k) {
+		using result_rep = std::common_type_t<Rep, K>;
 		return quantity<result_rep, Unit>{static_cast<result_rep>(q.value) / static_cast<result_rep>(k)};
 	}
 	//! Divide a scalar by a quantity.
-	template <typename T, typename Rep, typename Unit, typename = std::enable_if_t<std::is_convertible_v<T, Rep>>>
-	constexpr auto operator /(T const& k, quantity<Rep, Unit> const& q) {
-		using result_rep = std::common_type_t<Rep, T>;
+	template <typename K, typename Rep, typename Unit, typename = std::enable_if_t<std::is_convertible_v<K, Rep>>>
+	constexpr auto operator /(K const& k, quantity<Rep, Unit> const& q) {
+		using result_rep = std::common_type_t<Rep, K>;
 		return quantity<result_rep, inverse_t<Unit>>{static_cast<result_rep>(k) / static_cast<result_rep>(q.value)};
 	}
 
 	//! Mod a quantity by a scalar.
-	template <typename Rep, typename Unit, typename T, typename = std::enable_if_t<std::is_convertible_v<T, Rep>>>
-	constexpr auto operator %(quantity<Rep, Unit> const& q, T const& k) {
-		using result_rep = std::common_type_t<Rep, T>;
+	template <typename Rep, typename Unit, typename K, typename = std::enable_if_t<std::is_convertible_v<K, Rep>>>
+	constexpr auto operator %(quantity<Rep, Unit> const& q, K const& k) {
+		using result_rep = std::common_type_t<Rep, K>;
 		return quantity<result_rep, Unit>{static_cast<result_rep>(q.value) % static_cast<result_rep>(k)};
 	}
 
@@ -270,7 +284,7 @@ namespace meta {
 	template <typename Rep, typename Unit>
 	constexpr auto sqrt(quantity<Rep, Unit> const& q) {
 		using gcem::sqrt;
-		return quantity<Rep, meta::exponential_t<1, 2, Unit>>{sqrt(q.value)};
+		return quantity<Rep, meta::exponential_t<1, 2, Unit>>{static_cast<Rep>(sqrt(q.value))};
 	}
 
 	//! Cast a quantity to a quantity with the same unit but a different representation.

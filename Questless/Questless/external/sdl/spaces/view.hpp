@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include "box.hpp"
-#include "point.hpp"
-#include "vector.hpp"
+#include "units/box.hpp"
+#include "units/point.hpp"
+#include "units/vector.hpp"
 
-namespace units ::view {
+namespace sdl::spaces::view {
 	using distance = meta::quantity<float, meta::unit_t<struct distance_tag>>;
 
 	namespace literals {
@@ -16,20 +16,20 @@ namespace units ::view {
 	}
 	using namespace literals;
 
-	using vector = units::vector<distance, distance>;
-	using point = units::point<distance, distance>;
+	using vector = units::vector<distance, 2>;
+	using point = units::point<distance, 2>;
 
-	constexpr auto& x(vector& v) { return v.get<0>(); }
-	constexpr auto const& x(vector const& v) { return v.get<0>(); }
+	constexpr auto& x(vector& v) { return v[0]; }
+	constexpr auto const& x(vector const& v) { return v[0]; }
 
-	constexpr auto& y(vector& v) { return v.get<1>(); }
-	constexpr auto const& y(vector const& v) { return v.get<1>(); }
+	constexpr auto& y(vector& v) { return v[1]; }
+	constexpr auto const& y(vector const& v) { return v[1]; }
 
-	constexpr auto& x(point& v) { return v.get<0>(); }
-	constexpr auto const& x(point const& v) { return v.get<0>(); }
+	constexpr auto& x(point& v) { return v[0]; }
+	constexpr auto const& x(point const& v) { return v[0]; }
 
-	constexpr auto& y(point& v) { return v.get<1>(); }
-	constexpr auto const& y(point const& v) { return v.get<1>(); }
+	constexpr auto& y(point& v) { return v[1]; }
+	constexpr auto const& y(point const& v) { return v[1]; }
 
 	using h_align = axis<0>::align;
 	using v_align = axis<1>::align;

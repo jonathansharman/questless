@@ -7,318 +7,165 @@
 #include "vector.hpp"
 
 namespace units {
-	template <typename... Quantities>
+	//! Represents an n-dimensional point of quantities.
+	//! @tparam Quantity The quantity type of scalars in this point type.
+	//! @tparam N The dimension of this point type.
+	template <typename Quantity, std::size_t N>
 	struct point {
-		constexpr int n = sizeof...(Quantities);
+		//! The type of scalars in this point type.
+		using scalar_t = Quantity;
 
-		std::tuple<Quantities...> components;
+		//! The number of dimensions of this point type.
+		static constexpr std::size_t n = N;
 
-		//! Rotates the point about another point, overwriting the original value.
-		//! @param origin The origin around which the point will be rotated.
-		//! @param dphi The counter-clockwise rotation to apply, in radians.
-		template <typename UnitsPerCircle>
-		void rotate(point const& origin, angle<UnitsPerCircle> const& dphi) & {
-			static_assert(std::is_floating_point_v<scalar> && n == 2, "Requires two-dimensional floating-point space.");
-
-			scalar const dphi_radians = angle_cast<radians>(dphi).count();
-			auto const cos_dphi = static_cast<scalar>(cos(dphi_radians));
-			auto const sin_dphi = static_cast<scalar>(sin(dphi_radians));
-			auto offset = vector{origin[0], origin[1]};
-			*this -= offset;
-			*this = point
-				{ static_cast<scalar>(this->_elements[0] * cos_dphi - this->_elements[1] * sin_dphi)
-				, static_cast<scalar>(this->_elements[0] * sin_dphi + this->_elements[1] * cos_dphi)
-				};
-			*this += offset;
-		}
-
-		//! Creates a copy of the point, rotated about another point.
-		//! @param origin The origin around which the point will be rotated.
-		//! @param phi The counter-clockwise rotation to apply, in radians.
-		template <typename UnitsPerCircle>
-		point rotated(point const& origin, angle<UnitsPerCircle> const& dphi) const {
-			//! @todo Cannot be constexpr because of cos() and sin(). Implement constexpr trig functions in units::math to enable.
-			static_assert(std::is_floating_point_v<scalar> && n == 2, "Requires two-dimensional floating-point space.");
-
-			scalar const dphi_radians = angle_cast<radians>(dphi).count();
-			auto const cos_dphi = static_cast<scalar>(cos(dphi_radians));
-			auto const sin_dphi = static_cast<scalar>(sin(dphi_radians));
-			auto const offset = vector{origin[0], origin[1]};
-			point result = *this - offset;
-			result = point
-				{ static_cast<scalar>(result[0] * cos_dphi - result[1] * sin_dphi)
-				, static_cast<scalar>(result[0] * sin_dphi + result[1] * cos_dphi)
-				};
-			result += offset;
-			return result;
-		}
-
-		//! The vector's length.
-		//! @note For better performance, use @p length_squared if possible, avoiding a sqrt.
-		constexpr scalar length() const { return scalar{math::sqrt(length_squared().value)}; }
-
-		//! The square of the vector's length.
-		constexpr scalar length_squared() const {
-			auto result = math::square(scalar(0));
-			for (auto const& e : this->_elements) { result += e * e; }
-			return result;
-		}
-
-		//! The counter-clockwise angle of the vector from the positive x-axis (in radians by default).
-		template <typename UnitsPerCircle = radians::units_per_circle>
-		typename space::angle<UnitsPerCircle> angle() const {
-			//! @todo Cannot be constexpr because of cos() and sin(). Implement constexpr trig functions in units::math to enable.
-			static_assert(n == 2, "Requires two-dimensional space.");
-			return typename space::angle<UnitsPerCircle>{static_cast<scalar>(atan2(this->_elements[1], this->_elements[0]))};
-		}
-	};
-
-	//! Template deduction guide for vector.
-	template <typename... Quantities>
-	point(Quantities...) -> point<Quantities...>;
-
-	template <typename... Quantities>
-	vector<Quantities...> operator +(vector<Quantities...> const& v1, vector<Quantities...> const& v2) {
-		auto result = v1;
-		result += v2;
-		return result;
-	}
-
-	template <typename... Quantities>
-	vector<Quantities...> operator -(vector<Quantities...> const& v1, vector<Quantities...> const& v2) {
-		auto result = v1;
-		result -= v2;
-		return result;
-	}
-
-	template <typename... Quantities>
-	vector<Quantities...> operator -(vector<Quantities...> const& v) {
-		auto result = v;
-		for (int i = 0; i < n; ++i) {
-			result[i] = -result[i];
-		}
-		return result;
-	}
-
-	//! Performs @p BinaryOp on the elements of vectors @p v1 and @p v2 at index @p Index, returning the result.
-	template <std::size_t Index, typename BinaryOp, typename... Quantities1, typename... Quantities2>
-	constexpr auto component_bin_op(BinaryOp&& f, vector<Quantities1...> const& v1, std::tuple<Quantities2...> const& v2) {
-		return std::forward<BinaryOp>(f)(v1.get<Index>(), v2.get<Index>());
-	}
-
-	//! Performs @p BinaryOp on the elements of vectors @p v1 and @p v2 at each of the indices @p Indices, returning the resulting vector.
-	template <std::size_t... Indices, typename BinaryOp, typename... Quantities1, typename... Quantities2>
-	constexpr auto component_wise_bin_op(std::index_sequence<Indices...>, BinaryOp&& f, vector<Quantities1...> const& v1, vector<Quantities2...> const& v2) {
-		return vector{component_bin_op<Indices>(std::forward<BinaryOp>(f), v1, v2)...};
-	}
-
-	//! Performs component-wise @p BinaryOp on @p v1 and @p v2, returning the resulting vector.
-	template <typename BinaryOp, typename... Quantities1, typename... Quantities2>
-	constexpr auto component_wise_bin_op(BinaryOp&& f, vector<Quantities1...> const& v1, vector<Quantities2...> const& v2) {
-		constexpr std::size_t size1 = sizeof...(Quantities1);
-		constexpr std::size_t size2 = sizeof...(Quantities2);
-		static_assert(size1 == size2, "Vectors must have the same size in order to perform a binary operation on their elements.");
-		return component_wise_bin_op(std::make_index_sequence<size1>{}, std::forward<BinaryOp>(f), v1, v2);
-	}
-
-	//! Performs component-wise multiplication of @p v1 and @p v2, returning the resulting vector.
-	template <typename... Quantities1, typename... Quantities2>
-	constexpr auto component_wise_product(vector<Quantities1...> const& v1, vector<Quantities2...> const& v2) {
-		return component_wise_binary_op(std::multiplies{}, v1, v2);
-	}
-
-	//! Performs component-wise division of @p v1 and @p v2, returning the resulting vector.
-	template <typename... Quantities1, typename... Quantities2>
-	constexpr auto component_wise_division(vector<Quantities1...> const& v1, vector<Quantities2...> const& v2) {
-		return component_wise_binary_op(std::divides{}, v1, v2);
-	}
-
-	template <typename K, typename... Quantities>
-	constexpr auto operator *(vector<Quantities...> const& v, K const& k) {
-		return vector{}
-		auto result = v;
-		result *= k;
-		return result;
-	}
-	template <typename K, typename... Quantities>
-	vector<Quantities...> operator *(K const& k, vector<Quantities...> const& v) {
-		auto result = v;
-		for (int i = 0; i < n; ++i) {
-			result[i] = k * result[i];
-		}
-		return result;
-	}
-
-	template <typename T, typename... Quantities>
-	vector<Quantities...> operator /(vector<Quantities...> const& v, T const& k) {
-		auto result = v;
-		result /= k;
-		return result;
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	//! A point in this space.
-	class point : public Buffer {
-	public:
-		constexpr point() = default;
-		constexpr point(point const&) = default;
-		constexpr point(point&&) = default;
-
-		constexpr point(std::array<scalar, n> coordinates)
-			: Buffer{std::move(coordinates)} {}
+		std::array<scalar_t, n> components{};
 
 		template <typename... Args>
-		constexpr point(Args... args) : Buffer{{std::forward<Args>(args)...}} {
-			static_assert(sizeof...(args) == n, "All coordinates of a point must be initialized.");
-		}
+		constexpr point(Args&&... args) : components{{std::forward<Args>(args)...}} {}
 
-		point& operator =(point const&) & = default;
-		point& operator =(point&&) & = default;
+		explicit constexpr point(std::array<scalar_t, n> components) : components{std::move(components)} {}
 
-		constexpr scalar& operator [](std::size_t index) { return this->_elements[index]; }
-		constexpr scalar operator [](std::size_t index) const { return this->_elements[index]; }
+		//! The canonical origin point for this point type, viz. all zeroes.
+		static constexpr auto origin() { return point<scalar_t, n>{}; }
 
-		template <typename Archive>
-		void save(Archive& archive) const { archive(this->_elements); }
-
-		template <typename Archive>
-		void load(Archive& archive) { archive(this->_elements); }
-
-		constexpr bool operator ==(point const& that) const {
+		template <typename ThatQuantity>
+		constexpr bool operator ==(point<ThatQuantity, n> const& that) {
 			for (std::size_t i = 0; i < n; ++i) {
-				if (this->_elements[i] != that._elements[i]) return false;
+				if (components[i] != that[i]) return false;
 			}
 			return true;
 		}
-		constexpr bool operator !=(point const& that) const {
+
+		template <typename ThatQuantity>
+		constexpr bool operator !=(point<ThatQuantity, n> const& that) {
 			for (std::size_t i = 0; i < n; ++i) {
-				if (this->_elements[i] != that._elements[i]) return true;
+				if (components[i] != that[i]) return true;
 			}
 			return false;
 		}
 
-		constexpr friend point operator +(point const& p, vector const& v) {
-			point result;
-			for (int i = 0; i < n; ++i) {
-				result[i] = p[i] + v[i];
-			}
-			return result;
+		template <typename Archive>
+		void save(Archive& archive) const { archive(components); }
+
+		template <typename Archive>
+		void load(Archive& archive) { archive(components); }
+
+		//! Gets the component at index @p index.
+		constexpr auto& operator [](std::size_t index) { return components[index]; }
+
+		//! Gets the component at index @p index.
+		constexpr auto operator [](std::size_t index) const { return components[index]; }
+
+		auto begin() { return components.begin(); }
+		auto end() { return components.end(); }
+
+		auto begin() const { return components.begin(); }
+		auto end() const { return components.end(); }
+
+		//! Creates a new point by applying @p f to each component of this point, in order.
+		template <typename MapOp>
+		constexpr auto map(MapOp const& f) const {
+			return std::apply([this, f](auto const&... components) {
+				return vector{f(components)...};
+			}, components);
 		}
-		constexpr friend point operator +(vector const& v, point const& p) {
-			point result;
-			for (int i = 0; i < n; ++i) {
-				result[i] = p[i] + v[i];
+
+		//! Creates a new point from the application of @p f to the corresponding components of this point and @p that.
+		template <typename ThatQuantity, typename ZipOp>
+		constexpr auto zip(vector<ThatQuantity, n> const& that, ZipOp const& f) const {
+			auto result = point<scalar_t::rep, scalar_t::unit, n>::zero();
+			for (std::size_t i = 0; i < n; ++i) {
+				result[i] = f(components[i], that.components[i]);
 			}
 			return result;
 		}
 
-		constexpr friend point operator -(point const& p, vector const& v) {
-			point result;
-			for (int i = 0; i < n; ++i) {
-				result[i] = p[i] - v[i];
+		//! Produces a left reduction/fold over this point.
+		//! @param f The operation to apply to the accumulator and the next point component, to produce the next accumulator value.
+		//! @param accumulator The starting value of the reduction.
+		template <typename T, typename ReduceOp>
+		constexpr auto reduce(T accumulator, ReduceOp const& f) const {
+			//! @todo Replace this function with std::reduce/std::accumulate once those are made constexpr.
+			for (auto const& component : components) {
+				accumulator = f(std::move(accumulator), component);
 			}
-			return result;
-		}
-		constexpr friend vector operator -(point const& p1, point const& p2) {
-			vector result;
-			for (int i = 0; i < n; ++i) {
-				result[i] = p1[i] - p2[i];
-			}
-			return result;
+			return accumulator;
 		}
 
-		friend point componentwise_product(point const& p, vector const& v) {
-			auto result = p;
-			result *= v;
-			return result;
-		}
-		friend point componentwise_product(vector const& v, point const& p) {
-			auto result = p;
-			for (int i = 0; i < n; ++i) {
-				result[i] = result[i] * v[i];
-			}
-			return result;
-		}
-
-		point& operator +=(vector const& v) & {
-			for (int i = 0; i < n; ++i) {
-				this->_elements[i] += v[i];
-			}
-			return *this;
-		}
-		point& operator -=(vector const& v) & {
-			for (int i = 0; i < n; ++i) {
-				this->_elements[i] -= v[i];
-			}
-			return *this;
-		}
-
-		//! Component-wise product.
-		point& operator *=(vector const& v) {
-			for (int i = 0; i < n; ++i) {
-				this->_elements[i] *= v[i];
+		template <typename Quantity>
+		constexpr auto& operator +=(vector<Quantity, n> const& v) {
+			for (std::size_t i = 0; i < n; ++i) {
+				components[i] += v[i];
 			}
 			return *this;
 		}
 
-		//! Rotates the point about another point, overwriting the original value.
-		//! @param origin The origin around which the point will be rotated.
-		//! @param dphi The counter-clockwise rotation to apply, in radians.
-		template <typename UnitsPerCircle>
-		void rotate(point const& origin, angle<UnitsPerCircle> const& dphi) & {
-			static_assert(std::is_floating_point_v<scalar> && n == 2, "Requires two-dimensional floating-point space.");
-
-			scalar const dphi_radians = angle_cast<radians>(dphi).count();
-			auto const cos_dphi = static_cast<scalar>(cos(dphi_radians));
-			auto const sin_dphi = static_cast<scalar>(sin(dphi_radians));
-			auto offset = vector{origin[0], origin[1]};
-			*this -= offset;
-			*this = point
-			{static_cast<scalar>(this->_elements[0] * cos_dphi - this->_elements[1] * sin_dphi)
-			, static_cast<scalar>(this->_elements[0] * sin_dphi + this->_elements[1] * cos_dphi)
-			};
-			*this += offset;
+		template <typename Quantity>
+		constexpr auto& operator -=(vector<Quantity, n> const& v) {
+			for (std::size_t i = 0; i < n; ++i) {
+				components[i] -= v[i];
+			}
+			return *this;
 		}
 
-		//! Creates a copy of the point, rotated about another point.
-		//! @param origin The origin around which the point will be rotated.
-		//! @param phi The counter-clockwise rotation to apply, in radians.
-		template <typename UnitsPerCircle>
-		point rotated(point const& origin, angle<UnitsPerCircle> const& dphi) const {
-			//! @todo Cannot be constexpr because of cos() and sin(). Implement constexpr trig functions in units::math to enable.
-			static_assert(std::is_floating_point_v<scalar> && n == 2, "Requires two-dimensional floating-point space.");
+		//! Creates a copy of this point, rotated around another point.
+		//! @param origin The origin around which to rotate this point.
+		//! @param angle The angle of the rotation, from @p axis1 to @p axis2.
+		constexpr auto rotated(radians angle, std::size_t axis1 = 0, std::size_t axis2 = 1) const {
+			return origin + (*this - origin).rotated(angle, axis1, axis2);
+		}
 
-			scalar const dphi_radians = angle_cast<radians>(dphi).count();
-			auto const cos_dphi = static_cast<scalar>(cos(dphi_radians));
-			auto const sin_dphi = static_cast<scalar>(sin(dphi_radians));
-			auto const offset = vector{origin[0], origin[1]};
-			point result = *this - offset;
-			result = point
-			{static_cast<scalar>(result[0] * cos_dphi - result[1] * sin_dphi)
-			, static_cast<scalar>(result[0] * sin_dphi + result[1] * cos_dphi)
-			};
-			result += offset;
-			return result;
+		//! Creates a copy of this point, rotated around @p origin by each of @p angles, in successive planes.
+		constexpr auto rotated(point<scalar_t, n> const& origin, std::array<radians, n - 1> const& angles) const {
+			return origin + (*this - origin).rotated(angles);
+		}
+
+		//! Rotates this point around another point.
+		//! @param origin The origin around which to rotate this point.
+		//! @param angle The angle of the rotation, from @p axis1 to @p axis2.
+		constexpr void rotate(point<scalar_t, n> const& origin, radians angle, std::size_t axis1 = 0, std::size_t axis2 = 1) {
+			*this = rotated(origin, angle, axis1, axis2);
+		}
+
+		//! Rotates this point around @p origin by each of @p angles, in successive planes.
+		constexpr void rotate(point<scalar_t, n> const& origin, std::array<radians, n - 1> const& angles) {
+			*this = rotated(origin, angles);
 		}
 	};
+
+	template <typename T, typename... U>
+	point(T, U...) -> point<T, 1 + sizeof...(U)>;
+
+	template <typename Quantity, std::size_t N>
+	point(std::array<Quantity, N>) -> point<Quantity, N>;
+
+	//! The sum of point @p p and vector @p v.
+	template <typename QuantityPoint, typename QuantityVector, std::size_t N>
+	constexpr auto operator +(point<QuantityPoint, N> const& p, vector<QuantityVector, N> const& v) {
+		auto result = p;
+		result += v;
+		return result;
+	}
+
+	//! The sum of vector @p v and point @p p.
+	template <typename QuantityVector, typename QuantityPoint, std::size_t N>
+	constexpr auto operator +(vector<QuantityVector, N> const& v, point<QuantityPoint, N> const& p) {
+		auto result = p;
+		for (auto& component : result) {
+			component = v + component;
+		}
+		return result;
+	}
+
+	//! The vector difference of @p p1 and @p p2.
+	template <typename Quantity1, typename Quantity2, std::size_t N>
+	constexpr auto operator -(point<Quantity1, N> const& p1, point<Quantity2, N> const& p2) {
+		auto result = vector<Quantity1, N>::zero();
+		for (std::size_t i = 0; i < N; ++i) {
+			result[i] = p1[i] - p2[i];
+		}
+		return result;
+	}
 }
 
 #ifndef _DEBUG
@@ -329,43 +176,55 @@ namespace units {
 #undef far // Defined in minwindef.h (!)
 
 TEST_CASE("[point] operations") {
-	using int_space = units::space<struct int_space_tag, int, 2>;
-	using double_space = units::space<struct double_space_tag, double, 2>;
+	using namespace meta;
+	using namespace units;
+	using namespace units::literals;
 
-	typename int_space::point pi1{3, 4};
+	using u_t = unit_t<struct u_t_tag>;
+	using q_t = quantity<int, u_t>;
+	using q2_t = product_t<q_t, q_t>;
+	using v_t = vector<q_t, 2>;
+	using p_t = vector<q_t, 2>;
+
+	v_t v1{q_t{3}, q_t{4}};
+	p_t p1{q_t{3}, q_t{4}};
 
 	SUBCASE("binary operations") {
+		constexpr v_t v2{q_t{1}, q_t{6}};
 		SUBCASE("addition") {
-			constexpr int_space::vector vi{1, 6};
-			constexpr int_space::point p_sum{4, 10};
-			CHECK(pi1 + vi == p_sum);
-			pi1 += vi;
-			CHECK(pi1 == p_sum);
+			constexpr v_t expected{q_t{4}, q_t{10}};
+			CHECK(v1 + v2 == expected);
+			v1 += v2;
+			CHECK(v1 == expected);
 		}
 		SUBCASE("subtraction") {
-			constexpr int_space::point pi2{1, 6};
-			constexpr int_space::vector v_diff{2, -2};
-			CHECK(pi1 - pi2 == v_diff);
-
-			constexpr int_space::vector vi{1, 6};
-			constexpr int_space::point p_diff{2, -2};
-			pi1 -= vi;
-			CHECK(pi1 == p_diff);
+			constexpr v_t expected{q_t{2}, q_t{-2}};
+			CHECK(v1 - v2 == expected);
+			v1 -= v2;
+			CHECK(v1 == expected);
+		}
+	}
+	SUBCASE("scalar operations") {
+		q_t k = q_t{2};
+		SUBCASE("scalar multiplication") {
+			v_t expected{q2_t{6}, q2_t{8}};
+			CHECK(k * v1 == expected);
+			CHECK(v1 * k == expected);
+		}
+		SUBCASE("scalar division") {
+			constexpr auto expected = vector{unitless<int>{1}, unitless<int>{2}};
+			CHECK(v1 / k == expected);
 		}
 	}
 	SUBCASE("rotations") {
-		typename double_space::point pd{3.0, 4.0};
-		constexpr typename double_space::degrees dphi{90.0};
-		constexpr typename double_space::point pivot{1.0, 1.0};
-		constexpr typename double_space::point pd_rot{-2.0, 3.0};
-		auto pd_rot_actual = pd.rotated(pivot, dphi);
+		v_t v{q_t{3}, q_t{4}};
+		auto theta = 90.0_deg;
+		v_t expected{q_t{-4}, q_t{3}};
 
-		CHECK(pd_rot_actual[0] == doctest::Approx(pd_rot[0]));
-		CHECK(pd_rot_actual[1] == doctest::Approx(pd_rot[1]));
+		auto v_rotated = v.rotated(theta * rad_per_deg);
+		CHECK(v_rotated == expected);
 
-		pd.rotate(pivot, dphi);
-
-		CHECK(pd[0] == doctest::Approx(pd_rot[0]));
-		CHECK(pd[1] == doctest::Approx(pd_rot[1]));
+		v.rotate(theta);
+		CHECK(v == expected);
 	}
 }

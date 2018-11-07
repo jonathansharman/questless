@@ -4,26 +4,20 @@
 
 #pragma once
 
-namespace units {
+#include "units/vector.hpp"
+
+namespace sdl::spaces::units {
 	using tx = meta::quantity<int, meta::unit_t<struct tx_tag>>;
 	namespace literals {
 		constexpr tx operator "" _tx(unsigned long long value) { return tx{static_cast<int>(value)}; }
 	}
 	using namespace literals;
 
-	namespace detail {
-		class texture_space_buffer : public buffer_base<tx, 2> {
-		public:
-			constexpr auto& u() & { return _elements[0]; }
-			constexpr auto const& u() const& { return _elements[0]; }
+	constexpr auto& u() & { return _elements[0]; }
+	constexpr auto const& u() const& { return _elements[0]; }
 
-			constexpr auto& v() & { return _elements[1]; }
-			constexpr auto const& v() const& { return _elements[1]; }
-		protected:
-			using buffer_base::buffer_base;
-			using buffer_base::operator =;
-		};
-	}
+	constexpr auto& v() & { return _elements[1]; }
+	constexpr auto const& v() const& { return _elements[1]; }
 
 	struct texture_space : space<struct texture_space_tag, tx, 2, detail::texture_space_buffer> {
 		using h_align = axis<0>::align;

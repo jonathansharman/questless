@@ -4,22 +4,22 @@
 
 #pragma once
 
-#include "vector.hpp"
+#include "units/vector.hpp"
 
 #include <vector>
 
-namespace units {
+namespace sdl::spaces::screen {
 	using screen_px = meta::quantity<int, meta::unit_t<struct screen_px_tag>>;
 	namespace literals {
 		constexpr screen_px operator "" _screen_px(unsigned long long value) { return screen_px{static_cast<int>(value)}; }
 	}
 	using namespace literals;
 
-	constexpr auto& x() & { return _elements[0]; }
-	constexpr auto const& x() const& { return _elements[0]; }
+	constexpr auto& x() { return _elements[0]; }
+	constexpr auto const& x() const { return _elements[0]; }
 
-	constexpr auto& y() & { return _elements[1]; }
-	constexpr auto const& y() const& { return _elements[1]; }
+	constexpr auto& y() { return _elements[1]; }
+	constexpr auto const& y() const { return _elements[1]; }
 
 	struct screen_space : space<struct screen_space_tag, screen_px, 2, detail::screen_space_buffer> {
 		using h_align = axis<0>::align;

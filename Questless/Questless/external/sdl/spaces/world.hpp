@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "box.hpp"
-#include "point.hpp"
-#include "vector.hpp"
+#include "units/box.hpp"
+#include "units/point.hpp"
+#include "units/vector.hpp"
 
 namespace units::world {
 	using distance = meta::quantity<double, meta::unit_t<struct distance_tag>>;
@@ -16,31 +16,20 @@ namespace units::world {
 	}
 	using namespace literals;
 
-	using vector = units::vector<distance, distance>;
-	using point = units::point<distance, distance>;
+	using vector = units::vector<distance, 2>;
+	using point = units::point<distance, 2>;
 
-	constexpr auto& x(vector& v) { return v.get<0>(); }
-	constexpr auto const& x(vector const& v) { return v.get<0>(); }
+	constexpr auto& x(vector& v) { return v[0]; }
+	constexpr auto const& x(vector const& v) { return v[0]; }
 
-	constexpr auto& y(vector& v) { return v.get<1>(); }
-	constexpr auto const& y(vector const& v) { return v.get<1>(); }
+	constexpr auto& y(vector& v) { return v[1]; }
+	constexpr auto const& y(vector const& v) { return v[1]; }
 
-	constexpr auto& x(point& v) { return v.get<0>(); }
-	constexpr auto const& x(point const& v) { return v.get<0>(); }
+	constexpr auto& x(point& v) { return v[0]; }
+	constexpr auto const& x(point const& v) { return v[0]; }
 
-	constexpr auto& y(point& v) { return v.get<1>(); }
-	constexpr auto const& y(point const& v) { return v.get<1>(); }
-
-	using h_align = axis<0>::align;
-	using v_align = axis<1>::align;
-
-	constexpr auto align_left = h_align::near;
-	constexpr auto align_center = h_align::mid;
-	constexpr auto align_right = h_align::far;
-
-	constexpr auto align_top = v_align::near;
-	constexpr auto align_middle = v_align::mid;
-	constexpr auto align_bottom = v_align::far;
+	constexpr auto& y(point& v) { return v[1]; }
+	constexpr auto const& y(point const& v) { return v[1]; }
 
 	// Timing and Rates
 
@@ -56,7 +45,18 @@ namespace units::world {
 
 	// Box Types and Functions
 
-	using box = units::box<distance, distance>;
+	using box = units::box<distance, 2>;
+
+	using h_align = box::align<0>;
+	using v_align = box::align<1>;
+
+	constexpr auto left_align = h_align{h_align::near};
+	constexpr auto center_align = h_align{h_align::mid};
+	constexpr auto right_align = h_align{h_align::far};
+
+	constexpr auto top_align = v_align{v_align::near};
+	constexpr auto middle_align = v_align{v_align::mid};
+	constexpr auto bottom_align = v_align{v_align::far};
 
 	constexpr auto& width(box& box) { return x(box.size); }
 	constexpr auto width(box const& box) { return x(box.size); }

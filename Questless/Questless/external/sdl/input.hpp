@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "units/window_space.hpp"
+#include "spaces/window.hpp"
 
 #include <SDL.h>
 

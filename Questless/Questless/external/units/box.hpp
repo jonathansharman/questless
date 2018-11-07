@@ -8,36 +8,51 @@
 #include "vector.hpp"
 
 namespace units {
-	//! Represents the axis along the dimension with index @p Index.
-	template <std::size_t Index>
-	struct axis {
-		static_assert(0 <= Index && Index < n, "Axis index out of bounds.");
-
-		//! Alignment along this axis.
-		enum class alignment { near, mid, far };
-	};
-
-	//! @todo Is there a way to generate the type for the alignment tuple without using a dummy function?
-
-	template <std::size_t... DimensionIndices>
-	static decltype(auto) align_dummy(std::index_sequence<DimensionIndices...>) {
-		return std::tuple<typename axis<DimensionIndices>::align...>{};
-	}
-
-	//! The alignment along every axis in this space.
-	template <std::size_t N>
-	using alignment = decltype(align_dummy(std::make_index_sequence<N>{}));
-
-	template <typename... Quantities>
+	//! An n-dimensional rectangular volume.
+	template <typename Quantity, std::size_t N>
 	struct box {
+		//! The type of scalars in this box type.
+		using scalar_t = Quantity;
+
 		//! The number of dimensions of this box type.
-		static constexpr std::size_t n = sizeof...(Quantities);
+		static constexpr std::size_t n = N;
+
+		//! Alignment along the axis with index @p Axis.
+		template <std::size_t Axis>
+		struct align {
+			static constexpr std::size_t axis = Axis;
+			enum { near, mid, far } align;
+		};
 
 		//! The position of the minimal corner of this box.
-		point<Quantities...> position;
+		point<scalar_t, n> position;
 
 		//! The size or extent of this box.
-		vector<Quantities...> size;
+		vector<scalar_t, n> size;
+
+		//! Creates a box of size @p size at @p position with alignment @p alignment.
+		//! @param position The position of the box relative to its origin.
+		//! @param size The size of the box.
+		//! @param aligns A variadic list of alignments to apply to the box.
+		template <typename Quantity, std::size_t N, typename... Aligns>
+		static constexpr auto aligned(point<Quantity, N> position, vector<Quantity, N> size, Aligns... aligns) {
+			auto result = box{position, size};
+			auto apply_align = [&result](auto align) {
+				using t = decltype(align);
+				switch (align.align) {
+					case t::near:
+						break;
+					case t::mid:
+						result.position[t::axis] -= size[t::axis] / 2 - 1;
+						break;
+					case t::far:
+						result.position[t::axis] -= size[t::axis] - 1;
+						break;
+				}
+			};
+			(apply_align(aligns), ...);
+			return result;
+		}
 
 		template <typename Archive>
 		void save(Archive& archive) const {
@@ -62,7 +77,7 @@ namespace units {
 		}
 
 		//! Extends this box, if necessary, to include the given point.
-		void extend(point const& point) {
+		void extend(point<scalar_t, n> const& point) {
 			for (int i = 0; i < n; ++i) {
 				if (point[i] < position[i]) {
 					size[i] += position[i] - point[i];
@@ -74,64 +89,8 @@ namespace units {
 		}
 	};
 
-	//! Template deduction guide for variadic vector construction.
-	template <typename... Quantities>
-	box(vector<Quantities...>, point<Quantities...>) -> box<Quantities...>;
-
-	namespace detail {
-		template <typename Alignment>
-		void apply_alignment(Alignment alignment) {
-			switch (std::get<Index>(alignment)) {
-				case axis<Index>::align::near:
-					break;
-				case axis<Index>::align::mid:
-					position[Index] -= size[Index] / 2 - 1;
-					break;
-				case axis<Index>::align::far:
-					position[Index] -= size[Index] - 1;
-					break;
-			}
-		}
-	}
-
-	//! Creates a box of size @p size at @p position with alignment @p alignment.
-	//! @param position The position of the box relative to its origin.
-	//! @param size The size of the box.
-	//! @param alignment The alignment of each of the box's axes, which determines where the origin is.
-	template <typename... Quantities, typename... Alignment>
-	auto aligned_box(point<Quantities...> position, vector<Quantities...> size, Alignment... alignment) {
-		auto result = box{position, size};
-		(apply_alignment<Alignment>(result), ...);
-		return result;
-	}
-
-	//! A rectangular, orthogonal volume in this space.
-	struct box {
-	private:
-		static constexpr point aligned_position(point position, vector size, alignment const& alignment) {
-			return apply_alignment<0>(position, size, alignment);
-		}
-
-		template <int Index>
-		static constexpr point apply_alignment(point position, vector size, alignment const& alignment) {
-			//! @todo Specialize these adjustments for integers and floats?
-			switch (std::get<Index>(alignment)) {
-				case axis<Index>::align::near:
-					break;
-				case axis<Index>::align::mid:
-					position[Index] -= size[Index] / 2 - 1;
-					break;
-				case axis<Index>::align::far:
-					position[Index] -= size[Index] - 1;
-					break;
-			}
-			if constexpr (Index == n - 1) {
-				return position;
-			} else {
-				return apply_alignment<Index + 1>(position, size, alignment);
-			}
-		}
-	};
+	template <typename Quantity, std::size_t N>
+	box(vector<Quantity, N>, point<Quantity, N>) -> box<Quantity, N>;
 }
 
 #ifndef _DEBUG
