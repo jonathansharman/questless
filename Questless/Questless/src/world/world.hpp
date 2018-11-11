@@ -4,19 +4,20 @@
 
 #pragma once
 
+#include "quantities/wall_time.hpp"
+
 #include "vecx/box.hpp"
 #include "vecx/point.hpp"
-#include "vecx/polygon.hpp"
 #include "vecx/sphere.hpp"
 #include "vecx/vector.hpp"
 
 #include "vecx/define_macros.hpp"
 
-namespace sdl::spaces::view {
-	using length = cancel::quantity<float, cancel::unit_t<struct distance_tag>>;
+namespace ql::world {
+	using length = cancel::quantity<double, cancel::unit_t<struct distance_tag>>;
 
 	namespace literals {
-		constexpr auto operator "" _view_length(long double value) { return length{static_cast<float>(value)}; }
+		constexpr auto operator "" _world_distance(long double value) { return distance{static_cast<double>(value)}; }
 	}
 	using namespace literals;
 
@@ -27,6 +28,12 @@ namespace sdl::spaces::view {
 	DEFINE_VECTOR_INDEX_NAME(vector, 1, y);
 	DEFINE_VECTOR_INDEX_NAME(point, 0, x);
 	DEFINE_VECTOR_INDEX_NAME(point, 1, y);
+
+	// Timing and Rates
+
+	using speed = cancel::quotient_t<length, sec>;
+	using velocity = decltype(vector{} / sec{});
+	using acceleration = decltype(velocity{} / sec{});
 
 	// Box
 
@@ -57,10 +64,6 @@ namespace sdl::spaces::view {
 	// Circle
 
 	using circle = vecx::sphere<length, 2>;
-
-	// Polygon
-
-	using polygon = vecx::polygon<length>;
 }
 
 #include "vecx/undef_macros.hpp"

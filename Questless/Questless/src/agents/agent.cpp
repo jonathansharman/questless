@@ -59,7 +59,7 @@ namespace ql {
 
 			auto const agility_factor = 100.0_agi / being.stats.a.agility.value();
 			auto const turn_delay = delay_per_turn * region_tile::distance(being.direction, direction);
-			being.busy_time += meta::quantity_cast<tick>(agility_factor * (base_delay + turn_delay));
+			being.busy_time += cancel::quantity_cast<tick>(agility_factor * (base_delay + turn_delay));
 			being.direction = direction;
 
 			return cont(action::result::success);
@@ -79,7 +79,7 @@ namespace ql {
 			auto const agility_factor = 100.0_agi / being.stats.a.agility.value();
 			if (being.region->try_move(being, being.coords.neighbor(direction))) {
 				auto const strafe_delay = delay_per_turn * region_tile::distance(being.direction, direction);
-				being.busy_time += meta::quantity_cast<tick>(agility_factor * (base_delay + strafe_delay)); //! @todo Account for terrain.
+				being.busy_time += cancel::quantity_cast<tick>(agility_factor * (base_delay + strafe_delay)); //! @todo Account for terrain.
 				
 				return cont(action::result::success);
 			}

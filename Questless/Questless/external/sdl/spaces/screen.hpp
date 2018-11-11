@@ -4,61 +4,62 @@
 
 #pragma once
 
-#include "units/vector.hpp"
+#include "vecx/point.hpp"
+#include "vecx/polygon.hpp"
+#include "vecx/sphere.hpp"
+#include "vecx/vector.hpp"
 
-#include <vector>
+#include "vecx/define_macros.hpp"
 
 namespace sdl::spaces::screen {
-	using screen_px = meta::quantity<int, meta::unit_t<struct screen_px_tag>>;
+	//! Screen pixel.
+	using px = cancel::quantity<int, cancel::unit_t<struct px_tag>>;
 	namespace literals {
-		constexpr screen_px operator "" _screen_px(unsigned long long value) { return screen_px{static_cast<int>(value)}; }
+		constexpr px operator "" _screen_px(unsigned long long value) { return px{static_cast<int>(value)}; }
 	}
 	using namespace literals;
 
-	constexpr auto& x() { return _elements[0]; }
-	constexpr auto const& x() const { return _elements[0]; }
+	using vector = vecx::vector<px, 2>;
+	using point = vecx::point<px, 2>;
 
-	constexpr auto& y() { return _elements[1]; }
-	constexpr auto const& y() const { return _elements[1]; }
+	DEFINE_VECTOR_INDEX_NAME(vector, 0, x);
+	DEFINE_VECTOR_INDEX_NAME(vector, 1, y);
+	DEFINE_VECTOR_INDEX_NAME(point, 0, x);
+	DEFINE_VECTOR_INDEX_NAME(point, 1, y);
 
-	struct screen_space : space<struct screen_space_tag, screen_px, 2, detail::screen_space_buffer> {
-		using h_align = axis<0>::align;
-		using v_align = axis<1>::align;
+	// Box
 
-		static constexpr auto align_left = h_align::near;
-		static constexpr auto align_center = h_align::mid;
-		static constexpr auto align_right = h_align::far;
+	using box = vecx::box<px, 2>;
 
-		static constexpr auto align_top = v_align::near;
-		static constexpr auto align_middle = v_align::mid;
-		static constexpr auto align_bottom = v_align::far;
+	using h_align = box::align<0>;
+	using v_align = box::align<1>;
 
-		//! Define a polygon as a sequence of its vertex points.
-		using polygon = std::vector<point>;
-	};
+	constexpr auto left_align = h_align{h_align::near};
+	constexpr auto center_align = h_align{h_align::mid};
+	constexpr auto right_align = h_align{h_align::far};
 
-	inline auto& width(screen_space::box& box) { return box.size.x(); }
-	inline auto width(screen_space::box const& box) { return box.size.x(); }
+	constexpr auto top_align = v_align{v_align::near};
+	constexpr auto middle_align = v_align{v_align::mid};
+	constexpr auto bottom_align = v_align{v_align::far};
 
-	inline auto& height(screen_space::box& box) { return box.size.y(); }
-	inline auto height(screen_space::box const& box) { return box.size.y(); }
+	DEFINE_BOX_SIZE_NAME(box, 0, width);
+	DEFINE_BOX_SIZE_NAME(box, 1, height);
 
-	inline auto& left(screen_space::box& box) { return box.position.x(); }
-	inline auto left(screen_space::box const& box) { return box.position.x(); }
+	DEFINE_BOX_EXTREMES_NAMES(box, 0, left, right);
+	DEFINE_BOX_EXTREMES_NAMES(box, 1, top, bottom);
 
-	inline auto& top(screen_space::box& box) { return box.position.y(); }
-	inline auto top(screen_space::box const& box) { return box.position.y(); }
+	constexpr auto top_left(box const& box) { return box.position; }
+	constexpr auto top_right(box const& box) { return point{x(box.position) + x(box.size), y(box.position)}; }
+	constexpr auto bottom_left(box const& box) { return point{x(box.position), y(box.position) + y(box.size)}; }
+	constexpr auto bottom_right(box const& box) { return box.position + box.size; }
 
-	inline auto right(screen_space::box const& box) { return box.position.x() + box.size.x(); }
+	// Circle
 
-	inline auto bottom(screen_space::box const& box) { return box.position.y() + box.size.y(); }
+	using circle = vecx::sphere<px, 2>;
 
-	inline auto top_left(screen_space::box const& box) { return box.position; }
-	inline auto top_right(screen_space::box const& box) { return screen_space::point{box.position.x() + box.size.x(), box.position.y()}; }
-	inline auto bottom_left(screen_space::box const& box) { return screen_space::point{box.position.x(), box.position.y() + box.size.y()}; }
-	inline auto bottom_right(screen_space::box const& box) { return box.position + box.size; }
+	// Polygon
 
-	inline auto center(screen_space::box const& box) { return box.position + box.size / 2; }
-
-	inline auto area(screen_space::box const& box) { return width(box) * height(box); }
+	using polygon = vecx::polygon<px>;
 }
+
+#include "vecx/undef_macros.hpp"

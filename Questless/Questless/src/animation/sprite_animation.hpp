@@ -7,7 +7,7 @@
 #include "animation.hpp"
 #include "utility/reference.hpp"
 
-#include "meta/quantity.hpp"
+#include "cancel/quantity.hpp"
 
 #include "sdl/resources.hpp"
 #include "units/sprite_sheet_space.hpp"
@@ -29,9 +29,9 @@ namespace ql {
 		{}
 
 		//! The dimensions of a single cel.
-		units::window_space::vector cel_size() const {
+		spaces::window::vector cel_size() const {
 			if (_need_cel_size) {
-				_cel_size = units::window_space::vector {
+				_cel_size = spaces::window::vector {
 					sdl::the_texture_manager()[texture_handle].width() / cel_dimensions.x(),
 					sdl::the_texture_manager()[texture_handle].height() / cel_dimensions.y(),
 				};
@@ -47,7 +47,7 @@ namespace ql {
 		int cel_height() const { return cel_size().y(); }
 	private:
 		bool mutable _need_cel_size = true;
-		units::window_space::vector mutable _cel_size;
+		spaces::window::vector mutable _cel_size;
 	};
 
 	//! A simple 2D animation.
@@ -77,12 +77,12 @@ namespace ql {
 			, start_time start_time = start_time::zero
 			);
 
-		void draw(units::window_space::point position) const final;
+		void draw(spaces::window::point position) const final;
 
 		void draw
 			( units::world_space::point position
 			, camera const& camera
-			, units::colors::color_vector color_vector = units::colors::white_vector()
+			, spaces::colors::color_vector color_vector = spaces::colors::white_vector()
 			) const final;
 
 		//! The number of times the animation has looped.

@@ -57,12 +57,12 @@ namespace sdl {
 		// Mouse state accessors
 		
 		bool mouse_visible() const { return SDL_ShowCursor(-1) == 1; }
-		auto x_mouse() const { return _mouse_position.x(); }
-		auto y_mouse() const { return _mouse_position.y(); }
-		auto last_x_mouse() const { return _prev_mouse_position.x(); }
-		auto last_y_mouse() const { return _prev_mouse_position.y(); }
-		units::window_space::point mouse_position() const { return _mouse_position; }
-		units::window_space::point last_mouse_position() const { return _prev_mouse_position; }
+		auto x_mouse() const { return x(_mouse_position); }
+		auto y_mouse() const { return y(_mouse_position); }
+		auto last_x_mouse() const { return x(_prev_mouse_position); }
+		auto last_y_mouse() const { return y(_prev_mouse_position); }
+		spaces::window::point mouse_position() const { return _mouse_position; }
+		spaces::window::point last_mouse_position() const { return _prev_mouse_position; }
 		bool mouse_moved() const { return _mouse_position != _prev_mouse_position; }
 
 		bool pressed(mouse_button button) const;
@@ -77,7 +77,7 @@ namespace sdl {
 
 		//! Sets the position of the mouse cursor in the window.
 		//! @param position The position to which the cursor is moved.
-		void move_mouse(units::window_space::point const& position);
+		void move_mouse(spaces::window::point const& position);
 
 		//! Hides the mouse cursor.
 		void hide_mouse() const { SDL_ShowCursor(0); }
@@ -98,8 +98,8 @@ namespace sdl {
 		std::unordered_map<SDL_Keycode, int> _presses;
 		std::unordered_map<SDL_Keycode, int> _releases;
 
-		units::window_space::point _mouse_position;
-		units::window_space::point _prev_mouse_position;
+		spaces::window::point _mouse_position;
+		spaces::window::point _prev_mouse_position;
 
 		uint32_t _prev_mouse_state;
 		uint32_t _curr_mouse_state;

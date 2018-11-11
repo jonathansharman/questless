@@ -18,9 +18,9 @@ namespace ql {
 			: _texture_handle{texture_handle}, _origin{origin}
 		{}
 
-		void draw(units::window_space::point position) const final;
+		void draw(spaces::window::point position) const final;
 
-		void draw(units::world_space::point position, camera const& camera, units::colors::color_vector color_vector = units::colors::white_vector()) const final;
+		void draw(units::world_space::point position, camera const& camera, spaces::colors::color_vector color_vector = spaces::colors::white_vector()) const final;
 	private:
 		sdl::texture_handle _texture_handle;
 

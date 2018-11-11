@@ -7,15 +7,12 @@
 
 #pragma once
 
-#include "meta/list.hpp"
+#include "cancel/list.hpp"
 
 namespace ql {
 	//! Visitor template for at least one type (recursive case).
 	template <typename ElementSubtypeList, int Length = ElementSubtypeList::length::value>
-	class visitor
-		: public visitor<typename ElementSubtypeList::tail
-		, ElementSubtypeList::tail::length::value>
-	{
+	class visitor : public visitor<typename ElementSubtypeList::tail, ElementSubtypeList::tail::length::value> {
 	public:
 		virtual ~visitor() = default;
 
@@ -28,7 +25,7 @@ namespace ql {
 
 	//! Specialization of visitor template for zero types.
 	template <>
-	class visitor<meta::empty, 0> {};
+	class visitor<cancel::empty, 0> {};
 
 	//! Specialization of visitor template for one type.
 	template <typename ElementSubtypeList>
@@ -43,14 +40,14 @@ namespace ql {
 	class element {
 	public:
 		virtual void accept(visitor<ElementSubtypeList>& visitor) = 0;
-		virtual void accept(visitor<meta::add_const_t<ElementSubtypeList>>& visitor) const = 0;
+		virtual void accept(visitor<cancel::add_const_t<ElementSubtypeList>>& visitor) const = 0;
 	};
 }
 
 //! Defines ElementType##MutableVisitor and ElementType##ConstVisitor.
 #define DEFINE_VISITORS(ElementType, ElementSubtypeList) \
 using ElementType##_mutable_visitor = visitor<ElementSubtypeList>; \
-using ElementType##_const_visitor = visitor<meta::add_const_t<ElementSubtypeList>>;
+using ElementType##_const_visitor = visitor<cancel::add_const_t<ElementSubtypeList>>;
 
 //! Defines ParentType##_base, implementing const and non-const ElementType::accept for ParentType using CRTP. Pulls in the visible ParentClass constructors as protected.
 #define DEFINE_ELEMENT_BASE(ParentType, ElementType) \

@@ -10,7 +10,7 @@ namespace ql {
 		constexpr auto range_per_lum = 1_span / 10.0_lum;
 	}
 	span light_source::range() const {
-		return meta::quantity_cast<span>(_luminance * range_per_lum);
+		return cancel::quantity_cast<span>(_luminance * range_per_lum);
 	}
 
 	lum light_source::luminance(region const& region, region_tile::point region_tile_coords) const {

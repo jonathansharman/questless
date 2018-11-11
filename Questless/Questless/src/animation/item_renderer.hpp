@@ -14,7 +14,7 @@ namespace ql {
 	class item_renderer : public item_const_visitor {
 	public:
 		//! @param position The coordinates at which the item should be drawn to the screen.
-		item_renderer(units::window_space::point position) : _position{position} {}
+		item_renderer(spaces::window::point position) : _position{position} {}
 
 		void visit(arrow const&) final;
 		void visit(bow const&) final;
@@ -23,6 +23,6 @@ namespace ql {
 		void visit(scroll const&) final;
 		void visit(gatestone const&) final;
 	private:
-		units::window_space::point _position;
+		spaces::window::point _position;
 	};
 }

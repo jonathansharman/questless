@@ -14,7 +14,7 @@ namespace ql {
 	class quiver;
 	class scroll;
 
-	using item_subtype_list = meta::list_t
+	using item_subtype_list = cancel::list_t
 		< arrow
 		, bow
 		, gatestone

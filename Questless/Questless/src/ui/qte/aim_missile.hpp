@@ -32,10 +32,10 @@ namespace ql::qte {
 
 		region_tile::point _source_tile_coords;
 		being const& _target_being;
-		units::view_space::point _target_view_coords;
-		units::view_space::scalar _target_view_scale;
+		spaces::view::point _target_view_coords;
+		spaces::view::scalar _target_view_scale;
 		continuation<body_part*> _cont;
-		units::view_space::sphere _aiming_circle;
+		spaces::view::sphere _aiming_circle;
 		aiming_state _aiming_state = aiming_state::beginning;
 
 		units::world_space::seconds _elapsed_time = 0.0s;

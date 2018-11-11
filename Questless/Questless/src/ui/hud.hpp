@@ -40,7 +40,7 @@ namespace ql {
 		std::array<std::optional<id<item>>, _hotbar_size> _hotbar;
 		bool _inv_open = false;
 		int _inv_page = 0; //! @todo Replace with filters and a scrollable view.
-		units::window_space::box _inv_layout;
+		spaces::window::box _inv_layout;
 		int _inv_row_count;
 		int _inv_column_count;
 		std::vector<cref<item>> _displayed_items;

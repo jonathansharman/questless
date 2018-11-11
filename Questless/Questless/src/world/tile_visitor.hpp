@@ -15,7 +15,7 @@ namespace ql {
 	class stone_tile;
 	class water_tile;
 
-	using tile_subtype_list = meta::list_t
+	using tile_subtype_list = cancel::list_t
 		< dirt_tile
 		, edge_tile
 		, grass_tile

@@ -7,7 +7,7 @@
 
 #include "list.hpp"
 
-namespace meta {
+namespace cancel {
 	namespace detail {
 		//! A type representing the power (exponent) of a type.
 		template <typename T, int Power>

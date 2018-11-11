@@ -6,12 +6,12 @@
 
 #include "animation/animation.hpp"
 
-#include "meta/quantity.hpp"
+#include "cancel/quantity.hpp"
 
 #include "sdl/texture.hpp"
 
 namespace ql {
-	using max_displacement = meta::quantity<double, meta::unit_t<struct max_displacement_tag>>;
+	using max_displacement = cancel::quantity<double, cancel::unit_t<struct max_displacement_tag>>;
 
 	class camera;
 
@@ -41,9 +41,9 @@ namespace ql {
 
 		virtual ~particle() = default;
 
-		void draw(units::window_space::point position) const final;
+		void draw(spaces::window::point position) const final;
 
-		void draw(units::world_space::point position, camera const& camera, units::colors::color_vector color_vector = units::colors::white_vector()) const final;
+		void draw(units::world_space::point position, camera const& camera, spaces::colors::color_vector color_vector = spaces::colors::white_vector()) const final;
 	protected:
 		//! @todo Are these protected variables the right way to do this?
 
@@ -56,7 +56,7 @@ namespace ql {
 		units::world_space::scale_velocity _scale_velocity;
 		sec _lifetime;
 		sec _time_left;
-		units::colors::color_vector _color_vector;
+		spaces::colors::color_vector _color_vector;
 
 		//! The texture to be used when drawing a particle.
 		virtual sdl::texture const& texture() const = 0;

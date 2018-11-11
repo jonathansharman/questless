@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include "meta/quantity.hpp"
+#include "cancel/quantity.hpp"
 
 namespace ql {
 	//! In-game mass.
-	using load = meta::quantity<double, meta::unit_t<struct load_tag>>;
+	using load = cancel::quantity<double, cancel::unit_t<struct load_tag>>;
 	constexpr load operator "" _load(long double value) { return load{static_cast<double>(value)}; }
 }

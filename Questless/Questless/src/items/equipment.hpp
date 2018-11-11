@@ -6,7 +6,7 @@
 
 #include "items/item.hpp"
 
-#include "meta/quantity.hpp"
+#include "cancel/quantity.hpp"
 
 #include <optional>
 
@@ -30,14 +30,14 @@ namespace ql {
 		//! The ID of the being bearing this equipment or nullopt if it's currently unequipped.
 		std::optional<ql::id<being>> opt_bearer_id() const { return _opt_bearer_id; }
 	protected:
-		using heads = meta::quantity<int, meta::unit_t<struct heads_tag>>;
-		using torsos = meta::quantity<int, meta::unit_t<struct torsos_tag>>;
-		using arms = meta::quantity<int, meta::unit_t<struct arms_tag>>;
-		using hands = meta::quantity<int, meta::unit_t<struct hands_tag>>;
-		using legs = meta::quantity<int, meta::unit_t<struct legs_tag>>;
-		using feet = meta::quantity<int, meta::unit_t<struct feet_tag>>;
-		using wings = meta::quantity<int, meta::unit_t<struct wings_tag>>;
-		using tails = meta::quantity<int, meta::unit_t<struct tails_tag>>;
+		using heads = cancel::quantity<int, cancel::unit_t<struct heads_tag>>;
+		using torsos = cancel::quantity<int, cancel::unit_t<struct torsos_tag>>;
+		using arms = cancel::quantity<int, cancel::unit_t<struct arms_tag>>;
+		using hands = cancel::quantity<int, cancel::unit_t<struct hands_tag>>;
+		using legs = cancel::quantity<int, cancel::unit_t<struct legs_tag>>;
+		using feet = cancel::quantity<int, cancel::unit_t<struct feet_tag>>;
+		using wings = cancel::quantity<int, cancel::unit_t<struct wings_tag>>;
+		using tails = cancel::quantity<int, cancel::unit_t<struct tails_tag>>;
 
 		struct body_part_counts {
 			heads heads{0};

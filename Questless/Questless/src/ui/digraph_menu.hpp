@@ -57,9 +57,9 @@ namespace ql {
 		//! @param horizontal_alignment The horizontal alignment of the menu relative to the origin point.
 		//! @param vertical_alignment The vertical alignment of the menu relative to the origin point.
 		void draw
-			( units::window_space::point origin
-			, units::window_space::h_align horizontal_alignment = units::window_space::align_left
-			, units::window_space::v_align vertical_alignment = units::window_space::align_top
+			( spaces::window::point origin
+			, spaces::window::h_align horizontal_alignment = spaces::window::align_left
+			, spaces::window::v_align vertical_alignment = spaces::window::align_top
 			);
 	private:
 		struct page {
@@ -104,7 +104,7 @@ namespace ql {
 		std::vector<std::pair<std::string, std::string>> _selections;
 
 		std::vector<page_view> _page_views;
-		units::window_space::point _content_position;
+		spaces::window::point _content_position;
 		int _min_width, _min_height;
 		int _content_width, _content_height;
 		uptr<sdl::texture> _background;

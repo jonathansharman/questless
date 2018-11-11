@@ -83,38 +83,38 @@ namespace sdl {
 		bool resizable() const;
 
 		//! The position of the window in screen space.
-		units::screen_space::point position() const { return _layout.position; }
+		spaces::screen::point position() const { return _layout.position; }
 		//! The x-coordinate of the window in screen space.
-		units::screen_space::scalar x() const { return _layout.position.x(); }
+		spaces::screen::px x() const { return spaces::screen::x(_layout.position); }
 		//! The y-coordinate of the window in screen space.
-		units::screen_space::scalar y() const { return _layout.position.y(); }
+		spaces::screen::px y() const { return spaces::screen::y(_layout.position); }
 
 		//! The size/resolution of the window in screen space.
-		units::screen_space::vector size() const { return _layout.size; }
+		spaces::screen::vector size() const { return _layout.size; }
 		//! The width of the window in screen space.
-		units::screen_space::scalar width() const { return _layout.size.x(); }
+		spaces::screen::px width() const { return spaces::screen::x(_layout.size); }
 		//! The height of the window in screen space.
-		units::screen_space::scalar height() const { return _layout.size.y(); }
+		spaces::screen::px height() const { return spaces::screen::y(_layout.size); }
 
 		//! The center point of the window, in window space.
-		units::window_space::point window_center() const;
+		spaces::window::point window_center() const;
 		//! The horizontal center of the window, in window space.
-		units::window_space::scalar window_center_x() const;
+		spaces::window::px window_center_x() const;
 		//! The vertical center of the window, in window space.
-		units::window_space::scalar window_center_y() const;
+		spaces::window::px window_center_y() const;
 
 		//! The center point of the window, in view space.
-		units::view_space::point view_center() const;
+		spaces::view::point view_center() const;
 		//! The horizontal center of the window, in view space.
-		units::view_space::scalar view_center_x() const;
+		spaces::view::length view_center_x() const;
 		//! The vertical center of the window, in view space.
-		units::view_space::scalar view_center_y() const;
+		spaces::view::length view_center_y() const;
 	private:
 		SDL_Window* _sdl_window;
 		std::string _title;
 		std::string _icon_filename;
 
-		units::screen_space::box _layout;
+		spaces::screen::box _layout;
 
 		//! The SDL window flags.
 		Uint32 flags() const { return SDL_GetWindowFlags(_sdl_window); }

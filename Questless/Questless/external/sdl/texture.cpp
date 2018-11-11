@@ -14,8 +14,12 @@
 
 #include <string>
 
-using namespace units;
-using namespace units::colors;
+using namespace vecx;
+using namespace sdl::spaces;
+using namespace sdl::spaces::colors;
+using namespace sdl::spaces::colors::literals;
+using namespace sdl::spaces::view::literals;
+using namespace sdl::spaces::window::literals;
 
 namespace {
 	//! @todo This is not completely portable. Find a fully portable way to translate an SDL surface format into a GL texture format.
@@ -45,7 +49,7 @@ namespace {
 }
 
 namespace sdl {
-	texture::texture(window_space::vector size, colors::color color) : _size{size} {
+	texture::texture(spaces::window::vector size, color color) : _size{size} {
 		if (width() != 0_px && height() != 0_px) {
 			// Generate texture.
 			glGenTextures(1, &_texture);
@@ -54,10 +58,10 @@ namespace sdl {
 			// Set texture data.
 			std::vector<GLubyte> blank_buffer(width().value * height().value * 4);
 			for (std::size_t i = 0; i < blank_buffer.size(); i += 4) {
-				blank_buffer[i] = static_cast<GLubyte>(255 * color.red().value);
-				blank_buffer[i + 1] = static_cast<GLubyte>(255 * color.green().value);
-				blank_buffer[i + 2] = static_cast<GLubyte>(255 * color.blue().value);
-				blank_buffer[i + 3] = static_cast<GLubyte>(255 * color.alpha().value);
+				blank_buffer[i] = static_cast<GLubyte>(255 * r(color).value);
+				blank_buffer[i + 1] = static_cast<GLubyte>(255 * g(color).value);
+				blank_buffer[i + 2] = static_cast<GLubyte>(255 * b(color).value);
+				blank_buffer[i + 3] = static_cast<GLubyte>(255 * a(color).value);
 			}
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width().value, height().value, 0, GL_RGBA, GL_UNSIGNED_BYTE, &blank_buffer[0]);
 			// Set minification and magnification filters.
@@ -86,7 +90,7 @@ namespace sdl {
 		}
 
 		// Store width and height;
-		_size = window_space::vector{surface->w, surface->h};
+		_size = spaces::window::vector{spaces::window::px{surface->w}, spaces::window::px{surface->h}};
 
 		// Determine surface format.
 		GLenum format = get_gl_format(surface);
@@ -117,7 +121,7 @@ namespace sdl {
 
 	texture::texture(SDL_Surface* surface) {
 		// Store width and height;
-		_size = window_space::vector{surface->w, surface->h};
+		_size = spaces::window::vector{spaces::window::px{surface->w}, spaces::window::px{surface->h}};
 
 		// Determine surface format.
 		GLenum format = get_gl_format(surface);
@@ -170,12 +174,12 @@ namespace sdl {
 	}
 
 	void texture::draw_transformed
-		( std::variant<window_space::point, view_space::point> position
-		, texture_space::vector origin
-		, color_vector color_vector
-		, view_space::vector scale
-		, world_space::radians angle
-		, std::optional<texture_space::box> const& src_rect
+		( std::variant<spaces::window::point, spaces::view::point> position
+		, spaces::texture::vector origin
+		, color color_factor
+		, view::vector scale
+		, radians angle
+		, std::optional<spaces::texture::box> const& src_rect
 		) const
 	{
 		// Bind program.
@@ -193,12 +197,12 @@ namespace sdl {
 
 		{ // Set color vector.
 			GLuint const color_vector_uniform = dflt_program().get_uniform_handle("color_vector"); //! @todo Cache this, invalidating cache after window resize.
-			glUniform4f(color_vector_uniform, color_vector.red().value, color_vector.green().value, color_vector.blue().value, color_vector.alpha().value);
+			glUniform4f(color_vector_uniform, r(color_factor).value, g(color_factor).value, b(color_factor).value, a(color_factor).value);
 		}
 
 		{ // Set model matrix.
-			int const width = src_rect ? units::width(*src_rect).value : _size.x().value;
-			int const height = src_rect ? units::height(*src_rect).value : _size.y().value;
+			int const width = src_rect ? spaces::texture::width(*src_rect).value : x(_size).value;
+			int const height = src_rect ? spaces::texture::height(*src_rect).value : y(_size).value;
 
 			glm::mat4 model_matrix;
 			// Position. Correct for odd width/height in window space by nudging position by half a pixel.
@@ -206,37 +210,37 @@ namespace sdl {
 				struct to_float_coords {
 					int const width;
 					int const height;
-					auto operator ()(view_space::point position) { return position; }
-					auto operator ()(window_space::point position) {
-						return view_space::point
-							{ view{position.x().value + ((width & 1) ? 0.5f : 0.0f)}
-							, view{position.y().value + ((height & 1) ? 0.5f : 0.0f)}
+					auto operator ()(view::point position) { return position; }
+					auto operator ()(spaces::window::point position) {
+						return view::point
+							{ x(position) + ((width & 1) ? 0.5_view_length : 0.0_view_length)
+							, y(position) + ((height & 1) ? 0.5_view_length : 0.0_view_length)
 							};
 					}
 				};
 				return std::visit(to_float_coords{width, height}, position);
 			}();
-			model_matrix = glm::translate(model_matrix, glm::vec3{view_space_position.x().value, view_space_position.y().value, 0.0f});
+			model_matrix = glm::translate(model_matrix, glm::vec3{x(view_space_position).value, y(view_space_position).value, 0.0f});
 			// Orientation
 			model_matrix = glm::rotate
 				( model_matrix
-				, static_cast<float>(-angle.count().value)
+				, static_cast<float>(-angle.value)
 				, glm::vec3{0.0f, 0.0f, 1.0f}
 				);
 			// Scale
-			model_matrix = glm::scale(model_matrix, glm::vec3{scale.x() * width, scale.y() * height, 1.0f});
+			model_matrix = glm::scale(model_matrix, glm::vec3{x(scale).value * width, y(scale).value * height, 1.0f});
 			// Origin
-			model_matrix = glm::translate(model_matrix, glm::vec3{-1.0f * origin.u().value / width, -1.0f * origin.v().value / height, 0.0f});
+			model_matrix = glm::translate(model_matrix, glm::vec3{-1.0f * u(origin).value / width, -1.0f * v(origin).value / height, 0.0f});
 
 			GLuint const model_matrix_uniform = dflt_program().get_uniform_handle("model_matrix"); //! @todo Cache this, invalidating cache after window resize.
 			glUniformMatrix4fv(model_matrix_uniform, 1, GL_FALSE, glm::value_ptr(model_matrix));
 		}
 
 		// Get texture coordinates.
-		float const u0 = src_rect ? static_cast<float>(left(*src_rect).value) / width().value : 0.0f;
-		float const u1 = src_rect ? static_cast<float>(right(*src_rect).value) / width().value : 1.0f;
-		float const v0 = src_rect ? static_cast<float>(top(*src_rect).value) / height().value : 0.0f;
-		float const v1 = src_rect ? static_cast<float>(bottom(*src_rect).value) / height().value : 1.0f;
+		float const u0 = src_rect ? static_cast<float>(spaces::texture::left(*src_rect).value) / width().value : 0.0f;
+		float const u1 = src_rect ? static_cast<float>(spaces::texture::right(*src_rect).value) / width().value : 1.0f;
+		float const v0 = src_rect ? static_cast<float>(spaces::texture::top(*src_rect).value) / height().value : 0.0f;
+		float const v1 = src_rect ? static_cast<float>(spaces::texture::bottom(*src_rect).value) / height().value : 1.0f;
 
 		// Set vertex data.
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo);

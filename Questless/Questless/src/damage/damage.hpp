@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "meta/quantity.hpp"
+#include "cancel/quantity.hpp"
 
 #include <variant>
 
@@ -12,15 +12,15 @@ namespace ql {
 	namespace dmg {
 		// Damage
 
-		using slash = meta::quantity<double, meta::unit_t<struct slash_tag>>;
-		using pierce = meta::quantity<double, meta::unit_t<struct pierce_tag>>;
-		using cleave = meta::quantity<double, meta::unit_t<struct cleave_tag>>;
-		using bludgeon = meta::quantity<double, meta::unit_t<struct bludgeon_tag>>;
-		using burn = meta::quantity<double, meta::unit_t<struct burn_tag>>;
-		using freeze = meta::quantity<double, meta::unit_t<struct freeze_tag>>;
-		using blight = meta::quantity<double, meta::unit_t<struct blight_tag>>;
-		using poison = meta::quantity<double, meta::unit_t<struct poison_tag>>;
-		using shock = meta::quantity<double, meta::unit_t<struct shock_tag>>;
+		using slash = cancel::quantity<double, cancel::unit_t<struct slash_tag>>;
+		using pierce = cancel::quantity<double, cancel::unit_t<struct pierce_tag>>;
+		using cleave = cancel::quantity<double, cancel::unit_t<struct cleave_tag>>;
+		using bludgeon = cancel::quantity<double, cancel::unit_t<struct bludgeon_tag>>;
+		using burn = cancel::quantity<double, cancel::unit_t<struct burn_tag>>;
+		using freeze = cancel::quantity<double, cancel::unit_t<struct freeze_tag>>;
+		using blight = cancel::quantity<double, cancel::unit_t<struct blight_tag>>;
+		using poison = cancel::quantity<double, cancel::unit_t<struct poison_tag>>;
+		using shock = cancel::quantity<double, cancel::unit_t<struct shock_tag>>;
 
 		using damage = std::variant
 			< slash
@@ -36,15 +36,15 @@ namespace ql {
 
 		// Damage factors
 
-		using slash_factor = meta::quantity<double, meta::unit_t<struct slash_factor_tag>>;
-		using pierce_factor = meta::quantity<double, meta::unit_t<struct pierce_factor_tag>>;
-		using cleave_factor = meta::quantity<double, meta::unit_t<struct cleave_factor_tag>>;
-		using bludgeon_factor = meta::quantity<double, meta::unit_t<struct bludgeon_factor_tag>>;
-		using burn_factor = meta::quantity<double, meta::unit_t<struct burn_factor_tag>>;
-		using freeze_factor = meta::quantity<double, meta::unit_t<struct freeze_factor_tag>>;
-		using blight_factor = meta::quantity<double, meta::unit_t<struct blight_factor_tag>>;
-		using poison_factor = meta::quantity<double, meta::unit_t<struct poison_factor_tag>>;
-		using shock_factor = meta::quantity<double, meta::unit_t<struct shock_factor_tag>>;
+		using slash_factor = cancel::quantity<double, cancel::unit_t<struct slash_factor_tag>>;
+		using pierce_factor = cancel::quantity<double, cancel::unit_t<struct pierce_factor_tag>>;
+		using cleave_factor = cancel::quantity<double, cancel::unit_t<struct cleave_factor_tag>>;
+		using bludgeon_factor = cancel::quantity<double, cancel::unit_t<struct bludgeon_factor_tag>>;
+		using burn_factor = cancel::quantity<double, cancel::unit_t<struct burn_factor_tag>>;
+		using freeze_factor = cancel::quantity<double, cancel::unit_t<struct freeze_factor_tag>>;
+		using blight_factor = cancel::quantity<double, cancel::unit_t<struct blight_factor_tag>>;
+		using poison_factor = cancel::quantity<double, cancel::unit_t<struct poison_factor_tag>>;
+		using shock_factor = cancel::quantity<double, cancel::unit_t<struct shock_factor_tag>>;
 
 		using factor = std::variant
 			< slash_factor

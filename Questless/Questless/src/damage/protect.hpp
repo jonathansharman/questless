@@ -6,19 +6,19 @@
 
 #include "utility/nonnegative.hpp"
 
-#include "meta/quantity.hpp"
+#include "cancel/quantity.hpp"
 
 #include <cereal/cereal.hpp>
 
 namespace ql {
 	namespace dmg {
-		using pad = meta::quantity<double, meta::unit_t<struct pad_tag>>;
-		using deflect = meta::quantity<double, meta::unit_t<struct deflect_tag>>;
-		using fireproof = meta::quantity<double, meta::unit_t<struct fireproof_tag>>;
-		using frostproof = meta::quantity<double, meta::unit_t<struct frostproof_tag>>;
-		using fortify = meta::quantity<double, meta::unit_t<struct fortify_tag>>;
-		using immunize = meta::quantity<double, meta::unit_t<struct immunize_tag>>;
-		using insulate = meta::quantity<double, meta::unit_t<struct _tag>>;
+		using pad = cancel::quantity<double, cancel::unit_t<struct pad_tag>>;
+		using deflect = cancel::quantity<double, cancel::unit_t<struct deflect_tag>>;
+		using fireproof = cancel::quantity<double, cancel::unit_t<struct fireproof_tag>>;
+		using frostproof = cancel::quantity<double, cancel::unit_t<struct frostproof_tag>>;
+		using fortify = cancel::quantity<double, cancel::unit_t<struct fortify_tag>>;
+		using immunize = cancel::quantity<double, cancel::unit_t<struct immunize_tag>>;
+		using insulate = cancel::quantity<double, cancel::unit_t<struct _tag>>;
 
 		//! A fixed reduction to damage, by type.
 		struct protect {

@@ -327,11 +327,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="external\meta\list.hpp" />
-    <ClInclude Include="external\meta\meta.hpp" />
-    <ClInclude Include="external\meta\algebra.hpp" />
-    <ClInclude Include="external\meta\quantity.hpp" />
-    <ClInclude Include="external\meta\unit.hpp" />
+    <ClInclude Include="external\cancel\algebra.hpp" />
+    <ClInclude Include="external\cancel\list.hpp" />
+    <ClInclude Include="external\cancel\quantity.hpp" />
+    <ClInclude Include="external\cancel\serialization.hpp" />
+    <ClInclude Include="external\cancel\unit.hpp" />
     <ClInclude Include="external\sdl\font.hpp" />
     <ClInclude Include="external\sdl\input.hpp" />
     <ClInclude Include="external\sdl\renderer.hpp" />
@@ -339,28 +339,29 @@
     <ClInclude Include="external\sdl\resource_manager.hpp" />
     <ClInclude Include="external\sdl\shader_program.hpp" />
     <ClInclude Include="external\sdl\sound.hpp" />
-    <ClInclude Include="external\sdl\spaces\color.hpp" />
     <ClInclude Include="external\sdl\spaces\colors.hpp" />
     <ClInclude Include="external\sdl\spaces\screen.hpp" />
     <ClInclude Include="external\sdl\spaces\sprite_sheet.hpp" />
     <ClInclude Include="external\sdl\spaces\texture.hpp" />
     <ClInclude Include="external\sdl\spaces\view.hpp" />
     <ClInclude Include="external\sdl\spaces\window.hpp" />
-    <ClInclude Include="external\sdl\spaces\world.hpp" />
     <ClInclude Include="external\sdl\texture.hpp" />
     <ClInclude Include="external\sdl\window.hpp" />
-    <ClInclude Include="external\units\angle.hpp" />
-    <ClInclude Include="external\units\box.hpp" />
-    <ClInclude Include="external\units\color.hpp" />
-    <ClInclude Include="external\units\colors.hpp" />
-    <ClInclude Include="external\units\constants.hpp" />
-    <ClInclude Include="external\units\frequency.hpp" />
-    <ClInclude Include="external\units\hex_space.hpp" />
-    <ClInclude Include="external\units\point.hpp" />
-    <ClInclude Include="external\units\polygon.hpp" />
-    <ClInclude Include="external\units\rate.hpp" />
-    <ClInclude Include="external\units\sphere.hpp" />
-    <ClInclude Include="external\units\vector.hpp" />
+    <ClInclude Include="external\vecx\angle.hpp" />
+    <ClInclude Include="external\vecx\box.hpp" />
+    <ClInclude Include="external\vecx\constants.hpp" />
+    <ClInclude Include="external\vecx\hex_space.hpp" />
+    <ClInclude Include="external\vecx\define_macros.hpp" />
+    <ClInclude Include="external\vecx\point.hpp" />
+    <ClInclude Include="external\vecx\polygon.hpp" />
+    <ClInclude Include="external\vecx\serialization\box.hpp" />
+    <ClInclude Include="external\vecx\serialization\point.hpp" />
+    <ClInclude Include="external\vecx\serialization\polygon.hpp" />
+    <ClInclude Include="external\vecx\serialization\sphere.hpp" />
+    <ClInclude Include="external\vecx\serialization\vector.hpp" />
+    <ClInclude Include="external\vecx\sphere.hpp" />
+    <ClInclude Include="external\vecx\undef_macros.hpp" />
+    <ClInclude Include="external\vecx\vector.hpp" />
     <ClInclude Include="src\agents\action.hpp" />
     <ClInclude Include="src\agents\agent.hpp" />
     <ClInclude Include="src\agents\basic_ai.hpp" />
@@ -515,6 +516,7 @@
     <ClInclude Include="src\world\section.hpp" />
     <ClInclude Include="src\world\tile.hpp" />
     <ClInclude Include="src\world\tile_visitor.hpp" />
+    <ClInclude Include="src\world\world.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="external\sdl\font.cpp" />

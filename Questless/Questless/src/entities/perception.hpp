@@ -6,11 +6,11 @@
 
 #include "utility/static_bounded.hpp"
 
-#include "meta/quantity.hpp"
+#include "cancel/quantity.hpp"
 
 namespace ql::perception {
 	//! The degree to which a being perceives an entity.
-	using level = meta::quantity<double, meta::unit_t<struct perception_leve_tag>>;
+	using level = cancel::quantity<double, cancel::unit_t<struct perception_leve_tag>>;
 
 	constexpr auto minimum_level = level{0.0};
 	constexpr auto maximum_level = level{100.0};

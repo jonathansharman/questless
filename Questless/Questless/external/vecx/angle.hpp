@@ -6,19 +6,19 @@
 
 #include "constants.hpp"
 
-#include "meta/quantity.hpp"
+#include "cancel/quantity.hpp"
 
-namespace units {
-	using radians = meta::quantity<double, meta::unit_t<struct radians_tag>>;
+namespace vecx {
+	using radians = cancel::quantity<double, cancel::unit_t<struct radians_tag>>;
 
-	using degrees = meta::quantity<double, meta::unit_t<struct degrees_tag>>;
+	using degrees = cancel::quantity<double, cancel::unit_t<struct degrees_tag>>;
 
-	using gradians = meta::quantity<double, meta::unit_t<struct gradians_tag>>;
+	using gradians = cancel::quantity<double, cancel::unit_t<struct gradians_tag>>;
 
 	namespace literals {
-		auto operator "" _rad(long double value) { return radians{static_cast<double>(value)}; }
-		auto operator "" _deg(long double value) { return degrees{static_cast<double>(value)}; }
-		auto operator "" _grad(long double value) { return gradians{static_cast<double>(value)}; }
+		constexpr auto operator "" _rad(long double value) { return radians{static_cast<double>(value)}; }
+		constexpr auto operator "" _deg(long double value) { return degrees{static_cast<double>(value)}; }
+		constexpr auto operator "" _grad(long double value) { return gradians{static_cast<double>(value)}; }
 	}
 
 	constexpr auto circle_rad = radians{constants::tau};
@@ -44,7 +44,7 @@ namespace units {
 
 TEST_CASE("[angle] operations") {
 	SUBCASE("conversions") {
-		using namespace units;
+		using namespace vecx;
 
 		CHECK(circle_rad * deg_per_rad == circle_deg);
 		CHECK(circle_rad * grad_per_rad == circle_grad);

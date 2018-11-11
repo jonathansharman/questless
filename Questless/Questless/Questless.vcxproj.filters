@@ -79,12 +79,6 @@
     <Filter Include="external\sdl">
       <UniqueIdentifier>{43366d19-94c6-48f6-bd1c-0f09164738cd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="external\units">
-      <UniqueIdentifier>{e28e69fb-5e3a-4825-a4da-5520c4b1eb45}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="external\meta">
-      <UniqueIdentifier>{79f9aee3-ec16-49c7-83d6-43cfc5feddf4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\quantities">
       <UniqueIdentifier>{b8546f8c-858b-43b6-8fda-84d83cc84e11}</UniqueIdentifier>
     </Filter>
@@ -93,6 +87,15 @@
     </Filter>
     <Filter Include="external\sdl\spaces">
       <UniqueIdentifier>{4ba74b55-154d-43f8-b1b1-b2c2b6456256}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\vecx">
+      <UniqueIdentifier>{f7a1a22e-69f8-4eae-9f76-48af80fc7624}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\vecx\serialization">
+      <UniqueIdentifier>{ce4fde67-c663-4a19-b8db-17db57c99f7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\cancel">
+      <UniqueIdentifier>{131fc6ea-ecf3-42d9-b809-e9efc0976d2a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -474,18 +477,6 @@
     <ClInclude Include="external\sdl\resource_manager.hpp">
       <Filter>external\sdl</Filter>
     </ClInclude>
-    <ClInclude Include="external\units\rate.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\constants.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\frequency.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\hex_space.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
     <ClInclude Include="src\magic\color.hpp">
       <Filter>src\magic</Filter>
     </ClInclude>
@@ -561,21 +552,6 @@
     <ClInclude Include="src\entities\beings\stats\part.hpp">
       <Filter>src\entities\beings\stats</Filter>
     </ClInclude>
-    <ClInclude Include="external\meta\list.hpp">
-      <Filter>external\meta</Filter>
-    </ClInclude>
-    <ClInclude Include="external\meta\meta.hpp">
-      <Filter>external\meta</Filter>
-    </ClInclude>
-    <ClInclude Include="external\meta\unit.hpp">
-      <Filter>external\meta</Filter>
-    </ClInclude>
-    <ClInclude Include="external\meta\quantity.hpp">
-      <Filter>external\meta</Filter>
-    </ClInclude>
-    <ClInclude Include="external\meta\algebra.hpp">
-      <Filter>external\meta</Filter>
-    </ClInclude>
     <ClInclude Include="src\utility\dynamic_property.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
@@ -612,36 +588,6 @@
     <ClInclude Include="src\ui\scenes\main_menu.hpp">
       <Filter>src\ui\scenes</Filter>
     </ClInclude>
-    <ClInclude Include="external\units\colors.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\vector.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\point.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\box.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\sphere.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\angle.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\polygon.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\units\color.hpp">
-      <Filter>external\units</Filter>
-    </ClInclude>
-    <ClInclude Include="external\sdl\spaces\world.hpp">
-      <Filter>external\sdl\spaces</Filter>
-    </ClInclude>
-    <ClInclude Include="external\sdl\spaces\color.hpp">
-      <Filter>external\sdl\spaces</Filter>
-    </ClInclude>
     <ClInclude Include="external\sdl\spaces\colors.hpp">
       <Filter>external\sdl\spaces</Filter>
     </ClInclude>
@@ -659,6 +605,69 @@
     </ClInclude>
     <ClInclude Include="external\sdl\spaces\screen.hpp">
       <Filter>external\sdl\spaces</Filter>
+    </ClInclude>
+    <ClInclude Include="external\vecx\angle.hpp">
+      <Filter>external\vecx</Filter>
+    </ClInclude>
+    <ClInclude Include="external\vecx\box.hpp">
+      <Filter>external\vecx</Filter>
+    </ClInclude>
+    <ClInclude Include="external\vecx\constants.hpp">
+      <Filter>external\vecx</Filter>
+    </ClInclude>
+    <ClInclude Include="external\vecx\hex_space.hpp">
+      <Filter>external\vecx</Filter>
+    </ClInclude>
+    <ClInclude Include="external\vecx\point.hpp">
+      <Filter>external\vecx</Filter>
+    </ClInclude>
+    <ClInclude Include="external\vecx\polygon.hpp">
+      <Filter>external\vecx</Filter>
+    </ClInclude>
+    <ClInclude Include="external\vecx\sphere.hpp">
+      <Filter>external\vecx</Filter>
+    </ClInclude>
+    <ClInclude Include="external\vecx\vector.hpp">
+      <Filter>external\vecx</Filter>
+    </ClInclude>
+    <ClInclude Include="external\vecx\define_macros.hpp">
+      <Filter>external\vecx</Filter>
+    </ClInclude>
+    <ClInclude Include="external\vecx\undef_macros.hpp">
+      <Filter>external\vecx</Filter>
+    </ClInclude>
+    <ClInclude Include="src\world\world.hpp">
+      <Filter>src\world</Filter>
+    </ClInclude>
+    <ClInclude Include="external\vecx\serialization\polygon.hpp">
+      <Filter>external\vecx\serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="external\vecx\serialization\sphere.hpp">
+      <Filter>external\vecx\serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="external\vecx\serialization\vector.hpp">
+      <Filter>external\vecx\serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="external\vecx\serialization\box.hpp">
+      <Filter>external\vecx\serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="external\vecx\serialization\point.hpp">
+      <Filter>external\vecx\serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="external\cancel\list.hpp">
+      <Filter>external\cancel</Filter>
+    </ClInclude>
+    <ClInclude Include="external\cancel\quantity.hpp">
+      <Filter>external\cancel</Filter>
+    </ClInclude>
+    <ClInclude Include="external\cancel\serialization.hpp">
+      <Filter>external\cancel</Filter>
+    </ClInclude>
+    <ClInclude Include="external\cancel\unit.hpp">
+      <Filter>external\cancel</Filter>
+    </ClInclude>
+    <ClInclude Include="external\cancel\algebra.hpp">
+      <Filter>external\cancel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

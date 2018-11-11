@@ -6,79 +6,94 @@
 
 #include "view.hpp" // for conversions
 
+#include <range/v3/algorithm/transform.hpp>
+
+#include "vecx/define_macros.hpp"
+
 namespace sdl::spaces::window {
-	using px = meta::quantity<int, meta::unit_t<struct px_tag>>;
+	//! Window pixel.
+	using px = cancel::quantity<int, cancel::unit_t<struct px_tag>>;
 	namespace literals {
 		constexpr px operator "" _px(unsigned long long value) { return px{static_cast<int>(value)}; }
 	}
 	using namespace literals;
 
-	constexpr auto& x() { return _elements[0]; }
-	constexpr auto const& x() const { return _elements[0]; }
+	using vector = vecx::vector<px, 2>;
+	using point = vecx::point<px, 2>;
 
-	constexpr auto& y() { return _elements[1]; }
-	constexpr auto const& y() const { return _elements[1]; }
+	DEFINE_VECTOR_INDEX_NAME(vector, 0, x);
+	DEFINE_VECTOR_INDEX_NAME(vector, 1, y);
+	DEFINE_VECTOR_INDEX_NAME(point, 0, x);
+	DEFINE_VECTOR_INDEX_NAME(point, 1, y);
 
-	struct window_space : space<struct window_space_tag, px, 2, detail::window_space_buffer> {
-		using h_align = axis<0>::align;
-		using v_align = axis<1>::align;
+	// Box
 
-		static constexpr auto align_left = h_align::near;
-		static constexpr auto align_center = h_align::mid;
-		static constexpr auto align_right = h_align::far;
+	using box = vecx::box<px, 2>;
 
-		static constexpr auto align_top = v_align::near;
-		static constexpr auto align_middle = v_align::mid;
-		static constexpr auto align_bottom = v_align::far;
-	};
+	using h_align = box::align<0>;
+	using v_align = box::align<1>;
 
-	inline px& width(window_space::box& box) { return box.size.x(); }
-	inline px width(window_space::box const& box) { return box.size.x(); }
+	constexpr auto left_align = h_align{h_align::near};
+	constexpr auto center_align = h_align{h_align::mid};
+	constexpr auto right_align = h_align{h_align::far};
 
-	inline px& height(window_space::box& box) { return box.size.y(); }
-	inline px height(window_space::box const& box) { return box.size.y(); }
+	constexpr auto top_align = v_align{v_align::near};
+	constexpr auto middle_align = v_align{v_align::mid};
+	constexpr auto bottom_align = v_align{v_align::far};
 
-	inline px& left(window_space::box& box) { return box.position.x(); }
-	inline px left(window_space::box const& box) { return box.position.x(); }
+	DEFINE_BOX_SIZE_NAME(box, 0, width);
+	DEFINE_BOX_SIZE_NAME(box, 1, height);
 
-	inline px& top(window_space::box& box) { return box.position.y(); }
-	inline px top(window_space::box const& box) { return box.position.y(); }
+	DEFINE_BOX_EXTREMES_NAMES(box, 0, left, right);
+	DEFINE_BOX_EXTREMES_NAMES(box, 1, top, bottom);
 
-	inline px right(window_space::box const& box) { return box.position.x() + box.size.x(); }
+	constexpr auto top_left(box const& box) { return box.position; }
+	constexpr auto top_right(box const& box) { return point{x(box.position) + x(box.size), y(box.position)}; }
+	constexpr auto bottom_left(box const& box) { return point{x(box.position), y(box.position) + y(box.size)}; }
+	constexpr auto bottom_right(box const& box) { return box.position + box.size; }
 
-	inline px bottom(window_space::box const& box) { return box.position.y() + box.size.y(); }
+	// Circle
 
-	inline auto top_left(window_space::box const& box) { return box.position; }
-	inline auto top_right(window_space::box const& box) { return window_space::point{box.position.x() + box.size.x(), box.position.y()}; }
-	inline auto bottom_left(window_space::box const& box) { return window_space::point{box.position.x(), box.position.y() + box.size.y()}; }
-	inline auto bottom_right(window_space::box const& box) { return box.position + box.size; }
+	using circle = vecx::sphere<px, 2>;
 
-	inline auto center(window_space::box const& box) { return box.position + box.size / 2; }
+	// Polygon
 
-	inline auto area(window_space::box const& box) { return width(box) * height(box); }
+	using polygon = vecx::polygon<px>;
 
-	//! @todo Add a uniform mechanism for converting between spaces?
+	// View Conversions
 
-	static constexpr auto px_per_view = 1_px / 1.0_view;
-	static constexpr auto view_per_px = 1.0_view / 1_px;
+	using namespace view::literals;
 
-	inline view to_view_space(px s) {
-		return s * view_per_px;
+	static constexpr auto px_per_view_length = 1_px / 1.0_view_length;
+	static constexpr auto view_length_per_px = 1.0_view_length / 1_px;
+
+	inline auto to_view_space(px s) {
+		return s * view_length_per_px;
 	}
 
-	inline view_space::point to_view_space(window_space::point p) {
-		return {to_view_space(p.x()), to_view_space(p.y())};
+	inline auto to_view_space(point p) {
+		return view::point{to_view_space(x(p)), to_view_space(y(p))};
 	}
 
-	inline view_space::vector to_view_space(window_space::vector v) {
-		return {v.x() * view_per_px, v.y() * view_per_px};
+	inline auto to_view_space(vector v) {
+		return view::vector{to_view_space(x(v)), to_view_space(y(v))};
 	}
 
-	inline view_space::box to_view_space(window_space::box b) {
-		return {to_view_space(b.position), to_view_space(b.size)};
+	inline auto to_view_space(box b) {
+		return view::box{to_view_space(b.position), to_view_space(b.size)};
 	}
 
-	inline view_space::sphere to_view_space(window_space::sphere s) {
-		return {to_view_space(s.center), to_view_space(s.radius)};
+	inline auto to_view_space(circle c) {
+		return view::circle{to_view_space(c.center), to_view_space(c.radius)};
+	}
+
+	inline auto to_view_space(polygon polygon) {
+		view::polygon result;
+		for (auto const& p : polygon.vertices) {
+			result.vertices.push_back(to_view_space(p));
+		}
+		return result;
 	}
 }
+
+#include "vecx/undef_macros.hpp"

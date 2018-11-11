@@ -110,7 +110,7 @@ namespace ql::stats {
 		span mutable _max_range;
 
 		constexpr span get_max_range() const {
-			return meta::quantity_cast<span>(acuity.value() / acuity_loss_per_span);
+			return cancel::quantity_cast<span>(acuity.value() / acuity_loss_per_span);
 		}
 	};
 }

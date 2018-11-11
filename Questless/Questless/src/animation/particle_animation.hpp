@@ -16,9 +16,9 @@ namespace ql {
 	public:
 		virtual ~particle_animation() = default;
 
-		void draw(units::window_space::point position) const final;
+		void draw(spaces::window::point position) const final;
 
-		void draw(units::world_space::point position, camera const& camera, units::colors::color_vector color_vector = units::colors::white_vector()) const final;
+		void draw(units::world_space::point position, camera const& camera, spaces::colors::color_vector color_vector = spaces::colors::white_vector()) const final;
 	protected:
 		//! Adds @p particle to the front of the list of particles.
 		void push_front(uptr<particle> particle) {

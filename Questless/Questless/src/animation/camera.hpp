@@ -30,7 +30,7 @@ namespace ql {
 		}
 	public:
 		//! A color vector to apply to anything drawn using this camera.
-		units::colors::color_vector color_vector;
+		spaces::colors::color_vector color_vector;
 
 		units::world_space::point position;
 
@@ -41,7 +41,7 @@ namespace ql {
 		//! Constructs a camera with the specified starting position.
 		//! @param position The starting position of the camera.
 		camera(units::world_space::point position)
-			: color_vector{units::colors::white_vector()}
+			: color_vector{spaces::colors::white_vector()}
 			, position{position}
 		{}
 
@@ -71,8 +71,8 @@ namespace ql {
 			( sdl::texture const& texture
 			, units::world_space::point position
 			, units::texture_space::vector origin = units::texture_space::vector::zero()
-			, units::colors::color_vector color_vector = units::colors::white_vector()
-			, units::view_space::vector scale = units::view_space::vector{1.0f, 1.0f}
+			, spaces::colors::color_vector color_vector = spaces::colors::white_vector()
+			, spaces::view::vector scale = spaces::view::vector{1.0f, 1.0f}
 			, units::world_space::radians angle = units::world_space::radians{0.0}
 			, std::optional<units::texture_space::box> const& src_rect = std::nullopt
 			) const;
@@ -80,12 +80,12 @@ namespace ql {
 		//! Draws lines relative to the camera connecting the series of points contained in the vector.
 		//! @param points A vector of game points.
 		//! @param color The color of the lines.
-		void draw_lines(std::vector<units::world_space::point> points, units::colors::color color) const;
+		void draw_lines(std::vector<units::world_space::point> points, spaces::colors::color color) const;
 	private:
 		units::world_space::point _point_hovered;
 		region_tile::point _tile_hovered;
 
 		//! The given game point transformed to window space, accounting for the camera.
-		units::window_space::point to_window_point(units::world_space::point point) const;
+		spaces::window::point to_window_point(units::world_space::point point) const;
 	};
 }

@@ -12,7 +12,7 @@ namespace ql::magic {
 	class shock;
 	class teleport;
 
-	using spell_subtype_list = meta::list_t
+	using spell_subtype_list = cancel::list_t
 		< eagle_eye
 		, heal
 		, shock

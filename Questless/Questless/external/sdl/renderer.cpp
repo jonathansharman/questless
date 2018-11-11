@@ -6,8 +6,6 @@
 
 #include "resources.hpp"
 
-#include "units/math.hpp"
-
 #include <gl/GL.h>
 #include <gl/GLU.h>
 #include <glm.hpp>
@@ -16,57 +14,60 @@
 
 #include <numeric>
 
-using std::vector;
 using std::runtime_error;
 
-using namespace units;
-
-//! @todo Can use ranges algorithms for the various vector<window_space::point> -> vector<ViewSpace::point> conversions, when available.
+using namespace vecx;
 
 namespace sdl {
+	using namespace spaces;
+	using namespace spaces::colors::literals;
+	using namespace spaces::view::literals;
+	
 	namespace {
-		bool has_positive_winding_order(view_space::polygon const& polygon) {
+		bool has_positive_winding_order(view::polygon const& polygon) {
 			// Winding order is positive iff "winding" is positive.
-			meta::product_t<view, view> winding{0.0f};
-			for (std::size_t i = 0; i < polygon.size(); ++i) {
-				auto const p1 = polygon[i];
-				auto const p2 = i == polygon.size() - 1 ? polygon.front() : polygon[i + 1];
+			auto winding = 0.0_view_length * 0.0_view_length;
+			for (std::size_t i = 0; i < polygon.vertices.size(); ++i) {
+				auto const p1 = polygon.vertices[i];
+				auto const p2 = i == polygon.vertices.size() - 1 ? polygon.vertices.front() : polygon.vertices[i + 1];
 
-				winding += (p1.x() - p2.x()) * (p2.y() + p1.y());
+				winding += (x(p1) - x(p2)) * (y(p2) + y(p1));
 			}
-			return winding >= meta::product_t<view, view>{0.0f};
+			return winding >= 0.0_view_length * 0.0_view_length;
 		}
 
-		bool is_convex(vector<view_space::point> const& vertices) {
-			auto last_cross_product = math::square(0.0_view);
+		bool is_convex(std::vector<view::point> const& vertices) {
+			auto const v_squared = 0.0_view_length * 0.0_view_length;
+			auto const v_fourth = v_squared * v_squared;
+			auto last_cross_product = v_squared;
 			for (std::size_t i = 0; i < vertices.size(); ++i) {
 				auto const p0 = i == 0 ? vertices.back() : vertices[i - 1];
 				auto const p1 = vertices[i];
 				auto const p2 = i == vertices.size() - 1 ? vertices.front() : vertices[i + 1];
 
-				auto cross_product = (p1.x() - p0.x()) * p2.y() - 2 * p1.y() - p0.y() * p2.x() - p1.x();
-				if (last_cross_product == math::square(0.0_view)) {
+				auto cross_product = (x(p1) - x(p0)) * y(p2) - 2 * y(p1) - y(p0) * x(p2) - x(p1);
+				if (last_cross_product == 0.0_view_length * 0.0_view_length){
 					last_cross_product = cross_product;
-				} else if (last_cross_product * cross_product < math::pow<4>(0.0_view)) {
+				} else if (last_cross_product * cross_product < v_fourth) {
 					return false;
 				}
 			}
 			return true;
 		}
 
-		vector<vector<view_space::point>> convex_components(vector<view_space::point> polygon) {
+		std::vector<std::vector<view::point>> convex_components(std::vector<view::point> polygon) {
 			//! @todo Implement.
 			return {polygon};
 		}
 	}
 
-	renderer::renderer(window& the_window, int width, int height) : _w{width}, _h{height}, _target{nullptr} {
+	renderer::renderer(sdl::window& the_window, spaces::window::px width, spaces::window::px height) : _w{width}, _h{height}, _target{nullptr} {
 		_renderer = SDL_CreateRenderer(the_window.sdl_ptr(), -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_TARGETTEXTURE);
 		if (_renderer == nullptr) {
 			throw runtime_error{"Failed to create renderer."};
 		}
 
-		if (SDL_RenderSetLogicalSize(_renderer, width, height)) {
+		if (SDL_RenderSetLogicalSize(_renderer, width.value, height.value)) {
 			throw runtime_error{"Failed to set renderer's logical size."};
 		}
 
@@ -110,7 +111,7 @@ namespace sdl {
 		SDL_RenderClear(_renderer);
 	}
 
-	void renderer::draw_lines(vector<view_space::point> const& vertices, colors::color color) {
+	void renderer::draw_lines(std::vector<view::point> const& vertices, colors::color color) {
 		// Bind program.
 		solid_program().use();
 
@@ -126,11 +127,11 @@ namespace sdl {
 
 		// Set vertex data.
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-		vector<GLfloat> vertex_data;
+		std::vector<GLfloat> vertex_data;
 		vertex_data.reserve(2 * vertices.size());
 		for (auto const& vertex : vertices) {
-			vertex_data.push_back(vertex.x().value);
-			vertex_data.push_back(vertex.y().value);
+			vertex_data.push_back(x(vertex).value);
+			vertex_data.push_back(y(vertex).value);
 		}
 		glBufferData(GL_ARRAY_BUFFER, 2 * vertices.size() * sizeof(GLfloat), vertex_data.data(), GL_DYNAMIC_DRAW);
 		{
@@ -141,7 +142,7 @@ namespace sdl {
 		}
 
 		{ // Set IBO.
-			vector<GLuint> index_data(vertices.size());
+			std::vector<GLuint> index_data(vertices.size());
 			std::iota(index_data.begin(), index_data.end(), 0);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_data.size() * sizeof(GLuint), index_data.data(), GL_DYNAMIC_DRAW);
@@ -149,7 +150,7 @@ namespace sdl {
 
 		// Set color uniform.
 		GLuint color_uniform = solid_program().get_uniform_handle("color"); //! @todo Cache this, invalidating cache after window resize.
-		glUniform4f(color_uniform, color.red().value, color.green().value, color.blue().value, color.alpha().value);
+		glUniform4f(color_uniform, r(color).value, g(color).value, b(color).value, a(color).value);
 
 		// Render.
 		glDrawElements(GL_LINE_STRIP, vertices.size(), GL_UNSIGNED_INT, nullptr);
@@ -158,17 +159,17 @@ namespace sdl {
 		glDisableVertexAttribArray(position_attribute);
 	}
 	
-	void renderer::draw_lines(vector<window_space::point> const& vertices, colors::color color) {
-		vector<view_space::point> view_space_vertices;
+	void renderer::draw_lines(std::vector<spaces::window::point> const& vertices, colors::color color) {
+		std::vector<view::point> view_space_vertices;
 		for (auto const& vertex : vertices) {
 			view_space_vertices.push_back(to_view_space(vertex));
 		}
 		draw_lines(view_space_vertices, color);
 	}
 
-	void renderer::draw_polygon(view_space::polygon const& polygon, colors::color color) {
+	void renderer::draw_polygon(view::polygon const& polygon, colors::color color) {
 		// Don't bother rendering transparent polygons.
-		if (color.alpha() == color_component{0.0f}) { return; }
+		if (a(color) == 0.0_c) { return; }
 
 		//! @todo Reenable after convex_components() is implemented.
 		// Break solid non-convex polygons into convex subpolygons.
@@ -194,13 +195,13 @@ namespace sdl {
 
 		{ // Set vertex data.
 			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-			vector<GLfloat> vertex_data;
-			vertex_data.reserve(2 * polygon.size());
-			for (auto const& vertex : polygon) {
-				vertex_data.push_back(vertex.x().value);
-				vertex_data.push_back(vertex.y().value);
+			std::vector<GLfloat> vertex_data;
+			vertex_data.reserve(2 * polygon.vertices.size());
+			for (auto const& vertex : polygon.vertices) {
+				vertex_data.push_back(x(vertex).value);
+				vertex_data.push_back(y(vertex).value);
 			}
-			glBufferData(GL_ARRAY_BUFFER, 2 * polygon.size() * sizeof(GLfloat), vertex_data.data(), GL_DYNAMIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, 2 * polygon.vertices.size() * sizeof(GLfloat), vertex_data.data(), GL_DYNAMIC_DRAW);
 			{
 				GLint const component_count = 2;
 				GLsizei const stride = 2 * sizeof(GLfloat);
@@ -210,7 +211,7 @@ namespace sdl {
 		}
 
 		{ // Set IBO.
-			vector<GLuint> index_data(polygon.size());
+			std::vector<GLuint> index_data(polygon.vertices.size());
 			std::iota(index_data.begin(), index_data.end(), 0);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_data.size() * sizeof(GLuint), index_data.data(), GL_DYNAMIC_DRAW);
@@ -218,57 +219,53 @@ namespace sdl {
 
 		// Set color uniform.
 		GLuint const color_uniform = solid_program().get_uniform_handle("color"); //! @todo Cache this, invalidating cache after window resize.
-		glUniform4f(color_uniform, color.red().value, color.green().value, color.blue().value, color.alpha().value);
+		glUniform4f(color_uniform, r(color).value, g(color).value, b(color).value, a(color).value);
 
 		// Render.
-		glDrawElements(GL_TRIANGLE_FAN, polygon.size(), GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLE_FAN, polygon.vertices.size(), GL_UNSIGNED_INT, nullptr);
 
 		// Disable vertex attributes.
 		glDisableVertexAttribArray(position_attribute);
 	}
 
-	void renderer::draw_polygon(window_space::polygon const& polygon, colors::color color) {
-		view_space::polygon view_space_polygon;
-		for (auto const& vertex : polygon) {
-			view_space_polygon.push_back(to_view_space(vertex));
-		}
-		draw_polygon(view_space_polygon, color);
+	void renderer::draw_polygon(spaces::window::polygon const& polygon, colors::color color) {
+		draw_polygon(to_view_space(polygon), color);
 	}
 	
 	void renderer::draw_polygon
-		( view_space::polygon const& polygon
-		, view_space::scalar border_width
+		( view::polygon const& polygon
+		, view::length border_width
 		, colors::color border_color
 		, colors::color fill_color
 		)
 	{
 		// A polygon must have at least three vertices.
-		if (polygon.size() < 3) { return; }
+		if (polygon.vertices.size() < 3) { return; }
 
 		// Construct fill vertices.
-		view_space::polygon fill_vertices;
+		view::polygon fill_polygon;
 		bool const positive_winding_order = has_positive_winding_order(polygon);
-		for (std::size_t i = 0; i < polygon.size(); ++i) {
-			auto const p_minus_1 = i == 0 ? polygon.back() : polygon[i - 1];
-			auto const p_plus_1 = i == polygon.size() - 1 ? polygon.front() : polygon[i + 1];
+		for (std::size_t i = 0; i < polygon.vertices.size(); ++i) {
+			auto const p_minus_1 = i == 0 ? polygon.vertices.back() : polygon.vertices[i - 1];
+			auto const p_plus_1 = i == polygon.vertices.size() - 1 ? polygon.vertices.front() : polygon.vertices[i + 1];
 
 			// Edge direction depends on winding order.
 			auto const p0 = positive_winding_order ? p_minus_1 : p_plus_1;
-			auto const p1 = polygon[i];
+			auto const p1 = polygon.vertices[i];
 			auto const p2 = positive_winding_order ? p_plus_1 : p_minus_1;
 
 			// Parametric 2D line type.
-			struct line { view_space::point p; view_space::vector m; };
+			struct line { view::point p; view::vector m; };
 
 			line l1{p0, p1 - p0};
 			line l2{p1, p2 - p1};
 
 			// If the segments are precisely parallel, ignore this vertex.
-			if (l1.m.y() * l2.m.x() == l2.m.y() * l1.m.x()) { continue; }
+			if (y(l1.m) * x(l2.m) == y(l2.m) * x(l1.m)) { continue; }
 
 			auto offset_start_point = [border_width](line& l) {
 				// Find perpendicular slopes.
-				view_space::vector m_prime{-l.m.y(), l.m.x()};
+				view::vector m_prime{-y(l.m), x(l.m)};
 				// Normalize to border width.
 				m_prime *= border_width / m_prime.length();
 				// Offset first segment's starting point.
@@ -278,91 +275,87 @@ namespace sdl {
 			offset_start_point(l2);
 
 			// Find the intersection and add it to fill vertices. (Guaranteed to be unique since we ignore parallel segments.)
-			auto l2_t_intersect = ((l2.p.y() - l1.p.y()) * l1.m.x() - (l2.p.x() - l1.p.x()) * l1.m.y()) / (l2.m.x() * l1.m.y() - l2.m.y() * l1.m.x());
-			fill_vertices.push_back(l2.p + l2.m * l2_t_intersect);
+			auto l2_t_intersect = ((y(l2.p) - y(l1.p)) * x(l1.m) - (x(l2.p) - x(l1.p)) * y(l1.m)) / (x(l2.m) * y(l1.m) - y(l2.m) * x(l1.m));
+			fill_polygon.vertices.push_back(l2.p + l2.m * l2_t_intersect);
 		}
 
 		// Draw fill color.
-		draw_polygon(fill_vertices, fill_color);
+		draw_polygon(fill_polygon, fill_color);
 
 		// Draw border color.
-		vector<view_space::point> border_vertices;
-		for (std::size_t i = 0; i < polygon.size(); ++i) {
-			border_vertices.push_back(polygon[i]);
-			border_vertices.push_back(fill_vertices[i]);
+		std::vector<view::point> border_vertices;
+		for (std::size_t i = 0; i < polygon.vertices.size(); ++i) {
+			border_vertices.push_back(polygon.vertices[i]);
+			border_vertices.push_back(fill_polygon.vertices[i]);
 		}
 		// Close the loop by repeating the first two vertices.
-		border_vertices.push_back(polygon.front());
-		border_vertices.push_back(fill_vertices.front());
+		border_vertices.push_back(polygon.vertices.front());
+		border_vertices.push_back(fill_polygon.vertices.front());
 		draw_triangle_strip(border_vertices, border_color);
 	}
 	
 	void renderer::draw_polygon
-		( window_space::polygon const& polygon
-		, window_space::scalar border_width
+		( spaces::window::polygon const& polygon
+		, spaces::window::px border_width
 		, colors::color border_color
 		, colors::color fill_color
 		)
 	{
-		view_space::polygon view_space_polygon;
-		for (auto const& vertex : polygon) {
-			view_space_polygon.push_back(to_view_space(vertex));
-		}
-		draw_polygon(view_space_polygon, to_view_space(border_width), border_color, fill_color);
+		draw_polygon(to_view_space(polygon), to_view_space(border_width), border_color, fill_color);
 	}
 
-	void renderer::draw_box(view_space::box const& box, colors::color color)
+	void renderer::draw_box(view::box const& box, colors::color color)
 	{
-		draw_polygon(view_space::polygon{top_left(box), top_right(box), bottom_right(box), bottom_left(box)}, color);
+		draw_polygon(view::polygon{top_left(box), top_right(box), bottom_right(box), bottom_left(box)}, color);
 	}
 
-	void renderer::draw_box(window_space::box const& box, colors::color color) {
+	void renderer::draw_box(spaces::window::box const& box, colors::color color) {
 		draw_box(to_view_space(box), color);
 	}
 
 	void renderer::draw_box
-		( window_space::box const& box
-		, window_space::scalar border_width
+		( spaces::window::box const& box
+		, spaces::window::px border_width
 		, colors::color border_color
 		, colors::color fill_color
-		) {
-		if (units::width(box) > 0_px && units::height(box) > 0_px) {
-			draw_box(to_view_space(box), to_view_space(border_width), border_color, fill_color);
-		}
+		)
+	{
+		draw_box(to_view_space(box), to_view_space(border_width), border_color, fill_color);
 	}
 	
 	void renderer::draw_box
-		( view_space::box const& box
-		, view_space::scalar border_width
+		( view::box const& box
+		, view::length border_width
 		, colors::color border_color
 		, colors::color fill_color
-		) {
-		if (units::width(box) > 0.0_view && units::height(box) > 0.0_view) {
-			draw_polygon(view_space::polygon{top_left(box), top_right(box), bottom_right(box), bottom_left(box)}, border_width, border_color, fill_color);
+		)
+	{
+		if (spaces::view::width(box) > 0.0_view_length && spaces::view::height(box) > 0.0_view_length) {
+			draw_polygon(view::polygon{top_left(box), top_right(box), bottom_right(box), bottom_left(box)}, border_width, border_color, fill_color);
 		}
 	}
 
 	void renderer::draw_disc
-		( view_space::sphere const& boundary
-		, view_space::scalar border_width
+		( view::circle const& boundary
+		, view::length border_width
 		, colors::color border_color
 		, colors::color fill_color
 		, float segments_per_radius
 		)
 	{
-		view_space::polygon polygon;
+		view::polygon polygon;
 		int const segments_count = lround(boundary.radius.value * segments_per_radius);
 		for (int i = 0; i < segments_count; ++i) {
-			view_space::radians const angle{static_cast<float>(constants::tau * i / segments_count)};
-			view_space::vector const offset{angle, boundary.radius};
-			polygon.push_back(boundary.center + offset);
+			radians const angle{static_cast<float>(constants::tau * i / segments_count)};
+			auto const offset = vecx::make_polar_vector(boundary.radius, angle);
+			polygon.vertices.push_back(boundary.center + offset);
 		}
 		draw_polygon(polygon, border_width, border_color, fill_color);
 	}
 
 	void renderer::draw_disc
-		( window_space::sphere const& boundary
-		, window_space::scalar border_width
+		( spaces::window::circle const& boundary
+		, spaces::window::px border_width
 		, colors::color border_color
 		, colors::color fill_color
 		, float segments_per_radius
@@ -374,10 +367,10 @@ namespace sdl {
 	void renderer::set_draw_color(colors::color color) {
 		auto error = SDL_SetRenderDrawColor
 			( _renderer
-			, static_cast<uint8_t>(255 * color.red().value)
-			, static_cast<uint8_t>(255 * color.green().value)
-			, static_cast<uint8_t>(255 * color.blue().value)
-			, static_cast<uint8_t>(255 * color.alpha().value)
+			, static_cast<uint8_t>(255 * r(color).value)
+			, static_cast<uint8_t>(255 * g(color).value)
+			, static_cast<uint8_t>(255 * b(color).value)
+			, static_cast<uint8_t>(255 * a(color).value)
 			);
 		if (error) {
 			std::string message = std::string{"Failed to set renderer draw color. SDL error: "} + SDL_GetError();
@@ -385,7 +378,7 @@ namespace sdl {
 		}
 	}
 
-	void renderer::draw_triangle_strip(vector<view_space::point> const& vertices, colors::color color) {
+	void renderer::draw_triangle_strip(std::vector<view::point> const& vertices, colors::color color) {
 		// Bind program.
 		solid_program().use();
 
@@ -401,11 +394,11 @@ namespace sdl {
 
 		{ // Set vertex data.
 			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-			vector<GLfloat> vertex_data;
+			std::vector<GLfloat> vertex_data;
 			vertex_data.reserve(2 * vertices.size());
 			for (auto const& vertex : vertices) {
-				vertex_data.push_back(vertex.x().value);
-				vertex_data.push_back(vertex.y().value);
+				vertex_data.push_back(x(vertex).value);
+				vertex_data.push_back(y(vertex).value);
 			}
 			glBufferData(GL_ARRAY_BUFFER, 2 * vertices.size() * sizeof(GLfloat), vertex_data.data(), GL_DYNAMIC_DRAW);
 			{
@@ -417,7 +410,7 @@ namespace sdl {
 		}
 
 		{ // Set IBO.
-			vector<GLuint> index_data(vertices.size());
+			std::vector<GLuint> index_data(vertices.size());
 			std::iota(index_data.begin(), index_data.end(), 0);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_data.size() * sizeof(GLuint), index_data.data(), GL_DYNAMIC_DRAW);
@@ -425,7 +418,7 @@ namespace sdl {
 
 		// Set color uniform.
 		GLuint const color_uniform = solid_program().get_uniform_handle("color"); //! @todo Cache this, invalidating cache after window resize.
-		glUniform4f(color_uniform, color.red().value, color.green().value, color.blue().value, color.alpha().value);
+		glUniform4f(color_uniform, r(color).value, g(color).value, b(color).value, a(color).value);
 
 		// Render.
 		glDrawElements(GL_TRIANGLE_STRIP, vertices.size(), GL_UNSIGNED_INT, nullptr);

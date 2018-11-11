@@ -7,17 +7,18 @@
 
 #pragma once
 
-#include "world_space.hpp"
-#include "math.hpp"
+#include "world.hpp"
 
-#include "meta/quantity.hpp"
+#include "cancel/quantity.hpp"
+
+#include <gcem.hpp>
 
 #include <algorithm>
 #include <cassert> //! @todo Remove when contracts available.
 #include <exception>
 #include <vector>
 
-namespace units {
+namespace vecx {
 	//! A hexagonal space.
 	//! @tparam LengthQuantity A quantity type representing a distance in this hex space.
 	template <typename Tag, typename DistanceQuantity>
@@ -258,8 +259,8 @@ namespace units {
 			, start_angle{start_angle}
 		{}
 
-		constexpr static auto pointy() { return hex_orientation{math::sqrt(3.0), math::sqrt(3.0) / 2.0, 0.0, 3.0 / 2.0, 0.5}; }
-		constexpr static auto flat() { return hex_orientation{3.0 / 2.0, 0.0, math::sqrt(3.0) / 2.0, math::sqrt(3.0), 0.0}; }
+		constexpr static auto pointy() { return hex_orientation{gcem::sqrt(3.0), gcem::sqrt(3.0) / 2.0, 0.0, 3.0 / 2.0, 0.5}; }
+		constexpr static auto flat() { return hex_orientation{3.0 / 2.0, 0.0, gcem::sqrt(3.0) / 2.0, gcem::sqrt(3.0), 0.0}; }
 	};
 
 	struct hex_layout {

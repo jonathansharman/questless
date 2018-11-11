@@ -7,14 +7,14 @@
 #include "angle.hpp"
 #include "constants.hpp"
 
-#include "meta/quantity.hpp"
+#include "cancel/quantity.hpp"
 
 #include <gcem.hpp>
 
 #include <algorithm>
 #include <array>
 
-namespace units {
+namespace vecx {
 	//! Represents an n-dimensional vector of quantities.
 	//! @tparam Quantity The quantity type of scalars in this vector type.
 	//! @tparam N The dimension of this vector type.
@@ -28,16 +28,21 @@ namespace units {
 
 		std::array<scalar_t, n> components{};
 
-		template <typename... Args>
-		constexpr vector(Args&&... args) : components{{std::forward<Args>(args)...}} {}
+		constexpr vector() = default;
+		constexpr vector(vector const&) = default;
+		constexpr vector(vector&&) = default;
 
-		explicit constexpr vector(std::array<scalar_t, n> components) : components{std::move(components)} {}
+		template<typename... Args, typename = std::enable_if_t<(std::is_convertible_v<Args, scalar_t> && ...)>>
+		constexpr vector(Args&&... args) : components{std::forward<Args>(args)...} {}
+
+		constexpr vector& operator =(vector const&) = default;
+		constexpr vector& operator =(vector&&) = default;
 
 		//! The zero vector for this vector type.
 		static constexpr auto zero() { return vector<scalar_t, n>{}; }
 
 		template <typename ThatQuantity>
-		constexpr bool operator ==(vector<ThatQuantity, n> const& that) {
+		constexpr bool operator ==(vector<ThatQuantity, n> const& that) const {
 			for (std::size_t i = 0; i < n; ++i) {
 				if (components[i] != that[i]) return false;
 			}
@@ -45,30 +50,18 @@ namespace units {
 		}
 
 		template <typename ThatQuantity>
-		constexpr bool operator !=(vector<ThatQuantity, n> const& that) {
+		constexpr bool operator !=(vector<ThatQuantity, n> const& that) const {
 			for (std::size_t i = 0; i < n; ++i) {
 				if (components[i] != that[i]) return true;
 			}
 			return false;
 		}
 
-		template <typename Archive>
-		void save(Archive& archive) const { archive(components); }
-
-		template <typename Archive>
-		void load(Archive& archive) { archive(components); }
-
 		//! Gets the component at index @p index.
 		constexpr auto& operator [](std::size_t index) { return components[index]; }
 
 		//! Gets the component at index @p index.
 		constexpr auto operator [](std::size_t index) const { return components[index]; }
-
-		auto begin() { return components.begin(); }
-		auto end() { return components.end(); }
-
-		auto begin() const { return components.begin(); }
-		auto end() const { return components.end(); }
 
 		//! Creates a new vector by applying @p f to each component of this vector, in order.
 		template <typename MapOp>
@@ -91,13 +84,15 @@ namespace units {
 		//! Produces a left reduction/fold over this vector.
 		//! @param f The operation to apply to the accumulator and the next vector component, to produce the next accumulator value.
 		//! @param accumulator The starting value of the reduction.
-		template <typename T, typename ReduceOp>
-		constexpr auto reduce(T accumulator, ReduceOp const& f) const {
-			//! @todo Replace this function with std::reduce/std::accumulate once those are made constexpr.
-			for (auto const& component : components) {
-				accumulator = f(std::move(accumulator), component);
+		//! @tparam Index The index of the first element of the reduction.
+		template <std::size_t Index = 0, typename T, typename ReduceOp>
+		constexpr auto reduce(T const& accumulator, ReduceOp const& f) const {
+			if constexpr (Index == n) {
+				(void)f; // Unused in base case.
+				return accumulator;
+			} else {
+				return reduce<Index + 1>(f(accumulator, components[Index]), f);
 			}
-			return accumulator;
 		}
 
 		template <typename Quantity>
@@ -137,8 +132,8 @@ namespace units {
 			auto const cos_angle = gcem::cos(angle.value);
 			auto const sin_angle = gcem::sin(angle.value);
 			auto const old_axis1 = components[axis1];
-			components[axis1] = static_cast<scalar_t>(old_axis1 * cos_angle - components[axis2] * sin_angle);
-			components[axis2] = static_cast<scalar_t>(old_axis1 * sin_angle + components[axis2] * cos_angle);
+			components[axis1] = cancel::quantity_cast<scalar_t>(old_axis1 * cos_angle - components[axis2] * sin_angle);
+			components[axis2] = cancel::quantity_cast<scalar_t>(old_axis1 * sin_angle + components[axis2] * cos_angle);
 		}
 
 		//! Rotates this vector by each of @p angles, in successive planes.
@@ -193,17 +188,14 @@ namespace units {
 	};
 
 	template <typename T, typename... U>
-	vector(T, U...) -> vector<T, 1 + sizeof...(U)>;
-
-	template <typename Quantity, std::size_t N>
-	vector(std::array<Quantity, N>) -> vector<Quantity, N>;
+	vector(T, U...) -> vector<std::remove_cv_t<std::remove_reference_t<T>>, 1 + sizeof...(U)>;
 
 	//! Constructs a vector from a magnitude and direction.
 	//! @param magnitude The magnitude or length of the vector. Must be a quantity.
 	//! @param angles The counterclockwise rotations to apply to the vector, in radians, following the order of the axes.
-	template <typename Quantity, std::size_t N, typename... Angles>
-	constexpr auto make_polar_vector(Quantity const& magnitude, std::array<radians, N> const& angles) {
-		return vector<Quantity, N>{magnitude}.rotated(angles);
+	template <typename Quantity, typename... Angles>
+	constexpr auto make_polar_vector(Quantity const& magnitude, Angles... angles) {
+		return vector<Quantity, 1 + sizeof...(Angles)>{magnitude}.rotated(std::array{angles...});
 	}
 
 	//! The vector sum of @p v1 and @p v2.
@@ -262,16 +254,16 @@ namespace units {
 #undef far // Defined in minwindef.h (!)
 
 TEST_CASE("[vector] operations") {
-	using namespace meta;
-	using namespace units;
-	using namespace units::literals;
+	using namespace cancel;
+	using namespace vecx;
+	using namespace vecx::literals;
 
 	using u_t = unit_t<struct u_t_tag>;
 	using q_t = quantity<int, u_t>;
 	using q2_t = product_t<q_t, q_t>;
 	using v_t = vector<q_t, 2>;
 
-	v_t v1{q_t{3}, q_t{4}};
+	auto v1 = vector{q_t{3}, q_t{4}};
 
 	SUBCASE("length") {
 		CHECK(v1.length().value == 5);
@@ -281,15 +273,15 @@ TEST_CASE("[vector] operations") {
 		CHECK(v1.angle().value == doctest::Approx(0.927295218));
 	}
 	SUBCASE("binary operations") {
-		constexpr v_t v2{q_t{1}, q_t{6}};
+		constexpr auto v2 = vector{q_t{1}, q_t{6}};
 		SUBCASE("addition") {
-			constexpr v_t expected{q_t{4}, q_t{10}};
+			constexpr auto expected = vector{q_t{4}, q_t{10}};
 			CHECK(v1 + v2 == expected);
 			v1 += v2;
 			CHECK(v1 == expected);
 		}
 		SUBCASE("subtraction") {
-			constexpr v_t expected{q_t{2}, q_t{-2}};
+			constexpr auto expected = vector{q_t{2}, q_t{-2}};
 			CHECK(v1 - v2 == expected);
 			v1 -= v2;
 			CHECK(v1 == expected);
@@ -298,7 +290,7 @@ TEST_CASE("[vector] operations") {
 	SUBCASE("scalar operations") {
 		q_t k = q_t{2};
 		SUBCASE("scalar multiplication") {
-			v_t expected{q2_t{6}, q2_t{8}};
+			constexpr auto expected = vector{q2_t{6}, q2_t{8}};
 			CHECK(k * v1 == expected);
 			CHECK(v1 * k == expected);
 		}
@@ -308,11 +300,11 @@ TEST_CASE("[vector] operations") {
 		}
 	}
 	SUBCASE("rotations") {
-		v_t v{q_t{3}, q_t{4}};
-		auto theta = 90.0_deg;
-		v_t expected{q_t{-4}, q_t{3}};
+		auto v = vector{q_t{3}, q_t{4}};
+		constexpr auto theta = 90.0_deg * rad_per_deg;
+		constexpr auto expected = vector{q_t{-4}, q_t{3}};
 
-		auto v_rotated = v.rotated(theta * rad_per_deg);
+		auto v_rotated = v.rotated(theta);
 		CHECK(v_rotated == expected);
 
 		v.rotate(theta);

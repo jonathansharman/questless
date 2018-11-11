@@ -4,56 +4,58 @@
 
 #pragma once
 
-#include "units/vector.hpp"
+#include "vecx/box.hpp"
+#include "vecx/point.hpp"
+#include "vecx/sphere.hpp"
+#include "vecx/vector.hpp"
 
-namespace sdl::spaces::units {
-	using tx = meta::quantity<int, meta::unit_t<struct tx_tag>>;
+#include "vecx/define_macros.hpp"
+
+namespace sdl::spaces::texture {
+	//! Texel.
+	using tx = cancel::quantity<int, cancel::unit_t<struct tx_tag>>;
 	namespace literals {
 		constexpr tx operator "" _tx(unsigned long long value) { return tx{static_cast<int>(value)}; }
 	}
 	using namespace literals;
 
-	constexpr auto& u() & { return _elements[0]; }
-	constexpr auto const& u() const& { return _elements[0]; }
+	using vector = vecx::vector<tx, 2>;
+	using point = vecx::point<tx, 2>;
 
-	constexpr auto& v() & { return _elements[1]; }
-	constexpr auto const& v() const& { return _elements[1]; }
+	DEFINE_VECTOR_INDEX_NAME(vector, 0, u);
+	DEFINE_VECTOR_INDEX_NAME(vector, 1, v);
+	DEFINE_VECTOR_INDEX_NAME(point, 0, u);
+	DEFINE_VECTOR_INDEX_NAME(point, 1, v);
 
-	struct texture_space : space<struct texture_space_tag, tx, 2, detail::texture_space_buffer> {
-		using h_align = axis<0>::align;
-		using v_align = axis<1>::align;
+	// Box
 
-		static constexpr auto align_left = h_align::near;
-		static constexpr auto align_center = h_align::mid;
-		static constexpr auto align_right = h_align::far;
+	using box = vecx::box<tx, 2>;
 
-		static constexpr auto align_top = v_align::near;
-		static constexpr auto align_middle = v_align::mid;
-		static constexpr auto align_bottom = v_align::far;
-	};
+	using h_align = box::align<0>;
+	using v_align = box::align<1>;
 
-	inline auto& width(texture_space::box& box) { return box.size.u(); }
-	inline auto width(texture_space::box const& box) { return box.size.u(); }
+	constexpr auto left_align = h_align{h_align::near};
+	constexpr auto center_align = h_align{h_align::mid};
+	constexpr auto right_align = h_align{h_align::far};
 
-	inline auto& height(texture_space::box& box) { return box.size.v(); }
-	inline auto height(texture_space::box const& box) { return box.size.v(); }
+	constexpr auto top_align = v_align{v_align::near};
+	constexpr auto middle_align = v_align{v_align::mid};
+	constexpr auto bottom_align = v_align{v_align::far};
 
-	inline auto& left(texture_space::box& box) { return box.position.u(); }
-	inline auto left(texture_space::box const& box) { return box.position.u(); }
+	DEFINE_BOX_SIZE_NAME(box, 0, width);
+	DEFINE_BOX_SIZE_NAME(box, 1, height);
 
-	inline auto& top(texture_space::box& box) { return box.position.v(); }
-	inline auto top(texture_space::box const& box) { return box.position.v(); }
+	DEFINE_BOX_EXTREMES_NAMES(box, 0, left, right);
+	DEFINE_BOX_EXTREMES_NAMES(box, 1, top, bottom);
 
-	inline auto right(texture_space::box const& box) { return box.position.u() + box.size.u(); }
+	constexpr auto top_left(box const& box) { return box.position; }
+	constexpr auto top_right(box const& box) { return point{u(box.position) + u(box.size), v(box.position)}; }
+	constexpr auto bottom_left(box const& box) { return point{u(box.position), v(box.position) + v(box.size)}; }
+	constexpr auto bottom_right(box const& box) { return box.position + box.size; }
 
-	inline auto bottom(texture_space::box const& box) { return box.position.v() + box.size.v(); }
+	// Circle
 
-	inline auto top_left(texture_space::box const& box) { return box.position; }
-	inline auto top_right(texture_space::box const& box) { return texture_space::point{box.position.u() + box.size.u(), box.position.v()}; }
-	inline auto bottom_left(texture_space::box const& box) { return texture_space::point{box.position.u(), box.position.v() + box.size.v()}; }
-	inline auto bottom_right(texture_space::box const& box) { return box.position + box.size; }
-
-	inline auto center(texture_space::box const& box) { return box.position + box.size / 2; }
-
-	inline auto area(texture_space::box const& box) { return width(box) * height(box); }
+	using circle = vecx::sphere<tx, 2>;
 }
+
+#include "vecx/undef_macros.hpp"

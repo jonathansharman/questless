@@ -7,7 +7,7 @@
 #include "point.hpp"
 #include "vector.hpp"
 
-namespace units {
+namespace vecx {
 	//! An n-dimensional rectangular volume.
 	template <typename Quantity, std::size_t N>
 	struct box {
@@ -25,10 +25,28 @@ namespace units {
 		};
 
 		//! The position of the minimal corner of this box.
-		point<scalar_t, n> position;
+		point<scalar_t, n> position{};
 
 		//! The size or extent of this box.
-		vector<scalar_t, n> size;
+		vector<scalar_t, n> size{};
+
+		box() = default;
+		box(box const&) = default;
+		box(box&&) = default;
+
+		//! @param position The position of the minimal corner of this box.
+		//! @param size The size or extent of this box.
+		box(point<scalar_t, n> position, vector<scalar_t, n> size)
+			: position{position}, size{size}
+		{}
+
+		constexpr bool operator ==(box const& that) const {
+			return position == that.position && size == that.size;
+		};
+
+		constexpr bool operator !=(box const& that) const {
+			return position != that.position || size != that.size;
+		}
 
 		//! Creates a box of size @p size at @p position with alignment @p alignment.
 		//! @param position The position of the box relative to its origin.
@@ -54,14 +72,12 @@ namespace units {
 			return result;
 		}
 
-		template <typename Archive>
-		void save(Archive& archive) const {
-			archive(position, size);
-		}
+		//! The center point of this box.
+		constexpr auto center(box const& box) { return box.position + box.size / 2; }
 
-		template <typename Archive>
-		void load(Archive& archive) {
-			archive(position, size);
+		//! The n-dimensional volume of this box.
+		constexpr auto volume() const {
+			return size.reduce(scalar_t(1), std::multiplies{});
 		}
 
 		//! Whether @p box contains @p point.
@@ -90,7 +106,7 @@ namespace units {
 	};
 
 	template <typename Quantity, std::size_t N>
-	box(vector<Quantity, N>, point<Quantity, N>) -> box<Quantity, N>;
+	box(point<Quantity, N>, vector<Quantity, N>) -> box<Quantity, N>;
 }
 
 #ifndef _DEBUG

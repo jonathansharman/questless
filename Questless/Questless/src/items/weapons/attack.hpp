@@ -42,7 +42,7 @@ namespace ql {
 		virtual tick cooldown() const = 0;
 
 		//! Integrity removed from the weapon per HP the attack removes.
-		virtual meta::quotient_t<ql::integrity, ql::health> wear_ratio() const = 0;
+		virtual cancel::quotient_t<ql::integrity, ql::health> wear_ratio() const = 0;
 
 		//! The cost of performing the attack.
 		virtual cost const& cost() const = 0;

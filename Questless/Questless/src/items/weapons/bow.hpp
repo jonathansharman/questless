@@ -34,7 +34,7 @@ namespace ql {
 			tick wind_up() const final { return 50_tick; }
 			tick follow_through() const final { return 5_tick; }
 			tick cooldown() const final { return 10_tick; }
-			meta::quotient_t<ql::integrity, ql::health> wear_ratio() const final { return 0.002_integrity / 1.0_hp; };
+			cancel::quotient_t<ql::integrity, ql::health> wear_ratio() const final { return 0.002_integrity / 1.0_hp; };
 			ql::cost const& cost() const final { return _cost; }
 			span range() const final { return 7_span; }
 		private:

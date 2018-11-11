@@ -42,9 +42,9 @@ namespace ql {
 		static constexpr int _prompt_top = 40;
 		static constexpr int _selector_top = 100;
 
-		static uptr<sdl::texture> make_title(char const* title, units::colors::color color = units::colors::white());
-		static uptr<sdl::texture> make_prompt(char const* prompt, units::colors::color color = units::colors::white());
-		static uptr<sdl::texture> make_selector(char const* selector, units::colors::color color = units::colors::white());
+		static uptr<sdl::texture> make_title(char const* title, spaces::colors::color color = spaces::colors::white());
+		static uptr<sdl::texture> make_prompt(char const* prompt, spaces::colors::color color = spaces::colors::white());
+		static uptr<sdl::texture> make_selector(char const* selector, spaces::colors::color color = spaces::colors::white());
 
 		static void draw_title(sdl::texture const& title);
 		static void draw_prompt(sdl::texture const& prompt);

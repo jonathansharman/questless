@@ -15,10 +15,10 @@ namespace ql {
 		//! @param position The particle's starting position.
 		//! @param text The text for the particle to show.
 		//! @param color The color of the particle's text.
-		text_particle(std::string text, units::colors::color color);
+		text_particle(std::string text, spaces::colors::color color);
 	private:
 		std::string _text;
-		units::colors::color _color;
+		spaces::colors::color _color;
 
 		sdl::texture _texture;
 

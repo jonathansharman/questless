@@ -6,7 +6,7 @@
 
 #include "vector.hpp"
 
-namespace units {
+namespace vecx {
 	//! Represents an n-dimensional point of quantities.
 	//! @tparam Quantity The quantity type of scalars in this point type.
 	//! @tparam N The dimension of this point type.
@@ -20,16 +20,21 @@ namespace units {
 
 		std::array<scalar_t, n> components{};
 
-		template <typename... Args>
-		constexpr point(Args&&... args) : components{{std::forward<Args>(args)...}} {}
+		constexpr point() = default;
+		constexpr point(point const&) = default;
+		constexpr point(point&&) = default;
 
-		explicit constexpr point(std::array<scalar_t, n> components) : components{std::move(components)} {}
+		template <typename... Args, typename = std::enable_if_t<(std::is_convertible_v<Args, scalar_t> && ...)>>
+		constexpr point(Args&&... args) : components{std::forward<Args>(args)...} {}
+
+		constexpr point& operator =(point const&) = default;
+		constexpr point& operator =(point&&) = default;
 
 		//! The canonical origin point for this point type, viz. all zeroes.
 		static constexpr auto origin() { return point<scalar_t, n>{}; }
 
 		template <typename ThatQuantity>
-		constexpr bool operator ==(point<ThatQuantity, n> const& that) {
+		constexpr bool operator ==(point<ThatQuantity, n> const& that) const {
 			for (std::size_t i = 0; i < n; ++i) {
 				if (components[i] != that[i]) return false;
 			}
@@ -37,30 +42,18 @@ namespace units {
 		}
 
 		template <typename ThatQuantity>
-		constexpr bool operator !=(point<ThatQuantity, n> const& that) {
+		constexpr bool operator !=(point<ThatQuantity, n> const& that) const {
 			for (std::size_t i = 0; i < n; ++i) {
 				if (components[i] != that[i]) return true;
 			}
 			return false;
 		}
 
-		template <typename Archive>
-		void save(Archive& archive) const { archive(components); }
-
-		template <typename Archive>
-		void load(Archive& archive) { archive(components); }
-
 		//! Gets the component at index @p index.
 		constexpr auto& operator [](std::size_t index) { return components[index]; }
 
 		//! Gets the component at index @p index.
 		constexpr auto operator [](std::size_t index) const { return components[index]; }
-
-		auto begin() { return components.begin(); }
-		auto end() { return components.end(); }
-
-		auto begin() const { return components.begin(); }
-		auto end() const { return components.end(); }
 
 		//! Creates a new point by applying @p f to each component of this point, in order.
 		template <typename MapOp>
@@ -134,10 +127,7 @@ namespace units {
 	};
 
 	template <typename T, typename... U>
-	point(T, U...) -> point<T, 1 + sizeof...(U)>;
-
-	template <typename Quantity, std::size_t N>
-	point(std::array<Quantity, N>) -> point<Quantity, N>;
+	point(T, U...) -> point<std::remove_cv_t<std::remove_reference_t<T>>, 1 + sizeof...(U)>;
 
 	//! The sum of point @p p and vector @p v.
 	template <typename QuantityPoint, typename QuantityVector, std::size_t N>
@@ -176,9 +166,9 @@ namespace units {
 #undef far // Defined in minwindef.h (!)
 
 TEST_CASE("[point] operations") {
-	using namespace meta;
-	using namespace units;
-	using namespace units::literals;
+	using namespace cancel;
+	using namespace vecx;
+	using namespace vecx::literals;
 
 	using u_t = unit_t<struct u_t_tag>;
 	using q_t = quantity<int, u_t>;
@@ -224,7 +214,7 @@ TEST_CASE("[point] operations") {
 		auto v_rotated = v.rotated(theta * rad_per_deg);
 		CHECK(v_rotated == expected);
 
-		v.rotate(theta);
+		v.rotate(theta * rad_per_deg);
 		CHECK(v == expected);
 	}
 }

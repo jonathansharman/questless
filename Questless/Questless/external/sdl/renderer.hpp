@@ -24,7 +24,7 @@ namespace sdl {
 		//! @param window The window onto which the renderer will render images.
 		//! @param width The logical width of the view port. Rendered images will be scaled as needed.
 		//! @param height The logical height of the view port. Rendered image will be scaled as needed.
-		renderer(window& the_window, int width, int height);
+		renderer(sdl::window& the_window, spaces::window::px width, spaces::window::px height);
 
 		renderer(const renderer*) = delete;
 		renderer(renderer&&) = default;
@@ -38,10 +38,10 @@ namespace sdl {
 		SDL_Renderer* sdl_ptr() { return _renderer; }
 
 		//! The logical width of the render target.
-		int width() const { return _w; }
+		spaces::window::px width() const { return _w; }
 	
 		//! The logical height of the render target.
-		int height() const { return _h; }
+		spaces::window::px height() const { return _h; }
 
 		//! Whether the renderer supports render targets.
 		bool supports_render_targets() const { return (_info.flags & SDL_RENDERER_TARGETTEXTURE) != 0; }
@@ -57,23 +57,23 @@ namespace sdl {
 		void present() { SDL_RenderPresent(_renderer); }
 
 		//! Clears the screen with the current drawing color.
-		void clear(units::colors::color color);
+		void clear(spaces::colors::color color);
 
 		//! Draws lines connecting the given @p vertices, with color @p color.
-		void draw_lines(std::vector<units::view_space::point> const& vertices, units::colors::color color);
+		void draw_lines(std::vector<spaces::view::point> const& vertices, spaces::colors::color color);
 
 		//! Draws lines connecting the given @p vertices, with color @p color.
-		void draw_lines(std::vector<units::window_space::point> const& vertices, units::colors::color color);
+		void draw_lines(std::vector<spaces::window::point> const& vertices, spaces::colors::color color);
 
 		//! Draws a solid polygon.
 		//! @param polygon The polygon to draw.
 		//! @param color The color of the polygon.
-		void draw_polygon(units::view_space::polygon const& polygon, units::colors::color color);
+		void draw_polygon(spaces::view::polygon const& polygon, spaces::colors::color color);
 
 		//! Draws a solid polygon.
 		//! @param polygon The polygon to draw.
 		//! @param color The color of the polygon.
-		void draw_polygon(units::window_space::polygon const& polygon, units::colors::color color);
+		void draw_polygon(spaces::window::polygon const& polygon, spaces::colors::color color);
 
 		//! Draws a filled polygon with a border.
 		//! @param polygon The polygon to draw.
@@ -82,10 +82,10 @@ namespace sdl {
 		//! @param fill_color The color of the polygon's interior.
 		//! @note This function assumes the width of the polygon is sufficiently greater than the border width to avoid overlapping the border with the polygon's edges. If the polygon is too narrow or contains too-sharp corners, overlap may occur.
 		void draw_polygon
-			( units::view_space::polygon const& polygon
-			, units::view_space::scalar border_width
-			, units::colors::color border_color
-			, units::colors::color fill_color
+			( spaces::view::polygon const& polygon
+			, spaces::view::length border_width
+			, spaces::colors::color border_color
+			, spaces::colors::color fill_color
 			);
 
 		//! Draws a filled polygon with a border.
@@ -95,21 +95,21 @@ namespace sdl {
 		//! @param fill_color The color of the polygon's interior.
 		//! @note This function assumes the width of the polygon is sufficiently greater than the border width to avoid overlapping the border with the polygon's edges. If the polygon is too narrow or contains too-sharp corners, overlap may occur.
 		void draw_polygon
-			( units::window_space::polygon const& polygon
-			, units::window_space::scalar border_width
-			, units::colors::color border_color
-			, units::colors::color fill_color
+			( spaces::window::polygon const& polygon
+			, spaces::window::px border_width
+			, spaces::colors::color border_color
+			, spaces::colors::color fill_color
 			);
 
 		//! Draws a solid box.
 		//! @param box The box to be drawn.
 		//! @param color The color of the box.
-		void draw_box(units::view_space::box const& box, units::colors::color color);
+		void draw_box(spaces::view::box const& box, spaces::colors::color color);
 
 		//! Draws a solid box.
 		//! @param box The box to be drawn.
 		//! @param color The color of the box.
-		void draw_box(units::window_space::box const& box, units::colors::color color);
+		void draw_box(spaces::window::box const& box, spaces::colors::color color);
 
 		//! Draws a box with a border.
 		//! @param box The box to be drawn.
@@ -117,10 +117,10 @@ namespace sdl {
 		//! @param border_color The color of the box's border.
 		//! @param fill_color The color of the box's interior.
 		void draw_box
-			( units::view_space::box const& box
-			, units::view_space::scalar border_width
-			, units::colors::color border_color
-			, units::colors::color fill_color
+			( spaces::view::box const& box
+			, spaces::view::length border_width
+			, spaces::colors::color border_color
+			, spaces::colors::color fill_color
 			);
 
 		//! Draws a box with a border.
@@ -129,10 +129,10 @@ namespace sdl {
 		//! @param border_color The color of the box's border.
 		//! @param fill_color The color of the box's interior.
 		void draw_box
-			( units::window_space::box const& box
-			, units::window_space::scalar border_width
-			, units::colors::color border_color
-			, units::colors::color fill_color
+			( spaces::window::box const& box
+			, spaces::window::px border_width
+			, spaces::colors::color border_color
+			, spaces::colors::color fill_color
 			);
 
 		//! Draws a disc with a border using a polygonal approximation.
@@ -142,10 +142,10 @@ namespace sdl {
 		//! @param fill_color The color of the disc's interior.
 		//! @param segments_per_radius The number of segments to use in the polygonal approximation, divided by the radius of the disc. Improves disc quality at the cost of time.
 		void draw_disc
-			( units::view_space::sphere const& boundary
-			, units::view_space::scalar border_width
-			, units::colors::color border_color
-			, units::colors::color fill_color
+			( spaces::view::circle const& boundary
+			, spaces::view::length border_width
+			, spaces::colors::color border_color
+			, spaces::colors::color fill_color
 			, float segments_per_radius = 1.0f
 			);
 
@@ -156,23 +156,23 @@ namespace sdl {
 		//! @param fill_color The color of the disc's interior.
 		//! @param segments_per_radius The number of segments to use in the polygonal approximation, divided by the radius of the disc. Improves disc quality at the cost of time.
 		void draw_disc
-			( units::window_space::sphere const& boundary
-			, units::window_space::scalar border_width
-			, units::colors::color border_color
-			, units::colors::color fill_color
+			( spaces::window::circle const& boundary
+			, spaces::window::px border_width
+			, spaces::colors::color border_color
+			, spaces::colors::color fill_color
 			, float segments_per_radius = 1.0f
 			);
 	private:
 		SDL_Renderer* _renderer;
-		int _w;
-		int _h;
+		spaces::window::px _w;
+		spaces::window::px _h;
 		SDL_RendererInfo _info;
 		SDL_Texture* _target;
 
 		GLuint _vbo;
 		GLuint _ibo;
 
-		void set_draw_color(units::colors::color color);
-		void draw_triangle_strip(std::vector<units::view_space::point> const& vertices, units::colors::color color);
+		void set_draw_color(spaces::colors::color color);
+		void draw_triangle_strip(std::vector<spaces::view::point> const& vertices, spaces::colors::color color);
 	};
 }

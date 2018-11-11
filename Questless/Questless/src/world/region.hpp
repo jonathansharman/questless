@@ -157,9 +157,9 @@ namespace ql {
 		static constexpr double _twilight_pct = 0.05;
 		static constexpr tick _end_of_morning = _day_length / 4;
 		static constexpr tick _end_of_afternoon = _day_length / 2;
-		static constexpr tick _end_of_dusk = meta::quantity_cast<tick>((0.5 + _twilight_pct) * _day_length);
+		static constexpr tick _end_of_dusk = cancel::quantity_cast<tick>((0.5 + _twilight_pct) * _day_length);
 		static constexpr tick _end_of_evening = 2 * _day_length / 3;
-		static constexpr tick _end_of_night = meta::quantity_cast<tick>((1.0 - _twilight_pct) * _day_length);
+		static constexpr tick _end_of_night = cancel::quantity_cast<tick>((1.0 - _twilight_pct) * _day_length);
 
 		/////////////////
 		// Member Data //

@@ -13,7 +13,7 @@ namespace ql {
 		//! @param rate The rate of blight damage.
 		//! @param duration The number of turns remaining before the status modifier expires.
 		//! @param source_id The ID of the being that caused the status modifier, if any.
-		poisoned(meta::quotient_t<dmg::blight, tick> rate, tick duration, std::optional<id<being>> source_id = std::nullopt)
+		poisoned(cancel::quotient_t<dmg::blight, tick> rate, tick duration, std::optional<id<being>> source_id = std::nullopt)
 			: status("Poisoned", duration, source_id), _rate{rate}
 		{}
 
@@ -21,6 +21,6 @@ namespace ql {
 
 		void subupdate(being& target, tick elapsed) final;
 	private:
-		meta::quotient_t<dmg::blight, tick> _rate;
+		cancel::quotient_t<dmg::blight, tick> _rate;
 	};
 }

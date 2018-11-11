@@ -8,7 +8,7 @@
 #include "list.hpp"
 #include "algebra.hpp"
 
-namespace meta {
+namespace cancel {
 	namespace detail {
 		//! A list of type tags, each representing a unit.
 		template <typename... Tags>

@@ -8,7 +8,7 @@ using namespace sdl;
 using namespace units;
 
 namespace ql {
-	void particle_animation::draw(units::window_space::point position) const {
+	void particle_animation::draw(spaces::window::point position) const {
 		for (auto& particle : _particles) {
 			particle->draw(position);
 		}

@@ -7,7 +7,7 @@
 
 #include <type_traits>
 
-namespace meta {
+namespace cancel {
 	//! The empty type list.
 	struct empty {
 		using length = std::integral_constant<int, 0>;

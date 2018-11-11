@@ -55,7 +55,7 @@ namespace ql {
 		particle_subupdate();
 	}
 
-	void particle::draw(units::window_space::point position) const {
+	void particle::draw(spaces::window::point position) const {
 		texture().draw(position, texture_space::align_center, texture_space::align_middle);
 	}
 

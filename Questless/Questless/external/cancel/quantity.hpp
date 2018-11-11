@@ -10,7 +10,7 @@
 
 #include <utility>
 
-namespace meta {
+namespace cancel {
 	//! Represents a quantity with the given data representation and unit.
 	template <typename Rep, typename Unit>
 	struct quantity {
@@ -19,7 +19,7 @@ namespace meta {
 		//! The unit of this quantity type.
 		using unit = Unit;
 
-		//! The underlying value.
+		//! The underlying value of this quantity.
 		rep value;
 
 		//! Constructs a quantity from the default value of the underlying type.
@@ -284,7 +284,7 @@ namespace meta {
 	template <typename Rep, typename Unit>
 	constexpr auto sqrt(quantity<Rep, Unit> const& q) {
 		using gcem::sqrt;
-		return quantity<Rep, meta::exponential_t<1, 2, Unit>>{static_cast<Rep>(sqrt(q.value))};
+		return quantity<Rep, cancel::exponential_t<1, 2, Unit>>{static_cast<Rep>(sqrt(q.value))};
 	}
 
 	//! Cast a quantity to a quantity with the same unit but a different representation.

@@ -78,7 +78,7 @@ namespace ql {
 			};
 
 		//! The region this body part occupies, for collision and display.
-		units::view_space::polygon hitbox;
+		spaces::view::polygon hitbox;
 
 		//! The draw layer, with smaller-numbered layers drawn first (i.e. in the background).
 		int layer = 0;
@@ -182,10 +182,10 @@ namespace ql {
 		std::optional<body_part> part;
 
 		//! The offset from the parent part's origin to the child part's origin.
-		units::view_space::vector offset;
+		spaces::view::vector offset;
 
 		//! The rotation of the attached part about the attachment point.
-		units::view_space::radians rotation;
+		spaces::view::radians rotation;
 
 		//! The resource filepath to the default part for this attachment.
 		std::string default_part;

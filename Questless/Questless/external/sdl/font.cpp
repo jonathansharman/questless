@@ -4,16 +4,16 @@
 
 #include "font.hpp"
 
-using namespace units;
-
 namespace sdl {
+	using namespace spaces;
+
 	namespace {
 		SDL_Color sdl_color(colors::color color) {
 			return SDL_Color
-				{ static_cast<uint8_t>(255.0f * color.red().value)
-				, static_cast<uint8_t>(255.0f * color.green().value)
-				, static_cast<uint8_t>(255.0f * color.blue().value)
-				, static_cast<uint8_t>(255.0f * color.alpha().value)
+				{ static_cast<uint8_t>(255.0f * colors::r(color).value)
+				, static_cast<uint8_t>(255.0f * colors::g(color).value)
+				, static_cast<uint8_t>(255.0f * colors::b(color).value)
+				, static_cast<uint8_t>(255.0f * colors::a(color).value)
 				};
 		}
 	}
@@ -52,32 +52,32 @@ namespace sdl {
 		std::swap(first._blend_mode, second._blend_mode);
 	}
 
-	texture font::render(char const* text, colors::color text_color) const {
+	sdl::texture font::render(char const* text, colors::color text_color) const {
 		SDL_Surface* surface = TTF_RenderText_Blended(_font, text, sdl_color(text_color));
 		if (surface == nullptr) {
 			throw std::runtime_error{TTF_GetError()};
 		}
-		texture texture{surface};
+		sdl::texture texture{surface};
 		SDL_FreeSurface(surface);
 		return texture;
 	}
 
-	texture font::render(char const* text, colors::color text_color, colors::color background_color) const {
+	sdl::texture font::render(char const* text, colors::color text_color, colors::color background_color) const {
 		SDL_Surface* surface = TTF_RenderText_Shaded(_font, text, sdl_color(text_color), sdl_color(background_color));
 		if (surface == nullptr) {
 			throw std::runtime_error(TTF_GetError());
 		}
-		texture texture{surface};
+		sdl::texture texture{surface};
 		SDL_FreeSurface(surface);
 		return texture;
 	}
 
-	texture font::fast_render(char const* text, colors::color text_color) const {
+	sdl::texture font::fast_render(char const* text, colors::color text_color) const {
 		SDL_Surface* surface = TTF_RenderText_Solid(_font, text, sdl_color(text_color));
 		if (surface == nullptr) {
 			throw std::runtime_error(TTF_GetError());
 		}
-		texture texture{surface};
+		sdl::texture texture{surface};
 		SDL_FreeSurface(surface);
 		return texture;
 	}
