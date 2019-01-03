@@ -340,9 +340,7 @@
     <ClInclude Include="external\sdl\shader_program.hpp" />
     <ClInclude Include="external\sdl\sound.hpp" />
     <ClInclude Include="external\sdl\spaces\colors.hpp" />
-    <ClInclude Include="external\sdl\spaces\screen.hpp" />
     <ClInclude Include="external\sdl\spaces\sprite_sheet.hpp" />
-    <ClInclude Include="external\sdl\spaces\texture.hpp" />
     <ClInclude Include="external\sdl\spaces\view.hpp" />
     <ClInclude Include="external\sdl\spaces\window.hpp" />
     <ClInclude Include="external\sdl\texture.hpp" />

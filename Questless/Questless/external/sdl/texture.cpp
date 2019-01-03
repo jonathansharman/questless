@@ -18,8 +18,8 @@ using namespace vecx;
 using namespace sdl::spaces;
 using namespace sdl::spaces::colors;
 using namespace sdl::spaces::colors::literals;
-using namespace sdl::spaces::view::literals;
 using namespace sdl::spaces::window::literals;
+using namespace sdl::spaces::view::literals;
 
 namespace {
 	//! @todo This is not completely portable. Find a fully portable way to translate an SDL surface format into a GL texture format.
@@ -175,11 +175,11 @@ namespace sdl {
 
 	void texture::draw_transformed
 		( std::variant<spaces::window::point, spaces::view::point> position
-		, spaces::texture::vector origin
+		, spaces::window::vector origin
 		, color color_factor
 		, view::vector scale
 		, radians angle
-		, std::optional<spaces::texture::box> const& src_rect
+		, std::optional<spaces::window::box> const& src_rect
 		) const
 	{
 		// Bind program.
@@ -201,24 +201,24 @@ namespace sdl {
 		}
 
 		{ // Set model matrix.
-			int const width = src_rect ? spaces::texture::width(*src_rect).value : x(_size).value;
-			int const height = src_rect ? spaces::texture::height(*src_rect).value : y(_size).value;
+			int const width = src_rect ? spaces::window::width(*src_rect).value : _size[0].value;
+			int const height = src_rect ? spaces::window::height(*src_rect).value : _size[1].value;
 
 			glm::mat4 model_matrix;
 			// Position. Correct for odd width/height in window space by nudging position by half a pixel.
 			auto const view_space_position = [&] {
-				struct to_float_coords {
+				struct view_space_converter {
 					int const width;
 					int const height;
 					auto operator ()(view::point position) { return position; }
 					auto operator ()(spaces::window::point position) {
 						return view::point
-							{ x(position) + ((width & 1) ? 0.5_view_length : 0.0_view_length)
-							, y(position) + ((height & 1) ? 0.5_view_length : 0.0_view_length)
+							{ to_view_space(x(position)) + ((width & 1) ? 0.5_view_length : 0.0_view_length)
+							, to_view_space(y(position)) + ((height & 1) ? 0.5_view_length : 0.0_view_length)
 							};
 					}
 				};
-				return std::visit(to_float_coords{width, height}, position);
+				return std::visit(view_space_converter{width, height}, position);
 			}();
 			model_matrix = glm::translate(model_matrix, glm::vec3{x(view_space_position).value, y(view_space_position).value, 0.0f});
 			// Orientation
@@ -230,17 +230,17 @@ namespace sdl {
 			// Scale
 			model_matrix = glm::scale(model_matrix, glm::vec3{x(scale).value * width, y(scale).value * height, 1.0f});
 			// Origin
-			model_matrix = glm::translate(model_matrix, glm::vec3{-1.0f * u(origin).value / width, -1.0f * v(origin).value / height, 0.0f});
+			model_matrix = glm::translate(model_matrix, glm::vec3{-1.0f * origin[0].value / width, -1.0f * origin[1].value / height, 0.0f});
 
 			GLuint const model_matrix_uniform = dflt_program().get_uniform_handle("model_matrix"); //! @todo Cache this, invalidating cache after window resize.
 			glUniformMatrix4fv(model_matrix_uniform, 1, GL_FALSE, glm::value_ptr(model_matrix));
 		}
 
 		// Get texture coordinates.
-		float const u0 = src_rect ? static_cast<float>(spaces::texture::left(*src_rect).value) / width().value : 0.0f;
-		float const u1 = src_rect ? static_cast<float>(spaces::texture::right(*src_rect).value) / width().value : 1.0f;
-		float const v0 = src_rect ? static_cast<float>(spaces::texture::top(*src_rect).value) / height().value : 0.0f;
-		float const v1 = src_rect ? static_cast<float>(spaces::texture::bottom(*src_rect).value) / height().value : 1.0f;
+		float const u0 = src_rect ? static_cast<float>(spaces::window::left(*src_rect).value) / width().value : 0.0f;
+		float const u1 = src_rect ? static_cast<float>(spaces::window::right(*src_rect).value) / width().value : 1.0f;
+		float const v0 = src_rect ? static_cast<float>(spaces::window::top(*src_rect).value) / height().value : 0.0f;
+		float const v1 = src_rect ? static_cast<float>(spaces::window::bottom(*src_rect).value) / height().value : 1.0f;
 
 		// Set vertex data.
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo);

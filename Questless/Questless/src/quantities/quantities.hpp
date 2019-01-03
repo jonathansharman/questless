@@ -31,9 +31,6 @@ namespace ql {
 	using strength = cancel::quantity<double, cancel::unit_t<struct strength_tag>>;
 	constexpr strength operator "" _str(long double value) { return strength{static_cast<double>(value)}; }
 
-	using toughness = cancel::quantity<double, cancel::unit_t<struct toughness_tag>>;
-	constexpr toughness operator "" _tgh(long double value) { return toughness{static_cast<double>(value)}; }
-
 	using energy = cancel::quantity<double, cancel::unit_t<struct energy_tag>>;
 	constexpr energy operator "" _ep(long double value) { return energy{static_cast<double>(value)}; }
 

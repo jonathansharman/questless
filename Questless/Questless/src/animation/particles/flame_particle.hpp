@@ -12,7 +12,7 @@ namespace ql {
 	public:
 		flame_particle();
 	private:
-		static constexpr units::hertz _vx_pct_drag_rate = 1.8_Hz;
+		static constexpr per_sec _vx_pct_drag_rate = 1.8_hz;
 
 		void particle_subupdate() final;
 

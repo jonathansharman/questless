@@ -13,42 +13,47 @@
 #include <unordered_map>
 
 using namespace sdl;
-using namespace units;
+using namespace sdl::spaces;
+using namespace sdl::spaces::colors::literals;
+using namespace sdl::spaces::view::literals;
+using namespace sdl::spaces::window::literals;
+using namespace vecx;
+using namespace vecx::literals;
 
 namespace ql {
 	namespace {
 		colors::color get_color(ql::body_part const& part) {
-			double const pct_health = (part.health.value() / part.stats.a.vitality.value()).value;
-			constexpr auto threshold = 0.5;
+			float const pct_health = static_cast<float>((part.health.value() / part.stats.a.vitality.value()).value);
+			constexpr float threshold = 0.5f;
 			bool const below_threshold = pct_health < threshold;
-			float const red = below_threshold
-				? 1.0f
-				: static_cast<float>(1.0 - (pct_health - threshold) / (1.0 - threshold))
+			auto const red = below_threshold
+				? 1.0_c
+				: 1.0_c - sdl::spaces::colors::part{(pct_health - threshold) / (1.0f - threshold)}
 				;
-			float const green = below_threshold
-				? static_cast<float>(pct_health / threshold)
-				: 1.0f
+			auto const green = below_threshold
+				? sdl::spaces::colors::part{pct_health / threshold}
+				: 1.0_c
 				;
-			return colors::color{red, green, 0.0f, 1.0f};
+			return colors::color{red, green, 0.0_c, 1.0_c};
 		};
 
 		struct render_data {
-			std::unordered_multimap<int, std::tuple<view_space::polygon, colors::color>> colored_hitboxes;
-			view_space::box bounds;
+			std::unordered_multimap<int, std::tuple<view::polygon, colors::color>> colored_hitboxes;
+			view::box bounds;
 		};
 
 		render_data get_render_data(ql::body_part const& root) {
-			std::unordered_multimap<int, std::tuple<view_space::polygon, colors::color>> colored_hitboxes;
+			std::unordered_multimap<int, std::tuple<view::polygon, colors::color>> colored_hitboxes;
 
 			// Initialize bounds to just the first vertex of the root part.
-			view_space::box bounds{root.hitbox.front(), view_space::vector::zero()};
+			view::box bounds{root.hitbox.vertices.front(), view::vector::zero()};
 
-			std::function<void(ql::body_part const&, view_space::vector, view_space::radians)>
-			traverse = [&](ql::body_part const& part, view_space::vector parent_offset, view_space::radians parent_rotation) {
+			std::function<void(ql::body_part const&, view::vector, radians)>
+			traverse = [&](ql::body_part const& part, view::vector parent_offset, radians parent_rotation) {
 				// Adjust hitbox and extend body bounds.
 				auto hitbox = part.hitbox;
-				for (auto& vertex : hitbox) {
-					vertex.rotate(view_space::point{0.0f, 0.0f}, parent_rotation);
+				for (auto& vertex : hitbox.vertices) {
+					vertex.rotate(view::point{0.0_view_length, 0.0_view_length}, parent_rotation);
 					vertex += parent_offset;
 					bounds.extend(vertex);
 				}
@@ -65,7 +70,7 @@ namespace ql {
 					}
 				}
 			};
-			traverse(root, view_space::vector::zero(), view_space::radians::zero());
+			traverse(root, view::vector::zero(), 0.0_rad);
 
 			return render_data{std::move(colored_hitboxes), std::move(bounds)};
 		}
@@ -74,29 +79,29 @@ namespace ql {
 	void body_texturer::visit(body const& body) {
 		render_data data = get_render_data(body.root());
 
-		window_space::vector const texture_size
-			{ static_cast<int>(data.bounds.size.x())
-			, static_cast<int>(data.bounds.size.y())
+		spaces::window::vector const texture_size
+			{ spaces::window::px{lround(x(data.bounds.size).value)}
+			, spaces::window::px{lround(y(data.bounds.size).value)}
 			};
-		colors::color const texture_color{0.0f, 1.0f, 1.0f, 0.5f};
+		auto const texture_color = colors::color{0.0_c, 1.0_c, 1.0_c, 0.5_c};
 		_texture = umake<sdl::texture>(texture_size, texture_color);
 		_texture->as_target([&] {
-			auto offset_to_center = view_space::point{0.0f, 0.0f} - data.bounds.position;
+			auto offset_to_center = view::point{0.0_view_length, 0.0_view_length} - data.bounds.position;
 
 			{ // Draw outline.
-				window_space::box outline
-					{ window_space::point{0, 0}
-					, window_space::vector{_texture->width(), _texture->height()}
+				spaces::window::box outline
+					{ spaces::window::point{0_px, 0_px}
+					, spaces::window::vector{_texture->width(), _texture->height()}
 					};
-				the_renderer().draw_box(outline, 1, colors::red(), colors::clear());
+				the_renderer().draw_box(outline, 1_px, colors::red(), colors::clear());
 			}
 
 			for (auto& kv : data.colored_hitboxes) {
 				auto [hitbox, color] = kv.second;
-				for (auto& vertex : hitbox) {
+				for (auto& vertex : hitbox.vertices) {
 					vertex += offset_to_center;
 				}
-				the_renderer().draw_polygon(hitbox, 2, colors::black(), color);
+				the_renderer().draw_polygon(hitbox, 2.0_view_length, colors::black(), color);
 			}
 		}, solid_program());
 	}

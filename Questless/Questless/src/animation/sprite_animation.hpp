@@ -10,8 +10,8 @@
 #include "cancel/quantity.hpp"
 
 #include "sdl/resources.hpp"
-#include "units/sprite_sheet_space.hpp"
-#include "units/texture_space.hpp"
+#include "sdl/spaces/sprite_sheet.hpp"
+#include "sdl/spaces/window.hpp"
 
 #include <vector>
 
@@ -20,34 +20,34 @@ namespace ql {
 	class sprite_sheet {
 	public:
 		sdl::texture_handle const texture_handle;
-		units::sprite_sheet_space::vector const cel_dimensions;
+		sdl::spaces::sprite_sheet::vector const cel_dimensions;
 
 		//! @param texture_handle A texture handle to the sprite sheet texture.
 		//! @param cel_dimensions The dimensions of this sprite sheet's cel grid.
-		sprite_sheet(sdl::texture_handle texture_handle, units::sprite_sheet_space::vector cel_dimensions)
+		sprite_sheet(sdl::texture_handle texture_handle, sdl::spaces::sprite_sheet::vector cel_dimensions)
 			: texture_handle{texture_handle}, cel_dimensions{cel_dimensions}
 		{}
 
 		//! The dimensions of a single cel.
-		spaces::window::vector cel_size() const {
+		sdl::spaces::window::vector cel_size() const {
 			if (_need_cel_size) {
-				_cel_size = spaces::window::vector {
-					sdl::the_texture_manager()[texture_handle].width() / cel_dimensions.x(),
-					sdl::the_texture_manager()[texture_handle].height() / cel_dimensions.y(),
-				};
+				_cel_size = sdl::spaces::window::vector
+					{ sdl::the_texture_manager()[texture_handle].width() / x(cel_dimensions) * sdl::spaces::sprite_sheet::cel{1}
+					, sdl::the_texture_manager()[texture_handle].height() / y(cel_dimensions) * sdl::spaces::sprite_sheet::cel{1}
+					};
 				_need_cel_size = false;
 			}
 			return _cel_size;
 		}
 
 		//! The width of a single cel.
-		int cel_width() const { return cel_size().x(); }
+		sdl::spaces::window::px cel_width() const { return x(cel_size()); }
 
 		//! The width of a single cel.
-		int cel_height() const { return cel_size().y(); }
+		sdl::spaces::window::px cel_height() const { return y(cel_size()); }
 	private:
 		bool mutable _need_cel_size = true;
-		spaces::window::vector mutable _cel_size;
+		sdl::spaces::window::vector mutable _cel_size;
 	};
 
 	//! A simple 2D animation.
@@ -60,10 +60,10 @@ namespace ql {
 			sec duration;
 
 			//! The cel coordinates within the sprite sheet.
-			units::sprite_sheet_space::point coords;
+			sdl::spaces::sprite_sheet::point coords;
 
 			//! The origin of the frame's texture relative to its center.
-			units::texture_space::vector origin;
+			sdl::spaces::window::vector origin;
 		};
 
 		enum class loop_type { once, looping } loop;
@@ -77,12 +77,12 @@ namespace ql {
 			, start_time start_time = start_time::zero
 			);
 
-		void draw(spaces::window::point position) const final;
+		void draw(sdl::spaces::window::point position) const final;
 
 		void draw
-			( units::world_space::point position
+			( world::point position
 			, camera const& camera
-			, spaces::colors::color_vector color_vector = spaces::colors::white_vector()
+			, sdl::spaces::colors::color color_vector = sdl::spaces::colors::white()
 			) const final;
 
 		//! The number of times the animation has looped.

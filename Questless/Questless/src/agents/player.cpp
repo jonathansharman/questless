@@ -306,6 +306,8 @@ namespace ql {
 		)
 	{
 		std::array<std::string, 2> const title_prompt = std::visit([&](auto&& query) -> std::array<std::string, 2> {
+			(void)query;
+			return { "", "" }; // No direction queries currently.
 		}, query);
 
 		_dialogs.push_back(umake<direction_dialog>(std::move(title_prompt[0]), std::move(title_prompt[1]), std::move(cont)));

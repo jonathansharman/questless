@@ -4,6 +4,7 @@
 
 #include "sound.hpp"
 
+#include <stdexcept>
 #include <string>
 
 namespace sdl {

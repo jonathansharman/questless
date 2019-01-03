@@ -14,7 +14,7 @@ using namespace units;
 
 namespace ql {
 	namespace {
-		constexpr window_space::vector item_icon_size{55, 55};
+		constexpr spaces::window::vector item_icon_size{55, 55};
 	}
 	
 	void hud::update() {
@@ -115,19 +115,19 @@ namespace ql {
 			// Draw condition bars.
 			int const screen_bottom = the_window().height() - 1;
 			the_renderer().draw_box
-				( window_space::box
-					{ window_space::point{0, screen_bottom}
-					, window_space::vector{condition_bar_width * conditions_count, condition_bar_height}
-					, { window_space::align_left, window_space::align_bottom }
+				( spaces::window::box
+					{ spaces::window::point{0, screen_bottom}
+					, spaces::window::vector{condition_bar_width * conditions_count, condition_bar_height}
+					, { spaces::window::align_left, spaces::window::align_bottom }
 					}
 				, colors::black()
 				);
 			auto draw_bar = [condition_bar_width, condition_bar_height, screen_bottom, left = 0](double ratio, colors::color const& color) mutable {
 				the_renderer().draw_box
-					( window_space::box
-						{ window_space::point{left + 1, screen_bottom}
-						, window_space::vector{condition_bar_width - 2, lround(condition_bar_height * ratio) - 1}
-						, { window_space::align_left, window_space::align_bottom }
+					( spaces::window::box
+						{ spaces::window::point{left + 1, screen_bottom}
+						, spaces::window::vector{condition_bar_width - 2, lround(condition_bar_height * ratio) - 1}
+						, { spaces::window::align_left, spaces::window::align_bottom }
 						}
 					, color
 					);
@@ -146,7 +146,7 @@ namespace ql {
 				body_texturer texturer;
 				texturer.visit(player_being->body);
 				uptr<texture> texture = texturer.texture();
-				texture->draw(window_space::point{0, screen_bottom - condition_bar_height}, texture_space::align_left, texture_space::align_bottom);
+				texture->draw(spaces::window::point{0, screen_bottom - condition_bar_height}, spaces::window::align_left, spaces::window::align_bottom);
 			}
 
 			{ // Draw hotbar items.
@@ -158,10 +158,10 @@ namespace ql {
 				for (int i = 0; i < _hotbar_size; ++i) {
 					int x = hotbar_x_start + (hotbar_slot_width + hotbar_interslot_gap) * i;
 					int y = screen_bottom - hotbar_bottom_gap;
-					hotbar_slot_texture->draw(window_space::point{x, y}, texture_space::align_left, texture_space::align_bottom);
+					hotbar_slot_texture->draw(spaces::window::point{x, y}, spaces::window::align_left, spaces::window::align_bottom);
 					if (std::optional<id<item>> opt_item_id = _hotbar[i]) {
 						item const& item = the_game().items.cref(*opt_item_id);
-						item_renderer item_renderer{window_space::point{x + hotbar_slot_h_padding, y - hotbar_slot_v_padding - 55}}; //! @todo Remove magic number or add alignment back in. 55 is the height of item textures.
+						item_renderer item_renderer{spaces::window::point{x + hotbar_slot_h_padding, y - hotbar_slot_v_padding - 55}}; //! @todo Remove magic number or add alignment back in. 55 is the height of item textures.
 						item.accept(item_renderer);
 					}
 				}
@@ -178,10 +178,10 @@ namespace ql {
 					_inv_row_count = std::max(1l, lround(inv_height_pct * the_window().height() / item_icon_size.y()));
 					_inv_column_count = std::max(1l, lround(inv_width_pct * the_window().width() / item_icon_size.x()));
 
-					_inv_layout = window_space::box
+					_inv_layout = spaces::window::box
 						{ the_window().window_center()
-						, window_space::vector{_inv_column_count * item_icon_size.x(), _inv_row_count * item_icon_size.y()}
-						, {window_space::align_center, window_space::align_middle}
+						, spaces::window::vector{_inv_column_count * item_icon_size.x(), _inv_row_count * item_icon_size.y()}
+						, {spaces::window::align_center, spaces::window::align_middle}
 						};
 
 				the_renderer().draw_box(_inv_layout, 1, colors::black(), colors::gray());
@@ -193,8 +193,8 @@ namespace ql {
 					int const column = (x_mouse - left(_inv_layout)) / item_icon_size.x();
 					if (top(_inv_layout) <= y_mouse && row < _inv_row_count && left(_inv_layout) <= x_mouse && column < _inv_column_count) {
 						the_renderer().draw_box
-							( window_space::box
-								{ window_space::point{left(_inv_layout) + item_icon_size.x() * column, top(_inv_layout) + item_icon_size.y() * row}
+							( spaces::window::box
+								{ spaces::window::point{left(_inv_layout) + item_icon_size.x() * column, top(_inv_layout) + item_icon_size.y() * row}
 								, item_icon_size
 								}
 							, 1
@@ -208,7 +208,7 @@ namespace ql {
 				for (size_t i = 0; i < _displayed_items.size(); ++i) {
 					int row = i / _inv_column_count;
 					int column = i % _inv_column_count;
-					item_renderer texturer{window_space::point{left(_inv_layout) + column * item_icon_size.x(), top(_inv_layout) + row * item_icon_size.y()}};
+					item_renderer texturer{spaces::window::point{left(_inv_layout) + column * item_icon_size.x(), top(_inv_layout) + row * item_icon_size.y()}};
 					_displayed_items[i].get().accept(texturer);
 				}
 			}

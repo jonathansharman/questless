@@ -50,9 +50,9 @@ namespace ql {
 
 					if (find_bounds && tile_perception > 0.0_perception) {
 						// Update bounding rectangle.
-						world_space::point tile_game_point = to_world(region_tile_coords);
+						world::point tile_game_point = to_world(region_tile_coords);
 						if (!_bounds) {
-							_bounds = world_space::box{world_space::point{tile_game_point.x(), tile_game_point.y()}, world_space::vector::zero()};
+							_bounds = world_space::box{world::point{tile_game_point.x(), tile_game_point.y()}, world_space::vector::zero()};
 						} else {
 							_bounds->extend(tile_game_point);
 						}	

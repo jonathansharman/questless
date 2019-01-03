@@ -8,8 +8,13 @@
 #include "game.hpp"
 #include "utility/random.hpp"
 
+#include <numeric>
+
 using namespace sdl;
-using namespace units;
+using namespace sdl::spaces::sprite_sheet::literals;
+using namespace sdl::spaces::view::literals;
+
+using namespace vecx::literals;
 
 namespace ql {
 	sprite_animation::sprite_animation
@@ -24,15 +29,15 @@ namespace ql {
 		, _accrued_time{start_time == start_time::random ? uniform(0.0, 1.0) * duration() : 0.0_s}
 	{}
 
-	void sprite_animation::draw(window_space::point position) const {
+	void sprite_animation::draw(spaces::window::point position) const {
 		//! @todo What is the default center in this case, and what should it be?
 		sprite_animation::frame const& frame = _frames[_frame_index];
-		//window_space::box src_rect
-		//	{ window_space::point{_sprite_sheet->cel_width() * frame.coords.x(), _sprite_sheet->cel_height() * frame.coords.y()}
-		//	, window_space::vector{_sprite_sheet->cel_width(), _sprite_sheet->cel_height()}
+		//spaces::window::box src_rect
+		//	{ spaces::window::point{_sprite_sheet->cel_width() * frame.coords.x(), _sprite_sheet->cel_height() * frame.coords.y()}
+		//	, spaces::window::vector{_sprite_sheet->cel_width(), _sprite_sheet->cel_height()}
 		//	};
 		//the_texture_manager()[_sprite_sheet->texture_handle].draw
-		//	( window_space::point{position.x() - frame.origin.u(), position.y() + frame.origin.v()} //! @todo Uncouth point casting here.
+		//	( spaces::window::point{position.x() - frame.origin.u(), position.y() + frame.origin.v()} //! @todo Uncouth point casting here.
 		//	, h_align::center
 		//	, v_align::middle
 		//	, colors::white_vector()
@@ -41,28 +46,28 @@ namespace ql {
 		the_texture_manager()[_sprite_sheet->texture_handle].draw_transformed
 			( position
 			, frame.origin
-			, colors::white_vector()
-			, view_space::vector{1.0f, 1.0f}
-			, world_space::radians{0.0}
-			, texture_space::box
-				{ texture_space::point{_sprite_sheet->cel_width() * frame.coords.x(), _sprite_sheet->cel_height() * frame.coords.y()}
-				, texture_space::vector{_sprite_sheet->cel_width(), _sprite_sheet->cel_height()}
+			, spaces::colors::white()
+			, {1.0_view_length, 1.0_view_length}
+			, 0.0_rad
+			, spaces::window::box
+				{ spaces::window::point{_sprite_sheet->cel_width() * frame.coords[0] / 1_cel, _sprite_sheet->cel_height() * frame.coords[1] / 1_cel}
+				, spaces::window::vector{_sprite_sheet->cel_width(), _sprite_sheet->cel_height()}
 				}
 			);
 	}
 
-	void sprite_animation::draw(world_space::point position, camera const& camera, colors::color_vector color_vector) const {
+	void sprite_animation::draw(world::point position, camera const& camera, spaces::colors::color color_factor) const {
 		sprite_animation::frame const& frame = _frames[_frame_index];
 		camera.draw
 			( the_texture_manager()[_sprite_sheet->texture_handle]
-			, world_space::point{position}
+			, world::point{position}
 			, frame.origin
-			, color_vector
-			, view_space::vector{1.0f, 1.0f}
-			, world_space::radians{0.0}
-			, texture_space::box
-				{ texture_space::point{_sprite_sheet->cel_width() * frame.coords.x(), _sprite_sheet->cel_height() * frame.coords.y()}
-				, texture_space::vector{_sprite_sheet->cel_width(), _sprite_sheet->cel_height()}
+			, color_factor
+			, {1.0_view_length, 1.0_view_length}
+			, 0.0_rad
+			, spaces::window::box
+				{ spaces::window::point{_sprite_sheet->cel_width() * frame.coords[0] / 1_cel, _sprite_sheet->cel_height() * frame.coords[1] / 1_cel}
+				, spaces::window::vector{_sprite_sheet->cel_width(), _sprite_sheet->cel_height()}
 				}
 			);
 	}

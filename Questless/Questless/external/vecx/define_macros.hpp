@@ -5,7 +5,7 @@
 
 #define DEFINE_VECTOR_INDEX_NAME(vector_type, index, name) \
 	constexpr auto& name(vector_type& v) { return v[index]; } \
-	constexpr auto const& name(vector_type const& v) { return v[index]; }
+	constexpr auto name(vector_type const& v) { return v[index]; }
 
 #define DEFINE_BOX_SIZE_NAME(box_type, index, name) \
 	constexpr auto& name(box_type& box) { return box.size[index]; } \

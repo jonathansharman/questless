@@ -15,7 +15,7 @@ namespace ql {
 		, (random_displacement(200.0) + world_space::vector{0.0, 150.0}) / 1.0s
 		, world_space::vector{0.0, -300.0} / 1.0s / 1.0s
 		, random_angle()
-		, uniform(-2.0, 2.0) * units::world_space::radians::circle() / 1.0s
+		, uniform(-2.0, 2.0) * world::radians::circle() / 1.0s
 		, 1.0
 		, world_space::scale_velocity{0.0}
 		, world_space::seconds{uniform(0.6, 1.0)}

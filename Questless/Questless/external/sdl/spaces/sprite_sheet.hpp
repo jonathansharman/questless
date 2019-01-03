@@ -15,38 +15,48 @@ namespace sdl::spaces::sprite_sheet {
 	}
 	using namespace literals;
 
-	constexpr auto& x() & { return _elements[0]; }
-	constexpr auto const& x() const& { return _elements[0]; }
+	using vector = vecx::vector<cel, 2>;
+	using point = vecx::point<cel, 2>;
 
-	constexpr auto& y() & { return _elements[1]; }
-	constexpr auto const& y() const& { return _elements[1]; }
+	DEFINE_VECTOR_INDEX_NAME(vector, 0, x);
+	DEFINE_VECTOR_INDEX_NAME(vector, 1, y);
+	DEFINE_VECTOR_INDEX_NAME(point, 0, x);
+	DEFINE_VECTOR_INDEX_NAME(point, 1, y);
 
-	using sprite_sheet_space = space<struct sprite_sheet_space_tag, cel, 2, detail::sprite_sheet_space_buffer>;
+	// Box
 
-	inline auto& width(sprite_sheet_space::box& box) { return box.size.x(); }
-	inline auto width(sprite_sheet_space::box const& box) { return box.size.x(); }
+	using box = vecx::box<cel, 2>;
 
-	inline auto& height(sprite_sheet_space::box& box) { return box.size.y(); }
-	inline auto height(sprite_sheet_space::box const& box) { return box.size.y(); }
+	using h_align = box::axis<0>::align_t;
+	using v_align = box::axis<1>::align_t;
 
-	inline auto& left(sprite_sheet_space::box& box) { return box.position.x(); }
-	inline auto left(sprite_sheet_space::box const& box) { return box.position.x(); }
+	constexpr auto left_align = h_align::near;
+	constexpr auto center_align = h_align::mid;
+	constexpr auto right_align = h_align::far;
 
-	inline auto& top(sprite_sheet_space::box& box) { return box.position.y(); }
-	inline auto top(sprite_sheet_space::box const& box) { return box.position.y(); }
+	constexpr auto top_align = v_align::near;
+	constexpr auto middle_align = v_align::mid;
+	constexpr auto bottom_align = v_align::far;
 
-	inline auto right(sprite_sheet_space::box const& box) { return box.position.x() + box.size.x(); }
+	DEFINE_BOX_SIZE_NAME(box, 0, width);
+	DEFINE_BOX_SIZE_NAME(box, 1, height);
 
-	inline auto bottom(sprite_sheet_space::box const& box) { return box.position.y() + box.size.y(); }
+	DEFINE_BOX_EXTREMES_NAMES(box, 0, left, right);
+	DEFINE_BOX_EXTREMES_NAMES(box, 1, top, bottom);
 
-	inline auto top_left(sprite_sheet_space::box const& box) { return box.position; }
-	inline auto top_right(sprite_sheet_space::box const& box) { return sprite_sheet_space::point{box.position.x() + box.size.x(), box.position.y()}; }
-	inline auto bottom_left(sprite_sheet_space::box const& box) { return sprite_sheet_space::point{box.position.x(), box.position.y() + box.size.y()}; }
-	inline auto bottom_right(sprite_sheet_space::box const& box) { return box.position + box.size; }
+	constexpr auto top_left(box const& box) { return box.position; }
+	constexpr auto top_right(box const& box) { return point{x(box.position) + x(box.size), y(box.position)}; }
+	constexpr auto bottom_left(box const& box) { return point{x(box.position), y(box.position) + y(box.size)}; }
+	constexpr auto bottom_right(box const& box) { return box.position + box.size; }
+	constexpr auto center(box const& box) { return box.position + box.size / 2; }
 
-	inline auto center(sprite_sheet_space::box const& box) { return box.position + box.size / 2; }
+	// Circle
 
-	inline auto area(sprite_sheet_space::box const& box) { return width(box) * height(box); }
+	using circle = vecx::sphere<cel, 2>;
+
+	// Polygon
+
+	using polygon = vecx::polygon<cel>;
 }
 
 #include "vecx/undef_macros.hpp"

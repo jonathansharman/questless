@@ -5,7 +5,6 @@
 #include "animation/particle_animation.hpp"
 
 using namespace sdl;
-using namespace units;
 
 namespace ql {
 	void particle_animation::draw(spaces::window::point position) const {
@@ -14,9 +13,9 @@ namespace ql {
 		}
 	}
 
-	void particle_animation::draw(units::world_space::point position, camera const& camera, colors::color_vector color_vector) const {
+	void particle_animation::draw(world::point position, camera const& camera, sdl::spaces::colors::color color_factor) const {
 		for (auto& particle : _particles) {
-			particle->draw(position, camera, color_vector);
+			particle->draw(position, camera, color_factor);
 		}
 	}
 

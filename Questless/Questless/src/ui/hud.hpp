@@ -4,13 +4,14 @@
 
 #pragma once
 
+#include "utility/id.hpp"
+#include "utility/reference.hpp"
+
+#include "sdl/spaces/window.hpp"
+
 #include <array>
 #include <optional>
 #include <vector>
-
-#include "units/window_space.hpp"
-#include "utility/id.hpp"
-#include "utility/reference.hpp"
 
 namespace ql {
 	class being;
@@ -40,7 +41,7 @@ namespace ql {
 		std::array<std::optional<id<item>>, _hotbar_size> _hotbar;
 		bool _inv_open = false;
 		int _inv_page = 0; //! @todo Replace with filters and a scrollable view.
-		spaces::window::box _inv_layout;
+		sdl::spaces::window::box _inv_layout;
 		int _inv_row_count;
 		int _inv_column_count;
 		std::vector<cref<item>> _displayed_items;

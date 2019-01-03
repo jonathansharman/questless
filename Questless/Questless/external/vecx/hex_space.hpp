@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "world.hpp"
+#include "world/world.hpp"
 
 #include "cancel/quantity.hpp"
 
@@ -21,10 +21,12 @@
 namespace vecx {
 	//! A hexagonal space.
 	//! @tparam LengthQuantity A quantity type representing a distance in this hex space.
-	template <typename Tag, typename DistanceQuantity>
+	template <typename Tag, typename LengthQuantity>
 	struct hex_space {
 		//! A distance in this space.
-		using dist_t = DistanceQuantity;
+		using length_t = LengthQuantity;
+
+		static_assert(std::is_integral_v<length_t::rep>, "The length quantity of a hex space must be integral.");
 
 		enum class direction : int { one = 1, two, three, four, five, six };
 
@@ -36,9 +38,9 @@ namespace vecx {
 
 		//! Hexagonal vector type.
 		struct vector {
-			dist_t q;
-			dist_t r;
-			dist_t s;
+			length_t q;
+			length_t r;
+			length_t s;
 
 			//! Unit vector in the given direction.
 			constexpr static vector unit(direction direction) {
@@ -54,30 +56,30 @@ namespace vecx {
 			}
 
 			constexpr explicit vector() : q{0}, r{0}, s{0} {}
-			constexpr explicit vector(dist_t q, dist_t r) : q{q}, r{r}, s{-q - r} {}
-			constexpr explicit vector(dist_t q, dist_t r, dist_t s) : q{q}, r{r}, s{s} {}
+			constexpr explicit vector(length_t q, length_t r) : q{q}, r{r}, s{-q - r} {}
+			constexpr explicit vector(length_t q, length_t r, length_t s) : q{q}, r{r}, s{s} {}
 			constexpr explicit vector(double q, double r)
 				: vector{q, r, -q - r}
 			{}
 
-			constexpr explicit vector(double q, double r, double s)
-				: q{math::abs(q - math::lround(q)) > math::abs(r - math::lround(r)) && math::abs(q - math::lround(q)) > math::abs(s - math::lround(s))
-					? -math::lround(r) - math::lround(s)
-					: math::lround(q)
-					}
-				, r{math::abs(q - math::lround(q)) > math::abs(r - math::lround(r)) && math::abs(q - math::lround(q)) > math::abs(s - math::lround(s))
-					? math::lround(r)
-					: math::abs(r - math::lround(r)) > math::abs(s - math::lround(s))
-						? -math::lround(q) - math::lround(s)
-						: math::lround(r)
-					}
-				, s{math::abs(q - math::lround(q)) > math::abs(r - math::lround(r)) && math::abs(q - math::lround(q)) > math::abs(s - math::lround(s))
-					? math::lround(s)
-					: math::abs(r - math::lround(r)) > math::abs(s - math::lround(s))
-						? math::lround(s)
-						: -math::lround(q) - math::lround(r)
-					}
-			{}
+			constexpr explicit vector(double q, double r, double s) {
+				auto round = [this](double v) { return static_cast<typename length_t::rep>(v + 0.5); };
+				if (gcem::abs(q - round(q)) > gcem::abs(r - round(r)) && gcem::abs(q - round(q)) > gcem::abs(s - round(s))) {
+					this->q = length_t{-round(r) - round(s)};
+					this->r = length_t{round(r)};
+					this->s = length_t{round(s)};
+				} else {
+					this->q = length_t{round(q)};
+					this->r = length_t{gcem::abs(r - round(r)) > gcem::abs(s - round(s))
+						? -round(q) - round(s)
+						: round(r)
+						};
+					this->s = length_t{gcem::abs(r - round(r)) > gcem::abs(s - round(s))
+						? round(s)
+						: -round(q) - round(r)
+						};
+				}
+			}
 
 			friend constexpr vector operator +(vector v1, vector v2) { return vector{v1.q + v2.q, v1.r + v2.r, v1.s + v2.s}; }
 
@@ -100,7 +102,7 @@ namespace vecx {
 			//! Arbitrary less-than function so that HexCoords are comparable.
 			friend constexpr bool operator <(vector v1, vector v2) { return v1.q < v2.q || (v1.q == v2.q && v1.r < v2.r); }
 
-			constexpr dist_t length() const { return static_cast<dist_t>((math::abs(q) + math::abs(r) + math::abs(s)) / 2); }
+			constexpr length_t length() const { return static_cast<length_t>((gcem::abs(q) + gcem::abs(r) + gcem::abs(s)) / 2); }
 
 			//! The unit vector nearest this vector. This vector must be non-zero.
 			constexpr vector unit() const {
@@ -147,35 +149,35 @@ namespace vecx {
 
 		//! Hexagonal point type.
 		struct point {
-			dist_t q;
-			dist_t r;
-			dist_t s;
+			length_t q;
+			length_t r;
+			length_t s;
 
 			constexpr explicit point() : q{0}, r{0}, s{0} {}
-			constexpr explicit point(dist_t q, dist_t r) : q{q}, r{r}, s{-q - r} {}
-			constexpr explicit point(dist_t q, dist_t r, dist_t s) : q{q}, r{r}, s{s} {}
+			constexpr explicit point(length_t q, length_t r) : q{q}, r{r}, s{-q - r} {}
+			constexpr explicit point(length_t q, length_t r, length_t s) : q{q}, r{r}, s{s} {}
 			constexpr explicit point(double q, double r)
 				: point{q, r, -q - r}
 			{}
 
-			constexpr explicit point(double q, double r, double s)
-				: q{math::abs(q - math::lround(q)) > math::abs(r - math::lround(r)) && math::abs(q - math::lround(q)) > math::abs(s - math::lround(s))
-					? -math::lround(r) - math::lround(s)
-					: math::lround(q)
-					}
-				, r{math::abs(q - math::lround(q)) > math::abs(r - math::lround(r)) && math::abs(q - math::lround(q)) > math::abs(s - math::lround(s))
-					? math::lround(r)
-					: math::abs(r - math::lround(r)) > math::abs(s - math::lround(s))
-						? -math::lround(q) - math::lround(s)
-						: math::lround(r)
-					}
-				, s{math::abs(q - math::lround(q)) > math::abs(r - math::lround(r)) && math::abs(q - math::lround(q)) > math::abs(s - math::lround(s))
-					? math::lround(s)
-					: math::abs(r - math::lround(r)) > math::abs(s - math::lround(s))
-						? math::lround(s)
-						: -math::lround(q) - math::lround(r)
-					}
-			{}
+			constexpr explicit point(double q, double r, double s) {
+				auto round = [this](double v) { return static_cast<typename length_t::rep>(v + 0.5); };
+				if (gcem::abs(q - round(q)) > gcem::abs(r - round(r)) && gcem::abs(q - round(q)) > gcem::abs(s - round(s))) {
+					this->q = length_t{-round(r) - round(s)};
+					this->r = length_t{round(r)};
+					this->s = length_t{round(s)};
+				} else {
+					this->q = length_t{round(q)};
+					this->r = length_t{gcem::abs(r - round(r)) > gcem::abs(s - round(s))
+						? -round(q) - round(s)
+						: round(r)
+						};
+					this->s = length_t{gcem::abs(r - round(r)) > gcem::abs(s - round(s))
+						? round(s)
+						: -round(q) - round(r)
+						};
+				}
+			}
 
 			friend constexpr point operator +(point p, vector v) { return point{p.q + v.q, p.r + v.r, p.s + v.s}; }
 			friend constexpr point operator +(vector v, point p) { return point{v.q + p.q, v.r + p.r, v.s + p.s}; }
@@ -213,12 +215,12 @@ namespace vecx {
 			constexpr point neighbor(direction direction) const {
 				switch (direction) {
 					default: [[fallthrough]]; // Impossible case.
-					case direction::one:   return point{q + dist_t{1}, r + dist_t{0}};
-					case direction::two:   return point{q + dist_t{0}, r + dist_t{1}};
-					case direction::three: return point{q - dist_t{1}, r + dist_t{1}};
-					case direction::four:  return point{q - dist_t{1}, r + dist_t{0}};
-					case direction::five:  return point{q + dist_t{0}, r - dist_t{1}};
-					case direction::six:   return point{q + dist_t{1}, r - dist_t{1}};
+					case direction::one:   return point{q + length_t{1}, r + length_t{0}};
+					case direction::two:   return point{q + length_t{0}, r + length_t{1}};
+					case direction::three: return point{q - length_t{1}, r + length_t{1}};
+					case direction::four:  return point{q - length_t{1}, r + length_t{0}};
+					case direction::five:  return point{q + length_t{0}, r - length_t{1}};
+					case direction::six:   return point{q + length_t{1}, r - length_t{1}};
 				};
 			}
 
@@ -265,44 +267,44 @@ namespace vecx {
 
 	struct hex_layout {
 		hex_orientation orientation;
-		world_space::vector size;
-		world_space::point origin;
+		ql::world::vector size;
+		ql::world::point origin;
 
-		constexpr hex_layout(units::hex_orientation orientation, world_space::vector size, world_space::point origin)
+		constexpr hex_layout(vecx::hex_orientation orientation, ql::world::vector size, ql::world::point origin)
 			: orientation{orientation}, size{std::move(size)}, origin{std::move(origin)}
 		{}
 
 		template <typename HexCoordsType>
-		constexpr world_space::point to_world(HexCoordsType h) const {
+		constexpr ql::world::point to_world(HexCoordsType h) const {
 			//! @todo This function should just work for region_tile::point.
-			return world_space::point
-				{ ((orientation.f0 * h.q + orientation.f1 * h.r) * size.x() + origin.x())
-				, ((orientation.f2 * h.q + orientation.f3 * h.r) * size.y() + origin.y())
+			return world::point
+				{ ((orientation.f0 * h.q + orientation.f1 * h.r) * x(size) + x(origin))
+				, ((orientation.f2 * h.q + orientation.f3 * h.r) * y(size) + y(origin))
 				};
 		}
 
 		template <typename HexCoordsType>
-		constexpr HexCoordsType to_hex_coords(world_space::point p) const {
+		constexpr HexCoordsType to_hex_coords(ql::world::point p) const {
 			//! @todo This function should just work for region_tile::point.
 			return HexCoordsType
-				{ orientation.b0 * (p.x() - origin.x()) / size.x() + orientation.b1 * (p.y() - origin.y()) / size.y()
-				, orientation.b2 * (p.x() - origin.x()) / size.x() + orientation.b3 * (p.y() - origin.y()) / size.y()
+				{ orientation.b0 * (x(p) - x(origin)) / x(size) + orientation.b1 * (y(p) - y(origin)) / y(size)
+				, orientation.b2 * (x(p) - x(origin)) / x(size) + orientation.b3 * (y(p) - y(origin)) / y(size)
 				};
 		}
 
-		world_space::point hex_corner_offset(int corner) {
-			world_space::radians angle = world_space::radians::circle() * (corner + orientation.start_angle) / 6.0;
-			return world_space::point{size.x() * cos(angle.count()), size.y() * sin(angle.count())};
+		ql::world::point hex_corner_offset(int corner) {
+			radians angle = circle_rad * (corner + orientation.start_angle) / 6.0;
+			return ql::world::point{x(size) * cos(angle.value), y(size) * sin(angle.value)};
 		}
 
 		template <typename HexCoordsType>
-		std::vector<world_space::point> corner_points(HexCoordsType h) {
+		std::vector<ql::world::point> corner_points(HexCoordsType h) {
 			//! @todo This function should just work for region_tile::point.
-			std::vector<world_space::point> corners;
-			world_space::point const center = to_world_f(h);
+			std::vector<world::point> corners;
+			ql::world::point const center = to_world_f(h);
 			for (int i = 0; i < 6; i++) {
-				world_space::point offset = hex_corner_offset(i);
-				corners.push_back(world_space::point{center.x + offset.x, center.y + offset.y});
+				ql::world::point offset = hex_corner_offset(i);
+				corners.push_back(world::point{x(center) + x(offset), y(center) + y(offset)});
 			}
 			return corners;
 		}
@@ -380,9 +382,9 @@ void test_hex_linedraw() {
 
 void test_layout() {
 	HexCoords h{3, 4, -7};
-	layout flat{orientation_flat, units::world_space::point{10, 15}, units::world_space::point{35, 71}};
+	layout flat{orientation_flat, world::point{10, 15}, world::point{35, 71}};
 	equal_hex("layout", h, flat.to_hex_coords(flat.to_world(h)));
-	layout pointy = layout(orientation_pointy, units::world_space::point{10, 15}, units::world_space::point{35, 71});
+	layout pointy = layout(orientation_pointy, world::point{10, 15}, world::point{35, 71});
 	equal_hex("layout", h, pointy.to_hex_coords(pointy.to_world(h)));
 }
 

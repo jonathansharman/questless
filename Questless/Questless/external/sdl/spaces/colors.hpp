@@ -12,12 +12,30 @@
 namespace sdl::spaces::colors {
 	using part = cancel::quantity<float, cancel::unit_t<struct part_tag>>;
 
+	using color = vecx::vector<part, 4>;
+
 	namespace literals {
+		//! 
 		constexpr auto operator "" _c(long double value) { return part{static_cast<float>(value)}; }
+
+		//! Creates a color from a three-digit hexadecimal number.
+		constexpr auto operator "" _rgb(unsigned long long value) {
+			part r = part{(value >> 16) / 255.0f};
+			part g = part{((value >> 8) & 0xff) / 255.0f};
+			part b = part{(value & 0xff) / 255.0f};
+			return color{r, g, b, 1.0_c};
+		}
+
+		//! Creates a color from a four-digit hexadecimal number.
+		constexpr auto operator "" _rgba(unsigned long long value) {
+			part r = part{(value >> 24) / 255.0f};
+			part g = part{(value >> 16) / 255.0f};
+			part b = part{((value >> 8) & 0xff) / 255.0f};
+			part a = part{(value & 0xff) / 255.0f};
+			return color{r, g, b, a};
+		}
 	}
 	using namespace literals;
-
-	using color = vecx::vector<part, 4>;
 
 	DEFINE_VECTOR_INDEX_NAME(color, 0, r);
 	DEFINE_VECTOR_INDEX_NAME(color, 1, g);

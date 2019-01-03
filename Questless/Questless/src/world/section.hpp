@@ -4,11 +4,12 @@
 
 #pragma once
 
-#include "units/hex_space.hpp"
 #include "utility/container_view.hpp"
 #include "utility/id.hpp"
 #include "utility/reference.hpp"
 #include "world/coordinates.hpp"
+
+#include "vecx/hex_space.hpp"
 
 #include <array>
 #include <iostream>

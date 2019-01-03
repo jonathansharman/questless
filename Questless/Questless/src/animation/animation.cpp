@@ -7,7 +7,6 @@
 #include "game.hpp"
 
 using namespace sdl;
-using namespace units;
 
 namespace ql {
 	void animation::update() {

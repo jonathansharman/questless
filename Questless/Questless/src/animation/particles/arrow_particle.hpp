@@ -12,9 +12,9 @@ namespace ql {
 	public:
 		//! @param source Where the arrow is shot from.
 		//! @param target Where the arrow is headed towards.
-		arrow_particle(units::world_space::point source, units::world_space::point target);
+		arrow_particle(world::point source, world::point target);
 	private:
-		units::world_space::point _target;
+		world::point _target;
 
 		bool fade_out() const final { return false; };
 

@@ -6,8 +6,9 @@
 
 #include "animation/camera.hpp"
 #include "ui/dialog.hpp"
-#include "units/world_space.hpp"
-#include "units/view_space.hpp"
+#include "world/world.hpp"
+
+#include "sdl/spaces/view.hpp"
 
 namespace ql {
 	class being;
@@ -28,17 +29,17 @@ namespace ql::qte {
 	private:
 		enum class aiming_state { beginning, aiming, in_flight, ending };
 
-		static constexpr units::world_space::seconds _time_limit = 5.0s;
+		static constexpr auto _time_limit = 5.0_s;
 
 		region_tile::point _source_tile_coords;
 		being const& _target_being;
-		spaces::view::point _target_view_coords;
-		spaces::view::scalar _target_view_scale;
+		sdl::spaces::view::point _target_view_coords;
+		cancel::unitless<sdl::spaces::view::length::rep> _target_view_scale;
 		continuation<body_part*> _cont;
-		spaces::view::sphere _aiming_circle;
+		sdl::spaces::view::circle _aiming_circle;
 		aiming_state _aiming_state = aiming_state::beginning;
 
-		units::world_space::seconds _elapsed_time = 0.0s;
+		sec _elapsed_time = 0.0_s;
 
 		uptr<sdl::texture> _txt_title;
 		uptr<sdl::texture> _txt_prompt;

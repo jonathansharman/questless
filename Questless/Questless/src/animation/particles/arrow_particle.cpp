@@ -10,7 +10,7 @@
 using namespace units;
 
 namespace ql {
-	arrow_particle::arrow_particle(world_space::point source, world_space::point target)
+	arrow_particle::arrow_particle(world::point source, world::point target)
 		: particle
 			{ world_space::vector::zero()
 			, world_space::vector::zero() / 1.0s

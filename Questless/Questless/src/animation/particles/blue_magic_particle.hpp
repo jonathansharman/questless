@@ -12,7 +12,7 @@ namespace ql {
 	public:
 		blue_magic_particle();
 	private:
-		static constexpr units::world_space::radians _dtheta_max = 2.0 * units::world_space::radians::circle();
+		static constexpr world::radians _dtheta_max = 2.0 * world::radians::circle();
 
 		void particle_subupdate() final {}
 

@@ -4,24 +4,25 @@
 
 #pragma once
 
+#include "dialog.hpp"
+
+#include "sdl/resources.hpp"
+#include "sdl/spaces/window.hpp"
+
 #include <string>
 #include <vector>
-
-#include "dialog.hpp"
-#include "units/window_space.hpp"
-#include "sdl/resources.hpp"
 
 namespace ql {
 	//! Retrieves the player's choice from a list of options.
 	class list_dialog : public dialog {
 	public:
 		list_dialog
-			( spaces::window::point origin
+			( sdl::spaces::window::point origin
 			, std::string title
 			, std::vector<std::string> options
 			, std::function<void(std::optional<int>)> cont
 			)
-			: _bounds{origin, spaces::window::vector::zero()}
+			: _bounds{origin, sdl::spaces::window::vector::zero()}
 			, _title{std::move(title)}
 			, _options{std::move(options)}
 			, _cont{std::move(cont)}
@@ -65,35 +66,43 @@ namespace ql {
 		}
 
 		void draw() const final {
+			using namespace sdl::spaces;
+			using namespace sdl::spaces::colors;
+			using namespace sdl::spaces::colors::literals;
+			using namespace sdl::spaces::window::literals;
+
 			// Draw background.
-			sdl::the_renderer().draw_box(_bounds, 1, spaces::colors::black(), spaces::colors::color{1.0f, 0.75f, 0.6f, 1.0f});
+			sdl::the_renderer().draw_box(_bounds, 1_px, black(), color{1.0_c, 0.75_c, 0.6_c, 1.0_c});
 
 			{ // Draw highlight.
-				spaces::window::box bounds
-					{ spaces::window::point{left(_bounds) + _x_padding, top(_bounds) + _y_padding + _title_height + _selection * _option_height}
-					, spaces::window::vector{width(_bounds) - 2 * _x_padding, _option_height}
+				sdl::spaces::window::box const highlight_bounds
+					{ _bounds.position + _padding + sdl::spaces::window::vector
+						{ sdl::spaces::window::px{0}
+						, sdl::spaces::window::px{_title_height + _selection * _option_height}
+						}
+					, window::vector{width(_bounds) - 2 * _padding[0], _option_height}
 					};
-				sdl::the_renderer().draw_box(bounds, spaces::colors::white());
+				sdl::the_renderer().draw_box(highlight_bounds, sdl::spaces::colors::white());
 			}
 
 			// Draw title.
-			_txt_title->draw(spaces::window::point{left(_bounds) + _x_padding, top(_bounds) + _y_padding});
+			_txt_title->draw(_bounds.position + _padding);
 
 			// Draw options.
-			for (size_t i = 0; i < _options.size(); ++i) {
-				_txt_options[i].draw(spaces::window::point {
-					left(_bounds) + _x_padding,
-					top(_bounds) + _y_padding + _title_height + static_cast<int>(i) * _option_height,
-				});
+			for (std::size_t i = 0; i < _options.size(); ++i) {
+				auto const position = _bounds.position + _padding + sdl::spaces::window::vector
+					{ sdl::spaces::window::px{0}
+					, sdl::spaces::window::px{_title_height + static_cast<int>(i) * _option_height}
+					};
+				_txt_options[i].draw(position);
 			}
 		}
 	private:
-		static constexpr int _title_height = 40;
-		static constexpr int _option_height = 20;
-		static constexpr int _x_padding = 10;
-		static constexpr int _y_padding = 10;
+		static constexpr auto _title_height = sdl::spaces::window::px{40};
+		static constexpr auto _option_height = sdl::spaces::window::px{20};
+		static constexpr auto _padding = sdl::spaces::window::vector{sdl::spaces::window::px{10}, sdl::spaces::window::px{10}};
 
-		spaces::window::box _bounds;
+		sdl::spaces::window::box _bounds;
 		std::string _title;
 		std::vector<std::string> _options;
 		continuation<std::optional<int>> _cont;
@@ -104,23 +113,27 @@ namespace ql {
 		int _selection;
 
 		void load_textures() {
+			using namespace sdl::spaces::colors;
+
 			static auto list_option_font_handle = sdl::the_font_manager().add("resources/fonts/dumbledor1.ttf", 20);
 
-			_txt_title = make_title(_title.c_str(), spaces::colors::black());
-			width(_bounds) = _txt_title->width();
+			_txt_title = make_title(_title.c_str(), sdl::spaces::colors::black());
+			width(_bounds) = _txt_title->width() * sdl::spaces::window::px{1} / sdl::spaces::window::px{1};
 			_txt_options.clear();
 			for (auto const& option : _options) {
-				_txt_options.push_back(sdl::the_font_manager()[list_option_font_handle].render(option.c_str(), spaces::colors::black()));
-				width(_bounds) = std::max(width(_bounds), _txt_options.back().width());
+				_txt_options.push_back(sdl::the_font_manager()[list_option_font_handle].render(option.c_str(), black()));
+				width(_bounds) = std::max(width(_bounds), _txt_options.back().width() * sdl::spaces::window::px{1} / sdl::spaces::window::px{1});
 			}
-			width(_bounds) += 2 * _x_padding;
-			height(_bounds) = _title_height + static_cast<int>(_options.size() * _option_height) + 2 * _y_padding;
+			_bounds.size += sdl::spaces::window::vector
+				{ 2 * _padding[0]
+				, _title_height + static_cast<int>(_options.size()) * _option_height + 2 * _padding[1]
+				};
 
 			// Confine bounds to window.
-			if (left(_bounds) + width(_bounds) > sdl::the_window().width()) {
+			if (right(_bounds) > sdl::the_window().width()) {
 				left(_bounds) -= width(_bounds);
 			}
-			if (top(_bounds) + height(_bounds) > sdl::the_window().height()) {
+			if (bottom(_bounds) > sdl::the_window().height()) {
 				top(_bounds) -= height(_bounds);
 			}
 		}

@@ -20,17 +20,17 @@ namespace ql::qte {
 		: _source_tile_coords{source_coords}
 		, _target_being{target_being}
 		, _cont{std::move(cont)}
-		, _aiming_circle{view_space::point{500.0f, 500.0f}, 10.0f}
+		, _aiming_circle{spaces::view::point{500.0f, 500.0f}, 10.0f}
 		, _txt_title{make_title("Aim your shot!")}
 		, _txt_prompt{make_prompt("Pull back the aiming circle.")}
 	{
 		auto const tile_source_to_target = _target_being.coords - _source_tile_coords;
 		auto const game_source_to_target = to_world(tile_source_to_target);
-		view_space::vector const view_source_to_target
-			{ static_cast<view_space::scalar>(game_source_to_target.x())
-			, static_cast<view_space::scalar>(-game_source_to_target.y())
+		spaces::view::vector const view_source_to_target
+			{ static_cast<spaces::view::scalar>(game_source_to_target.x())
+			, static_cast<spaces::view::scalar>(-game_source_to_target.y())
 			};
-		view_space::scalar const view_distance = view_source_to_target.length();
+		spaces::view::scalar const view_distance = view_source_to_target.length();
 		auto const unit_source_to_target = view_distance == 0.0f ? view_source_to_target : view_source_to_target / view_distance;
 
 		// Reduce scale with distance.
@@ -45,7 +45,7 @@ namespace ql::qte {
 	}
 
 	dialog::state aim_missile::update() {
-		static constexpr units::world_space::seconds time_limit = 5.0s;
+		static constexpr world::seconds time_limit = 5.0s;
 
 		switch (_aiming_state) {
 			case aiming_state::beginning:
@@ -87,9 +87,9 @@ namespace ql::qte {
 			uptr<texture> texture = texturer.texture();
 			texture->draw_transformed
 				( _target_view_coords
-				, texture_space::vector{0, texture->height() / 2}
+				, spaces::window::vector{0, texture->height() / 2}
 				, colors::white_vector()
-				, view_space::vector{_target_view_scale, _target_view_scale}
+				, spaces::view::vector{_target_view_scale, _target_view_scale}
 				);
 		}
 
@@ -97,7 +97,7 @@ namespace ql::qte {
 			// Draw the aiming circle.
 			the_renderer().draw_disc(_aiming_circle, 3.0f, colors::white(), colors::red(0.75f));
 			// Draw the hint circle.
-			view_space::sphere const hint_circle
+			spaces::view::sphere const hint_circle
 				//{ the_window().view_center() + (the_window().view_center() - _aiming_circle.center)
 				{ _target_view_coords
 				, _aiming_circle.radius

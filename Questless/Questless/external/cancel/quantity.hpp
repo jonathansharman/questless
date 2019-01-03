@@ -8,6 +8,7 @@
 
 #include <gcem.hpp>
 
+#include <cmath>
 #include <utility>
 
 namespace cancel {
@@ -285,6 +286,27 @@ namespace cancel {
 	constexpr auto sqrt(quantity<Rep, Unit> const& q) {
 		using gcem::sqrt;
 		return quantity<Rep, cancel::exponential_t<1, 2, Unit>>{static_cast<Rep>(sqrt(q.value))};
+	}
+
+	//! Floating-point mod a quantity by a scalar.
+	template
+		< typename Rep, typename Unit, typename K
+		, typename = std::enable_if_t<std::is_floating_point_v<Rep> && std::is_convertible_v<K, Rep>>
+		>
+	constexpr auto fmod(quantity<Rep, Unit> const& q, K const& k) {
+		using result_rep = std::common_type_t<Rep, K>;
+		return quantity<result_rep, Unit>{static_cast<result_rep>(std::fmodl(q.value, k))};
+	}
+
+	//! Floating-point mod quantities of compatible representation and the same unit.
+	template
+		< typename Rep1, typename Unit1, typename Rep2, typename Unit2
+		, typename = std::enable_if_t<std::is_floating_point_v<std::common_type_t<Rep1, Rep2>>>
+		>
+	constexpr auto fmod(quantity<Rep1, Unit1> const& q1, quantity<Rep2, Unit2> const& q2) {
+		static_assert(std::is_convertible_v<Rep1, Rep2> || std::is_convertible_v<Rep2, Rep1>, "Attempted to mod quantities with incompatible representations.");
+		using result_rep = std::common_type_t<Rep1, Rep2>;
+		return quantity<result_rep, Unit1>{static_cast<result_rep>(fmodl(q1.value, q2.value))};
 	}
 
 	//! Cast a quantity to a quantity with the same unit but a different representation.

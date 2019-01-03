@@ -24,7 +24,10 @@
 #include "world/tile.hpp"
 
 using namespace sdl;
-using namespace units;
+using namespace sdl::spaces::colors::literals;
+using namespace sdl::spaces::sprite_sheet::literals;
+using namespace sdl::spaces::window::literals;
+using namespace sdl::spaces::window::literals;
 
 namespace ql {
 	uptr<still> world_renderer::_unknown_entity_animation;
@@ -32,7 +35,7 @@ namespace ql {
 	initializer<world_renderer> _initializer;
 	void world_renderer::initialize() {
 		auto unknown_entity_animation_ss = the_texture_manager().add("resources/textures/entities/unknown.png");
-		_unknown_entity_animation = umake<still>(unknown_entity_animation_ss, texture_space::vector::zero());
+		_unknown_entity_animation = umake<still>(unknown_entity_animation_ss, spaces::window::vector::zero());
 	}
 
 	world_renderer::world_renderer(world_view const& world_view)
@@ -41,15 +44,15 @@ namespace ql {
 			{ ql::sprite_animation
 				{ smake<ql::sprite_sheet>
 					( the_texture_manager().add("resources/textures/terrain/selector.png")
-					, sprite_sheet_space::vector{4, 1}
+					, spaces::sprite_sheet::vector{4_cel, 1_cel}
 					)
 				, std::vector<sprite_animation::frame>
-					{ {0.100_s, sprite_sheet_space::point{0, 0}, texture_space::vector{0, 0}}
-					, {0.075_s, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 0}}
-					, {0.050_s, sprite_sheet_space::point{2, 0}, texture_space::vector{0, 0}}
-					, {0.025_s, sprite_sheet_space::point{3, 0}, texture_space::vector{0, 0}}
-					, {0.050_s, sprite_sheet_space::point{2, 0}, texture_space::vector{0, 0}}
-					, {0.075_s, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 0}}
+					{ {0.100_s, {0_cel, 0_cel}, {0_px, 0_px}}
+					, {0.075_s, {1_cel, 0_cel}, {0_px, 0_px}}
+					, {0.050_s, {2_cel, 0_cel}, {0_px, 0_px}}
+					, {0.025_s, {3_cel, 0_cel}, {0_px, 0_px}}
+					, {0.050_s, {2_cel, 0_cel}, {0_px, 0_px}}
+					, {0.075_s, {1_cel, 0_cel}, {0_px, 0_px}}
 					}
 				, sprite_animation::loop_type::looping
 				}
@@ -123,7 +126,7 @@ namespace ql {
 		}
 		// Draw terrain.
 		if (_terrain_texture) {
-			camera.draw(*_terrain_texture, world_space::point{center(_terrain_bounds)});
+			camera.draw(*_terrain_texture, center(_terrain_bounds));
 		}
 		// Draw tile highlights, if active.
 		if (_highlight_predicate) {
@@ -147,8 +150,8 @@ namespace ql {
 		auto y_sort = [](world_view::entity_view const& a, world_view::entity_view const& b) {
 			if (entity const* entity_a = get_entity_cptr(a.id)) {
 				if (entity const* entity_b = get_entity_cptr(b.id)) {
-					double const y_a = to_world(entity_a->coords).y();
-					double const y_b = to_world(entity_b->coords).y();
+					auto const y_a = y(to_world(entity_a->coords));
+					auto const y_b = y(to_world(entity_b->coords));
 					return y_a > y_b;
 				}
 			}
@@ -168,7 +171,7 @@ namespace ql {
 
 				auto& entity_animation = get_animation(entity_view.id);
 
-				float const intensity = static_cast<float>(((entity_view.perception.value() - perception::minimum_level) / (perception::maximum_level - perception::minimum_level)).value);
+				spaces::colors::part const intensity{static_cast<float>(((entity_view.perception.value() - perception::minimum_level) / (perception::maximum_level - perception::minimum_level)).value)};
 				switch (perception::get_category(entity_view.perception)) {
 					case perception::category::none:
 						break;
@@ -176,7 +179,7 @@ namespace ql {
 						_unknown_entity_animation->draw
 							( to_world(entity->coords)
 							, camera
-							, colors::color_vector{intensity, intensity, intensity, 1.0f}
+							, spaces::colors::color{intensity, intensity, intensity, 1.0_c}
 							);
 						break;
 					case perception::category::medium:
@@ -187,9 +190,9 @@ namespace ql {
 						struct heading_drawer {
 							ql::camera const& camera;
 							void operator ()(being const& being) {
-								world_space::point start = to_world(being.coords);
-								world_space::point end = to_world(being.coords.neighbor(being.direction));
-								camera.draw_lines({start, end}, colors::magenta());
+								world::point start = to_world(being.coords);
+								world::point end = to_world(being.coords.neighbor(being.direction));
+								camera.draw_lines({start, end}, spaces::colors::magenta());
 							}
 							void operator ()(object const&) {}
 						};
@@ -200,8 +203,8 @@ namespace ql {
 						//	( overload
 						//		( [](being const& being)
 						//			{
-						//				world_space::point start = to_world(being.coords);
-						//				world_space::point end = to_world(being.coords.neighbor(being.direction));
+						//				world::point start = to_world(being.coords);
+						//				world::point end = to_world(being.coords.neighbor(being.direction));
 						//				camera.draw_lines({start, end}, color::magenta());
 						//			}
 						//		, [](object const&) {}
@@ -212,7 +215,7 @@ namespace ql {
 						entity_animation.draw
 							( to_world(entity->coords)
 							, camera
-							, colors::color_vector{intensity, intensity, intensity, 1.0f}
+							, spaces::colors::color{intensity, intensity, intensity, 1.0_c}
 							);
 						break;
 					}
@@ -268,16 +271,19 @@ namespace ql {
 	}
 
 	void world_renderer::render_terrain() {
-		std::optional<world_space::box> opt_bounds = _world_view->bounds();
+		std::optional<world::box> opt_bounds = _world_view->bounds();
 		if (!opt_bounds) {
 			_terrain_texture = nullptr;
 			return;
 		}
 		_terrain_bounds = *opt_bounds;
 		
-		_terrain_texture = umake<texture>(window_space::vector{lround(width(_terrain_bounds)), lround(height(_terrain_bounds))});
+		_terrain_texture = umake<texture>(spaces::window::vector
+			{ spaces::window::px{lround(width(_terrain_bounds).value)}
+			, spaces::window::px{lround(height(_terrain_bounds).value)}
+			});
 		_terrain_texture->as_target([&] {
-			the_renderer().clear(colors::clear());
+			the_renderer().clear(spaces::colors::clear());
 			for (auto const& section_view : _world_view->section_views()) {
 				auto opt_section = _world_view->region().section_at(section_view.coords);
 				if (opt_section) {
@@ -288,11 +294,11 @@ namespace ql {
 							perception::level tile_perception = section_view.tile_perceptions[section_tile_coords.q.value][section_tile_coords.r.value];
 							if (perception::get_category(tile_perception) != perception::category::none) {
 								region_tile::point const region_tile_coords = section.region_tile_coords(section_tile_coords);
-								world_space::point const tile_game_point = to_world(region_tile_coords);
-								world_space::point const terrain_game_point = _terrain_bounds.position;
-								window_space::point const tile_screen_point
-									{ lround(tile_game_point.x() - terrain_game_point.x())
-									, lround(terrain_game_point.y() - tile_game_point.y() + height(_terrain_bounds) - 1)
+								world::point const tile_game_point = to_world(region_tile_coords);
+								world::point const terrain_game_point = _terrain_bounds.position;
+								spaces::window::point const tile_screen_point
+									{ spaces::window::px{lround(x(tile_game_point).value - x(terrain_game_point).value)}
+									, spaces::window::px{lround(y(terrain_game_point).value - y(tile_game_point).value + height(_terrain_bounds).value - 1)}
 									};
 
 								// Get the current tile.
@@ -302,11 +308,11 @@ namespace ql {
 								// If it's there, use it. Otherwise, create the texture and cache it.
 								texture& tile_texture = it != _tile_textures.end() ? *it->second : cache_tile_texture(tile);
 
-								float const intensity = static_cast<float>(((tile_perception - perception::minimum_level) / (perception::maximum_level - perception::minimum_level)).value);
+								spaces::colors::part const intensity{static_cast<float>(((tile_perception - perception::minimum_level) / (perception::maximum_level - perception::minimum_level)).value)};
 								tile_texture.draw_transformed
 									( tile_screen_point
-									, texture_space::vector::zero()
-									, colors::color_vector{intensity, intensity, intensity, 1.0f}
+									, spaces::window::vector::zero()
+									, spaces::colors::color{intensity, intensity, intensity, 1.0_c}
 									);
 							}
 						}
@@ -323,8 +329,8 @@ namespace ql {
 	void world_renderer::visit(arrow_attack_effect const& e) {
 		static auto arrow_sound_handle = the_sound_manager().add("resources/sounds/spells/eagle-eye.wav");
 
-		world_space::point source = to_world(e.origin());
-		world_space::point target = to_world(e.target);
+		world::point source = to_world(e.origin());
+		world::point target = to_world(e.target);
 		_animations.push_back(std::make_pair(umake<arrow_particle>(source, target), source));
 		the_sound_manager()[arrow_sound_handle].play();
 	}
@@ -332,7 +338,7 @@ namespace ql {
 	void world_renderer::visit(eagle_eye_effect const& e) {
 		static auto eagle_eye_sound_handle = the_sound_manager().add("resources/sounds/spells/eagle-eye.wav");
 
-		world_space::point position = to_world(e.origin());
+		world::point position = to_world(e.origin());
 		for (int i = 0; i < 50; ++i) {
 			_animations.push_back(std::make_pair(umake<green_magic_particle>(), position));
 		}
@@ -348,14 +354,14 @@ namespace ql {
 		auto const target_vitality = target_part ? target_part->stats.a.vitality.value() : 100.0_hp; // Assume vitality = 100 if being no longer exists to check.
 		//! @todo Pass along the vitality in the event object if it's needed here (to avoid having to make up a number).
 
-		world_space::point const position = to_world(e.origin());
+		world::point const position = to_world(e.origin());
 
 		dmg::group const& damage = e.damage;
 
 		for (auto const& part : damage.parts()) {
 			struct damage_renderer {
-				std::vector<std::pair<uptr<animation>, units::world_space::point>>& animations;
-				world_space::point const position;
+				std::vector<std::pair<uptr<animation>, world::point>>& animations;
+				world::point const position;
 				ql::health const target_vitality;
 
 				void spawn_blood(double const damage) {
@@ -369,7 +375,7 @@ namespace ql {
 				void render_slash_or_pierce(double const amount) {
 					spawn_blood(amount);
 					animations.push_back(std::make_pair
-						( umake<text_particle>(std::to_string(lround(amount)), colors::white())
+						( umake<text_particle>(std::to_string(lround(amount)), spaces::colors::white())
 						, position
 						));
 					the_sound_manager()[pierce_sound_handle].play();
@@ -378,7 +384,7 @@ namespace ql {
 				void render_cleave_or_bludgeon(double const amount) {
 					spawn_blood(amount);
 					animations.push_back(std::make_pair
-						( umake<text_particle>(std::to_string(lround(amount)), colors::white())
+						( umake<text_particle>(std::to_string(lround(amount)), spaces::colors::white())
 						, position
 						));
 					the_sound_manager()[hit_sound_handle].play();
@@ -390,31 +396,31 @@ namespace ql {
 				void operator ()(dmg::bludgeon const& bludgeon) { render_cleave_or_bludgeon(bludgeon.value); }
 				void operator ()(dmg::burn const& burn) {
 					animations.push_back(std::make_pair
-						( umake<text_particle>(std::to_string(lround(burn.value)), colors::orange())
+						( umake<text_particle>(std::to_string(lround(burn.value)), spaces::colors::orange())
 						, position
 						));
 				}
 				void operator ()(dmg::freeze const& freeze) {
 					animations.push_back(std::make_pair
-						( umake<text_particle>(std::to_string(lround(freeze.value)), colors::cyan())
+						( umake<text_particle>(std::to_string(lround(freeze.value)), spaces::colors::cyan())
 						, position
 						));
 				}
 				void operator ()(dmg::blight const& blight) {
 					animations.push_back(std::make_pair
-						( umake<text_particle>(std::to_string(lround(blight.value)), colors::black())
+						( umake<text_particle>(std::to_string(lround(blight.value)), spaces::colors::black())
 						, position
 						));
 				}
 				void operator ()(dmg::poison const& poison) {
 					animations.push_back(std::make_pair
-						( umake<text_particle>(std::to_string(lround(poison.value)), colors::purple())
+						( umake<text_particle>(std::to_string(lround(poison.value)), spaces::colors::purple())
 						, position
 						));
 				}
 				void operator ()(dmg::shock const& shock) {
 					animations.push_back(std::make_pair
-						( umake<text_particle>(std::to_string(lround(shock.value)), colors::yellow())
+						( umake<text_particle>(std::to_string(lround(shock.value)), spaces::colors::yellow())
 						, position
 						));
 				}
@@ -426,7 +432,7 @@ namespace ql {
 	void world_renderer::visit(lightning_bolt_effect const& e) {
 		static auto lightning_bolt_sound_handle = the_sound_manager().add("resources/sounds/spells/lightning-bolt.wav");
 
-		world_space::point position = to_world(e.origin());
+		world::point position = to_world(e.origin());
 		for (int i = 0; i < 35; ++i) {
 			_animations.push_back(std::make_pair(umake<yellow_magic_particle>(), position));
 		}

@@ -13,7 +13,8 @@
 #include "utility/reference.hpp"
 #include "utility/utility.hpp"
 
-#include "units/view_space.hpp"
+#include "sdl/spaces/view.hpp"
+#include "vecx/angle.hpp"
 
 #include <cereal/access.hpp>
 #include <cereal/cereal.hpp>
@@ -78,7 +79,7 @@ namespace ql {
 			};
 
 		//! The region this body part occupies, for collision and display.
-		spaces::view::polygon hitbox;
+		sdl::spaces::view::polygon hitbox;
 
 		//! The draw layer, with smaller-numbered layers drawn first (i.e. in the background).
 		int layer = 0;
@@ -182,10 +183,10 @@ namespace ql {
 		std::optional<body_part> part;
 
 		//! The offset from the parent part's origin to the child part's origin.
-		spaces::view::vector offset;
+		sdl::spaces::view::vector offset;
 
 		//! The rotation of the attached part about the attachment point.
-		spaces::view::radians rotation;
+		vecx::radians rotation;
 
 		//! The resource filepath to the default part for this attachment.
 		std::string default_part;

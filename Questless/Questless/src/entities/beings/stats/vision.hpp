@@ -9,9 +9,6 @@
 #include "utility/nonnegative.hpp"
 #include "quantities/quantities.hpp"
 
-#include "units/constants.hpp"
-#include "units/math.hpp"
-
 namespace ql::stats {
 	//! Represents a being's vision-related stats.
 	class vision {

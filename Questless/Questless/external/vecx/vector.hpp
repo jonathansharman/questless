@@ -67,7 +67,8 @@ namespace vecx {
 		template <typename MapOp>
 		constexpr auto map(MapOp const& f) const {
 			return std::apply([this, f](auto const&... components) {
-				return vector{f(components)...};
+				using mapped_type = decltype(f(std::declval<scalar_t>()));
+				return vector<mapped_type, n>{f(components)...};
 			}, components);
 		}
 
@@ -143,10 +144,10 @@ namespace vecx {
 			}
 		}
 
-		//! Creates a copy of this vector, rotated by @p angle.
-		constexpr auto rotated(radians angle) const {
+		//! Creates a copy of this vector, rotated by @p angle in the @p axis1 to @p axis2 plane.
+		constexpr auto rotated(radians angle, std::size_t axis1 = 0, std::size_t axis2 = 1) const {
 			auto result = *this;
-			result.rotate(angle);
+			result.rotate(angle, axis1, axis2);
 			return result;
 		}
 
@@ -174,16 +175,7 @@ namespace vecx {
 				( std::is_convertible_v<scalar_t::rep, double>
 				, "Scalar representation must be convertible to double to find the vector angle."
 				);
-			auto atan2 = [](double x, double y) {
-				return
-					// Positive x half plane: just use atan().
-					x > 0.0 ? gcem::atan(y / x) :
-					// Negative x half plane: need to adjust atan() result.
-					x < 0.0 ? gcem::atan(y / x) + (y >= 0.0 ? constants::pi : -constants::pi) :
-					// On the y-axis: answer is pi or -pi.
-					y > 0.0 ? constants::pi / 2 : -constants::pi / 2;
-			};
-			return radians{atan2(static_cast<double>(components[axis2].value), static_cast<double>(components[axis1].value))};
+			return radians{gcem::atan2(static_cast<double>(components[axis2].value), static_cast<double>(components[axis1].value))};
 		}
 	};
 
@@ -201,13 +193,13 @@ namespace vecx {
 	//! The vector sum of @p v1 and @p v2.
 	template <typename Quantity1, typename Quantity2, std::size_t N>
 	constexpr auto operator +(vector<Quantity1, N> const& v1, vector<Quantity2, N> const& v2) {
-		return v1.zip(v2, std::plus{});
+		return v1.zip(v2, [](auto const& a, auto const& b) { return a + b; });
 	}
 
 	//! The vector difference of @p v1 and @p v2.
 	template <typename Quantity1, typename Quantity2, std::size_t N>
 	constexpr auto operator -(vector<Quantity1, N> const& v1, vector<Quantity2, N> const& v2) {
-		return v1.zip(v2, std::minus{});
+		return v1.zip(v2, [](auto const& a, auto const& b) { return a - b; });
 	}
 
 	//! The negation of @p v.
@@ -219,13 +211,13 @@ namespace vecx {
 	//! Performs component-wise multiplication of @p v1 and @p v2, returning the resulting vector.
 	template <typename Quantity1, typename Quantity2, std::size_t N>
 	constexpr auto component_wise_product(vector<Quantity1, N> const& v1, vector<Quantity2, N> const& v2) {
-		return v1.zip(v2, std::multiplies{});
+		return v1.zip(v2, [](auto const& a, auto const& b) { return a * b; });
 	}
 
 	//! Performs component-wise division of @p v1 and @p v2, returning the resulting vector.
 	template <typename Quantity1, typename Quantity2, std::size_t N>
 	constexpr auto component_wise_quotient(vector<Quantity1, N> const& v1, vector<Quantity2, N> const& v2) {
-		return v1.zip(std::divides{}, v2);
+		return v1.zip([](auto const& a, auto const& b) { return a / b; }, v2);
 	}
 
 	//! Multiplies a vector @p v by a scalar value @p k.

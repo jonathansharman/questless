@@ -8,7 +8,6 @@
 
 namespace sdl {
 	using namespace spaces;
-	using namespace spaces::screen::literals;
 	using namespace spaces::view::literals;
 	using namespace spaces::window::literals;
 
@@ -72,11 +71,11 @@ namespace sdl {
 	}
 
 	void sdl::window::refresh_size() {
-		SDL_GetWindowSize(_sdl_window, &spaces::screen::x(_layout.size).value, &spaces::screen::y(_layout.size).value);
+		SDL_GetWindowSize(_sdl_window, &spaces::window::x(_layout.size).value, &spaces::window::y(_layout.size).value);
 	}
 
 	void sdl::window::refresh_position() {
-		SDL_GetWindowPosition(_sdl_window, &spaces::screen::x(_layout.position).value, &spaces::screen::y(_layout.position).value);
+		SDL_GetWindowPosition(_sdl_window, &spaces::window::x(_layout.position).value, &spaces::window::y(_layout.position).value);
 	}
 
 	bool sdl::window::maximized() const {
@@ -92,22 +91,22 @@ namespace sdl {
 	}
 
 	spaces::window::point sdl::window::window_center() const {
-		return spaces::window::point{width() * (1_px / 1_screen_px) / 2, height() * (1_px / 1_screen_px) / 2};
+		return spaces::window::point{width() / 2, height() / 2};
 	}
 	spaces::window::px sdl::window::window_center_x() const {
-		return width() * (1_px / 1_screen_px) / 2;
+		return width() / 2;
 	}
 	spaces::window::px sdl::window::window_center_y() const {
-		return height() * (1_px / 1_screen_px) / 2;
+		return height() / 2;
 	}
 
 	view::point sdl::window::view_center() const {
-		return view::point{width() / 2.0f, height() / 2.0f};
+		return view::point{width() * (1.0_view_length / 1_px) / 2.0f, height() * (1.0_view_length / 1_px) / 2.0f};
 	}
 	view::length sdl::window::view_center_x() const {
-		return width() * (1.0_view_length / 1_screen_px) / 2.0f;
+		return width() * (1.0_view_length / 1_px) / 2.0f;
 	}
 	view::length sdl::window::view_center_y() const {
-		return height() * (1.0_view_length / 1_screen_px) / 2.0f;
+		return height() * (1.0_view_length / 1_px) / 2.0f;
 	}
 }

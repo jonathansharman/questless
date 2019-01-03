@@ -15,7 +15,8 @@
 #include "sdl/resources.hpp"
 
 using namespace sdl;
-using namespace units;
+using namespace sdl::spaces::sprite_sheet::literals;
+using namespace sdl::spaces::window::literals;
 
 namespace ql {
 	entity_animator::entity_animator() = default;
@@ -29,15 +30,15 @@ namespace ql {
 		// Sprite animation
 		static auto sprite_sheet = smake<ql::sprite_sheet>
 			( the_texture_manager().add("resources/textures/human-animation.png")
-			, sprite_sheet_space::vector{3, 1}
+			, spaces::sprite_sheet::vector{3_cel, 1_cel}
 			);
 		auto sprite_animation = umake<ql::sprite_animation>
 			( sprite_sheet
 			, std::vector<sprite_animation::frame>
-				{ {0.2_s, sprite_sheet_space::point{0, 0}, texture_space::vector{0, 12}}
-				, {0.2_s, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 12}}
-				, {0.2_s, sprite_sheet_space::point{2, 0}, texture_space::vector{0, 12}}
-				, {0.2_s, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 12}}
+				{ {0.2_s, {0_cel, 0_cel}, {0_px, 12_px}}
+				, {0.2_s, {1_cel, 0_cel}, {0_px, 12_px}}
+				, {0.2_s, {2_cel, 0_cel}, {0_px, 12_px}}
+				, {0.2_s, {1_cel, 0_cel}, {0_px, 12_px}}
 				}
 			, sprite_animation::loop_type::looping
 			, sprite_animation::start_time::random
@@ -63,15 +64,15 @@ namespace ql {
 		// Sprite animation
 		static auto sprite_sheet = smake<ql::sprite_sheet>
 			( the_texture_manager().add("resources/textures/goblin-animation.png")
-			, sprite_sheet_space::vector{3, 1}
+			, spaces::sprite_sheet::vector{3_cel, 1_cel}
 			);
 		auto sprite_animation = umake<ql::sprite_animation>
 			( sprite_sheet
 			, std::vector<sprite_animation::frame>
-				{ {0.2_s, sprite_sheet_space::point{0, 0}, texture_space::vector{0, 12}}
-				, {0.2_s, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 12}}
-				, {0.2_s, sprite_sheet_space::point{2, 0}, texture_space::vector{0, 12}}
-				, {0.2_s, sprite_sheet_space::point{1, 0}, texture_space::vector{0, 12}}
+				{ {0.2_s, {0_cel, 0_cel}, {0_px, 12_px}}
+				, {0.2_s, {1_cel, 0_cel}, {0_px, 12_px}}
+				, {0.2_s, {2_cel, 0_cel}, {0_px, 12_px}}
+				, {0.2_s, {1_cel, 0_cel}, {0_px, 12_px}}
 				}
 			, sprite_animation::loop_type::looping
 			, sprite_animation::start_time::random
@@ -97,7 +98,7 @@ namespace ql {
 	void entity_animator::visit(campfire const&) {
 		static auto texture_handle = the_texture_manager().add("resources/textures/entities/objects/campfire.png");
 		auto animation_stack = umake<ql::animation_stack>();
-		animation_stack->add(umake<still>(texture_handle, texture_space::vector{0, 0}));
+		animation_stack->add(umake<still>(texture_handle, spaces::window::vector{0_px, 0_px}));
 		auto flame = umake<ql::flame>();
 		// Pre-update the flame a number of times so it's steady immediately.
 		constexpr int n_pre_updates = 100;
@@ -109,10 +110,10 @@ namespace ql {
 	}
 	void entity_animator::visit(corpse const&) {
 		static auto texture_handle = the_texture_manager().add("resources/textures/entities/objects/grave.png");
-		_animation = umake<still>(texture_handle, texture_space::vector{0, 12});
+		_animation = umake<still>(texture_handle, spaces::window::vector{0_px, 12_px});
 	}
 	void entity_animator::visit(item_box const&) {
 		static auto texture_handle = the_texture_manager().add("resources/textures/entities/objects/item-box.png");
-		_animation = umake<still>(texture_handle, texture_space::vector{0, 8});
+		_animation = umake<still>(texture_handle, spaces::window::vector{0_px, 8_px});
 	}
 }

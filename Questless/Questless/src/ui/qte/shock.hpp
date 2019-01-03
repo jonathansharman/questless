@@ -22,11 +22,11 @@ namespace ql::qte {
 		void draw() const final;
 	private:
 		struct charge {
-			units::world_space::point position;
-			units::world_space::velocity velocity;
+			world::point position;
+			world::vel velocity;
 		};
 
-		units::world_space::point _target_point;
+		world::point _target_point;
 		continuation<double> _cont;
 
 		sec _elapsed_time = 0.0_s;

@@ -15,7 +15,6 @@ namespace ql::stats {
 		aggregate a{};
 
 		nonnegative<ql::per_tick> regen = 0_per_tick;
-		nonnegative<ql::toughness> toughness = 0.0_tgh;
 		ql::temperature min_temp{0.0};
 		ql::temperature max_temp{0.0};
 		nonnegative<ql::stealth> stealth = 0.0_stl;
@@ -28,7 +27,6 @@ namespace ql::stats {
 		being
 			( aggregate a
 			, ql::per_tick regen
-			, ql::toughness toughness
 			, ql::stealth stealth
 			, ql::temperature min_temp
 			, ql::temperature max_temp
@@ -38,7 +36,6 @@ namespace ql::stats {
 			)
 			: a{a}
 			, regen{regen}
-			, toughness{toughness}
 			, min_temp{min_temp}
 			, max_temp{max_temp}
 			, stealth{stealth}
@@ -52,7 +49,6 @@ namespace ql::stats {
 			archive
 				( CEREAL_NVP(a)
 				, CEREAL_NVP(regen)
-				, CEREAL_NVP(toughness)
 				, CEREAL_NVP(min_temp)
 				, CEREAL_NVP(max_temp)
 				, CEREAL_NVP(stealth)
@@ -67,7 +63,6 @@ namespace ql::stats {
 			archive
 				( CEREAL_NVP(a)
 				, CEREAL_NVP(regen)
-				, CEREAL_NVP(toughness)
 				, CEREAL_NVP(min_temp)
 				, CEREAL_NVP(max_temp)
 				, CEREAL_NVP(stealth)

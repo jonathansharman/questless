@@ -8,45 +8,49 @@
 
 #include "sdl/resources.hpp"
 
+using namespace ql::world::literals;
+
 using namespace sdl;
-using namespace units;
+using namespace sdl::spaces::window::literals;
+
+using namespace vecx;
 
 namespace ql {
 	void camera::update() {
-		window_space::vector center_to_mouse = the_input().mouse_position() - the_window().window_center();
-		world_space::vector scaled_center_to_mouse = world_space::vector
-			{ static_cast<double>(center_to_mouse.x())
-			, static_cast<double>(-center_to_mouse.y())
+		spaces::window::vector center_to_mouse = the_input().mouse_position() - the_window().window_center();
+		world::vector scaled_center_to_mouse = world::vector
+			{ center_to_mouse[0] * 1.0_world_length / 1_px
+			, center_to_mouse[1] * -1.0_world_length / 1_px
 			} / zoom;
 		_point_hovered = position + scaled_center_to_mouse;
-		_point_hovered.rotate(position, _angle);
+		_point_hovered.rotate(position, angle);
 		_tile_hovered = to_region_tile(_point_hovered);
 	}
 
 	void camera::draw
 		( texture const& texture
-		, world_space::point position
-		, texture_space::vector origin
-		, colors::color_vector draw_color_vector
-		, view_space::vector scale
-		, world_space::radians angle
-		, std::optional<texture_space::box> const& src_rect
+		, world::point draw_position
+		, spaces::window::vector origin
+		, spaces::colors::color draw_color_factor
+		, spaces::view::vector scale
+		, radians draw_angle
+		, std::optional<spaces::window::box> const& src_rect
 		) const
 	{
 		texture.draw_transformed
-			( to_window_point(position)
+			( to_window_point(draw_position)
 			, origin
-			, draw_color_vector * color_vector
+			, component_wise_quotient(component_wise_product(draw_color_factor, color_factor), spaces::colors::white())
 			, scale
-			, angle - _angle
+			, draw_angle - angle.value()
 			, src_rect
 			);
 	}
 
-	void camera::draw_lines(std::vector<world_space::point> points, colors::color color) const {
+	void camera::draw_lines(std::vector<world::point> points, spaces::colors::color color) const {
 		// Transform segment end points.
-		std::vector<window_space::point> window_points;
-		for (world_space::point const& point : points) {
+		std::vector<spaces::window::point> window_points;
+		for (auto const& point : points) {
 			window_points.push_back(to_window_point(point));
 		}
 
@@ -54,11 +58,17 @@ namespace ql {
 		the_renderer().draw_lines(window_points, color);
 	}
 
-	window_space::point camera::to_window_point(world_space::point point) const {
-		world_space::point const window_center = world_space::point{0.0, 0.0} + world_space::vector{static_cast<double>(the_window().width()), static_cast<double>(the_window().height())} / 2.0;
-		world_space::vector const camera_to_point = point - position;
-		world_space::point const scaled_point = zoom.value() * world_space::vector{camera_to_point.x(), -camera_to_point.y()} + window_center;
-		world_space::point const rotated_scaled_point = scaled_point.rotated(window_center, _angle);
-		return window_space::point{lround(rotated_scaled_point.x()), lround(rotated_scaled_point.y())};
+	spaces::window::point camera::to_window_point(world::point point) const {
+		world::point const window_center = world::point{0.0_world_length, 0.0_world_length} + world::vector
+			{ the_window().width()
+			, the_window().height()
+			} / 2.0;
+		world::vector const camera_to_point = point - position;
+		world::point const scaled_point = zoom.value() * world::vector{x(camera_to_point), -y(camera_to_point)} + window_center;
+		world::point const rotated_scaled_point = scaled_point.rotated(window_center, angle);
+		return spaces::window::point
+			{ spaces::window::px{lround(x(rotated_scaled_point).value)}
+			, spaces::window::px{lround(y(rotated_scaled_point).value)}
+			};
 	}
 }

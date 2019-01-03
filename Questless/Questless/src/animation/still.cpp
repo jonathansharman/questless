@@ -6,23 +6,25 @@
 #include "animation/still.hpp"
 
 using namespace sdl;
-using namespace units;
+using namespace sdl::spaces::view::literals;
+
+using namespace vecx::literals;
 
 namespace ql {
-	void still::draw(window_space::point position) const {
+	void still::draw(spaces::window::point position) const {
 		texture const& texture = the_texture_manager()[_texture_handle];
-		window_space::point dst_point{position.x() - _origin.u(), position.y() - _origin.v()};
+		spaces::window::point dst_point{x(position) - _origin[0], y(position) - _origin[1]};
 		texture.draw(dst_point);
 	}
 
-	void still::draw(world_space::point position, camera const& camera, colors::color_vector color) const {
+	void still::draw(world::point position, camera const& camera, spaces::colors::color color) const {
 		camera.draw
 			( the_texture_manager()[_texture_handle]
-			, world_space::point{position}
+			, world::point{position}
 			, _origin
 			, color
-			, view_space::vector{1.0f, 1.0f}
-			, world_space::radians{0.0}
+			, {1.0_view_length, 1.0_view_length}
+			, 0.0_rad
 			);
 	}
 }

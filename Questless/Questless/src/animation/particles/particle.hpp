@@ -28,35 +28,35 @@ namespace ql {
 		//! @param lifetime The duration of the particle's life, after which it is considered expired and should be removed.
 		//! @param max_displacement Maximum random displacement from the given position.
 		particle
-			( units::world_space::vector displacement
-			, units::world_space::velocity velocity
-			, units::world_space::acceleration acceleration
-			, units::world_space::radians angle
-			, units::world_space::radians_per_sec angular_velocity
-			, units::world_space::scalar scale
-			, units::world_space::scale_velocity scale_velocity
-			, units::world_space::seconds lifetime
+			( world::vector displacement
+			, world::vel velocity
+			, world::accel acceleration
+			, vecx::radians angle
+			, world::angular_vel angular_velocity
+			, double scale
+			, per_sec scale_velocity
+			, sec lifetime
 			, max_displacement max_displacement = max_displacement{15.0}
 			);
 
 		virtual ~particle() = default;
 
-		void draw(spaces::window::point position) const final;
+		void draw(sdl::spaces::window::point position) const final;
 
-		void draw(units::world_space::point position, camera const& camera, spaces::colors::color_vector color_vector = spaces::colors::white_vector()) const final;
+		void draw(world::point position, camera const& camera, sdl::spaces::colors::color color_factor = sdl::spaces::colors::white()) const final;
 	protected:
 		//! @todo Are these protected variables the right way to do this?
 
-		units::world_space::vector _displacement;
-		units::world_space::velocity _velocity;
-		units::world_space::acceleration _acceleration;
-		units::world_space::radians _angle;
-		units::world_space::radians_per_sec _angular_velocity;
-		units::world_space::scalar _scale;
-		units::world_space::scale_velocity _scale_velocity;
+		world::vector _displacement;
+		world::vel _velocity;
+		world::accel _acceleration;
+		vecx::radians _angle;
+		world::angular_vel _angular_velocity;
+		double _scale;
+		per_sec _scale_velocity;
 		sec _lifetime;
 		sec _time_left;
-		spaces::colors::color_vector _color_vector;
+		sdl::spaces::colors::color _color_factor;
 
 		//! The texture to be used when drawing a particle.
 		virtual sdl::texture const& texture() const = 0;

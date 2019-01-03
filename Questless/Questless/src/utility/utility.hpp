@@ -6,7 +6,9 @@
 #pragma once
 
 #include "reference.hpp"
-#include "units/world_space.hpp"
+#include "world/world.hpp"
+
+#include <range/v3/all.hpp>
 
 namespace ql {
 	//! Useful for selectively disabling constexpr branches.
@@ -59,14 +61,11 @@ namespace ql {
 		return result;
 	}
 
-	//! @todo Reenable when ranges is support in VS again, if desired.
-	/*
 	//! Returns a transform view to statically cast elements to type @p T.
 	template <typename T>
 	static auto cast_transform() {
 		return ranges::view::transform([](auto arg) { return static_cast<T>(arg); });
 	}
-	*/
 
 	template <typename... Ts> struct overloaded : Ts... { using Ts::operator ()...; };
 	template <typename... Ts> overloaded(Ts...) -> overloaded<Ts...>;

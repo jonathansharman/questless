@@ -7,7 +7,7 @@
 #include "ui/dialog.hpp"
 
 #include "magic/spell.hpp"
-#include "units/world_space.hpp"
+#include "world/world.hpp"
 
 namespace ql::qte {
 	//! Quick time event for incanting a spell.
@@ -37,7 +37,7 @@ namespace ql::qte {
 
 		bool _begun = false;
 
-		units::world_space::seconds _elapsed_time = 0.0s;
+		sec _elapsed_time = 0.0_s;
 
 		std::vector<note> _notes;
 

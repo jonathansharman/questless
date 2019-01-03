@@ -6,8 +6,7 @@
 #pragma once
 
 #include "utility.hpp"
-
-#include "units/world_space.hpp"
+#include "world/world.hpp"
 
 #include <random>
 #include <type_traits>
@@ -17,7 +16,7 @@ namespace ql {
 	std::mt19937_64& prng() {
 		static auto result = [] {
 			std::random_device seeder{};
-			return std::mt19937_64{seeder};
+			return std::mt19937_64{seeder()};
 		}();
 		return result;
 	}
@@ -51,7 +50,7 @@ namespace ql {
 		std::fill
 			( result.components.begin()
 			, result.components.end()
-			, uniform(Space::scalar(0), Space::scalar(1)) * units::world_space::radians::circle()
+			, uniform(Space::scalar(0), Space::scalar(1)) * world::radians::circle()
 			);
 	}
 
@@ -60,7 +59,7 @@ namespace ql {
 	//! @param max_length The maximum possible length of the displacement.
 	template <typename Space>
 	typename Space::vector random_displacement(typename Space::scalar min_length, typename Space::scalar max_length) {
-		return units::world_space::vector{random_angle<Space>(), uniform(min_length, max_length)};
+		return world::vector{random_angle<Space>(), uniform(min_length, max_length)};
 	}
 
 	//! A displacement based on a uniform random distance and uniform random angle.
@@ -71,7 +70,8 @@ namespace ql {
 	}
 
 	//! A uniformly randomly sampled point from within the bounds of @p box.
-	inline units::world_space::point random_point_within(units::world_space::box box) {
-		return box.position + units::world_space::vector{uniform(0.0, width(box)), uniform(0.0, height(box))};
+	inline world::point random_point_within(world::box box) {
+		//! @todo Check containment logic here.
+		return box.position + world::vector{world::length{uniform(0.0, width(box).value)}, world::length{uniform(0.0, height(box).value)}};
 	}
 }

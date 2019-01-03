@@ -23,15 +23,15 @@ namespace ql {
 			return *_animations.back();
 		}
 
-		void draw(spaces::window::point position) const {
+		void draw(sdl::spaces::window::point position) const {
 			for (auto& animation : _animations) {
 				animation->draw(position);
 			}
 		}
 
-		void draw(units::world_space::point position, camera const& camera, spaces::colors::color_vector color_vector = spaces::colors::white_vector()) const {
+		void draw(world::point position, camera const& camera, sdl::spaces::colors::color color_factor = sdl::spaces::colors::white()) const {
 			for (auto& animation : _animations) {
-				animation->draw(position, camera, color_vector);
+				animation->draw(position, camera, color_factor);
 			}
 		}
 	private:

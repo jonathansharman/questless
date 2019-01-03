@@ -7,7 +7,6 @@
 #include "items/scroll.hpp"
 
 using namespace sdl;
-using namespace units;
 
 namespace ql {
 	void spell_texturer::visit(magic::eagle_eye const&) {

@@ -17,11 +17,11 @@ namespace vecx {
 		//! The number of dimensions of this box type.
 		static constexpr std::size_t n = N;
 
-		//! Alignment along the axis with index @p Axis.
-		template <std::size_t Axis>
-		struct align {
-			static constexpr std::size_t axis = Axis;
-			enum { near, mid, far } align;
+		//! The axis with index @p index.
+		template <std::size_t Index>
+		struct axis {
+			static constexpr std::size_t index = Index;
+			enum class align_t { near, mid, far } align;
 		};
 
 		//! The position of the minimal corner of this box.
@@ -30,15 +30,26 @@ namespace vecx {
 		//! The size or extent of this box.
 		vector<scalar_t, n> size{};
 
-		box() = default;
-		box(box const&) = default;
-		box(box&&) = default;
+		constexpr box() = default;
+		constexpr box(box const&) = default;
+		constexpr box(box&&) = default;
 
 		//! @param position The position of the minimal corner of this box.
 		//! @param size The size or extent of this box.
-		box(point<scalar_t, n> position, vector<scalar_t, n> size)
+		constexpr box(point<scalar_t, n> position, vector<scalar_t, n> size)
 			: position{position}, size{size}
 		{}
+
+		constexpr box& operator =(box const& other) {
+			this->position = other.position;
+			this->size = other.size;
+			return *this;
+		}
+		constexpr box& operator =(box&& other) {
+			this->position = std::move(other.position);
+			this->size = std::move(other.size);
+			return *this;
+		}
 
 		constexpr bool operator ==(box const& that) const {
 			return position == that.position && size == that.size;

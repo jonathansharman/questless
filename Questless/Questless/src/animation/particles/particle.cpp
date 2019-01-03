@@ -56,10 +56,10 @@ namespace ql {
 	}
 
 	void particle::draw(spaces::window::point position) const {
-		texture().draw(position, texture_space::align_center, texture_space::align_middle);
+		texture().draw(position, spaces::window::align_center, spaces::window::align_middle);
 	}
 
-	void particle::draw(units::world_space::point position, camera const& camera, colors::color_vector color_vector) const {
+	void particle::draw(world::point position, camera const& camera, colors::color_vector color_vector) const {
 		// Determine color vector to use.
 		color_vector = ignore_color_mod() ? _color_vector : color_vector * _color_vector;
 		if (fade_out()) {
@@ -69,11 +69,11 @@ namespace ql {
 		camera.draw
 			( texture()
 			, position + _displacement
-			, texture_space::vector::zero()
+			, spaces::window::vector::zero()
 			, color_vector
-			, view_space::vector
-				{ static_cast<view_space::scalar>(_scale)
-				, static_cast<view_space::scalar>(_scale)
+			, spaces::view::vector
+				{ static_cast<spaces::view::scalar>(_scale)
+				, static_cast<spaces::view::scalar>(_scale)
 				}
 			, _angle
 			);

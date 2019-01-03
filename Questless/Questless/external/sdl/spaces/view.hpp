@@ -32,16 +32,16 @@ namespace sdl::spaces::view {
 
 	using box = vecx::box<length, 2>;
 
-	using h_align = box::align<0>;
-	using v_align = box::align<1>;
+	using h_align = box::axis<0>::align_t;
+	using v_align = box::axis<1>::align_t;
 
-	constexpr auto left_align = h_align{h_align::near};
-	constexpr auto center_align = h_align{h_align::mid};
-	constexpr auto right_align = h_align{h_align::far};
+	constexpr auto left_align = h_align::near;
+	constexpr auto center_align = h_align::mid;
+	constexpr auto right_align = h_align::far;
 
-	constexpr auto top_align = v_align{v_align::near};
-	constexpr auto middle_align = v_align{v_align::mid};
-	constexpr auto bottom_align = v_align{v_align::far};
+	constexpr auto top_align = v_align::near;
+	constexpr auto middle_align = v_align::mid;
+	constexpr auto bottom_align = v_align::far;
 
 	DEFINE_BOX_SIZE_NAME(box, 0, width);
 	DEFINE_BOX_SIZE_NAME(box, 1, height);
@@ -53,6 +53,7 @@ namespace sdl::spaces::view {
 	constexpr auto top_right(box const& box) { return point{x(box.position) + x(box.size), y(box.position)}; }
 	constexpr auto bottom_left(box const& box) { return point{x(box.position), y(box.position) + y(box.size)}; }
 	constexpr auto bottom_right(box const& box) { return box.position + box.size; }
+	constexpr auto center(box const& box) { return box.position + box.size / 2; }
 
 	// Circle
 

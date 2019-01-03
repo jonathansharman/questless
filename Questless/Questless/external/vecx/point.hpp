@@ -104,7 +104,7 @@ namespace vecx {
 		//! Creates a copy of this point, rotated around another point.
 		//! @param origin The origin around which to rotate this point.
 		//! @param angle The angle of the rotation, from @p axis1 to @p axis2.
-		constexpr auto rotated(radians angle, std::size_t axis1 = 0, std::size_t axis2 = 1) const {
+		constexpr auto rotated(point<scalar_t, n> const& origin, radians angle, std::size_t axis1 = 0, std::size_t axis2 = 1) const {
 			return origin + (*this - origin).rotated(angle, axis1, axis2);
 		}
 
@@ -141,8 +141,8 @@ namespace vecx {
 	template <typename QuantityVector, typename QuantityPoint, std::size_t N>
 	constexpr auto operator +(vector<QuantityVector, N> const& v, point<QuantityPoint, N> const& p) {
 		auto result = p;
-		for (auto& component : result) {
-			component = v + component;
+		for (std::size_t i = 0; i < N; ++i) {
+			result[i] = v[i] + p[i];
 		}
 		return result;
 	}
@@ -197,7 +197,7 @@ TEST_CASE("[point] operations") {
 	SUBCASE("scalar operations") {
 		q_t k = q_t{2};
 		SUBCASE("scalar multiplication") {
-			v_t expected{q2_t{6}, q2_t{8}};
+			constexpr auto expected = vector{q2_t{6}, q2_t{8}};
 			CHECK(k * v1 == expected);
 			CHECK(v1 * k == expected);
 		}

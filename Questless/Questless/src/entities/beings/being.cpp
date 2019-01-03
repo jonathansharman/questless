@@ -303,7 +303,7 @@ namespace ql {
 		}
 
 		// Part loses health.
-		target_part.health -= damage.health_loss() / (1.0 + (stats.toughness.value() / 100.0_tgh).value);
+		target_part.health -= damage.health_loss();
 
 		// Check for part disability.
 		if (target_part.health.value() <= 0.0_hp) {
@@ -404,7 +404,6 @@ namespace ql {
 
 		if (weary()) {
 			result.a.strength *= 0.5;
-			result.toughness *= 0.5;
 		}
 		if (sleepy()) {
 			result.a.agility *= 0.5;

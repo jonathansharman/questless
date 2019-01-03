@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include "spaces/screen.hpp"
 #include "spaces/window.hpp"
 
 #include <SDL.h>
@@ -83,18 +82,18 @@ namespace sdl {
 		bool resizable() const;
 
 		//! The position of the window in screen space.
-		spaces::screen::point position() const { return _layout.position; }
+		spaces::window::point position() const { return _layout.position; }
 		//! The x-coordinate of the window in screen space.
-		spaces::screen::px x() const { return spaces::screen::x(_layout.position); }
+		spaces::window::px x() const { return spaces::window::x(_layout.position); }
 		//! The y-coordinate of the window in screen space.
-		spaces::screen::px y() const { return spaces::screen::y(_layout.position); }
+		spaces::window::px y() const { return spaces::window::y(_layout.position); }
 
 		//! The size/resolution of the window in screen space.
-		spaces::screen::vector size() const { return _layout.size; }
+		spaces::window::vector size() const { return _layout.size; }
 		//! The width of the window in screen space.
-		spaces::screen::px width() const { return spaces::screen::x(_layout.size); }
+		spaces::window::px width() const { return spaces::window::x(_layout.size); }
 		//! The height of the window in screen space.
-		spaces::screen::px height() const { return spaces::screen::y(_layout.size); }
+		spaces::window::px height() const { return spaces::window::y(_layout.size); }
 
 		//! The center point of the window, in window space.
 		spaces::window::point window_center() const;
@@ -114,7 +113,7 @@ namespace sdl {
 		std::string _title;
 		std::string _icon_filename;
 
-		spaces::screen::box _layout;
+		spaces::window::box _layout;
 
 		//! The SDL window flags.
 		Uint32 flags() const { return SDL_GetWindowFlags(_sdl_window); }

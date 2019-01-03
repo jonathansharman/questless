@@ -9,7 +9,6 @@
 #include <SDL_image.h>
 
 #include "spaces/colors.hpp"
-#include "spaces/texture.hpp"
 #include "spaces/window.hpp"
 
 #include "vecx/angle.hpp"
@@ -29,7 +28,7 @@ namespace sdl {
 	class texture {
 	public:
 		//! Constructs a targetable, blank texture with the specified dimensions. Useful for building textures at run time.
-		//! @param size The size of this texture in screen space.
+		//! @param size The size of this texture in texture space.
 		//! @param color The initial background color for the texture. Defaults to clear black.
 		texture(spaces::window::vector size = spaces::window::vector::zero(), spaces::colors::color color = spaces::colors::clear());
 
@@ -49,12 +48,12 @@ namespace sdl {
 		texture& operator =(texture&&) &;
 
 		//! The width of this texture.
-		spaces::window::px width() const { return x(_size); }
+		spaces::window::px width() const { return _size[0]; }
 
 		//! The height of this texture.
-		spaces::window::px height() const { return y(_size); }
+		spaces::window::px height() const { return _size[1]; }
 
-		//! The width and height of the texture, as a screen space vector.
+		//! The width and height of the texture, as a window space vector.
 		spaces::window::vector size() const { return _size; }
 
 		//! Draws all or part of the texture to the screen (or current frame buffer).
@@ -67,37 +66,40 @@ namespace sdl {
 		template <typename Point>
 		void draw
 			( Point position
-			, spaces::texture::h_align horizontal_alignment = spaces::texture::align_left
-			, spaces::texture::v_align vertical_alignment = spaces::texture::align_top
+			, spaces::window::h_align horizontal_alignment = spaces::window::left_align
+			, spaces::window::v_align vertical_alignment = spaces::window::top_align
 			, spaces::colors::color color_factor = spaces::colors::white()
-			, std::optional<spaces::texture::box> const& src_rect = std::nullopt
-			) const {
+			, std::optional<spaces::window::box> const& src_rect = std::nullopt
+			) const
+		{
 			switch (horizontal_alignment) {
-				case units::texture_space::align_left:
-					position.x() += width() / 2;
+				case spaces::window::left_align:
+					x(position) += width() / 2;
 					break;
-				case units::texture_space::align_center:
+				case spaces::window::center_align:
 					break;
-				case units::texture_space::align_right:
-					position.x() -= width() / 2;
+				case spaces::window::right_align:
+					x(position) -= width() / 2;
 					break;
 			}
 			switch (vertical_alignment) {
-				case units::texture_space::align_top:
-					position.y() += height() / 2;
+				case spaces::window::top_align:
+					y(position) += height() / 2;
 					break;
-				case units::texture_space::align_middle:
+				case spaces::window::middle_align:
 					break;
-				case units::texture_space::align_bottom:
-					position.y() -= height() / 2;
+				case spaces::window::bottom_align:
+					y(position) -= height() / 2;
 					break;
 			}
+			using namespace spaces::view::literals;
+			using namespace vecx::literals;
 			draw_transformed
 				( position
-				, units::texture_space::vector::zero()
+				, spaces::window::vector::zero()
 				, color_factor
-				, spaces::view::vector{1.0f, 1.0f}
-				, units::world_space::radians::zero()
+				, spaces::view::vector{1.0_view_length, 1.0_view_length}
+				, 0.0_rad
 				, src_rect
 				);
 		}
@@ -112,11 +114,11 @@ namespace sdl {
 		//! @param src_rect The section of the texture to be drawn. If nullopt, the entire texture is used.
 		void draw_transformed
 			( std::variant<spaces::window::point, spaces::view::point> position
-			, spaces::texture::vector origin = spaces::texture::vector::zero()
+			, spaces::window::vector origin = spaces::window::vector::zero()
 			, spaces::colors::color color_factor = spaces::colors::white()
 			, spaces::view::vector scale = {spaces::view::length{1.0}, spaces::view::length{1.0}}
 			, vecx::radians angle = vecx::radians{0.0}
-			, std::optional<spaces::texture::box> const& src_rect = std::nullopt
+			, std::optional<spaces::window::box> const& src_rect = std::nullopt
 			) const;
 
 		//! Executes the given code with this texture as the render target so that draw operations will affect this texture instead of the screen buffer.

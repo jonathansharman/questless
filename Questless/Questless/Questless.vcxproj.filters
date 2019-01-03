@@ -597,13 +597,7 @@
     <ClInclude Include="external\sdl\spaces\view.hpp">
       <Filter>external\sdl\spaces</Filter>
     </ClInclude>
-    <ClInclude Include="external\sdl\spaces\texture.hpp">
-      <Filter>external\sdl\spaces</Filter>
-    </ClInclude>
     <ClInclude Include="external\sdl\spaces\sprite_sheet.hpp">
-      <Filter>external\sdl\spaces</Filter>
-    </ClInclude>
-    <ClInclude Include="external\sdl\spaces\screen.hpp">
       <Filter>external\sdl\spaces</Filter>
     </ClInclude>
     <ClInclude Include="external\vecx\angle.hpp">

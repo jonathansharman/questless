@@ -18,7 +18,6 @@ namespace ql::stats {
 	struct spirit_modifier { ql::mana amount; };
 	struct regen_modifier { ql::per_tick amount; };
 	struct strength_modifier { ql::strength amount; };
-	struct toughness_modifier { ql::toughness amount; };
 	struct stamina_modifier { ql::energy amount; };
 	struct agility_modifier { ql::agility amount; };
 	struct stealth_modifier { ql::stealth amount; };
@@ -62,7 +61,6 @@ namespace ql::stats {
 				MATCH_TYPE(spirit_modifier) stats.a.spirit += mod.amount;
 				MATCH_TYPE(regen_modifier) stats.regen += mod.amount;
 				MATCH_TYPE(strength_modifier) stats.a.strength += mod.amount;
-				MATCH_TYPE(toughness_modifier) stats.toughness += mod.amount;
 				MATCH_TYPE(stamina_modifier) stats.a.stamina += mod.amount;
 				MATCH_TYPE(agility_modifier) stats.a.agility += mod.amount;
 				MATCH_TYPE(stealth_modifier) stats.stealth += mod.amount;

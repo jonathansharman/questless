@@ -8,7 +8,6 @@
 #include <vector>
 
 #include "entities/beings/body_part.hpp"
-#include "units/window_space.hpp"
 
 namespace ql {
 	class being;

@@ -15,7 +15,8 @@
 #include "items/scroll.hpp"
 
 using namespace sdl;
-using namespace units;
+using namespace sdl::spaces::window::literals;
+using namespace sdl::spaces::colors::literals;
 
 namespace ql {
 	void item_renderer::visit(arrow const&) {
@@ -70,8 +71,8 @@ namespace ql {
 					texture& scroll_texture = the_texture_manager()[scroll_handle];
 					auto texture = umake<sdl::texture>(scroll_texture.size());
 					texture->as_target([&] {
-						scroll_texture.draw(window_space::point{0, 0});
-						the_texture_manager()[spell_handle].draw(window_space::point{0, 0});
+						scroll_texture.draw(spaces::window::point{0_px, 0_px});
+						the_texture_manager()[spell_handle].draw(spaces::window::point{0_px, 0_px});
 					});
 					return texture;
 				});
@@ -89,28 +90,36 @@ namespace ql {
 			the_texture_manager()[empty_texture_handle].draw(_position);
 		} else {
 			static auto non_empty_texture_handle = the_texture_manager().add("resources/textures/items/soul-gem.png");
-			colors::color_vector const draw_color_vector = [&] {
-				float const alpha = static_cast<float>((gatestone.charge.value() / gatestone.capacity()).value);
+			spaces::colors::color const draw_color_vector = [&] {
+				spaces::colors::part const alpha{static_cast<float>((gatestone.charge.value() / gatestone.capacity()).value)};
 				switch (gatestone.color()) {
-					case magic::color::white:  return colors::white_vector(alpha);
-					case magic::color::black:  return colors::color_vector{0.2f, 0.2f, 0.2f, alpha};
-					case magic::color::green:  return colors::green_vector(alpha);
-					case magic::color::red:    return colors::red_vector(alpha);
-					case magic::color::blue:   return colors::blue_vector(alpha);
-					case magic::color::yellow: return colors::yellow_vector(alpha);
-					case magic::color::violet: return colors::purple_vector(alpha);
-					case magic::color::orange: return colors::orange_vector(alpha);
+					case magic::color::white:  return spaces::colors::white(alpha);
+					case magic::color::black:  return spaces::colors::color{0.2_c, 0.2_c, 0.2_c, alpha};
+					case magic::color::green:  return spaces::colors::green(alpha);
+					case magic::color::red:    return spaces::colors::red(alpha);
+					case magic::color::blue:   return spaces::colors::blue(alpha);
+					case magic::color::yellow: return spaces::colors::yellow(alpha);
+					case magic::color::violet: return spaces::colors::purple(alpha);
+					case magic::color::orange: return spaces::colors::orange(alpha);
 					default: assert(false && "Invalid spell color."); //! @todo Replace with precondition when available and remove dummy return value.
 				}
-				return colors::color_vector{};
+				return spaces::colors::color{};
 			}();
 			// Draw the gatestone.
-			the_texture_manager()[empty_texture_handle].draw(_position, texture_space::align_left, texture_space::align_top);
-			the_texture_manager()[non_empty_texture_handle].draw(_position, texture_space::align_left, texture_space::align_top, draw_color_vector);
+			the_texture_manager()[empty_texture_handle].draw(_position, spaces::window::left_align, spaces::window::top_align);
+			the_texture_manager()[non_empty_texture_handle].draw(_position, spaces::window::left_align, spaces::window::top_align, draw_color_vector);
 			// Draw charge bar.
-			the_renderer().draw_box(window_space::box{_position, window_space::vector{6, 55}}, colors::black());
-			colors::color const fill_color{draw_color_vector.red(), draw_color_vector.green(), draw_color_vector.blue(), 1.0f};
-			the_renderer().draw_box(window_space::box{_position, window_space::vector{6, static_cast<int>(55.0 * (gatestone.charge.value() / gatestone.capacity()).value)}}, 1, colors::black(), fill_color);
+			the_renderer().draw_box(spaces::window::box{_position, {6_px, 55_px}}, spaces::colors::black());
+			spaces::colors::color const fill_color{r(draw_color_vector), g(draw_color_vector), b(draw_color_vector), 1.0_c};
+			the_renderer().draw_box
+				( spaces::window::box
+					{ _position
+					, spaces::window::vector{6_px, spaces::window::px{static_cast<int>(55.0 * (gatestone.charge.value() / gatestone.capacity()).value)}}
+					}
+				, 1_px
+				, spaces::colors::black()
+				, fill_color
+				);
 
 			//! @todo Clean this up. Remove magic numbers.
 		}
