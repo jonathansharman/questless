@@ -27,7 +27,7 @@ namespace ql {
 	}
 
 	//! Generates a random value with a uniform distribution in [@p min, @p max].
-	template<typename Arithmetic>
+	template <typename Arithmetic>
 	typename Arithmetic uniform(Arithmetic min, Arithmetic max) {
 		if constexpr (std::is_integral_v<Arithmetic>) {
 			return std::uniform_int_distribution<Arithmetic>(min, max)(prng());
@@ -38,40 +38,42 @@ namespace ql {
 		}
 	}
 
+	//! Overload of the uniform sample function for quantity types.
+	template <typename Rep, typename Unit>
+	auto uniform(cancel::quantity<Rep, Unit> const& min, cancel::quantity<Rep, Unit> const& max) {
+		return cancel::quantity<Rep, Unit>{uniform(min.value, max.value)};
+	}
+
 	//! True or false with @p probability chance of returning true.
 	inline bool bernoulli_trial(double probability) {
 		return probability > uniform(0.0, 1.0);
 	}
 
-	//! A random angle in radians.
-	template <typename Space>
-	typename Space::radians random_angle() {
-		typename Space::radians result;
-		std::fill
-			( result.components.begin()
-			, result.components.end()
-			, uniform(Space::scalar(0), Space::scalar(1)) * world::radians::circle()
-			);
+	//! A random angle in degrees.
+	typename vecx::radians random_radians() {
+		return uniform(vecx::radians{0.0}, vecx::circle_rad);
+	}
+
+	//! A random angle in degrees.
+	typename vecx::degrees random_degrees() {
+		return uniform(vecx::degrees{0.0}, vecx::circle_deg);
 	}
 
 	//! A displacement based on a uniform random distance and uniform random angle.
 	//! @param min_length The minimum possible length of the displacement.
 	//! @param max_length The maximum possible length of the displacement.
-	template <typename Space>
-	typename Space::vector random_displacement(typename Space::scalar min_length, typename Space::scalar max_length) {
-		return world::vector{random_angle<Space>(), uniform(min_length, max_length)};
+	typename world::vector random_displacement(world::length min_length, world::length max_length) {
+		return make_polar_vector(uniform(min_length, max_length), random_radians());
 	}
 
 	//! A displacement based on a uniform random distance and uniform random angle.
 	//! @param max_length The maximum possible length of the displacement.
-	template <typename Space>
-	typename Space::vector random_displacement(typename Space::scalar max_length) {
-		return random_displacement(Space::scalar(0), max_length);
+	typename world::vector random_displacement(world::length max_length) {
+		return random_displacement(world::length{0.0}, max_length);
 	}
 
 	//! A uniformly randomly sampled point from within the bounds of @p box.
-	inline world::point random_point_within(world::box box) {
-		//! @todo Check containment logic here.
-		return box.position + world::vector{world::length{uniform(0.0, width(box).value)}, world::length{uniform(0.0, height(box).value)}};
+	inline world::point random_point_within(world::box box) { //! @todo Check containment logic here.
+		return box.position + world::vector{uniform(world::length{0.0}, width(box)), uniform(world::length{0.0}, height(box))};
 	}
 }

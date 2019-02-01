@@ -5,44 +5,42 @@
 #include "green_magic_particle.hpp"
 
 #include "game.hpp"
-#include "sdl/resources.hpp"
 #include "utility/random.hpp"
 
-using namespace units;
+using namespace ql::world::literals;
+
+using namespace media;
+using namespace vecx;
+using namespace vecx::literals;
 
 namespace ql {
+	namespace {
+		sf::Texture const& texture() {
+			static auto texture_handle = the_texture_manager().add("resources/textures/particles/magic/green.png");
+			return the_texture_manager()[texture_handle];
+		}
+	}
+
 	green_magic_particle::green_magic_particle()
-		: particle
-			{ world_space::vector::zero()
-			, random_displacement<world_space>(20.0, 50.0) / 1.0s
-			, world_space::acceleration::zero()
-			, random_angle<world_space>()
-			, uniform(-2.0, 2.0) * world::radians::circle() / 1.0s
-			, 1.0
-			, world_space::scale_velocity{0.0}
-			, sec{uniform(1.8, 2.2)}
-			}
-		, _turning_right{random_bool()}
+	    : sprite_particle{texture(), uniform(1.8_s, 2.2_s)}
+	    , _turning_right{random_bool()} //
 	{
-		_scale_velocity = world_space::scale_velocity{-_scale / _lifetime};
+		displacement = world::vector::zero();
+		velocity = random_displacement(20.0_world_length, 50.0_world_length) / 1.0_s;
+		angle = random_degrees();
+		angular_velocity = uniform(-2.0, 2.0) * circle_rad / 1.0_s;
+		scale_velocity = -scale / lifetime;
 	}
 
-	void green_magic_particle::particle_subupdate() {
+	void green_magic_particle::sprite_particle_subupdate(sec elapsed_time) {
 		constexpr double inflection_probability = 0.1;
-		if (bernoulli_trial(inflection_probability)) {
-			_turning_right = !_turning_right;
-		}
+		if (bernoulli_trial(inflection_probability)) { _turning_right = !_turning_right; }
 
-		constexpr auto turn_rate = world_space::radians::circle() / 1.0s;
+		constexpr auto turn_rate = circle_rad / 1.0_s;
 		if (_turning_right) {
-			_velocity.step().rotate(world_space::radians{-1.0 * turn_rate * game::target_frame_duration});
+			velocity.rotate(-1.0_rad * turn_rate * elapsed_time);
 		} else {
-			_velocity.step().rotate(world_space::radians{turn_rate * game::frame_duration});
+			velocity.rotate(turn_rate * elapsed_time);
 		}
-	}
-
-	sdl::texture const& green_magic_particle::texture() const {
-		static auto texture_handle = sdl::the_texture_manager().add("resources/textures/particles/magic/green.png");
-		return sdl::the_texture_manager()[texture_handle];
 	}
 }

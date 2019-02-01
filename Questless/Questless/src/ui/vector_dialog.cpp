@@ -2,58 +2,60 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "ui/vector_dialog.hpp"
+#include "vector_dialog.hpp"
 
 #include "game.hpp"
 
-using namespace sdl;
-using namespace units;
+using namespace media;
 
 namespace ql {
-	dialog::state vector_dialog::update() {
-		if (the_input().presses(SDLK_BACKSPACE) || the_input().presses(SDLK_ESCAPE)) {
-			return _cont(std::nullopt);
-		}
+	vector_dialog::vector_dialog(sf::Window& window,
+		rsrc::fonts const& fonts,
+		sf::String const& title,
+		sf::String const& prompt,
+		std::optional<region_tile::point> origin,
+		std::function<bool(region_tile::vector)> predicate,
+		std::function<void(std::optional<region_tile::vector>)> cont)
+		: dialog{window, fonts}
+		, _origin{std::move(origin)}
+		, _predicate{std::move(predicate)}
+		, _cont{std::move(cont)}
+		, _title{make_title{window, font, title}}
+		, _prompt{make_prompt{window, font, prompt}} {}
+
+	dialog::state vector_dialog::update(input_manager& im) {
+		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) { return _cont(std::nullopt); }
 
 		std::optional<region_tile::vector> result;
 
-		if (the_input().presses(SDLK_e)) {
+		if (im.pressed(sf::Keyboard::E)) {
 			result = region_tile::vector::unit(region_tile::direction::one);
-		} else if (the_input().presses(SDLK_w)) {
+		} else if (im.pressed(sf::Keyboard::W)) {
 			result = region_tile::vector::unit(region_tile::direction::two);
-		} else if (the_input().presses(SDLK_q)) {
+		} else if (im.pressed(sf::Keyboard::Q)) {
 			result = region_tile::vector::unit(region_tile::direction::three);
-		} else if (the_input().presses(SDLK_a)) {
+		} else if (im.pressed(sf::Keyboard::A)) {
 			result = region_tile::vector::unit(region_tile::direction::four);
-		} else if (the_input().presses(SDLK_s)) {
+		} else if (im.pressed(sf::Keyboard::S)) {
 			result = region_tile::vector::unit(region_tile::direction::five);
-		} else if (the_input().presses(SDLK_d)) {
+		} else if (im.pressed(sf::Keyboard::D)) {
 			result = region_tile::vector::unit(region_tile::direction::six);
 		}
-		if (result && _predicate(*result)) {
-			return _cont(*result);
-		}
+		if (result && _predicate(*result)) { return _cont(*result); }
 
-		if (_origin && the_input().pressed(mouse_button::left)) {
+		if (_origin && im.pressed(sf::Mouse::Left)) {
 			result = the_game().camera().tile_hovered() - *_origin;
-			if (_predicate(*result)) {
-				return _cont(*result);
-			}
+			if (_predicate(*result)) { return _cont(*result); }
 		}
 
 		return state::open;
 	}
 
-	void vector_dialog::draw() const {
-		draw_title(*_txt_title);
-		draw_prompt(*_txt_prompt);
+	void vector_dialog::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+		draw_title(_title);
+		draw_prompt(_prompt);
 
 		// Highlight valid tiles.
 		//! @todo This.
-	}
-
-	void vector_dialog::load_textures() {
-		_txt_title = make_title(_title.c_str());
-		_txt_prompt = make_prompt(_prompt.c_str());
 	}
 }

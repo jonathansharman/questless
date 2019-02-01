@@ -9,7 +9,7 @@
 #include "units/spaces::window.hpp"
 #include "utility/utility.hpp"
 
-using namespace sdl;
+using namespace media;
 using namespace units;
 
 namespace ql {
@@ -133,7 +133,7 @@ namespace ql {
 				{ spaces::window::point{position.x(), position.y()}
 				, _page_views[_page_index].option_textures[i].size()
 				};
-			spaces::window::point point = the_input().mouse_position();
+			spaces::window::point point = im.mouse_position();
 			if (box.contains(point)) {
 				hovered_option_index = static_cast<int>(i);
 				break;
@@ -144,17 +144,17 @@ namespace ql {
 		// Change option index, if necessary.
 
 		int& current_option_index = _pages[_page_index].option_index;
-		if (the_input().mouse_moved() && hovered_option_index) {
+		if (im.mouse_moved() && hovered_option_index) {
 			if (current_option_index != hovered_option_index.value()) {
 				the_sound_manager()[hover_sound_handle].play();
 				current_option_index = hovered_option_index.value();
 			}
 		} else {
-			if (the_input().presses(SDLK_DOWN)) {
+			if (im.presses(sf::Keyboard::DOWN)) {
 				the_sound_manager()[hover_sound_handle].play();
 				++current_option_index;
 			}
-			if (the_input().presses(SDLK_UP)) {
+			if (im.presses(sf::Keyboard::UP)) {
 				the_sound_manager()[hover_sound_handle].play();
 				--current_option_index;
 			}
@@ -167,7 +167,7 @@ namespace ql {
 
 		// Check for selection.
 
-		if (the_input().presses(SDLK_RETURN) || the_input().presses(SDLK_SPACE) || hovered_option_index && the_input().pressed(mouse_button::left)) {
+		if (im.presses(sf::Keyboard::RETURN) || im.presses(sf::Keyboard::SPACE) || hovered_option_index && im.pressed(mouse_button::left)) {
 			the_sound_manager()[select_sound_handle].play();
 			digraph_menu::page::option selection = _pages[_page_index].options[_pages[_page_index].option_index];
 			if (selection.target) {

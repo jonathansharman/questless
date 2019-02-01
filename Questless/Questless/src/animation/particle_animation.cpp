@@ -4,31 +4,25 @@
 
 #include "animation/particle_animation.hpp"
 
-using namespace sdl;
+using namespace media;
 
 namespace ql {
-	void particle_animation::draw(spaces::window::point position) const {
-		for (auto& particle : _particles) {
-			particle->draw(position);
+	void particle_animation::animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const {
+		for (auto& particle : particles) {
+			particle->draw(target, states);
 		}
 	}
 
-	void particle_animation::draw(world::point position, camera const& camera, sdl::spaces::colors::color color_factor) const {
-		for (auto& particle : _particles) {
-			particle->draw(position, camera, color_factor);
-		}
-	}
-
-	void particle_animation::animation_subupdate() {
-		for (std::size_t i = 0; i < _particles.size();) {
-			_particles[i]->update();
-			if (_particles[i]->over()) {
-				_particles.erase(_particles.begin() + i);
+	void particle_animation::animation_subupdate(sec elapsed_time) {
+		for (auto it = particles.begin(); it != particles.end();) {
+			(*it)->update(elapsed_time);
+			if ((*it)->stopped()) {
+				it = particles.erase(it);
 			} else {
-				++i;
+				++it;
 			}
 		}
 
-		particle_animation_subupdate();
+		particle_animation_subupdate(elapsed_time);
 	}
 }

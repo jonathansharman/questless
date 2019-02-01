@@ -12,23 +12,25 @@ namespace ql {
 	//! Displays a message to the player.
 	class message_dialog : public dialog {
 	public:
-		message_dialog(std::string title, std::string prompt, std::function<void()> cont)
-			: _title{std::move(title)}, _prompt{std::move(prompt)}, _cont{std::move(cont)}
-		{
-			load_textures();
-		}
-		
-		state update() final;
+		message_dialog(sf::Window const& window,
+			rsrc::fonts const& fonts,
+			std::string const& title,
+			std::string const& prompt,
+			std::function<void()> cont)
+			: dialog{window, fonts}
+			, _cont{std::move(cont)}
+			, _title{make_title(title)}
+			, _prompt{make_prompt(prompt)} //
+		{}
 
-		void draw() const final;
+		state update(input_manager& im) final;
+
+		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
+
 	private:
-		std::string _title;
-		std::string _prompt;
 		continuation<> _cont;
 
-		uptr<sdl::texture> _txt_title;
-		uptr<sdl::texture> _txt_prompt;
-
-		void load_textures();
+		sf::Text _title;
+		sf::Text _prompt;
 	};
 }

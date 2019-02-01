@@ -14,6 +14,8 @@
 
 #include "vecx/define_macros.hpp"
 
+#include <SFML/System.hpp>
+
 namespace ql::world {
 	using length = cancel::quantity<double, cancel::unit_t<struct distance_tag>>;
 
@@ -67,6 +69,16 @@ namespace ql::world {
 	// Circle
 
 	using circle = vecx::sphere<length, 2>;
+
+	// Conversions to SFML
+
+	sf::Vector2f to_sfml(vector v) {
+		return {static_cast<float>(v[0].value), static_cast<float>(v[1].value)};
+	}
+
+	sf::Vector2f to_sfml(point p) {
+		return {static_cast<float>(p[0].value), static_cast<float>(p[1].value)};
+	}
 }
 
 #include "vecx/undef_macros.hpp"

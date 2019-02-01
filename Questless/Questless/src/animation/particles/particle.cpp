@@ -4,78 +4,49 @@
 
 #include "particle.hpp"
 
-#include "animation/camera.hpp"
-#include "game.hpp"
 #include "utility/random.hpp"
+#include "world/world.hpp"
 
-using namespace sdl;
-using namespace units;
+using namespace media;
 
 namespace ql {
-	particle::particle
-		( world_space::vector displacement
-		, world_space::velocity velocity
-		, world_space::acceleration acceleration
-		, world_space::radians angle
-		, world_space::radians_per_sec angular_velocity
-		, world_space::scalar scale
-		, world_space::scale_velocity scale_velocity
-		, world_space::seconds lifetime
-		, max_displacement max_displacement
-		)
-		: _displacement{displacement + random_displacement<world_space>(max_displacement.value)}
-		, _velocity{std::move(velocity)}
-		, _acceleration{std::move(acceleration)}
-		, _angle{std::move(angle)}
-		, _angular_velocity{std::move(angular_velocity)}
-		, _scale{scale}
-		, _scale_velocity{scale_velocity}
-		, _lifetime{lifetime}
-		, _time_left{lifetime}
-		, _color_vector{colors::white_vector()}
-	{}
-	void particle::animation_subupdate() {
-		auto elapsed_time = animation::elapsed_time();
+	particle::particle(world::vector displacement, sec lifetime) : lifetime{lifetime}, displacement{displacement} {
+	}
 
-		_time_left -= elapsed_time;
-		if (_time_left < 0.0_s) {
-			_over = true;
+	void particle::animation_subupdate(sec elapsed_time) {
+		// Timing.
+		time_left -= elapsed_time;
+		if (time_left <= 0.0_s) {
+			stop();
 			return;
 		}
 
-		_displacement += _velocity * elapsed_time;
-		_velocity += _acceleration * elapsed_time;
-		if (face_towards_heading() && _velocity != world_space::velocity::zero()) {
-			_angle = _velocity.step().angle();
+		// Update physics.
+		displacement += velocity * elapsed_time;
+		velocity += acceleration * elapsed_time;
+		if (face_towards_heading() && velocity != world::vel::zero()) {
+			angle = velocity.angle();
 		} else {
-			_angle += _angular_velocity * elapsed_time;
+			angle += angular_velocity * elapsed_time;
 		}
-		_scale += _scale_velocity * elapsed_time;
+		scale += scale_velocity * elapsed_time;
 
-		particle_subupdate();
-	}
-
-	void particle::draw(spaces::window::point position) const {
-		texture().draw(position, spaces::window::align_center, spaces::window::align_middle);
-	}
-
-	void particle::draw(world::point position, camera const& camera, colors::color_vector color_vector) const {
-		// Determine color vector to use.
-		color_vector = ignore_color_mod() ? _color_vector : color_vector * _color_vector;
+		// Fade out, if enabled.
 		if (fade_out()) {
-			color_vector[3] *= static_cast<float>(_time_left.count() / _lifetime.count());
+			color_factor.a -= 255 * (time_left / lifetime).value;
 		}
 
-		camera.draw
-			( texture()
-			, position + _displacement
-			, spaces::window::vector::zero()
-			, color_vector
-			, spaces::view::vector
-				{ static_cast<spaces::view::scalar>(_scale)
-				, static_cast<spaces::view::scalar>(_scale)
-				}
-			, _angle
-			);
+		// Subupdate.
+		particle_subupdate(elapsed_time);
+	}
+
+	void particle::animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const {
+		// Combine animation/other transforms with particle transforms.
+		states.transform.scale({scale.value, scale.value});
+		states.transform.rotate(angle.value);
+		states.transform.translate(to_sfml(displacement));
+
+		// Subdraw.
+		particle_subdraw(target, states);
 	}
 }

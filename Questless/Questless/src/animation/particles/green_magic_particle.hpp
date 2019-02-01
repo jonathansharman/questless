@@ -4,18 +4,17 @@
 
 #pragma once
 
-#include "animation/particles/particle.hpp"
+#include "sprite_particle.hpp"
 
 namespace ql {
 	//! A particle for effects involving green magic.
-	class green_magic_particle : public particle {
+	class green_magic_particle : public sprite_particle {
 	public:
 		green_magic_particle();
 	private:
-		bool _turning_right; //!< True if the green magic particle is turning to the right (CW), false if turning left (CCW).
+		//! True if the green magic particle is turning to the right (CW), false if turning left (CCW).
+		bool _turning_right;
 
-		void particle_subupdate() final;
-
-		sdl::texture const& texture() const final;
+		void sprite_particle_subupdate(sec elapsed_time) final;
 	};
 }

@@ -8,12 +8,12 @@
 
 namespace ql {
 	//! Increases visual acuity.
-	class eagle_eyed : public status {
+	class telescoped : public status {
 	public:
 		//! @param magnitude How powerful the status modifier is.
 		//! @param duration The number of turns remaining before the status modifier expires.
 		//! @param source_id The ID of the being that caused the status modifier, if any.
-		eagle_eyed(acuity magnitude, tick duration, std::optional<id<being>> source_id = std::nullopt)
+		telescoped(acuity magnitude, tick duration, std::optional<id<being>> source_id = std::nullopt)
 			: status{"Blind", duration, source_id}
 			, _magnitude{magnitude}
 		{}

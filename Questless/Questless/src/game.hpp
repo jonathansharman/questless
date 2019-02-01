@@ -4,29 +4,24 @@
 
 #pragma once
 
+#include "ui/input_manager.hpp"
 #include "utility/cache.hpp"
 #include "utility/reference.hpp"
 
-namespace sdl {
-	class font;
-	class input;
-	class renderer;
-	class sound;
-	class texture;
-	class window;
-}
+#include <SFML/Graphics.hpp>
 
 namespace ql {
 	class being;
 	class item;
 	class light_source;
 	class object;
-	class player;
 	namespace scene { class scene; }
 
 	//! Represents an instance of the game Questless.
 	class game {
 	public:
+		~game();
+
 		//! @todo Relocate these maps?
 		static id<being> get_being_id(uptr<being> const& being);
 		static id<object> get_object_id(uptr<object> const& object);
@@ -42,20 +37,21 @@ namespace ql {
 
 		friend game& the_game();
 
-		~game();
-
 		//! Runs a new game of Questless.
 		void run();
 	private:
-		enum class state { being_editor };
-		uptr<scene::scene> _scene = nullptr;
+		enum class state { being_editor }; //! @todo Should not be needed. Replace with scene.
+
+		sf::RenderWindow _window;
+
+		input_manager _im{_window};
+
+		uptr<scene::scene> _scene;
 
 		//! @param fullscreen Whether to run the game in fullscreen mode.
 		game(bool fullscreen);
 
 		void load_textures();
-
-		void initialize_opengl();
 	};
 
 	//! The game instance.

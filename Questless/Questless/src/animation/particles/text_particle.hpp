@@ -12,20 +12,18 @@ namespace ql {
 	//! A particle composed of colored text.
 	class text_particle : public particle {
 	public:
-		//! @param position The particle's starting position.
+		//! @param displacement The initial displacement of this particle.
+		//! @param lifetime The amount of time before this particle expires.
+		//! @param font The font to use to render this text particle's text. Must out-live this particle.
 		//! @param text The text for the particle to show.
 		//! @param color The color of the particle's text.
-		text_particle(std::string text, sdl::spaces::colors::color color);
+		text_particle(world::vector displacement, sec lifetime, sf::Font const& font, sf::String const& text, sf::Color color);
+
 	private:
-		std::string _text;
-		sdl::spaces::colors::color _color;
+		sf::Text _text;
 
-		sdl::texture _texture;
+		void particle_subupdate(sec) final {}
 
-		void particle_subupdate() final {}
-
-		sdl::texture const& texture() const final { return _texture; }
-
-		sdl::texture make_texture() const;
+		void particle_subdraw(sf::RenderTarget& target, sf::RenderStates states) const final;
 	};
 }

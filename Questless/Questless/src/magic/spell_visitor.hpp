@@ -7,17 +7,12 @@
 #include "utility/visitor_pattern.hpp"
 
 namespace ql::magic {
-	class eagle_eye;
+	class telescope;
 	class heal;
 	class shock;
 	class teleport;
 
-	using spell_subtype_list = cancel::list_t
-		< eagle_eye
-		, heal
-		, shock
-		, teleport
-		>;
+	using spell_subtype_list = cancel::list_t<telescope, heal, shock, teleport>;
 
 	DEFINE_VISITORS(spell, spell_subtype_list)
 }

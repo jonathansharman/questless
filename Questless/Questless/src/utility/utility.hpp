@@ -15,19 +15,25 @@ namespace ql {
 	template <typename T>
 	struct dependent_false_type : std::false_type {};
 
+	//! Scales a value in [0, 1] to [0, 255].
+	template <typename T>
+	sf::Uint8 to_uint8(T percentage) {
+		return static_cast<sf::Uint8>(255 * percentage);
+	}
+
+	//! Scales a unitless quantity in [0, 1] to [0, 255].
+	template <typename Rep>
+	sf::Uint8 to_uint8(cancel::unitless<Rep> percentage) {
+		return static_cast<sf::Uint8>(255 * percentage.value);
+	}
+
 	//! Conditionally removes elements from a container.
 	//! @param container An iterable container.
 	//! @param predicate A predicate over elements of the container. Elements for which the predicate is true are erased.
 	template <typename Container, typename Predicate>
 	void erase_if(Container& container, Predicate&& predicate) {
-		container.erase
-			( std::remove_if
-				( container.begin()
-				, container.end()
-				, std::forward<Predicate>(predicate)
-				)
-			, container.end()
-			);
+		container.erase(
+			std::remove_if(container.begin(), container.end(), std::forward<Predicate>(predicate)), container.end());
 	};
 
 	//! Moves @p pointer into a new vector and returns it.
@@ -44,7 +50,8 @@ namespace ql {
 		std::vector<uptr<T>> modifiers;
 		modifiers.push_back(std::move(first));
 		auto restVector = make_uptr_vector<T>(std::forward<Rest>(rest)...);
-		modifiers.insert(modifiers.end(), std::make_move_iterator(restVector.begin()), std::make_move_iterator(restVector.end()));
+		modifiers.insert(
+			modifiers.end(), std::make_move_iterator(restVector.begin()), std::make_move_iterator(restVector.end()));
 		return modifiers;
 	}
 
@@ -67,6 +74,10 @@ namespace ql {
 		return ranges::view::transform([](auto arg) { return static_cast<T>(arg); });
 	}
 
-	template <typename... Ts> struct overloaded : Ts... { using Ts::operator ()...; };
-	template <typename... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+	template <typename... Ts>
+	struct overloaded : Ts... {
+		using Ts::operator()...;
+	};
+	template <typename... Ts>
+	overloaded(Ts...)->overloaded<Ts...>;
 }

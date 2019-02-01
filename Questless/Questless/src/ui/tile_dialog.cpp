@@ -2,16 +2,29 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "ui/tile_dialog.hpp"
+#include "tile_dialog.hpp"
 
 #include "game.hpp"
 
-using namespace sdl;
-using namespace units;
+using namespace media;
 
 namespace ql {
-	dialog::state tile_dialog::update() {
-		if (the_input().presses(SDLK_BACKSPACE) || the_input().presses(SDLK_ESCAPE)) {
+	tile_dialog::tile_dialog(sf::Window const& window,
+		fonts const& fonts,
+		sf::String const& title,
+		sf::String const& prompt,
+		std::optional<region_tile::point> origin,
+		std::function<bool(region_tile::point)> predicate,
+		std::function<void(std::optional<region_tile::point>)> cont)
+		: dialog{window, fonts}
+		, _origin{std::move(origin)}
+		, _predicate{std::move(predicate)}
+		, _cont{std::move(cont)}
+		, _title{make_title(title)}
+		, _prompt{make_prompt(prompt)} {}
+
+	dialog::state tile_dialog::update(input_manager& im) {
+		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) {
 			the_game().world_renderer().clear_highlight_predicate();
 			return _cont(std::nullopt);
 		}
@@ -19,17 +32,17 @@ namespace ql {
 		std::optional<region_tile::point> result;
 
 		if (_origin) {
-			if (the_input().presses(SDLK_e)) {
+			if (im.pressed(sf::Keyboard::E)) {
 				result = _origin->neighbor(region_tile::direction::one);
-			} else if (the_input().presses(SDLK_w)) {
+			} else if (im.pressed(sf::Keyboard::W)) {
 				result = _origin->neighbor(region_tile::direction::two);
-			} else if (the_input().presses(SDLK_q)) {
+			} else if (im.pressed(sf::Keyboard::Q)) {
 				result = _origin->neighbor(region_tile::direction::three);
-			} else if (the_input().presses(SDLK_a)) {
+			} else if (im.pressed(sf::Keyboard::A)) {
 				result = _origin->neighbor(region_tile::direction::four);
-			} else if (the_input().presses(SDLK_s)) {
+			} else if (im.pressed(sf::Keyboard::S)) {
 				result = _origin->neighbor(region_tile::direction::five);
-			} else if (the_input().presses(SDLK_d)) {
+			} else if (im.pressed(sf::Keyboard::D)) {
 				result = _origin->neighbor(region_tile::direction::six);
 			}
 			if (result && _predicate(*result)) {
@@ -38,7 +51,7 @@ namespace ql {
 			}
 		}
 
-		if (the_input().pressed(mouse_button::left)) {
+		if (im.pressed(sf::Mouse::Left)) {
 			result = the_game().camera().tile_hovered();
 			if (_predicate(*result)) {
 				the_game().world_renderer().clear_highlight_predicate();
@@ -50,16 +63,11 @@ namespace ql {
 		return state::open;
 	}
 
-	void tile_dialog::draw() const {
-		draw_title(*_txt_title);
-		draw_prompt(*_txt_prompt);
+	void tile_dialog::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+		draw_title(_title);
+		draw_prompt(_prompt);
 
 		// Highlight valid tiles.
 		//! @todo This.
-	}
-
-	void tile_dialog::load_textures() {
-		_txt_title = make_title(_title.c_str());
-		_txt_prompt = make_prompt(_prompt.c_str());
 	}
 }

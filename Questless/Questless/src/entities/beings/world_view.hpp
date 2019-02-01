@@ -31,16 +31,11 @@ namespace ql {
 		struct entity_view {
 			std::variant<id<being>, id<object>> id;
 			perception::bounded_level perception;
-
-			entity_view(std::variant<ql::id<being>, ql::id<object>> id, ql::perception::level perception)
-				: id{id}, perception{perception}
-			{}
 		};
 
 		//! Constructs the world view of the given being.
 		//! @param being The being whose perspective this world view represents.
-		//! @param find_bounds If true, the world view will find a bounding rectangle in world space around the visible tiles.
-		world_view(being const& being, bool find_bounds);
+		world_view(being const& being);
 		
 		//! Copy constructor.
 		world_view(world_view const&) = default;
@@ -59,16 +54,11 @@ namespace ql {
 		ql::region const& region() const { return _region; }
 		region_tile::point origin() const { return _origin; }
 		span visual_range() const { return _visual_range; }
-
-		//! A bounding box around the visible tiles or nullopt if initialized with find_bounds set to false or if no tiles are visible.
-		std::optional<world::box> bounds() const { return _bounds; }
 	private:
 		std::vector<section_view> _section_views;
 		std::vector<entity_view> _entity_views;
 		std::reference_wrapper<const ql::region> _region;
 		region_tile::point _origin;
 		span _visual_range;
-
-		std::optional<world::box> _bounds;
 	};
 }

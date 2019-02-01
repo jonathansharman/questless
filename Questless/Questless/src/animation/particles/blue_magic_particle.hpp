@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include "animation/particles/particle.hpp"
+#include "sprite_particle.hpp"
 
 namespace ql {
 	//! A particle for effects involving blue magic.
-	class blue_magic_particle : public particle {
+	class blue_magic_particle : public sprite_particle {
 	public:
 		blue_magic_particle();
 	private:
@@ -16,6 +16,6 @@ namespace ql {
 
 		void particle_subupdate() final {}
 
-		sdl::texture const& texture() const final;
+		media::texture const& texture() const final;
 	};
 }

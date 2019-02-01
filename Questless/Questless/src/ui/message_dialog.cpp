@@ -2,28 +2,18 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "ui/message_dialog.hpp"
-
-#include "sdl/resources.hpp"
-
-using namespace sdl;
-using namespace units;
+#include "message_dialog.hpp"
 
 namespace ql {
-	dialog::state message_dialog::update() {
-		if(the_input().any_presses()) {
+	dialog::state message_dialog::update(input_manager& im) {
+		if(im.any_pressed()) {
 			return _cont();
 		}
 		return state::open;
 	}
 
-	void message_dialog::draw() const {
-		draw_title(*_txt_title);
-		draw_prompt(*_txt_prompt);
-	}
-
-	void message_dialog::load_textures() {
-		_txt_title = make_title(_title.c_str());
-		_txt_prompt = make_prompt(_prompt.c_str());
+	void message_dialog::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+		draw_title(_title);
+		draw_prompt(_prompt);
 	}
 }

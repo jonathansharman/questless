@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include "sdl/resources.hpp"
 #include "utility/initializer.hpp"
 #include "utility/reference.hpp"
 
@@ -80,10 +79,10 @@ namespace ql {
 		};
 
 		struct page_view {
-			sdl::texture title_texture;
-			mutable std::vector<sdl::texture> option_textures;
+			media::texture title_texture;
+			mutable std::vector<media::texture> option_textures;
 
-			page_view(sdl::texture title_texture, std::vector<sdl::texture> option_textures)
+			page_view(media::texture title_texture, std::vector<media::texture> option_textures)
 				: title_texture{std::move(title_texture)}, option_textures{std::move(option_textures)}
 			{}
 		};
@@ -91,7 +90,7 @@ namespace ql {
 		static constexpr int _title_height = 60;
 		static constexpr int _option_height = 32;
 
-		static sdl::texture_handle _ul_handle, _ur_handle, _dl_handle, _dr_handle, _u_handle, _d_handle, _l_handle, _r_handle, _tile_handle;
+		static media::texture_handle _ul_handle, _ur_handle, _dl_handle, _dr_handle, _u_handle, _d_handle, _l_handle, _r_handle, _tile_handle;
 
 		static int _top_margin, _bottom_margin, _left_margin, _right_margin, _tile_width, _tile_height;
 
@@ -107,7 +106,7 @@ namespace ql {
 		spaces::window::point _content_position;
 		int _min_width, _min_height;
 		int _content_width, _content_height;
-		uptr<sdl::texture> _background;
+		uptr<media::texture> _background;
 		bool _render_is_current;
 
 		//! Finds the first page with the given page title, if it exists.

@@ -4,11 +4,10 @@
 
 #pragma once
 
-#include "animation/camera.hpp"
 #include "ui/dialog.hpp"
 #include "world/world.hpp"
 
-#include "sdl/spaces/view.hpp"
+#include "media/spaces/view.hpp"
 
 namespace ql {
 	class being;
@@ -23,9 +22,9 @@ namespace ql::qte {
 		//! @param cont The dialog continuation function.
 		aim_missile(region_tile::point source_coords, being const& target_being, std::function<void(body_part*)> cont);
 
-		state update() final;
+		state update(input_manager& im) final;
 
-		void draw() const final;
+		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 	private:
 		enum class aiming_state { beginning, aiming, in_flight, ending };
 
@@ -33,15 +32,15 @@ namespace ql::qte {
 
 		region_tile::point _source_tile_coords;
 		being const& _target_being;
-		sdl::spaces::view::point _target_view_coords;
-		cancel::unitless<sdl::spaces::view::length::rep> _target_view_scale;
+		media::spaces::view::point _target_view_coords;
+		cancel::unitless<media::spaces::view::length::rep> _target_view_scale;
 		continuation<body_part*> _cont;
-		sdl::spaces::view::circle _aiming_circle;
+		media::spaces::view::circle _aiming_circle;
 		aiming_state _aiming_state = aiming_state::beginning;
 
 		sec _elapsed_time = 0.0_s;
 
-		uptr<sdl::texture> _txt_title;
-		uptr<sdl::texture> _txt_prompt;
+		sf::Text _title;
+		sf::Text _prompt;
 	};
 }

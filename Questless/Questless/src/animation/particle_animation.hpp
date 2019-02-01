@@ -14,27 +14,15 @@ namespace ql {
 	//! Abstract base for animations composed of particle effects.
 	class particle_animation : public animation {
 	public:
+		std::deque<uptr<particle>> particles;
+
 		virtual ~particle_animation() = default;
-
-		void draw(sdl::spaces::window::point position) const final;
-
-		void draw(world::point position, camera const& camera, sdl::spaces::colors::color color_factor = sdl::spaces::colors::white()) const final;
-	protected:
-		//! Adds @p particle to the front of the list of particles.
-		void push_front(uptr<particle> particle) {
-			_particles.push_front(std::move(particle));
-		}
-
-		//! Adds @p particle to the back of the list of particles.
-		void push_back(uptr<particle> particle) {
-			_particles.push_back(std::move(particle));
-		}
-
-		//! Particle animation subtype-specific update.
-		virtual void particle_animation_subupdate() = 0;
 	private:
-		std::deque<uptr<particle>> _particles;
+		void animation_subupdate(sec elapsed_time) final;
 
-		void animation_subupdate() final;
+		void animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const final;
+
+		//! Advances this particle animation by @p elapsed_time in a subtype-specific way.
+		virtual void particle_animation_subupdate(sec elapsed_time) = 0;
 	};
 }

@@ -4,7 +4,6 @@
 
 #include "blue_magic_particle.hpp"
 
-#include "sdl/resources.hpp"
 #include "utility/random.hpp"
 
 using namespace units;
@@ -21,8 +20,8 @@ namespace ql {
 		, world_space::seconds{uniform(2.0, 2.4)}
 		}
 	{}
-	sdl::texture const& blue_magic_particle::texture() const {
-		static auto texture_handle = sdl::the_texture_manager().add("resources/textures/particles/magic/blue.png");
-		return sdl::the_texture_manager()[texture_handle];
+	media::texture const& blue_magic_particle::texture() const {
+		static auto texture_handle = media::the_texture_manager().add("resources/textures/particles/magic/blue.png");
+		return media::the_texture_manager()[texture_handle];
 	}
 }

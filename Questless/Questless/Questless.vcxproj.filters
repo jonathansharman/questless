@@ -76,17 +76,11 @@
     <Filter Include="external">
       <UniqueIdentifier>{502881e6-cf08-47ad-81ec-ad1c3e04bb7a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="external\sdl">
-      <UniqueIdentifier>{43366d19-94c6-48f6-bd1c-0f09164738cd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\quantities">
       <UniqueIdentifier>{b8546f8c-858b-43b6-8fda-84d83cc84e11}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\ui\scenes">
       <UniqueIdentifier>{bd590d8e-e85b-4688-b3a5-9824fa0f585c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="external\sdl\spaces">
-      <UniqueIdentifier>{4ba74b55-154d-43f8-b1b1-b2c2b6456256}</UniqueIdentifier>
     </Filter>
     <Filter Include="external\vecx">
       <UniqueIdentifier>{f7a1a22e-69f8-4eae-9f76-48af80fc7624}</UniqueIdentifier>
@@ -96,6 +90,21 @@
     </Filter>
     <Filter Include="external\cancel">
       <UniqueIdentifier>{131fc6ea-ecf3-42d9-b809-e9efc0976d2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\media">
+      <UniqueIdentifier>{e5993567-b2ca-43a1-81d7-782c145db5f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\media\spaces">
+      <UniqueIdentifier>{f6a8dbfa-58f9-4404-b496-1a7f50157517}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\fmt">
+      <UniqueIdentifier>{58aaeb9e-8661-4247-b968-1c3724debed0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\scenes">
+      <UniqueIdentifier>{394fbcfc-b9cc-4463-8eda-2db6c36593ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\rsrc">
+      <UniqueIdentifier>{73cabe8c-8c07-4b98-b860-1b9fc23de138}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -210,16 +219,7 @@
     <ClInclude Include="src\animation\animation.hpp">
       <Filter>src\animation</Filter>
     </ClInclude>
-    <ClInclude Include="src\animation\animation_stack.hpp">
-      <Filter>src\animation</Filter>
-    </ClInclude>
     <ClInclude Include="src\animation\bleeding.hpp">
-      <Filter>src\animation</Filter>
-    </ClInclude>
-    <ClInclude Include="src\animation\body_texturer.hpp">
-      <Filter>src\animation</Filter>
-    </ClInclude>
-    <ClInclude Include="src\animation\camera.hpp">
       <Filter>src\animation</Filter>
     </ClInclude>
     <ClInclude Include="src\animation\entity_animator.hpp">
@@ -228,22 +228,10 @@
     <ClInclude Include="src\animation\flame.hpp">
       <Filter>src\animation</Filter>
     </ClInclude>
-    <ClInclude Include="src\animation\item_renderer.hpp">
-      <Filter>src\animation</Filter>
-    </ClInclude>
     <ClInclude Include="src\animation\particle_animation.hpp">
       <Filter>src\animation</Filter>
     </ClInclude>
-    <ClInclude Include="src\animation\spell_texturer.hpp">
-      <Filter>src\animation</Filter>
-    </ClInclude>
     <ClInclude Include="src\animation\sprite_animation.hpp">
-      <Filter>src\animation</Filter>
-    </ClInclude>
-    <ClInclude Include="src\animation\still.hpp">
-      <Filter>src\animation</Filter>
-    </ClInclude>
-    <ClInclude Include="src\animation\tile_texturer.hpp">
       <Filter>src\animation</Filter>
     </ClInclude>
     <ClInclude Include="src\game.hpp">
@@ -331,9 +319,6 @@
       <Filter>src\magic</Filter>
     </ClInclude>
     <ClInclude Include="src\magic\charge_cost.hpp">
-      <Filter>src\magic</Filter>
-    </ClInclude>
-    <ClInclude Include="src\magic\eagle_eye.hpp">
       <Filter>src\magic</Filter>
     </ClInclude>
     <ClInclude Include="src\magic\heal.hpp">
@@ -450,33 +435,6 @@
     <ClInclude Include="src\entities\perception.hpp">
       <Filter>src\entities</Filter>
     </ClInclude>
-    <ClInclude Include="external\sdl\resources.hpp">
-      <Filter>external\sdl</Filter>
-    </ClInclude>
-    <ClInclude Include="external\sdl\shader_program.hpp">
-      <Filter>external\sdl</Filter>
-    </ClInclude>
-    <ClInclude Include="external\sdl\sound.hpp">
-      <Filter>external\sdl</Filter>
-    </ClInclude>
-    <ClInclude Include="external\sdl\texture.hpp">
-      <Filter>external\sdl</Filter>
-    </ClInclude>
-    <ClInclude Include="external\sdl\window.hpp">
-      <Filter>external\sdl</Filter>
-    </ClInclude>
-    <ClInclude Include="external\sdl\font.hpp">
-      <Filter>external\sdl</Filter>
-    </ClInclude>
-    <ClInclude Include="external\sdl\input.hpp">
-      <Filter>external\sdl</Filter>
-    </ClInclude>
-    <ClInclude Include="external\sdl\renderer.hpp">
-      <Filter>external\sdl</Filter>
-    </ClInclude>
-    <ClInclude Include="external\sdl\resource_manager.hpp">
-      <Filter>external\sdl</Filter>
-    </ClInclude>
     <ClInclude Include="src\magic\color.hpp">
       <Filter>src\magic</Filter>
     </ClInclude>
@@ -576,30 +534,6 @@
     <ClInclude Include="src\utility\static_property.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\scenes\playing.hpp">
-      <Filter>src\ui\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\scenes\scene.hpp">
-      <Filter>src\ui\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\scenes\splash.hpp">
-      <Filter>src\ui\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\scenes\main_menu.hpp">
-      <Filter>src\ui\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="external\sdl\spaces\colors.hpp">
-      <Filter>external\sdl\spaces</Filter>
-    </ClInclude>
-    <ClInclude Include="external\sdl\spaces\window.hpp">
-      <Filter>external\sdl\spaces</Filter>
-    </ClInclude>
-    <ClInclude Include="external\sdl\spaces\view.hpp">
-      <Filter>external\sdl\spaces</Filter>
-    </ClInclude>
-    <ClInclude Include="external\sdl\spaces\sprite_sheet.hpp">
-      <Filter>external\sdl\spaces</Filter>
-    </ClInclude>
     <ClInclude Include="external\vecx\angle.hpp">
       <Filter>external\vecx</Filter>
     </ClInclude>
@@ -663,6 +597,90 @@
     <ClInclude Include="external\cancel\algebra.hpp">
       <Filter>external\cancel</Filter>
     </ClInclude>
+    <ClInclude Include="src\ui\scenes\main_menu.hpp">
+      <Filter>src\ui\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\scenes\playing.hpp">
+      <Filter>src\ui\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\scenes\scene.hpp">
+      <Filter>src\ui\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\scenes\splash.hpp">
+      <Filter>src\ui\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="external\media\spaces\view.hpp">
+      <Filter>external\media\spaces</Filter>
+    </ClInclude>
+    <ClInclude Include="external\media\spaces\window.hpp">
+      <Filter>external\media\spaces</Filter>
+    </ClInclude>
+    <ClInclude Include="src\animation\scene_node.hpp">
+      <Filter>src\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\animation\sprite_sheet.hpp">
+      <Filter>src\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\animation\particles\sprite_particle.hpp">
+      <Filter>src\animation\particles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\animation\item_animator.hpp">
+      <Filter>src\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\animation\spell_animator.hpp">
+      <Filter>src\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\animation\tile_animator.hpp">
+      <Filter>src\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\animation\still_image.hpp">
+      <Filter>src\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\animation\still_shape.hpp">
+      <Filter>src\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenes\playing.hpp">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenes\scene.hpp">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenes\splash.hpp">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenes\main_menu.hpp">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\input_manager.hpp">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\magic\telescope.hpp">
+      <Filter>src\magic</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rsrc\item.hpp">
+      <Filter>src\rsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rsrc\spell.hpp">
+      <Filter>src\rsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rsrc\splash.hpp">
+      <Filter>src\rsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rsrc\tile.hpp">
+      <Filter>src\rsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rsrc\utility.hpp">
+      <Filter>src\rsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rsrc\world_renderer.hpp">
+      <Filter>src\rsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rsrc\entity.hpp">
+      <Filter>src\rsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rsrc\fonts.hpp">
+      <Filter>src\rsrc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -674,34 +692,16 @@
     <ClCompile Include="src\animation\entity_animator.cpp">
       <Filter>src\animation</Filter>
     </ClCompile>
-    <ClCompile Include="src\animation\item_renderer.cpp">
-      <Filter>src\animation</Filter>
-    </ClCompile>
     <ClCompile Include="src\animation\particle_animation.cpp">
       <Filter>src\animation</Filter>
     </ClCompile>
-    <ClCompile Include="src\animation\spell_texturer.cpp">
-      <Filter>src\animation</Filter>
-    </ClCompile>
     <ClCompile Include="src\animation\sprite_animation.cpp">
-      <Filter>src\animation</Filter>
-    </ClCompile>
-    <ClCompile Include="src\animation\still.cpp">
-      <Filter>src\animation</Filter>
-    </ClCompile>
-    <ClCompile Include="src\animation\tile_texturer.cpp">
       <Filter>src\animation</Filter>
     </ClCompile>
     <ClCompile Include="src\animation\world_renderer.cpp">
       <Filter>src\animation</Filter>
     </ClCompile>
     <ClCompile Include="src\animation\animation.cpp">
-      <Filter>src\animation</Filter>
-    </ClCompile>
-    <ClCompile Include="src\animation\body_texturer.cpp">
-      <Filter>src\animation</Filter>
-    </ClCompile>
-    <ClCompile Include="src\animation\camera.cpp">
       <Filter>src\animation</Filter>
     </ClCompile>
     <ClCompile Include="src\animation\particles\blue_magic_particle.cpp">
@@ -818,9 +818,6 @@
     <ClCompile Include="src\magic\teleport.cpp">
       <Filter>src\magic</Filter>
     </ClCompile>
-    <ClCompile Include="src\magic\eagle_eye.cpp">
-      <Filter>src\magic</Filter>
-    </ClCompile>
     <ClCompile Include="src\ui\player_action_dialog.cpp">
       <Filter>src\ui</Filter>
     </ClCompile>
@@ -914,32 +911,14 @@
     <ClCompile Include="src\magic\charge_cost.cpp">
       <Filter>src\magic</Filter>
     </ClCompile>
-    <ClCompile Include="external\sdl\resources.cpp">
-      <Filter>external\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="external\sdl\shader_program.cpp">
-      <Filter>external\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="external\sdl\sound.cpp">
-      <Filter>external\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="external\sdl\texture.cpp">
-      <Filter>external\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="external\sdl\window.cpp">
-      <Filter>external\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="external\sdl\font.cpp">
-      <Filter>external\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="external\sdl\input.cpp">
-      <Filter>external\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="external\sdl\renderer.cpp">
-      <Filter>external\sdl</Filter>
-    </ClCompile>
     <ClCompile Include="src\animation\flame.cpp">
       <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\scenes\main_menu.cpp">
+      <Filter>src\ui\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\scenes\playing.cpp">
+      <Filter>src\ui\scenes</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\scenes\scene.cpp">
       <Filter>src\ui\scenes</Filter>
@@ -947,11 +926,47 @@
     <ClCompile Include="src\ui\scenes\splash.cpp">
       <Filter>src\ui\scenes</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\scenes\main_menu.cpp">
-      <Filter>src\ui\scenes</Filter>
+    <ClCompile Include="src\animation\particles\sprite_particle.cpp">
+      <Filter>src\animation\particles</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\scenes\playing.cpp">
-      <Filter>src\ui\scenes</Filter>
+    <ClCompile Include="external\fmt\format.cc">
+      <Filter>external\fmt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\item_animator.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\spell_animator.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\tile_animator.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\still_image.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\still_shape.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scenes\scene.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scenes\splash.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scenes\main_menu.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scenes\playing.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\input_manager.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\list_dialog.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\magic\telescope.cpp">
+      <Filter>src\magic</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

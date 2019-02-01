@@ -4,33 +4,28 @@
 
 #include "yellow_magic_particle.hpp"
 
-#include "sdl/resources.hpp"
 #include "utility/random.hpp"
 
-using namespace units;
+using namespace ql::world::literals;
+
+using namespace media;
+using namespace vecx;
+using namespace vecx::literals;
 
 namespace ql {
-	yellow_magic_particle::yellow_magic_particle() : particle
-		{ world_space::vector::zero()
-		, world_space::vector{random_angle(), 100.0} / 1.0s
-		, world_space::acceleration::zero()
-		, random_angle()
-		, world_space::radians{0.0} / 1.0s
-		, 1.0
-		, world_space::scale_velocity::zero()
-		, world_space::seconds{uniform(0.8, 1.2)}
-		, max_displacement{30.0}
+	namespace {
+		sf::Texture const& texture() {
+			static auto texture_handle = the_texture_manager().add("resources/textures/particles/magic/yellow.png");
+			return the_texture_manager()[texture_handle];
 		}
-	{}
-
-	void yellow_magic_particle::particle_subupdate() {
-		constexpr world_space::radians max_turn_rate = world_space::radians::circle() / 6.0;
-		_velocity.step().rotate(uniform(-1.0, 1.0) * max_turn_rate);
-		_angle = _velocity.step().angle();
+	}
+	yellow_magic_particle::yellow_magic_particle() : sprite_particle{texture(), uniform(0.8_s, 1.2_s)} {
+		displacement = random_displacement(30.0_world_length);
+		velocity = make_polar_vector(100.0_world_length, random_radians()) / 1.0_s;
 	}
 
-	sdl::texture const& yellow_magic_particle::texture() const {
-		static auto texture_handle = sdl::the_texture_manager().add("resources/textures/particles/magic/yellow.png");
-		return sdl::the_texture_manager()[texture_handle];
+	void yellow_magic_particle::sprite_particle_subupdate(sec elapsed_time) {
+		constexpr radians max_turn_rate = circle_rad / 0.1_s;
+		velocity.rotate(uniform(-max_turn_rate, max_turn_rate) * elapsed_time);
 	}
 }

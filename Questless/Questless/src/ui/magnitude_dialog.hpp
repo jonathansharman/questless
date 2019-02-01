@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include <string>
 #include <functional>
 #include <optional>
+#include <string>
 
 #include "dialog.hpp"
 
@@ -14,39 +14,27 @@ namespace ql {
 	//! Retrieves a floating-point value from the player.
 	class magnitude_dialog : public dialog {
 	public:
-		magnitude_dialog
-			( std::string title
-			, std::string prompt
-			, double default_value
-			, std::optional<double> min
-			, std::optional<double> max
-			, std::function<void(std::optional<double>)> cont
-			)
-			: _title{std::move(title)}
-			, _prompt{std::move(prompt)}
-			, _magnitude{default_value}
-			, _min{min}
-			, _max{max}
-			, _cont{std::move(cont)}
-		{
-			load_textures();
-		}
+		magnitude_dialog(sf::Window const& window,
+			rsrc::fonts const& fonts,
+			sf::String const& title,
+			sf::String const& prompt,
+			double default_value,
+			std::optional<double> min,
+			std::optional<double> max,
+			std::function<void(std::optional<double>)> cont);
 
-		state update() final;
+		state update(input_manager& im) final;
 
-		void draw() const final;
+		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
+
 	private:
-		std::string _title;
-		std::string _prompt;
 		double _magnitude;
 		std::optional<double> _min;
 		std::optional<double> _max;
 		continuation<std::optional<double>> _cont;
 
-		uptr<sdl::texture> _txt_title;
-		uptr<sdl::texture> _txt_prompt;
-		uptr<sdl::texture> _txt_selector;
-
-		void load_textures();
+		sf::Text _title;
+		sf::Text _prompt;
+		sf::Text _selector;
 	};
 }

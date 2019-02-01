@@ -4,12 +4,13 @@
 
 #pragma once
 
-#include "animation/particles/particle.hpp"
+#include "sprite_particle.hpp"
+
 #include "utility/utility.hpp"
 
 namespace ql {
 	//! A particle for effects involving black magic.
-	class black_magic_particle : public particle {
+	class black_magic_particle : public sprite_particle {
 	public:
 		black_magic_particle();
 	private:
@@ -19,6 +20,6 @@ namespace ql {
 
 		void particle_subupdate() final;
 
-		sdl::texture const& texture() const final;
+		media::texture const& texture() const final;
 	};
 }

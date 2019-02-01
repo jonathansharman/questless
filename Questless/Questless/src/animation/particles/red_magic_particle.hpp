@@ -4,16 +4,16 @@
 
 #pragma once
 
-#include "animation/particles/particle.hpp"
+#include "sprite_particle.hpp"
 
 namespace ql {
 	//! A particle for effects involving red magic.
-	class red_magic_particle : public particle {
+	class red_magic_particle : public sprite_particle {
 	public:
 		red_magic_particle();
 	private:
 		void particle_subupdate() final {}
 
-		sdl::texture const& texture() const final;
+		media::texture const& texture() const final;
 	};
 }

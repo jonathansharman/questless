@@ -4,10 +4,10 @@
 
 #pragma once
 
+#include "entities/beings/body_part.hpp"
+
 #include <memory>
 #include <vector>
-
-#include "entities/beings/body_part.hpp"
 
 namespace ql {
 	class being;
@@ -25,15 +25,25 @@ namespace ql {
 		body(body&& that) noexcept;
 
 		//! The root body part, to which all other body parts are attached.
-		body_part const& root() const { return _root; }
+		body_part const& root() const {
+			return _root;
+		}
 		//! The root body part, to which all other body parts are attached.
-		body_part& root() { return _root; }
+		body_part& root() {
+			return _root;
+		}
 
 		//! The cumulative vitality of all parts of this body.
-		ql::health total_vitality() const { return _total_vitality; }
+		ql::health total_vitality() const {
+			return _total_vitality;
+		}
 
-		std::vector<cref<body_part>> const& parts() const { return _c_parts; }
-		std::vector<ref<body_part>> const& parts() { return _parts; }
+		std::vector<cref<body_part>> const& parts() const {
+			return _c_parts;
+		}
+		std::vector<ref<body_part>> const& parts() {
+			return _parts;
+		}
 
 		//! The body part on this body with the given ID or nullptr if none exists.
 		body_part const* find_part(id<body_part> id) const;
@@ -42,6 +52,7 @@ namespace ql {
 
 		//! Advances this body and all its parts by @p elapsed.
 		void update(tick elapsed);
+
 	private:
 		being& _owner; // Okay to store reference here. A body's lifetime is a subset of its owning being's lifetime.
 
@@ -52,7 +63,8 @@ namespace ql {
 
 		// Cumulative attributes
 		ql::health _total_vitality;
-
-
 	};
+
+	class animation;
+	uptr<animation> get_animation(body body);
 }

@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "item_visitor.hpp"
 #include "agents/action.hpp"
+#include "item_visitor.hpp"
 #include "quantities/mass.hpp"
 #include "quantities/quantities.hpp"
 #include "utility/id.hpp"
@@ -25,20 +25,26 @@ namespace ql {
 		virtual std::string name() const = 0;
 
 		//! The item's mass.
-		virtual load mass() const = 0;
+		virtual mass mass() const = 0;
 
 		//! The list of actions that can be performed with the item.
 		virtual std::vector<uptr<action>> actions() = 0;
 
 		//! Advances this item by @p elapsed.
 		virtual void update(tick elapsed);
+
 	protected:
 		class drop : public action {
 		public:
 			drop(item& item) : _item{item} {}
-			static auto make(item& item) { return umake<drop>(item); }
-			std::string name() const final { return "Drop"; }
+			static auto make(item& item) {
+				return umake<drop>(item);
+			}
+			std::string name() const final {
+				return "Drop";
+			}
 			complete perform(being& actor, cont cont) final;
+
 		private:
 			item& _item;
 		};
@@ -46,9 +52,14 @@ namespace ql {
 		class toss : public action {
 		public:
 			toss(item& item) : _item{item} {}
-			static auto make(item& item) { return umake<toss>(item); }
-			std::string name() const final { return "Throw"; }
+			static auto make(item& item) {
+				return umake<toss>(item);
+			}
+			std::string name() const final {
+				return "Throw";
+			}
 			complete perform(being& actor, cont cont) final;
+
 		private:
 			item& _item;
 		};

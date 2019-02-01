@@ -4,46 +4,36 @@
 
 #pragma once
 
-#include <string>
+#include "dialog.hpp"
+
+#include "world/coordinates.hpp"
+
 #include <functional>
 #include <optional>
-
-#include "dialog.hpp"
-#include "world/coordinates.hpp"
+#include <string>
 
 namespace ql {
 	//! Retrieves a region tile vector from the player.
 	class vector_dialog : public dialog {
 	public:
-		vector_dialog
-			( std::string title
-			, std::string prompt
-			, std::optional<region_tile::point> origin
-			, std::function<bool(region_tile::vector)> predicate
-			, std::function<void(std::optional<region_tile::vector>)> cont
-			)
-			: _title{std::move(title)}
-			, _prompt{std::move(prompt)}
-			, _origin{std::move(origin)}
-			, _predicate{std::move(predicate)}
-			, _cont{std::move(cont)}
-		{
-			load_textures();
-		}
+		vector_dialog(sf::Window const& window,
+			rsrc::fonts const& fonts,
+			sf::String const& title,
+			sf::String const& prompt,
+			std::optional<region_tile::point> origin,
+			std::function<bool(region_tile::vector)> predicate,
+			std::function<void(std::optional<region_tile::vector>)> cont);
 
-		state update() final;
+		state update(input_manager& im) final;
 
-		void draw() const final;
+		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
+
 	private:
-		std::string _title;
-		std::string _prompt;
 		std::optional<region_tile::point> _origin;
 		std::function<bool(region_tile::vector)> _predicate;
 		continuation<std::optional<region_tile::vector>> _cont;
 
-		uptr<sdl::texture> _txt_title;
-		uptr<sdl::texture> _txt_prompt;
-
-		void load_textures();
+		sf::Text _title;
+		sf::Text _prompt;
 	};
 }

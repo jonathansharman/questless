@@ -75,12 +75,6 @@ namespace ql {
 			}
 
 			protect& operator +=(protect const& p) {
-				dmg::pad whatever{2.0};
-				whatever += dmg::pad{3.0};
-				nonnegative<double> whatever2{2.0};
-				whatever2 += nonnegative<double>{3.0};
-				nonnegative<dmg::pad> whatever3{dmg::pad{2.0}};
-				whatever3 += nonnegative<dmg::pad>{dmg::pad{3.0}};
 				pad += p.pad;
 				deflect += p.deflect;
 				fireproof += p.fireproof;

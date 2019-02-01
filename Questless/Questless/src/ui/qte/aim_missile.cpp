@@ -11,25 +11,23 @@
 #include "units/math.hpp"
 #include "utility/random.hpp"
 
-using namespace sdl;
+using namespace media;
 using namespace units;
 using namespace units::math;
 
 namespace ql::qte {
 	aim_missile::aim_missile(region_tile::point source_coords, being const& target_being, std::function<void(body_part*)> cont)
-		: _source_tile_coords{source_coords}
-		, _target_being{target_being}
-		, _cont{std::move(cont)}
-		, _aiming_circle{spaces::view::point{500.0f, 500.0f}, 10.0f}
-		, _txt_title{make_title("Aim your shot!")}
-		, _txt_prompt{make_prompt("Pull back the aiming circle.")}
+	    : _source_tile_coords{source_coords}
+	    , _target_being{target_being}
+	    , _cont{std::move(cont)}
+	    , _aiming_circle{spaces::view::point{500.0f, 500.0f}, 10.0f}
+	    , _title{make_title("Aim your shot!")}
+	    , _prompt{make_prompt("Pull back the aiming circle.")} //
 	{
 		auto const tile_source_to_target = _target_being.coords - _source_tile_coords;
 		auto const game_source_to_target = to_world(tile_source_to_target);
-		spaces::view::vector const view_source_to_target
-			{ static_cast<spaces::view::scalar>(game_source_to_target.x())
-			, static_cast<spaces::view::scalar>(-game_source_to_target.y())
-			};
+		spaces::view::vector const view_source_to_target{static_cast<spaces::view::scalar>(game_source_to_target.x()),
+		    static_cast<spaces::view::scalar>(-game_source_to_target.y())};
 		spaces::view::scalar const view_distance = view_source_to_target.length();
 		auto const unit_source_to_target = view_distance == 0.0f ? view_source_to_target : view_source_to_target / view_distance;
 
@@ -38,18 +36,18 @@ namespace ql::qte {
 		_target_view_scale = base_scale_divisor / (view_distance + 1.0f);
 
 		constexpr float aiming_circle_distance = 100.0f;
-		_aiming_circle.center = the_window().view_center() - aiming_circle_distance * unit_source_to_target;
+		_aiming_circle.center = _window.view_center() - aiming_circle_distance * unit_source_to_target;
 
 		constexpr float target_distance = 200.0f;
-		_target_view_coords = the_window().view_center() + target_distance * unit_source_to_target;
+		_target_view_coords = _window.view_center() + target_distance * unit_source_to_target;
 	}
 
-	dialog::state aim_missile::update() {
-		static constexpr world::seconds time_limit = 5.0s;
+	dialog::state aim_missile::update(input_manager& im) {
+		static constexpr auto time_limit = 5.0_s;
 
 		switch (_aiming_state) {
 			case aiming_state::beginning:
-				if (the_input().down(sdl::mouse_button::left) && _aiming_circle.contains(to_view_space(the_input().mouse_position()))) {
+				if (im.down(sf::Mouse::Left) && _aiming_circle.contains(to_view_space(sf::Mouse::getPosition()))) {
 					_aiming_state = aiming_state::aiming;
 				}
 				break;
@@ -61,10 +59,10 @@ namespace ql::qte {
 					return _cont(nullptr);
 				}
 
-				_aiming_circle.center = to_view_space(the_input().mouse_position());
+				_aiming_circle.center = to_view_space(sf::Mouse::getPosition());
 
 				// Loose.
-				if (the_input().up(sdl::mouse_button::left)) {
+				if (im.up(sf::Mouse::Left)) {
 					//! @todo Calculate heading.
 					return _cont(nullptr);
 				}
@@ -80,17 +78,15 @@ namespace ql::qte {
 		return state::open;
 	}
 
-	void aim_missile::draw() const {
+	void aim_missile::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 		{ // Draw the target.
 			body_texturer texturer;
 			texturer.visit(_target_being.body);
 			uptr<texture> texture = texturer.texture();
-			texture->draw_transformed
-				( _target_view_coords
-				, spaces::window::vector{0, texture->height() / 2}
-				, colors::white_vector()
-				, spaces::view::vector{_target_view_scale, _target_view_scale}
-				);
+			texture->draw_transformed(_target_view_coords,
+			    spaces::window::vector{0, texture->height() / 2},
+			    colors::white_vector(),
+			    spaces::view::vector{_target_view_scale, _target_view_scale});
 		}
 
 		if (_aiming_state == aiming_state::beginning || _aiming_state == aiming_state::aiming) {
@@ -98,14 +94,12 @@ namespace ql::qte {
 			the_renderer().draw_disc(_aiming_circle, 3.0f, colors::white(), colors::red(0.75f));
 			// Draw the hint circle.
 			spaces::view::sphere const hint_circle
-				//{ the_window().view_center() + (the_window().view_center() - _aiming_circle.center)
-				{ _target_view_coords
-				, _aiming_circle.radius
-				};
+			    //{ the_window().view_center() + (the_window().view_center() - _aiming_circle.center)
+			    {_target_view_coords, _aiming_circle.radius};
 			the_renderer().draw_disc(hint_circle, 3.0f, colors::white(0.5f), colors::red(0.375f));
 		}
 
-		draw_title(*_txt_title);
-		draw_prompt(*_txt_prompt);
+		draw_title(*_title);
+		draw_prompt(*_prompt);
 	}
 }

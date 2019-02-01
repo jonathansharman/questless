@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "eagle_eye.hpp"
+#include "telescope.hpp"
 #include "heal.hpp"
 #include "shock.hpp"
 #include "teleport.hpp"

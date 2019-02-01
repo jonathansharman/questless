@@ -4,22 +4,23 @@
 
 #pragma once
 
-#include "animation/particles/particle.hpp"
+#include "sprite_particle.hpp"
 
 namespace ql {
 	//! A blood drop particle.
-	class blood_particle : public particle {
+	class blood_particle : public sprite_particle {
 	public:
 		blood_particle();
+
 	private:
-		bool fade_out() const final { return false; };
+		bool fade_out() const final {
+			return false;
+		};
 
-		bool face_towards_heading() const final { return true; }
+		bool face_towards_heading() const final {
+			return true;
+		}
 
-		virtual bool ignore_color_mod() const { return false; }
-
-		void particle_subupdate() final {}
-
-		sdl::texture const& texture() const final;
+		void sprite_particle_subupdate(sec) final {}
 	};
 }

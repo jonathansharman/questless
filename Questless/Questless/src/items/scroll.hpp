@@ -13,18 +13,30 @@ namespace ql {
 	//! A magic scroll for inscribing spells.
 	class scroll : public item_base<scroll> {
 	public:
-		scroll(uptr<magic::spell> spell, ql::id<item> id = ql::id<item>::make()) : item_base{id}, _spell{std::move(spell)} {}
+		scroll(uptr<magic::spell> spell, ql::id<item> id = ql::id<item>::make())
+			: item_base{id}, _spell{std::move(spell)} {}
 
-		std::string name() const final { return blank() ? "Blank Scroll" : "Scroll: " + _spell->name(); }
+		std::string name() const final {
+			return blank() ? "Blank Scroll" : "Scroll: " + _spell->name();
+		}
 
-		load mass() const final { return 0.1_load; }
+		ql::mass mass() const final {
+			return 0.1_mass;
+		}
 
-		bool blank() const { return _spell == nullptr; }
+		bool blank() const {
+			return _spell == nullptr;
+		}
 
-		magic::spell& spell() { return *_spell; }
-		magic::spell const& spell() const { return *_spell; }
+		magic::spell& spell() {
+			return *_spell;
+		}
+		magic::spell const& spell() const {
+			return *_spell;
+		}
 
 		std::vector<uptr<action>> actions() final;
+
 	private:
 		uptr<magic::spell> _spell;
 	};

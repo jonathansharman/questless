@@ -1,96 +1,57 @@
----
-AccessModifierOffset: -8
-AlignAfterOpenBracket: DontAlign
-AlignConsecutiveAssignments: false
-AlignConsecutiveDeclarations: false
-AlignEscapedNewlinesLeft: false
-AlignOperands: true
-AlignTrailingComments: false
-AllowAllParametersOfDeclarationOnNextLine: true
-AllowShortBlocksOnASingleLine: true
-AllowShortCaseLabelsOnASingleLine: true
-AllowShortFunctionsOnASingleLine: All
-AllowShortIfStatementsOnASingleLine: true
-AllowShortLoopsOnASingleLine: false
-AlwaysBreakAfterDefinitionReturnType: TopLevel
-AlwaysBreakAfterReturnType: None
-AlwaysBreakBeforeMultilineStrings: false
-AlwaysBreakTemplateDeclarations: false
-BinPackArguments: true
-BinPackParameters: true
-BraceWrapping:
-  AfterClass: false
-  AfterControlStatement: false
-  AfterEnum: false
-  AfterFunction: true
-  AfterNamespace: false
-  AfterObjCDeclaration: false
-  AfterStruct: false
-  AfterUnion: false
-  BeforeCatch: true
-  BeforeElse: false
-  IndentBraces: false
-BreakAfterJavaFieldAnnotations: false
-BreakBeforeBinaryOperators: All
+﻿---
+AccessModifierOffset: '-4'
+AlignAfterOpenBracket: 'DontAlign'
+AlignEscapedNewlinesLeft: 'true'
+AlignTrailingComments: 'false'
+AllowAllParametersOfDeclarationOnNextLine: 'false'
+AllowShortBlocksOnASingleLine: 'true'
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: 'true'
+AllowShortLoopsOnASingleLine: 'false'
+AlwaysBreakBeforeMultilineStrings: 'true'
+AlwaysBreakTemplateDeclarations: 'true'
+BinPackArguments: 'false'
+BinPackParameters: 'false'
+BreakBeforeBinaryOperators: 'false'
 BreakBeforeBraces: Attach
-BreakBeforeTernaryOperators: false
-BreakConstructorInitializersBeforeComma: true
-BreakStringLiterals: false
-ColumnLimit: 0
-CommentPragmas: '^ IWYU pragma:'
-ConstructorInitializerAllOnOneLineOrOnePerLine: true
-ConstructorInitializerIndentWidth: 8
-ContinuationIndentWidth: 4
-Cpp11BracedListStyle: true
-DerivePointerAlignment: true
-DisableFormat: false
-ExperimentalAutoDetectBinPacking: false
-ForEachMacros:
-- foreach
-- Q_FOREACH
-- BOOST_FOREACH
-IncludeCategories:
-- Priority: 2
-  Regex: ^"(llvm|llvm-c|clang|clang-c)/
-- Priority: 3
-  Regex: ^(<|"(gtest|isl|json)/)
-- Priority: 1
-  Regex: .*
-IncludeIsMainRegex: $
-IndentCaseLabels: false
-IndentWidth: 8
-IndentWrappedFunctionNames: false
-JavaScriptQuotes: Single
-JavaScriptWrapImports: false
-KeepEmptyLinesAtTheStartOfBlocks: false
+BreakBeforeTernaryOperators: 'true'
+BreakConstructorInitializersBeforeComma: 'true'
+BreakInheritanceList: 'BeforeComma'
+ColumnLimit: '120'
+ConstructorInitializerAllOnOneLineOrOnePerLine: 'true'
+ConstructorInitializerIndentWidth: '4'
+ContinuationIndentWidth: '4'
+Cpp11BracedListStyle: 'true'
+DerivePointerAlignment: 'false'
+FixNamespaceComments: 'false'
+IndentCaseLabels: 'true'
+IndentWidth: '4'
+IndentWrappedFunctionNames: 'false'
+KeepEmptyLinesAtTheStartOfBlocks: 'false'
 Language: Cpp
-MacroBlockBegin: ''
-MacroBlockEnd: ''
-MaxEmptyLinesToKeep: 2
+MaxEmptyLinesToKeep: '1'
 NamespaceIndentation: All
-ObjCBlockIndentWidth: 4
-ObjCSpaceAfterProperty: true
-ObjCSpaceBeforeProtocolList: true
-PenaltyBreakBeforeFirstCallParameter: 17
-PenaltyBreakComment: 372
-PenaltyBreakFirstLessLess: 56
-PenaltyBreakString: 266
-PenaltyExcessCharacter: 1567573
-PenaltyReturnTypeOnItsOwnLine: 82
+PenaltyBreakAssignment: '40'
+PenaltyBreakBeforeFirstCallParameter: '100'
+PenaltyBreakComment: '10'
+PenaltyBreakFirstLessLess: '1'
+PenaltyBreakString: '100'
+PenaltyExcessCharacter: '2'
+PenaltyReturnTypeOnItsOwnLine: '100'
 PointerAlignment: Left
-ReflowComments: true
-SortIncludes: false
-SpaceAfterCStyleCast: true
-SpaceBeforeAssignmentOperators: true
+SpaceAfterTemplateKeyword: 'true'
+SpaceBeforeAssignmentOperators: 'true'
+SpaceBeforeCpp11BracedList: 'false'
+SpaceBeforeCtorInitializerColon: 'true'
+SpaceBeforeInheritanceColon: 'true'
 SpaceBeforeParens: ControlStatements
-SpaceInEmptyParentheses: false
-SpacesBeforeTrailingComments: 1
-SpacesInAngles: false
-SpacesInCStyleCastParentheses: true
-SpacesInContainerLiterals: false
-SpacesInParentheses: false
-SpacesInSquareBrackets: false
+SpacesInContainerLiterals: 'false'
+SpaceInEmptyParentheses: 'false'
+SpacesBeforeTrailingComments: '1'
+SpacesInAngles: 'false'
+SpacesInParentheses: 'false'
 Standard: Auto
-TabWidth: 8
-UseTab: Always
+TabWidth: '4'
+UseTab: ForContinuationAndIndentation
+
 ...

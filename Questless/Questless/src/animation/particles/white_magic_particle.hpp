@@ -4,17 +4,18 @@
 
 #pragma once
 
-#include "animation/particles/particle.hpp"
+#include "sprite_particle.hpp"
+
 #include "utility/utility.hpp"
 
 namespace ql {
 	//! A particle for effects involving white magic.
-	class white_magic_particle : public particle {
+	class white_magic_particle : public sprite_particle {
 	public:
 		white_magic_particle();
 	private:
 		void particle_subupdate() final;
 
-		sdl::texture const& texture() const final;
+		media::texture const& texture() const final;
 	};
 }

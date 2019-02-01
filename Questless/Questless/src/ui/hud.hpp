@@ -7,7 +7,7 @@
 #include "utility/id.hpp"
 #include "utility/reference.hpp"
 
-#include "sdl/spaces/window.hpp"
+#include "media/spaces/window.hpp"
 
 #include <array>
 #include <optional>
@@ -27,13 +27,18 @@ namespace ql {
 		void update();
 
 		//! Draws the HUD.
-		void draw();
+		void draw(sf::RenderTarget& target, sf::RenderStates states);
 
 		//! A constant reference to the hotbar.
-		auto const& hotbar() { return _hotbar; }
+		auto const& hotbar() {
+			return _hotbar;
+		}
 
 		//! Whether the inventory view is open.
-		bool inventory_open() const { return _inv_open; }
+		bool inventory_open() const {
+			return _inv_open;
+		}
+
 	private:
 		static constexpr size_t _hotbar_size = 10;
 
@@ -41,7 +46,7 @@ namespace ql {
 		std::array<std::optional<id<item>>, _hotbar_size> _hotbar;
 		bool _inv_open = false;
 		int _inv_page = 0; //! @todo Replace with filters and a scrollable view.
-		sdl::spaces::window::box _inv_layout;
+		sf::IntRect _inv_layout;
 		int _inv_row_count;
 		int _inv_column_count;
 		std::vector<cref<item>> _displayed_items;

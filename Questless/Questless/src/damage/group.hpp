@@ -40,27 +40,22 @@ namespace ql::dmg {
 
 		//! Constructs a damage group from a list of damage components.
 		//! @param parts The list of components in this damage group.
-		//! @param protection_bypass The amount of protection this damage group bypasses.
-		group(std::vector<damage> parts, protect protection_bypass = protect::zero())
+		//! @param protection_bypass The proportion of protection this damage group bypasses.
+		group(std::vector<damage> parts, double protection_bypass = 0.0)
 			: _parts{std::move(parts)}
 			, _protection_bypass{protection_bypass}
 		{}
 
 		//! Constructs a damage group from a single damage component.
 		//! @param part The single component of this damage group.
-		//! @param protection_bypass The amount of protection this damage group bypasses.
+		//! @param protection_bypass The proportion of protection this damage group bypasses.
 		template <typename Damage>
-		group(Damage damage_part, protect protection_bypass = protect::zero())
+		group(Damage damage_part, double protection_bypass = 0.0)
 			: group{damage{damage_part}, protection_bypass}
 		{}
 
 		static group zero() { return group{}; }
 
-		friend group operator +(group const& d1, group const& d2) {
-			group sum = d1;
-			sum += d2;
-			return sum;
-		}
 		friend group operator *(group const& d, double k) {
 			group product = d;
 			product *= k;
@@ -77,31 +72,24 @@ namespace ql::dmg {
 			return quotient;
 		}
 
-		group& operator +=(group const& d) {
-			_parts.insert(_parts.end(), d._parts.begin(), d._parts.end());
-			_protection_bypass += d._protection_bypass;
-			return *this;
-		}
 		group& operator *=(double k) {
 			for (auto& part : _parts) {
 				std::visit([k](auto& part) { part *= k; }, part);
 			}
-			_protection_bypass *= k;
 			return *this;
 		}
 		group& operator /=(double k) {
 			for (auto& part : _parts) {
 				std::visit([k](auto& part) { part /= k; }, part);
 			}
-			_protection_bypass /= k;
 			return *this;
 		}
 
 		//! The different parts/components of the damage group.
 		std::vector<damage> const& parts() const { return _parts; }
 
-		//! The amount of protection this damage group is capable of bypassing.
-		protect const& protection_bypass() const { return _protection_bypass; }
+		//! The proportion of protection this damage group bypasses.
+		double protection_bypass() const { return _protection_bypass; }
 
 		//! The amount of health loss this damage group causes, defined as the sum of its damage component values.
 		health health_loss() const {
@@ -116,10 +104,10 @@ namespace ql::dmg {
 		group with(protect const& protection, resist const& resistance, vuln const& vulnerability) const;
 	private:
 		std::vector<damage> _parts;
-		protect _protection_bypass;
+		double _protection_bypass;
 
 		//! Helper for constructing a damage group from a single damage part and optional protection bypass.
-		group(damage damage_part, protect protection_bypass = protect::zero())
+		group(damage damage_part, double protection_bypass = 0.0)
 			: _parts{{damage_part}}
 			, _protection_bypass{protection_bypass}
 		{}

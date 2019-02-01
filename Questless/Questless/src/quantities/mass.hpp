@@ -8,6 +8,8 @@
 
 namespace ql {
 	//! In-game mass.
-	using load = cancel::quantity<double, cancel::unit_t<struct load_tag>>;
-	constexpr load operator "" _load(long double value) { return load{static_cast<double>(value)}; }
+	using mass = cancel::quantity<double, cancel::unit_t<struct load_tag>>;
+	constexpr mass operator"" _mass(long double value) {
+		return mass{static_cast<double>(value)};
+	}
 }

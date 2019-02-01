@@ -15,11 +15,12 @@ namespace ql::qte {
 	public:
 		//! @param target_coords The target strike coordinates.
 		//! @param cont The dialog continuation function.
-		shock(region_tile::point target_coords, std::function<void(double)> cont);
+		shock(sf::Window const& window, rsrc::fonts const& fonts, region_tile::point target_coords, std::function<void(double)> cont);
 
-		state update() final;
+		state update(input_manager& im) final;
 
-		void draw() const final;
+		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
+
 	private:
 		struct charge {
 			world::point position;
@@ -34,7 +35,7 @@ namespace ql::qte {
 
 		std::vector<charge> _charges;
 
-		uptr<sdl::texture> _txt_title;
-		uptr<sdl::texture> _txt_prompt;
+		sf::Text _title;
+		sf::Text _prompt;
 	};
 }

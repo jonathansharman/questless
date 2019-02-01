@@ -16,17 +16,25 @@ namespace ql {
 	//! Dialog for the player to choose an action for his or her controlled being.
 	class player_action_dialog : public dialog {
 	public:
-		struct idle { bool prolonged; };
-		struct move { bool strafe; region_tile::direction direction; };
-		struct use { std::size_t index; };
+		struct idle {
+			bool prolonged;
+		};
+		struct move {
+			bool strafe;
+			region_tile::direction direction;
+		};
+		struct use {
+			std::size_t index;
+		};
 		using choice = std::variant<idle, move, use>;
 
-		player_action_dialog(hud& hud, std::function<void(choice)> cont) : _hud{hud}, _cont{std::move(cont)} {}
+		player_action_dialog(sf::Window const& window, rsrc::fonts const& fonts, hud& hud, std::function<void(choice)> cont)
+			: dialog{window, fonts}, _hud{hud}, _cont{std::move(cont)} {}
 
-		state update() final;
+		state update(input_manager& im) final;
 
-		void draw() const final
-		{}
+		void draw(sf::RenderTarget&, sf::RenderStates) const final {}
+
 	private:
 		hud& _hud;
 		continuation<choice> _cont;

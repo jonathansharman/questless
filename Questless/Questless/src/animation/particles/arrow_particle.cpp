@@ -4,41 +4,36 @@
 
 #include "arrow_particle.hpp"
 
-#include "sdl/resources.hpp"
 #include "utility/random.hpp"
 
-using namespace units;
+using namespace ql::world::literals;
+
+using namespace media;
 
 namespace ql {
-	arrow_particle::arrow_particle(world::point source, world::point target)
-		: particle
-			{ world_space::vector::zero()
-			, world_space::vector::zero() / 1.0s
-			, world_space::vector::zero() / 1.0s / 1.0s
-			, random_angle<world_space>()
-			, world_space::radians{0.0} / 1.0s
-			, 1.0
-			, world_space::scale_velocity{0.0}
-			, world_space::seconds::zero()
-			, max_displacement{0.0}
-			}
-		, _target{target}
-	{
-		auto target_vector = target - source;
-		if (target_vector == world_space::vector::zero()) {
-			_lifetime = 0.0_s;
-		} else {
-			// Set velocity towards the target.
-			auto heading = target_vector / target_vector.length();
-			_velocity = 1'000.0 * heading / 1.0s;
-			// Set lifetime / time left such that the arrow will disappear when it reaches the target.
-			_lifetime = sec{target_vector.length() / _velocity.step().length()};
-			_time_left = _lifetime;
+	namespace {
+		sf::Texture texture() {
+			static auto handle = the_texture_manager().add("resources/textures/particles/arrow.png");
+			return the_texture_manager()[handle];
 		}
 	}
 
-	sdl::texture const& arrow_particle::texture() const {
-		static sdl::texture_handle handle = sdl::the_texture_manager().add("resources/textures/particles/arrow.png");
-		return sdl::the_texture_manager()[handle];
+	arrow_particle::arrow_particle(world::point source, world::point target)
+	    : sprite_particle{texture(), 0.0_s}
+	    , _target{target} //
+	{
+		setPosition(to_sfml(source));
+		angle = random_degrees();
+		auto target_vector = target - source;
+		if (target_vector == world::vector::zero()) {
+			lifetime = 0.0_s;
+		} else {
+			// Set velocity towards the target.
+			auto heading = target_vector / target_vector.length();
+			velocity = heading * 1'000.0_world_length / 1.0_s;
+			// Set lifetime / time left such that the arrow will disappear when it reaches the target.
+			lifetime = target_vector.length() / velocity.length();
+			time_left = lifetime;
+		}
 	}
 }

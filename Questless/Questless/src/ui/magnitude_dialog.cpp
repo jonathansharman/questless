@@ -2,45 +2,52 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "ui/magnitude_dialog.hpp"
-
-#include "sdl/resources.hpp"
-
-using namespace sdl;
-using namespace units;
+#include "magnitude_dialog.hpp"
 
 namespace ql {
-	dialog::state magnitude_dialog::update() {
-		if (the_input().presses(SDLK_BACKSPACE) || the_input().presses(SDLK_ESCAPE)) {
-			return _cont(std::nullopt);
-		}
+	magnitude_dialog::magnitude_dialog(sf::Window const& window,
+		fonts const& fonts,
+		sf::String const& title,
+		sf::String const& prompt,
+		double default_value,
+		std::optional<double> min,
+		std::optional<double> max,
+		std::function<void(std::optional<double>)> cont)
+		: dialog{window, fonts}
+		, _magnitude{default_value}
+		, _min{min}
+		, _max{max}
+		, _cont{std::move(cont)}
+		, _title{make_title(title)}
+		, _prompt{make_prompt(prompt)}
+		, _selector{make_selector(std::to_string(_magnitude))} //
+	{}
+
+	dialog::state magnitude_dialog::update(input_manager& im) {
+		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) { return _cont(std::nullopt); }
 
 		double old_magnitude = _magnitude;
 
-		_magnitude += (the_input().shift() ? 10.0 : 1.0) * (the_input().presses(SDLK_UP) - the_input().presses(SDLK_DOWN) + the_input().scroll());
-		_magnitude = (_min && _magnitude < _min.value()) ? _min.value() : _magnitude;
-		_magnitude = (_max && _magnitude > _max.value()) ? _max.value() : _magnitude;
+		int const ups = im.press_count(sf::Keyboard::Up);
+		int const downs = im.press_count(sf::Keyboard::Down);
+		_magnitude += (im.shift() ? 10.0 : 1.0) * (ups - downs + im.scroll());
+
+		// Clamp magnitude, if bounds are set.
+		if (_min) { _magnitude = std::max(*_min, _magnitude); }
+		if (_max) { _magnitude = std::min(*_max, _magnitude); }
 
 		// Update selector texture if value changed.
-		if (old_magnitude != _magnitude) {
-			_txt_selector = make_selector(std::to_string(_magnitude).c_str());
-		}
+		if (old_magnitude != _magnitude) { _selector = make_selector(_window, std::to_string(_magnitude)); }
 
-		if (the_input().pressed(mouse_button::left) || the_input().presses(SDLK_RETURN) || the_input().presses(SDLK_SPACE)) {
-			return _cont(_magnitude);
-		}
+		// Choose value.
+		if (im.pressed({sf::Mouse::Left, sf::Keyboard::Return, sf::Keyboard::Space})) { return _cont(_magnitude); }
+
 		return state::open;
 	}
 
-	void magnitude_dialog::draw() const {
-		draw_title(*_txt_title);
-		draw_prompt(*_txt_prompt);
-		draw_selector(*_txt_selector);
-	}
-
-	void magnitude_dialog::load_textures() {
-		_txt_title = make_title(_title.c_str());
-		_txt_prompt = make_prompt(_prompt.c_str());
-		_txt_selector = make_selector(std::to_string(_magnitude).c_str());
+	void magnitude_dialog::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+		draw_title(_title);
+		draw_prompt(_prompt);
+		draw_selector(_selector);
 	}
 }

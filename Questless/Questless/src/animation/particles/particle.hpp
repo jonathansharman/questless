@@ -8,72 +8,60 @@
 
 #include "cancel/quantity.hpp"
 
-#include "sdl/texture.hpp"
-
 namespace ql {
-	using max_displacement = cancel::quantity<double, cancel::unit_t<struct max_displacement_tag>>;
-
-	class camera;
-
 	//! Used to create particle effects.
 	class particle : public animation {
 	public:
-		//! @param displacement Initial displacement from the origin, in game space.
-		//! @param velocity Initial velocity in game pixels per second.
-		//! @param acceleration Initial acceleration in game pixels per second per second.
-		//! @param angle Initial angle, in radians, counter-clockwise from the positive x-axis.
-		//! @param angular_velocity Initial angular velocity in radians per second.
-		//! @param scale Initial size scale.
-		//! @param scale_velocity Initial rate of change in size scale per second.
-		//! @param lifetime The duration of the particle's life, after which it is considered expired and should be removed.
-		//! @param max_displacement Maximum random displacement from the given position.
-		particle
-			( world::vector displacement
-			, world::vel velocity
-			, world::accel acceleration
-			, vecx::radians angle
-			, world::angular_vel angular_velocity
-			, double scale
-			, per_sec scale_velocity
-			, sec lifetime
-			, max_displacement max_displacement = max_displacement{15.0}
-			);
+		//! @param displacement The initial displacement of this particle.
+		//! @param lifetime The amount of time before this particle expires.
+		particle(world::vector displacement, sec lifetime);
+
+		//! The total length of time the particle lives. Not to be confused with @p time_left.
+		sec lifetime;
+
+		//! The amount of time left before this particle expires.
+		sec time_left = lifetime;
+
+		//! Displacement of this particle from its animation position.
+		world::vector displacement = world::vector::zero();
+
+		world::vel velocity = world::vel::zero();
+
+		world::accel acceleration = world::accel::zero();
+
+		vecx::degrees angle = vecx::degrees{0.0};
+
+		world::angular_vel angular_velocity = vecx::radians{0.0} / 0.0_s;
+
+		cancel::unitless<double> scale{1.0};
+
+		per_sec scale_velocity = 0.0_hz;
+
+		sf::Color color_factor = sf::Color::White;
 
 		virtual ~particle() = default;
 
-		void draw(sdl::spaces::window::point position) const final;
+		void animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const final;
 
-		void draw(world::point position, camera const& camera, sdl::spaces::colors::color color_factor = sdl::spaces::colors::white()) const final;
-	protected:
-		//! @todo Are these protected variables the right way to do this?
-
-		world::vector _displacement;
-		world::vel _velocity;
-		world::accel _acceleration;
-		vecx::radians _angle;
-		world::angular_vel _angular_velocity;
-		double _scale;
-		per_sec _scale_velocity;
-		sec _lifetime;
-		sec _time_left;
-		sdl::spaces::colors::color _color_factor;
-
-		//! The texture to be used when drawing a particle.
-		virtual sdl::texture const& texture() const = 0;
 	private:
+		world::point _initial_position;
+
 		//! Whether the particle should fade out as it nears expiration.
-		virtual bool fade_out() const { return true; };
+		virtual bool fade_out() const {
+			return true;
+		};
 
 		//! Whether the particle's angle should be set to match its velocity.
-		virtual bool face_towards_heading() const { return false; }
+		virtual bool face_towards_heading() const {
+			return false;
+		}
 
-		//! Whether the particle should ignore the draw() color mod.
-		virtual bool ignore_color_mod() const { return true; }
+		void animation_subupdate(sec elapsed_time) final;
 
-		//! Animation subtype-specific update.
-		void animation_subupdate() final;
+		//! Updates the particle in a subtype-specific way.
+		virtual void particle_subupdate(sec elapsed_time) = 0;
 
-		//! Particle subtype-specific update.
-		virtual void particle_subupdate() = 0;
+		//! Draws the particle in a subtype-specific way.
+		virtual void particle_subdraw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
 	};
 }

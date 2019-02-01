@@ -4,41 +4,31 @@
 
 #include "ui/direction_dialog.hpp"
 
-#include "sdl/resources.hpp"
-
-using namespace sdl;
-using namespace units;
+using namespace media;
 
 namespace ql {
-	dialog::state direction_dialog::update() {
-		if (the_input().presses(SDLK_BACKSPACE) || the_input().presses(SDLK_ESCAPE)) {
-			return _cont(std::nullopt);
-		}
+	dialog::state direction_dialog::update(input_manager& im) {
+		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) { return _cont(std::nullopt); }
 
-		if (the_input().presses(SDLK_e)) {
+		if (im.pressed(sf::Keyboard::E)) {
 			return _cont(region_tile::direction::one);
-		} else if (the_input().presses(SDLK_w)) {
+		} else if (im.pressed(sf::Keyboard::W)) {
 			return _cont(region_tile::direction::two);
-		} else if (the_input().presses(SDLK_q)) {
+		} else if (im.pressed(sf::Keyboard::Q)) {
 			return _cont(region_tile::direction::three);
-		} else if (the_input().presses(SDLK_a)) {
+		} else if (im.pressed(sf::Keyboard::A)) {
 			return _cont(region_tile::direction::four);
-		} else if (the_input().presses(SDLK_s)) {
+		} else if (im.pressed(sf::Keyboard::S)) {
 			return _cont(region_tile::direction::five);
-		} else if (the_input().presses(SDLK_d)) {
+		} else if (im.pressed(sf::Keyboard::D)) {
 			return _cont(region_tile::direction::six);
 		}
 
 		return state::open;
 	}
 
-	void direction_dialog::draw() const {
-		draw_title(*_txt_title);
-		draw_prompt(*_txt_prompt);
-	}
-
-	void direction_dialog::load_textures() {
-		_txt_title = make_title(_title.c_str());
-		_txt_prompt = make_prompt(_prompt.c_str());
+	void direction_dialog::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+		target.draw(_title, states);
+		target.draw(_prompt, states);
 	}
 }

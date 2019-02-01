@@ -9,7 +9,17 @@
 namespace ql {
 	//! Creates sparks, smoke, and flame.
 	class flame : public particle_animation {
+	public:
+		//! Unit of flames, for use in flame animations.
+		using flames = cancel::quantity<double, cancel::unit_t<struct flame_particle_tag>>;
+
+		//! The number of flames to create per second. Can be less than one.
+		decltype(flames{} / sec{}) flame_rate = flames{2} / 1.0_s;
+
 	private:
-		void particle_animation_subupdate() final;
+		//! The current accumulation of flames.
+		flames _flames{0.0};
+
+		void particle_animation_subupdate(sec elapsed_time) final;
 	};
 }

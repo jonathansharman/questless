@@ -19,9 +19,9 @@ namespace ql::qte {
 
 		~incant();
 
-		state update() final;
+		state update(input_manager& im) final;
 
-		void draw() const final;
+		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 	private:
 		enum class note { left, right, up, down };
 		enum class side { left, right };
@@ -33,17 +33,14 @@ namespace ql::qte {
 
 		side _side = side::right;
 
-		bool _tick = false;
-
 		bool _begun = false;
 
 		sec _elapsed_time = 0.0_s;
 
 		std::vector<note> _notes;
 
-		uptr<sdl::texture> _txt_title;
-		uptr<sdl::texture> _txt_prompt;
-
-		void load_textures();
+		sf::Text _title;
+		sf::Text _prompt;
+		sf::RectangleShape _metronome;
 	};
 }

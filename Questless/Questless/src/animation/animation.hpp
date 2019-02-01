@@ -5,58 +5,70 @@
 #pragma once
 
 #include "quantities/wall_time.hpp"
-#include "utility/static_bounded.hpp"
+#include "utility/nonnegative.hpp"
 
 #include "world/world.hpp"
 
-#include "sdl/spaces/colors.hpp"
-#include "sdl/spaces/window.hpp"
+#include "media/spaces/window.hpp"
+
+#include <SFML/Graphics.hpp>
 
 namespace ql {
-	class camera;
-
 	//! Abstract base for animations.
-	class animation {
+	class animation
+	    : public sf::Drawable
+	    , public sf::Transformable {
 	public:
-		static constexpr double minimum_timescale = 0.0;
-
 		//! The time scale of the animation. E.g., a time scale of 2.0 plays the animation at double speed.
-		static_bounded<double, minimum_timescale> time_scale = 1.0;
+		nonnegative<double> time_scale = 1.0;
 
 		virtual ~animation() = default;
 
-		//! Whether the current animation is paused.
-		bool paused() const { return _paused; }
+		//! Whether this animation is paused.
+		bool paused() const {
+			return _paused;
+		}
 
-		//! Pauses the current animation.
-		void pause() { _paused = true; }
+		//! Pauses this animation.
+		void pause() {
+			_paused = true;
+		}
 
-		//! Resumes the current animation.
-		void resume() { _paused = false; }
+		//! Resumes this animation.
+		void resume() {
+			_paused = false;
+		}
 
-		//! Whether the animation has played to its end.
-		bool over() const { return _over; }
+		//! Stops this animation.
+		void stop() {
+			_stopped = true;
+		}
 
-		//! Updates the current animation.
-		void update();
+		//! Whether this animation has played to its end or been stopped early.
+		bool stopped() const {
+			return _stopped;
+		}
 
-		//! Draws the animation at @p position in screen space.
-		virtual void draw(sdl::spaces::window::point position) const = 0;
+		//! Advances this animation by @p elapsed_time.
+		void update(sec elapsed_time);
 
-		//! Draws the animation at @p position in game space using @p camera.
-		//! @param position The position in game space at which to draw the animation.
-		//! @param camera The camera with which to draw the animation.
-		//! @param color_factor An additional color factor, applied on top of the camera's color vector.
-		virtual void draw(world::point position, camera const& camera, sdl::spaces::colors::color color_factor = sdl::spaces::colors::white()) const = 0;
+		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
+
 	protected:
-		bool _over = false;
+		//! Marks this animation as not stopped.
+		void restart() {
+			_stopped = false;
+		}
 
-		//! The logical amount of time elapsed since last frame, accounting for the time scale.
-		sec elapsed_time() const;
 	private:
+		bool _stopped = false;
 		bool _paused = false;
 
-		//! Animation subtype-specific update.
-		virtual void animation_subupdate() = 0;
+		//! Advances this animation by @p elapsed_time in a subtype-specific way.
+		virtual void animation_subupdate(sec elapsed_time) = 0;
+
+		//! Draws this animation in a subtype-specific way. The transform has already been applied to
+		//! @note The @p states transform has already been multiplied by this animation's transform before this call.
+		virtual void animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
 	};
 }

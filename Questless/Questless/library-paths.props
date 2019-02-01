@@ -2,10 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-    <SDL_PATH>C:\vc-libs\SDL2-2.0.4\</SDL_PATH>
-    <SDL_IMAGE_PATH>C:\vc-libs\SDL2_image-2.0.1\</SDL_IMAGE_PATH>
-    <SDL_MIXER_PATH>C:\vc-libs\SDL2_mixer-2.0.1\</SDL_MIXER_PATH>
-    <SDL_TTF_PATH>C:\vc-libs\SDL2_ttf-2.0.14\</SDL_TTF_PATH>
+    <SFML_PATH>C:\vc-libs\SFML-2.5.1\</SFML_PATH>
     <BOOST_PATH>C:\vc-libs\boost_1_68_0</BOOST_PATH>
     <DOCTEST_PATH>C:\vc-libs\doctest\</DOCTEST_PATH>
     <GLEW_PATH>C:\vc-libs\glew-2.0.0\</GLEW_PATH>
@@ -15,24 +12,13 @@
     <CEREAL_PATH>C:\vc-libs\cereal\</CEREAL_PATH>
     <NLOHMANN_JSON_PATH>C:\vc-libs\json\</NLOHMANN_JSON_PATH>
     <GCEM_PATH>C:\vc-libs\gcem\</GCEM_PATH>
+    <FMT_PATH>C:\vc-libs\fmt\</FMT_PATH>
   </PropertyGroup>
   <PropertyGroup />
   <ItemDefinitionGroup />
   <ItemGroup>
-    <BuildMacro Include="SDL_PATH">
-      <Value>$(SDL_PATH)</Value>
-      <EnvironmentVariable>true</EnvironmentVariable>
-    </BuildMacro>
-    <BuildMacro Include="SDL_IMAGE_PATH">
-      <Value>$(SDL_IMAGE_PATH)</Value>
-      <EnvironmentVariable>true</EnvironmentVariable>
-    </BuildMacro>
-    <BuildMacro Include="SDL_MIXER_PATH">
-      <Value>$(SDL_MIXER_PATH)</Value>
-      <EnvironmentVariable>true</EnvironmentVariable>
-    </BuildMacro>
-    <BuildMacro Include="SDL_TTF_PATH">
-      <Value>$(SDL_TTF_PATH)</Value>
+    <BuildMacro Include="SFML_PATH">
+      <Value>$(SFML_PATH)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
     <BuildMacro Include="BOOST_PATH">
@@ -68,6 +54,10 @@
     </BuildMacro>
     <BuildMacro Include="GCEM_PATH">
       <Value>$(GCEM_PATH)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="FMT_PATH">
+      <Value>$(FMT_PATH)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
   </ItemGroup>

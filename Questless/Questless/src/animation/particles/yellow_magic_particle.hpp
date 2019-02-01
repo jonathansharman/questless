@@ -4,18 +4,17 @@
 
 #pragma once
 
-#include "animation/particles/particle.hpp"
+#include "sprite_particle.hpp"
 
 #include "utility/random.hpp"
 
 namespace ql {
 	//! A particle for effects involving yellow magic.
-	class yellow_magic_particle : public particle {
+	class yellow_magic_particle : public sprite_particle {
 	public:
 		yellow_magic_particle();
-	private:
-		void particle_subupdate() final;
 
-		sdl::texture const& texture() const final;
+	private:
+		void sprite_particle_subupdate(sec elapsed_time) final;
 	};
 }

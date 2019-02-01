@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include "animation/particles/particle.hpp"
+#include "sprite_particle.hpp"
 
 namespace ql {
 	//! An arrow in flight.
-	class arrow_particle : public particle {
+	class arrow_particle : public sprite_particle {
 	public:
 		//! @param source Where the arrow is shot from.
 		//! @param target Where the arrow is headed towards.
@@ -20,10 +20,6 @@ namespace ql {
 
 		bool face_towards_heading() const final { return true; }
 
-		virtual bool ignore_color_mod() const { return false; }
-
-		void particle_subupdate() final {}
-
-		sdl::texture const& texture() const final;
+		void sprite_particle_subupdate(sec) final {}
 	};
 }

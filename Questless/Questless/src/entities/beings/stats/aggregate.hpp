@@ -22,23 +22,21 @@ namespace ql::stats {
 		nonnegative<hearing> hearing = 0.0_hear;
 		nonnegative<speech> speech = 0.0_speech;
 		nonnegative<intellect> intellect = 0.0_int;
-		nonnegative<load> mass = 0.0_load;
+		nonnegative<mass> mass = 0.0_mass;
 		vision vision{};
 
 		aggregate() = default;
 
-		aggregate
-			( ql::health vitality
-			, ql::mana spirit
-			, ql::strength strength
-			, ql::energy stamina
-			, ql::agility agility
-			, ql::hearing hearing
-			, ql::speech speech
-			, ql::intellect intellect
-			, ql::load mass
-			, stats::vision vision
-			)
+		aggregate(ql::health vitality,
+			ql::mana spirit,
+			ql::strength strength,
+			ql::energy stamina,
+			ql::agility agility,
+			ql::hearing hearing,
+			ql::speech speech,
+			ql::intellect intellect,
+			ql::mass mass,
+			stats::vision vision)
 			: vitality{vitality}
 			, spirit{spirit}
 			, strength{strength}
@@ -48,44 +46,39 @@ namespace ql::stats {
 			, speech{speech}
 			, intellect{intellect}
 			, mass{mass}
-			, vision{std::move(vision)}
-		{}
+			, vision{std::move(vision)} {}
 
 		template <typename Archive>
 		void save(Archive& archive) const {
-			archive
-				( CEREAL_NVP(vitality)
-				, CEREAL_NVP(spirit)
-				, CEREAL_NVP(strength)
-				, CEREAL_NVP(stamina)
-				, CEREAL_NVP(agility)
-				, CEREAL_NVP(vision)
-				, CEREAL_NVP(hearing)
-				, CEREAL_NVP(speech)
-				, CEREAL_NVP(intellect)
-				, CEREAL_NVP(mass)
-				, CEREAL_NVP(vision)
-				);
+			archive(CEREAL_NVP(vitality),
+				CEREAL_NVP(spirit),
+				CEREAL_NVP(strength),
+				CEREAL_NVP(stamina),
+				CEREAL_NVP(agility),
+				CEREAL_NVP(vision),
+				CEREAL_NVP(hearing),
+				CEREAL_NVP(speech),
+				CEREAL_NVP(intellect),
+				CEREAL_NVP(mass),
+				CEREAL_NVP(vision));
 		}
 
 		template <typename Archive>
 		void load(Archive& archive) {
-			archive
-				( CEREAL_NVP(vitality)
-				, CEREAL_NVP(spirit)
-				, CEREAL_NVP(strength)
-				, CEREAL_NVP(stamina)
-				, CEREAL_NVP(agility)
-				, CEREAL_NVP(vision)
-				, CEREAL_NVP(hearing)
-				, CEREAL_NVP(speech)
-				, CEREAL_NVP(intellect)
-				, CEREAL_NVP(mass)
-				, CEREAL_NVP(vision)
-				);
+			archive(CEREAL_NVP(vitality),
+				CEREAL_NVP(spirit),
+				CEREAL_NVP(strength),
+				CEREAL_NVP(stamina),
+				CEREAL_NVP(agility),
+				CEREAL_NVP(vision),
+				CEREAL_NVP(hearing),
+				CEREAL_NVP(speech),
+				CEREAL_NVP(intellect),
+				CEREAL_NVP(mass),
+				CEREAL_NVP(vision));
 		}
 
-		aggregate& operator +=(aggregate const& that) {
+		aggregate& operator+=(aggregate const& that) {
 			vitality += that.vitality;
 			spirit += that.spirit;
 			strength += that.strength;
@@ -99,7 +92,7 @@ namespace ql::stats {
 			return *this;
 		}
 
-		aggregate operator +(aggregate const& that) {
+		aggregate operator+(aggregate const& that) {
 			aggregate result = *this;
 			result += that;
 			return result;

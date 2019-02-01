@@ -4,46 +4,33 @@
 
 #include "entity_animator.hpp"
 
-#include "animation_stack.hpp"
 #include "bleeding.hpp"
 #include "flame.hpp"
+#include "scene_node.hpp"
 #include "sprite_animation.hpp"
-#include "still.hpp"
+#include "still_image.hpp"
 
 #include "entities/all_entities.hpp"
-
-#include "sdl/resources.hpp"
-
-using namespace sdl;
-using namespace sdl::spaces::sprite_sheet::literals;
-using namespace sdl::spaces::window::literals;
+#include "rsrc/entity.hpp"
 
 namespace ql {
-	entity_animator::entity_animator() = default;
+	entity_animator::entity_animator(rsrc::entity const& resources) : resources{resources} {}
+
 	entity_animator::~entity_animator() = default;
 
 	// Beings
 
 	void entity_animator::visit(human const& human) {
-		auto animation_stack = umake<ql::animation_stack>();
-
 		// Sprite animation
-		static auto sprite_sheet = smake<ql::sprite_sheet>
-			( the_texture_manager().add("resources/textures/human-animation.png")
-			, spaces::sprite_sheet::vector{3_cel, 1_cel}
-			);
-		auto sprite_animation = umake<ql::sprite_animation>
-			( sprite_sheet
-			, std::vector<sprite_animation::frame>
-				{ {0.2_s, {0_cel, 0_cel}, {0_px, 12_px}}
-				, {0.2_s, {1_cel, 0_cel}, {0_px, 12_px}}
-				, {0.2_s, {2_cel, 0_cel}, {0_px, 12_px}}
-				, {0.2_s, {1_cel, 0_cel}, {0_px, 12_px}}
-				}
-			, sprite_animation::loop_type::looping
-			, sprite_animation::start_time::random
-			);
-		animation_stack->add(std::move(sprite_animation));
+		auto scene_node = umake<ql::scene_node>(umake<ql::sprite_animation>( //
+			ql::sprite_sheet{resources.ss.human, {3, 1}},
+			std::vector<sprite_animation::frame>{//
+				{0.2_s, {0, 0}, {0, 12}},
+				{0.2_s, {1, 0}, {0, 12}},
+				{0.2_s, {2, 0}, {0, 12}},
+				{0.2_s, {1, 0}, {0, 12}}},
+			sprite_animation::loop_type::looping,
+			sprite_animation::start_time::random));
 
 		// Bleeding animation
 		auto total_bleeding = blood_per_tick{0.0};
@@ -51,69 +38,68 @@ namespace ql {
 			total_bleeding += part.bleeding.value();
 		}
 		if (total_bleeding > blood_per_tick{0.0}) {
-			constexpr auto bleeding_scaling_factor = 5_tick * 1.0_hp / 1.0_blood;
-			auto bleeding = umake<ql::bleeding>((total_bleeding / human.body.total_vitality() * bleeding_scaling_factor).value);
-			animation_stack->add(std::move(bleeding));
+			// Severity of bleeding is the rate of blood loss over the being's total vitality.
+			auto const severity = total_bleeding / human.body.total_vitality();
+			// Converts the severity of bleeding to drops of animated blood per second.
+			constexpr auto conversion_factor = ql::bleeding::drops{5.0} / 1.0_s / (blood_per_tick{1.0} / 1.0_hp);
+			auto bleeding = umake<ql::bleeding>(severity * conversion_factor);
+			scene_node->front_children.push_back(std::move(bleeding));
 		}
 
-		_animation = std::move(animation_stack);
+		animation = std::move(scene_node);
 	}
-	void entity_animator::visit(goblin const& goblin) {
-		auto animation_stack = umake<ql::animation_stack>();
 
+	void entity_animator::visit(goblin const& goblin) {
 		// Sprite animation
-		static auto sprite_sheet = smake<ql::sprite_sheet>
-			( the_texture_manager().add("resources/textures/goblin-animation.png")
-			, spaces::sprite_sheet::vector{3_cel, 1_cel}
-			);
-		auto sprite_animation = umake<ql::sprite_animation>
-			( sprite_sheet
-			, std::vector<sprite_animation::frame>
-				{ {0.2_s, {0_cel, 0_cel}, {0_px, 12_px}}
-				, {0.2_s, {1_cel, 0_cel}, {0_px, 12_px}}
-				, {0.2_s, {2_cel, 0_cel}, {0_px, 12_px}}
-				, {0.2_s, {1_cel, 0_cel}, {0_px, 12_px}}
-				}
-			, sprite_animation::loop_type::looping
-			, sprite_animation::start_time::random
-			);
-		animation_stack->add(std::move(sprite_animation));
+		auto scene_node = umake<ql::scene_node>(umake<ql::sprite_animation>( //
+			ql::sprite_sheet{resources.ss.goblin, {3, 1}},
+			std::vector<sprite_animation::frame>{//
+				{0.2_s, {0, 0}, {0, 12}}, //
+				{0.2_s, {1, 0}, {0, 12}}, //
+				{0.2_s, {2, 0}, {0, 12}}, //
+				{0.2_s, {1, 0}, {0, 12}}},
+			sprite_animation::loop_type::looping,
+			sprite_animation::start_time::random));
 
 		// Bleeding animation
-		blood_per_tick total_bleeding{0.0};
+		auto total_bleeding = blood_per_tick{0.0};
 		for (body_part const& part : goblin.body.parts()) {
 			total_bleeding += part.bleeding.value();
 		}
-		if (total_bleeding > 0.0_blood_per_tick) {
-			constexpr double bleeding_scaling_factor = 5.0;
-			auto bleeding = umake<ql::bleeding>((total_bleeding / goblin.body.total_vitality() / body_part::blood_per_vitality * bleeding_scaling_factor).value);
-			animation_stack->add(std::move(bleeding));
+		if (total_bleeding > blood_per_tick{0.0}) {
+			// Severity of bleeding is the rate of blood loss over the being's total vitality.
+			auto const severity = total_bleeding / goblin.body.total_vitality();
+			// Converts the severity of bleeding to drops of animated blood per second.
+			constexpr auto conversion_factor = ql::bleeding::drops{5.0} / 1.0_s / (blood_per_tick{1.0} / 1.0_hp);
+			auto bleeding = umake<ql::bleeding>(severity * conversion_factor);
+			scene_node->front_children.push_back(std::move(bleeding));
 		}
 
-		_animation = std::move(animation_stack);
+		animation = std::move(scene_node);
 	}
 
 	// Objects
-	
+
 	void entity_animator::visit(campfire const&) {
-		static auto texture_handle = the_texture_manager().add("resources/textures/entities/objects/campfire.png");
-		auto animation_stack = umake<ql::animation_stack>();
-		animation_stack->add(umake<still>(texture_handle, spaces::window::vector{0_px, 0_px}));
+		auto firewood = umake<still_image>(resources.txtr.firewood);
+		firewood->set_relative_origin({0.5f, 0.5f});
+		auto scene_node = umake<ql::scene_node>(std::move(firewood));
+
 		auto flame = umake<ql::flame>();
-		// Pre-update the flame a number of times so it's steady immediately.
-		constexpr int n_pre_updates = 100;
-		for (int i = 0; i < n_pre_updates; ++i) {
-			flame->update();
-		}
-		animation_stack->add(std::move(flame));
-		_animation = std::move(animation_stack);
+		// Pre-update the flame so it's steady immediately.
+		flame->update(2.0_s);
+
+		scene_node->front_children.push_back(umake<ql::scene_node>(std::move(flame)));
+		animation = std::move(scene_node);
 	}
+
 	void entity_animator::visit(corpse const&) {
-		static auto texture_handle = the_texture_manager().add("resources/textures/entities/objects/grave.png");
-		_animation = umake<still>(texture_handle, spaces::window::vector{0_px, 12_px});
+		animation = umake<still_image>(resources.txtr.grave);
+		animation->setOrigin(0, 12);
 	}
+
 	void entity_animator::visit(item_box const&) {
-		static auto texture_handle = the_texture_manager().add("resources/textures/entities/objects/item-box.png");
-		_animation = umake<still>(texture_handle, spaces::window::vector{0_px, 8_px});
+		animation = umake<still_image>(resources.txtr.item_box);
+		animation->setOrigin(0, 8);
 	}
 }

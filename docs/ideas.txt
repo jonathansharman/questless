@@ -300,29 +300,57 @@ Utility
 Weapons
 	Melee
 		Blades
+			Sword attributes
+				Length, weight, and balance - all determined by other attributes
+				Hands
+					One-handed
+					Hand-and-a-half
+					Two-handed
+				Hilt types
+					Simple - low protection
+					Cross-guard - some slash protection
+					Knuckle-bow - more slash protection 
+					Basket - great slash protection
+					Cup - good pierce protection
+				Edge/section
+					Double-edged
+					Single-edged
+						False-edged or not
+					Edgeless (triangular or rectangular section) - no cutting, good thrusting
+				Taper - affects weight and balance
+					Distal taper
+					Profile taper
+				Curve
+					Straight - nice for thrusting
+					Back-curved - nice for cutting
+					Forward-curved - nice for chopping
+				Material
+					Copper
+					Bronze
+					Iron
+						Carbon content (steel)
+				Material properties
+					Hardness (quenching)
+					Stiffness (resistance to deformation)
+					Strength (stress before plastic deformation)
+						Tempering?
 			Remember that pistol-grips are good for thrusting, bad for parrying
 			(Look up types of swords)
 				Include half-swording form for appropriate swords
-			Broadsword
-				Hands: 1
-				Damage: slash
-				Equip time: medium
-				Unequip time: medium
-				Ready time: high
-				Recovery time: high
-				Burst damage: high
-				Damage rate: average
-				Weight: average
+			Arming sword
+			Greatsword
+			Falchion
+			Falx
 			Rapier
-				Hands: 1
-				Damage type: piercing
+			Saber
 			Cutlass
+			Scimitar
 			Xiphos
 			Fireblade
 				Deals burn and slash or pierce damage
 				Very low weight
-				Powered by a green gatestone
-				Cannot parry
+				Powered by a gatestone
+				Cannot parry?
 			Push-daggers
 		Hacking weapons
 			Battle axe
@@ -741,7 +769,6 @@ Fiend (Legion)
 			Maintains existence by draining the health and mana of other beings
 		Wraith
 			The evil spirit of a deceased mortal
-Void Beasts
 Elemental
 	Light
 		A good elemental that routs out evil

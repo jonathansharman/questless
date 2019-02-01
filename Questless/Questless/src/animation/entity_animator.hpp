@@ -4,15 +4,24 @@
 
 #pragma once
 
-#include "animation.hpp"
 #include "entities/entity_visitor.hpp"
 #include "utility/reference.hpp"
 
 namespace ql {
+	namespace rsrc {
+		struct entity;
+	}
+	class animation;
+
 	//! Creates animations for entities.
-	class entity_animator : public entity_const_visitor {
-	public:
-		entity_animator();
+	struct entity_animator : public entity_const_visitor {
+		rsrc::entity const& resources;
+
+		//! The animation created by the last visit.
+		uptr<animation> animation;
+
+		entity_animator(rsrc::entity const& resources);
+
 		~entity_animator();
 
 		void visit(human const&) final;
@@ -21,10 +30,5 @@ namespace ql {
 		void visit(campfire const&) final;
 		void visit(corpse const&) final;
 		void visit(item_box const&) final;
-
-		//! The animation produced by the last visit. Moves the animation out of the animator.
-		uptr<animation> animation() { return std::move(_animation); }
-	private:
-		uptr<ql::animation> _animation;
 	};
 }

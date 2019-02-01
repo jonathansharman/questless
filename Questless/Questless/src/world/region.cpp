@@ -28,7 +28,7 @@ using std::vector;
 using std::function;
 namespace fs = std::filesystem;
 
-using namespace sdl;
+using namespace media;
 
 namespace ql {
 	bool turn_order_function(being const& first, being const& second) {

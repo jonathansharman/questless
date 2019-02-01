@@ -5,7 +5,6 @@
 #include "white_magic_particle.hpp"
 
 #include "game.hpp"
-#include "sdl/resources.hpp"
 #include "utility/random.hpp"
 
 using namespace units;
@@ -28,8 +27,8 @@ namespace ql {
 		_velocity.step().x() *= 1.0 - vx_pct_drag_rate * game::target_frame_duration;
 	}
 
-	sdl::texture const& white_magic_particle::texture() const {
-		static auto texture_handle = sdl::the_texture_manager().add("resources/textures/particles/magic/white.png");
-		return sdl::the_texture_manager()[texture_handle];
+	media::texture const& white_magic_particle::texture() const {
+		static auto texture_handle = media::the_texture_manager().add("resources/textures/particles/magic/white.png");
+		return media::the_texture_manager()[texture_handle];
 	}
 }
