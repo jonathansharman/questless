@@ -7,23 +7,29 @@
 #include "object.hpp"
 
 namespace ql {
-	class being;
+	struct being;
 
 	//! The remains of a deceased corporeal being.
-	class corpse : public object_base<corpse> {
-	public:
+	struct corpse : object_base<corpse> {
 		corpse(ql::id<being> being_id, ql::id<object> id = ql::id<object>::make())
-			: object_base<corpse>{id}
-			, _being_id{being_id}
-		{}
+			: object_base<corpse>{id}, _being_id{being_id} {}
 
-		virtual ql::entity_subtype entity_subtype() const { return entity_subtype::corpse_class; }
+		virtual ql::entity_subtype entity_subtype() const {
+			return entity_subtype::corpse_class;
+		}
 
-		double transparency() const final { return 0.5; }
+		double transparency() const final {
+			return 0.5;
+		}
 
-		bool blocks_movement() const final { return true; }
+		bool blocks_movement() const final {
+			return true;
+		}
 
-		ql::id<being> being_id() const { return _being_id; }
+		ql::id<being> being_id() const {
+			return _being_id;
+		}
+
 	private:
 		ql::id<being> const _being_id;
 	};

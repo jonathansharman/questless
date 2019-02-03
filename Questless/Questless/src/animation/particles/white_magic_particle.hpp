@@ -10,9 +10,9 @@
 
 namespace ql {
 	//! A particle for effects involving white magic.
-	class white_magic_particle : public sprite_particle {
-	public:
+	struct white_magic_particle : sprite_particle {
 		white_magic_particle();
+
 	private:
 		void particle_subupdate() final;
 

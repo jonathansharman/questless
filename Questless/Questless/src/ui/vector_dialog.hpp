@@ -14,8 +14,7 @@
 
 namespace ql {
 	//! Retrieves a region tile vector from the player.
-	class vector_dialog : public dialog {
-	public:
+	struct vector_dialog : dialog {
 		vector_dialog(sf::Window const& window,
 			rsrc::fonts const& fonts,
 			sf::String const& title,

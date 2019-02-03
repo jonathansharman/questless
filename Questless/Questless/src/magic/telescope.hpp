@@ -4,31 +4,26 @@
 
 #pragma once
 
+#include "color.hpp"
 #include "spell.hpp"
 
-namespace ql::magic {
-	//! Temporarily increases the caster's visual acuity.
-	class telescope : public spell_base<telescope> {
-	public:
-		std::string name() const final {
-			return "Telescope";
-		}
+#include "agents/action.hpp"
 
-		magic::color color() const final {
-			return color::green;
-		}
+namespace ql {
+	struct gatestone;
 
-		tick cooldown() const final {
-			return 50_tick;
-		}
+	namespace magic {
+		//! Temporarily increases the caster's visual acuity.
+		struct telescope {
+			static constexpr char const* name = "Telescope";
+			static constexpr magic::color color = magic::color::green;
+			tick cooldown = 50_tick;
+			tick base_incant_time = 10_tick;
 
-	private:
-		static constexpr mana _cost = 10.0_mp;
+			complete cast(being& caster, gatestone& gatestone, action::cont cont);
 
-		complete perform_cast(being& caster, gatestone& gatestone, action::cont cont) final;
-
-		tick base_incant_time() const final {
-			return 10_tick;
-		}
-	};
+		private:
+			static constexpr mana _cost = 10.0_mp;
+		};
+	}
 }

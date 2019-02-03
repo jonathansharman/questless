@@ -27,13 +27,14 @@ namespace ql {
 		return static_cast<sf::Uint8>(255 * percentage.value);
 	}
 
-	//! Conditionally removes elements from a container.
+	//! Conditionally removes elements from a container using the erase-remove idiom.
 	//! @param container An iterable container.
 	//! @param predicate A predicate over elements of the container. Elements for which the predicate is true are erased.
 	template <typename Container, typename Predicate>
 	void erase_if(Container& container, Predicate&& predicate) {
-		container.erase(
-			std::remove_if(container.begin(), container.end(), std::forward<Predicate>(predicate)), container.end());
+		container.erase( //
+			std::remove_if(container.begin(), container.end(), std::forward<Predicate>(predicate)),
+			container.end());
 	};
 
 	//! Moves @p pointer into a new vector and returns it.
@@ -50,8 +51,10 @@ namespace ql {
 		std::vector<uptr<T>> modifiers;
 		modifiers.push_back(std::move(first));
 		auto restVector = make_uptr_vector<T>(std::forward<Rest>(rest)...);
-		modifiers.insert(
-			modifiers.end(), std::make_move_iterator(restVector.begin()), std::make_move_iterator(restVector.end()));
+		modifiers.insert( //
+			modifiers.end(),
+			std::make_move_iterator(restVector.begin()),
+			std::make_move_iterator(restVector.end()));
 		return modifiers;
 	}
 
@@ -73,11 +76,4 @@ namespace ql {
 	static auto cast_transform() {
 		return ranges::view::transform([](auto arg) { return static_cast<T>(arg); });
 	}
-
-	template <typename... Ts>
-	struct overloaded : Ts... {
-		using Ts::operator()...;
-	};
-	template <typename... Ts>
-	overloaded(Ts...)->overloaded<Ts...>;
 }

@@ -11,11 +11,10 @@
 #include "world/coordinates.hpp"
 
 namespace ql {
-	class hud;
+	struct hud;
 
 	//! Dialog for the player to choose an action for his or her controlled being.
-	class player_action_dialog : public dialog {
-	public:
+	struct player_action_dialog : dialog {
 		struct idle {
 			bool prolonged;
 		};

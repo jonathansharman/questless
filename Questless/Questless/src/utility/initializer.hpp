@@ -14,27 +14,24 @@
 //!
 //! Example:
 //! @code
-//! class foo
-//! {
-//! public:
-//!		// Public members
-//!	private:
-//!		// Static data members
-//!
+//! struct foo {
+//!		static int bar;
+//! private:
 //! 	friend class initializer<T>;
 //! 	static initializer<T> _initializer;
-//! 	static void initialize();
-//!
-//!		// Other private members
+//! 	static void initialize(); // Initializes bar.
 //! };
 //! @endcode
 //!
-//! @warning It is critical to define the initializer member after all other static members in order to guarantee it is initialized last.
+//! @warning It is critical to define the initializer member after all other static members in order to guarantee it is
+//! initialized last.
 //!
-template <typename T>
-class initializer {
-public:
-	initializer() {
-		T::initialize();
-	}
-};
+
+namespace ql {
+	template <typename T>
+	struct initializer {
+		initializer() {
+			T::initialize();
+		}
+	};
+}

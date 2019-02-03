@@ -12,11 +12,10 @@
 #include "utility/reference.hpp"
 
 namespace ql {
-	class being;
+	struct being;
 
 	//! An item that can be picked up, used by beings, etc.
-	class item : public element<item_subtype_list> {
-	public:
+	struct item : element<item_subtype_list> {
 		id<item> const id;
 
 		virtual ~item() = default;
@@ -34,9 +33,8 @@ namespace ql {
 		virtual void update(tick elapsed);
 
 	protected:
-		class drop : public action {
-		public:
-			drop(item& item) : _item{item} {}
+		struct drop : action {
+				drop(item& item) : _item{item} {}
 			static auto make(item& item) {
 				return umake<drop>(item);
 			}
@@ -49,9 +47,8 @@ namespace ql {
 			item& _item;
 		};
 
-		class toss : public action {
-		public:
-			toss(item& item) : _item{item} {}
+		struct toss : action {
+				toss(item& item) : _item{item} {}
 			static auto make(item& item) {
 				return umake<toss>(item);
 			}

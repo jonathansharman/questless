@@ -10,8 +10,7 @@
 
 namespace ql {
 	//! Displays a message to the player.
-	class message_dialog : public dialog {
-	public:
+	struct message_dialog : dialog {
 		message_dialog(sf::Window const& window,
 			rsrc::fonts const& fonts,
 			std::string const& title,

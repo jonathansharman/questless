@@ -4,20 +4,22 @@
 
 #pragma once
 
-#include "spell.hpp"
+#include "color.hpp"
 
-namespace ql::magic {
-	//! Discharges a bolt of electricity to strike a tile.
-	class shock : public spell_base<shock> {
-	public:
-		std::string name() const final { return "Lightning Bolt"; }
+#include "quantities/game_time.hpp"
 
-		magic::color color() const final { return color::red; }
+namespace ql {
+	struct gatestone;
 
-		tick cooldown() const final { return 5_tick; }
-	private:
-		complete perform_cast(being& caster, gatestone& gatestone, action::cont cont) final;
+	namespace magic {
+		//! Discharges a bolt of electricity to strike a tile.
+		struct shock {
+			static constexpr char const* name = "Lightning Bolt";
+			static constexpr magic::color color = magic::color::red;
+			static constexpr tick cooldown = 5_tick;
+			static constexpr tick base_incant_time = 15_tick;
 
-		tick base_incant_time() const final { return 15_tick; }
-	};
+			complete cast(being& caster, gatestone& gatestone, action::cont cont);
+		};
+	}
 }

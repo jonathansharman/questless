@@ -12,8 +12,7 @@
 
 namespace ql::scene {
 	//! The splash screen scene.
-	class splash : scene {
-	public:
+	struct splash : scene {
 		splash();
 
 	private:

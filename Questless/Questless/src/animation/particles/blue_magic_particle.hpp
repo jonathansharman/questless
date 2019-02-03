@@ -8,9 +8,9 @@
 
 namespace ql {
 	//! A particle for effects involving blue magic.
-	class blue_magic_particle : public sprite_particle {
-	public:
+	struct blue_magic_particle : sprite_particle {
 		blue_magic_particle();
+
 	private:
 		static constexpr world::radians _dtheta_max = 2.0 * world::radians::circle();
 

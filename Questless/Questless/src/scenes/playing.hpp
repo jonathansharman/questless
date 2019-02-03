@@ -12,8 +12,7 @@
 
 namespace ql::scene {
 	//! The scene for an active game.
-	class playing : scene {
-	public:
+	struct playing : scene {
 		playing();
 	private:
 		sf::View _view;

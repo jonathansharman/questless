@@ -8,8 +8,7 @@
 
 namespace ql {
 	//! Creates drops of blood.
-	class bleeding : public particle_animation {
-	public:
+	struct bleeding : particle_animation {
 		//! Unit of drops of blood, for use in bleeding animations.
 		using drops = cancel::quantity<double, cancel::unit_t<struct bleeding_drops_tag>>;
 
@@ -18,6 +17,7 @@ namespace ql {
 
 		//! The number of drops of blood to create per second. Can be less than one.
 		bleeding(decltype(drops{} / sec{}) drop_rate) : drop_rate{drop_rate} {}
+
 	private:
 		//! The current accumulation of drops of blood.
 		drops _drops{0.0};

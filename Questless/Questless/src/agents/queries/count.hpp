@@ -9,5 +9,5 @@
 namespace ql::queries::count {
 	struct wait_time {};
 
-	using any = std::variant<wait_time>;
+	using query = std::variant<wait_time>;
 }

@@ -8,8 +8,7 @@
 
 namespace ql {
 	//! A texture composed of a grid of animation cels.
-	class sprite_sheet {
-	public:
+	struct sprite_sheet {
 		//! A reference to this sprite sheet's texture.
 		sf::Texture const& texture;
 
@@ -18,10 +17,8 @@ namespace ql {
 
 		//! The dimensions of a single cel.
 		sf::Vector2i cel_size() const {
-			return {
-				static_cast<int>(texture.getSize().x) / cel_grid_dimensions.x,
-				static_cast<int>(texture.getSize().y) / cel_grid_dimensions.y
-			};
+			return {static_cast<int>(texture.getSize().x) / cel_grid_dimensions.x,
+				static_cast<int>(texture.getSize().y) / cel_grid_dimensions.y};
 		}
 
 		//! The rectangle of the sprite cel at the given @p cel_coords.

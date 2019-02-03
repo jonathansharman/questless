@@ -6,14 +6,13 @@
 
 #include "sprite_animation.hpp"
 
-#include "effects/effect_visitor.hpp"
+#include "effects/effect.hpp"
 #include "rsrc/entity.hpp"
 #include "rsrc/tile.hpp"
 #include "rsrc/world_renderer.hpp"
 #include "utility/id.hpp"
 #include "utility/reference.hpp"
 #include "world/coordinates.hpp"
-#include "world/tile_visitor.hpp"
 
 #include <optional>
 #include <unordered_map>
@@ -23,24 +22,22 @@ namespace ql {
 	namespace rsrc {
 		struct fonts;
 	}
-	class being;
-	class effect;
-	class entity;
-	class game;
-	class object;
-	class tile;
-	class world_view;
+	struct being;
+	struct entity;
+	struct game;
+	struct object;
+	struct tile;
+	struct world_view;
 
 	//! Draws the elements of the world that the player can see.
-	class world_renderer : public effect_const_visitor {
-	public:
+	struct world_renderer {
 		//! @param world_view The initial world view to render.
 		world_renderer(rsrc::fonts const& fonts, world_view const& world_view);
 
 		//! Updates the world renderer's world view.
 		//! @param world_view The new world view to render.
 		//! @param effects Any newly perceived effects to render.
-		void update_view(world_view const& world_view, std::vector<sptr<effect>> effects);
+		void update_view(world_view const& world_view, std::vector<effects::effect> const& effects);
 
 		//! Advances animations by @p elapsed_time.
 		void update(sec elapsed_time);
@@ -60,15 +57,6 @@ namespace ql {
 		//! Clears the current highlight predicate so that no tiles are highlighted.
 		void clear_highlight_predicate();
 
-		////////////////////////////
-		// Effect Visitor Methods //
-		////////////////////////////
-
-		void visit(arrow_attack_effect const&) final;
-		void visit(telescope_effect const&) final;
-		void visit(injury_effect const&) final;
-		void visit(lightning_bolt_effect const&) final;
-
 	private:
 		using entity_id_var_t = std::variant<id<being>, id<object>>;
 		using entity_cref_var_t = std::variant<cref<being>, cref<object>>;
@@ -85,7 +73,7 @@ namespace ql {
 
 		world_view const* _world_view;
 
-		std::unordered_map<tile_subtype, uptr<animation>> _tile_animations;
+		std::unordered_map<id<tile>, uptr<animation>> _tile_animations;
 		std::unordered_map<entity_id_var_t, uptr<animation>> _entity_animations;
 
 		std::vector<uptr<animation>> _effect_animations;

@@ -9,5 +9,5 @@
 namespace ql::queries::being {
 	struct heal_target {};
 
-	using any = std::variant<heal_target>;
+	using query = std::variant<heal_target>;
 }

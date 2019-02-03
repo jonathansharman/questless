@@ -8,8 +8,7 @@
 
 namespace ql {
 	//! A particle drawn with a sprite.
-	class sprite_particle : public particle {
-	public:
+	struct sprite_particle : particle {
 		//! @param displacement The initial displacement of this particle.
 		//! @param lifetime The amount of time before this particle expires.
 		//! @param texture The texture to use for this particle's sprite.

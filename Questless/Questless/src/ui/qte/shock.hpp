@@ -11,8 +11,7 @@
 
 namespace ql::qte {
 	//! Quick time event for determining shock strength.
-	class shock : public dialog {
-	public:
+	struct shock : dialog {
 		//! @param target_coords The target strike coordinates.
 		//! @param cont The dialog continuation function.
 		shock(sf::Window const& window, rsrc::fonts const& fonts, region_tile::point target_coords, std::function<void(double)> cont);

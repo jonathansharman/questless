@@ -9,14 +9,14 @@
 namespace ql {
 	// Beings
 
-	class goblin;
-	class human;
+	struct goblin;
+	struct human;
 
 	// Objects
 
-	class campfire;
-	class corpse;
-	class item_box;
+	struct campfire;
+	struct corpse;
+	struct item_box;
 
 	using entity_subtype_list = cancel::list_t
 		// Beings

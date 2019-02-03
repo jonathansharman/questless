@@ -10,14 +10,13 @@
 #include "media/spaces/view.hpp"
 
 namespace ql {
-	class being;
-	class body_part;
+	struct being;
+	struct body_part;
 }
 
 namespace ql::qte {
 	//! Quick time event for determining the .
-	class aim_missile : public dialog {
-	public:
+	struct aim_missile : dialog {
 		//! @param target_coords The target strike coordinates.
 		//! @param cont The dialog continuation function.
 		aim_missile(region_tile::point source_coords, being const& target_being, std::function<void(body_part*)> cont);

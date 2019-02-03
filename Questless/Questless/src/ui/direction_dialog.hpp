@@ -11,8 +11,7 @@
 
 namespace ql {
 	//! Retrieves a direction from the player.
-	class direction_dialog : public dialog {
-	public:
+	struct direction_dialog : dialog {
 		direction_dialog(sf::Window const& window,
 			rsrc::fonts const& fonts,
 			std::string title,

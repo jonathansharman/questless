@@ -31,12 +31,11 @@
 
 namespace ql {
 	struct attachment;
-	class being;
-	class item;
+	struct being;
+	struct item;
 
 	//! A being's body part.
-	class body_part {
-	public:
+	struct body_part {
 		enum class tag : int { head = 0, torso, arm, hand, leg, foot, wing, tail };
 
 		static constexpr auto blood_per_vitality = 1.0_blood / 1.0_hp;
@@ -57,26 +56,28 @@ namespace ql {
 
 		//! Whether this body part is vital to its being. If true, the being usually dies when this body part is disabled.
 		vitalness vitalness = vitalness::nonvital;
-		constexpr bool vital() const { return vitalness == vitalness::vital; }
-		constexpr bool nonvital() const { return vitalness == vitalness::nonvital; }
+		constexpr bool vital() const {
+			return vitalness == vitalness::vital;
+		}
+		constexpr bool nonvital() const {
+			return vitalness == vitalness::nonvital;
+		}
 
 		//! Whether this body part is currently functioning. Parts can be disabled by damage or other effects.
 		ableness ableness = ableness::enabled;
-		constexpr bool enabled() const { return ableness == ableness::enabled; }
-		constexpr bool disabled() const { return ableness == ableness::disabled; }
+		constexpr bool enabled() const {
+			return ableness == ableness::enabled;
+		}
+		constexpr bool disabled() const {
+			return ableness == ableness::disabled;
+		}
 
-		lazy_bounded<ql::health> health
-			{ 0.0_hp
-			, [] { return 0.0_hp; }
-			, [this] { return this->stats.a.vitality.value(); }
-			};
+		lazy_bounded<ql::health> health{0.0_hp, [] { return 0.0_hp; }, [this] { return this->stats.a.vitality.value(); }};
 
 		//! The rate at which this body part is losing blood.
-		lazy_bounded<blood_per_tick> bleeding
-			{ 0.0_blood_per_tick
-			, [] { return 0.0_blood_per_tick; }
-			, [this] { return this->stats.a.vitality.value() * blood_per_vitality / 1_tick; }
-			};
+		lazy_bounded<blood_per_tick> bleeding{0.0_blood_per_tick,
+			[] { return 0.0_blood_per_tick; },
+			[this] { return this->stats.a.vitality.value() * blood_per_vitality / 1_tick; }};
 
 		//! The region this body part occupies, for collision and display.
 		media::spaces::view::polygon hitbox;
@@ -98,63 +99,75 @@ namespace ql {
 		template <typename Archive>
 		friend constexpr std::string save_minimal(Archive const&, tag const& t) {
 			switch (t) {
-				case tag::head: return "head";
-				case tag::torso: return "torso";
-				case tag::arm: return "arm";
-				case tag::hand: return "hand";
-				case tag::leg: return "leg";
-				case tag::foot: return "foot";
-				case tag::wing: return "wing";
-				default: return "tail";
+				case tag::head:
+					return "head";
+				case tag::torso:
+					return "torso";
+				case tag::arm:
+					return "arm";
+				case tag::hand:
+					return "hand";
+				case tag::leg:
+					return "leg";
+				case tag::foot:
+					return "foot";
+				case tag::wing:
+					return "wing";
+				default:
+					return "tail";
 			}
 		}
 
 		template <typename Archive>
 		friend void load_minimal(Archive const&, tag& t, std::string const& name) {
 			t = [&name] {
-				if (name == "head") return tag::head;
-				else if (name == "torso") return tag::torso;
-				else if (name == "arm") return tag::arm;
-				else if (name == "hand") return tag::hand;
-				else if (name == "leg") return tag::leg;
-				else if (name == "foot") return tag::foot;
-				else if (name == "wing") return tag::wing;
-				else return tag::tail;
+				if (name == "head")
+					return tag::head;
+				else if (name == "torso")
+					return tag::torso;
+				else if (name == "arm")
+					return tag::arm;
+				else if (name == "hand")
+					return tag::hand;
+				else if (name == "leg")
+					return tag::leg;
+				else if (name == "foot")
+					return tag::foot;
+				else if (name == "wing")
+					return tag::wing;
+				else
+					return tag::tail;
 			}();
 		}
 
 		template <typename Archive>
 		void save(Archive& archive) const {
-			archive
-				( CEREAL_NVP(id)
-				, CEREAL_NVP(owner_id)
-				, CEREAL_NVP(name)
-				, CEREAL_NVP(tags)
-				, CEREAL_NVP(stats)
-				, CEREAL_NVP(vitalness)
-				, CEREAL_NVP(ableness)
-				, CEREAL_NVP(layer)
-				, CEREAL_NVP(hitbox)
-				, CEREAL_NVP(equipped_item_id)
-				, CEREAL_NVP(attachments)
-				);
+			archive(CEREAL_NVP(id),
+				CEREAL_NVP(owner_id),
+				CEREAL_NVP(name),
+				CEREAL_NVP(tags),
+				CEREAL_NVP(stats),
+				CEREAL_NVP(vitalness),
+				CEREAL_NVP(ableness),
+				CEREAL_NVP(layer),
+				CEREAL_NVP(hitbox),
+				CEREAL_NVP(equipped_item_id),
+				CEREAL_NVP(attachments));
 		}
 
 		template <typename Archive>
 		void load(Archive& archive) {
-			archive
-				( CEREAL_NVP(id)
-				, CEREAL_NVP(owner_id)
-				, CEREAL_NVP(name)
-				, CEREAL_NVP(tags)
-				, CEREAL_NVP(stats)
-				, CEREAL_NVP(vital)
-				, CEREAL_NVP(enabled)
-				, CEREAL_NVP(layer)
-				, CEREAL_NVP(hitbox)
-				, CEREAL_NVP(equipped_item_id)
-				, CEREAL_NVP(attachments)
-				);
+			archive(CEREAL_NVP(id),
+				CEREAL_NVP(owner_id),
+				CEREAL_NVP(name),
+				CEREAL_NVP(tags),
+				CEREAL_NVP(stats),
+				CEREAL_NVP(vital),
+				CEREAL_NVP(enabled),
+				CEREAL_NVP(layer),
+				CEREAL_NVP(hitbox),
+				CEREAL_NVP(equipped_item_id),
+				CEREAL_NVP(attachments));
 		}
 
 		//! Advances the body part by @p elapsed.

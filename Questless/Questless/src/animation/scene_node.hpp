@@ -13,8 +13,7 @@
 
 namespace ql {
 	//! An animation with attached child animations. A scene node's transform is composed with its children's transforms.
-	class scene_node : public animation {
-	public:
+	struct scene_node : animation {
 		//! The animation to draw at this node.
 		uptr<animation> animation;
 

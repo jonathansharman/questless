@@ -8,8 +8,7 @@
 
 namespace ql {
 	//! An item that can be crafted from other items.
-	class craftable : public virtual item {
-	public:
+	struct craftable : virtual item {
 		virtual ~craftable() = 0 {}
 
 		enum class action { mix, boil, smoke, crush };

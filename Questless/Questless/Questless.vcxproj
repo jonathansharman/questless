@@ -365,6 +365,7 @@
     <ClInclude Include="src\agents\queries\tile.hpp" />
     <ClInclude Include="src\agents\queries\vector.hpp" />
     <ClInclude Include="src\animation\animation.hpp" />
+    <ClInclude Include="src\animation\animators.hpp" />
     <ClInclude Include="src\animation\bleeding.hpp" />
     <ClInclude Include="src\animation\entity_animator.hpp" />
     <ClInclude Include="src\animation\flame.hpp" />
@@ -384,18 +385,19 @@
     <ClInclude Include="src\animation\particle_animation.hpp" />
     <ClInclude Include="src\animation\scene_node.hpp" />
     <ClInclude Include="src\animation\still_shape.hpp" />
-    <ClInclude Include="src\animation\spell_animator.hpp" />
     <ClInclude Include="src\animation\sprite_animation.hpp" />
     <ClInclude Include="src\animation\sprite_sheet.hpp" />
     <ClInclude Include="src\animation\still_image.hpp" />
-    <ClInclude Include="src\animation\tile_animator.hpp" />
     <ClInclude Include="src\animation\world_renderer.hpp" />
     <ClInclude Include="src\damage\damage.hpp" />
     <ClInclude Include="src\damage\group.hpp" />
     <ClInclude Include="src\damage\multiplier.hpp" />
     <ClInclude Include="src\damage\protect.hpp" />
+    <ClInclude Include="src\effects\arrow_attack.hpp" />
     <ClInclude Include="src\effects\effect.hpp" />
-    <ClInclude Include="src\effects\effect_visitor.hpp" />
+    <ClInclude Include="src\effects\injury.hpp" />
+    <ClInclude Include="src\effects\lightning_bolt.hpp" />
+    <ClInclude Include="src\effects\telescope.hpp" />
     <ClInclude Include="src\entities\all_entities.hpp" />
     <ClInclude Include="src\entities\beings\being.hpp" />
     <ClInclude Include="src\entities\beings\body.hpp" />
@@ -444,14 +446,12 @@
     <ClInclude Include="src\items\weapons\quarterstaff.hpp" />
     <ClInclude Include="src\items\weapons\quiver.hpp" />
     <ClInclude Include="src\items\weapons\weapon.hpp" />
-    <ClInclude Include="src\magic\all_spells.hpp" />
     <ClInclude Include="src\magic\charge_cost.hpp" />
     <ClInclude Include="src\magic\color.hpp" />
     <ClInclude Include="src\magic\telescope.hpp" />
     <ClInclude Include="src\magic\heal.hpp" />
     <ClInclude Include="src\magic\shock.hpp" />
     <ClInclude Include="src\magic\spell.hpp" />
-    <ClInclude Include="src\magic\spell_visitor.hpp" />
     <ClInclude Include="src\magic\teleport.hpp" />
     <ClInclude Include="src\quantities\distance.hpp" />
     <ClInclude Include="src\quantities\mass.hpp" />
@@ -503,20 +503,19 @@
     <ClInclude Include="src\utility\io.hpp" />
     <ClInclude Include="src\utility\lazy_bounded.hpp" />
     <ClInclude Include="src\utility\nonnegative.hpp" />
+    <ClInclude Include="src\utility\visitation.hpp" />
     <ClInclude Include="src\utility\static_property.hpp" />
     <ClInclude Include="src\utility\random.hpp" />
     <ClInclude Include="src\utility\reference.hpp" />
     <ClInclude Include="src\utility\static_bounded.hpp" />
     <ClInclude Include="src\utility\type_list.hpp" />
     <ClInclude Include="src\utility\utility.hpp" />
-    <ClInclude Include="src\utility\type_switch.hpp" />
     <ClInclude Include="src\utility\visitor_pattern.hpp" />
     <ClInclude Include="src\world\coordinates.hpp" />
     <ClInclude Include="src\world\light_source.hpp" />
     <ClInclude Include="src\world\region.hpp" />
     <ClInclude Include="src\world\section.hpp" />
     <ClInclude Include="src\world\tile.hpp" />
-    <ClInclude Include="src\world\tile_visitor.hpp" />
     <ClInclude Include="src\world\world.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -527,6 +526,7 @@
     <ClCompile Include="src\agents\lazy_ai.cpp" />
     <ClCompile Include="src\agents\player.cpp" />
     <ClCompile Include="src\animation\animation.cpp" />
+    <ClCompile Include="src\animation\animators.cpp" />
     <ClCompile Include="src\animation\bleeding.cpp" />
     <ClCompile Include="src\animation\entity_animator.cpp" />
     <ClCompile Include="src\animation\flame.cpp" />
@@ -545,13 +545,12 @@
     <ClCompile Include="src\animation\particles\yellow_magic_particle.cpp" />
     <ClCompile Include="src\animation\particle_animation.cpp" />
     <ClCompile Include="src\animation\still_shape.cpp" />
-    <ClCompile Include="src\animation\spell_animator.cpp" />
     <ClCompile Include="src\animation\sprite_animation.cpp" />
     <ClCompile Include="src\animation\still_image.cpp" />
-    <ClCompile Include="src\animation\tile_animator.cpp" />
     <ClCompile Include="src\animation\world_renderer.cpp" />
     <ClCompile Include="src\damage\damage.cpp" />
     <ClCompile Include="src\damage\group.cpp" />
+    <ClCompile Include="src\effects\effect.cpp" />
     <ClCompile Include="src\entities\beings\being.cpp" />
     <ClCompile Include="src\entities\beings\body.cpp" />
     <ClCompile Include="src\entities\beings\body_part.cpp" />
@@ -614,7 +613,6 @@
     <ClCompile Include="src\world\light_source.cpp" />
     <ClCompile Include="src\world\region.cpp" />
     <ClCompile Include="src\world\section.cpp" />
-    <ClCompile Include="src\world\tile.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

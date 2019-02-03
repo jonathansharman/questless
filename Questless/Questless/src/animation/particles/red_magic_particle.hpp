@@ -8,9 +8,9 @@
 
 namespace ql {
 	//! A particle for effects involving red magic.
-	class red_magic_particle : public sprite_particle {
-	public:
+	struct red_magic_particle : sprite_particle {
 		red_magic_particle();
+
 	private:
 		void particle_subupdate() final {}
 

@@ -9,13 +9,11 @@
 #include <variant>
 
 namespace ql::queries::tile {
-	struct ranged_attack_target { span range; };
+	struct ranged_attack_target {
+		span range;
+	};
 	struct shock_target {};
 	struct teleport_target {};
 
-	using any = std::variant
-		< ranged_attack_target
-		, shock_target
-		, teleport_target
-		>;
+	using query = std::variant<ranged_attack_target, shock_target, teleport_target>;
 }

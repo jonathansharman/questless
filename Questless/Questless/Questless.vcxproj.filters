@@ -249,9 +249,6 @@
     <ClInclude Include="src\damage\damage.hpp">
       <Filter>src\damage</Filter>
     </ClInclude>
-    <ClInclude Include="src\effects\effect_visitor.hpp">
-      <Filter>src\effects</Filter>
-    </ClInclude>
     <ClInclude Include="src\effects\effect.hpp">
       <Filter>src\effects</Filter>
     </ClInclude>
@@ -265,9 +262,6 @@
       <Filter>src\world</Filter>
     </ClInclude>
     <ClInclude Include="src\world\tile.hpp">
-      <Filter>src\world</Filter>
-    </ClInclude>
-    <ClInclude Include="src\world\tile_visitor.hpp">
       <Filter>src\world</Filter>
     </ClInclude>
     <ClInclude Include="src\world\coordinates.hpp">
@@ -315,9 +309,6 @@
     <ClInclude Include="src\ui\vector_dialog.hpp">
       <Filter>src\ui</Filter>
     </ClInclude>
-    <ClInclude Include="src\magic\all_spells.hpp">
-      <Filter>src\magic</Filter>
-    </ClInclude>
     <ClInclude Include="src\magic\charge_cost.hpp">
       <Filter>src\magic</Filter>
     </ClInclude>
@@ -328,9 +319,6 @@
       <Filter>src\magic</Filter>
     </ClInclude>
     <ClInclude Include="src\magic\spell.hpp">
-      <Filter>src\magic</Filter>
-    </ClInclude>
-    <ClInclude Include="src\magic\spell_visitor.hpp">
       <Filter>src\magic</Filter>
     </ClInclude>
     <ClInclude Include="src\magic\teleport.hpp">
@@ -437,9 +425,6 @@
     </ClInclude>
     <ClInclude Include="src\magic\color.hpp">
       <Filter>src\magic</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utility\type_switch.hpp">
-      <Filter>src\utility</Filter>
     </ClInclude>
     <ClInclude Include="src\agents\queries\being.hpp">
       <Filter>src\agents\queries</Filter>
@@ -627,12 +612,6 @@
     <ClInclude Include="src\animation\item_animator.hpp">
       <Filter>src\animation</Filter>
     </ClInclude>
-    <ClInclude Include="src\animation\spell_animator.hpp">
-      <Filter>src\animation</Filter>
-    </ClInclude>
-    <ClInclude Include="src\animation\tile_animator.hpp">
-      <Filter>src\animation</Filter>
-    </ClInclude>
     <ClInclude Include="src\animation\still_image.hpp">
       <Filter>src\animation</Filter>
     </ClInclude>
@@ -680,6 +659,24 @@
     </ClInclude>
     <ClInclude Include="src\rsrc\fonts.hpp">
       <Filter>src\rsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\animation\animators.hpp">
+      <Filter>src\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\effects\lightning_bolt.hpp">
+      <Filter>src\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\effects\telescope.hpp">
+      <Filter>src\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\effects\arrow_attack.hpp">
+      <Filter>src\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\effects\injury.hpp">
+      <Filter>src\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utility\visitation.hpp">
+      <Filter>src\utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -863,9 +860,6 @@
     <ClCompile Include="src\world\section.cpp">
       <Filter>src\world</Filter>
     </ClCompile>
-    <ClCompile Include="src\world\tile.cpp">
-      <Filter>src\world</Filter>
-    </ClCompile>
     <ClCompile Include="src\world\light_source.cpp">
       <Filter>src\world</Filter>
     </ClCompile>
@@ -935,12 +929,6 @@
     <ClCompile Include="src\animation\item_animator.cpp">
       <Filter>src\animation</Filter>
     </ClCompile>
-    <ClCompile Include="src\animation\spell_animator.cpp">
-      <Filter>src\animation</Filter>
-    </ClCompile>
-    <ClCompile Include="src\animation\tile_animator.cpp">
-      <Filter>src\animation</Filter>
-    </ClCompile>
     <ClCompile Include="src\animation\still_image.cpp">
       <Filter>src\animation</Filter>
     </ClCompile>
@@ -967,6 +955,12 @@
     </ClCompile>
     <ClCompile Include="src\magic\telescope.cpp">
       <Filter>src\magic</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\animators.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\effects\effect.cpp">
+      <Filter>src\effects</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

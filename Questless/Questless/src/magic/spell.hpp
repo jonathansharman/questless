@@ -5,44 +5,40 @@
 #pragma once
 
 #include "color.hpp"
+#include "heal.hpp"
+#include "shock.hpp"
+#include "teleport.hpp"
+#include "telescope.hpp"
 
-#include "agents/action.hpp"
-#include "items/magic/gatestone.hpp"
-#include "quantities/quantities.hpp"
-#include "spell_visitor.hpp"
 #include "utility/id.hpp"
 #include "utility/reference.hpp"
 
 #include <string>
+#include <variant>
 
-namespace ql::magic {
-	//! A magical spell that can be cast by a being.
-	class spell : public element<spell_subtype_list> {
-	public:
-		virtual ~spell() = default;
+namespace ql {
+	struct action;
+	struct being;
+	struct gatestone;
+	struct item;
 
-		//! An action that casts @p spell using @p gatestone.
-		static uptr<action> cast(uptr<spell> spell, id<item> gatestone_id);
+	namespace magic {
+		//! A magical spell that can be cast by a being.
+		using spell = std::variant<heal, shock, teleport, telescope>;
 
-		//! The amount of time @p caster takes to incant this spell.
-		tick incant_time(being& caster) const;
+		complete cast(spell const& spell, being& actor, gatestone& gatestone, action::cont cont);
 
-		//! This spell's name.
-		virtual std::string name() const = 0;
+		//! Creates an action that casts @p spell using @p gatestone.
+		uptr<action> cast_action(spell const& spell, id<item> gatestone_id);
 
-		//! This spell's color.
-		virtual color color() const = 0;
+		//! The amount of time @p caster takes to incant @p spell.
+		tick incant_time(spell const& spell, being const& caster);
 
-		//! Time after casting this spell before the gatestone used to cast it can be used again.
-		virtual tick cooldown() const = 0;
-	private:
-		friend class cast;
+		std::string name(spell const& spell);
+		magic::color spell_color(spell const& spell);
+		tick cooldown(spell const& spell);
 
-		//! The base amount of time it takes to incant this spell, ignoring the skill of the caster.
-		virtual tick base_incant_time() const = 0;
-
-		virtual complete perform_cast(being& actor, gatestone& gatestone, action::cont cont) = 0;
-	};
-
-	DEFINE_ELEMENT_BASE(spell, spell)
+		//! The base amount of time it takes to incant @p spell, ignoring the skill of the caster.
+		tick base_incant_time(spell const& spell);
+	}
 }

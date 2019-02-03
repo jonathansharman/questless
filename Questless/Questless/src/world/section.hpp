@@ -20,14 +20,13 @@
 #include <unordered_set>
 
 namespace ql {
-	class being;
-	class light_source;
-	class object;
-	class tile;
+	struct being;
+	struct light_source;
+	struct object;
+	struct tile;
 
 	//! An rhomboid section of hexes in a region.
-	class section {
-	public:
+	struct section {
 		static ref<being> being_entry_to_ref(std::pair<region_tile::point const, id<being>> being_entry);
 		static cref<being> being_entry_to_cref(std::pair<region_tile::point const, id<being>> being_entry);
 		using beings_view = container_view

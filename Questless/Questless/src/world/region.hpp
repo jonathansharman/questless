@@ -15,16 +15,15 @@
 #include <string>
 
 namespace ql {
-	class being;
-	class effect;
-	class game;
-	class object;
+	struct being;
+	struct effect;
+	struct game;
+	struct object;
 
 	enum class period_of_day { morning, afternoon, dusk, evening, night, dawn };
 
 	//! A large set of connected sections of hexagonal tiles.
-	class region {
-	public:
+	struct region {
 		//! Pseudo-randomly generates a new region.
 		//! @param name The name of the new region.
 		region(std::string region_name);

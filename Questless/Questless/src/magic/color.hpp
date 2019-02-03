@@ -5,14 +5,5 @@
 #pragma once
 
 namespace ql::magic {
-	enum class color {
-		white
-		, black
-		, green
-		, red
-		, blue
-		, yellow
-		, violet
-		, orange
-	};
+	enum class color { white, black, green, red, blue, yellow, violet, orange };
 }

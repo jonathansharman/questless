@@ -14,12 +14,11 @@
 #include <vector>
 
 namespace ql {
-	class being;
-	class item;
+	struct being;
+	struct item;
 
 	//! The head-up display controls and displays various elements, such as conditions, the hotbar, and the inventory.
-	class hud {
-	public:
+	struct hud {
 		//! @param player_being_id The ID of the player-controlled being.
 		hud(id<being> player_being_id) : _player_being_id{player_being_id} {}
 

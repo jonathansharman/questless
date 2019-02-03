@@ -18,8 +18,7 @@ namespace ql {
 	//! The mutator takes the current value by reference and the new value by const-reference and is responsible for assigning the new value to
 	//! the current value, handling any domain errors appropriately.
 	template <typename ValueType, void (*mutator)(ValueType&, ValueType const&)>
-	class static_property : public bounded<ValueType, static_property<ValueType, mutator>> {
-	public:
+	struct static_property : bounded<ValueType, static_property<ValueType, mutator>> {
 		using value_type = ValueType;
 
 		constexpr static_property() = default;

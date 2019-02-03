@@ -10,8 +10,7 @@
 
 namespace ql {
 	//! A particle for effects involving yellow magic.
-	class yellow_magic_particle : public sprite_particle {
-	public:
+	struct yellow_magic_particle : sprite_particle {
 		yellow_magic_particle();
 
 	private:

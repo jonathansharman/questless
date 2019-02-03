@@ -10,8 +10,7 @@
 
 namespace ql {
 	//! Abstract base class for items which can be worn down and broken.
-	class breakable : public virtual item {
-	public:
+	struct breakable : virtual item {
 		virtual ~breakable() = default;
 
 		//! The item's durability, i.e. its maximum integrity.

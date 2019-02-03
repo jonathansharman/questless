@@ -7,13 +7,16 @@
 #include "items/item.hpp"
 
 namespace ql {
-	class arrow : public item_base<arrow> {
-	public:
+	struct arrow : item_base<arrow> {
 		arrow(ql::id<item> id = ql::id<item>::make()) : item_base<arrow>{id} {}
 
-		std::string name() const final { return "Arrow"; }
+		std::string name() const final {
+			return "Arrow";
+		}
 
-		load mass() const final { return 0.1_load; }
+		ql::mass mass() const final {
+			return 0.1_mass;
+		}
 
 		std::vector<uptr<action>> actions() final {
 			std::vector<uptr<action>> actions;

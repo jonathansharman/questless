@@ -10,9 +10,9 @@
 
 namespace ql {
 	//! A particle for effects involving black magic.
-	class black_magic_particle : public sprite_particle {
-	public:
+	struct black_magic_particle : sprite_particle {
 		black_magic_particle();
+
 	private:
 		static constexpr world::radians_per_sec _turn_rate = world::radians{4.0} / 1.0s;
 		static constexpr world::radians _dtheta_max = 2.0 * world::radians::circle();

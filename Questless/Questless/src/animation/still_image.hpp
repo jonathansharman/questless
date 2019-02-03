@@ -12,8 +12,7 @@ namespace sf {
 
 namespace ql {
 	//! An animation composed of a single still image.
-	class still_image : public animation {
-	public:
+	struct still_image : animation {
 		//! @param texture_handle A handle to the texture to use for this still image.
 		still_image(sf::Texture const& texture);
 

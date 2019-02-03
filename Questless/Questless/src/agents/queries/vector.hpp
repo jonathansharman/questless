@@ -9,5 +9,5 @@
 namespace ql::queries::vector {
 	struct melee_attack {};
 
-	using any = std::variant<melee_attack>;
+	using query = std::variant<melee_attack>;
 }

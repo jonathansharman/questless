@@ -12,10 +12,10 @@ namespace ql {
 		struct item;
 		struct spell;
 	}
-	class animation;
+	struct animation;
 
 	//! Creates animations for items.
-	struct item_animator : public item_const_visitor {
+	struct item_animator : item_const_visitor {
 		rsrc::item const& item_resources;
 		rsrc::spell const& spell_resources;
 

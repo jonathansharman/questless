@@ -19,8 +19,7 @@ namespace ql {
 	using input = std::variant<sf::Keyboard::Key, sf::Mouse::Button>;
 
 	//! Handles mouse and keyboard input as well as other events.
-	class input_manager {
-	public:
+	struct input_manager {
 		//! Represents the press or release of a keyboard key or mouse button.
 		struct input_event {
 			input input;

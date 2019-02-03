@@ -12,8 +12,7 @@
 
 namespace ql {
 	//! Retrieves a floating-point value from the player.
-	class magnitude_dialog : public dialog {
-	public:
+	struct magnitude_dialog : dialog {
 		magnitude_dialog(sf::Window const& window,
 			rsrc::fonts const& fonts,
 			sf::String const& title,

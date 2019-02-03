@@ -11,13 +11,12 @@
 #include <deque>
 
 namespace ql::scene {
-	class input_manager;
+	struct input_manager;
 
 	enum class update_result { continue_game, game_over };
 
 	//! A scene in the game.
-	class scene : sf::Drawable {
-	public:
+	struct scene : public sf::Drawable {
 		virtual ~scene() = default;
 
 		//! Advances this scene according to the amount of time that has passed since the last update.

@@ -8,8 +8,7 @@
 
 namespace ql {
 	//! Creates sparks, smoke, and flame.
-	class flame : public particle_animation {
-	public:
+	struct flame : particle_animation {
 		//! Unit of flames, for use in flame animations.
 		using flames = cancel::quantity<double, cancel::unit_t<struct flame_particle_tag>>;
 

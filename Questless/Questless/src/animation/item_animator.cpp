@@ -4,11 +4,11 @@
 
 #include "item_animator.hpp"
 
+#include "animators.hpp"
 #include "items/magic/gatestone.hpp"
 #include "items/scroll.hpp"
 #include "rsrc/item.hpp"
 #include "scene_node.hpp"
-#include "spell_animator.hpp"
 #include "still_image.hpp"
 #include "still_shape.hpp"
 
@@ -37,11 +37,8 @@ namespace ql {
 		if (scroll.blank()) {
 			animation = umake<still_image>(item_resources.blank_scroll);
 		} else {
-			spell_animator spell_animator{spell_resources};
-			scroll.spell().accept(spell_animator);
-
 			auto node = umake<scene_node>(umake<still_image>(item_resources.written_scroll));
-			node->front_children.push_front(std::move(spell_animator.animation));
+			node->front_children.push_front(animate(spell_resources, scroll.spell()));
 
 			animation = std::move(node);
 		}

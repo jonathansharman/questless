@@ -10,8 +10,7 @@
 
 namespace ql {
 	//! An animation composed of a single still shape.
-	class still_shape : public animation {
-	public:
+	struct still_shape : animation {
 		uptr<sf::Shape> shape;
 
 		still_shape(uptr<sf::Shape> shape) : shape{std::move(shape)} {}

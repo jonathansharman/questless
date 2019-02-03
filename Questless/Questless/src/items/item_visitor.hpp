@@ -7,12 +7,12 @@
 #include "utility/visitor_pattern.hpp"
 
 namespace ql {
-	class arrow;
-	class bow;
-	class gatestone;
-	class quarterstaff;
-	class quiver;
-	class scroll;
+	struct arrow;
+	struct bow;
+	struct gatestone;
+	struct quarterstaff;
+	struct quiver;
+	struct scroll;
 
 	using item_subtype_list = cancel::list_t
 		< arrow

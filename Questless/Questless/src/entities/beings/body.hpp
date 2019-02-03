@@ -10,11 +10,10 @@
 #include <vector>
 
 namespace ql {
-	class being;
+	struct being;
 
 	//! A being's body, which is composed of a tree of body parts.
-	class body {
-	public:
+	struct body {
 		//! The amount of blood in this body.
 		lazy_bounded<ql::blood> blood;
 
@@ -65,6 +64,6 @@ namespace ql {
 		ql::health _total_vitality;
 	};
 
-	class animation;
+	struct animation;
 	uptr<animation> get_animation(body body);
 }

@@ -11,8 +11,7 @@
 namespace ql {
 	//! Wraps an arithmetic type, clamping negative values to zero.
 	template <typename ArithmeticType>
-	class nonnegative : public bounded<ArithmeticType, nonnegative<ArithmeticType>> {
-	public:
+	struct nonnegative : bounded<ArithmeticType, nonnegative<ArithmeticType>> {
 		using arithmetic_type = ArithmeticType;
 
 		constexpr nonnegative() = default;

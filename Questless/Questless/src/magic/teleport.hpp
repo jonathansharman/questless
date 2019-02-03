@@ -4,23 +4,26 @@
 
 #pragma once
 
-#include "spell.hpp"
+#include "color.hpp"
 
-namespace ql::magic {
-	//! Teleports the caster some distance from its current location.
-	class teleport : public spell_base<teleport> {
-	public:
-		std::string name() const final { return "Teleport"; }
+#include "quantities/game_time.hpp"
 
-		magic::color color() const final { return color::yellow; }
+namespace ql {
+	struct gatestone;
 
-		tick cooldown() const final { return 15_tick; }
-	private:
-		static constexpr auto _cost_factor = 5.0_mp / 1_span;
-		static constexpr span _range = 15_span;
+	namespace magic {
+		//! Teleports the caster some distance from its current location.
+		struct teleport {
+			static constexpr char const* name = "Teleport";
+			static constexpr magic::color color = magic::color::yellow;
+			static constexpr tick cooldown = 15_tick;
+			static constexpr tick base_incant_time = 20_tick;
 
-		complete perform_cast(being& caster, gatestone& gatestone, action::cont cont) final;
+			complete cast(being& caster, gatestone& gatestone, action::cont cont);
 
-		tick base_incant_time() const final { return 20_tick; }
-	};
+		private:
+			static constexpr auto _cost_factor = 5.0_mp / 1_span;
+			static constexpr span _range = 15_span;
+		};
+	}
 }

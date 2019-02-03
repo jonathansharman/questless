@@ -13,8 +13,7 @@ namespace ql {
 	//! @tparam ArithmeticType The underlying type.
 	//! @note See also @p static_bounded and @p lazy_bounded.
 	template <typename ArithmeticType>
-	class dynamic_bounded : public bounded<ArithmeticType, dynamic_bounded<ArithmeticType>> {
-	public:
+	struct dynamic_bounded : bounded<ArithmeticType, dynamic_bounded<ArithmeticType>> {
 		using arithmetic_type = ArithmeticType;
 
 		//! @param lower_bound The minimum value in the range (inclusive).

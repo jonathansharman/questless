@@ -13,8 +13,7 @@ namespace ql {
 	struct fonts;
 
 	//! Retrieves the player's choice from a list of options.
-	class list_dialog : public dialog {
-	public:
+	struct list_dialog : dialog {
 		list_dialog(sf::Window const& window,
 			rsrc::fonts const& fonts,
 			sf::Vector2f origin,

@@ -14,80 +14,55 @@ namespace ql {
 		return complete{};
 	}
 
-	complete lazy_ai::send_message
-		( queries::message::any
-		, std::function<complete()> cont
-		)
-	{
+	complete lazy_ai::send_message(queries::message::query, std::function<complete()> cont) {
 		return cont();
 	}
 
-	complete lazy_ai::query_count
-		( queries::count::any
-		, int
-		, std::optional<int>
-		, std::optional<int>
-		, std::function<complete(std::optional<int>)> cont
-		)
-	{
+	complete lazy_ai::query_count(queries::count::query,
+		int,
+		std::optional<int>,
+		std::optional<int>,
+		std::function<complete(std::optional<int>)> cont) {
 		return cont(std::nullopt);
 	}
 
-	complete lazy_ai::query_magnitude
-		( queries::magnitude::any
-		, double
-		, std::optional<double>
-		, std::optional<double>
-		, std::function<complete(std::optional<double>)> cont
-		)
-	{
+	complete lazy_ai::query_magnitude(queries::magnitude::query,
+		double,
+		std::optional<double>,
+		std::optional<double>,
+		std::function<complete(std::optional<double>)> cont) {
 		return cont(std::nullopt);
 	}
 
-	complete lazy_ai::query_tile
-		( queries::tile::any
-		, std::optional<region_tile::point>
-		, std::function<bool(region_tile::point)>
-		, std::function<complete(std::optional<region_tile::point>)> cont
-		)
-	{
+	complete lazy_ai::query_tile(queries::tile::query,
+		std::optional<region_tile::point>,
+		std::function<bool(region_tile::point)>,
+		std::function<complete(std::optional<region_tile::point>)> cont) {
 		return cont(std::nullopt);
 	}
 
-	complete lazy_ai::query_direction
-		( queries::direction::any
-		, std::function<complete(std::optional<region_tile::direction>)> cont
-		)
-	{
+	complete lazy_ai::query_direction(queries::direction::query,
+		std::function<complete(std::optional<region_tile::direction>)> cont) {
 		return cont(std::nullopt);
 	}
 
-	complete lazy_ai::query_vector
-		( queries::vector::any
-		, std::optional<region_tile::point>
-		, std::function<bool(region_tile::vector)>
-		, std::function<complete(std::optional<region_tile::vector>)> cont
-		)
-	{
+	complete lazy_ai::query_vector(queries::vector::query,
+		std::optional<region_tile::point>,
+		std::function<bool(region_tile::vector)>,
+		std::function<complete(std::optional<region_tile::vector>)> cont) {
 		return cont(std::nullopt);
 	}
 
-	complete lazy_ai::query_being
-		( queries::being::any
-		, std::function<bool(ql::being&)>
-		, std::function<complete(std::optional<ql::being*>)> cont
-		)
-	{
+	complete lazy_ai::query_being(queries::being::query,
+		std::function<bool(ql::being&)>,
+		std::function<complete(std::optional<ql::being*>)> cont) {
 		return cont(std::nullopt);
 	}
 
-	complete lazy_ai::query_item
-		( queries::item::any
-		, ql::being&
-		, std::function<bool(ql::being&)>
-		, std::function<complete(std::optional<item*>)> cont
-		)
-	{
+	complete lazy_ai::query_item(queries::item::query,
+		ql::being&,
+		std::function<bool(ql::being&)>,
+		std::function<complete(std::optional<item*>)> cont) {
 		return cont(std::nullopt);
 	}
 }

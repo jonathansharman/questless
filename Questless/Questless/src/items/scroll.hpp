@@ -4,20 +4,20 @@
 
 #pragma once
 
-#include <memory>
-
 #include "item.hpp"
 #include "magic/spell.hpp"
 
+#include <memory>
+#include <optional>
+
 namespace ql {
 	//! A magic scroll for inscribing spells.
-	class scroll : public item_base<scroll> {
-	public:
-		scroll(uptr<magic::spell> spell, ql::id<item> id = ql::id<item>::make())
+	struct scroll : item_base<scroll> {
+		scroll(std::optional<magic::spell> spell, ql::id<item> id = ql::id<item>::make())
 			: item_base{id}, _spell{std::move(spell)} {}
 
 		std::string name() const final {
-			return blank() ? "Blank Scroll" : "Scroll: " + _spell->name();
+			return blank() ? "Blank Scroll" : "Scroll: " + magic::name(*_spell);
 		}
 
 		ql::mass mass() const final {
@@ -25,7 +25,7 @@ namespace ql {
 		}
 
 		bool blank() const {
-			return _spell == nullptr;
+			return _spell == std::nullopt;
 		}
 
 		magic::spell& spell() {
@@ -38,6 +38,6 @@ namespace ql {
 		std::vector<uptr<action>> actions() final;
 
 	private:
-		uptr<magic::spell> _spell;
+		std::optional<magic::spell> _spell;
 	};
 }

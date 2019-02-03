@@ -11,24 +11,11 @@
 
 namespace ql {
 	//! An inanimate entity.
-	class object : public entity {
-	public:
-		///////////
-		// Types //
-		///////////
-
+	struct object : entity {
 		using ptr_less_t = std::function<bool(uptr<object> const&, uptr<object> const&)>;
 		using ref_less_t = std::function<bool(object const&, object const&)>;
 
-		/////////////////
-		// Public Data //
-		/////////////////
-
 		id<object> const id;
-
-		////////////////////
-		// Public Methods //
-		////////////////////
 
 		virtual ~object() = default;
 
@@ -37,6 +24,7 @@ namespace ql {
 
 		//! Advanced this object in time by @p elapsed.
 		void update(tick elapsed) final;
+
 	protected:
 		object(ql::id<object> id) : entity{}, id{id} {}
 	};

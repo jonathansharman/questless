@@ -18,8 +18,7 @@ namespace ql {
 	}
 
 	//! A UI element used to exchange information with the player.
-	class dialog : sf::Drawable {
-	public:
+	struct dialog : public sf::Drawable {
 		enum class state { open, closed };
 
 		//! @param window The window in which this dialog will be displayed.
@@ -34,8 +33,7 @@ namespace ql {
 
 	protected:
 		template <typename... Args>
-		class continuation {
-		public:
+		struct continuation {
 			continuation(std::function<void(Args...)> cont) : _cont{std::move(cont)} {}
 
 			state operator()(Args&&... args) {

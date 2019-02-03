@@ -4,20 +4,19 @@
 
 #pragma once
 
-#include <vector>
-#include <string>
+#include "utility/complete.hpp"
+#include "world/coordinates.hpp"
+
 #include <functional>
 #include <memory>
-
-#include "world/coordinates.hpp"
-#include "utility/complete.hpp"
+#include <string>
+#include <vector>
 
 namespace ql {
-	class being;
+	struct being;
 
 	//! An action that a being can perform via its controlling agent.
-	class action {
-	public:
+	struct action {
 		enum class result { success, aborted };
 
 		using cont = std::function<complete(result)>;

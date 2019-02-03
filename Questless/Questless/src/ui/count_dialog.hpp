@@ -11,8 +11,7 @@
 
 namespace ql {
 	//! Retrieves a count from the player.
-	class count_dialog : public dialog {
-	public:
+	struct count_dialog : dialog {
 		count_dialog(sf::Window const& window,
 			sf::Font const& font,
 			sf::String const& title,

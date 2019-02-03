@@ -6,13 +6,14 @@
 
 #include <functional>
 
-#include "items/item.hpp"
 #include "items/craftable.hpp"
+#include "items/item.hpp"
 
 namespace ql {
 	//! A drinkable magic concoction.
-	class potion : public item, public craftable {
-	public:
+	struct potion
+		: item
+		, craftable {
 		virtual ~potion() = default;
 	};
 }

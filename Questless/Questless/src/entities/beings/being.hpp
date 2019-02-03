@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "entities/entity.hpp"
 #include "entities/beings/body.hpp"
+#include "entities/entity.hpp"
 #include "entities/perception.hpp"
 #include "items/armor/armor.hpp"
 #include "items/inventory.hpp"
@@ -14,31 +14,26 @@
 #include "stats/being.hpp"
 #include "utility/dynamic_property.hpp"
 #include "utility/event.hpp"
+#include "utility/id.hpp"
 #include "utility/lazy_bounded.hpp"
 #include "utility/static_bounded.hpp"
-#include "utility/id.hpp"
 
-#include <vector>
 #include <deque>
-#include <utility>
 #include <functional>
 #include <memory>
+#include <utility>
+#include <vector>
 
 namespace ql {
-	class agent;
-	class status;
+	struct agent;
+	struct status;
 
 	enum class mortality : int { alive = 0, dead, undead, immortal };
 
 	//! An animate entity.
-	class being : public entity {
-	public:
-		using ref_less_t = bool(*)(being const&, being const&);
-		using ptr_less_t = bool(*)(uptr<being> const&, uptr<being> const&);
-
-		///////////////////////////
-		// Public Data/Accessors //
-		///////////////////////////
+	struct being : entity {
+		using ref_less_t = bool (*)(being const&, being const&);
+		using ptr_less_t = bool (*)(uptr<being> const&, uptr<being> const&);
 
 		id<being> const id;
 
@@ -54,36 +49,56 @@ namespace ql {
 		// Conditions
 
 		lazy_bounded<ql::energy> energy;
-		constexpr bool weary() const { return energy.value() < 0.5 * stats.a.stamina.value(); }
+		constexpr bool weary() const {
+			return energy.value() < 0.5 * stats.a.stamina.value();
+		}
 
 		static constexpr auto min_satiety = 0.0_sat;
 		static constexpr auto max_satiety = 100.0_sat;
 		static_bounded<ql::satiety, min_satiety, max_satiety> satiety = max_satiety;
-		constexpr bool hungry() const { return satiety.value() < min_satiety + 0.5 * (max_satiety - min_satiety); }
-		constexpr bool starving() const { return satiety.value() == min_satiety; }
+		constexpr bool hungry() const {
+			return satiety.value() < min_satiety + 0.5 * (max_satiety - min_satiety);
+		}
+		constexpr bool starving() const {
+			return satiety.value() == min_satiety;
+		}
 
 		static constexpr auto min_alertness = 0.0_alert;
 		static constexpr auto max_alertness = 100.0_alert;
 		static_bounded<ql::alertness, min_alertness, max_alertness> alertness = max_alertness;
-		constexpr bool sleepy() const { return alertness.value() < min_alertness + 0.5 * (max_alertness - min_alertness); }
+		constexpr bool sleepy() const {
+			return alertness.value() < min_alertness + 0.5 * (max_alertness - min_alertness);
+		}
 
 		static constexpr auto min_joy = -100.0_joy;
 		static constexpr auto max_joy = 100.0_joy;
 		static_bounded<ql::joy, min_joy, max_joy> joy = 0.0_joy;
-		constexpr bool sad() const { return joy.value() < min_joy + 0.25 * (max_joy - min_joy); }
-		constexpr bool happy() const { return joy.value() > min_joy + 0.75 * (max_joy - min_joy); }
+		constexpr bool sad() const {
+			return joy.value() < min_joy + 0.25 * (max_joy - min_joy);
+		}
+		constexpr bool happy() const {
+			return joy.value() > min_joy + 0.75 * (max_joy - min_joy);
+		}
 
 		static constexpr auto min_courage = -100.0_courage;
 		static constexpr auto max_courage = 100.0_courage;
 		static_bounded<ql::courage, min_courage, max_courage> courage = 0.0_courage;
-		constexpr bool afraid() const { return courage.value() < min_courage + 0.25 * (max_courage - min_courage); }
-		constexpr bool brave() const { return courage.value() > min_courage + 0.75 * (max_courage - min_courage); }
+		constexpr bool afraid() const {
+			return courage.value() < min_courage + 0.25 * (max_courage - min_courage);
+		}
+		constexpr bool brave() const {
+			return courage.value() > min_courage + 0.75 * (max_courage - min_courage);
+		}
 
 		static constexpr auto min_serenity = -100.0_serenity;
 		static constexpr auto max_serenity = 100.0_serenity;
 		static_bounded<ql::serenity, min_serenity, max_serenity> serenity = 0.0_serenity;
-		constexpr bool angry() const { return serenity.value() < min_serenity + 0.25 * (max_serenity - min_serenity); }
-		constexpr bool calm() const { return serenity.value() > min_serenity + 0.75 * (max_serenity - min_serenity); }
+		constexpr bool angry() const {
+			return serenity.value() < min_serenity + 0.25 * (max_serenity - min_serenity);
+		}
+		constexpr bool calm() const {
+			return serenity.value() > min_serenity + 0.75 * (max_serenity - min_serenity);
+		}
 
 		dynamic_property<ql::tick> busy_time = 0_tick;
 
@@ -92,12 +107,20 @@ namespace ql {
 		region_tile::direction direction;
 
 		awakeness awakeness = awakeness::awake;
-		constexpr bool awake() const { return awakeness == awakeness::awake; }
-		constexpr bool asleep() const { return awakeness == awakeness::asleep; }
+		constexpr bool awake() const {
+			return awakeness == awakeness::awake;
+		}
+		constexpr bool asleep() const {
+			return awakeness == awakeness::asleep;
+		}
 
 		corporeality corporeality = corporeality::corporeal;
-		constexpr bool corporeal() const { return corporeality == corporeality::corporeal; }
-		constexpr bool incorporeal() const { return corporeality == corporeality::incorporeal; }
+		constexpr bool corporeal() const {
+			return corporeality == corporeality::corporeal;
+		}
+		constexpr bool incorporeal() const {
+			return corporeality == corporeality::incorporeal;
+		}
 
 		// Event Handlers
 
@@ -119,14 +142,12 @@ namespace ql {
 		event<ql::id<being>> before_kill;
 		event<ql::id<being>> after_kill;
 
-		////////////////////
-		// Public Methods //
-		////////////////////
-
 		virtual ~being();
 
 		//! The agent responsible for this being.
-		agent& agent() { return *_agent; }
+		agent& agent() {
+			return *_agent;
+		}
 
 		//! This being's perception of the tile at @p region_tile_coords in its region.
 		perception::level perception_of(region_tile::point region_tile_coords) const;
@@ -144,10 +165,14 @@ namespace ql {
 		void clear_delayed_actions();
 
 		//! The being's equipped shields.
-		std::vector<uptr<armor>> const& shields() { return _shields; }
+		std::vector<uptr<armor>> const& shields() {
+			return _shields;
+		}
 
 		//! Recalculates this being's stats. Called automatically with each update.
-		void refresh_stats() { stats = get_stats(); }
+		void refresh_stats() {
+			stats = get_stats();
+		}
 
 		//! Advances the being in time by @p elapsed.
 		void update(tick elapsed) final;
@@ -165,22 +190,24 @@ namespace ql {
 		void heal(ql::health amount, body_part& part, std::optional<ql::id<being>> opt_source_id);
 
 		void add_status(uptr<status> status);
+
 	protected:
-		being
-			( const std::function<uptr<ql::agent>(being&)>& make_agent
-			, ql::id<being> id
-			, ql::body body
-			, std::function<stats::being()> const& make_base_stats
-			);
+		being(const std::function<uptr<ql::agent>(being&)>& make_agent,
+			ql::id<being> id,
+			ql::body body,
+			std::function<stats::being()> const& make_base_stats);
 
 		virtual ql::body make_body(ql::id<being> owner_id) = 0;
 
 		static stats::being load_stats(char const* filepath);
+
 	private:
 		uptr<ql::agent> _agent; //!< The agent responsible for this being.
 
-		std::deque<tick> _action_delays; //!< The queue of delays before the next action in the delayed actions queue should begin.
-		std::deque<std::tuple<uptr<action>, action::cont>> _delayed_actions; //!< The queue of delayed actions and continuations to occur when this being is not busy.
+		//!< The queue of delays before the next action in the delayed actions queue should begin.
+		std::deque<tick> _action_delays;
+		//! The queue of delayed actions and continuations to occur when this being is not busy.
+		std::deque<std::tuple<uptr<action>, action::cont>> _delayed_actions;
 
 		std::vector<uptr<status>> _statuses;
 

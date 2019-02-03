@@ -27,17 +27,15 @@ namespace ql::dmg {
 
 		constexpr multiplier() = default;
 
-		constexpr multiplier
-			( slash_factor slash
-			, pierce_factor pierce
-			, cleave_factor cleave
-			, bludgeon_factor bludgeon
-			, burn_factor burn
-			, freeze_factor freeze
-			, blight_factor blight
-			, poison_factor poison
-			, shock_factor shock
-		)
+		constexpr multiplier(slash_factor slash,
+			pierce_factor pierce,
+			cleave_factor cleave,
+			bludgeon_factor bludgeon,
+			burn_factor burn,
+			freeze_factor freeze,
+			blight_factor blight,
+			poison_factor poison,
+			shock_factor shock)
 			: slash{slash}
 			, pierce{pierce}
 			, cleave{cleave}
@@ -46,39 +44,39 @@ namespace ql::dmg {
 			, freeze{freeze}
 			, blight{blight}
 			, poison{poison}
-			, shock{shock}
-		{}
+			, shock{shock} {}
 
 		constexpr multiplier(factor factor) {
-			std::visit(overloaded
-			([this](slash_factor slash_factor) { slash = slash_factor; }
-			, [this](pierce_factor pierce_factor) { pierce = pierce_factor; }
-			, [this](cleave_factor cleave_factor) { cleave = cleave_factor; }
-			, [this](bludgeon_factor bludgeon_factor) { bludgeon = bludgeon_factor; }
-			, [this](burn_factor burn_factor) { burn = burn_factor; }
-			, [this](freeze_factor freeze_factor) { freeze = freeze_factor; }
-			, [this](blight_factor blight_factor) { blight = blight_factor; }
-			, [this](poison_factor poison_factor) { poison = poison_factor; }
-			, [this](shock_factor shock_factor) { shock = shock_factor; }
-			), factor);
+			match(factor, //
+				[this](slash_factor slash_factor) { slash = slash_factor; },
+				[this](pierce_factor pierce_factor) { pierce = pierce_factor; },
+				[this](cleave_factor cleave_factor) { cleave = cleave_factor; },
+				[this](bludgeon_factor bludgeon_factor) { bludgeon = bludgeon_factor; },
+				[this](burn_factor burn_factor) { burn = burn_factor; },
+				[this](freeze_factor freeze_factor) { freeze = freeze_factor; },
+				[this](blight_factor blight_factor) { blight = blight_factor; },
+				[this](poison_factor poison_factor) { poison = poison_factor; },
+				[this](shock_factor shock_factor) { shock = shock_factor; });
 		}
 
-		static constexpr Derived zero() { return Derived{}; }
+		static constexpr Derived zero() {
+			return Derived{};
+		}
 
-		constexpr friend Derived operator +(Derived const& d1, Derived const& d2) {
-			return Derived
-			{d1.slash + d2.slash
-			, d1.pierce + d2.pierce
-			, d1.cleave + d2.cleave
-			, d1.bludgeon + d2.bludgeon
-			, d1.burn + d2.burn
-			, d1.freeze + d2.freeze
-			, d1.blight + d2.blight
-			, d1.poison + d2.poison
-			, d1.shock + d2.shock,
+		constexpr friend Derived operator+(Derived const& d1, Derived const& d2) {
+			return Derived{
+				d1.slash + d2.slash,
+				d1.pierce + d2.pierce,
+				d1.cleave + d2.cleave,
+				d1.bludgeon + d2.bludgeon,
+				d1.burn + d2.burn,
+				d1.freeze + d2.freeze,
+				d1.blight + d2.blight,
+				d1.poison + d2.poison,
+				d1.shock + d2.shock,
 			};
 		}
-		friend constexpr Derived operator -(Derived const& d1, Derived const& d2) {
+		friend constexpr Derived operator-(Derived const& d1, Derived const& d2) {
 			Derived difference;
 			difference.slash = d1.slash - d2.slash;
 			difference.pierce = d1.pierce - d2.pierce;
@@ -91,20 +89,11 @@ namespace ql::dmg {
 			difference.shock = d1.shock - d2.shock;
 			return difference;
 		}
-		friend constexpr Derived operator *(Derived const& d, double k) {
-			return Derived
-			{d.slash * k
-			, d.pierce * k
-			, d.cleave * k
-			, d.bludgeon * k
-			, d.burn * k
-			, d.freeze * k
-			, d.blight * k
-			, d.poison * k
-			, d.shock * k
-			};
+		friend constexpr Derived operator*(Derived const& d, double k) {
+			return Derived{
+				d.slash * k, d.pierce * k, d.cleave * k, d.bludgeon * k, d.burn * k, d.freeze * k, d.blight * k, d.poison * k, d.shock * k};
 		}
-		friend constexpr Derived operator *(double k, Derived const& d) {
+		friend constexpr Derived operator*(double k, Derived const& d) {
 			return Derived{
 				slash_factor{k * d.slash},
 				pierce_factor{k * d.pierce},
@@ -117,7 +106,7 @@ namespace ql::dmg {
 				shock_factor{k * d.shock},
 			};
 		}
-		friend constexpr Derived operator /(Derived const& d, double k) {
+		friend constexpr Derived operator/(Derived const& d, double k) {
 			return Derived{
 				d.slash / k,
 				d.pierce / k,
@@ -131,7 +120,7 @@ namespace ql::dmg {
 			};
 		}
 
-		Derived& operator +=(Derived const& addend) {
+		Derived& operator+=(Derived const& addend) {
 			slash += addend.slash;
 			pierce += addend.pierce;
 			cleave += addend.cleave;
@@ -143,7 +132,7 @@ namespace ql::dmg {
 			shock += addend.shock;
 			return static_cast<Derived&>(*this);
 		}
-		Derived& operator -=(Derived const& d) {
+		Derived& operator-=(Derived const& d) {
 			slash -= d.slash;
 			pierce -= d.pierce;
 			cleave -= d.cleave;
@@ -155,7 +144,7 @@ namespace ql::dmg {
 			shock -= d.shock;
 			return static_cast<Derived&>(*this);
 		}
-		Derived& operator *=(double k) {
+		Derived& operator*=(double k) {
 			slash *= k;
 			pierce *= k;
 			cleave *= k;
@@ -170,74 +159,64 @@ namespace ql::dmg {
 	};
 
 	//! Reduces the percentage damage taken
-	class resist : public multiplier<resist> {
-	public:
+	struct resist : multiplier<resist> {
 		using multiplier<resist>::multiplier;
 
 		template <typename Archive>
 		void save(Archive& archive) const {
-			archive
-				( CEREAL_NVP(slash)
-				, CEREAL_NVP(pierce)
-				, CEREAL_NVP(cleave)
-				, CEREAL_NVP(bludgeon)
-				, CEREAL_NVP(burn)
-				, CEREAL_NVP(freeze)
-				, CEREAL_NVP(blight)
-				, CEREAL_NVP(poison)
-				, CEREAL_NVP(shock)
-				);
+			archive(CEREAL_NVP(slash),
+				CEREAL_NVP(pierce),
+				CEREAL_NVP(cleave),
+				CEREAL_NVP(bludgeon),
+				CEREAL_NVP(burn),
+				CEREAL_NVP(freeze),
+				CEREAL_NVP(blight),
+				CEREAL_NVP(poison),
+				CEREAL_NVP(shock));
 		}
 
 		template <typename Archive>
 		void load(Archive& archive) {
-			archive
-				( CEREAL_NVP(slash)
-				, CEREAL_NVP(pierce)
-				, CEREAL_NVP(cleave)
-				, CEREAL_NVP(bludgeon)
-				, CEREAL_NVP(burn)
-				, CEREAL_NVP(freeze)
-				, CEREAL_NVP(blight)
-				, CEREAL_NVP(poison)
-				, CEREAL_NVP(shock)
-				);
+			archive(CEREAL_NVP(slash),
+				CEREAL_NVP(pierce),
+				CEREAL_NVP(cleave),
+				CEREAL_NVP(bludgeon),
+				CEREAL_NVP(burn),
+				CEREAL_NVP(freeze),
+				CEREAL_NVP(blight),
+				CEREAL_NVP(poison),
+				CEREAL_NVP(shock));
 		}
 	};
 
 	//! Increases the percentage of damage taken.
-	class vuln : public multiplier<vuln> {
-	public:
+	struct vuln : multiplier<vuln> {
 		using multiplier<vuln>::multiplier;
 
 		template <typename Archive>
 		void save(Archive& archive) const {
-			archive
-				( CEREAL_NVP(slash)
-				, CEREAL_NVP(pierce)
-				, CEREAL_NVP(cleave)
-				, CEREAL_NVP(bludgeon)
-				, CEREAL_NVP(burn)
-				, CEREAL_NVP(freeze)
-				, CEREAL_NVP(blight)
-				, CEREAL_NVP(poison)
-				, CEREAL_NVP(shock)
-				);
+			archive(CEREAL_NVP(slash),
+				CEREAL_NVP(pierce),
+				CEREAL_NVP(cleave),
+				CEREAL_NVP(bludgeon),
+				CEREAL_NVP(burn),
+				CEREAL_NVP(freeze),
+				CEREAL_NVP(blight),
+				CEREAL_NVP(poison),
+				CEREAL_NVP(shock));
 		}
 
 		template <typename Archive>
 		void load(Archive& archive) {
-			archive
-				( CEREAL_NVP(slash)
-				, CEREAL_NVP(pierce)
-				, CEREAL_NVP(cleave)
-				, CEREAL_NVP(bludgeon)
-				, CEREAL_NVP(burn)
-				, CEREAL_NVP(freeze)
-				, CEREAL_NVP(blight)
-				, CEREAL_NVP(poison)
-				, CEREAL_NVP(shock)
-				);
+			archive(CEREAL_NVP(slash),
+				CEREAL_NVP(pierce),
+				CEREAL_NVP(cleave),
+				CEREAL_NVP(bludgeon),
+				CEREAL_NVP(burn),
+				CEREAL_NVP(freeze),
+				CEREAL_NVP(blight),
+				CEREAL_NVP(poison),
+				CEREAL_NVP(shock));
 		}
 	};
 }

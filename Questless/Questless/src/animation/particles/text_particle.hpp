@@ -10,8 +10,7 @@
 
 namespace ql {
 	//! A particle composed of colored text.
-	class text_particle : public particle {
-	public:
+	struct text_particle : particle {
 		//! @param displacement The initial displacement of this particle.
 		//! @param lifetime The amount of time before this particle expires.
 		//! @param font The font to use to render this text particle's text. Must out-live this particle.

@@ -1,7 +1,7 @@
 //! @file
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
-//! @brief Includes header files of all entity classes.
+//! @brief Includes header files of all entity types.
 
 #pragma once
 

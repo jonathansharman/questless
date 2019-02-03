@@ -16,16 +16,17 @@ namespace ql::queries::message {
 	struct incant_failed_mute {};
 	struct melee_miss {};
 	struct not_enough_ammo {};
-	struct not_enough_charge { mana charge_deficit; };
+	struct not_enough_charge {
+		mana charge_deficit;
+	};
 
-	using any = std::variant
-		< arrow_miss
-		, cannot_equip
-		, entity_in_the_way
-		, gatestone_missing
-		, incant_failed_mute
-		, melee_miss
-		, not_enough_ammo
-		, not_enough_charge
-		>;
+	using query = std::variant< //
+		arrow_miss,
+		cannot_equip,
+		entity_in_the_way,
+		gatestone_missing,
+		incant_failed_mute,
+		melee_miss,
+		not_enough_ammo,
+		not_enough_charge>;
 }

@@ -12,11 +12,11 @@
 
 namespace ql {
 	//! Abstract base for animations composed of particle effects.
-	class particle_animation : public animation {
-	public:
+	struct particle_animation : animation {
 		std::deque<uptr<particle>> particles;
 
 		virtual ~particle_animation() = default;
+
 	private:
 		void animation_subupdate(sec elapsed_time) final;
 

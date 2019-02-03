@@ -17,8 +17,7 @@ namespace ql {
 	//! The mutator takes the current value by reference and the new value by const-reference and is responsible for assigning the new value to
 	//! the current value, handling any domain errors appropriately.
 	template <typename ValueType>
-	class dynamic_property : public bounded<ValueType, dynamic_property<ValueType>> {
-	public:
+	struct dynamic_property : bounded<ValueType, dynamic_property<ValueType>> {
 		using value_type = ValueType;
 		using mutator_type = std::function<void(value_type&, value_type const&)>;
 

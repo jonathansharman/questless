@@ -10,8 +10,5 @@ namespace ql::queries::magnitude {
 	struct heal {};
 	struct shock {};
 
-	using any = std::variant
-		< heal
-		, shock
-		>;
+	using query = std::variant<heal, shock>;
 }

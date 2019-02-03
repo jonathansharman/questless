@@ -12,10 +12,9 @@
 #include "utility/id.hpp"
 
 namespace ql {
-	class region;
+	struct region;
 
-	class light_source {
-	public:
+	struct light_source {
 		id<light_source> const id;
 
 		//! @param coords The coordinates of this light source in its region.

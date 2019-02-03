@@ -250,7 +250,7 @@ namespace ql::scene {
 			// Update the player's world view.
 			_player->update_view();
 			// Update the world renderer's world view.
-			_world_renderer->update_view(_player->world_view(), _player->poll_perceived_effects());
+			_world_renderer->update_view(_player->world_view(), player_being->agent()->poll_perceived_effects());
 		}
 	}
 }

@@ -15,10 +15,10 @@
 
 namespace ql {
 	//! Abstract base for animations.
-	class animation
-	    : public sf::Drawable
-	    , public sf::Transformable {
-	public:
+	struct animation
+		: public sf::Drawable
+		, public sf::Transformable //
+	{
 		//! The time scale of the animation. E.g., a time scale of 2.0 plays the animation at double speed.
 		nonnegative<double> time_scale = 1.0;
 

@@ -9,11 +9,9 @@
 
 namespace ql {
 	//! A weapon with different forms or modes of use.
-	class modal_weapon : public weapon {
-	public:
-		class form {
-		public:
-			form(modal_weapon& weapon) : _weapon{weapon} {}
+	struct modal_weapon : weapon {
+		struct form {
+				form(modal_weapon& weapon) : _weapon{weapon} {}
 
 			//! The modal weapon of which this is a form.
 			modal_weapon& weapon() { return _weapon; }
@@ -34,9 +32,8 @@ namespace ql {
 		std::vector<uptr<action>> actions() final { return _form->actions(); }
 	protected:
 		template <typename TargetForm>
-		class switch_form : public action {
-		public:
-			switch_form(modal_weapon& weapon, std::string name)
+		struct switch_form : action {
+				switch_form(modal_weapon& weapon, std::string name)
 				: _weapon{weapon}, _form{weapon._form}, _name{std::move(name)}
 			{}
 

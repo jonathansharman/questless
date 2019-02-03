@@ -8,8 +8,7 @@
 
 namespace ql {
 	//! A blood drop particle.
-	class blood_particle : public sprite_particle {
-	public:
+	struct blood_particle : sprite_particle {
 		blood_particle();
 
 	private:

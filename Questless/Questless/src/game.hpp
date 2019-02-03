@@ -11,15 +11,14 @@
 #include <SFML/Graphics.hpp>
 
 namespace ql {
-	class being;
-	class item;
-	class light_source;
-	class object;
+	struct being;
+	struct item;
+	struct light_source;
+	struct object;
 	namespace scene { class scene; }
 
 	//! Represents an instance of the game Questless.
-	class game {
-	public:
+	struct game {
 		~game();
 
 		//! @todo Relocate these maps?

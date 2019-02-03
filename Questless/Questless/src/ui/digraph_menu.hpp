@@ -9,8 +9,7 @@
 
 namespace ql {
 	//! A menu consisting of linked pages of options.
-	class digraph_menu {
-	public:
+	struct digraph_menu {
 		//! @param min_width The minimum width of the menu, including margins. If necessary, the menu will stretch to fit its contents.
 		//! @param min_height The minimum height of the menu, including margins. If necessary, the menu will stretch to fit its contents.
 		digraph_menu(int min_width, int min_height);

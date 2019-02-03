@@ -15,8 +15,7 @@ namespace ql {
 	//! @tparam ArithmeticType The underlying type.
 	//! @note See also @p static_bounded and @p dynamic_bounded.
 	template <typename ArithmeticType>
-	class lazy_bounded : public bounded<ArithmeticType, lazy_bounded<ArithmeticType>> {
-	public:
+	struct lazy_bounded : bounded<ArithmeticType, lazy_bounded<ArithmeticType>> {
 		using arithmetic_type = ArithmeticType;
 
 		using bound_getter_type = std::function<arithmetic_type()>;

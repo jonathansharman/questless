@@ -4,20 +4,25 @@
 
 #pragma once
 
-#include "spell.hpp"
+#include "color.hpp"
 
-namespace ql::magic {
-	//! Heals a being.
-	class heal : public spell_base<heal> {
-	public:
-		std::string name() const final { return "Heal"; }
+#include "agents/action.hpp"
+#include "quantities/game_time.hpp"
+#include "utility/complete.hpp"
 
-		magic::color color() const final { return color::white; }
+namespace ql {
+	struct being;
+	struct gatestone;
 
-		tick cooldown() const final { return 5_tick; }
-	private:
-		complete perform_cast(being& caster, gatestone& gatestone, action::cont cont) final;
+	namespace magic {
+		//! Heals a being.
+		struct heal {
+			static constexpr char const* name = "Heal";
+			static constexpr magic::color color = magic::color::white;
+			static constexpr tick cooldown = 5_tick;
+			static constexpr tick base_incant_time = 10_tick;
 
-		tick base_incant_time() const final { return 10_tick; }
-	};
+			complete cast(being& caster, gatestone& gatestone, action::cont cont);
+		};
+	}
 }

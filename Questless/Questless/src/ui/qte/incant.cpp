@@ -11,7 +11,7 @@
 using namespace media;
 
 namespace ql::qte {
-	incant::incant(gatestone& gatestone, std::function<void(uptr<magic::spell>)> cont)
+	incant::incant(gatestone& gatestone, std::function<void(std::optional<magic::spell> const&)> cont)
 		: _gatestone{gatestone}, _cont{std::move(cont)} {
 		_title = make_title("Incant a spell!");
 		_prompt = make_prompt("Use the arrow keys to control the pitch, and type the magic words.");
@@ -20,13 +20,13 @@ namespace ql::qte {
 
 	incant::~incant() {}
 
-	dialog::state incant::update() {
-		_metronome.setSize({10, the_window().getSize().y});
+	dialog::state incant::update(input_manager& im) {
+		_metronome.setSize({10, _window.getSize().y});
 
 		_elapsed_time += target_frame_duration;
 
 		// Set the position of the metronome.
-		_metronome.setPosition({0, the_window().getSize().x / 2 * (1 + sin(time_factor * _elapsed_time.value))});
+		_metronome.setPosition({0, _window.getSize().x / 2 * (1 + sin(time_factor * _elapsed_time.value))});
 
 		side const side = sin(time_factor * _elapsed_time.value) >= 0.0 ? side::right : side::left;
 		if (_side != side) {
@@ -58,20 +58,18 @@ namespace ql::qte {
 				}
 			} else if (_begun) {
 				// Done with incantation. Interpret results.
-
-				uptr<magic::spell> spell = nullptr;
-				if (_notes.size() > 0) {
+				return _cont([&]() -> std::optional<magic::spell> {
+					if (_notes.empty()) return std::nullopt;
 					if (_notes.front() == note::left) {
-						spell = umake<magic::heal>();
+						return magic::heal{};
 					} else if (_notes.front() == note::right) {
-						spell = umake<magic::shock>();
+						return magic::shock{};
 					} else if (_notes.front() == note::up) {
-						spell = umake<magic::teleport>();
+						return magic::teleport{};
 					} else if (_notes.front() == note::down) {
-						spell = umake<magic::telescope>();
+						return magic::telescope{};
 					}
-				}
-				return _cont(std::move(spell));
+				}());
 			}
 		} else {
 			_metronome.setFillColor(sf::Color::White);
@@ -80,7 +78,7 @@ namespace ql::qte {
 		return state::open;
 	}
 
-	void incant::draw() const {
+	void incant::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 		draw_title(_title);
 		draw_prompt(_prompt);
 		the_window().draw(_metronome);

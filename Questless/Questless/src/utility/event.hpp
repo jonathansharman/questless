@@ -15,8 +15,7 @@ namespace ql {
 	//!
 	//! Differs from delegate in that handlers may return false to indicate not to continue invoking callbacks.
 	template <typename... Args>
-	class event {
-	public:
+	struct event {
 		//! The event handler type. Return type indicates whether the event was handled.
 		using handler_t = sptr<std::function<bool(Args...)>>; //! @todo This shared_ptr and the one in delegate are smelly.
 

@@ -8,9 +8,9 @@
 
 namespace ql {
 	//! A particle for effects involving green magic.
-	class green_magic_particle : public sprite_particle {
-	public:
+	struct green_magic_particle : sprite_particle {
 		green_magic_particle();
+
 	private:
 		//! True if the green magic particle is turning to the right (CW), false if turning left (CCW).
 		bool _turning_right;

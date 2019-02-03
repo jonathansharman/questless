@@ -34,8 +34,7 @@ namespace ql {
 		, ArithmeticType const& LowerBound
 		, ArithmeticType const& UpperBound = detail::maximum<ArithmeticType>::value
 		>
-	class static_bounded : public bounded<ArithmeticType, static_bounded<ArithmeticType, LowerBound, UpperBound>> {
-	public:
+	struct static_bounded : bounded<ArithmeticType, static_bounded<ArithmeticType, LowerBound, UpperBound>> {
 		using arithmetic_type = ArithmeticType;
 
 		//! The minimum value in the range (inclusive).

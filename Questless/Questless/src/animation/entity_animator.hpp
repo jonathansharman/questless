@@ -11,10 +11,10 @@ namespace ql {
 	namespace rsrc {
 		struct entity;
 	}
-	class animation;
+	struct animation;
 
 	//! Creates animations for entities.
-	struct entity_animator : public entity_const_visitor {
+	struct entity_animator : entity_const_visitor {
 		rsrc::entity const& resources;
 
 		//! The animation created by the last visit.

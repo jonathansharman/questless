@@ -17,8 +17,7 @@
 
 namespace ql {
 	//! A simple 2D animation.
-	class sprite_animation : public animation {
-	public:
+	struct sprite_animation : animation {
 		enum class start_time { zero, random };
 
 		struct frame {

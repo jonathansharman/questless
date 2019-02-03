@@ -11,11 +11,10 @@
 #include <optional>
 
 namespace ql {
-	class body_part;
+	struct body_part;
 
 	//! Abstract base class for items that can be equipped to a being.
-	class equipment : public virtual item {
-	public:
+	struct equipment : virtual item {
 		virtual ~equipment() = default;
 
 		//! The amount of time required to equip the item.
@@ -60,9 +59,8 @@ namespace ql {
 		};
 
 		friend class equip;
-		class equip : public action {
-		public:
-			equip(equipment& equipment) : _equipment{equipment} {}
+		struct equip : action {
+				equip(equipment& equipment) : _equipment{equipment} {}
 			static auto make(equipment& equipment) { return umake<equip>(equipment); }
 			std::string name() const final { return "Equip"; }
 			complete perform(being& actor, cont cont) final;
@@ -71,9 +69,8 @@ namespace ql {
 		};
 
 		friend class unequip;
-		class unequip : public action {
-		public:
-			unequip(equipment& equipment) : _equipment{equipment} {}
+		struct unequip : action {
+				unequip(equipment& equipment) : _equipment{equipment} {}
 			static auto make(equipment& equipment) { return umake<unequip>(equipment); }
 			std::string name() const final { return "Unequip"; }
 			complete perform(being& actor, cont cont) final;

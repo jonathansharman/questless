@@ -24,8 +24,7 @@ namespace ql {
 		, IdType (*id_to_element)(StoredType const&)
 		, RetrievedType* (*stored_to_retrieved_ptr)(StoredType const&)
 		>
-	class cache {
-	public:
+	struct cache {
 		using id_t = IdType;
 		using stored_t = StoredType;
 		using retrieved_t = RetrievedType;

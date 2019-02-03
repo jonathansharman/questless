@@ -14,9 +14,9 @@
 #include <vector>
 
 namespace ql::dmg {
-	//! Represents a single group of damage to a being, possibly including multiple types and quantities of damage and protection bypass.
-	class group {
-	public:
+	//! Represents a single group of damage to a being, possibly including multiple types and quantities of damage and
+	//! protection bypass.
+	struct group {
 		static constexpr auto slash_per_pad = 0.50_slash / 1.0_pad;
 		static constexpr auto pierce_per_pad = 0.25_pierce / 1.0_pad;
 		static constexpr auto cleave_per_pad = 0.75_cleave / 1.0_pad;
@@ -42,43 +42,41 @@ namespace ql::dmg {
 		//! @param parts The list of components in this damage group.
 		//! @param protection_bypass The proportion of protection this damage group bypasses.
 		group(std::vector<damage> parts, double protection_bypass = 0.0)
-			: _parts{std::move(parts)}
-			, _protection_bypass{protection_bypass}
-		{}
+			: _parts{std::move(parts)}, _protection_bypass{protection_bypass} {}
 
 		//! Constructs a damage group from a single damage component.
 		//! @param part The single component of this damage group.
 		//! @param protection_bypass The proportion of protection this damage group bypasses.
 		template <typename Damage>
-		group(Damage damage_part, double protection_bypass = 0.0)
-			: group{damage{damage_part}, protection_bypass}
-		{}
+		group(Damage damage_part, double protection_bypass = 0.0) : group{damage{damage_part}, protection_bypass} {}
 
-		static group zero() { return group{}; }
+		static group zero() {
+			return group{};
+		}
 
-		friend group operator *(group const& d, double k) {
+		friend group operator*(group const& d, double k) {
 			group product = d;
 			product *= k;
 			return product;
 		}
-		friend group operator *(double k, group const& d) {
+		friend group operator*(double k, group const& d) {
 			group product = d;
 			product *= k;
 			return product;
 		}
-		friend group operator /(group const& d, double k) {
+		friend group operator/(group const& d, double k) {
 			group quotient = d;
 			quotient /= k;
 			return quotient;
 		}
 
-		group& operator *=(double k) {
+		group& operator*=(double k) {
 			for (auto& part : _parts) {
 				std::visit([k](auto& part) { part *= k; }, part);
 			}
 			return *this;
 		}
-		group& operator /=(double k) {
+		group& operator/=(double k) {
 			for (auto& part : _parts) {
 				std::visit([k](auto& part) { part /= k; }, part);
 			}
@@ -86,10 +84,14 @@ namespace ql::dmg {
 		}
 
 		//! The different parts/components of the damage group.
-		std::vector<damage> const& parts() const { return _parts; }
+		std::vector<damage> const& parts() const {
+			return _parts;
+		}
 
 		//! The proportion of protection this damage group bypasses.
-		double protection_bypass() const { return _protection_bypass; }
+		double protection_bypass() const {
+			return _protection_bypass;
+		}
 
 		//! The amount of health loss this damage group causes, defined as the sum of its damage component values.
 		health health_loss() const {
@@ -102,14 +104,13 @@ namespace ql::dmg {
 
 		//! Damage group adjusted by the given @protection, @resistance, and @vulnerability.
 		group with(protect const& protection, resist const& resistance, vuln const& vulnerability) const;
+
 	private:
 		std::vector<damage> _parts;
 		double _protection_bypass;
 
 		//! Helper for constructing a damage group from a single damage part and optional protection bypass.
 		group(damage damage_part, double protection_bypass = 0.0)
-			: _parts{{damage_part}}
-			, _protection_bypass{protection_bypass}
-		{}
+			: _parts{{damage_part}}, _protection_bypass{protection_bypass} {}
 	};
 }

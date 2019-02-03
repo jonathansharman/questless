@@ -10,10 +10,11 @@
 #include "utility/dynamic_bounded.hpp"
 #include "utility/nonnegative.hpp"
 
+#include <string>
+
 namespace ql {
 	//! A gem that can hold spell charges.
-	class gatestone : public equipment_base<gatestone> {
-	public:
+	struct gatestone : equipment_base<gatestone> {
 		gatestone(mana capacity, mana charge, tick cooldown, magic::color color, ql::id<item> id = ql::id<item>::make())
 			: item{id}, charge{charge, 0.0_mp, capacity}, _capacity{capacity}, _cooldown{cooldown}, _color{color} {}
 
@@ -56,8 +57,7 @@ namespace ql {
 		}
 
 	private:
-		class incant : public action {
-		public:
+		struct incant : action {
 			incant(gatestone& gatestone) : _gatestone_id{gatestone.id} {}
 			static auto make(gatestone& gatestone) {
 				return umake<incant>(gatestone);

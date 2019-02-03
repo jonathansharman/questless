@@ -8,8 +8,7 @@
 
 namespace ql {
 	//! A particle of flame and smoke.
-	class flame_particle : public sprite_particle {
-	public:
+	struct flame_particle : sprite_particle {
 		flame_particle();
 
 	private:

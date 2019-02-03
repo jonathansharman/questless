@@ -10,8 +10,7 @@
 
 namespace ql {
 	//! Used to create particle effects.
-	class particle : public animation {
-	public:
+	struct particle : animation {
 		//! @param displacement The initial displacement of this particle.
 		//! @param lifetime The amount of time before this particle expires.
 		particle(world::vector displacement, sec lifetime);

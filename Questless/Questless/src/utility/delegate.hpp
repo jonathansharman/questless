@@ -13,8 +13,7 @@
 namespace ql {
 	//! A modifiable list of callback functions that can be invoked in order.
 	template <typename... Args>
-	class delegate {
-	public:
+	struct delegate {
 		//! The delegate callback type.
 		using callback_t = sptr<std::function<void(Args...)>>; //! @todo This shared_ptr and the one in event are smelly.
 

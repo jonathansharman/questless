@@ -13,8 +13,7 @@
 
 namespace ql {
 	//! Retrieves region tile coordinates from the player.
-	class tile_dialog : public dialog {
-	public:
+	struct tile_dialog : dialog {
 		tile_dialog(sf::Window const& window,
 			rsrc::fonts const& fonts,
 			sf::String title,

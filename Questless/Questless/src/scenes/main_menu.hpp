@@ -11,8 +11,7 @@
 
 namespace ql::scene {
 	//! The splash screen scene.
-	class main_menu : scene {
-	public:
+	struct main_menu : scene {
 		main_menu();
 	private:
 		digraph_menu _main_menu{480, 640};
