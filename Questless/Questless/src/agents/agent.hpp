@@ -7,7 +7,6 @@
 #include "action.hpp"
 #include "queries/all.hpp"
 
-#include "effects/effect.hpp"
 #include "magic/spell.hpp"
 #include "quantities/quantities.hpp"
 #include "utility/complete.hpp"
@@ -18,6 +17,9 @@
 #include <optional>
 
 namespace ql {
+	namespace effects {
+		struct effect;
+	}
 	struct being;
 	struct body_part;
 	struct item;

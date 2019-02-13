@@ -4,7 +4,6 @@
 
 #include "hud.hpp"
 
-#include "animation/body_renderer.hpp"
 #include "animation/item_animator.hpp"
 #include "entities/beings/being.hpp"
 #include "game.hpp"
@@ -82,22 +81,22 @@ namespace ql {
 			// Draw condition bars.
 			int const screen_bottom = the_window().height() - 1;
 			the_renderer().draw_box(spaces::window::box{spaces::window::point{0, screen_bottom},
-			                            spaces::window::vector{condition_bar_width * conditions_count, condition_bar_height},
-			                            {spaces::window::align_left, spaces::window::align_bottom}},
-			    colors::black());
+										spaces::window::vector{condition_bar_width * conditions_count, condition_bar_height},
+										{spaces::window::align_left, spaces::window::align_bottom}},
+				colors::black());
 			auto draw_bar = [condition_bar_width, condition_bar_height, screen_bottom, left = 0](
-			                    double ratio, colors::color const& color) mutable {
+								double ratio, colors::color const& color) mutable {
 				the_renderer().draw_box(
-				    spaces::window::box{spaces::window::point{left + 1, screen_bottom},
-				        spaces::window::vector{condition_bar_width - 2, lround(condition_bar_height * ratio) - 1},
-				        {spaces::window::align_left, spaces::window::align_bottom}},
-				    color);
+					spaces::window::box{spaces::window::point{left + 1, screen_bottom},
+						spaces::window::vector{condition_bar_width - 2, lround(condition_bar_height * ratio) - 1},
+						{spaces::window::align_left, spaces::window::align_bottom}},
+					color);
 				left += condition_bar_width;
 			};
 			// Blood
 			draw_bar(
-			    (player_being->body.blood.value() / player_being->body.total_vitality() / body_part::blood_per_vitality).value,
-			    sf::Color::Red);
+				(player_being->body.blood.value() / player_being->body.total_vitality() / body_part::blood_per_vitality).value,
+				sf::Color::Red);
 			// Energy
 			draw_bar((player_being->energy.value() / player_being->stats.a.stamina.value()).value, sf::Color::Cyan);
 			// Satiety
@@ -110,27 +109,27 @@ namespace ql {
 				renderer.visit(player_being->body);
 				uptr<texture> texture = texturer.texture();
 				texture->draw(spaces::window::point{0, screen_bottom - condition_bar_height},
-				    spaces::window::align_left,
-				    spaces::window::align_bottom);
+					spaces::window::align_left,
+					spaces::window::align_bottom);
 			}
 
 			{ // Draw hotbar items.
 				static auto const hotbar_slot_texture = umake<texture>("resources/textures/ui/hud/hotbar-slot.png");
 
 				int const hotbar_width = hotbar_slot_texture->width() * _hotbar_size +
-				                         hotbar_interslot_gap * (_hotbar_size - 1);
+										 hotbar_interslot_gap * (_hotbar_size - 1);
 				int const hotbar_x_start = (the_window().width() - hotbar_width) / 2;
 
 				for (int i = 0; i < _hotbar_size; ++i) {
 					int x = hotbar_x_start + (hotbar_slot_width + hotbar_interslot_gap) * i;
 					int y = screen_bottom - hotbar_bottom_gap;
 					hotbar_slot_texture->draw(
-					    spaces::window::point{x, y}, spaces::window::align_left, spaces::window::align_bottom);
+						spaces::window::point{x, y}, spaces::window::align_left, spaces::window::align_bottom);
 					if (std::optional<id<item>> opt_item_id = _hotbar[i]) {
 						item const& item = the_game().items.cref(*opt_item_id);
 						item_animator item_animator{spaces::window::point{x + hotbar_slot_h_padding,
-						    y - hotbar_slot_v_padding - 55}}; //! @todo Remove magic number or add alignment back in. 55
-						                                      //! is the height of item textures.
+							y - hotbar_slot_v_padding - 55}}; //! @todo Remove magic number or add alignment back in. 55
+															  //! is the height of item textures.
 						item.accept(item_animator);
 					}
 				}
@@ -148,8 +147,8 @@ namespace ql {
 					_inv_column_count = std::max(1l, lround(inv_width_pct * the_window().getSize().x / item_icon_size.x));
 
 					_inv_layout = spaces::window::box{the_window().getSize() / 2,
-					    spaces::window::vector{_inv_column_count * item_icon_size.x, _inv_row_count * item_icon_size.y},
-					    {spaces::window::align_center, spaces::window::align_middle}};
+						spaces::window::vector{_inv_column_count * item_icon_size.x, _inv_row_count * item_icon_size.y},
+						{spaces::window::align_center, spaces::window::align_middle}};
 				}
 
 				the_renderer().draw_box(_inv_layout, 1, sf::Color::Black, sf::Color{128, 128, 128});
@@ -160,14 +159,14 @@ namespace ql {
 					int const row = (y_mouse - _inv_layout.top) / item_icon_size.y;
 					int const column = (x_mouse - _inv_layout.left) / item_icon_size.x;
 					if (_inv_layout.top <= y_mouse && row < _inv_row_count && _inv_layout.left <= x_mouse &&
-					    column < _inv_column_count) {
+						column < _inv_column_count) {
 						the_renderer().draw_box(
-						    spaces::window::box{spaces::window::point{_inv_layout.left + item_icon_size.x * column,
-						                            _inv_layout.top + item_icon_size.y * row},
-						        item_icon_size},
-						    1,
-						    sf::Color::Black,
-						    sf::Color{192, 192, 192});
+							spaces::window::box{spaces::window::point{_inv_layout.left + item_icon_size.x * column,
+													_inv_layout.top + item_icon_size.y * row},
+								item_icon_size},
+							1,
+							sf::Color::Black,
+							sf::Color{192, 192, 192});
 					}
 				}
 
@@ -176,7 +175,7 @@ namespace ql {
 					int row = i / _inv_column_count;
 					int column = i % _inv_column_count;
 					item_animator texturer{spaces::window::point{
-					    _inv_layout.left + column * item_icon_size.x, _inv_layout.top + row * item_icon_size.y}};
+						_inv_layout.left + column * item_icon_size.x, _inv_layout.top + row * item_icon_size.y}};
 					_displayed_items[i].get().accept(texturer);
 				}
 			}

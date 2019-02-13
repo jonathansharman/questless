@@ -4,42 +4,32 @@
 
 #pragma once
 
-#include <iostream>
-#include <memory>
-#include <string>
+#include "beings/being.hpp"
+#include "objects/object.hpp"
 
-#include "entity_visitor.hpp"
-#include "utility/reference.hpp"
-#include "world/coordinates.hpp"
+#include "utility/visitation.hpp"
 
 namespace ql {
-	struct game;
 	struct region;
 	struct section;
 
-	//! Things that can exist on the world map, including beings and objects.
-	struct entity : element<entity_subtype_list> {
-		using ref_less_t = bool (*)(entity const&, entity const&);
-		using ptr_less_t = bool (*)(uptr<entity> const&, uptr<entity> const&);
+	//! Things that can exist on the world map: beings or objects.
+	struct entity {
+		std::variant<being, object> value;
 
-		region* region;
-		section* section;
-		region_tile::point coords;
+		//! The location of this entity.
+		location location() const {
+			return match(value, [](auto const& entity) { return entity.location; });
+		};
 
-		virtual ~entity() = default;
-
-		//! The entity's class's enumerated value.
-		virtual entity_subtype entity_subtype() const = 0;
-
-		//! Advances this entity in time by @elapsed.
-		virtual void update(tick elapsed) = 0;
+		//! Advances this entity in time by @p elapsed.
+		void update(tick elapsed) {
+			match(value, [elapsed](auto& entity) { entity.update(elapsed); });
+		}
 
 		//! The proportion of light or visual information this entity allows through, in the range [0, 1].
-		virtual double transparency() const = 0;
-
-	protected:
-		entity() : region{}, section{}, coords{} {}
+		double transparency() const {
+			return match(value, [](auto& entity) { return entity.transparency(); });
+		}
 	};
-
-	DEFINE_ELEMENT_BASE(entity, entity)
 }

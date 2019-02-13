@@ -5,6 +5,7 @@
 #pragma once
 
 #include "entities/perception.hpp"
+#include "quantities/distance.hpp"
 #include "quantities/quantities.hpp"
 #include "utility/io.hpp"
 #include "utility/nonnegative.hpp"

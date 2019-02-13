@@ -23,7 +23,7 @@ namespace ql {
 		, _selector{make_selector(std::to_string(_magnitude))} //
 	{}
 
-	dialog::state magnitude_dialog::update(input_manager& im) {
+	dialog::state magnitude_dialog::update(sec elapsed_time, input_manager& im) {
 		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) { return _cont(std::nullopt); }
 
 		double old_magnitude = _magnitude;

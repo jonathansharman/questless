@@ -21,7 +21,7 @@ namespace ql {
 			std::vector<sf::String> option_texts,
 			std::function<void(std::optional<int>)> cont);
 
-		state update(input_manager& im) final {
+		state update(sec /*elapsed_time*/, input_manager& im) final {
 			if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) { return _cont(std::nullopt); }
 
 			int const option_count = static_cast<int>(_options.size());

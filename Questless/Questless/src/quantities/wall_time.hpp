@@ -42,10 +42,10 @@ namespace ql {
 	//! Wall time in std::chrono seconds.
 	using chrono_sec = std::chrono::duration<double>;
 
-	//! The game's frames per second.
+	//! The game's target frames per second.
 	static constexpr auto target_frame_rate = 60.0_hz;
 
-	//! The duration of a single frame; inverse of FPS.
+	//! The target duration of a single frame; inverse of FPS.
 	static constexpr auto target_frame_duration = 1.0 / target_frame_rate;
 
 	//! Converts from a seconds quantity to std::chrono seconds. Useful for interacting with the Standard Library.

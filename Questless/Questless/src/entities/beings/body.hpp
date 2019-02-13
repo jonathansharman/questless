@@ -17,11 +17,9 @@ namespace ql {
 		//! The amount of blood in this body.
 		lazy_bounded<ql::blood> blood;
 
-		//! @param owner The being that owns this body.
+		//! @param owner The ID of the being that owns this body.
 		//! @param root The root of the body parts tree.
-		body(being& owner, body_part root);
-
-		body(body&& that) noexcept;
+		body(id<being> owner_id, body_part root);
 
 		//! The root body part, to which all other body parts are attached.
 		body_part const& root() const {
@@ -53,7 +51,7 @@ namespace ql {
 		void update(tick elapsed);
 
 	private:
-		being& _owner; // Okay to store reference here. A body's lifetime is a subset of its owning being's lifetime.
+		id<being> _owner_id;
 
 		body_part _root;
 
@@ -65,5 +63,5 @@ namespace ql {
 	};
 
 	struct animation;
-	uptr<animation> get_animation(body body);
+	uptr<animation> get_animation(body const& body);
 }

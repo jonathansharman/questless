@@ -17,7 +17,7 @@ namespace ql {
 			: item_base{id}, _spell{std::move(spell)} {}
 
 		std::string name() const final {
-			return blank() ? "Blank Scroll" : "Scroll: " + magic::name(*_spell);
+			return blank() ? "Blank Scroll" : "Scroll: " + _spell->name();
 		}
 
 		ql::mass mass() const final {

@@ -48,10 +48,10 @@ namespace cancel {
 			using type = std::conditional_t
 				< std::is_same_v<T, typename Head::type>
 				, std::conditional_t // Found matching type powers.
-					< Head::power + Power == 0
-					, Tail // Cancel.
-					, cons<type_power<T, Head::power + Power>, Tail> // Add powers.
-					>
+				< Head::power + Power == 0
+				, Tail // Cancel.
+				, cons<type_power<T, Head::power + Power>, Tail> // Add powers.
+				>
 				, cons<Head, product_t<Tail, type_power<T, Power>>> // Recurse.
 				>;
 		};
@@ -109,10 +109,10 @@ namespace cancel {
 		struct exponential<ExpNum, ExpDen, cons<Head, Tail>> {
 			static_assert(ExpDen != 0, "Exponent denominator cannot be zero.");
 			static_assert(ExpNum == 0 || (ExpNum < 0 == ExpDen < 0), "Exponent must be nonnegative.");
-			static_assert((Head::power * ExpNum) % ExpDen == 0, "A type power exponential must result in integral powers.");
+			static_assert((Head::power* ExpNum) % ExpDen == 0, "A type power exponential must result in integral powers.");
 
 			using type = cons
-				< type_power<typename Head::type, Head::power * ExpNum / ExpDen>
+				< type_power<typename Head::type, Head::power* ExpNum / ExpDen>
 				, exponential_t<ExpNum, ExpDen, Tail>
 				>;
 		};

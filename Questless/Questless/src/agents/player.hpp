@@ -6,6 +6,7 @@
 
 #include "agent.hpp"
 
+#include "effects/effect.hpp"
 #include "ui/dialog.hpp"
 #include "ui/hud.hpp"
 #include "ui/player_action_dialog.hpp"

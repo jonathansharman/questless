@@ -23,7 +23,7 @@ namespace ql {
 		, _selector{make_selector(window, font, std::to_string(_count))} //
 	{}
 
-	dialog::state count_dialog::update(input_manager& im) {
+	dialog::state count_dialog::update(sec elapsed_time, input_manager& im) {
 		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) { return _cont(std::nullopt); }
 
 		int old_count = _count;

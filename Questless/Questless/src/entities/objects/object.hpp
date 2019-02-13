@@ -4,30 +4,35 @@
 
 #pragma once
 
-#include <memory>
+#include "campfire.hpp"
+#include "corpse.hpp"
+#include "item_box.hpp"
 
-#include "entities/entity.hpp"
 #include "utility/id.hpp"
+#include "utility/visitation.hpp"
+#include "world/coordinates.hpp"
 
 namespace ql {
 	//! An inanimate entity.
-	struct object : entity {
-		using ptr_less_t = std::function<bool(uptr<object> const&, uptr<object> const&)>;
-		using ref_less_t = std::function<bool(object const&, object const&)>;
-
+	struct object {
 		id<object> const id;
 
-		virtual ~object() = default;
+		location location;
+
+		std::variant<campfire, corpse, item_box> subtype;
+
+		double transparency() const {
+			return match(subtype, [](auto const& subtype) { return subtype.transparency(); });
+		}
 
 		//! Whether the object blocks the movement of other entities.
-		virtual bool blocks_movement() const = 0;
+		bool blocks_movement() const {
+			return match(subtype, [](auto const& subtype) { return subtype.blocks_movement(); });
+		}
 
-		//! Advanced this object in time by @p elapsed.
-		void update(tick elapsed) final;
-
-	protected:
-		object(ql::id<object> id) : entity{}, id{id} {}
+		//! Advances this object in time by @p elapsed.
+		void update(tick elapsed) {
+			return match(subtype, [elapsed](auto& subtype) { subtype.update(elapsed); });
+		}
 	};
-
-	DEFINE_ELEMENT_BASE(object, entity)
 }

@@ -4,7 +4,7 @@
 
 #include "dialog.hpp"
 
-#include "loaders/fonts.hpp"
+#include "rsrc/fonts.hpp"
 
 #include "media/spaces/window.hpp"
 

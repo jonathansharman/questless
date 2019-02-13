@@ -6,9 +6,9 @@
 
 #include "tile.hpp"
 
-#include "game.hpp"
 #include "entities/beings/being.hpp"
 #include "entities/objects/object.hpp"
+#include "game.hpp"
 #include "magic/spell.hpp"
 #include "world/light_source.hpp"
 #include "world/region.hpp"
@@ -39,22 +39,16 @@ namespace ql {
 
 	region_section::point section::region_section_coords(region_tile::point region_tile_coords) {
 		auto q = region_tile_coords.q >= 0_span
-			? 1_section_span * (region_tile_coords.q + section::radius) / section::diameter
-			: 1_section_span * (region_tile_coords.q - section::radius) / section::diameter
-			;
+					 ? 1_section_span * (region_tile_coords.q + section::radius) / section::diameter
+					 : 1_section_span * (region_tile_coords.q - section::radius) / section::diameter;
 		auto r = region_tile_coords.r >= 0_span
-			? 1_section_span * (region_tile_coords.r + section::radius) / section::diameter
-			: 1_section_span * (region_tile_coords.r - section::radius) / section::diameter
-			;
+					 ? 1_section_span * (region_tile_coords.r + section::radius) / section::diameter
+					 : 1_section_span * (region_tile_coords.r - section::radius) / section::diameter;
 		return region_section::point{q, r};
 	}
 
 	section::section(region_section::point coords, std::istream& data_stream)
-		: beings{_being_map}
-		, objects{_object_map}
-		, light_sources{_light_source_ids}
-		, _coords{coords}
-	{
+		: beings{_being_map}, objects{_object_map}, light_sources{_light_source_ids}, _coords{coords} {
 		for (auto& slice : _tiles) {
 			for (auto& tile : slice) {
 				int c;
@@ -98,10 +92,9 @@ namespace ql {
 		, _tiles{std::move(that._tiles)}
 		, _coords{that._coords}
 		, _being_map{std::move(that._being_map)}
-		, _object_map{std::move(that._object_map)}
-	{}
+		, _object_map{std::move(that._object_map)} {}
 
-	section& section::operator =(section&& that) {
+	section& section::operator=(section&& that) {
 		beings.container = _being_map;
 		objects.container = _object_map;
 		light_sources.container = _light_source_ids;
@@ -113,7 +106,7 @@ namespace ql {
 	}
 
 	section::~section() {}
-	
+
 	void section::save(char const* filename) {
 		std::ofstream fout{filename};
 		for (auto& r_row : _tiles) {
@@ -148,9 +141,7 @@ namespace ql {
 	typename void section::remove_being(region_tile::point coords) {
 		auto it = _being_map.find(coords);
 		if (it != _being_map.end()) {
-			if (being* removed_being = the_game().beings.ptr(it->second)) {
-				removed_being->section = nullptr;
-			}
+			if (being* removed_being = the_game().beings.ptr(it->second)) { removed_being->section = nullptr; }
 			_being_map.erase(it);
 		}
 	}
@@ -158,9 +149,7 @@ namespace ql {
 	typename void section::remove_object(region_tile::point coords) {
 		auto it = _object_map.find(coords);
 		if (it != _object_map.end()) {
-			if (object* removed_object = the_game().objects.ptr(it->second)) {
-				removed_object->section = nullptr;
-			}
+			if (object* removed_object = the_game().objects.ptr(it->second)) { removed_object->section = nullptr; }
 			_object_map.erase(it);
 		}
 	}

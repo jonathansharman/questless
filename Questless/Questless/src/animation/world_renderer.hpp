@@ -6,7 +6,6 @@
 
 #include "sprite_animation.hpp"
 
-#include "effects/effect.hpp"
 #include "rsrc/entity.hpp"
 #include "rsrc/tile.hpp"
 #include "rsrc/world_renderer.hpp"
@@ -19,6 +18,9 @@
 #include <variant>
 
 namespace ql {
+	namespace effects {
+		struct effect;
+	}
 	namespace rsrc {
 		struct fonts;
 	}
@@ -37,7 +39,7 @@ namespace ql {
 		//! Updates the world renderer's world view.
 		//! @param world_view The new world view to render.
 		//! @param effects Any newly perceived effects to render.
-		void update_view(world_view const& world_view, std::vector<effects::effect> const& effects);
+		void render_view(world_view const& view, std::vector<effects::effect> const& effects);
 
 		//! Advances animations by @p elapsed_time.
 		void update(sec elapsed_time);
@@ -59,19 +61,16 @@ namespace ql {
 
 	private:
 		using entity_id_var_t = std::variant<id<being>, id<object>>;
-		using entity_cref_var_t = std::variant<cref<being>, cref<object>>;
-		using entity_cptr_var_t = std::variant<being const*, object const*>;
 
 		rsrc::world_renderer _resources;
 		rsrc::entity _entity_resources;
 		rsrc::tile _tile_resources;
 		rsrc::fonts const& _fonts;
 
-		static entity_id_var_t get_entity_id_var(entity_cref_var_t entity);
-		static entity_cref_var_t get_entity_cref_var(entity_id_var_t id);
+		static entity_id_var_t get_entity_id_var(entity const& entity);
 		static entity const* get_entity_cptr(entity_id_var_t id);
 
-		world_view const* _world_view;
+		std::reference_wrapper<world_view const> _world_view;
 
 		std::unordered_map<id<tile>, uptr<animation>> _tile_animations;
 		std::unordered_map<entity_id_var_t, uptr<animation>> _entity_animations;
@@ -80,8 +79,12 @@ namespace ql {
 
 		std::optional<std::function<bool(region_tile::point)>> _highlight_predicate;
 
+		void render_terrain(world_view const& view);
+		void render_entities(world_view const& view);
+		void visit_effects(std::vector<effects::effect> const& effects);
+
 		animation& cache_tile_animation(tile const& tile);
-		animation& cache_entity_animation(entity_id_var_t entity);
+		animation& cache_entity_animation(entity const& entity);
 		animation& get_animation(entity_id_var_t entity) const;
 	};
 }

@@ -7,7 +7,7 @@
 using namespace media;
 
 namespace ql {
-	dialog::state direction_dialog::update(input_manager& im) {
+	dialog::state direction_dialog::update(sec elapsed_time, input_manager& im) {
 		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) { return _cont(std::nullopt); }
 
 		if (im.pressed(sf::Keyboard::E)) {

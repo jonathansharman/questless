@@ -4,123 +4,47 @@
 
 #pragma once
 
-#include "entities/beings/body.hpp"
-#include "entities/entity.hpp"
-#include "entities/perception.hpp"
+#include "../perception.hpp"
+#include "body.hpp"
+#include "conditions.hpp"
+#include "species.hpp"
+#include "stats/being.hpp"
+
 #include "items/armor/armor.hpp"
 #include "items/inventory.hpp"
 #include "items/weapons/weapon.hpp"
 #include "quantities/quantities.hpp"
-#include "stats/being.hpp"
 #include "utility/dynamic_property.hpp"
 #include "utility/event.hpp"
 #include "utility/id.hpp"
 #include "utility/lazy_bounded.hpp"
 #include "utility/static_bounded.hpp"
 
-#include <deque>
-#include <functional>
-#include <memory>
-#include <utility>
-#include <vector>
-
 namespace ql {
 	struct agent;
+	struct region;
+	struct section;
 	struct status;
 
-	enum class mortality : int { alive = 0, dead, undead, immortal };
-
 	//! An animate entity.
-	struct being : entity {
-		using ref_less_t = bool (*)(being const&, being const&);
-		using ptr_less_t = bool (*)(uptr<being> const&, uptr<being> const&);
-
+	struct being {
 		id<being> const id;
+
+		species species;
 
 		body body;
 
+		location location;
+
 		inventory inventory;
 
-		// Stats
+		//! Base stats, prior to application of status modifiers.
+		stats::being base_stats;
+		//! Effective stats, accounting for all modifiers from base.
+		stats::being stats;
 
-		stats::being base_stats; //!< Base stats, prior to application of status modifiers.
-		stats::being stats; //!< Effective stats, accounting for all modifiers from base.
-
-		// Conditions
-
-		lazy_bounded<ql::energy> energy;
-		constexpr bool weary() const {
-			return energy.value() < 0.5 * stats.a.stamina.value();
-		}
-
-		static constexpr auto min_satiety = 0.0_sat;
-		static constexpr auto max_satiety = 100.0_sat;
-		static_bounded<ql::satiety, min_satiety, max_satiety> satiety = max_satiety;
-		constexpr bool hungry() const {
-			return satiety.value() < min_satiety + 0.5 * (max_satiety - min_satiety);
-		}
-		constexpr bool starving() const {
-			return satiety.value() == min_satiety;
-		}
-
-		static constexpr auto min_alertness = 0.0_alert;
-		static constexpr auto max_alertness = 100.0_alert;
-		static_bounded<ql::alertness, min_alertness, max_alertness> alertness = max_alertness;
-		constexpr bool sleepy() const {
-			return alertness.value() < min_alertness + 0.5 * (max_alertness - min_alertness);
-		}
-
-		static constexpr auto min_joy = -100.0_joy;
-		static constexpr auto max_joy = 100.0_joy;
-		static_bounded<ql::joy, min_joy, max_joy> joy = 0.0_joy;
-		constexpr bool sad() const {
-			return joy.value() < min_joy + 0.25 * (max_joy - min_joy);
-		}
-		constexpr bool happy() const {
-			return joy.value() > min_joy + 0.75 * (max_joy - min_joy);
-		}
-
-		static constexpr auto min_courage = -100.0_courage;
-		static constexpr auto max_courage = 100.0_courage;
-		static_bounded<ql::courage, min_courage, max_courage> courage = 0.0_courage;
-		constexpr bool afraid() const {
-			return courage.value() < min_courage + 0.25 * (max_courage - min_courage);
-		}
-		constexpr bool brave() const {
-			return courage.value() > min_courage + 0.75 * (max_courage - min_courage);
-		}
-
-		static constexpr auto min_serenity = -100.0_serenity;
-		static constexpr auto max_serenity = 100.0_serenity;
-		static_bounded<ql::serenity, min_serenity, max_serenity> serenity = 0.0_serenity;
-		constexpr bool angry() const {
-			return serenity.value() < min_serenity + 0.25 * (max_serenity - min_serenity);
-		}
-		constexpr bool calm() const {
-			return serenity.value() > min_serenity + 0.75 * (max_serenity - min_serenity);
-		}
-
-		dynamic_property<ql::tick> busy_time = 0_tick;
-
-		mortality mortality = mortality::alive;
-
-		region_tile::direction direction;
-
-		awakeness awakeness = awakeness::awake;
-		constexpr bool awake() const {
-			return awakeness == awakeness::awake;
-		}
-		constexpr bool asleep() const {
-			return awakeness == awakeness::asleep;
-		}
-
-		corporeality corporeality = corporeality::corporeal;
-		constexpr bool corporeal() const {
-			return corporeality == corporeality::corporeal;
-		}
-		constexpr bool incorporeal() const {
-			return corporeality == corporeality::incorporeal;
-		}
+		//! This being's current conditions.
+		conditions cond;
 
 		// Event Handlers
 
@@ -141,8 +65,6 @@ namespace ql {
 
 		event<ql::id<being>> before_kill;
 		event<ql::id<being>> after_kill;
-
-		virtual ~being();
 
 		//! The agent responsible for this being.
 		agent& agent() {
@@ -175,7 +97,7 @@ namespace ql {
 		}
 
 		//! Advances the being in time by @p elapsed.
-		void update(tick elapsed) final;
+		void update(tick elapsed);
 
 		//! Causes the being to take damage to the given part from the specified source being.
 		//! @param damage Damage to be applied to this being.
@@ -191,13 +113,12 @@ namespace ql {
 
 		void add_status(uptr<status> status);
 
-	protected:
-		being(const std::function<uptr<ql::agent>(being&)>& make_agent,
-			ql::id<being> id,
-			ql::body body,
-			std::function<stats::being()> const& make_base_stats);
+		double transparency() const {
+			return species.transparency();
+		}
 
-		virtual ql::body make_body(ql::id<being> owner_id) = 0;
+	protected:
+		being(const std::function<uptr<ql::agent>(being&)>& make_agent, ql::id<being> id, ql::species species);
 
 		static stats::being load_stats(char const* filepath);
 
@@ -218,6 +139,4 @@ namespace ql {
 
 		std::function<void(tick&, tick const&)> busy_time_mutator();
 	};
-
-	DEFINE_ELEMENT_BASE(being, entity)
 }

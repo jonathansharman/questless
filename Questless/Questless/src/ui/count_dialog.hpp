@@ -21,7 +21,7 @@ namespace ql {
 			std::optional<int> max,
 			std::function<void(std::optional<int>)> cont);
 
-		state update(input_manager& im) final;
+		state update(sec elapsed_time, input_manager& im) final;
 
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 

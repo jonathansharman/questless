@@ -10,7 +10,7 @@ using namespace media;
 namespace ql {
 	std::size_t player_action_dialog::_last_used = 0;
 
-	dialog::state player_action_dialog::update(input_manager& im) {
+	dialog::state player_action_dialog::update(sec elapsed_time, input_manager& im) {
 		if (!_hud.inventory_open()) {
 			if (im.down(sf::Keyboard::X) || im.pressed({sf::Keyboard::Z, sf::Keyboard::Return})) {
 				return _cont(idle{im.shift()});

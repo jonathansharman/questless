@@ -4,35 +4,26 @@
 
 #pragma once
 
+#include "quantities/game_time.hpp"
+#include "utility/id.hpp"
+
 #include <vector>
 
-#include "object.hpp"
-
 namespace ql {
+	struct item;
+
 	//! A box capable of holding some items.
-	struct item_box : object_base<item_box> {
-		item_box(ql::id<object> id = ql::id<object>::make()) : object_base<item_box>{id} {}
+	struct item_box {
+		std::vector<ql::id<item>> items;
 
-		virtual ql::entity_subtype entity_subtype() const {
-			return entity_subtype::item_box_class;
-		}
-
-		double transparency() const final {
+		double transparency() const {
 			return 0.5;
 		}
 
-		bool blocks_movement() const final {
+		bool blocks_movement() const {
 			return false;
 		}
 
-		std::vector<ql::id<item>>& items() {
-			return _items;
-		}
-		std::vector<ql::id<item>> const& items() const {
-			return _items;
-		}
-
-	private:
-		std::vector<ql::id<item>> _items;
+		void update(tick /*elapsed*/) {}
 	};
 }

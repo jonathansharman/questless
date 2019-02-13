@@ -22,7 +22,7 @@ namespace ql {
 			, _prompt{make_prompt(prompt)} //
 		{}
 
-		state update(input_manager& im) final;
+		state update(sec elapsed_time, input_manager& im) final;
 
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 

@@ -24,21 +24,29 @@ namespace ql {
 
 	namespace magic {
 		//! A magical spell that can be cast by a being.
-		using spell = std::variant<heal, shock, teleport, telescope>;
+		struct spell {
+			std::variant<heal, shock, teleport, telescope> value;
 
-		complete cast(spell const& spell, being& actor, gatestone& gatestone, action::cont cont);
+			//! The name of this spell to show the player.
+			std::string name() const;
 
-		//! Creates an action that casts @p spell using @p gatestone.
-		uptr<action> cast_action(spell const& spell, id<item> gatestone_id);
+			//! The magic color of this spell.
+			magic::color color() const;
 
-		//! The amount of time @p caster takes to incant @p spell.
-		tick incant_time(spell const& spell, being const& caster);
+			//! The amount of cooldown time this spell puts on a gatestone that casts it.
+			tick cooldown() const;
 
-		std::string name(spell const& spell);
-		magic::color spell_color(spell const& spell);
-		tick cooldown(spell const& spell);
+			//! Causes @p caster to casts this spell using @p gatestone and invokes @p cont upon success.
+			complete cast(being& caster, gatestone& gatestone, action::cont cont) const;
 
-		//! The base amount of time it takes to incant @p spell, ignoring the skill of the caster.
-		tick base_incant_time(spell const& spell);
+			//! Creates an action that casts this spell using the gatestone with ID @p gatestone_id.
+			uptr<action> cast_action(id<item> gatestone_id) const;
+
+			//! The amount of time @p caster takes to incant this spell.
+			tick incant_time(being const& caster) const;
+
+			//! The base amount of time it takes to incant this spell, ignoring the skill of the caster.
+			tick base_incant_time() const;
+		};
 	}
 }

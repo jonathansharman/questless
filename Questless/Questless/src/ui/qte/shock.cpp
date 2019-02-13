@@ -19,7 +19,7 @@ namespace ql::qte {
 		_prompt = make_prompt("Circle the target counter-clockwise as fast as you can!");
 	}
 
-	dialog::state shock::update(input_manager& im) {
+	dialog::state shock::update(sec elapsed_time, input_manager& im) {
 		constexpr auto time_limit = 5.0_s;
 		constexpr int charges_per_quadrant = 4;
 		constexpr double expected_charges = charges_per_quadrant * 70.0;
@@ -81,7 +81,7 @@ namespace ql::qte {
 			point_charge.velocity.step() += 20'000.0 * r / std::max(1.0, square(d));
 			point_charge.velocity.step() -= 800'000.0 * r / std::max(1.0, cube(d));
 			// Update position.
-			point_charge.position += point_charge.velocity * target_frame_duration;
+			point_charge.position += point_charge.velocity * elapsed_time;
 		}
 
 		return state::open;

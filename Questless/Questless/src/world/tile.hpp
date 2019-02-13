@@ -5,6 +5,7 @@
 #pragma once
 
 #include "quantities/quantities.hpp"
+#include "utility/id.hpp"
 
 #include <variant>
 
@@ -18,10 +19,14 @@ namespace ql {
 	struct water {};
 
 	//! Tile terrain types.
-	using terrain = std::variant<dirt, edge, grass, sand, snow, stone, water>;
+	struct terrain {
+		std::variant<dirt, edge, grass, sand, snow, stone, water> value;
+	};
 
 	//! A hexagonal region of the world.
 	struct tile {
+		id<tile> const id;
+
 		//! Offset from ambient temperature at this tile.
 		ql::temperature temperature_offset;
 

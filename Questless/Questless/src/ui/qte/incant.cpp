@@ -6,13 +6,18 @@
 
 #include "game.hpp"
 #include "items/magic/gatestone.hpp"
-#include "magic/all_spells.hpp"
 
 using namespace media;
 
 namespace ql::qte {
-	incant::incant(gatestone& gatestone, std::function<void(std::optional<magic::spell> const&)> cont)
-		: _gatestone{gatestone}, _cont{std::move(cont)} {
+	incant::incant(sf::Window const& window,
+		rsrc::fonts const& fonts,
+		gatestone& gatestone,
+		std::function<void(std::optional<magic::spell> const&)> cont)
+		: dialog{window, fonts}
+		, _gatestone{gatestone}
+		, _cont{std::move(cont)} //
+	{
 		_title = make_title("Incant a spell!");
 		_prompt = make_prompt("Use the arrow keys to control the pitch, and type the magic words.");
 		_metronome.setOrigin({0, 5});
@@ -20,15 +25,15 @@ namespace ql::qte {
 
 	incant::~incant() {}
 
-	dialog::state incant::update(input_manager& im) {
+	dialog::state incant::update(sec elapsed_time, input_manager& im) {
 		_metronome.setSize({10, _window.getSize().y});
 
-		_elapsed_time += target_frame_duration;
+		_total_elapsed_time += elapsed_time;
 
 		// Set the position of the metronome.
-		_metronome.setPosition({0, _window.getSize().x / 2 * (1 + sin(time_factor * _elapsed_time.value))});
+		_metronome.setPosition({0, _window.getSize().x / 2 * (1 + sin(time_factor * _total_elapsed_time.value))});
 
-		side const side = sin(time_factor * _elapsed_time.value) >= 0.0 ? side::right : side::left;
+		side const side = sin(time_factor * _total_elapsed_time.value) >= 0.0 ? side::right : side::left;
 		if (_side != side) {
 			// Metronome ticked. Read input.
 
@@ -79,8 +84,8 @@ namespace ql::qte {
 	}
 
 	void incant::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-		draw_title(_title);
-		draw_prompt(_prompt);
-		the_window().draw(_metronome);
+		target.draw(_title);
+		target.draw(_prompt);
+		target.draw(_metronome, states);
 	}
 }

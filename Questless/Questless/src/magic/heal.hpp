@@ -22,7 +22,7 @@ namespace ql {
 			static constexpr tick cooldown = 5_tick;
 			static constexpr tick base_incant_time = 10_tick;
 
-			complete cast(being& caster, gatestone& gatestone, action::cont cont);
+			complete cast(being& caster, gatestone& gatestone, action::cont cont) const;
 		};
 	}
 }

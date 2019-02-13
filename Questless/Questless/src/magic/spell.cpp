@@ -11,37 +11,37 @@
 #include "utility/visitation.hpp"
 
 namespace ql::magic {
-	std::string name(spell const& spell) {
-		return match(spell, [](auto const& spell) { return spell.name; });
+	std::string spell::name() const {
+		return match(value, [](auto const& spell) { return spell.name; });
 	}
 
-	magic::color spell_color(spell const& spell) {
-		return match(spell, [](auto const& spell) { return spell.color; });
+	magic::color spell::color() const {
+		return match(value, [](auto const& spell) { return spell.color; });
 	}
 
-	tick cooldown(spell const& spell) {
-		return match(spell, [](auto const& spell) { return spell.cooldown; });
+	tick spell::cooldown() const {
+		return match(value, [](auto const& spell) { return spell.cooldown; });
 	}
 
-	tick base_incant_time(spell const& spell) {
-		return match(spell, [](auto const& spell) { return spell.base_incant_time; });
+	tick spell::base_incant_time() const {
+		return match(value, [](auto const& spell) { return spell.base_incant_time; });
 	}
 
-	complete cast(spell const& spell, being& actor, gatestone& gatestone, action::cont cont) {
-		return match(spell, [&](auto const& spell) { return spell.cast(actor, gatestone, cont); });
+	complete spell::cast(being& actor, gatestone& gatestone, action::cont cont) const {
+		return match(value, [&](auto const& spell) { return spell.cast(actor, gatestone, cont); });
 	}
 
-	uptr<action> cast_action(spell const& spell, id<item> gatestone_id) {
+	uptr<action> spell::cast_action(id<item> gatestone_id) const {
 		struct cast : action {
 			cast(magic::spell spell, id<item> gatestone_id) : _spell{std::move(spell)}, _gatestone_id{gatestone_id} {}
 
 			std::string name() const final {
-				return "cast " + magic::name(_spell);
+				return "cast " + _spell.name();
 			}
 
 			complete perform(being& actor, cont cont) final {
 				if (auto gatestone = the_game().items.ptr_as<ql::gatestone>(_gatestone_id)) {
-					return perform_cast(_spell, actor, *gatestone, std::move(cont));
+					return _spell.cast(actor, *gatestone, std::move(cont));
 				} else {
 					return actor.agent().send_message(
 						queries::message::gatestone_missing{}, [cont] { return cont(result::aborted); });
@@ -53,11 +53,10 @@ namespace ql::magic {
 			id<item> _gatestone_id;
 		};
 
-		return umake<cast>(std::move(spell), gatestone_id);
+		return umake<cast>(*this, gatestone_id);
 	}
 
-	tick incant_time(spell const& spell, being& caster) {
-		return cancel::quantity_cast<tick>(
-			base_incant_time(spell) / (1.0 + (caster.stats.a.speech.value() / 100.0_speech).value));
+	tick spell::incant_time(being const& caster) const {
+		return cancel::quantity_cast<tick>(base_incant_time() / (1.0 + (caster.stats.a.speech.value() / 100.0_speech).value));
 	}
 }

@@ -4,6 +4,7 @@
 
 #include "basic_ai.hpp"
 
+#include "effects/effect.hpp"
 #include "entities/beings/being.hpp"
 #include "game.hpp"
 #include "utility/random.hpp"
@@ -24,7 +25,7 @@ namespace ql {
 	complete basic_ai::walk_state::act(basic_ai& ai) {
 		// Move or turn at random.
 		if (random_bool()) {
-			return ai.walk(ai.being.direction, [&ai](action::result result) {
+			return ai.walk(ai.being.cond.direction, [&ai](action::result result) {
 				// Idle next time.
 				ai._state = umake<idle_state>();
 				if (result == action::result::aborted) {
@@ -49,15 +50,15 @@ namespace ql {
 
 	complete basic_ai::attack_state::act(basic_ai& ai) {
 		if (ql::being* target = the_game().beings.ptr(target_id)) {
-			if (perception::get_category(ai.being.perception_of(target->coords)) == perception::category::none) {
+			if (perception::get_category(ai.being.perception_of(target->location.coords)) == perception::category::none) {
 				// Target not visible. Switch to idle state.
 				ai._state = umake<idle_state>();
 				return ai.act();
 
 				//! @todo Only go passive while target is out of visual range. Keep a grudge list?
 			} else {
-				auto target_direction = (target->coords - ai.being.coords).direction();
-				if (ai.being.direction != target_direction) {
+				auto target_direction = (target->location.coords - ai.being.location.coords).direction();
+				if (ai.being.cond.direction != target_direction) {
 					// Facing away from target. Turn towards it.
 					return ai.turn(target_direction, [&ai](action::result result) {
 						if (result == action::result::aborted) {
@@ -68,7 +69,7 @@ namespace ql {
 					});
 				} else {
 					// Facing towards target.
-					if ((target->coords - ai.being.coords).length() == 1_span) {
+					if ((target->location.coords - ai.being.location.coords).length() == 1_span) {
 						// Within striking distance of target.
 						//! @todo This is a hack that assumes the first item in the inventory is a melee weapon.
 						item& item = *ai.being.inventory.items.begin();
@@ -99,9 +100,9 @@ namespace ql {
 	}
 
 	void basic_ai::perceive(effects::effect const& effect) {
-		if (std::holds_alternative<effects::injury>(effect)) {
+		if (std::holds_alternative<effects::injury>(effect.value)) {
 			// Retaliate against injuries. Ignore all other effects.
-			effects::injury const& injury = std::get<effects::injury>(effect);
+			effects::injury const& injury = std::get<effects::injury>(effect.value);
 			if (injury.opt_source_id && injury.target_being_id == being.id) {
 				_state = umake<attack_state>(*injury.opt_source_id);
 			}
@@ -140,9 +141,9 @@ namespace ql {
 			[&](queries::tile::ranged_attack_target const& query) {
 				auto target_id = dynamic_cast<attack_state*>(_state.get())->target_id;
 				if (ql::being* target = the_game().beings.ptr(target_id)) {
-					if ((target->coords - being.coords).length() <= query.range) {
+					if ((target->location.coords - being.location.coords).length() <= query.range) {
 						// If in range, shoot the target.
-						return cont(target->coords);
+						return cont(target->location.coords);
 					}
 				}
 				return cont(std::nullopt);
@@ -166,7 +167,7 @@ namespace ql {
 				auto target_id = dynamic_cast<attack_state*>(_state.get())->target_id;
 				if (ql::being* target = the_game().beings.ptr(target_id)) {
 					// Attack towards the target.
-					return cont((target->coords - being.coords).unit());
+					return cont((target->location.coords - being.location.coords).unit());
 				}
 				return cont(std::nullopt);
 			},

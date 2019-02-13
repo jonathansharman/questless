@@ -222,9 +222,6 @@
     <ClInclude Include="src\animation\bleeding.hpp">
       <Filter>src\animation</Filter>
     </ClInclude>
-    <ClInclude Include="src\animation\entity_animator.hpp">
-      <Filter>src\animation</Filter>
-    </ClInclude>
     <ClInclude Include="src\animation\flame.hpp">
       <Filter>src\animation</Filter>
     </ClInclude>
@@ -417,9 +414,6 @@
     <ClInclude Include="src\entities\entity.hpp">
       <Filter>src\entities</Filter>
     </ClInclude>
-    <ClInclude Include="src\entities\entity_visitor.hpp">
-      <Filter>src\entities</Filter>
-    </ClInclude>
     <ClInclude Include="src\entities\perception.hpp">
       <Filter>src\entities</Filter>
     </ClInclude>
@@ -445,9 +439,6 @@
       <Filter>src\agents\queries</Filter>
     </ClInclude>
     <ClInclude Include="src\agents\queries\vector.hpp">
-      <Filter>src\agents\queries</Filter>
-    </ClInclude>
-    <ClInclude Include="src\agents\queries\all.hpp">
       <Filter>src\agents\queries</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\beings\statuses\healing.hpp">
@@ -678,6 +669,15 @@
     <ClInclude Include="src\utility\visitation.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
+    <ClInclude Include="src\agents\queries\all.hpp">
+      <Filter>src\agents\queries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\conditions.hpp">
+      <Filter>src\entities\beings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\species.hpp">
+      <Filter>src\entities\beings</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -685,9 +685,6 @@
     </ClCompile>
     <ClCompile Include="src\game.cpp">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\animation\entity_animator.cpp">
-      <Filter>src\animation</Filter>
     </ClCompile>
     <ClCompile Include="src\animation\particle_animation.cpp">
       <Filter>src\animation</Filter>
@@ -736,9 +733,6 @@
     </ClCompile>
     <ClCompile Include="src\damage\damage.cpp">
       <Filter>src\damage</Filter>
-    </ClCompile>
-    <ClCompile Include="src\entities\entity.cpp">
-      <Filter>src\entities</Filter>
     </ClCompile>
     <ClCompile Include="src\entities\objects\campfire.cpp">
       <Filter>src\entities\objects</Filter>

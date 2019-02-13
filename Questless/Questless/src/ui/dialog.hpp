@@ -6,6 +6,7 @@
 
 #include "input_manager.hpp"
 
+#include "quantities/wall_time.hpp"
 #include "utility/reference.hpp"
 
 #include <SFML/Graphics.hpp>
@@ -25,8 +26,9 @@ namespace ql {
 		dialog(sf::Window const& window, rsrc::fonts const& fonts) : _window{window}, _fonts{fonts} {}
 
 		//! Updates the dialog state. To be called once per frame as long as this dialog is open.
+		//! @param elapsed_time The amount of time since the last update.
 		//! @return The state of this dialog after this update: either open or closed.
-		virtual state update(input_manager& im) = 0;
+		virtual state update(sec elapsed_time, input_manager& im) = 0;
 
 		//! Draws the dialog to the screen.
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;

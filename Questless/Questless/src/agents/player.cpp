@@ -69,7 +69,7 @@ namespace ql {
 					} else {
 						// Turn towards the chosen direction or move in that direction if already
 						// facing that way.
-						if (this->being.direction == move.direction) {
+						if (this->being.cond.direction == move.direction) {
 							return this->walk(move.direction, [this](action::result result) {
 								if (result == action::result::aborted) {
 									// Chosen action aborted. Player must try to act again.
@@ -143,7 +143,7 @@ namespace ql {
 	complete player::send_message(queries::message::query message, function<complete()> cont) {
 		using namespace queries::message;
 		using ret_t = std::array<sf::String, 2>;
-		auto [title, prompt] = match(message, //
+		auto [title, prompt] = match(message,
 			[&](arrow_miss const&) -> ret_t {
 				return {"Ranged Attack", "Miss!"};
 			},
@@ -302,7 +302,7 @@ namespace ql {
 	}
 
 	complete player::incant(gatestone& gatestone, std::function<complete(std::optional<magic::spell> const&)> cont) {
-		_dialogs.push_back(umake<qte::incant>(gatestone, std::move(cont)));
+		_dialogs.push_back(umake<qte::incant>(_window, _fonts, gatestone, std::move(cont)));
 		return complete{};
 	}
 }

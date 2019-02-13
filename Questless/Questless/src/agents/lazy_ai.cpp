@@ -10,7 +10,7 @@
 
 namespace ql {
 	complete lazy_ai::act() {
-		being.busy_time += tick{uniform(1, 3)};
+		being.cond.busy_time += tick{uniform(1, 3)};
 		return complete{};
 	}
 

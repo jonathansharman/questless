@@ -37,7 +37,7 @@ namespace ql {
 	complete agent::idle(action::cont cont) {
 		return query_count(queries::count::wait_time{}, 10, 0, std::nullopt, [this, cont](std::optional<int> duration) {
 			if (duration) {
-				this->being.busy_time += tick{*duration}; //! @todo Ticks query?
+				this->being.cond.busy_time += tick{*duration}; //! @todo Ticks query?
 				return cont(action::result::success);
 			} else {
 				return cont(action::result::aborted);
@@ -46,7 +46,7 @@ namespace ql {
 	}
 
 	complete agent::idle(tick duration) {
-		being.busy_time += duration;
+		being.cond.busy_time += duration;
 		return complete{};
 	}
 
@@ -59,9 +59,9 @@ namespace ql {
 			constexpr auto delay_per_turn = 1_tick;
 
 			auto const agility_factor = 100.0_agi / being.stats.a.agility.value();
-			auto const turn_delay = delay_per_turn * region_tile::distance(being.direction, direction);
-			being.busy_time += cancel::quantity_cast<tick>(agility_factor * (base_delay + turn_delay));
-			being.direction = direction;
+			auto const turn_delay = delay_per_turn * region_tile::distance(being.cond.direction, direction);
+			being.cond.busy_time += cancel::quantity_cast<tick>(agility_factor * (base_delay + turn_delay));
+			being.cond.direction = direction;
 
 			return cont(action::result::success);
 		} else {
@@ -78,12 +78,10 @@ namespace ql {
 			constexpr auto delay_per_turn = 1_tick;
 
 			auto const agility_factor = 100.0_agi / being.stats.a.agility.value();
-			if (being.region->try_move(being, being.coords.neighbor(direction))) {
-				auto const strafe_delay = delay_per_turn * region_tile::distance(being.direction, direction);
-				being.busy_time += cancel::quantity_cast<tick>(agility_factor * (base_delay + strafe_delay)); //! @todo
-																											  //! Account
-																											  //! for
-																											  //! terrain.
+			if (being.location.region->try_move(being, being.location.coords.neighbor(direction))) {
+				auto const strafe_delay = delay_per_turn * region_tile::distance(being.cond.direction, direction);
+				//! @todo Account for terrain.
+				being.cond.busy_time += cancel::quantity_cast<tick>(agility_factor * (base_delay + strafe_delay));
 
 				return cont(action::result::success);
 			}

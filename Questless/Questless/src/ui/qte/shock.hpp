@@ -16,7 +16,7 @@ namespace ql::qte {
 		//! @param cont The dialog continuation function.
 		shock(sf::Window const& window, rsrc::fonts const& fonts, region_tile::point target_coords, std::function<void(double)> cont);
 
-		state update(input_manager& im) final;
+		state update(sec elapsed_time, input_manager& im) final;
 
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 

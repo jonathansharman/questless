@@ -15,14 +15,16 @@
 
 namespace ql::effects {
 	//! An in-game effect perceivable by beings, such as light and sound stimuli.
-	using effect = std::variant<arrow_attack, injury, lightning_bolt, telescope>;
+	struct effect {
+		std::variant<arrow_attack, injury, lightning_bolt, telescope> value;
+
+		//! The coordinates from which @p effect originates.
+		region_tile::point origin() const;
+
+		//! The maximum distance from the origin at which @p effect may be perceived.
+		span range() const;
+	};
 
 	//! @todo Should effects have an origin? If so, find a good way to factor it out so it's not duplicated accross
 	//! subtypes.
-
-	//! The coordinates from which @p effect originates.
-	region_tile::point origin(effect const& effect);
-
-	//! The maximum distance from the origin at which @p effect may be perceived.
-	span range(effect const& effect);
 }

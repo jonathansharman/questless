@@ -4,40 +4,42 @@
 
 #include "entities/beings/being.hpp"
 
+#include "agents/agent.hpp"
 #include "effects/effect.hpp"
 #include "entities/beings/body.hpp"
 #include "entities/beings/statuses/status.hpp"
 #include "entities/objects/corpse.hpp"
 #include "game.hpp"
-#include "agents/agent.hpp"
 #include "utility/io.hpp"
 #include "utility/random.hpp"
-#include "world/section.hpp"
 #include "world/region.hpp"
+#include "world/section.hpp"
+
+#include <numeric>
 
 using std::function;
 
 namespace ql {
-	being::being
-		( const function<uptr<ql::agent>(being&)>& make_agent
-		, ql::id<being> id
-		, ql::body body
-		, function<stats::being()> const& make_base_stats
-		)
-		: entity{}
-		, id{id}
-		, body{std::move(body)}
-		, base_stats{make_base_stats()}
+	being::being(const function<uptr<ql::agent>(being&)>& make_agent, ql::id<being> id, ql::species species)
+		: id{id}
+		, species{std::move(species)}
+		, body{this->species.make_body(id)}
+		, base_stats{this->species.make_base_stats()}
 		, stats{base_stats}
-		, energy{[] { return 0.0_ep; }, [this] { return stats.a.stamina; }}
-		, direction{static_cast<region_tile::direction>(uniform(1, 6))}
-		, _agent{make_agent(*this)}
+		, cond{stats}
+		, _agent{make_agent(*this)} //
 	{
 		refresh_stats();
-		energy = stats.a.stamina;
 
-		// Only set busy time mutator after initialization so that it won't try to access the being's region before it's placed in one.
-		busy_time.set_mutator(busy_time_mutator(), false);
+		cond.energy = stats.a.stamina;
+		cond.energy.lower_bound_getter = [] { return 0.0_ep; };
+		cond.energy.upper_bound_getter = [this] { return stats.a.stamina; };
+
+		cond.direction = static_cast<region_tile::direction>(uniform(1, 6));
+
+		// Only set busy time mutator after initialization so that it won't try to access the being's region before it's
+		// placed in one.
+		cond.busy_time.set_mutator(busy_time_mutator(), false);
 	}
 
 	stats::being being::load_stats(char const* filepath) {
@@ -120,7 +122,7 @@ namespace ql {
 
 	void being::update(tick elapsed) {
 		refresh_stats();
-		
+
 		// Update status modifiers.
 		for (auto& status : _statuses) {
 			status->update(*this, elapsed);
@@ -159,7 +161,8 @@ namespace ql {
 			constexpr double stage_2_max = 0.3;
 			constexpr double stage_3_max = 0.4;
 
-			double const pct_blood_lost = 1.0 - (body.blood.value() / body.total_vitality() / body_part::blood_per_vitality).value;
+			double const pct_blood_lost = 1.0 -
+										  (body.blood.value() / body.total_vitality() / body_part::blood_per_vitality).value;
 
 			// No effects for stage 1 blood loss.
 			if (pct_blood_lost > stage_1_max) {
@@ -245,61 +248,58 @@ namespace ql {
 			//! @todo Add effects for other damage types. Balance numbers.
 			struct damage_effect_applier {
 				body_part& body_part;
-				void operator ()(dmg::slash const& slash) {
+				void operator()(dmg::slash const& slash) {
 					constexpr auto bleeding_per_slash = 0.1_blood_per_tick / 1.0_slash;
 					body_part.bleeding += slash * bleeding_per_slash;
 				}
-				void operator ()(dmg::pierce const& pierce) {
+				void operator()(dmg::pierce const& pierce) {
 					constexpr auto bleeding_per_pierce = 0.2_blood_per_tick / 1.0_pierce;
 					body_part.bleeding += pierce * bleeding_per_pierce;
 				}
-				void operator ()(dmg::cleave const& cleave) {
+				void operator()(dmg::cleave const& cleave) {
 					constexpr auto bleeding_per_cleave = 0.1_blood_per_tick / 1.0_cleave;
 					body_part.bleeding += cleave * bleeding_per_cleave;
 				}
-				void operator ()(dmg::bludgeon const& bludgeon) {
+				void operator()(dmg::bludgeon const& bludgeon) {
 					constexpr auto bleeding_per_bludgeon = 0.05_blood_per_tick / 1.0_bludgeon;
 					body_part.bleeding += bludgeon * bleeding_per_bludgeon;
 				}
-				void operator ()(dmg::burn const& burn) {
+				void operator()(dmg::burn const& burn) {
 					constexpr auto cauterization_per_burn = 1.0_blood_per_tick / 1.0_burn;
 					body_part.bleeding -= burn * cauterization_per_burn;
 				}
-				void operator ()(dmg::freeze const& /*freeze*/) {}
-				void operator ()(dmg::blight const& /*blight*/) {}
-				void operator ()(dmg::poison const& /*poison*/) {}
-				void operator ()(dmg::shock const& /*shock*/) {}
+				void operator()(dmg::freeze const&) {}
+				void operator()(dmg::blight const&) {}
+				void operator()(dmg::poison const&) {}
+				void operator()(dmg::shock const&) {}
 			};
 			for (dmg::damage const& damage_part : damage.parts()) {
-				std::visit([&](auto const& arg) {
-					SWITCH_TYPE(arg) {
-						MATCH_TYPE(dmg::slash) {
-							constexpr auto bleeding_per_slash = 0.1_blood_per_tick / 1.0_slash;
-							target_part.bleeding += arg * bleeding_per_slash;
-						}
-						MATCH_TYPE(dmg::pierce) {
-							constexpr auto bleeding_per_pierce = 0.2_blood_per_tick / 1.0_pierce;
-							target_part.bleeding += arg * bleeding_per_pierce;
-						}
-						MATCH_TYPE(dmg::cleave) {
-							constexpr auto bleeding_per_cleave = 0.1_blood_per_tick / 1.0_cleave;
-							target_part.bleeding += arg * bleeding_per_cleave;
-						}
-						MATCH_TYPE(dmg::bludgeon) {
-							constexpr auto bleeding_per_bludgeon = 0.05_blood_per_tick / 1.0_bludgeon;
-							target_part.bleeding += arg * bleeding_per_bludgeon;
-						}
-						MATCH_TYPE(dmg::burn) {
-							constexpr auto cauterization_per_burn = 1.0_blood_per_tick / 1.0_burn;
-							target_part.bleeding -= arg * cauterization_per_burn;
-						}
-						MATCH_TYPE(dmg::freeze) { [[maybeunused]] arg; }
-						MATCH_TYPE(dmg::blight) { [[maybeunused]] arg; }
-						MATCH_TYPE(dmg::poison) { [[maybeunused]] arg; }
-						MATCH_TYPE(dmg::shock) { [[maybeunused]] arg; }
-					}
-				}, damage_part);
-			}
+				match(damage_part,
+					[&](dmg::slash const& slash) {
+						constexpr auto bleeding_per_slash = 0.1_blood_per_tick / 1.0_slash;
+						target_part.bleeding += slash * bleeding_per_slash;
+					},
+					[&](dmg::pierce const& pierce) {
+						constexpr auto bleeding_per_pierce = 0.2_blood_per_tick / 1.0_pierce;
+						target_part.bleeding += pierce * bleeding_per_pierce;
+					},
+					[&](dmg::cleave const& cleave) {
+						constexpr auto bleeding_per_cleave = 0.1_blood_per_tick / 1.0_cleave;
+						target_part.bleeding += cleave * bleeding_per_cleave;
+					},
+					[&](dmg::bludgeon const& bludgeon) {
+						constexpr auto bleeding_per_bludgeon = 0.05_blood_per_tick / 1.0_bludgeon;
+						target_part.bleeding += bludgeon * bleeding_per_bludgeon;
+					},
+					[&](dmg::burn const& burn) {
+						constexpr auto cauterization_per_burn = 1.0_blood_per_tick / 1.0_burn;
+						target_part.bleeding -= burn * cauterization_per_burn;
+					},
+					[&](dmg::freeze const&) {},
+					[&](dmg::blight const&) {},
+					[&](dmg::poison const&) {},
+					[&](dmg::shock const&) {});
+			};
 		}
 
 		// Part loses health.
@@ -315,7 +315,7 @@ namespace ql {
 		}
 
 		// Add injury effect.
-		region->add_effect(smake<injury_effect>(coords, damage, id, target_part.id, opt_source_id));
+		region->add_effect(injury_effect(coords, damage, id, target_part.id, opt_source_id));
 
 		// Target has taken damage.
 		if (!after_take_damage(damage, target_part, opt_source_id)) return;
@@ -334,7 +334,8 @@ namespace ql {
 			// Target's death succeeded.
 			if (corporeal()) {
 				// Spawn corpse.
-				ql::region& corpse_region = *region; // Save region since the being's region pointer will be nulled when it's removed.
+				ql::region& corpse_region = *region; // Save region since the being's region pointer will be nulled when
+													 // it's removed.
 				region->remove(*this);
 				auto corpse = umake<ql::corpse>(id);
 				if (!corpse_region.try_add(*corpse, coords)) {
@@ -348,15 +349,15 @@ namespace ql {
 			// Source, if present, has killed target.
 			if (!source || source->after_kill(id)) {
 				// Target has died.
-				if (!after_die(opt_source_id)) return;
-				else return;
+				if (!after_die(opt_source_id))
+					return;
+				else
+					return;
 			}
 		}
 	}
 
 	void being::heal(ql::health amount, body_part& part, std::optional<ql::id<being>> opt_source_id) {
-		//! @todo heal the part, if present.
-
 		// Get source.
 		being* source = opt_source_id ? the_game().beings.ptr(*opt_source_id) : nullptr;
 
@@ -369,9 +370,7 @@ namespace ql {
 				// Target has received healing.
 				if (after_receive_heal(amount, part, opt_source_id)) {
 					// Source has given healing.
-					if (!source || source->after_give_heal(amount, part, id)) {
-						return;
-					}
+					if (!source || source->after_give_heal(amount, part, id)) { return; }
 				}
 			}
 		}
@@ -383,17 +382,14 @@ namespace ql {
 		ref.apply(*this);
 	}
 
-	////////////////////////////////
-	// Stats and Status Modifiers //
-	////////////////////////////////
-
 	stats::being being::get_stats() {
 		stats::being result = base_stats;
 
 		// Add body part stats to being stats.
-		result.a = std::accumulate(body.parts().begin(), body.parts().end(), result.a, [](stats::aggregate acc, body_part const& p) {
-			return acc + p.stats.a;
-		});
+		result.a = std::accumulate(
+			body.parts().begin(), body.parts().end(), result.a, [](stats::aggregate acc, body_part const& p) {
+				return acc + p.stats.a;
+			});
 
 		// Apply status stat modifiers after body part modifiers.
 		for (auto const& status : _statuses) {
@@ -402,13 +398,11 @@ namespace ql {
 
 		// Apply condition effects.
 
-		if (weary()) {
-			result.a.strength *= 0.5;
-		}
+		if (weary()) { result.a.strength *= 0.5; }
 		if (sleepy()) {
 			result.a.agility *= 0.5;
 			//! @todo How to apply sleepy penalty to body part dexterities?
-			//result.dexterity *= 0.5;
+			// result.dexterity *= 0.5;
 			result.a.intellect *= 0.75;
 		}
 		if (starving()) {

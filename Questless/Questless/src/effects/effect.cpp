@@ -6,14 +6,14 @@
 
 #include "effect.hpp"
 
-#include "all_effects.hpp"
+#include "utility/visitation.hpp"
 
 namespace ql::effects {
-	region_tile::point origin(effect const& effect) {
-		return std::visit([](auto const& effect) { return effect.origin; }, effect);
+	region_tile::point effect::origin() const {
+		return match(value, [](auto const& effect) { return effect.origin; });
 	}
 
-	span range(effect const& effect) {
-		return std::visit([](auto const& effect) { return effect.range(); }, effect);
+	span effect::range() const {
+		return match(value, [](auto const& effect) { return effect.range(); });
 	}
 }

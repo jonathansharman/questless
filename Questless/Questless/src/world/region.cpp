@@ -3,29 +3,28 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
 #include <filesystem>
+#include <fstream>
 #include <limits.h>
 #include <sstream>
-#include <fstream>
 
 #include "agents/agent.hpp"
-#include "agents/lazy_ai.hpp"
 #include "agents/basic_ai.hpp"
+#include "agents/lazy_ai.hpp"
 #include "effects/effect.hpp"
 #include "entities/all_entities.hpp"
 #include "entities/beings/being.hpp"
 #include "entities/objects/object.hpp"
 #include "game.hpp"
 #include "items/weapons/quarterstaff.hpp"
-#include "units/constants.hpp"
 #include "utility/random.hpp"
 #include "utility/utility.hpp"
 #include "world/light_source.hpp"
 #include "world/region.hpp"
 #include "world/tile.hpp"
 
+using std::function;
 using std::string;
 using std::vector;
-using std::function;
 namespace fs = std::filesystem;
 
 using namespace media;
@@ -33,8 +32,8 @@ using namespace media;
 namespace ql {
 	bool turn_order_function(being const& first, being const& second) {
 		// Sort beings in the turn queue by lower busy-time first, then lower entity ID.
-		tick f_b = first.busy_time;
-		tick s_b = second.busy_time;
+		tick f_b = first.cond.busy_time;
+		tick s_b = second.cond.busy_time;
 		return f_b < s_b || (f_b == s_b && first.id < second.id);
 	}
 
@@ -44,8 +43,7 @@ namespace ql {
 		, _time_of_day{get_time_of_day()}
 		, _period_of_day{get_period_of_day()}
 		, _turn_queue{turn_order_function}
-		, _ambient_illuminance{get_ambient_illuminance()}
-	{
+		, _ambient_illuminance{get_ambient_illuminance()} {
 		auto const r_radius = 1_section_span;
 		auto const q_radius = 1_section_span;
 
@@ -57,14 +55,15 @@ namespace ql {
 				string data;
 				for (span q = 0_span; q < section::diameter; ++q) {
 					for (span r = 0_span; r < section::diameter; ++r) {
-						//if (r == section::diameter - 1 || q == section::diameter - 1) {
-						//	data += std::to_string(static_cast<int>(ql::subtype::edge)) + ' ' + std::to_string(0.0) + ' ';
-						//} else {
-							data += std::to_string(uniform(0, static_cast<int>(tile_subtype::TILE_SUBTYPE_COUNT) - 1)) + ' ' + std::to_string(0.0) + ' ';
+						// if (r == section::diameter - 1 || q == section::diameter - 1) {
+						//	data += std::to_string(static_cast<int>(ql::subtype::edge)) + ' ' + std::to_string(0.0) + '
+						//'; } else {
+						data += std::to_string(uniform(0, static_cast<int>(tile_subtype::TILE_SUBTYPE_COUNT) - 1)) +
+								' ' + std::to_string(0.0) + ' ';
 						//}
 
 						// Every tile is snow (nice for testing lighting).
-						//data += std::to_string(static_cast<int>(ql::subtype::snow)) + " 0 ";
+						// data += std::to_string(static_cast<int>(ql::subtype::snow)) + " 0 ";
 					}
 				}
 				std::istringstream data_stream{data};
@@ -96,7 +95,7 @@ namespace ql {
 		, _time_of_day{get_time_of_day()}
 		, _period_of_day{get_period_of_day()}
 		, _turn_queue{turn_order_function}
-		, _ambient_illuminance{get_ambient_illuminance()}
+		, _ambient_illuminance{get_ambient_illuminance()} //
 	{
 		fs::path saves_dir{"saves"};
 		fs::path save_filename{save_name};
@@ -122,18 +121,14 @@ namespace ql {
 			region_section::point section_coords{section_q, section_r};
 
 			std::ifstream data_stream{(region_path / it->path()).string()};
-			if (data_stream.fail()) {
-				throw std::logic_error("Could not open section file.");
-			}
+			if (data_stream.fail()) { throw std::logic_error("Could not open section file."); }
 			_section_map.insert(std::make_pair(section_coords, section{section_coords, data_stream}));
 		}
 
 		fs::path entities_filename{"entities"};
 		std::ifstream fin;
 		fin.open((region_path / entities_filename).string());
-		if (fin.fail()) {
-			throw std::logic_error("Could not open region's entities file.");
-		}
+		if (fin.fail()) { throw std::logic_error("Could not open region's entities file."); }
 		string line;
 		while (std::getline(fin, line)) {
 			std::istringstream sin(line, std::ios::hexfloat);
@@ -141,10 +136,9 @@ namespace ql {
 			unsigned entity_id;
 			sin >> entity_id;
 			switch (static_cast<entity_subtype>(entity_id)) {
-				case entity_subtype::goblin_class:
-				{
-					//being& goblin = the_game().beings.add(umake<ql::goblin>(sin));
-					//if (!try_add(goblin, goblin.coords)) {
+				case entity_subtype::goblin_class: {
+					// being& goblin = the_game().beings.add(umake<ql::goblin>(sin));
+					// if (!try_add(goblin, goblin.coords)) {
 					//	throw std::logic_error("Overlapping beings in save file.");
 					//}
 					break;
@@ -197,9 +191,13 @@ namespace ql {
 #endif
 	}
 
-	void region::remove_from_turn_queue(being& being) { if (being.busy_time <= 0_tick) _turn_queue.erase(being); }
+	void region::remove_from_turn_queue(being& being) {
+		if (being.cond.busy_time <= 0_tick) _turn_queue.erase(being);
+	}
 
-	void region::add_to_turn_queue(being& being) { if (being.busy_time <= 0_tick) _turn_queue.insert(being); }
+	void region::add_to_turn_queue(being& being) {
+		if (being.cond.busy_time <= 0_tick) _turn_queue.insert(being);
+	}
 
 	being* region::next_ready_being() {
 		if (_turn_queue.empty()) {
@@ -245,9 +243,8 @@ namespace ql {
 
 	bool region::try_add(being& being, region_tile::point region_tile_coords) {
 		if (section* section = containing_section(region_tile_coords)) {
-			being.region = this;
-			being.section = section;
-			being.coords = region_tile_coords;
+			being.location.region = this;
+			being.location.coords = region_tile_coords;
 
 			add_to_turn_queue(being);
 			return section->try_add(being);
@@ -259,9 +256,8 @@ namespace ql {
 
 	bool region::try_add(ql::object& object, region_tile::point region_tile_coords) {
 		if (section* section = containing_section(region_tile_coords)) {
-			object.region = this;
-			object.section = section;
-			object.coords = region_tile_coords;
+			object.location.region = this;
+			object.location.coords = region_tile_coords;
 
 			return section->try_add(object);
 		} else {
@@ -295,7 +291,7 @@ namespace ql {
 				}
 
 				src_section.remove(being);
-				being.coords = region_tile_coords;
+				being.location.coords = region_tile_coords;
 				return dst_section->try_add(being);
 			} else {
 				//! @todo Need to deal with null destination case.
@@ -313,56 +309,53 @@ namespace ql {
 				}
 			}
 			src_section.remove(being);
-			being.coords = region_tile_coords;
+			being.location.coords = region_tile_coords;
 			return src_section.try_add(being);
 		}
 		return true;
 	}
 
 	bool region::try_move(ql::object& object, region_tile::point region_tile_coords) {
-		section& src_section = *object.section;
-		section* dst_section = containing_section(region_tile_coords);
-		if (dst_section != &src_section) {
-			if (dst_section != nullptr) {
-				if (dst_section->being_id(region_tile_coords) || dst_section->object_id(region_tile_coords)) {
+		if (section* src_section = containing_section(object.location.coords)) {
+			section* dst_section = containing_section(region_tile_coords);
+			if (dst_section != src_section) {
+				if (dst_section != nullptr) {
+					if (dst_section->being_id(region_tile_coords) || dst_section->object_id(region_tile_coords)) {
+						// Collision. Prevent movement.
+						return false;
+					}
+					src_section->remove(object);
+					object.location.coords = region_tile_coords;
+					return dst_section->try_add(object);
+				} else {
+					//! @todo Need to deal with null destination case.
+					return false;
+				}
+			} else {
+				if (src_section->object_id(region_tile_coords)) {
 					// Collision. Prevent movement.
 					return false;
 				}
-				src_section.remove(object);
-				object.coords = region_tile_coords;
-				return dst_section->try_add(object);
-			} else {
-				//! @todo Need to deal with null destination case.
-				return false;
+				src_section->remove(object);
+				object.location.coords = region_tile_coords;
+				return src_section->try_add(object);
 			}
-		} else {
-			if (src_section.object_id(region_tile_coords)) {
-				// Collision. Prevent movement.
-				return false;
-			}
-			src_section.remove(object);
-			object.coords = region_tile_coords;
-			return src_section.try_add(object);
 		}
 	}
-	
+
 	void region::remove(being& being) {
-		section& section = *being.section;
-
-		being.region = nullptr;
-		being.section = nullptr;
-
-		remove_from_turn_queue(being);
-		section.remove(being);
+		if (section* section = containing_section(being.location.coords)) {
+			being.location.region = nullptr;
+			remove_from_turn_queue(being);
+			section->remove(being);
+		}
 	}
 
 	void region::remove(ql::object& object) {
-		section& section = *object.section;
-
-		object.region = nullptr;
-		object.section = nullptr;
-
-		section.remove(object);
+		if (section* section = containing_section(object.location.coords)) {
+			object.location.region = nullptr;
+			section->remove(object);
+		}
 	}
 
 	void region::add(light_source const& light_source) {
@@ -380,9 +373,7 @@ namespace ql {
 		for (section_span section_q = min_section_coords.q; section_q <= max_section_coords.q; ++section_q) {
 			for (section_span section_r = min_section_coords.r; section_r <= max_section_coords.r; ++section_r) {
 				region_section::point section_coords{section_q, section_r};
-				if (section* s = section_at(section_coords)) {
-					s->add(light_source);
-				}
+				if (section* s = section_at(section_coords)) { s->add(light_source); }
 			}
 		}
 	}
@@ -401,9 +392,7 @@ namespace ql {
 		for (section_span section_q = max_section_coords.q; section_q <= max_section_coords.q; ++section_q) {
 			for (section_span section_r = max_section_coords.r; section_r <= max_section_coords.r; ++section_r) {
 				region_section::point section_coords{section_q, section_r};
-				if (section* s = section_at(section_coords)) {
-					s->remove(light_source);
-				}
+				if (section* s = section_at(section_coords)) { s->remove(light_source); }
 			}
 		}
 	}
@@ -426,12 +415,8 @@ namespace ql {
 		auto line = start.line_to(end);
 		double result = 1.0;
 		for (std::size_t i = 1; i < line.size() - 1; ++i) {
-			if (being const* other = the_game().region().being_at(line[i])) {
-				result *= other->transparency();
-			}
-			if (object const* other = the_game().region().object_at(line[i])) {
-				result *= other->transparency();
-			}
+			if (being const* other = the_game().region().being_at(line[i])) { result *= other->transparency(); }
+			if (object const* other = the_game().region().object_at(line[i])) { result *= other->transparency(); }
 		}
 		return result;
 	}
@@ -455,14 +440,10 @@ namespace ql {
 			}
 		});
 		for (id<being> being_id : beings_to_update) {
-			if (being* being = the_game().beings.ptr(being_id)) {
-				being->update(elapsed);
-			}
+			if (being* being = the_game().beings.ptr(being_id)) { being->update(elapsed); }
 		}
 		for (id<object> object_id : objects_to_update) {
-			if (object* object = the_game().objects.ptr(object_id)) {
-				object->update(elapsed);
-			}
+			if (object* object = the_game().objects.ptr(object_id)) { object->update(elapsed); }
 		}
 	}
 
@@ -512,13 +493,11 @@ namespace ql {
 		switch (_period_of_day) {
 			case period_of_day::morning:
 				[[fallthrough]];
-			case period_of_day::afternoon:
-			{
+			case period_of_day::afternoon: {
 				double const daylight_progress = sin((_time / _day_length).value * units::constants::tau);
 				return dawn_and_dusk_light + daylight_progress * (noon_light - dawn_and_dusk_light);
 			}
-			case period_of_day::dusk:
-			{
+			case period_of_day::dusk: {
 				double const dusk_progress = ((_time_of_day - _end_of_afternoon) / (_end_of_dusk - _end_of_afternoon)).value;
 				return (1.0 - dusk_progress) * dawn_and_dusk_light + dusk_progress * night_light;
 			}
@@ -526,12 +505,12 @@ namespace ql {
 				[[fallthrough]];
 			case period_of_day::night:
 				return night_light;
-			case period_of_day::dawn:
-			{
+			case period_of_day::dawn: {
 				double const dawn_progress = ((_time_of_day - _end_of_night) / (_day_length - _end_of_night)).value;
 				return dawn_progress * dawn_and_dusk_light + (1.0 - dawn_progress) * night_light;
 			}
-			default: throw std::logic_error{"Invalid period of day."};
+			default:
+				throw std::logic_error{"Invalid period of day."};
 		}
 	}
 
@@ -539,9 +518,7 @@ namespace ql {
 		for (section_span r = -_loaded_sections_q_radius; r <= _loaded_sections_q_radius; ++r) {
 			for (section_span q = -_loaded_sections_r_radius; q <= _loaded_sections_r_radius; ++q) {
 				region_section::point section_coords{q, r};
-				if (section* s = section_at(section_coords)) {
-					f(*s);
-				}
+				if (section* s = section_at(section_coords)) { f(*s); }
 			}
 		}
 	}

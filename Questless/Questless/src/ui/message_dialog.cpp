@@ -5,10 +5,8 @@
 #include "message_dialog.hpp"
 
 namespace ql {
-	dialog::state message_dialog::update(input_manager& im) {
-		if(im.any_pressed()) {
-			return _cont();
-		}
+	dialog::state message_dialog::update(sec elapsed_time, input_manager& im) {
+		if (im.any_pressed()) { return _cont(); }
 		return state::open;
 	}
 

@@ -8,9 +8,10 @@
 #include "entities/beings/being.hpp"
 #include "entities/objects/object.hpp"
 #include "scenes/scene.hpp"
-#include "ui/scenes/splash.hpp"
+#include "scenes/splash.hpp"
 #include "utility/io.hpp"
 #include "utility/random.hpp"
+#include "utility/visitation.hpp"
 #include "world/coordinates.hpp"
 #include "world/light_source.hpp"
 
@@ -64,8 +65,12 @@ namespace ql {
 	}
 
 	void game::run() {
-		while (_scene->update(_im) == scene::update_result::continue_game) {
-			_window.draw(*_scene);
+		bool running = true;
+		while (running) {
+			match(_scene->update(_im), //
+				[&](scene::continue_scene) { _window.draw(*_scene); },
+				[&](scene::switch_scene ss) { _scene = std::move(ss.new_scene); },
+				[&](scene::game_over) { running = false; });
 		}
 	}
 }

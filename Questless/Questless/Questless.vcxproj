@@ -367,7 +367,6 @@
     <ClInclude Include="src\animation\animation.hpp" />
     <ClInclude Include="src\animation\animators.hpp" />
     <ClInclude Include="src\animation\bleeding.hpp" />
-    <ClInclude Include="src\animation\entity_animator.hpp" />
     <ClInclude Include="src\animation\flame.hpp" />
     <ClInclude Include="src\animation\item_animator.hpp" />
     <ClInclude Include="src\animation\particles\arrow_particle.hpp" />
@@ -402,8 +401,10 @@
     <ClInclude Include="src\entities\beings\being.hpp" />
     <ClInclude Include="src\entities\beings\body.hpp" />
     <ClInclude Include="src\entities\beings\body_part.hpp" />
+    <ClInclude Include="src\entities\beings\conditions.hpp" />
     <ClInclude Include="src\entities\beings\goblinoids\goblin.hpp" />
     <ClInclude Include="src\entities\beings\human.hpp" />
+    <ClInclude Include="src\entities\beings\species.hpp" />
     <ClInclude Include="src\entities\beings\stats\aggregate.hpp" />
     <ClInclude Include="src\entities\beings\stats\modifier.hpp" />
     <ClInclude Include="src\entities\beings\stats\part.hpp" />
@@ -422,7 +423,6 @@
     <ClInclude Include="src\entities\beings\statuses\status.hpp" />
     <ClInclude Include="src\entities\beings\world_view.hpp" />
     <ClInclude Include="src\entities\entity.hpp" />
-    <ClInclude Include="src\entities\entity_visitor.hpp" />
     <ClInclude Include="src\entities\objects\campfire.hpp" />
     <ClInclude Include="src\entities\objects\corpse.hpp" />
     <ClInclude Include="src\entities\objects\item_box.hpp" />
@@ -528,7 +528,6 @@
     <ClCompile Include="src\animation\animation.cpp" />
     <ClCompile Include="src\animation\animators.cpp" />
     <ClCompile Include="src\animation\bleeding.cpp" />
-    <ClCompile Include="src\animation\entity_animator.cpp" />
     <ClCompile Include="src\animation\flame.cpp" />
     <ClCompile Include="src\animation\item_animator.cpp" />
     <ClCompile Include="src\animation\particles\arrow_particle.cpp" />
@@ -561,7 +560,6 @@
     <ClCompile Include="src\entities\beings\statuses\poisoned.cpp" />
     <ClCompile Include="src\entities\beings\statuses\status.cpp" />
     <ClCompile Include="src\entities\beings\world_view.cpp" />
-    <ClCompile Include="src\entities\entity.cpp" />
     <ClCompile Include="src\entities\objects\campfire.cpp" />
     <ClCompile Include="src\entities\objects\object.cpp" />
     <ClCompile Include="src\game.cpp" />

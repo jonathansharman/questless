@@ -14,11 +14,14 @@ namespace ql::qte {
 	struct incant : dialog {
 		//! @param gatestone The gatestone used for incantation.
 		//! @param cont The dialog continuation function.
-		incant(gatestone& gatestone, std::function<void(std::optional<magic::spell> const&)> cont);
+		incant(sf::Window const& window,
+			rsrc::fonts const& fonts,
+			gatestone& gatestone,
+			std::function<void(std::optional<magic::spell> const&)> cont);
 
 		~incant();
 
-		state update(input_manager& im) final;
+		state update(sec elapsed_time, input_manager& im) final;
 
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 
@@ -35,7 +38,8 @@ namespace ql::qte {
 
 		bool _begun = false;
 
-		sec _elapsed_time = 0.0_s;
+		//! Amount of time since the dialog started.
+		sec _total_elapsed_time = 0.0_s;
 
 		std::vector<note> _notes;
 

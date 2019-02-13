@@ -10,21 +10,19 @@
 using namespace units;
 
 namespace ql {
-	black_magic_particle::black_magic_particle() : particle
-		{ world_space::vector::zero()
-		, world_space::velocity{world_space::vector{random_angle(), uniform(5.0, 25.0)}}
-		, world_space::acceleration::zero()
-		, random_angle()
-		, uniform(-1.0, 1.0) * _dtheta_max / 1.0s
-		, 1.0
-		, world_space::scale_velocity{0.0}
-		, 2.0s
-		}
-	{}
+	black_magic_particle::black_magic_particle()
+		: particle{world_space::vector::zero(),
+			  world_space::velocity{world_space::vector{random_angle(), uniform(5.0, 25.0)}},
+			  world_space::acceleration::zero(),
+			  random_angle(),
+			  uniform(-1.0, 1.0) * _dtheta_max / 1.0s,
+			  1.0,
+			  world_space::scale_velocity{0.0},
+			  2.0s} {}
 
-	void black_magic_particle::particle_subupdate() {
-		_velocity *= 1.0 + _acceleration_factor * game::target_frame_duration;
-		_velocity.step().rotate(world_space::radians{_turn_rate * game::target_frame_duration});
+	void black_magic_particle::particle_subupdate(sec elapsed_time) {
+		velocity *= 1.0 + _acceleration_factor * elapsed_time;
+		velocity.rotate(_turn_rate * elapsed_time);
 	}
 
 	media::texture const& black_magic_particle::texture() const {

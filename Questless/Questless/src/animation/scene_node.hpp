@@ -48,11 +48,11 @@ namespace ql {
 		}
 
 		void animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const final {
-			for (auto& child : ranges::reverse_view{back_children}) {
+			for (auto& child : back_children | ranges::view::reverse) {
 				target.draw(*child, states);
 			}
 			if (animation) { target.draw(*animation, states); }
-			for (auto& child : ranges::reverse_view{front_children}) {
+			for (auto& child : front_children | ranges::view::reverse) {
 				target.draw(*child, states);
 			}
 		}
