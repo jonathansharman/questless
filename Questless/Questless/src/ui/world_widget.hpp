@@ -4,10 +4,11 @@
 
 #pragma once
 
-#include "sprite_animation.hpp"
+#include "being_widget.hpp"
+#include "object_widget.hpp"
+#include "tile_widget.hpp"
 
-#include "rsrc/entity.hpp"
-#include "rsrc/tile.hpp"
+#include "animation/sprite_animation.hpp"
 #include "rsrc/world_renderer.hpp"
 #include "utility/id.hpp"
 #include "utility/reference.hpp"
@@ -15,14 +16,16 @@
 
 #include <optional>
 #include <unordered_map>
-#include <variant>
 
 namespace ql {
 	namespace effects {
 		struct effect;
 	}
 	namespace rsrc {
+		struct entity;
 		struct fonts;
+		struct particle;
+		struct tile;
 	}
 	struct being;
 	struct entity;
@@ -31,10 +34,16 @@ namespace ql {
 	struct tile;
 	struct world_view;
 
-	//! Draws the elements of the world that the player can see.
-	struct world_renderer {
+	//! Handles interaction with the world, as the player sees it.
+	struct world_widget {
 		//! @param world_view The initial world view to render.
-		world_renderer(rsrc::fonts const& fonts, world_view const& world_view);
+		world_widget( //
+			world_view const& world_view,
+			rsrc::world_renderer resources,
+			rsrc::entity const& entity_resources,
+			rsrc::fonts const& fonts,
+			rsrc::tile const& tile_resources,
+			rsrc::particle const& particle_resources);
 
 		//! Updates the world renderer's world view.
 		//! @param world_view The new world view to render.
@@ -60,20 +69,17 @@ namespace ql {
 		void clear_highlight_predicate();
 
 	private:
-		using entity_id_var_t = std::variant<id<being>, id<object>>;
-
 		rsrc::world_renderer _resources;
-		rsrc::entity _entity_resources;
-		rsrc::tile _tile_resources;
+		rsrc::entity const& _entity_resources;
 		rsrc::fonts const& _fonts;
-
-		static entity_id_var_t get_entity_id_var(entity const& entity);
-		static entity const* get_entity_cptr(entity_id_var_t id);
+		rsrc::tile const& _tile_resources;
+		rsrc::particle const& _particle_resources;
 
 		std::reference_wrapper<world_view const> _world_view;
 
-		std::unordered_map<id<tile>, uptr<animation>> _tile_animations;
-		std::unordered_map<entity_id_var_t, uptr<animation>> _entity_animations;
+		std::unordered_map<id<tile>, tile_widget> _tile_widgets;
+		std::unordered_map<id<being>, being_widget> _being_widgets;
+		std::unordered_map<id<object>, object_widget> _object_widgets;
 
 		std::vector<uptr<animation>> _effect_animations;
 

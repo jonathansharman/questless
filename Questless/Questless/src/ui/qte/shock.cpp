@@ -10,7 +10,7 @@
 using namespace media;
 
 namespace ql::qte {
-	shock::shock(sf::Window const& window, fonts const& fonts, region_tile::point target_coords, std::function<void(double)> cont)
+	shock::shock(sf::Window const& window, rsrc::fonts const& fonts, region_tile::point target_coords, std::function<void(double)> cont)
 		: dialog{window, fonts}
 		, _target_point{to_world(target_coords)}
 		, _cont{std::move(cont)} //
@@ -19,13 +19,17 @@ namespace ql::qte {
 		_prompt = make_prompt("Circle the target counter-clockwise as fast as you can!");
 	}
 
-	dialog::state shock::update(sec elapsed_time, input_manager& im) {
+	void shock::update(sec elapsed_time, input_manager& im) {
 		constexpr auto time_limit = 5.0_s;
 		constexpr int charges_per_quadrant = 4;
 		constexpr double expected_charges = charges_per_quadrant * 70.0;
 
 		_elapsed_time += target_frame_duration;
-		if (_elapsed_time > time_limit) { return _cont(_charges.size() / expected_charges); }
+		if (_elapsed_time > time_limit) {
+			_cont(_charges.size() / expected_charges);
+			close();
+			return;
+		}
 
 		bool accelerate = false;
 		{ // Acclerate only when the mouse moves to the next quadrant over.

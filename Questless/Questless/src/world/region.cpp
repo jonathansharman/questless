@@ -275,7 +275,12 @@ namespace ql {
 	}
 
 	bool region::try_move(being& being, region_tile::point region_tile_coords) {
-		section& src_section = *being.section;
+		if (being.location.region != this) {
+			// The being is not in this region to begin with.
+			return false;
+		}
+
+		section& src_section = *containing_section(being.location.coords);
 		section* dst_section = containing_section(region_tile_coords);
 		if (dst_section != &src_section) {
 			if (dst_section != nullptr) {
@@ -447,9 +452,9 @@ namespace ql {
 		}
 	}
 
-	void region::add_effect(sptr<effect> const& effect) {
-		span range = effect->range();
-		region_tile::point const origin = effect->origin();
+	void region::add_effect(effects::effect const& effect) {
+		span range = effect.range();
+		region_tile::point const origin = effect.origin();
 
 		region_tile::point const min_tile_coords{origin.q - range, origin.r - range};
 		region_tile::point const max_tile_coords{origin.q + range, origin.r + range};
@@ -494,7 +499,7 @@ namespace ql {
 			case period_of_day::morning:
 				[[fallthrough]];
 			case period_of_day::afternoon: {
-				double const daylight_progress = sin((_time / _day_length).value * units::constants::tau);
+				double const daylight_progress = sin((_time / _day_length).value * vecx::constants::tau);
 				return dawn_and_dusk_light + daylight_progress * (noon_light - dawn_and_dusk_light);
 			}
 			case period_of_day::dusk: {

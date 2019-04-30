@@ -7,15 +7,15 @@
 #include "sprite_particle.hpp"
 
 namespace ql {
+	namespace rsrc {
+		struct particle;
+	}
+
 	//! A particle for effects involving blue magic.
 	struct blue_magic_particle : sprite_particle {
-		blue_magic_particle();
+		blue_magic_particle(rsrc::particle const& resources);
 
 	private:
-		static constexpr world::radians _dtheta_max = 2.0 * world::radians::circle();
-
-		void particle_subupdate() final {}
-
-		media::texture const& texture() const final;
+		void sprite_particle_subupdate(sec) final {}
 	};
 }

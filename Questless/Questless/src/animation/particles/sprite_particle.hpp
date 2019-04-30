@@ -9,10 +9,9 @@
 namespace ql {
 	//! A particle drawn with a sprite.
 	struct sprite_particle : particle {
-		//! @param displacement The initial displacement of this particle.
 		//! @param lifetime The amount of time before this particle expires.
 		//! @param texture The texture to use for this particle's sprite.
-		sprite_particle(world::vector displacement, sec lifetime, sf::Texture const& texture);
+		sprite_particle(sec lifetime, sf::Texture const& texture);
 
 		virtual ~sprite_particle() = default;
 

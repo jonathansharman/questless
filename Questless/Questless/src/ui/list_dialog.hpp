@@ -10,7 +10,9 @@
 #include <vector>
 
 namespace ql {
-	struct fonts;
+	namespace rsrc {
+		struct fonts;
+	}
 
 	//! Retrieves the player's choice from a list of options.
 	struct list_dialog : dialog {
@@ -21,8 +23,12 @@ namespace ql {
 			std::vector<sf::String> option_texts,
 			std::function<void(std::optional<int>)> cont);
 
-		state update(sec /*elapsed_time*/, input_manager& im) final {
-			if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) { return _cont(std::nullopt); }
+		void update(sec /*elapsed_time*/, input_manager& im) final {
+			if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) {
+				_cont(std::nullopt);
+				close();
+				return;
+			}
 
 			int const option_count = static_cast<int>(_options.size());
 
@@ -39,7 +45,9 @@ namespace ql {
 				for (int i = 0; i < end; ++i) {
 					if (im.pressed(input_manager::index_to_num_key(i))) {
 						if (_selection == i) {
-							return _cont(_selection);
+							_cont(_selection);
+							close();
+							return;
 						} else {
 							_selection = i;
 							break;
@@ -54,11 +62,11 @@ namespace ql {
 				}
 
 				if (im.pressed({sf::Mouse::Left, sf::Keyboard::Return, sf::Keyboard::Space})) {
-					return _cont(_selection);
+					_cont(_selection);
+					close();
+					return;
 				}
 			}
-
-			return state::open;
 		}
 
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const final {

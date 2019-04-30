@@ -107,7 +107,7 @@ namespace ql::dmg {
 
 	private:
 		std::vector<damage> _parts;
-		double _protection_bypass;
+		double _protection_bypass = 0.0;
 
 		//! Helper for constructing a damage group from a single damage part and optional protection bypass.
 		group(damage damage_part, double protection_bypass = 0.0)

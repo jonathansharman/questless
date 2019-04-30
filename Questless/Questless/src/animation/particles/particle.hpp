@@ -11,9 +11,8 @@
 namespace ql {
 	//! Used to create particle effects.
 	struct particle : animation {
-		//! @param displacement The initial displacement of this particle.
 		//! @param lifetime The amount of time before this particle expires.
-		particle(world::vector displacement, sec lifetime);
+		particle(sec lifetime);
 
 		//! The total length of time the particle lives. Not to be confused with @p time_left.
 		sec lifetime;
@@ -28,7 +27,7 @@ namespace ql {
 
 		world::accel acceleration = world::accel::zero();
 
-		vecx::degrees angle = vecx::degrees{0.0};
+		vecx::radians angle = vecx::radians{0.0};
 
 		world::angular_vel angular_velocity = vecx::radians{0.0} / 0.0_s;
 
@@ -43,8 +42,6 @@ namespace ql {
 		void animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const final;
 
 	private:
-		world::point _initial_position;
-
 		//! Whether the particle should fade out as it nears expiration.
 		virtual bool fade_out() const {
 			return true;

@@ -12,11 +12,11 @@ using namespace ql::world::literals;
 using namespace media;
 
 namespace ql {
-	text_particle::text_particle(world::vector displacement, sec lifetime, sf::Font const& font, sf::String const& text, sf::Color color)
-	    : particle{displacement, lifetime} {
+	text_particle::text_particle(sec lifetime, sf::Font const& font, sf::String const& text, sf::Color color)
+		: particle{lifetime} {
 		_text.setFont(font);
 		_text.setString(text);
-		_text.setColor(color);
+		_text.setFillColor(color);
 
 		// Set origin to the center of the text by default.
 		setOrigin({_text.getLocalBounds().width / 2, _text.getLocalBounds().height / 2});

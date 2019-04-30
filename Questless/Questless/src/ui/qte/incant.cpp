@@ -25,7 +25,7 @@ namespace ql::qte {
 
 	incant::~incant() {}
 
-	dialog::state incant::update(sec elapsed_time, input_manager& im) {
+	void incant::update(sec elapsed_time, input_manager& im) {
 		_metronome.setSize({10, _window.getSize().y});
 
 		_total_elapsed_time += elapsed_time;
@@ -63,7 +63,7 @@ namespace ql::qte {
 				}
 			} else if (_begun) {
 				// Done with incantation. Interpret results.
-				return _cont([&]() -> std::optional<magic::spell> {
+				_cont([&]() -> std::optional<magic::spell> {
 					if (_notes.empty()) return std::nullopt;
 					if (_notes.front() == note::left) {
 						return magic::heal{};
@@ -75,6 +75,8 @@ namespace ql::qte {
 						return magic::telescope{};
 					}
 				}());
+				close();
+				return;
 			}
 		} else {
 			_metronome.setFillColor(sf::Color::White);

@@ -5,28 +5,31 @@
 #include "black_magic_particle.hpp"
 
 #include "game.hpp"
+#include "rsrc/particle.hpp"
 #include "utility/random.hpp"
 
-using namespace units;
+using namespace vecx::literals;
 
 namespace ql {
-	black_magic_particle::black_magic_particle()
-		: particle{world_space::vector::zero(),
-			  world_space::velocity{world_space::vector{random_angle(), uniform(5.0, 25.0)}},
-			  world_space::acceleration::zero(),
-			  random_angle(),
-			  uniform(-1.0, 1.0) * _dtheta_max / 1.0s,
-			  1.0,
-			  world_space::scale_velocity{0.0},
-			  2.0s} {}
+	using namespace world::literals;
 
-	void black_magic_particle::particle_subupdate(sec elapsed_time) {
-		velocity *= 1.0 + _acceleration_factor * elapsed_time;
-		velocity.rotate(_turn_rate * elapsed_time);
+	black_magic_particle::black_magic_particle(rsrc::particle const& resources)
+		: sprite_particle{2.0_s, resources.black_magic} //
+	{
+		constexpr auto dtheta_max = 2.0 * vecx::circle_rad;
+		constexpr auto min_vel = 5.0_world_length;
+		constexpr auto max_vel = 25.0_world_length;
+
+		velocity = vecx::make_polar_vector(uniform(min_vel, max_vel), random_radians()) / 1.0_s;
+		angle = random_radians();
+		uniform(-dtheta_max, dtheta_max) * dtheta_max / 1.0_s;
 	}
 
-	media::texture const& black_magic_particle::texture() const {
-		static auto texture_handle = media::the_texture_manager().add("resources/textures/particles/magic/black.png");
-		return media::the_texture_manager()[texture_handle];
+	void black_magic_particle::sprite_particle_subupdate(sec elapsed_time) {
+		constexpr auto acceleration_factor = 1.25_hz;
+		constexpr auto turn_rate = 4.0_rad / 1.0_s;
+
+		velocity += velocity * acceleration_factor * elapsed_time;
+		velocity.rotate(turn_rate * elapsed_time);
 	}
 }

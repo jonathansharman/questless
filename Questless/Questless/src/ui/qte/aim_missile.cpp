@@ -12,8 +12,6 @@
 #include "utility/random.hpp"
 
 using namespace media;
-using namespace units;
-using namespace units::math;
 
 namespace ql::qte {
 	aim_missile::aim_missile(region_tile::point source_coords, being const& target_being, std::function<void(body_part*)> cont)
@@ -42,7 +40,7 @@ namespace ql::qte {
 		_target_view_coords = _window.view_center() + target_distance * unit_source_to_target;
 	}
 
-	dialog::state aim_missile::update(sec elapsed_time, input_manager& im) {
+	void aim_missile::update(sec elapsed_time, input_manager& im) {
 		static constexpr auto time_limit = 5.0_s;
 
 		switch (_aiming_state) {
@@ -56,7 +54,9 @@ namespace ql::qte {
 				//! @todo This seems bow-specific.
 				_total_elapsed_time += elapsed_time;
 				if (_total_elapsed_time > time_limit * 10000) { // @todo Remove the factor after debugging.
-					return _cont(nullptr);
+					_cont(nullptr);
+					close();
+					return;
 				}
 
 				_aiming_circle.center = to_view_space(sf::Mouse::getPosition());
@@ -64,7 +64,9 @@ namespace ql::qte {
 				// Loose.
 				if (im.up(sf::Mouse::Left)) {
 					//! @todo Calculate heading.
-					return _cont(nullptr);
+					_cont(nullptr);
+					close();
+					return;
 				}
 				break;
 			case aiming_state::in_flight:

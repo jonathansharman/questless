@@ -6,6 +6,7 @@
 
 #include "agents/agent.hpp"
 #include "effects/effect.hpp"
+#include "effects/injury.hpp"
 #include "entities/beings/body.hpp"
 #include "entities/beings/statuses/status.hpp"
 #include "entities/objects/corpse.hpp"
@@ -48,12 +49,10 @@ namespace ql {
 		return result;
 	}
 
-	being::~being() = default;
-
 	perception::level being::perception_of(region_tile::point region_tile_coords) const {
 		bool in_front = false;
-		auto offset = region_tile_coords - coords;
-		switch (direction) {
+		auto offset = region_tile_coords - location.coords;
+		switch (cond.direction) {
 			case region_tile::direction::one:
 				in_front = offset.q >= 0_span && offset.q + offset.r >= 0_span;
 				break;
@@ -75,10 +74,10 @@ namespace ql {
 			default:
 				assert(false && "Invalid direction.");
 		}
-		if (in_front && (region_tile_coords - coords).length() <= stats.a.vision.max_range()) {
-			auto const illuminance = region->illuminance(region_tile_coords);
-			span const distance{(region_tile_coords - coords).length()};
-			double const occlusion = region->occlusion(coords, region_tile_coords);
+		if (in_front && (region_tile_coords - location.coords).length() <= stats.a.vision.max_range()) {
+			auto const illuminance = location.region->illuminance(region_tile_coords);
+			span const distance{(region_tile_coords - location.coords).length()};
+			double const occlusion = location.region->occlusion(location.coords, region_tile_coords);
 			return stats.a.vision.perception(illuminance, distance, occlusion);
 		} else {
 			return 0.0_perception;
@@ -96,7 +95,7 @@ namespace ql {
 			return action->perform(*this, [&, this, cont = std::move(cont)](action::result result) {
 				// If there are additional delayed actions, pop and execute the next delay.
 				if (!_action_delays.empty()) {
-					this->busy_time += _action_delays.front();
+					this->cond.busy_time += _action_delays.front();
 					_action_delays.pop_front();
 				}
 				return cont(result);
@@ -107,7 +106,7 @@ namespace ql {
 	complete being::add_delayed_action(tick delay, action::cont cont, uptr<action> action) {
 		// If there are no enqueued delayed actions, just incur the delay immediately instead of enqueueing it.
 		if (_delayed_actions.empty()) {
-			busy_time += delay;
+			cond.busy_time += delay;
 		} else {
 			_action_delays.push_back(delay);
 		}
@@ -131,10 +130,10 @@ namespace ql {
 		erase_if(_statuses, [](auto const& status) { return status->duration() == 0_tick; });
 
 		// Update conditions.
-		satiety -= (awake() ? 0.05_sat : 0.025_sat) / 1_tick * elapsed;
-		energy += (awake() ? 1.0_ep : 3.0_ep) / 1_tick * elapsed;
-		alertness += (awake() ? -0.1_alert : 0.2_alert) / 1_tick * elapsed;
-		busy_time -= elapsed;
+		cond.satiety -= (cond.awake() ? 0.05_sat : 0.025_sat) / 1_tick * elapsed;
+		cond.energy += (cond.awake() ? 1.0_ep : 3.0_ep) / 1_tick * elapsed;
+		cond.alertness += (cond.awake() ? -0.1_alert : 0.2_alert) / 1_tick * elapsed;
+		cond.busy_time -= elapsed;
 
 		// Update body.
 		body.update(elapsed);
@@ -142,7 +141,7 @@ namespace ql {
 		{ // Handle temperature damage.
 			constexpr auto temperature_burn_rate = 1.0_burn / 1.0_temp / 1_tick;
 			constexpr auto temperature_freeze_rate = 1.0_freeze / 1.0_temp / 1_tick;
-			auto const temp = region->temperature(coords);
+			auto const temp = location.region->temperature(location.coords);
 			if (temp > stats.max_temp) {
 				dmg::group burn = (temp - stats.max_temp) * temperature_burn_rate * elapsed;
 				for (body_part& part : body.parts()) {
@@ -170,11 +169,11 @@ namespace ql {
 
 				// Joy loss as a factor of stage-2 blood loss.
 				constexpr auto joy_loss_rate = 1.0_joy / 1_tick;
-				joy -= (pct_blood_lost - stage_1_max) / (1.0 - stage_1_max) * joy_loss_rate * elapsed;
+				cond.joy -= (pct_blood_lost - stage_1_max) / (1.0 - stage_1_max) * joy_loss_rate * elapsed;
 
 				// Courage loss as a factor of stage-2 blood loss.
 				constexpr auto courage_loss_rate = 1.0_courage / 1_tick;
-				courage -= (pct_blood_lost - stage_1_max) / (1.0 - stage_1_max) * courage_loss_rate * elapsed;
+				cond.courage -= (pct_blood_lost - stage_1_max) / (1.0 - stage_1_max) * courage_loss_rate * elapsed;
 			}
 			if (pct_blood_lost > stage_2_max) {
 				// Stage 3: confusion
@@ -190,11 +189,11 @@ namespace ql {
 
 				// Energy loss as a factor of stage-4 blood loss.
 				constexpr auto energy_loss_rate = 1.0_ep / 1_tick;
-				energy -= pct_stage_4_blood_lost * energy_loss_rate * elapsed;
+				cond.energy -= pct_stage_4_blood_lost * energy_loss_rate * elapsed;
 
 				// Alertness loss as a factor of stage-4 blood loss.
 				constexpr auto alertness_loss_rate = 1.0_alert / 1_tick;
-				alertness -= pct_stage_4_blood_lost * alertness_loss_rate * elapsed;
+				cond.alertness -= pct_stage_4_blood_lost * alertness_loss_rate * elapsed;
 
 				// Percent of each part's vitality dealt to it as blight damage as a factor of stage-4 blood loss.
 				constexpr auto damage_rate = 0.1_blight / 1.0_hp / 1_tick;
@@ -213,16 +212,16 @@ namespace ql {
 
 	void being::take_damage(dmg::group& damage, body_part& target_part, std::optional<ql::id<being>> opt_source_id) {
 		// Store whether the being was already dead upon taking this damage.
-		bool const was_already_dead = mortality == ql::mortality::dead;
+		bool const was_already_dead = cond.mortality == mortality::dead;
 
 		// Get source.
 		being* const source = opt_source_id ? the_game().beings.ptr(*opt_source_id) : nullptr;
 
 		// Target will take damage.
-		if (!before_take_damage(damage, target_part, opt_source_id)) return;
+		if (before_take_damage(damage, target_part, opt_source_id) == handled::yes) return;
 
 		// Source, if present, will deal damage.
-		if (source && !source->before_deal_damage(damage, target_part, id)) return;
+		if (source && source->before_deal_damage(damage, target_part, id) == handled::yes) return;
 
 		// First, apply shields' protection, in reverse order so that more recently equipped shields are the first defense.
 		for (auto shields_it = _shields.rbegin(); shields_it != _shields.rend(); ++shields_it) {
@@ -310,50 +309,47 @@ namespace ql {
 			//! @todo Disable target_part.
 			if (target_part.vital()) {
 				// A vital part has been disabled. Kill target.
-				mortality = ql::mortality::dead;
+				cond.mortality = ql::mortality::dead;
 			}
 		}
 
 		// Add injury effect.
-		region->add_effect(injury_effect(coords, damage, id, target_part.id, opt_source_id));
+		location.region->add_effect(effects::injury{location.coords, damage, id, target_part.id, opt_source_id});
 
 		// Target has taken damage.
-		if (!after_take_damage(damage, target_part, opt_source_id)) return;
+		if (after_take_damage(damage, target_part, opt_source_id) == handled::yes) return;
 
 		// Source, if present, has dealt damage.
-		if (source && !source->after_deal_damage(damage, target_part, id)) return;
+		if (source && source->after_deal_damage(damage, target_part, id) == handled::yes) return;
 
 		// Handle death, if this damage killed the target.
-		if (!was_already_dead && mortality == ql::mortality::dead) {
+		if (!was_already_dead && cond.mortality == ql::mortality::dead) {
 			// Target will die.
-			if (!before_die(opt_source_id)) return;
+			if (before_die(opt_source_id) == handled::yes) return;
 
 			// Source, if present, will have killed target.
-			if (source && !source->before_kill(id)) return;
+			if (source && source->before_kill(id) == handled::yes) return;
 
 			// Target's death succeeded.
-			if (corporeal()) {
+			if (cond.corporeal()) {
 				// Spawn corpse.
-				ql::region& corpse_region = *region; // Save region since the being's region pointer will be nulled when
-													 // it's removed.
-				region->remove(*this);
+				ql::region& corpse_region = *location.region; // Save region since the being's region pointer will be
+															  // nulled when it's removed.
+				location.region->remove(*this);
 				auto corpse = umake<ql::corpse>(id);
-				if (!corpse_region.try_add(*corpse, coords)) {
+				if (!corpse_region.try_add(*corpse, location.coords)) {
 					//! @todo What to do in the unlikely event that the corpse can't be spawned?
 				}
 				the_game().objects.add(std::move(corpse));
 			} else {
-				region->remove(*this);
+				location.region->remove(*this);
 			}
 
 			// Source, if present, has killed target.
-			if (!source || source->after_kill(id)) {
-				// Target has died.
-				if (!after_die(opt_source_id))
-					return;
-				else
-					return;
-			}
+			if (source && source->after_kill(id) == handled::yes) return;
+
+			// Target has died.
+			if (after_die(opt_source_id) == handled::yes) return;
 		}
 	}
 
@@ -362,18 +358,19 @@ namespace ql {
 		being* source = opt_source_id ? the_game().beings.ptr(*opt_source_id) : nullptr;
 
 		// Source will give healing.
-		if (!source || source->before_give_heal(amount, part, id)) {
-			// Target will receive healing.
-			if (before_receive_heal(amount, part, opt_source_id)) {
-				// Target gains health.
-				part.health += amount;
-				// Target has received healing.
-				if (after_receive_heal(amount, part, opt_source_id)) {
-					// Source has given healing.
-					if (!source || source->after_give_heal(amount, part, id)) { return; }
-				}
-			}
-		}
+		if (source && source->before_give_heal(amount, part, id) == handled::yes) return;
+
+		// Target will receive healing.
+		if (before_receive_heal(amount, part, opt_source_id) == handled::yes) return;
+
+		// Target gains health.
+		part.health += amount;
+
+		// Target has received healing.
+		if (after_receive_heal(amount, part, opt_source_id) == handled::yes) return;
+
+		// Source has given healing.
+		if (source && source->after_give_heal(amount, part, id) == handled::yes) return;
 	}
 
 	void being::add_status(uptr<status> status) {
@@ -398,17 +395,17 @@ namespace ql {
 
 		// Apply condition effects.
 
-		if (weary()) { result.a.strength *= 0.5; }
-		if (sleepy()) {
+		if (cond.weary()) { result.a.strength *= 0.5; }
+		if (cond.sleepy()) {
 			result.a.agility *= 0.5;
 			//! @todo How to apply sleepy penalty to body part dexterities?
 			// result.dexterity *= 0.5;
 			result.a.intellect *= 0.75;
 		}
-		if (starving()) {
+		if (cond.starving()) {
 			result.regen = 0_per_tick;
-		} else if (hungry()) {
-			result.regen /= 2;
+		} else if (cond.hungry()) {
+			result.regen *= 0.5;
 		}
 
 		return result;
@@ -416,9 +413,9 @@ namespace ql {
 
 	std::function<void(tick&, tick const&)> being::busy_time_mutator() {
 		return [this](tick& busy_time, tick const& new_busy_time) {
-			this->region->remove_from_turn_queue(*this);
+			location.region->remove_from_turn_queue(*this);
 			busy_time = new_busy_time;
-			this->region->add_to_turn_queue(*this);
+			location.region->add_to_turn_queue(*this);
 		};
 	}
 }

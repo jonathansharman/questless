@@ -4,24 +4,18 @@
 
 #include "blue_magic_particle.hpp"
 
+#include "rsrc/particle.hpp"
 #include "utility/random.hpp"
 
-using namespace units;
-
 namespace ql {
-	blue_magic_particle::blue_magic_particle() : particle
-		{ world_space::vector::zero()
-		, world_space::vector{world_space::radians::circle() / 6.0 * uniform(0, 6), 45.0} / 1.0s
-		, world_space::acceleration::zero()
-		, random_angle()
-		, uniform(-1.0, 1.0) * _dtheta_max / 1.0s
-		, 1.0
-		, world_space::scale_velocity{0.0}
-		, world_space::seconds{uniform(2.0, 2.4)}
-		}
-	{}
-	media::texture const& blue_magic_particle::texture() const {
-		static auto texture_handle = media::the_texture_manager().add("resources/textures/particles/magic/blue.png");
-		return media::the_texture_manager()[texture_handle];
+	blue_magic_particle::blue_magic_particle(rsrc::particle const& resources)
+		: sprite_particle{uniform(2.0_s, 2.4_s), resources.blue_magic} //
+	{
+		using namespace world::literals;
+
+		constexpr auto dtheta_max = 2.0 * vecx::circle_rad;
+		velocity = vecx::make_polar_vector(45.0_world_length, vecx::circle_rad / 6.0 * uniform(0, 6)) / 1.0_s;
+		angle = random_radians();
+		angular_velocity = uniform(-1.0, 1.0) * dtheta_max / 1.0_s;
 	}
 }

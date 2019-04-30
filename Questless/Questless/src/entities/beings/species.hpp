@@ -20,7 +20,7 @@ namespace ql {
 		}
 
 		//! @todo Put this in being or entity?
-		std::string const& description() const {
+		std::string description() const {
 			return match(value, [](auto const& species) { return species.description(); });
 		}
 

@@ -23,8 +23,12 @@ namespace ql {
 		, _title{make_title{window, font, title}}
 		, _prompt{make_prompt{window, font, prompt}} {}
 
-	dialog::state vector_dialog::update(sec elapsed_time, input_manager& im) {
-		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) { return _cont(std::nullopt); }
+	void vector_dialog::update(sec elapsed_time, input_manager& im) {
+		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) {
+			_cont(std::nullopt);
+			close();
+			return;
+		}
 
 		std::optional<region_tile::vector> result;
 
@@ -41,11 +45,19 @@ namespace ql {
 		} else if (im.pressed(sf::Keyboard::D)) {
 			result = region_tile::vector::unit(region_tile::direction::six);
 		}
-		if (result && _predicate(*result)) { return _cont(*result); }
+		if (result && _predicate(*result)) {
+			cont(*result);
+			close();
+			return;
+		}
 
 		if (_origin && im.pressed(sf::Mouse::Left)) {
 			result = the_game().camera().tile_hovered() - *_origin;
-			if (_predicate(*result)) { return _cont(*result); }
+			if (_predicate(*result)) {
+				cont(*result);
+				close();
+				return;
+			}
 		}
 
 		return state::open;

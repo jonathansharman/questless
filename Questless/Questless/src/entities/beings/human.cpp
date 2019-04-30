@@ -2,9 +2,11 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "entities/beings/human.hpp"
-#include "entities/beings/body.hpp"
-#include "entities/beings/body_part.hpp"
+#include "human.hpp"
+
+#include "being.hpp"
+#include "body.hpp"
+#include "body_part.hpp"
 
 namespace ql {
 	body human::make_body(ql::id<being> owner_id) const {

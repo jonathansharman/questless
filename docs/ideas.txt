@@ -411,7 +411,7 @@ White - good - light - revelation
 	Specializations
 		Celestial mage
 		Healer
-		Light mage
+		Lightmage
 			Light, detection, alertness
 	Celestial
 		Comfort - Increase a being's joy.
@@ -437,8 +437,8 @@ White - good - light - revelation
 Black - evil - darkness - illusion
 	Specializations
 		Demon master
-		Necromancer
-		Shadow mage
+		Necromage
+		Shadowmage
 			Darkness, stealth, sleep
 	Demonic
 		Terrify - Lower another being's courage.
@@ -504,7 +504,7 @@ Green - matter - nature
 			Summon storm elemental
 Red - energy - technology
 	Specializations
-		Power mage
+		Powermage
 		Technomage
 	Power
 		Charge - Gain X mana over Y ticks. Total mana restored is equal to casting cost plus spell duration times a constant factor.
@@ -521,7 +521,7 @@ Red - energy - technology
 Blue - stasis - time
 	Specializations
 		Stasis mage
-		Chronomancer
+		Chronomage
 	Stasis
 		Summon preservers from the stasis
 		Banish - Banish a being to stasis for a certain duration. While banished, an impassable and indestructible stasis portal appears in its place. During banishment, the being cannot be interacted with and does not update its state.
@@ -640,6 +640,14 @@ Merchant - lawful neutral
 Mercenary - neutral
 	May be hired into service
 Knight - lawful neutral
+
+================================================================================
+Economy
+================================================================================
+Spellsmithing
+	Since the knowledge of spells is not copyable but can be transferred, spellsmiths can create spells and sell them
+Monster hunter
+	Towns will sometimes pay for proof (e.g. horns, hooves) of having slain creatures that plague the town
 
 ================================================================================
 Beings

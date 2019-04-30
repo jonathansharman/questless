@@ -22,14 +22,14 @@ namespace ql {
 			, _prompt{make_prompt(prompt)} //
 		{}
 
-		state update(sec elapsed_time, input_manager& im) final;
+		void update(sec elapsed_time, input_manager& im) final;
 
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 
 	private:
 		continuation<> _cont;
 
-		sf::Text _title;
-		sf::Text _prompt;
+		label _title;
+		label _prompt;
 	};
 }

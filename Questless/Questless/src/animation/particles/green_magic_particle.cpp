@@ -5,29 +5,22 @@
 #include "green_magic_particle.hpp"
 
 #include "game.hpp"
+#include "rsrc/particle.hpp"
 #include "utility/random.hpp"
 
-using namespace ql::world::literals;
-
-using namespace media;
 using namespace vecx;
 using namespace vecx::literals;
 
 namespace ql {
-	namespace {
-		sf::Texture const& texture() {
-			static auto texture_handle = the_texture_manager().add("resources/textures/particles/magic/green.png");
-			return the_texture_manager()[texture_handle];
-		}
-	}
+	using namespace world::literals;
 
-	green_magic_particle::green_magic_particle()
-	    : sprite_particle{texture(), uniform(1.8_s, 2.2_s)}
-	    , _turning_right{random_bool()} //
+	green_magic_particle::green_magic_particle(rsrc::particle const& resources)
+		: sprite_particle{uniform(1.8_s, 2.2_s), resources.green_magic}
+		, _turning_right{random_bool()} //
 	{
 		displacement = world::vector::zero();
 		velocity = random_displacement(20.0_world_length, 50.0_world_length) / 1.0_s;
-		angle = random_degrees();
+		angle = random_radians();
 		angular_velocity = uniform(-2.0, 2.0) * circle_rad / 1.0_s;
 		scale_velocity = -scale / lifetime;
 	}
@@ -38,7 +31,7 @@ namespace ql {
 
 		constexpr auto turn_rate = circle_rad / 1.0_s;
 		if (_turning_right) {
-			velocity.rotate(-1.0_rad * turn_rate * elapsed_time);
+			velocity.rotate(-turn_rate * elapsed_time);
 		} else {
 			velocity.rotate(turn_rate * elapsed_time);
 		}

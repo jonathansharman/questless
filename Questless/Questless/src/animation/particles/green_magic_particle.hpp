@@ -7,9 +7,13 @@
 #include "sprite_particle.hpp"
 
 namespace ql {
+	namespace rsrc {
+		struct particle;
+	}
+
 	//! A particle for effects involving green magic.
 	struct green_magic_particle : sprite_particle {
-		green_magic_particle();
+		green_magic_particle(rsrc::particle const& resources);
 
 	private:
 		//! True if the green magic particle is turning to the right (CW), false if turning left (CCW).

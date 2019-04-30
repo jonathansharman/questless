@@ -7,11 +7,16 @@
 #include "sprite_particle.hpp"
 
 namespace ql {
+	namespace rsrc {
+		struct particle;
+	}
+
 	//! An arrow in flight.
 	struct arrow_particle : sprite_particle {
+		//! @param resources Particle resources used to animate this particle.
 		//! @param source Where the arrow is shot from.
 		//! @param target Where the arrow is headed towards.
-		arrow_particle(world::point source, world::point target);
+		arrow_particle(rsrc::particle const& resources, world::point source, world::point target);
 
 	private:
 		world::point _target;

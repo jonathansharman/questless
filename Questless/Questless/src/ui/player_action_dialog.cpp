@@ -10,56 +10,82 @@ using namespace media;
 namespace ql {
 	std::size_t player_action_dialog::_last_used = 0;
 
-	dialog::state player_action_dialog::update(sec elapsed_time, input_manager& im) {
+	void player_action_dialog::update(sec elapsed_time, input_manager& im) {
 		if (!_hud.inventory_open()) {
 			if (im.down(sf::Keyboard::X) || im.pressed({sf::Keyboard::Z, sf::Keyboard::Return})) {
-				return _cont(idle{im.shift()});
+				_cont(idle{im.shift()});
+				close();
+				return;
 			} else if (im.pressed(sf::Keyboard::E)) {
-				return _cont(move{im.shift(), region_tile::direction::one});
+				_cont(move{im.shift(), region_tile::direction::one});
+				close();
+				return;
 			} else if (im.pressed(sf::Keyboard::W)) {
-				return _cont(move{im.shift(), region_tile::direction::two});
+				_cont(move{im.shift(), region_tile::direction::two});
+				close();
+				return;
 			} else if (im.pressed(sf::Keyboard::Q)) {
-				return _cont(move{im.shift(), region_tile::direction::three});
+				_cont(move{im.shift(), region_tile::direction::three});
+				close();
+				return;
 			} else if (im.pressed(sf::Keyboard::A)) {
-				return _cont(move{im.shift(), region_tile::direction::four});
+				_cont(move{im.shift(), region_tile::direction::four});
+				close();
+				return;
 			} else if (im.pressed(sf::Keyboard::S)) {
-				return _cont(move{im.shift(), region_tile::direction::five});
+				_cont(move{im.shift(), region_tile::direction::five});
+				close();
+				return;
 			} else if (im.pressed(sf::Keyboard::D)) {
-				return _cont(move{im.shift(), region_tile::direction::six});
+				_cont(move{im.shift(), region_tile::direction::six});
+				close();
+				return;
 			} else if (im.pressed(sf::Keyboard::Space)) {
-				return _cont(use{_last_used});
+				_cont(use{_last_used});
+				close();
+				return;
 			} else if (im.pressed(sf::Keyboard::Num1)) {
 				_last_used = 0;
-				return _cont(use{0});
+				_cont(use{0});
+				close();
+				return;
 			} else if (im.pressed(sf::Keyboard::Num2)) {
 				_last_used = 1;
-				return _cont(use{1});
+				_cont(use{1});
+				close();
 			} else if (im.pressed(sf::Keyboard::Num3)) {
 				_last_used = 2;
-				return _cont(use{2});
+				_cont(use{2});
+				close();
 			} else if (im.pressed(sf::Keyboard::Num4)) {
 				_last_used = 3;
-				return _cont(use{3});
+				_cont(use{3});
+				close();
 			} else if (im.pressed(sf::Keyboard::Num5)) {
 				_last_used = 4;
-				return _cont(use{4});
+				_cont(use{4});
+				close();
 			} else if (im.pressed(sf::Keyboard::Num6)) {
 				_last_used = 5;
-				return _cont(use{5});
+				_cont(use{5});
+				close();
 			} else if (im.pressed(sf::Keyboard::Num7)) {
 				_last_used = 6;
-				return _cont(use{6});
+				_cont(use{6});
+				close();
 			} else if (im.pressed(sf::Keyboard::Num8)) {
 				_last_used = 7;
-				return _cont(use{7});
+				_cont(use{7});
+				close();
 			} else if (im.pressed(sf::Keyboard::Num9)) {
 				_last_used = 8;
-				return _cont(use{8});
+				_cont(use{8});
+				close();
 			} else if (im.pressed(sf::Keyboard::Num0)) {
 				_last_used = 9;
-				return _cont(use{9});
+				_cont(use{9});
+				close();
 			}
 		}
-		return state::open;
 	}
 }

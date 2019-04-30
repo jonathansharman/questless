@@ -4,6 +4,7 @@
 
 #include "arrow_particle.hpp"
 
+#include "rsrc/particle.hpp"
 #include "utility/random.hpp"
 
 using namespace ql::world::literals;
@@ -11,19 +12,12 @@ using namespace ql::world::literals;
 using namespace media;
 
 namespace ql {
-	namespace {
-		sf::Texture texture() {
-			static auto handle = the_texture_manager().add("resources/textures/particles/arrow.png");
-			return the_texture_manager()[handle];
-		}
-	}
-
-	arrow_particle::arrow_particle(world::point source, world::point target)
-	    : sprite_particle{texture(), 0.0_s}
-	    , _target{target} //
+	arrow_particle::arrow_particle(rsrc::particle const& resources, world::point source, world::point target)
+		: sprite_particle{0.0_s, resources.arrow}
+		, _target{target} //
 	{
 		setPosition(to_sfml(source));
-		angle = random_degrees();
+		angle = random_radians();
 		auto target_vector = target - source;
 		if (target_vector == world::vector::zero()) {
 			lifetime = 0.0_s;

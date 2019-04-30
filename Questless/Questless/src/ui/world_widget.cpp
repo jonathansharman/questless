@@ -2,46 +2,48 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "world_renderer.hpp"
+#include "world_widget.hpp"
 
-#include "animators.hpp"
-#include "entities/entity.hpp"
-#include "particles/arrow_particle.hpp"
-#include "particles/blood_particle.hpp"
-#include "particles/green_magic_particle.hpp"
-#include "particles/text_particle.hpp"
-#include "particles/yellow_magic_particle.hpp"
-#include "still_image.hpp"
+#include "animation/animators.hpp"
+#include "animation/particles/arrow_particle.hpp"
+#include "animation/particles/blood_particle.hpp"
+#include "animation/particles/green_magic_particle.hpp"
+#include "animation/particles/text_particle.hpp"
+#include "animation/particles/yellow_magic_particle.hpp"
+#include "animation/still_image.hpp"
 
 #include "damage/damage.hpp"
 #include "effects/effect.hpp"
 #include "entities/beings/being.hpp"
 #include "entities/beings/world_view.hpp"
+#include "entities/entity.hpp"
 #include "entities/objects/object.hpp"
 #include "game.hpp"
+#include "rsrc/entity.hpp"
 #include "rsrc/fonts.hpp"
+#include "rsrc/tile.hpp"
 #include "utility/utility.hpp"
 #include "utility/visitation.hpp"
 #include "world/region.hpp"
 #include "world/tile.hpp"
 
 namespace ql {
-	world_renderer::world_renderer(rsrc::fonts const& fonts, world_view const& world_view)
-		: _fonts{fonts}, _world_view{world_view} {}
+	world_widget::world_widget( //
+		world_view const& world_view,
+		rsrc::world_renderer resources,
+		rsrc::entity const& entity_resources,
+		rsrc::fonts const& fonts,
+		rsrc::tile const& tile_resources,
+		rsrc::particle const& particle_resources)
+		: _resources{resources}
+		, _entity_resources{entity_resources}
+		, _fonts{fonts}
+		, _tile_resources{tile_resources}
+		, _particle_resources{particle_resources}
+		, _world_view{world_view} //
+	{}
 
-	auto world_renderer::get_entity_id_var(entity const& entity) -> entity_id_var_t {
-		return match(entity.value,
-			[](being const& being) -> entity_id_var_t { return being.id; },
-			[](object const& object) -> entity_id_var_t { return object.id; });
-	}
-
-	entity const* world_renderer::get_entity_cptr(entity_id_var_t id) {
-		match(id,
-			[](ql::id<being> id) { return the_game().beings.cptr(id); },
-			[](ql::id<object> id) { return the_game().objects.cptr(id); });
-	}
-
-	void world_renderer::render_view(world_view const& view, std::vector<effects::effect> const& effects) {
+	void world_widget::render_view(world_view const& view, std::vector<effects::effect> const& effects) {
 		_world_view = view;
 
 		render_terrain(view);
@@ -49,7 +51,7 @@ namespace ql {
 		visit_effects(effects);
 	}
 
-	void world_renderer::update(sec elapsed_time) {
+	void world_widget::update(sec elapsed_time) {
 		// Update tile selector animation.
 		_tile_resources.ani.selector.update(elapsed_time);
 
@@ -197,7 +199,8 @@ namespace ql {
 					case perception::category::high:
 					case perception::category::full: {
 						entity_animation.setPosition(to_sfml(to_world(entity->location().coords)));
-						entity_animation.setColor(sf::Color{intensity, intensity, intensity});
+						//! @todo: Incorporate color.
+						// entity_animation.setColor(sf::Color{intensity, intensity, intensity});
 						break;
 					}
 					default:
@@ -247,14 +250,16 @@ namespace ql {
 						auto render_slash_or_pierce = [&](double const amount) {
 							spawn_blood(amount);
 							_effect_animations.push_back(umake<text_particle>(
-								position, text_duration, font, std::to_string(lround(amount)), sf::Color::White));
+								text_duration, font, std::to_string(lround(amount)), sf::Color::White));
+							_effect_animations.back()->setPosition(to_sfml(position));
 							_resources.sfx.pierce.play();
 						};
 
 						auto render_cleave_or_bludgeon = [&](double const amount) {
 							spawn_blood(amount);
 							_effect_animations.push_back(umake<text_particle>(
-								position, text_duration, font, std::to_string(lround(amount)), sf::Color::White));
+								text_duration, font, std::to_string(lround(amount)), sf::Color::White));
+							_effect_animations.back()->setPosition(to_sfml(position));
 							_resources.sfx.hit.play();
 						};
 
@@ -265,23 +270,28 @@ namespace ql {
 							[&](dmg::bludgeon const& bludgeon) { render_cleave_or_bludgeon(bludgeon.value); },
 							[&](dmg::burn const& burn) {
 								_effect_animations.push_back(umake<text_particle>(
-									position, text_duration, font, std ::to_string(lround(burn.value)), sf::Color{255, 128, 0}));
+									text_duration, font, std ::to_string(lround(burn.value)), sf::Color{255, 128, 0}));
+								_effect_animations.back()->setPosition(to_sfml(position));
 							},
 							[&](dmg::freeze const& freeze) {
 								_effect_animations.push_back(umake<text_particle>(
-									position, text_duration, font, std::to_string(lround(freeze.value)), sf::Color::Cyan));
+									text_duration, font, std::to_string(lround(freeze.value)), sf::Color::Cyan));
+								_effect_animations.back()->setPosition(to_sfml(position));
 							},
 							[&](dmg::blight const& blight) {
 								_effect_animations.push_back(umake<text_particle>(
-									position, text_duration, font, std::to_string(lround(blight.value)), sf::Color::Black));
+									text_duration, font, std::to_string(lround(blight.value)), sf::Color::Black));
+								_effect_animations.back()->setPosition(to_sfml(position));
 							},
 							[&](dmg::poison const& poison) {
 								_effect_animations.push_back(umake<text_particle>(
-									position, text_duration, font, std::to_string(lround(poison.value)), sf::Color{128, 0, 192}));
+									text_duration, font, std::to_string(lround(poison.value)), sf::Color{128, 0, 192}));
+								_effect_animations.back()->setPosition(to_sfml(position));
 							},
 							[&](dmg::shock const& shock) {
 								_effect_animations.push_back(umake<text_particle>(
-									text_duration, position, font, std::to_string(lround(shock.value)), sf::Color::Yellow));
+									text_duration, font, std::to_string(lround(shock.value)), sf::Color::Yellow));
+								_effect_animations.back()->setPosition(to_sfml(position));
 							});
 					}
 				},
@@ -297,7 +307,7 @@ namespace ql {
 				[&](effects::telescope const& e) {
 					world::point position = to_world(e.origin);
 					for (int i = 0; i < 50; ++i) {
-						auto particle = umake<green_magic_particle>();
+						auto particle = umake<green_magic_particle>(_particle_resources);
 						particle->setPosition(to_sfml(position));
 						_effect_animations.push_back(std::move(particle));
 					}

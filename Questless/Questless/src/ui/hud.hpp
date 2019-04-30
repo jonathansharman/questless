@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "widget.hpp"
+
 #include "utility/id.hpp"
 #include "utility/reference.hpp"
 
@@ -18,15 +20,13 @@ namespace ql {
 	struct item;
 
 	//! The head-up display controls and displays various elements, such as conditions, the hotbar, and the inventory.
-	struct hud {
+	struct hud : widget {
 		//! @param player_being_id The ID of the player-controlled being.
 		hud(id<being> player_being_id) : _player_being_id{player_being_id} {}
 
-		//! Updates the HUD's state and animations. Should be called once per frame.
-		void update();
+		void update(sec elapsed_time, input_manager& im) final;
 
-		//! Draws the HUD.
-		void draw(sf::RenderTarget& target, sf::RenderStates states);
+		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 
 		//! A constant reference to the hotbar.
 		auto const& hotbar() {

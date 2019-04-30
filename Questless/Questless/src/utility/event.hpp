@@ -11,13 +11,13 @@
 #include <vector>
 
 namespace ql {
+	enum class handled { yes, no };
+
 	//! Holds a modifiable list of handler callbacks that can be invoked in order.
 	//!
 	//! Differs from delegate in that handlers may return false to indicate not to continue invoking callbacks.
 	template <typename... Args>
 	struct event {
-		enum class handled { yes, no };
-
 		//! The event handler type. Return type indicates whether the event was handled.
 		using handler_t = sptr<std::function<bool(Args...)>>; //! @todo This shared_ptr and the one in delegate are smelly.
 

@@ -17,9 +17,9 @@ using namespace media;
 
 namespace ql {
 	world_view::world_view(being const& being)
-	    : _region{*being.region}
-	    , _origin{being.coords}
-	    , _visual_range{being.stats.a.vision.max_range()} //
+		: _region{*being.location.region}
+		, _origin{being.location.coords}
+		, _visual_range{being.stats.a.vision.max_range()} //
 	{
 		ql::region const& region = _region;
 
@@ -29,7 +29,7 @@ namespace ql {
 			for (span r = -_visual_range; r <= _visual_range; ++r) {
 				region_tile::vector const offset{q, r};
 				if (offset.length() <= _visual_range) {
-					if (section const* section = region.containing_section(being.coords + offset)) {
+					if (section const* section = region.containing_section(being.location.coords + offset)) {
 						section_coords_set.insert(section->coords());
 					}
 				}
@@ -56,11 +56,11 @@ namespace ql {
 					// Can always perceive self fully.
 					_entity_views.emplace_back(other_being.id, perception::maximum_level);
 				} else {
-					region_tile::point other_coords = other_being.coords;
-					if ((being.coords - other_coords).length() <= _visual_range) {
+					region_tile::point other_coords = other_being.location.coords;
+					if ((being.location.coords - other_coords).length() <= _visual_range) {
 						section_tile::point other_section_coords = section::section_tile_coords(other_coords);
 						perception::level tile_perception =
-						    section_view.tile_perceptions[other_section_coords.q.value][other_section_coords.r.value];
+							section_view.tile_perceptions[other_section_coords.q.value][other_section_coords.r.value];
 
 						_entity_views.emplace_back(other_being.id, tile_perception);
 					}
@@ -69,11 +69,11 @@ namespace ql {
 
 			// Calculate object visibilities.
 			for (object const& object : region.section_at(section_coords)->objects) {
-				region_tile::point other_coords = object.coords;
-				if ((being.coords - other_coords).length() <= _visual_range) {
+				region_tile::point other_coords = object.location.coords;
+				if ((being.location.coords - other_coords).length() <= _visual_range) {
 					section_tile::point other_section_coords = section::section_tile_coords(other_coords);
 					perception::level tile_perception =
-					    section_view.tile_perceptions[other_section_coords.q.value][other_section_coords.r.value];
+						section_view.tile_perceptions[other_section_coords.q.value][other_section_coords.r.value];
 					_entity_views.emplace_back(object.id, tile_perception);
 				}
 			}

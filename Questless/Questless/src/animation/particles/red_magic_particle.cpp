@@ -4,24 +4,18 @@
 
 #include "red_magic_particle.hpp"
 
+#include "rsrc/particle.hpp"
 #include "utility/random.hpp"
 
-using namespace units;
-
 namespace ql {
-	red_magic_particle::red_magic_particle() : particle
-		{ world_space::vector::zero()
-		, (random_displacement(200.0) + world_space::vector{0.0, 150.0}) / 1.0s
-		, world_space::vector{0.0, -300.0} / 1.0s / 1.0s
-		, random_angle()
-		, uniform(-2.0, 2.0) * world::radians::circle() / 1.0s
-		, 1.0
-		, world_space::scale_velocity{0.0}
-		, world_space::seconds{uniform(0.6, 1.0)}
-		}
-	{}
-	media::texture const& red_magic_particle::texture() const {
-		static auto texture_handle = media::the_texture_manager().add("resources/textures/particles/magic/red.png");
-		return media::the_texture_manager()[texture_handle];
+	using namespace world::literals;
+
+	red_magic_particle::red_magic_particle(rsrc::particle const& resources)
+		: sprite_particle{uniform(0.6_s, 1.0_s), resources.red_magic} //
+	{
+		velocity = (random_displacement(200.0_world_length) + world::vector{0.0_world_length, 150.0_world_length}) / 1.0_s;
+		acceleration = world::vector{0.0_world_length, -300.0_world_length} / 1.0_s / 1.0_s;
+		angle = random_radians();
+		angular_velocity = uniform(-2.0, 2.0) * vecx::circle_rad / 1.0_s;
 	}
 }

@@ -79,9 +79,6 @@
     <Filter Include="src\quantities">
       <UniqueIdentifier>{b8546f8c-858b-43b6-8fda-84d83cc84e11}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\ui\scenes">
-      <UniqueIdentifier>{bd590d8e-e85b-4688-b3a5-9824fa0f585c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="external\vecx">
       <UniqueIdentifier>{f7a1a22e-69f8-4eae-9f76-48af80fc7624}</UniqueIdentifier>
     </Filter>
@@ -105,6 +102,9 @@
     </Filter>
     <Filter Include="src\rsrc">
       <UniqueIdentifier>{73cabe8c-8c07-4b98-b860-1b9fc23de138}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ui\dialog">
+      <UniqueIdentifier>{e03010e9-148b-46df-9026-2c29d231895e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -212,9 +212,6 @@
     </ClInclude>
     <ClInclude Include="src\animation\particles\yellow_magic_particle.hpp">
       <Filter>src\animation\particles</Filter>
-    </ClInclude>
-    <ClInclude Include="src\animation\world_renderer.hpp">
-      <Filter>src\animation</Filter>
     </ClInclude>
     <ClInclude Include="src\animation\animation.hpp">
       <Filter>src\animation</Filter>
@@ -573,18 +570,6 @@
     <ClInclude Include="external\cancel\algebra.hpp">
       <Filter>external\cancel</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\scenes\main_menu.hpp">
-      <Filter>src\ui\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\scenes\playing.hpp">
-      <Filter>src\ui\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\scenes\scene.hpp">
-      <Filter>src\ui\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\scenes\splash.hpp">
-      <Filter>src\ui\scenes</Filter>
-    </ClInclude>
     <ClInclude Include="external\media\spaces\view.hpp">
       <Filter>external\media\spaces</Filter>
     </ClInclude>
@@ -678,6 +663,24 @@
     <ClInclude Include="src\entities\beings\species.hpp">
       <Filter>src\entities\beings</Filter>
     </ClInclude>
+    <ClInclude Include="src\ui\widget.hpp">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rsrc\particle.hpp">
+      <Filter>src\rsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\being_widget.hpp">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\object_widget.hpp">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\tile_widget.hpp">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\world_widget.hpp">
+      <Filter>src\ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -690,9 +693,6 @@
       <Filter>src\animation</Filter>
     </ClCompile>
     <ClCompile Include="src\animation\sprite_animation.cpp">
-      <Filter>src\animation</Filter>
-    </ClCompile>
-    <ClCompile Include="src\animation\world_renderer.cpp">
       <Filter>src\animation</Filter>
     </ClCompile>
     <ClCompile Include="src\animation\animation.cpp">
@@ -902,18 +902,6 @@
     <ClCompile Include="src\animation\flame.cpp">
       <Filter>src\animation</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\scenes\main_menu.cpp">
-      <Filter>src\ui\scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\scenes\playing.cpp">
-      <Filter>src\ui\scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\scenes\scene.cpp">
-      <Filter>src\ui\scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\scenes\splash.cpp">
-      <Filter>src\ui\scenes</Filter>
-    </ClCompile>
     <ClCompile Include="src\animation\particles\sprite_particle.cpp">
       <Filter>src\animation\particles</Filter>
     </ClCompile>
@@ -955,6 +943,24 @@
     </ClCompile>
     <ClCompile Include="src\effects\effect.cpp">
       <Filter>src\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\label.hpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\label.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\being_widget.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\object_widget.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\tile_widget.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\world_widget.cpp">
+      <Filter>src\ui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -21,7 +21,7 @@
 #include "items/weapons/bow.hpp"
 #include "items/weapons/quarterstaff.hpp"
 #include "items/weapons/quiver.hpp"
-#include "magic/all_spells.hpp"
+#include "magic/spell.hpp"
 
 #include <fmt/format.h>
 
@@ -51,7 +51,8 @@ namespace ql::scene {
 
 		// Update dialogs.
 		if (!_dialogs.empty()) {
-			if (_dialogs.front()->update() == dialog::state::closed) {
+			_dialogs.front()->update();
+			if (_dialogs.front()->closed()) {
 				_dialogs.pop_front();
 
 				if (_dialogs.empty()) {
@@ -59,7 +60,8 @@ namespace ql::scene {
 				}
 			}
 		} else if (_player_action_dialog) {
-			if (_player_action_dialog->update() == dialog::state::closed) { _player_action_dialog = nullptr; }
+			_player_action_dialog->update();
+			if (_player_action_dialog->closed()) { _player_action_dialog = nullptr; }
 		} else {
 			// Take turns.
 

@@ -5,9 +5,11 @@
 #include "message_dialog.hpp"
 
 namespace ql {
-	dialog::state message_dialog::update(sec elapsed_time, input_manager& im) {
-		if (im.any_pressed()) { return _cont(); }
-		return state::open;
+	void message_dialog::update(sec elapsed_time, input_manager& im) {
+		if (im.any_pressed()) {
+			_cont();
+			close();
+		}
 	}
 
 	void message_dialog::draw(sf::RenderTarget& target, sf::RenderStates states) const {

@@ -7,9 +7,13 @@
 #include "sprite_particle.hpp"
 
 namespace ql {
+	namespace rsrc {
+		struct particle;
+	}
+
 	//! A blood drop particle.
 	struct blood_particle : sprite_particle {
-		blood_particle();
+		blood_particle(rsrc::particle const& resources);
 
 	private:
 		bool fade_out() const final {

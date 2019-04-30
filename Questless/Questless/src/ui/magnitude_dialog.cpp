@@ -23,8 +23,12 @@ namespace ql {
 		, _selector{make_selector(std::to_string(_magnitude))} //
 	{}
 
-	dialog::state magnitude_dialog::update(sec elapsed_time, input_manager& im) {
-		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) { return _cont(std::nullopt); }
+	void magnitude_dialog::update(sec elapsed_time, input_manager& im) {
+		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) {
+			_cont(std::nullopt);
+			close();
+			return;
+		}
 
 		double old_magnitude = _magnitude;
 
@@ -40,7 +44,11 @@ namespace ql {
 		if (old_magnitude != _magnitude) { _selector = make_selector(_window, std::to_string(_magnitude)); }
 
 		// Choose value.
-		if (im.pressed({sf::Mouse::Left, sf::Keyboard::Return, sf::Keyboard::Space})) { return _cont(_magnitude); }
+		if (im.pressed({sf::Mouse::Left, sf::Keyboard::Return, sf::Keyboard::Space})) {
+			_cont(_magnitude);
+			close();
+			return;
+		}
 
 		return state::open;
 	}

@@ -15,7 +15,7 @@ namespace ql {
 		sf::Vector2i const item_icon_size{55, 55};
 	}
 
-	void hud::update() {
+	void hud::update(sec elapsed_time, input_manager& im) {
 		if (being const* player_being = the_game().beings.cptr(_player_being_id)) {
 			update_displayed_items(*player_being);
 
@@ -63,7 +63,7 @@ namespace ql {
 		}
 	}
 
-	void hud::draw(sf::RenderTarget& target, sf::RenderStates states) {
+	void hud::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 		//! @todo This should not be static.
 		static auto fnt_item_count = umake<sf::Font>("resources/fonts/dumbledor1.ttf", 10);
 

@@ -7,24 +7,38 @@
 using namespace media;
 
 namespace ql {
-	dialog::state direction_dialog::update(sec elapsed_time, input_manager& im) {
-		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) { return _cont(std::nullopt); }
-
-		if (im.pressed(sf::Keyboard::E)) {
-			return _cont(region_tile::direction::one);
-		} else if (im.pressed(sf::Keyboard::W)) {
-			return _cont(region_tile::direction::two);
-		} else if (im.pressed(sf::Keyboard::Q)) {
-			return _cont(region_tile::direction::three);
-		} else if (im.pressed(sf::Keyboard::A)) {
-			return _cont(region_tile::direction::four);
-		} else if (im.pressed(sf::Keyboard::S)) {
-			return _cont(region_tile::direction::five);
-		} else if (im.pressed(sf::Keyboard::D)) {
-			return _cont(region_tile::direction::six);
+	void direction_dialog::update(sec elapsed_time, input_manager& im) {
+		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) {
+			_cont(std::nullopt);
+			close();
+			return;
 		}
 
-		return state::open;
+		if (im.pressed(sf::Keyboard::E)) {
+			_cont(region_tile::direction::one);
+			close();
+			return;
+		} else if (im.pressed(sf::Keyboard::W)) {
+			_cont(region_tile::direction::two);
+			close();
+			return;
+		} else if (im.pressed(sf::Keyboard::Q)) {
+			_cont(region_tile::direction::three);
+			close();
+			return;
+		} else if (im.pressed(sf::Keyboard::A)) {
+			_cont(region_tile::direction::four);
+			close();
+			return;
+		} else if (im.pressed(sf::Keyboard::S)) {
+			_cont(region_tile::direction::five);
+			close();
+			return;
+		} else if (im.pressed(sf::Keyboard::D)) {
+			_cont(region_tile::direction::six);
+			close();
+			return;
+		}
 	}
 
 	void direction_dialog::draw(sf::RenderTarget& target, sf::RenderStates states) const {

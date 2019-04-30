@@ -30,7 +30,7 @@ namespace ql {
 		player_action_dialog(sf::Window const& window, rsrc::fonts const& fonts, hud& hud, std::function<void(choice)> cont)
 			: dialog{window, fonts}, _hud{hud}, _cont{std::move(cont)} {}
 
-		state update(sec elapsed_time, input_manager& im) final;
+		void update(sec elapsed_time, input_manager& im) final;
 
 		void draw(sf::RenderTarget&, sf::RenderStates) const final {}
 

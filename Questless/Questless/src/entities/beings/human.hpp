@@ -12,7 +12,7 @@ namespace ql {
 			return 0.5;
 		}
 
-		std::string const& description() const {
+		std::string description() const {
 			return "You already know about humans.";
 		}
 

@@ -7,13 +7,15 @@
 #include "sprite_particle.hpp"
 
 namespace ql {
+	namespace rsrc {
+		struct particle;
+	}
+
 	//! A particle for effects involving red magic.
 	struct red_magic_particle : sprite_particle {
-		red_magic_particle();
+		red_magic_particle(rsrc::particle const& resources);
 
 	private:
-		void particle_subupdate() final {}
-
-		media::texture const& texture() const final;
+		void sprite_particle_subupdate(sec) final {}
 	};
 }

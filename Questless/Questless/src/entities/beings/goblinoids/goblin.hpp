@@ -15,7 +15,7 @@ namespace ql {
 			return 0.5;
 		}
 
-		std::string const& description() const {
+		std::string description() const {
 			return "The goblins are a diminutive and simpleminded humanoid race, known particularly for their bad "
 				   "tempers and love of mischief. Goblins rarely form large communities, preferring small family "
 				   "groups or solitude. They are remarkably sneaky, and many an unwary traveller through goblin "

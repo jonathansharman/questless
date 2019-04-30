@@ -9,13 +9,15 @@
 #include "utility/utility.hpp"
 
 namespace ql {
+	namespace rsrc {
+		struct particle;
+	}
+
 	//! A particle for effects involving white magic.
 	struct white_magic_particle : sprite_particle {
-		white_magic_particle();
+		white_magic_particle(rsrc::particle const& resources);
 
 	private:
-		void particle_subupdate() final;
-
-		media::texture const& texture() const final;
+		void sprite_particle_subupdate(sec) final;
 	};
 }

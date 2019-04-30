@@ -11,12 +11,11 @@
 namespace ql {
 	//! A particle composed of colored text.
 	struct text_particle : particle {
-		//! @param displacement The initial displacement of this particle.
 		//! @param lifetime The amount of time before this particle expires.
 		//! @param font The font to use to render this text particle's text. Must out-live this particle.
 		//! @param text The text for the particle to show.
 		//! @param color The color of the particle's text.
-		text_particle(world::vector displacement, sec lifetime, sf::Font const& font, sf::String const& text, sf::Color color);
+		text_particle(sec lifetime, sf::Font const& font, sf::String const& text, sf::Color color);
 
 	private:
 		sf::Text _text;

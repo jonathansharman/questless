@@ -21,7 +21,7 @@ namespace ql::qte {
 		//! @param cont The dialog continuation function.
 		aim_missile(region_tile::point source_coords, being const& target_being, std::function<void(body_part*)> cont);
 
-		state update(sec elapsed_time, input_manager& im) final;
+		void update(sec elapsed_time, input_manager& im) final;
 
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 

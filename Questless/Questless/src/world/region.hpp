@@ -15,8 +15,10 @@
 #include <string>
 
 namespace ql {
+	namespace effects {
+		struct effect;
+	}
 	struct being;
-	struct effect;
 	struct game;
 	struct object;
 
@@ -32,7 +34,9 @@ namespace ql {
 		region(char const* save_name, std::string region_name);
 
 		//! The region's name, as it appears in game and on disk.
-		std::string name() const { return _name; }
+		std::string name() const {
+			return _name;
+		}
 
 		//! Saves the region to disk.
 		//! @param save_name The name of the region's save file.
@@ -56,16 +60,25 @@ namespace ql {
 		std::optional<id<object>> object_id_at(region_tile::point region_tile_coords) const;
 
 		//! The being at @p region_tile_coords or nullptr if none.
-		being const* being_at(region_tile::point region_tile_coords) const { return being_helper(region_tile_coords); }
+		being const* being_at(region_tile::point region_tile_coords) const {
+			return being_helper(region_tile_coords);
+		}
 		//! The being at @p region_tile_coords or nullptr if none.
-		being* being_at(region_tile::point region_tile_coords) { return being_helper(region_tile_coords); }
+		being* being_at(region_tile::point region_tile_coords) {
+			return being_helper(region_tile_coords);
+		}
 
 		//! The object at @p region_tile_coords or nullptr if none.
-		ql::object const* object_at(region_tile::point region_tile_coords) const { return object_helper(region_tile_coords); }
+		ql::object const* object_at(region_tile::point region_tile_coords) const {
+			return object_helper(region_tile_coords);
+		}
 		//! The object at @p region_tile_coords or nullptr if none.
-		ql::object* object_at(region_tile::point region_tile_coords) { return object_helper(region_tile_coords); }
+		ql::object* object_at(region_tile::point region_tile_coords) {
+			return object_helper(region_tile_coords);
+		}
 
-		//! Spawns the player-controlled being @p player_being in the region at an arbitrary location and adds it to the being cache.
+		//! Spawns the player-controlled being @p player_being in the region at an arbitrary location and adds it to the
+		//! being cache.
 		void spawn_player(uptr<being> player_being);
 
 		//! Adds @p being to the region, setting its coordinates to @p region_tile_coords.
@@ -74,10 +87,12 @@ namespace ql {
 		//! Adds @p object to the region, setting its coordinates to @p region_tile_coords.
 		[[nodiscard]] bool try_add(ql::object& object, region_tile::point region_tile_coords);
 
-		//! Spawns @p being in the region, setting its coordinates to @p region_tile_coords and adding it to the being cache.
+		//! Spawns @p being in the region, setting its coordinates to @p region_tile_coords and adding it to the being
+		//! cache.
 		[[nodiscard]] bool try_spawn(uptr<being> being, region_tile::point region_tile_coords);
 
-		//! Spawns @p object in the region, setting its coordinates to @p region_tile_coords and adding it to the object cache.
+		//! Spawns @p object in the region, setting its coordinates to @p region_tile_coords and adding it to the object
+		//! cache.
 		[[nodiscard]] bool try_spawn(uptr<ql::object> object, region_tile::point region_tile_coords);
 
 		//! Moves @p being to the tile at @p region_tile_coords.
@@ -101,29 +116,47 @@ namespace ql {
 		void remove(light_source const& light_source);
 
 		//! The tile at @p region_tile_coords or nullptr if none.
-		tile* tile_at(region_tile::point region_tile_coords) { return tile_helper(region_tile_coords); }
+		tile* tile_at(region_tile::point region_tile_coords) {
+			return tile_helper(region_tile_coords);
+		}
 
 		//! The tile at @p region_tile_coords or nullptr if none.
-		tile const* tile_at(region_tile::point region_tile_coords) const { return tile_helper(region_tile_coords); }
+		tile const* tile_at(region_tile::point region_tile_coords) const {
+			return tile_helper(region_tile_coords);
+		}
 
 		//! The section at @p region_section_coords.
-		section* section_at(region_section::point region_section_coords) { return section_helper(region_section_coords); }
+		section* section_at(region_section::point region_section_coords) {
+			return section_helper(region_section_coords);
+		}
 		//! The section at @p region_section_coords.
-		section const* section_at(region_section::point region_section_coords) const { return section_helper(region_section_coords); }
+		section const* section_at(region_section::point region_section_coords) const {
+			return section_helper(region_section_coords);
+		}
 
 		//! The section that contains @p region_tile_coords or nullptr if none.
-		section* containing_section(region_tile::point region_tile_coords) { return containing_section_helper(region_tile_coords); }
+		section* containing_section(region_tile::point region_tile_coords) {
+			return containing_section_helper(region_tile_coords);
+		}
 		//! The section that contains @p region_tile_coords or nullptr if none.
-		section const* containing_section(region_tile::point region_tile_coords) const { return containing_section_helper(region_tile_coords); }
+		section const* containing_section(region_tile::point region_tile_coords) const {
+			return containing_section_helper(region_tile_coords);
+		}
 
 		//! The total in-game time in this region.
-		tick time() const { return _time; }
+		tick time() const {
+			return _time;
+		}
 
 		//! The time of day in this region.
-		tick time_of_day() const { return _time_of_day; }
+		tick time_of_day() const {
+			return _time_of_day;
+		}
 
 		//! The period of day in this region.
-		period_of_day period_of_day() const { return _period_of_day; }
+		period_of_day period_of_day() const {
+			return _period_of_day;
+		}
 
 		//! The illuminance of the tile at @p region_tile_coords.
 		lum illuminance(region_tile::point region_tile_coords) const;
@@ -139,7 +172,8 @@ namespace ql {
 
 		//! Adds an effect to this region, notifying beings within range of its occurrence.
 		//! @param effect The effect to add.
-		void add_effect(sptr<effect> const& effect);
+		void add_effect(effects::effect const& effect);
+
 	private:
 		///////////////
 		// Constants //
@@ -172,14 +206,16 @@ namespace ql {
 		tick _time_of_day;
 		ql::period_of_day _period_of_day;
 
-		std::set<ref<being>, bool(*)(being const&, being const&)> _turn_queue;
+		std::set<ref<being>, bool (*)(being const&, being const&)> _turn_queue;
 		lum _ambient_illuminance;
 
 		//////////////////////
 		// Member Functions //
 		//////////////////////
 
-		tick get_time_of_day() const { return _time % _day_length; }
+		tick get_time_of_day() const {
+			return _time % _day_length;
+		}
 		ql::period_of_day get_period_of_day() const;
 
 		lum get_ambient_illuminance();

@@ -21,7 +21,7 @@ namespace ql::qte {
 
 		~incant();
 
-		state update(sec elapsed_time, input_manager& im) final;
+		void update(sec elapsed_time, input_manager& im) final;
 
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 

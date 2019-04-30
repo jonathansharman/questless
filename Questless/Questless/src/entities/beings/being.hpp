@@ -66,6 +66,8 @@ namespace ql {
 		event<ql::id<being>> before_kill;
 		event<ql::id<being>> after_kill;
 
+		being(const std::function<uptr<ql::agent>(being&)>& make_agent, ql::id<being> id, ql::species species);
+
 		//! The agent responsible for this being.
 		agent& agent() {
 			return *_agent;
@@ -118,8 +120,6 @@ namespace ql {
 		}
 
 	protected:
-		being(const std::function<uptr<ql::agent>(being&)>& make_agent, ql::id<being> id, ql::species species);
-
 		static stats::being load_stats(char const* filepath);
 
 	private:

@@ -4,21 +4,15 @@
 
 #include "blood_particle.hpp"
 
+#include "rsrc/particle.hpp"
 #include "utility/random.hpp"
 
-using namespace ql::world::literals;
-
-using namespace media;
-
 namespace ql {
-	namespace {
-		sf::Texture const& texture() {
-			static texture_handle handle = the_texture_manager().add("resources/textures/particles/blood.png");
-			return the_texture_manager()[handle];
-		}
-	}
+	blood_particle::blood_particle(rsrc::particle const& resources)
+		: sprite_particle{uniform(0.25_s, 0.75_s), resources.blood} //
+	{
+		using namespace world::literals;
 
-	blood_particle::blood_particle() : sprite_particle{texture(), uniform(0.25_s, 0.75_s)} {
 		scale = {0.5};
 		// Set the velocity to a factor of displacement plus some extra upwards velocity, to create an explosive effect.
 		velocity = (10.0 * displacement + world::vector{0.0_world_length, 150.0_world_length}) / 1.0_s;

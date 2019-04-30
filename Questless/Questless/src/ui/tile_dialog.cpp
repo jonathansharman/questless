@@ -23,10 +23,12 @@ namespace ql {
 		, _title{make_title(title)}
 		, _prompt{make_prompt(prompt)} {}
 
-	dialog::state tile_dialog::update(sec elapsed_time, input_manager& im) {
+	void tile_dialog::update(sec elapsed_time, input_manager& im) {
 		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) {
 			the_game().world_renderer().clear_highlight_predicate();
-			return _cont(std::nullopt);
+			_cont(std::nullopt);
+			close();
+			return;
 		}
 
 		std::optional<region_tile::point> result;
@@ -47,7 +49,9 @@ namespace ql {
 			}
 			if (result && _predicate(*result)) {
 				the_game().world_renderer().clear_highlight_predicate();
-				return _cont(*result);
+				_cont(*result);
+				close();
+				return;
 			}
 		}
 
@@ -55,12 +59,13 @@ namespace ql {
 			result = the_game().camera().tile_hovered();
 			if (_predicate(*result)) {
 				the_game().world_renderer().clear_highlight_predicate();
-				return _cont(*result);
+				_cont(*result);
+				close();
+				return;
 			}
 		}
 
 		the_game().world_renderer().set_highlight_predicate(_predicate);
-		return state::open;
 	}
 
 	void tile_dialog::draw(sf::RenderTarget& target, sf::RenderStates states) const {

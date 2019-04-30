@@ -23,7 +23,7 @@ namespace ql {
 			std::function<bool(region_tile::vector)> predicate,
 			std::function<void(std::optional<region_tile::vector>)> cont);
 
-		state update(sec elapsed_time, input_manager& im) final;
+		void update(sec elapsed_time, input_manager& im) final;
 
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 

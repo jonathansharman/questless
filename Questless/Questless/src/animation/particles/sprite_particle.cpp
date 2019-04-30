@@ -7,10 +7,7 @@
 using namespace media;
 
 namespace ql {
-	sprite_particle::sprite_particle(world::vector displacement, sec lifetime, sf::Texture const& texture)
-	    : particle{displacement, lifetime}
-	    , _sprite{texture} //
-	{
+	sprite_particle::sprite_particle(sec lifetime, sf::Texture const& texture) : particle{lifetime}, _sprite{texture} {
 		// Set origin to the center of the sprite's texture by default.
 		setOrigin(sf::Vector2f{texture.getSize()} / 2.0f);
 	}

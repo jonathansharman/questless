@@ -23,8 +23,12 @@ namespace ql {
 		, _selector{make_selector(window, font, std::to_string(_count))} //
 	{}
 
-	dialog::state count_dialog::update(sec elapsed_time, input_manager& im) {
-		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) { return _cont(std::nullopt); }
+	void count_dialog::update(sec elapsed_time, input_manager& im) {
+		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) {
+			_cont(std::nullopt);
+			close();
+			return;
+		}
 
 		int old_count = _count;
 
@@ -33,9 +37,13 @@ namespace ql {
 		_count = (_max && _count > *_max) ? *_max : _count;
 
 		// Update selector texture if value changed.
-		if (old_count != _count) { _selector = make_selector(std::to_string(_count)); }
+		if (old_count != _count) { _selector.text.setString(std::to_string(_count)); }
 
-		if (im.pressed({sf::Mouse::Left, sf::Keyboard::Return, sf::Keyboard::Space})) { return _cont(_count); }
+		if (im.pressed({sf::Mouse::Left, sf::Keyboard::Return, sf::Keyboard::Space})) {
+			_cont(_count);
+			close();
+			return;
+		}
 		return state::open;
 	}
 
