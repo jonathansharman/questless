@@ -444,6 +444,7 @@ Black - evil - darkness - illusion
 		Terrify - Lower another being's courage.
 		Depress - Reduce a being's joy.
 		Corrupt - Drain a being's white gatestones.
+			I don't think this is the best use of that spell name
 		Possess - Channeled, interrupted by taking 10% of vitality in damage at once. Take control of a being for X ticks. Mana cost is proportional to the target's intellect.
 		Damn - Choose a being. If you are alive after X ticks, deal Y blight damage to that being.
 		Curse - Curse an item. Carrying a cursed item deals blight damage over time. Picking up a cursed item binds it to the carrier. When a bound cursed item is removed, it explodes, destroying itself and dealing blight damage in an area around the carrier.

@@ -25,10 +25,10 @@ namespace ql {
 			input input;
 			bool pressed;
 
-			constexpr bool operator ==(input_event const& other) const {
+			constexpr bool operator==(input_event const& other) const {
 				return this->input == other.input && this->pressed == other.pressed;
 			}
-			constexpr bool operator !=(input_event const& other) const {
+			constexpr bool operator!=(input_event const& other) const {
 				return !(*this == other);
 			}
 		};
@@ -46,10 +46,14 @@ namespace ql {
 		void update();
 
 		//! Whether the window was resized during this frame.
-		bool window_resized() const { return _window_resized; }
+		bool window_resized() const {
+			return _window_resized;
+		}
 
 		//! Whether a quit event has been received.
-		bool quit() const { return _quit; }
+		bool quit() const {
+			return _quit;
+		}
 
 		//! Whether @p input is currently up.
 		bool up(input input) const;
@@ -113,14 +117,20 @@ namespace ql {
 		bool alt() const;
 
 		//! The offset the mouse has moved since the last frame.
-		sf::Vector2i mouse_movement() const { return _mouse_movement; }
+		sf::Vector2i mouse_movement() const {
+			return _mouse_movement;
+		}
 
-		//! The number of ticks the mouse wheel has been scrolled up since the last call to update. Negative value indicates scroll down.
-		int scroll() const { return _scroll; }
+		//! The number of ticks the mouse wheel has been scrolled up since the last call to update. Negative value
+		//! indicates scroll down.
+		int scroll() const {
+			return _scroll;
+		}
 
 		//! Sets the position of the mouse cursor in the window.
 		//! @param position The position to which the cursor is moved.
 		void move_mouse(sf::Vector2i const& position);
+
 	private:
 		std::vector<input_event> _input_event_buffer{};
 		int _scroll = 0;

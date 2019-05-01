@@ -9,8 +9,6 @@
 
 using namespace ql::world::literals;
 
-using namespace media;
-
 namespace ql {
 	text_particle::text_particle(sec lifetime, sf::Font const& font, sf::String const& text, sf::Color color)
 		: particle{lifetime} {

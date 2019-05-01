@@ -7,11 +7,9 @@
 #include "rsrc/particle.hpp"
 #include "utility/random.hpp"
 
-using namespace ql::world::literals;
-
-using namespace media;
-
 namespace ql {
+	using namespace world::literals;
+
 	arrow_particle::arrow_particle(rsrc::particle const& resources, world::point source, world::point target)
 		: sprite_particle{0.0_s, resources.arrow}
 		, _target{target} //

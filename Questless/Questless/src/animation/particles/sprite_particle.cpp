@@ -4,8 +4,6 @@
 
 #include "sprite_particle.hpp"
 
-using namespace media;
-
 namespace ql {
 	sprite_particle::sprite_particle(sec lifetime, sf::Texture const& texture) : particle{lifetime}, _sprite{texture} {
 		// Set origin to the center of the sprite's texture by default.

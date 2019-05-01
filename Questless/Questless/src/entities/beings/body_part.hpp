@@ -80,7 +80,7 @@ namespace ql {
 			[this] { return this->stats.a.vitality.value() * blood_per_vitality / 1_tick; }};
 
 		//! The region this body part occupies, for collision and display.
-		media::spaces::view::polygon hitbox;
+		sf::ConvexShape hitbox;
 
 		//! The draw layer, with smaller-numbered layers drawn first (i.e. in the background).
 		int layer = 0;
