@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "media/spaces/window.hpp"
+#include "ui/view_space.hpp"
 
 #include <SFML/Window.hpp>
 

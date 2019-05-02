@@ -7,11 +7,10 @@
 #include "animation.hpp"
 #include "sprite_sheet.hpp"
 
+#include "ui/view_space.hpp"
 #include "utility/reference.hpp"
 
 #include "cancel/quantity.hpp"
-
-#include "media/spaces/window.hpp"
 
 #include <vector>
 

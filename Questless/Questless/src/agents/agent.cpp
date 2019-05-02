@@ -7,6 +7,7 @@
 #include "queries/all.hpp"
 
 #include "entities/beings/being.hpp"
+#include "game.hpp"
 #include "magic/spell.hpp"
 #include "utility/random.hpp"
 #include "world/region.hpp"

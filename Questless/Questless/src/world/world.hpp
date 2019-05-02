@@ -1,6 +1,7 @@
 //! @file
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
+//! @brief Defines the world space and related units.
 
 #pragma once
 
@@ -20,7 +21,9 @@ namespace ql::world {
 	using length = cancel::quantity<double, cancel::unit_t<struct distance_tag>>;
 
 	namespace literals {
-		constexpr auto operator "" _world_length(long double value) { return length{static_cast<double>(value)}; }
+		constexpr auto operator"" _world_length(long double value) {
+			return length{static_cast<double>(value)};
+		}
 	}
 	using namespace literals;
 
@@ -60,11 +63,21 @@ namespace ql::world {
 	DEFINE_BOX_EXTREMES_NAMES(box, 0, left, right);
 	DEFINE_BOX_EXTREMES_NAMES(box, 1, top, bottom);
 
-	constexpr auto top_left(box const& box) { return box.position; }
-	constexpr auto top_right(box const& box) { return point{x(box.position) + x(box.size), y(box.position)}; }
-	constexpr auto bottom_left(box const& box) { return point{x(box.position), y(box.position) + y(box.size)}; }
-	constexpr auto bottom_right(box const& box) { return box.position + box.size; }
-	constexpr auto center(box const& box) { return box.position + box.size / 2; }
+	constexpr auto top_left(box const& box) {
+		return box.position;
+	}
+	constexpr auto top_right(box const& box) {
+		return point{x(box.position) + x(box.size), y(box.position)};
+	}
+	constexpr auto bottom_left(box const& box) {
+		return point{x(box.position), y(box.position) + y(box.size)};
+	}
+	constexpr auto bottom_right(box const& box) {
+		return box.position + box.size;
+	}
+	constexpr auto center(box const& box) {
+		return box.position + box.size / 2;
+	}
 
 	// Circle
 

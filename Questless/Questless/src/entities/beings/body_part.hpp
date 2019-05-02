@@ -6,14 +6,14 @@
 
 #include "agents/action.hpp"
 #include "damage/group.hpp"
-#include "quantities/quantities.hpp"
+#include "quantities/misc.hpp"
 #include "stats/part.hpp"
+#include "ui/view_space.hpp"
 #include "utility/id.hpp"
 #include "utility/lazy_bounded.hpp"
 #include "utility/reference.hpp"
 #include "utility/utility.hpp"
 
-#include "media/spaces/view.hpp"
 #include "vecx/angle.hpp"
 
 #include <cereal/access.hpp>
@@ -80,7 +80,7 @@ namespace ql {
 			[this] { return this->stats.a.vitality.value() * blood_per_vitality / 1_tick; }};
 
 		//! The region this body part occupies, for collision and display.
-		sf::ConvexShape hitbox;
+		view::polygon hitbox;
 
 		//! The draw layer, with smaller-numbered layers drawn first (i.e. in the background).
 		int layer = 0;
@@ -196,7 +196,7 @@ namespace ql {
 		std::optional<body_part> part;
 
 		//! The offset from the parent part's origin to the child part's origin.
-		media::spaces::view::vector offset;
+		view::vector offset;
 
 		//! The rotation of the attached part about the attachment point.
 		vecx::radians rotation;

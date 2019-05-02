@@ -332,8 +332,6 @@
     <ClInclude Include="external\cancel\quantity.hpp" />
     <ClInclude Include="external\cancel\serialization.hpp" />
     <ClInclude Include="external\cancel\unit.hpp" />
-    <ClInclude Include="external\media\spaces\view.hpp" />
-    <ClInclude Include="external\media\spaces\window.hpp" />
     <ClInclude Include="external\vecx\angle.hpp" />
     <ClInclude Include="external\vecx\box.hpp" />
     <ClInclude Include="external\vecx\constants.hpp" />
@@ -368,7 +366,6 @@
     <ClInclude Include="src\animation\animators.hpp" />
     <ClInclude Include="src\animation\bleeding.hpp" />
     <ClInclude Include="src\animation\flame.hpp" />
-    <ClInclude Include="src\animation\item_animator.hpp" />
     <ClInclude Include="src\animation\particles\arrow_particle.hpp" />
     <ClInclude Include="src\animation\particles\black_magic_particle.hpp" />
     <ClInclude Include="src\animation\particles\blood_particle.hpp" />
@@ -401,7 +398,6 @@
     <ClInclude Include="src\entities\beings\body.hpp" />
     <ClInclude Include="src\entities\beings\body_part.hpp" />
     <ClInclude Include="src\entities\beings\conditions.hpp" />
-    <ClInclude Include="src\entities\beings\goblinoids\goblin.hpp" />
     <ClInclude Include="src\entities\beings\human.hpp" />
     <ClInclude Include="src\entities\beings\species.hpp" />
     <ClInclude Include="src\entities\beings\stats\aggregate.hpp" />
@@ -430,6 +426,7 @@
     <ClInclude Include="src\game.hpp" />
     <ClInclude Include="src\items\armor\armor.hpp" />
     <ClInclude Include="src\items\breakable.hpp" />
+    <ClInclude Include="src\items\common_actions.hpp" />
     <ClInclude Include="src\items\craftable.hpp" />
     <ClInclude Include="src\items\equipment.hpp" />
     <ClInclude Include="src\items\inventory.hpp" />
@@ -455,7 +452,7 @@
     <ClInclude Include="src\quantities\distance.hpp" />
     <ClInclude Include="src\quantities\mass.hpp" />
     <ClInclude Include="src\quantities\game_time.hpp" />
-    <ClInclude Include="src\quantities\quantities.hpp" />
+    <ClInclude Include="src\quantities\misc.hpp" />
     <ClInclude Include="src\quantities\wall_time.hpp" />
     <ClInclude Include="src\rsrc\entity.hpp" />
     <ClInclude Include="src\rsrc\fonts.hpp" />
@@ -477,6 +474,7 @@
     <ClInclude Include="src\ui\direction_dialog.hpp" />
     <ClInclude Include="src\ui\object_widget.hpp" />
     <ClInclude Include="src\ui\tile_widget.hpp" />
+    <ClInclude Include="src\ui\view_space.hpp" />
     <ClInclude Include="src\ui\widget.hpp" />
     <ClInclude Include="src\ui\hud.hpp" />
     <ClInclude Include="src\ui\input_manager.hpp" />
@@ -553,7 +551,6 @@
     <ClCompile Include="src\entities\beings\being.cpp" />
     <ClCompile Include="src\entities\beings\body.cpp" />
     <ClCompile Include="src\entities\beings\body_part.cpp" />
-    <ClCompile Include="src\entities\beings\goblinoids\goblin.cpp" />
     <ClCompile Include="src\entities\beings\human.cpp" />
     <ClCompile Include="src\entities\beings\stats\vision.cpp" />
     <ClCompile Include="src\entities\beings\statuses\healing.cpp" />
@@ -564,11 +561,13 @@
     <ClCompile Include="src\entities\objects\object.cpp" />
     <ClCompile Include="src\game.cpp" />
     <ClCompile Include="src\items\armor\armor.cpp" />
+    <ClCompile Include="src\items\common_actions.cpp" />
     <ClCompile Include="src\items\equipment.cpp" />
     <ClCompile Include="src\items\inventory.cpp" />
     <ClCompile Include="src\items\item.cpp" />
     <ClCompile Include="src\items\magic\gatestone.cpp" />
     <ClCompile Include="src\items\scroll.cpp" />
+    <ClCompile Include="src\items\weapons\arrow.cpp" />
     <ClCompile Include="src\items\weapons\attack.cpp" />
     <ClCompile Include="src\items\weapons\bow.cpp" />
     <ClCompile Include="src\items\weapons\modal_weapon.cpp" />

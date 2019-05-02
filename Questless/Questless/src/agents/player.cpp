@@ -94,7 +94,7 @@ namespace ql {
 						item& item = the_game().items.ref(*opt_item_id);
 						// Get a list of the item's actions. It's shared, so the lambda that captures
 						// it is copyable, so the lambda can be passed as a std::function.
-						auto actions = smake<std::vector<uptr<action>>>(item.actions());
+						auto actions = smake<std::vector<uptr<action>>>(item.actions);
 						// Get the action names from the list of actions.
 						std::vector<sf::String> action_names;
 						std::transform(actions->begin(),
@@ -105,7 +105,7 @@ namespace ql {
 						auto dialog = umake<list_dialog>(_window,
 							_fonts,
 							sf::Vector2f{sf::Mouse::getPosition()},
-							item.name(),
+							item.name,
 							std::move(action_names),
 							[this, actions = std::move(actions)](std::optional<int> opt_action_idx) {
 								if (!opt_action_idx) {

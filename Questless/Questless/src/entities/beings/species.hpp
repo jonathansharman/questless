@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include "goblinoids/goblin.hpp"
 #include "human.hpp"
 #include "stats/being.hpp"
 
@@ -13,7 +12,7 @@
 namespace ql {
 	// A being's species.
 	struct species {
-		std::variant<goblin, human> value;
+		std::variant<human> value;
 
 		double transparency() const {
 			return match(value, [](auto const& species) { return species.transparency(); });

@@ -6,7 +6,7 @@
 
 #include "section.hpp"
 
-#include "quantities/quantities.hpp"
+#include "quantities/misc.hpp"
 
 #include <functional>
 #include <map>

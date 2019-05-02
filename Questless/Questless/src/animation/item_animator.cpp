@@ -2,8 +2,6 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "item_animator.hpp"
-
 #include "animators.hpp"
 #include "items/magic/gatestone.hpp"
 #include "items/scroll.hpp"
@@ -12,15 +10,7 @@
 #include "still_image.hpp"
 #include "still_shape.hpp"
 
-using namespace media;
-
 namespace ql {
-	item_animator::~item_animator() = default;
-
-	void item_animator::visit(arrow const&) {
-		animation = umake<still_image>(item_resources.arrow);
-	}
-
 	void item_animator::visit(bow const&) {
 		animation = umake<still_image>(item_resources.bow);
 	}

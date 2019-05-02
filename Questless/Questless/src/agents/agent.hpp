@@ -8,7 +8,7 @@
 #include "queries/all.hpp"
 
 #include "magic/spell.hpp"
-#include "quantities/quantities.hpp"
+#include "quantities/misc.hpp"
 #include "utility/complete.hpp"
 #include "utility/reference.hpp"
 #include "world/coordinates.hpp"

@@ -73,7 +73,7 @@ namespace ql {
 						// Within striking distance of target.
 						//! @todo This is a hack that assumes the first item in the inventory is a melee weapon.
 						item& item = *ai.being.inventory.items.begin();
-						return item.actions().front()->perform(ai.being, [&ai](action::result result) {
+						return item.actions.front()->perform(ai.being, [&ai](action::result result) {
 							if (result == action::result::aborted) {
 								// Attack failed. Wait for up to 10 time units instead.
 								return ai.idle(tick{uniform(0, 10)});

@@ -15,29 +15,34 @@ namespace ql {
 	struct item;
 	struct light_source;
 	struct object;
-	namespace scene { class scene; }
+	namespace scene {
+		class scene;
+	}
 
 	//! Represents an instance of the game Questless.
 	struct game {
 		~game();
 
 		//! @todo Relocate these maps?
-		static id<being> get_being_id(uptr<being> const& being);
-		static id<object> get_object_id(uptr<object> const& object);
-		static id<item> get_item_id(uptr<item> const& item);
-		static id<light_source> get_light_source_id(uptr<light_source> const& light_source);
+		static id<being> get_being_id(being const& being);
+		static id<object> get_object_id(object const& object);
+		static id<item> get_item_id(item const& item);
+		static id<light_source> get_light_source_id(light_source const& light_source);
 
 		template <typename T>
-		static T* uptr_to_ptr(uptr<T> const& p) { return p.get(); }
-		cache<id<being>, uptr<being>, being, get_being_id, uptr_to_ptr<being>> beings;
-		cache<id<object>, uptr<object>, object, get_object_id, uptr_to_ptr<object>> objects;
-		cache<id<item>, uptr<item>, item, get_item_id, uptr_to_ptr<item>> items;
-		cache<id<light_source>, uptr<light_source>, light_source, get_light_source_id, uptr_to_ptr<light_source>> light_sources;
+		static T* to_ptr(T const& p) {
+			return &p;
+		}
+		cache<id<being>, being, being, get_being_id, to_ptr<being>> beings;
+		cache<id<object>, object, object, get_object_id, to_ptr<object>> objects;
+		cache<id<item>, item, item, get_item_id, to_ptr<item>> items;
+		cache<id<light_source>, light_source, light_source, get_light_source_id, to_ptr<light_source>> light_sources;
 
 		friend game& the_game();
 
 		//! Runs a new game of Questless.
 		void run();
+
 	private:
 		enum class state { being_editor }; //! @todo Should not be needed. Replace with scene.
 

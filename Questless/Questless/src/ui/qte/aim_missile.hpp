@@ -5,9 +5,8 @@
 #pragma once
 
 #include "ui/dialog.hpp"
+#include "ui/view_space.hpp"
 #include "world/world.hpp"
-
-#include "media/spaces/view.hpp"
 
 namespace ql {
 	struct being;
@@ -32,10 +31,10 @@ namespace ql::qte {
 
 		region_tile::point _source_tile_coords;
 		being const& _target_being;
-		media::spaces::view::point _target_view_coords;
-		cancel::unitless<media::spaces::view::length::rep> _target_view_scale;
+		view::point _target_view_coords;
+		cancel::unitless<view::px::rep> _target_view_scale;
 		continuation<body_part*> _cont;
-		media::spaces::view::circle _aiming_circle;
+		view::circle _aiming_circle;
 		aiming_state _aiming_state = aiming_state::beginning;
 
 		sec _total_elapsed_time = 0.0_s;

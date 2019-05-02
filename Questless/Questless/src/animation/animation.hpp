@@ -7,9 +7,8 @@
 #include "quantities/wall_time.hpp"
 #include "utility/nonnegative.hpp"
 
+#include "ui/view_space.hpp"
 #include "world/world.hpp"
-
-#include "media/spaces/window.hpp"
 
 #include <SFML/Graphics.hpp>
 

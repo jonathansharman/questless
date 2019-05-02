@@ -6,7 +6,7 @@
 
 #include "entities/perception.hpp"
 #include "quantities/distance.hpp"
-#include "quantities/quantities.hpp"
+#include "quantities/misc.hpp"
 #include "utility/io.hpp"
 #include "utility/nonnegative.hpp"
 
@@ -32,7 +32,8 @@ namespace ql::stats {
 
 		constexpr vision() : _previous_acuity{0.0_acuity}, _max_range{0} {}
 
-		constexpr vision(ql::acuity acuity,
+		constexpr vision( //
+			ql::acuity acuity,
 			ql::lum min_illuminance,
 			ql::lum max_illuminance,
 			nonnegative<acuity_per_lum> darkness_penalty,
@@ -47,22 +48,22 @@ namespace ql::stats {
 
 		template <typename Archive>
 		void save(Archive& archive) const {
-			archive(CEREAL_NVP(acuity),
+			archive( //
+				CEREAL_NVP(acuity),
 				CEREAL_NVP(min_illuminance),
 				CEREAL_NVP(max_illuminance),
 				CEREAL_NVP(darkness_penalty),
-				CEREAL_NVP(glare_penalty),
-				CEREAL_NVP(acuity));
+				CEREAL_NVP(glare_penalty));
 		}
 
 		template <typename Archive>
 		void load(Archive& archive) {
-			archive(CEREAL_NVP(acuity),
+			archive( //
+				CEREAL_NVP(acuity),
 				CEREAL_NVP(min_illuminance),
 				CEREAL_NVP(max_illuminance),
 				CEREAL_NVP(darkness_penalty),
-				CEREAL_NVP(glare_penalty),
-				CEREAL_NVP(acuity));
+				CEREAL_NVP(glare_penalty));
 		}
 
 		vision& operator+=(vision const& that) {

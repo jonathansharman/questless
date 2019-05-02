@@ -8,7 +8,7 @@
 #include "world.hpp"
 
 #include "quantities/distance.hpp"
-#include "quantities/quantities.hpp"
+#include "quantities/misc.hpp"
 
 #include "vecx/hex_space.hpp"
 

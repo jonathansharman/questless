@@ -5,7 +5,7 @@
 #pragma once
 
 #include "items/item.hpp"
-#include "quantities/quantities.hpp"
+#include "quantities/misc.hpp"
 #include "utility/lazy_bounded.hpp"
 
 namespace ql {
@@ -17,14 +17,16 @@ namespace ql {
 		virtual ql::integrity durability() const = 0;
 
 		//! Whether the item is broken, i.e. integrity is zero.
-		bool broken() const { return integrity.value() <= 0.0_integrity; }
+		bool broken() const {
+			return integrity.value() <= 0.0_integrity;
+		}
 
 		//! The item's integrity, which ranges from zero to its durability. The item is broken if integrity is zero.
 		lazy_bounded<ql::integrity> integrity;
+
 	protected:
 		breakable(ql::integrity integrity)
-			: integrity{integrity, [] { return 0.0_integrity; }, [this] { return durability(); }}
-		{}
+			: integrity{integrity, [] { return 0.0_integrity; }, [this] { return durability(); }} {}
 	};
 
 	DEFINE_ELEMENT_BASE_MAKE_CTOR(breakable, item)

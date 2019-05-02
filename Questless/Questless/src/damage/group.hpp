@@ -8,7 +8,7 @@
 #include "multiplier.hpp"
 #include "protect.hpp"
 
-#include "quantities/quantities.hpp"
+#include "quantities/misc.hpp"
 
 #include <cmath>
 #include <vector>

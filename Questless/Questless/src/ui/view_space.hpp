@@ -12,16 +12,18 @@
 
 #include "vecx/define_macros.hpp"
 
-namespace media::spaces::view {
-	using length = cancel::quantity<float, cancel::unit_t<struct distance_tag>>;
+namespace ql::view {
+	using px = cancel::quantity<float, cancel::unit_t<struct distance_tag>>;
 
 	namespace literals {
-		constexpr auto operator "" _view_length(long double value) { return length{static_cast<float>(value)}; }
+		constexpr auto operator"" _px(long double value) {
+			return px{static_cast<float>(value)};
+		}
 	}
 	using namespace literals;
 
-	using vector = vecx::vector<length, 2>;
-	using point = vecx::point<length, 2>;
+	using vector = vecx::vector<px, 2>;
+	using point = vecx::point<px, 2>;
 
 	DEFINE_VECTOR_INDEX_NAME(vector, 0, x);
 	DEFINE_VECTOR_INDEX_NAME(vector, 1, y);
@@ -30,7 +32,7 @@ namespace media::spaces::view {
 
 	// Box
 
-	using box = vecx::box<length, 2>;
+	using box = vecx::box<px, 2>;
 
 	using h_align = box::axis<0>::align_t;
 	using v_align = box::axis<1>::align_t;
@@ -49,19 +51,29 @@ namespace media::spaces::view {
 	DEFINE_BOX_EXTREMES_NAMES(box, 0, left, right);
 	DEFINE_BOX_EXTREMES_NAMES(box, 1, top, bottom);
 
-	constexpr auto top_left(box const& box) { return box.position; }
-	constexpr auto top_right(box const& box) { return point{x(box.position) + x(box.size), y(box.position)}; }
-	constexpr auto bottom_left(box const& box) { return point{x(box.position), y(box.position) + y(box.size)}; }
-	constexpr auto bottom_right(box const& box) { return box.position + box.size; }
-	constexpr auto center(box const& box) { return box.position + box.size / 2; }
+	constexpr auto top_left(box const& box) {
+		return box.position;
+	}
+	constexpr auto top_right(box const& box) {
+		return point{x(box.position) + x(box.size), y(box.position)};
+	}
+	constexpr auto bottom_left(box const& box) {
+		return point{x(box.position), y(box.position) + y(box.size)};
+	}
+	constexpr auto bottom_right(box const& box) {
+		return box.position + box.size;
+	}
+	constexpr auto center(box const& box) {
+		return box.position + box.size / 2;
+	}
 
 	// Circle
 
-	using circle = vecx::sphere<length, 2>;
+	using circle = vecx::sphere<px, 2>;
 
 	// Polygon
 
-	using polygon = vecx::polygon<length>;
+	using polygon = vecx::polygon<px>;
 }
 
 #include "vecx/undef_macros.hpp"

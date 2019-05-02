@@ -6,10 +6,9 @@
 
 #include "widget.hpp"
 
+#include "ui/view_space.hpp"
 #include "utility/id.hpp"
 #include "utility/reference.hpp"
-
-#include "media/spaces/window.hpp"
 
 #include <array>
 #include <optional>

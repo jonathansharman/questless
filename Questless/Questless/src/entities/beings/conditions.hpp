@@ -6,7 +6,7 @@
 
 #include "stats/being.hpp"
 
-#include "quantities/quantities.hpp"
+#include "quantities/misc.hpp"
 #include "utility/dynamic_property.hpp"
 
 namespace ql {

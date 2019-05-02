@@ -13,7 +13,7 @@
 #include "items/armor/armor.hpp"
 #include "items/inventory.hpp"
 #include "items/weapons/weapon.hpp"
-#include "quantities/quantities.hpp"
+#include "quantities/misc.hpp"
 #include "utility/dynamic_property.hpp"
 #include "utility/event.hpp"
 #include "utility/id.hpp"

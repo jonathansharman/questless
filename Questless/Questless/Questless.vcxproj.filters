@@ -28,9 +28,6 @@
     <Filter Include="src\entities\beings">
       <UniqueIdentifier>{d25bb59f-10bb-411d-8e56-a601dbb16f36}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\entities\beings\goblinoids">
-      <UniqueIdentifier>{7a3b6635-f54f-499f-a8e8-a1c2ea9494a9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\items">
       <UniqueIdentifier>{e363e4de-9bab-4f56-9da3-6a7b25071101}</UniqueIdentifier>
     </Filter>
@@ -87,12 +84,6 @@
     </Filter>
     <Filter Include="external\cancel">
       <UniqueIdentifier>{131fc6ea-ecf3-42d9-b809-e9efc0976d2a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="external\media">
-      <UniqueIdentifier>{e5993567-b2ca-43a1-81d7-782c145db5f5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="external\media\spaces">
-      <UniqueIdentifier>{f6a8dbfa-58f9-4404-b496-1a7f50157517}</UniqueIdentifier>
     </Filter>
     <Filter Include="external\fmt">
       <UniqueIdentifier>{58aaeb9e-8661-4247-b968-1c3724debed0}</UniqueIdentifier>
@@ -369,9 +360,6 @@
     <ClInclude Include="src\items\item_visitor.hpp">
       <Filter>src\items</Filter>
     </ClInclude>
-    <ClInclude Include="src\entities\beings\goblinoids\goblin.hpp">
-      <Filter>src\entities\beings\goblinoids</Filter>
-    </ClInclude>
     <ClInclude Include="src\entities\beings\stats\vision.hpp">
       <Filter>src\entities\beings\stats</Filter>
     </ClInclude>
@@ -501,9 +489,6 @@
     <ClInclude Include="src\quantities\game_time.hpp">
       <Filter>src\quantities</Filter>
     </ClInclude>
-    <ClInclude Include="src\quantities\quantities.hpp">
-      <Filter>src\quantities</Filter>
-    </ClInclude>
     <ClInclude Include="src\utility\static_property.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
@@ -570,12 +555,6 @@
     <ClInclude Include="external\cancel\algebra.hpp">
       <Filter>external\cancel</Filter>
     </ClInclude>
-    <ClInclude Include="external\media\spaces\view.hpp">
-      <Filter>external\media\spaces</Filter>
-    </ClInclude>
-    <ClInclude Include="external\media\spaces\window.hpp">
-      <Filter>external\media\spaces</Filter>
-    </ClInclude>
     <ClInclude Include="src\animation\scene_node.hpp">
       <Filter>src\animation</Filter>
     </ClInclude>
@@ -584,9 +563,6 @@
     </ClInclude>
     <ClInclude Include="src\animation\particles\sprite_particle.hpp">
       <Filter>src\animation\particles</Filter>
-    </ClInclude>
-    <ClInclude Include="src\animation\item_animator.hpp">
-      <Filter>src\animation</Filter>
     </ClInclude>
     <ClInclude Include="src\animation\still_image.hpp">
       <Filter>src\animation</Filter>
@@ -681,6 +657,15 @@
     <ClInclude Include="src\ui\world_widget.hpp">
       <Filter>src\ui</Filter>
     </ClInclude>
+    <ClInclude Include="src\quantities\misc.hpp">
+      <Filter>src\quantities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\view_space.hpp">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\items\common_actions.hpp">
+      <Filter>src\items</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -739,9 +724,6 @@
     </ClCompile>
     <ClCompile Include="src\entities\objects\object.cpp">
       <Filter>src\entities\objects</Filter>
-    </ClCompile>
-    <ClCompile Include="src\entities\beings\goblinoids\goblin.cpp">
-      <Filter>src\entities\beings\goblinoids</Filter>
     </ClCompile>
     <ClCompile Include="src\entities\beings\stats\vision.cpp">
       <Filter>src\entities\beings\stats</Filter>
@@ -961,6 +943,12 @@
     </ClCompile>
     <ClCompile Include="src\ui\world_widget.cpp">
       <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\items\weapons\arrow.cpp">
+      <Filter>src\items\weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="src\items\common_actions.cpp">
+      <Filter>src\items</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

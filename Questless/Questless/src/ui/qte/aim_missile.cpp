@@ -8,25 +8,24 @@
 #include "entities/beings/being.hpp"
 #include "entities/beings/body_part.hpp"
 #include "game.hpp"
-#include "units/math.hpp"
 #include "utility/random.hpp"
 
-using namespace media;
-
 namespace ql::qte {
+	using namespace view::literals;
+
 	aim_missile::aim_missile(region_tile::point source_coords, being const& target_being, std::function<void(body_part*)> cont)
 		: _source_tile_coords{source_coords}
 		, _target_being{target_being}
 		, _cont{std::move(cont)}
-		, _aiming_circle{spaces::view::point{500.0f, 500.0f}, 10.0f}
+		, _aiming_circle{view::point{500.0_px, 500.0_px}, 10.0_px}
 		, _title{make_title("Aim your shot!")}
 		, _prompt{make_prompt("Pull back the aiming circle.")} //
 	{
-		auto const tile_source_to_target = _target_being.coords - _source_tile_coords;
+		auto const tile_source_to_target = _target_being.location.coords - _source_tile_coords;
 		auto const game_source_to_target = to_world(tile_source_to_target);
-		spaces::view::vector const view_source_to_target{static_cast<spaces::view::scalar>(game_source_to_target.x()),
-			static_cast<spaces::view::scalar>(-game_source_to_target.y())};
-		spaces::view::scalar const view_distance = view_source_to_target.length();
+		view::vector const view_source_to_target{
+			static_cast<view::px>(game_source_to_target.x()), static_cast<view::scalar>(-game_source_to_target.y())};
+		view::scalar const view_distance = view_source_to_target.length();
 		auto const unit_source_to_target = view_distance == 0.0f ? view_source_to_target : view_source_to_target / view_distance;
 
 		// Reduce scale with distance.

@@ -6,7 +6,7 @@
 
 #include "being.hpp" //! @todo This could be forward-declared, but it would require practically doubling the amount of code in this file. Move inclusion to .cpp if ever added for another reason.
 
-#include "quantities/quantities.hpp"
+#include "quantities/misc.hpp"
 #include "utility/reference.hpp"
 #include "utility/utility.hpp"
 

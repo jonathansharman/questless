@@ -4,8 +4,6 @@
 
 #include "animation/particle_animation.hpp"
 
-using namespace media;
-
 namespace ql {
 	void particle_animation::animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const {
 		for (auto& particle : particles) {
