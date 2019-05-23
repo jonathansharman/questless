@@ -24,23 +24,23 @@ namespace cancel {
 		rep value;
 
 		//! Constructs a quantity from the default value of the underlying type.
-		constexpr quantity() = default;
+		constexpr quantity() noexcept(std::is_nothrow_default_constructible_v<rep>) = default;
 
-		//! Explicitly constructs a quantity from a value.
-		explicit constexpr quantity(rep const& value) : value(value) {}
+		//! Explicitly copy-constructs a quantity from a value.
+		explicit constexpr quantity(rep const& value) noexcept(std::is_nothrow_copy_constructible_v<rep>) : value{value} {}
 
-		//! Explicitly constructs a quantity from a value.
-		explicit constexpr quantity(rep&& value) : value(std::move(value)) {}
+		//! Explicitly move-constructs a quantity from a value.
+		explicit constexpr quantity(rep&& value) noexcept(std::is_nothrow_move_constructible_v<rep>) : value{std::move(value)} {}
 
-		//! Constructs a quantity from an object of the same representation and unit.
+		//! Copy-constructs a quantity from an object of the same representation and unit.
 		template <typename ThatUnit>
-		constexpr quantity(quantity<Rep, ThatUnit> const& that) : value{that.value} {
+		constexpr quantity(quantity<rep, ThatUnit> const& that) noexcept(std::is_nothrow_copy_constructible_v<rep>) : value{that.value} {
 			static_assert(detail::is_same_unit_v<unit, ThatUnit>, "Attempted to initialize from quantity of a different unit.");
 		};
 
-		//! Constructs a quantity from a quantity of compatible representation and the same unit.
-		template <typename ThatRep, typename ThatUnit>
-		constexpr quantity(quantity<ThatRep, ThatUnit>&& that) : value{std::move(that.value)} {
+		//! Move-constructs a quantity from an object of the same representation and unit.
+		template <typename ThatUnit>
+		constexpr quantity(quantity<rep, ThatUnit>&& that) noexcept(std::is_nothrow_move_constructible_v<rep>) : value{std::move(that.value)} {
 			static_assert(detail::is_same_unit_v<unit, ThatUnit>, "Attempted to initialize from quantity of a different unit.");
 		};
 
@@ -52,18 +52,18 @@ namespace cancel {
 		template <typename Archive>
 		void load(Archive& archive) { archive(value); }
 
-		//! Assign from an object of the same representation and unit.
+		//! Copy-assign from an object of the same representation and unit.
 		template <typename ThatRep, typename ThatUnit>
-		constexpr auto& operator =(quantity<ThatRep, ThatUnit> const& that) {
+		constexpr auto& operator =(quantity<ThatRep, ThatUnit> const& that) noexcept(std::is_nothrow_copy_assignable_v<rep>) {
 			static_assert(std::is_convertible_v<ThatRep, rep>, "Attempted to assign from a quantity with an incompatible representation.");
 			static_assert(detail::is_same_unit_v<unit, ThatUnit>, "Attempted to assign from a quantity of a different unit.");
 			value = static_cast<rep>(that.value);
 			return *this;
 		};
 
-		//! Assign from an object of the same representation and unit.
+		//! Move-assign from an object of the same representation and unit.
 		template <typename ThatRep, typename ThatUnit>
-		constexpr auto& operator =(quantity<ThatRep, ThatUnit>&& that) {
+		constexpr auto& operator =(quantity<ThatRep, ThatUnit>&& that) noexcept(std::is_nothrow_move_assignable_v<rep>) {
 			static_assert(std::is_convertible_v<ThatRep, rep>, "Attempted to assign from a quantity with an incompatible representation.");
 			static_assert(detail::is_same_unit_v<unit, ThatUnit>, "Attempted to assign from a quantity of a different unit.");
 			value = std::move(static_cast<rep>(that.value));
@@ -155,6 +155,10 @@ namespace cancel {
 
 		//! The negation of this quantity.
 		constexpr auto operator -() const { return quantity<rep, unit>{-value}; }
+
+		//! Implicit conversion to the representation type, if the quantity is unitless.
+		template <typename = std::enable_if_t<detail::is_same_unit_v<unit, unit_t<>>>>
+		constexpr rep operator rep() const noexcept { return value; }
 	};
 
 	//! A unit-less quantity with representation @p Rep.
@@ -226,13 +230,13 @@ namespace cancel {
 	template <typename Rep, typename Unit, typename K, typename = std::enable_if_t<std::is_convertible_v<K, Rep>>>
 	constexpr auto operator *(quantity<Rep, Unit> const& q, K const& k) {
 		using result_rep = std::common_type_t<Rep, K>;
-		return quantity<result_rep, Unit>{static_cast<result_rep>(q.value) * static_cast<result_rep>(k)};
+		return quantity<result_rep, Unit>{static_cast<result_rep>(q.value)* static_cast<result_rep>(k)};
 	}
 	//! Multiply a scalar by a quantity.
 	template <typename K, typename Rep, typename Unit, typename = std::enable_if_t<std::is_convertible_v<K, Rep>>>
 	constexpr auto operator *(K const& k, quantity<Rep, Unit> const& q) {
 		using result_rep = std::common_type_t<Rep, K>;
-		return quantity<result_rep, Unit>{static_cast<result_rep>(k) * static_cast<result_rep>(q.value)};
+		return quantity<result_rep, Unit>{static_cast<result_rep>(k)* static_cast<result_rep>(q.value)};
 	}
 
 	//! Divide a quantity by a scalar.
@@ -268,7 +272,7 @@ namespace cancel {
 	constexpr auto operator *(quantity<Rep1, Unit1> const& q1, quantity<Rep2, Unit2> const& q2) {
 		static_assert(std::is_convertible_v<Rep1, Rep2> || std::is_convertible_v<Rep2, Rep1>, "Attempted to multiply quantities with incompatible representations.");
 		using result_rep = std::common_type_t<Rep1, Rep2>;
-		return quantity<result_rep, product_t<Unit1, Unit2>>{static_cast<result_rep>(q1.value) * static_cast<result_rep>(q2.value)};
+		return quantity<result_rep, product_t<Unit1, Unit2>>{static_cast<result_rep>(q1.value)* static_cast<result_rep>(q2.value)};
 	}
 
 	//! Divide quantities of compatible representation and the same unit.
@@ -293,7 +297,7 @@ namespace cancel {
 		< typename Rep, typename Unit, typename K
 		, typename = std::enable_if_t<std::is_floating_point_v<Rep> && std::is_convertible_v<K, Rep>>
 		>
-	constexpr auto fmod(quantity<Rep, Unit> const& q, K const& k) {
+		constexpr auto fmod(quantity<Rep, Unit> const& q, K const& k) {
 		using result_rep = std::common_type_t<Rep, K>;
 		return quantity<result_rep, Unit>{static_cast<result_rep>(std::fmodl(q.value, k))};
 	}
@@ -303,7 +307,7 @@ namespace cancel {
 		< typename Rep1, typename Unit1, typename Rep2, typename Unit2
 		, typename = std::enable_if_t<std::is_floating_point_v<std::common_type_t<Rep1, Rep2>>>
 		>
-	constexpr auto fmod(quantity<Rep1, Unit1> const& q1, quantity<Rep2, Unit2> const& q2) {
+		constexpr auto fmod(quantity<Rep1, Unit1> const& q1, quantity<Rep2, Unit2> const& q2) {
 		static_assert(std::is_convertible_v<Rep1, Rep2> || std::is_convertible_v<Rep2, Rep1>, "Attempted to mod quantities with incompatible representations.");
 		using result_rep = std::common_type_t<Rep1, Rep2>;
 		return quantity<result_rep, Unit1>{static_cast<result_rep>(fmodl(q1.value, q2.value))};

@@ -71,11 +71,11 @@ namespace cancel {
 			using type = TypePowerList1;
 		};
 
-		//! The inverse of the given type type power list.
+		//! The inverse of the given type power list.
 		template <typename TypePowerList>
 		struct inverse;
 
-		//! The type of the inverse of the given type type power list.
+		//! The type of the inverse of the given type power list.
 		template <typename TypePowerList>
 		using inverse_t = typename inverse<TypePowerList>::type;
 
