@@ -6,7 +6,7 @@
 #pragma once
 
 #include "reference.hpp"
-#include "world/world.hpp"
+#include "world/world_space.hpp"
 
 #include <range/v3/all.hpp>
 
@@ -19,12 +19,6 @@ namespace ql {
 	template <typename T>
 	sf::Uint8 to_uint8(T percentage) {
 		return static_cast<sf::Uint8>(255 * percentage);
-	}
-
-	//! Scales a unitless quantity in [0, 1] to [0, 255].
-	template <typename Rep>
-	sf::Uint8 to_uint8(cancel::unitless<Rep> percentage) {
-		return static_cast<sf::Uint8>(255 * percentage.value);
 	}
 
 	//! Conditionally removes elements from a container using the erase-remove idiom.

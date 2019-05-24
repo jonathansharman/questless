@@ -8,7 +8,7 @@
 #include "utility/nonnegative.hpp"
 
 #include "ui/view_space.hpp"
-#include "world/world.hpp"
+#include "world/world_space.hpp"
 
 #include <SFML/Graphics.hpp>
 

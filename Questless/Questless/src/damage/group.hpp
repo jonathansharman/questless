@@ -9,6 +9,7 @@
 #include "protect.hpp"
 
 #include "quantities/misc.hpp"
+#include "utility/static_bounded.hpp"
 
 #include <cmath>
 #include <vector>
@@ -40,15 +41,14 @@ namespace ql::dmg {
 
 		//! Constructs a damage group from a list of damage components.
 		//! @param parts The list of components in this damage group.
-		//! @param protection_bypass The proportion of protection this damage group bypasses.
-		group(std::vector<damage> parts, double protection_bypass = 0.0)
-			: _parts{std::move(parts)}, _protection_bypass{protection_bypass} {}
+		//! @param bypass The amount of coverage this group can bypass.
+		group(std::vector<damage> parts, coverage bypass = 0.0_coverage) : _parts{std::move(parts)}, _bypass{bypass} {}
 
 		//! Constructs a damage group from a single damage component.
 		//! @param part The single component of this damage group.
-		//! @param protection_bypass The proportion of protection this damage group bypasses.
+		//! @param bypass The amount of coverage this group can bypass.
 		template <typename Damage>
-		group(Damage damage_part, double protection_bypass = 0.0) : group{damage{damage_part}, protection_bypass} {}
+		group(Damage damage_part, coverage bypass = 0.0_coverage) : group{damage{damage_part}, bypass} {}
 
 		static group zero() {
 			return group{};
@@ -88,9 +88,9 @@ namespace ql::dmg {
 			return _parts;
 		}
 
-		//! The proportion of protection this damage group bypasses.
-		double protection_bypass() const {
-			return _protection_bypass;
+		//! The amount of coverage this group can bypass.
+		coverage bypass() const {
+			return _bypass;
 		}
 
 		//! The amount of health loss this damage group causes, defined as the sum of its damage component values.
@@ -107,10 +107,9 @@ namespace ql::dmg {
 
 	private:
 		std::vector<damage> _parts;
-		double _protection_bypass = 0.0;
+		static_bounded<coverage, min_coverage, max_coverage> _bypass;
 
 		//! Helper for constructing a damage group from a single damage part and optional protection bypass.
-		group(damage damage_part, double protection_bypass = 0.0)
-			: _parts{{damage_part}}, _protection_bypass{protection_bypass} {}
+		group(damage damage_part, coverage bypass = 0.0_coverage) : _parts{{damage_part}}, _bypass{bypass} {}
 	};
 }

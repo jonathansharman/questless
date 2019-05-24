@@ -13,7 +13,7 @@
     <NLOHMANN_JSON_PATH>C:\vc-libs\json\</NLOHMANN_JSON_PATH>
     <GCEM_PATH>C:\vc-libs\gcem\</GCEM_PATH>
     <FMT_PATH>C:\vc-libs\fmt\</FMT_PATH>
-    <ENTT>C:\vc-libs\entt\src\</ENTT>
+    <ENTT_PATH>C:\vc-libs\entt\src\</ENTT_PATH>
   </PropertyGroup>
   <PropertyGroup />
   <ItemDefinitionGroup />
@@ -61,8 +61,8 @@
       <Value>$(FMT_PATH)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
-    <BuildMacro Include="ENTT">
-      <Value>$(ENTT)</Value>
+    <BuildMacro Include="ENTT_PATH">
+      <Value>$(ENTT_PATH)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
   </ItemGroup>

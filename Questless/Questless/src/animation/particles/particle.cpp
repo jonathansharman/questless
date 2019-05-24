@@ -5,7 +5,7 @@
 #include "particle.hpp"
 
 #include "utility/random.hpp"
-#include "world/world.hpp"
+#include "world/world_space.hpp"
 
 namespace ql {
 	particle::particle(sec lifetime) : lifetime{lifetime} {}

@@ -13,7 +13,6 @@
 #include "effects/effect.hpp"
 #include "entities/all_entities.hpp"
 #include "entities/beings/being.hpp"
-#include "entities/objects/object.hpp"
 #include "game.hpp"
 #include "items/weapons/quarterstaff.hpp"
 #include "utility/random.hpp"
@@ -26,8 +25,6 @@ using std::function;
 using std::string;
 using std::vector;
 namespace fs = std::filesystem;
-
-using namespace media;
 
 namespace ql {
 	bool turn_order_function(being const& first, being const& second) {
@@ -58,8 +55,8 @@ namespace ql {
 						// if (r == section::diameter - 1 || q == section::diameter - 1) {
 						//	data += std::to_string(static_cast<int>(ql::subtype::edge)) + ' ' + std::to_string(0.0) + '
 						//'; } else {
-						data += std::to_string(uniform(0, static_cast<int>(tile_subtype::TILE_SUBTYPE_COUNT) - 1)) +
-								' ' + std::to_string(0.0) + ' ';
+						data += std::to_string(uniform(0, static_cast<int>(terrain::terrain_count) - 1)) + ' ' +
+								std::to_string(0.0) + ' ';
 						//}
 
 						// Every tile is snow (nice for testing lighting).
@@ -74,11 +71,22 @@ namespace ql {
 						if ((section_r != 0_section_span || section_q != 0_section_span) && uniform(0, 10) == 0) {
 							auto entity_coords = section::region_tile_coords(section_coords, section_tile::point{q, r});
 							if (!uniform(0, 12)) {
-								bool const success = try_spawn(umake<campfire>(*this, entity_coords), entity_coords);
+								// Create and spawn campfire.
+								ent campfire = reg.create();
+								make_campfire(campfire, location{id, entity_coords});
+								bool const success = try_spawn(campfire, entity_coords);
 								assert(success);
 							} else {
-								auto new_being = umake<goblin>(agent::make<basic_ai>);
-								new_being->inventory.add(the_game().items.add(umake<quarterstaff>()).id);
+								// Create goblin.
+								auto goblin = reg.create();
+								make_goblin(goblin); //! @todo Implement make_goblin().
+								reg.assign<basic_ai>(goblin, goblin);
+								// Create quarterstaff.
+								ent quarterstaff = reg.create();
+								make_quarterstaff(quarterstaff); //! @todo Implement make_quarterstaff().
+								// Give quarterstaff to goblin.
+								reg.get<inventory>(goblin).add(quarterstaff);
+								// Spawn goblin.
 								bool const success = try_spawn(std::move(new_being), entity_coords);
 								assert(success);
 							}
@@ -191,11 +199,11 @@ namespace ql {
 #endif
 	}
 
-	void region::remove_from_turn_queue(being& being) {
+	void region::remove_from_turn_queue(ent being_id) {
 		if (being.cond.busy_time <= 0_tick) _turn_queue.erase(being);
 	}
 
-	void region::add_to_turn_queue(being& being) {
+	void region::add_to_turn_queue(ent being_id) {
 		if (being.cond.busy_time <= 0_tick) _turn_queue.insert(being);
 	}
 
@@ -241,13 +249,15 @@ namespace ql {
 		assert(success);
 	}
 
-	bool region::try_add(being& being, region_tile::point region_tile_coords) {
+	bool region::try_add(ent entity_id, region_tile::point region_tile_coords) {
 		if (section* section = containing_section(region_tile_coords)) {
-			being.location.region = this;
-			being.location.coords = region_tile_coords;
+			auto& location = reg.get<ql::location>(entity_id);
+			location.region_id = id;
+			location.coords = region_tile_coords;
 
-			add_to_turn_queue(being);
-			return section->try_add(being);
+			if (reg.has<being>(entity_id)) { add_to_turn_queue(entity_id); }
+
+			return section->try_add(entity_id);
 		} else {
 			//! @todo What to do when adding outside current sections?
 			return false;
@@ -264,14 +274,6 @@ namespace ql {
 			//! @todo What to do when adding outside current sections?
 			return false;
 		}
-	}
-
-	bool region::try_spawn(uptr<being> being, region_tile::point region_tile_coords) {
-		return try_add(the_game().beings.add(std::move(being)), region_tile_coords);
-	}
-
-	bool region::try_spawn(uptr<ql::object> object, region_tile::point region_tile_coords) {
-		return try_add(the_game().objects.add(std::move(object)), region_tile_coords);
 	}
 
 	bool region::try_move(being& being, region_tile::point region_tile_coords) {
@@ -544,7 +546,7 @@ namespace ql {
 		}
 	}
 
-	tile* region::tile_helper(region_tile::point region_tile_coords) const {
+	std::optional<ent> region::tile_helper(region_tile::point region_tile_coords) const {
 		section* section = containing_section_helper(region_tile_coords);
 		if (section) {
 			section_tile::point section_tile_coords = section::section_tile_coords(region_tile_coords);

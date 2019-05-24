@@ -10,7 +10,6 @@
 
 #include "animation/sprite_animation.hpp"
 #include "rsrc/world_renderer.hpp"
-#include "utility/id.hpp"
 #include "utility/reference.hpp"
 #include "world/coordinates.hpp"
 
@@ -77,9 +76,9 @@ namespace ql {
 
 		std::reference_wrapper<world_view const> _world_view;
 
-		std::unordered_map<id<tile>, tile_widget> _tile_widgets;
-		std::unordered_map<id<being>, being_widget> _being_widgets;
-		std::unordered_map<id<object>, object_widget> _object_widgets;
+		std::unordered_map<ent, tile_widget> _tile_widgets;
+		std::unordered_map<ent, being_widget> _being_widgets;
+		std::unordered_map<ent, object_widget> _object_widgets;
 
 		std::vector<uptr<animation>> _effect_animations;
 
@@ -91,6 +90,6 @@ namespace ql {
 
 		animation& cache_tile_animation(tile const& tile);
 		animation& cache_entity_animation(entity const& entity);
-		animation& get_animation(entity_id_var_t entity) const;
+		animation& get_animation(ent entity_id) const;
 	};
 }

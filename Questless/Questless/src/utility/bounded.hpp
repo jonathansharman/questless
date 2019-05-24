@@ -40,6 +40,7 @@
 namespace ql {
 	//! CRTP base class for bounded/property types. Cannot be used directly.
 	//! @tparam ValueType The underlying type.
+	//! @tparam Derived The derived @p bounded type.
 	template <typename ValueType, typename Derived>
 	struct bounded {
 	private:

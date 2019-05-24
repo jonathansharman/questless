@@ -8,21 +8,22 @@
 
 #include "agents/action.hpp"
 #include "quantities/game_time.hpp"
+#include "quantities/misc.hpp"
+#include "reg.hpp"
 #include "utility/complete.hpp"
 
-namespace ql {
-	struct being;
-	struct gatestone;
+namespace ql::magic {
+	//! Heals a being.
+	struct heal {
+		static constexpr magic::color color = magic::color::white;
+		static constexpr tick cooldown = 5_tick;
 
-	namespace magic {
-		//! Heals a being.
-		struct heal {
-			static constexpr char const* name = "Heal";
-			static constexpr magic::color color = magic::color::white;
-			static constexpr tick cooldown = 5_tick;
-			static constexpr tick base_incant_time = 10_tick;
+		struct cast : action {
+			ent gatestone_id;
+			ent target_id;
+			health healing;
 
-			complete cast(being& caster, gatestone& gatestone, action::cont cont) const;
+			result perform(being& caster) final;
 		};
-	}
+	};
 }

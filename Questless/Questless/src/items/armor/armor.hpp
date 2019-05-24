@@ -21,7 +21,7 @@ namespace ql {
 
 		//! The armor's effective protection per hit, accounting for wear.
 		dmg::protect protection() {
-			return base_protection() * (0.5 + 0.5 * (integrity.value() / durability()).value);
+			return base_protection() * (0.5 + 0.5 * (integrity.value() / durability).value);
 		}
 
 		//! The base amount of protection the armor provides.
@@ -29,7 +29,7 @@ namespace ql {
 
 		//! The armor's effective damage resistance, accounting for wear.
 		dmg::resist resistance() {
-			return base_resistance() * (0.5 + 0.5 * (integrity.value() / durability()).value);
+			return base_resistance() * (0.5 + 0.5 * (integrity.value() / durability).value);
 		}
 
 		//! The base amount of damage resistance the armor provides.

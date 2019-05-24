@@ -4,33 +4,15 @@
 
 #pragma once
 
-#include "quantities/misc.hpp"
-#include "utility/id.hpp"
+#include "terrain.hpp"
 
-#include <variant>
+#include "items/inventory.hpp"
+#include "quantities/misc.hpp"
 
 namespace ql {
-	struct dirt {};
-	struct edge {};
-	struct grass {};
-	struct sand {};
-	struct snow {};
-	struct stone {};
-	struct water {};
-
-	//! Tile terrain types.
-	struct terrain {
-		std::variant<dirt, edge, grass, sand, snow, stone, water> value;
-	};
-
-	//! A hexagonal region of the world.
-	struct tile {
-		id<tile> const id;
-
-		//! Offset from ambient temperature at this tile.
-		ql::temperature temperature_offset;
-
-		//! The terrain on this tile.
-		terrain terrain;
-	};
+	//! Makes @p id a tile, a hexagonal region of the world.
+	//! @param terrain The terrain on this tile.
+	//! @param temperature The temperature at this tile.
+	//! @param luminance The amount of light at this tile.
+	void make_tile(ent id, terrain terrain, temperature temperature, lum luminance);
 }

@@ -11,6 +11,8 @@
 #include "quantities/wall_time.hpp"
 #include "utility/reference.hpp"
 
+#include <SFML/System/String.hpp>
+
 #include <functional>
 
 namespace ql {

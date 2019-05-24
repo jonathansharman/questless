@@ -46,10 +46,11 @@ namespace ql {
 				return _start_time;
 			}
 
-		private:
+		protected:
 			sf::Window& _window;
 			rsrc::fonts const& _fonts;
 
+		private:
 			//! When the scene started.
 			clock::time_point _start_time = clock::now();
 			//! The last time the scene was updated.

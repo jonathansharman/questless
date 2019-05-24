@@ -37,7 +37,7 @@ namespace ql {
 				if (row_in_bounds && column_in_bounds && index_in_bounds) {
 					for (std::size_t key_index = 0; key_index < 10; ++key_index) {
 						if (im.pressed(input_manager::index_to_num_key(key_index))) {
-							_hotbar[key_index] = _displayed_items[index].get().id;
+							_hotbar[key_index] = _displayed_items[index];
 						}
 					}
 				}
@@ -54,8 +54,8 @@ namespace ql {
 
 			// Fill the hotbar with as many items as possible.
 			size_t count = 0;
-			for (item const& item : _displayed_items) {
-				_hotbar[count++] = item.id;
+			for (auto item_id : _displayed_items) {
+				_hotbar[count++] = item_id;
 				if (count == _hotbar_size) { return; }
 			}
 		} else {
@@ -183,12 +183,8 @@ namespace ql {
 	}
 
 	void hud::update_displayed_items(being const& player_being) {
-		_displayed_items = {player_being.inventory.items.begin(), player_being.inventory.items.end()};
-		// Sort displayed items alphabetically.
-		//! @todo Custom displayed items order and cache the displayed items (only need to regenerate list if a turn has
-		//! been taken).
-		std::sort(_displayed_items.begin(), _displayed_items.end(), [](item const& left, item const& right) {
-			return left.name() < right.name();
-		});
+		_displayed_items = {player_being.inventory.item_ids.begin(), player_being.inventory.item_ids.end()};
+		//! @todo Support item sorting (alphabetical or custom).
+		//! @todo Cache the displayed items (only need to regenerate list if a turn has been taken).
 	}
 }

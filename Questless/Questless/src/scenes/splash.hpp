@@ -6,23 +6,30 @@
 
 #include "scene.hpp"
 
+#include "ui/view_space.hpp"
 #include "utility/reference.hpp"
 
 #include "rsrc/splash.hpp"
 
-namespace ql::scene {
-	//! The splash screen scene.
-	struct splash : scene {
-		splash();
+namespace ql {
+	namespace rsrc {
+		struct fonts;
+	}
 
-	private:
-		bool _sound_played = false;
-		std::vector<sf::Vector2i> _flame_positions{};
+	namespace scene {
+		//! The splash screen scene.
+		struct splash : scene {
+			splash(sf::Window& window, rsrc::fonts const& fonts);
 
-		rsrc::splash _rsrc;
+		private:
+			bool _sound_played = false;
+			std::vector<view::point> _flame_positions{};
 
-		update_result scene_subupdate(sec elapsed_time, input_manager& im) final;
+			rsrc::splash _rsrc;
 
-		void scene_subdraw() final;
-	};
+			update_result scene_subupdate(sec elapsed_time, input_manager& im) final;
+
+			void scene_subdraw(sf::RenderTarget& target, sf::RenderStates states) const final;
+		};
+	}
 }

@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include "utility/id.hpp"
 #include "world/coordinates.hpp"
 
 namespace ql {
@@ -13,7 +12,7 @@ namespace ql {
 	namespace effects {
 		struct telescope {
 			region_tile::point origin;
-			id<being> const caster_id;
+			ent const caster_id;
 
 			constexpr span range() const {
 				return 3_span;

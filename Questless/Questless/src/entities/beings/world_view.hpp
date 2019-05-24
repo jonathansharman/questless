@@ -10,15 +10,12 @@
 #include <vector>
 
 #include "entities/perception.hpp"
-#include "utility/id.hpp"
 #include "world/coordinates.hpp"
 #include "world/section.hpp"
-#include "world/world.hpp"
+#include "world/world_space.hpp"
 
 namespace ql {
-	struct region;
 	struct being;
-	struct object;
 
 	//! Represents everything an agent can perceive about its being's environment.
 	struct world_view {
@@ -28,7 +25,7 @@ namespace ql {
 		};
 
 		struct entity_view {
-			std::variant<id<being>, id<object>> id;
+			ent id;
 			perception::bounded_level perception;
 		};
 

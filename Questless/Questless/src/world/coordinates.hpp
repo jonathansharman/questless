@@ -5,10 +5,11 @@
 
 #pragma once
 
-#include "world.hpp"
+#include "world_space.hpp"
 
 #include "quantities/distance.hpp"
 #include "quantities/misc.hpp"
+#include "reg.hpp"
 
 #include "vecx/hex_space.hpp"
 
@@ -26,7 +27,7 @@ namespace ql {
 
 	//! Location within the entire world.
 	struct location {
-		region* region;
+		ent region_id;
 		region_tile::point coords;
 	};
 
@@ -39,11 +40,11 @@ namespace ql {
 
 	//! Converts @p p to a world space point.
 	constexpr auto to_world(region_tile::point p) {
-		return world::point{
-			((hex_layout.orientation.f0 * p.q.value + hex_layout.orientation.f1 * p.r.value) * x(hex_layout.size) +
-				x(hex_layout.origin)),
-			((hex_layout.orientation.f2 * p.q.value + hex_layout.orientation.f3 * p.r.value) * y(hex_layout.size) +
-				y(hex_layout.origin))};
+		auto const px = ((hex_layout.orientation.f0 * p.q.value + hex_layout.orientation.f1 * p.r.value) * x(hex_layout.size) +
+						 x(hex_layout.origin));
+		auto const py = ((hex_layout.orientation.f2 * p.q.value + hex_layout.orientation.f3 * p.r.value) * y(hex_layout.size) +
+						 y(hex_layout.origin));
+		return world::point{px, py};
 	}
 	//! Converts @p v to a world space vector.
 	constexpr auto to_world(region_tile::vector v) {
@@ -58,7 +59,7 @@ namespace ql {
 		auto const r1 = hex_layout.orientation.b1 * (y(p) - y(hex_layout.origin)) / y(hex_layout.size);
 		auto const r2 = hex_layout.orientation.b2 * (x(p) - x(hex_layout.origin)) / x(hex_layout.size);
 		auto const r3 = hex_layout.orientation.b3 * (y(p) - y(hex_layout.origin)) / y(hex_layout.size);
-		return region_tile::point{(r0 + r1).value, (r2 + r3).value};
+		return region_tile::point{span{static_cast<int>((r0 + r1).value)}, span{static_cast<int>((r2 + r3).value)}};
 	}
 	//! Converts @p v to a region tile space vector.
 	constexpr auto to_region_tile(world::vector v) {
@@ -66,7 +67,7 @@ namespace ql {
 		auto const r1 = hex_layout.orientation.b1 * y(v) / y(hex_layout.size);
 		auto const r2 = hex_layout.orientation.b2 * x(v) / x(hex_layout.size);
 		auto const r3 = hex_layout.orientation.b3 * y(v) / y(hex_layout.size);
-		return region_tile::vector{(r0 + r1).value, (r2 + r3).value};
+		return region_tile::vector{span{static_cast<int>((r0 + r1).value)}, span{static_cast<int>((r2 + r3).value)}};
 	}
 }
 

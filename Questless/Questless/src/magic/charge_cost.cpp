@@ -6,20 +6,14 @@
 
 #include "magic/charge_cost.hpp"
 
-#include "agents/agent.hpp"
-#include "agents/queries/message.hpp"
-#include "entities/beings/being.hpp"
 #include "items/magic/gatestone.hpp"
 
 namespace ql {
-	complete charge_cost::check(being& actor, cont cont) const {
-		return _gatestone.charge >= _amount
-			? cont()
-			: actor.agent().send_message(queries::message::not_enough_charge{_amount - _gatestone.charge.value()}, [] { return complete{}; })
-			;
+	bool charge_cost::can_pay() const {
+		return gatestone.charge >= amount;
 	}
 
-	void charge_cost::incur(being&) const {
-		_gatestone.charge -= _amount;
+	void charge_cost::pay() {
+		gatestone.charge -= amount;
 	}
 }

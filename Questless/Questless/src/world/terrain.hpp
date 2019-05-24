@@ -4,8 +4,7 @@
 
 #pragma once
 
-#include "stats/being.hpp"
-
 namespace ql {
-	void make_human(ent id, location location);
+	//! Type of terrain on a tile.
+	enum class terrain : int { dirt = 0, edge, grass, sand, snow, stone, water, terrain_count };
 }

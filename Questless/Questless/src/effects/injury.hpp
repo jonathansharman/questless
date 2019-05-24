@@ -5,7 +5,6 @@
 #pragma once
 
 #include "damage/group.hpp"
-#include "utility/id.hpp"
 #include "world/coordinates.hpp"
 
 #include <optional>
@@ -18,9 +17,9 @@ namespace ql {
 		struct injury {
 			region_tile::point origin;
 			dmg::group const damage;
-			id<being> target_being_id;
-			id<body_part> target_part_id;
-			std::optional<id<being>> opt_source_id;
+			ent target_being_id;
+			ent target_part_id;
+			std::optional<ent> opt_source_id;
 
 			constexpr span range() const {
 				return 7_span;

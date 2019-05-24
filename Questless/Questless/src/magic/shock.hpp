@@ -6,20 +6,24 @@
 
 #include "color.hpp"
 
+#include "agents/action.hpp"
+#include "damage/damage.hpp"
 #include "quantities/game_time.hpp"
+#include "reg.hpp"
+#include "world/coordinates.hpp"
 
-namespace ql {
-	struct gatestone;
+namespace ql::magic {
+	//! Discharges a bolt of electricity to strike a tile.
+	struct shock {
+		static constexpr magic::color color = magic::color::red;
+		static constexpr tick cooldown = 5_tick;
 
-	namespace magic {
-		//! Discharges a bolt of electricity to strike a tile.
-		struct shock {
-			static constexpr char const* name = "Lightning Bolt";
-			static constexpr magic::color color = magic::color::red;
-			static constexpr tick cooldown = 5_tick;
-			static constexpr tick base_incant_time = 15_tick;
+		struct cast : action {
+			ent gatestone_id;
+			region_tile::point target;
+			dmg::shock damage;
 
-			complete cast(being& caster, gatestone& gatestone, action::cont cont);
+			result perform(being& caster) final;
 		};
-	}
+	};
 }

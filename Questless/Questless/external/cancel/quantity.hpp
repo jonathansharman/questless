@@ -158,7 +158,7 @@ namespace cancel {
 
 		//! Implicit conversion to the representation type, if the quantity is unitless.
 		template <typename = std::enable_if_t<detail::is_same_unit_v<unit, unit_t<>>>>
-		constexpr rep operator rep() const noexcept { return value; }
+		constexpr operator rep() const noexcept { return value; }
 	};
 
 	//! A unit-less quantity with representation @p Rep.

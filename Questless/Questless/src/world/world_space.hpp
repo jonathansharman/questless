@@ -18,11 +18,11 @@
 #include <SFML/System.hpp>
 
 namespace ql::world {
-	using length = cancel::quantity<double, cancel::unit_t<struct distance_tag>>;
+	using length = cancel::quantity<float, cancel::unit_t<struct distance_tag>>;
 
 	namespace literals {
 		constexpr auto operator"" _world_length(long double value) {
-			return length{static_cast<double>(value)};
+			return length{static_cast<float>(value)};
 		}
 	}
 	using namespace literals;
@@ -83,14 +83,26 @@ namespace ql::world {
 
 	using circle = vecx::sphere<length, 2>;
 
-	// Conversions to SFML
+	// Conversions from world space to SFML
 
 	sf::Vector2f to_sfml(vector v) {
-		return {static_cast<float>(v[0].value), static_cast<float>(v[1].value)};
+		return {v[0].value, v[1].value};
 	}
 
 	sf::Vector2f to_sfml(point p) {
-		return {static_cast<float>(p[0].value), static_cast<float>(p[1].value)};
+		return {p[0].value, p[1].value};
+	}
+
+	// Conversions from SFML to world space
+
+	template <typename T>
+	vector vector_from_sfml(sf::Vector2<T> const& v) {
+		return {length{v.x}, length{v.y}};
+	}
+
+	template <typename T>
+	point point_from_sfml(sf::Vector2<T> const& p) {
+		return {length{p.x}, length{p.y}};
 	}
 }
 

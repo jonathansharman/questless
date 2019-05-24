@@ -6,24 +6,28 @@
 
 #include "splash.hpp"
 
+#include "main_menu.hpp"
+
+#include "ui/input_manager.hpp"
 #include "utility/random.hpp"
 
 #include <algorithm>
 
-using namespace media;
-
 namespace ql::scene {
+	using namespace view::literals;
+
 	namespace {
 		constexpr sec fade_out_duration = 2.0_s;
 		constexpr sec fade_in_duration = 2.0_s;
 		constexpr sec duration = fade_out_duration + fade_in_duration;
 	}
 
-	splash::splash() {
-		static constexpr int flames_count = 20;
-		for (int i = 0; i < flames_count; ++i) {
-			_flame_positions.push_back(
-			    uniform(0, the_window().width() - 1), (i + 1) * the_window().height() / flame_count);
+	splash::splash(sf::Window& window, rsrc::fonts const& fonts) : scene{window, fonts} {
+		static constexpr int flame_count = 20;
+		for (int i = 0; i < flame_count; ++i) {
+			view::px const x = uniform(0.0_px, view::px{_window.getSize().x - 1});
+			view::px const y{(i + 1) * _window.getSize().y / flame_count};
+			_flame_positions.push_back({x, y});
 		}
 	}
 
@@ -31,45 +35,68 @@ namespace ql::scene {
 		// Play the splash sound effect on the first frame of the splash screen.
 		if (!_sound_played) {
 			_sound_played = true;
-			_loader.flame_sound.play();
+			_rsrc.sfx.flame.play();
 		}
 
-		static constexpr world::speed splash_flames_vy{-2800.0};
-
 		// Move splash flames.
-		for (window::point& position : _flame_positions) {
-			position.y() += lround(splash_flames_vy * target_frame_duration);
-			if (position.y() < 0) {
-				position.y() += the_window().height() + _txt_splash_flame->height();
-				position.x() = uniform(0, the_window().width() - 1);
+		for (auto& position : _flame_positions) {
+			constexpr auto splash_flames_vy = -2800.0_px / 1.0_s;
+			position[1] += splash_flames_vy * elapsed_time;
+			if (position[1] < 0.0_px) {
+				position[1] += view::px{_window.getSize().y + _rsrc.txtr.flame.getSize().y};
+				position[0] = uniform(0.0_px, view::px{_window.getSize().x - 1});
 			}
 		}
 
 		if (im.any_press_count() || to_sec(clock::now() - start_time()) >= duration) {
-			_loader.flame_sound.stop();
-			_state = state::menu;
-		}
-		return update_result::continue_game;
-	};
+			_rsrc.sfx.flame.stop();
+			return switch_scene{umake<main_menu>()};
+		};
+	}
 
-	void splash::scene_subdraw() {
-		float const intensity = [&] {
+	void splash::scene_subdraw(sf::RenderTarget& target, sf::RenderStates states) const {
+		// Get intensity, used for fading in and out.
+		auto const intensity = to_uint8([&]() -> double {
 			if (to_sec(clock::now() - start_time()) < fade_in_duration) {
-				auto time_fading_in = std::chrono::duration_cast<chrono_sec>(clock::now() - start_time());
+				auto time_fading_in = to_sec(clock::now() - start_time());
 				return time_fading_in / fade_in_duration;
 			} else {
-				auto time_fading_out = (clock::now() - start_time() - fade_in_duration);
+				auto time_fading_out = (to_sec(clock::now() - start_time()) - fade_in_duration);
 				return 1.0 - time_fading_out / fade_out_duration;
 			}
-		}();
+		}());
 
-		constexpr int logo_jiggle = 3;
-		window::point logo_position = the_window().window_center() + random_displacement
-			+ window_space::vector{uniform(-logo_jiggle, logo_jiggle), uniform(-logo_jiggle, logo_jiggle)};
-		_txt_splash_logo.draw(logo_position, texture_space::align_center, texture_space::align_middle, colors::color_vector{intensity, intensity, intensity, 1.0f});
+		// Create logo sprite.
+		sf::Sprite logo_sprite{_rsrc.txtr.logo};
+		{ // Set logo position.
+			constexpr auto max_jiggle = 3.0_px;
+			view::vector const logo_jiggle{uniform(-max_jiggle, max_jiggle), uniform(-max_jiggle, max_jiggle)};
+			auto const logo_position = view::point{} + view::vector_from_sfml(_window.getSize()) / 2.0f + logo_jiggle;
+			logo_sprite.setPosition(view::to_sfml(logo_position));
+		}
+		{ // Set logo origin to center.
+			auto const logo_size = _rsrc.txtr.logo.getSize();
+			logo_sprite.setOrigin(logo_size.x / 2, logo_size.y / 2);
+		}
+		{ // Set logo color.
+			logo_sprite.setColor(sf::Color(intensity, intensity, intensity, 1.0));
+		}
+		// Draw logo.
+		target.draw(logo_sprite, states);
 
-		for (window_space::point position : _splash_flame_positions) {
-			_txt_splash_flame.draw(position, texture_space::align_center, texture_space::align_bottom, colors::color_vector{intensity, intensity, intensity, 1.0f});
+		// Create flame sprite.
+		sf::Sprite flame_sprite{_rsrc.txtr.flame};
+		{ // Set flame origin to bottom-center.
+			auto const flame_size = _rsrc.txtr.flame.getSize();
+			flame_sprite.setOrigin(flame_size.x / 2, flame_size.y);
+		}
+		{ // Set flame color.
+			flame_sprite.setColor(sf::Color(intensity, intensity, intensity, 1.0));
+		}
+		for (auto position : _flame_positions) {
+			// Position and draw each flame.
+			flame_sprite.setPosition(to_sfml(position));
+			target.draw(flame_sprite, states);
 		}
 	}
 }

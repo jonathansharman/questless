@@ -4,85 +4,64 @@
 
 #include "damage/group.hpp"
 
+#include "utility/visitation.hpp"
+
 namespace ql::dmg {
 	group group::with(protect const& protection, resist const& resistance, vuln const& vulnerability) const {
 		group result = *this;
 
-		// Reduce protection by the damage's protection bypass.
-		protect const reduced_protection = protection * (1.0 - result._protection_bypass);
-
-		// Reduce damage by the reduced protection.
+		bool const bypassed = result.bypass > protection.coverage ? protect{} : protection;
 		for (auto& part : result._parts) {
-			struct protection_applier {
-				protect const& reduced_protection;
-
-				void operator()(slash& slash) const {
-					slash -= reduced_protection.pad.value() * slash_per_pad +
-							 reduced_protection.deflect.value() * slash_per_deflect;
-				}
-				void operator()(pierce& pierce) const {
-					pierce -= reduced_protection.pad.value() * pierce_per_pad +
-							  reduced_protection.deflect.value() * pierce_per_deflect;
-				}
-				void operator()(cleave& cleave) const {
-					cleave -= reduced_protection.pad.value() * cleave_per_pad +
-							  reduced_protection.deflect.value() * cleave_per_deflect;
-				}
-				void operator()(bludgeon& bludgeon) const {
-					bludgeon -= reduced_protection.pad.value() * bludgeon_per_pad +
-								reduced_protection.deflect.value() * bludgeon_per_deflect;
-				}
-				void operator()(burn& burn) const {
-					burn -= reduced_protection.fireproof.value() * burn_per_fireproof;
-				}
-				void operator()(freeze& freeze) const {
-					freeze -= reduced_protection.frostproof.value() * freeze_per_frostproof;
-				}
-				void operator()(blight& blight) const {
-					blight -= reduced_protection.fortify.value() * blight_per_fortify;
-				}
-				void operator()(poison& poison) const {
-					poison -= reduced_protection.immunize.value() * poison_per_immunize;
-				}
-				void operator()(shock& shock) const {
-					shock -= reduced_protection.insulate.value() * shock_per_insulate;
-				}
-			};
-			std::visit(protection_applier{reduced_protection}, part);
-
-			struct damage_multiplier_applier {
-				resist const& resistance;
-				vuln const& vulnerability;
-
-				void operator()(slash& slash) const {
+			if (!bypassed) {
+				// Apply protection if not bypassed.
+				match(part,
+					[&](slash& slash) {
+						slash -= protection.pad.value() * slash_per_pad + protection.deflect.value() * slash_per_deflect;
+					},
+					[&](pierce& pierce) {
+						pierce -= protection.pad.value() * pierce_per_pad + protection.deflect.value() * pierce_per_deflect;
+					},
+					[&](cleave& cleave) {
+						cleave -= protection.pad.value() * cleave_per_pad + protection.deflect.value() * cleave_per_deflect;
+					},
+					[&](bludgeon& bludgeon) {
+						bludgeon -= protection.pad.value() * bludgeon_per_pad + protection.deflect.value() * bludgeon_per_deflect;
+					},
+					[&](burn& burn) { burn -= protection.fireproof.value() * burn_per_fireproof; },
+					[&](freeze& freeze) { freeze -= protection.frostproof.value() * freeze_per_frostproof; },
+					[&](blight& blight) { blight -= protection.fortify.value() * blight_per_fortify; },
+					[&](poison& poison) { poison -= protection.immunize.value() * poison_per_immunize; },
+					[&](shock& shock) { shock -= protection.insulate.value() * shock_per_insulate; });
+			}
+			// Apply vulnerability and resistance.
+			match(part,
+				[&](slash& slash) {
 					slash += slash * (vulnerability.slash.value() - resistance.slash.value()) / 100.0_slash_factor;
-				}
-				void operator()(pierce& pierce) const {
+				},
+				[&](pierce& pierce) {
 					pierce += pierce * (vulnerability.pierce.value() - resistance.pierce.value()) / 100.0_pierce_factor;
-				}
-				void operator()(cleave& cleave) const {
+				},
+				[&](cleave& cleave) {
 					cleave += cleave * (vulnerability.cleave.value() - resistance.cleave.value()) / 100.0_cleave_factor;
-				}
-				void operator()(bludgeon& bludgeon) const {
+				},
+				[&](bludgeon& bludgeon) {
 					bludgeon += bludgeon * (vulnerability.bludgeon.value() - resistance.bludgeon.value()) / 100.0_bludgeon_factor;
-				}
-				void operator()(burn& burn) const {
+				},
+				[&](burn& burn) {
 					burn += burn * (vulnerability.burn.value() - resistance.burn.value()) / 100.0_burn_factor;
-				}
-				void operator()(freeze& freeze) const {
+				},
+				[&](freeze& freeze) {
 					freeze += freeze * (vulnerability.freeze.value() - resistance.freeze.value()) / 100.0_freeze_factor;
-				}
-				void operator()(blight& blight) const {
+				},
+				[&](blight& blight) {
 					blight += blight * (vulnerability.blight.value() - resistance.blight.value()) / 100.0_blight_factor;
-				}
-				void operator()(poison& poison) const {
+				},
+				[&](poison& poison) {
 					poison += poison * (vulnerability.poison.value() - resistance.poison.value()) / 100.0_poison_factor;
-				}
-				void operator()(shock& shock) const {
+				},
+				[&](shock& shock) {
 					shock += shock * (vulnerability.shock.value() - resistance.shock.value()) / 100.0_shock_factor;
-				}
-			};
-			std::visit(damage_multiplier_applier{resistance, vulnerability}, part);
+				});
 		}
 		return result;
 	}

@@ -4,28 +4,34 @@
 
 #pragma once
 
-#include "stats/being.hpp"
-
 #include "quantities/misc.hpp"
-#include "utility/dynamic_property.hpp"
+#include "reg.hpp"
 
 namespace ql {
 	enum class mortality : int { alive = 0, dead, undead, immortal };
 
 	//! Encapsulates the temporary conditions of a being.
 	struct conditions {
-		stats::being& stats;
+		ent id;
 
-		lazy_bounded<ql::energy> energy;
+		static constexpr auto min_energy = 0.0_ep;
+		static constexpr auto max_energy = 100.0_ep;
+		static_bounded<ql::energy, min_energy, max_energy> energy;
 		constexpr bool weary() const {
-			return energy.value() < 0.5 * stats.a.stamina.value();
+			return energy.value() < min_energy + 0.25 * (max_energy - min_energy);
+		}
+		constexpr bool energized() const {
+			return energy.value() > min_energy + 0.75 * (max_energy - min_energy);
 		}
 
 		static constexpr auto min_satiety = 0.0_sat;
 		static constexpr auto max_satiety = 100.0_sat;
 		static_bounded<ql::satiety, min_satiety, max_satiety> satiety = max_satiety;
 		constexpr bool hungry() const {
-			return satiety.value() < min_satiety + 0.5 * (max_satiety - min_satiety);
+			return satiety.value() < min_satiety + 0.25 * (max_satiety - min_satiety);
+		}
+		constexpr bool full() const {
+			return satiety.value() > min_satiety + 0.75 * (max_satiety - min_satiety);
 		}
 		constexpr bool starving() const {
 			return satiety.value() == min_satiety;
@@ -35,7 +41,10 @@ namespace ql {
 		static constexpr auto max_alertness = 100.0_alert;
 		static_bounded<ql::alertness, min_alertness, max_alertness> alertness = max_alertness;
 		constexpr bool sleepy() const {
-			return alertness.value() < min_alertness + 0.5 * (max_alertness - min_alertness);
+			return alertness.value() < min_alertness + 0.25 * (max_alertness - min_alertness);
+		}
+		constexpr bool alert() const {
+			return alertness.value() > min_alertness + 0.75 * (max_alertness - min_alertness);
 		}
 
 		static constexpr auto min_joy = -100.0_joy;
@@ -68,7 +77,7 @@ namespace ql {
 			return serenity.value() > min_serenity + 0.75 * (max_serenity - min_serenity);
 		}
 
-		dynamic_property<ql::tick> busy_time = 0_tick;
+		nonnegative<ql::tick> busy_time = 0_tick;
 
 		mortality mortality = mortality::alive;
 

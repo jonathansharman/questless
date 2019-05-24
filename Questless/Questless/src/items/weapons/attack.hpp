@@ -7,7 +7,6 @@
 #include "agents/action.hpp"
 #include "agents/cost.hpp"
 #include "damage/group.hpp"
-#include "utility/id.hpp"
 #include "utility/reference.hpp"
 
 namespace ql {
@@ -16,10 +15,10 @@ namespace ql {
 	struct weapon;
 
 	//! An attack that a weapon can perform.
-	struct attack : std::enable_shared_from_this<attack> {
-		id<item> const weapon_id;
+	struct attack {
+		ent const weapon_id;
 
-		attack(id<item> weapon_id) : weapon_id{weapon_id} {}
+		attack(ent weapon_id) : weapon_id{weapon_id} {}
 		virtual ~attack() = default;
 
 		//! The name of the attack.
@@ -56,12 +55,10 @@ namespace ql {
 
 	//! A close-range attack.
 	struct melee_attack : attack {
-		melee_attack(id<item> weapon_id) : attack{weapon_id} {}
-		virtual ~melee_attack() = default;
+		melee_attack(ent weapon_id) : attack{weapon_id} {}
 
 		ql::cost const& cost() const final {
-			static free free;
-			return free;
+			return free{}; //! @todo This slices.
 		}
 
 		uptr<action> launch() final {

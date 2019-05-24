@@ -6,7 +6,7 @@
 #pragma once
 
 #include "utility.hpp"
-#include "world/world.hpp"
+#include "world/world_space.hpp"
 
 #include <random>
 #include <type_traits>
@@ -49,6 +49,11 @@ namespace ql {
 		return probability > uniform(0.0, 1.0);
 	}
 
+	//! A uniformly randomly chosen direction in region tile space.
+	inline region_tile::direction random_direction() {
+		return static_cast<region_tile::direction>(uniform(1, 6));
+	}
+
 	//! A random angle in degrees.
 	typename vecx::radians random_radians() {
 		return uniform(vecx::radians{0.0}, vecx::circle_rad);
@@ -74,6 +79,7 @@ namespace ql {
 
 	//! A uniformly randomly sampled point from within the bounds of @p box.
 	inline world::point random_point_within(world::box box) { //! @todo Check containment logic here.
-		return box.position + world::vector{uniform(world::length{0.0}, width(box)), uniform(world::length{0.0}, height(box))};
+		return box.position +
+			   world::vector{uniform(world::length{0.0}, width(box)), uniform(world::length{0.0}, height(box))};
 	}
 }

@@ -7,9 +7,9 @@
 #include "agents/action.hpp"
 #include "damage/group.hpp"
 #include "quantities/misc.hpp"
+#include "reg.hpp"
 #include "stats/part.hpp"
 #include "ui/view_space.hpp"
-#include "utility/id.hpp"
 #include "utility/lazy_bounded.hpp"
 #include "utility/reference.hpp"
 #include "utility/utility.hpp"
@@ -40,10 +40,10 @@ namespace ql {
 
 		static constexpr auto blood_per_vitality = 1.0_blood / 1.0_hp;
 
-		ql::id<body_part> id;
+		ent id;
 
-		//! @param owner_id The ID of the being that owns this body part.
-		ql::id<being> owner_id;
+		//! The ID of the being that owns this body part.
+		ent owner_id;
 
 		//! The player-visisble name of this body part.
 		std::string name;
@@ -72,7 +72,7 @@ namespace ql {
 			return ableness == ableness::disabled;
 		}
 
-		lazy_bounded<ql::health> health{0.0_hp, [] { return 0.0_hp; }, [this] { return this->stats.a.vitality.value(); }};
+		lazy_bounded<health> health{0.0_hp, [] { return 0.0_hp; }, [this] { return this->stats.a.vitality.value(); }};
 
 		//! The rate at which this body part is losing blood.
 		lazy_bounded<blood_per_tick> bleeding{0.0_blood_per_tick,
@@ -86,7 +86,7 @@ namespace ql {
 		int layer = 0;
 
 		//! The ID of the item equipped to this body or nullopt if none.
-		std::optional<ql::id<item>> equipped_item_id = std::nullopt;
+		std::optional<ent> equipped_item_id = std::nullopt;
 
 		//! The body part attachment points on this body part.
 		std::vector<uptr<attachment>> attachments;
@@ -94,7 +94,7 @@ namespace ql {
 		body_part() = default;
 
 		//! Loads a body part from @filepath.
-		body_part(char const* filepath, ql::id<being> owner_id, ql::id<body_part> id = ql::id<body_part>::make());
+		body_part(ent id, char const* filepath, ent owner_id);
 
 		template <typename Archive>
 		friend constexpr std::string save_minimal(Archive const&, tag const& t) {
@@ -176,12 +176,12 @@ namespace ql {
 		//! Causes the body part to take damage from the specified source being.
 		//! @param damage Damage group to be applied to this being.
 		//! @param opt_source_id The ID of the being which caused the damage, if any.
-		void take_damage(dmg::group& damage, std::optional<ql::id<being>> opt_source_id);
+		void take_damage(dmg::group& damage, std::optional<ent> opt_source_id);
 
 		//! Causes the body part to be healed by the specified source being.
 		//! @param amount Health to be restored to this being.
 		//! @param opt_source_id The ID of the being which caused the healing, if any.
-		void heal(ql::health amount, std::optional<ql::id<being>> opt_source_id);
+		void heal(ql::health amount, std::optional<ent> opt_source_id);
 
 		//! Recursively generates each missing attached body part using default parts.
 		void generate_attached_parts();
@@ -189,25 +189,28 @@ namespace ql {
 
 	//! An attachment point on a body part.
 	struct attachment {
-		//! @param owner_id The ID of the being that owns this body part attachment.
-		ql::id<being> owner_id;
+		//! The ID of the being that owns this body part attachment.
+		ent owner_id;
 
 		//! The body part currently attached here or nullopt if there is no attached part.
 		std::optional<body_part> part;
 
 		//! The offset from the parent part's origin to the child part's origin.
-		view::vector offset;
+		sf::Vector2f offset;
 
 		//! The rotation of the attached part about the attachment point.
 		vecx::radians rotation;
 
 		//! The resource filepath to the default part for this attachment.
-		std::string default_part;
+		char const* default_part;
 
 		//! Creates an instance of the body part that attaches here by default.
 		//! @param owner_id The ID of the being that owns the new body part.
-		body_part make_default() {
-			return body_part{default_part.c_str(), owner_id};
+		//! @return The ID of the new body part.
+		ent make_default() {
+			ent id = reg.create();
+			reg.assign<body_part>(id, id, default_part, owner_id);
+			return id;
 		}
 
 		template <typename Archive>

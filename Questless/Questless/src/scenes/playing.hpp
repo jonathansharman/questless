@@ -6,41 +6,36 @@
 
 #include "scene.hpp"
 
-#include "animation/world_renderer.hpp"
 #include "ui/hud.hpp"
+#include "ui/world_widget.hpp"
 #include "utility/reference.hpp"
 
 namespace ql::scene {
 	//! The scene for an active game.
 	struct playing : scene {
-		playing();
+		playing(sf::Window& window, rsrc::fonts const& fonts);
+
 	private:
+		sf::RenderWindow& _window;
+
 		sf::View _view;
 
-		std::optional<ql::id<being>> _player_being_id = std::nullopt;
-		player* _player = nullptr;
+		std::optional<ent> _player_id = std::nullopt;
 
-		uptr<ql::region> _region;
+		ent _region_id;
 
 		sf::Font _fnt_20pt;
 
-		uptr<ql::world_renderer> _world_renderer;
-
 		// UI
 
-		sf::Texture _txt_test1;
-		sf::Texture _txt_test2;
-		sf::Texture _txt_test3;
-		sf::Texture _txt_test_even;
+		uptr<ql::world_widget> _world_widget;
 
 		sf::Texture _txt_hex_highlight;
 		sf::Texture _txt_hex_circle;
 
-		world::point _point_clicked_rounded;
+		update_result scene_subupdate(sec elapsed_time, input_manager& im) final;
 
-		update_result scene_subupdate(sec elapsed_time) final;
-
-		void scene_subdraw() final;
+		void scene_subdraw(sf::RenderTarget& target, sf::RenderStates states) const final;
 
 		void spawn_player();
 

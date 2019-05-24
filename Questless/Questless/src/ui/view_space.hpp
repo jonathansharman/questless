@@ -74,6 +74,28 @@ namespace ql::view {
 	// Polygon
 
 	using polygon = vecx::polygon<px>;
+
+	// Conversions from view space to SFML
+
+	sf::Vector2f to_sfml(vector v) {
+		return {v[0].value, v[1].value};
+	}
+
+	sf::Vector2f to_sfml(point p) {
+		return {p[0].value, p[1].value};
+	}
+
+	// Conversions from SFML to view space
+
+	template <typename T>
+	vector vector_from_sfml(sf::Vector2<T> const& v) {
+		return {px{v.x}, px{v.y}};
+	}
+
+	template <typename T>
+	point point_from_sfml(sf::Vector2<T> const& p) {
+		return {px{p.x}, px{p.y}};
+	}
 }
 
 #include "vecx/undef_macros.hpp"

@@ -116,14 +116,9 @@ namespace ql {
 		}
 	}
 
-	std::optional<id<being>> section::being_id(region_tile::point tile_coords) const {
-		auto it = _being_map.find(tile_coords);
+	std::optional<id<being>> section::entity_id_at(region_tile::point tile_coords) const {
+		auto it = _entity_map.find(tile_coords);
 		return it != _being_map.end() ? std::make_optional(it->second) : std::nullopt;
-	}
-
-	std::optional<id<object>> section::object_id(region_tile::point tile_coords) const {
-		auto it = _object_map.find(tile_coords);
-		return it != _object_map.end() ? std::make_optional(it->second) : std::nullopt;
 	}
 
 	bool section::try_add(being& being) {
@@ -132,13 +127,7 @@ namespace ql {
 		return result.second;
 	}
 
-	bool section::try_add(object& object) {
-		object.section = this;
-		auto result = _object_map.insert({object.coords, object.id});
-		return result.second;
-	}
-
-	typename void section::remove_being(region_tile::point coords) {
+	typename void section::remove_entity(region_tile::point coords) {
 		auto it = _being_map.find(coords);
 		if (it != _being_map.end()) {
 			if (being* removed_being = the_game().beings.ptr(it->second)) { removed_being->section = nullptr; }
@@ -146,27 +135,7 @@ namespace ql {
 		}
 	}
 
-	typename void section::remove_object(region_tile::point coords) {
-		auto it = _object_map.find(coords);
-		if (it != _object_map.end()) {
-			if (object* removed_object = the_game().objects.ptr(it->second)) { removed_object->section = nullptr; }
-			_object_map.erase(it);
-		}
-	}
-
 	void section::remove(being& being) {
-		remove_being(being.coords);
-	}
-
-	void section::remove(object& object) {
-		remove_object(object.coords);
-	}
-
-	void section::add(light_source const& light_source) {
-		_light_source_ids.insert(light_source.id);
-	}
-
-	void section::remove(light_source const& light_source) {
-		_light_source_ids.erase(light_source.id);
+		remove_entity(being.coords);
 	}
 }

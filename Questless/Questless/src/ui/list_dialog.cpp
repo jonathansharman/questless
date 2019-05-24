@@ -4,15 +4,15 @@
 
 #include "list_dialog.hpp"
 
+#include "rsrc/fonts.hpp"
+
 namespace ql {
 	list_dialog(sf::Window const& window,
 		rsrc::fonts const& fonts,
 		sf::Vector2f origin,
 		sf::String title,
-		std::vector<sf::String> option_texts,
-		std::function<void(std::optional<int>)> cont)
+		std::vector<std::tuple<sf::String, std::function<void()>>> options)
 		: dialog{window}
-		, _cont{std::move(cont)}
 		, _title{make_title(window, title, sf::Color::Black)} //
 	{
 		//! @todo Replace with precondition.
@@ -28,19 +28,19 @@ namespace ql {
 		float bg_width = _title.getLocalBounds().width;
 
 		// Create options.
-		for (auto const& option_text : option_texts) {
-			sf::Text option{option_text, font, 20};
-			option.setFillColor(sf::Color::Black);
-			option.setOutlineColor(sf::Color::Black);
-			option.setOutlineThickness(2);
+		for (auto& [string, callback] : options) {
+			sf::Text option_text{string, font, 20};
+			option_text.setFillColor(sf::Color::Black);
+			option_text.setOutlineColor(sf::Color::Black);
+			option_text.setOutlineThickness(2);
 			// Update background to fit this option's text.
-			bg_width = std::max(bg_width, option.getLocalBounds().width);
+			bg_width = std::max(bg_width, option_text.getLocalBounds().width);
 			// Move new option into options list.
-			_options.push_back(std::move(option));
+			_options.emplace_back(std::move(option_text), std::move(callback));
 		}
 
 		// Highlight first option.
-		_options.front().setFillColor(sf::Color::White);
+		std::get<0>(_options.front()).setFillColor(sf::Color::White);
 
 		// Add width padding to background and set size.
 		bg_width += 2 * padding.x;
@@ -54,12 +54,13 @@ namespace ql {
 		// Position contents relative to background.
 		_title.setPosition(_bg.getPosition() + padding);
 		for (std::size_t i = 0; i < _options.size(); ++i) {
-			_options[i].setPosition(
-				_bg.getPosition() + padding + sf::Vector2f{0, _title_height + static_cast<float>(i) * _option_height});
+			std::get<0>(_options[i])
+				.setPosition(
+					_bg.getPosition() + padding + sf::Vector2f{0, _title_height + static_cast<float>(i) * _option_height});
 		}
 	}
 
-	void update(sec elapsed_time, input_manager& im) final {
+	void list_dialog::update(sec /*elapsed_time*/, input_manager& im) {
 		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) {
 			_cont(std::nullopt);
 			close();
@@ -81,8 +82,8 @@ namespace ql {
 			for (int i = 0; i < end; ++i) {
 				if (im.pressed(input_manager::index_to_num_key(i))) {
 					if (_selection == i) {
-						_cont(_selection);
 						close();
+						std::get<1>(_options(_selection))();
 						return;
 					} else {
 						_selection = i;
@@ -93,13 +94,13 @@ namespace ql {
 
 			if (old_selection != _selection) {
 				// Selection changed. Update colors.
-				_options[old_selection].setFillColor(sf::Color::Black);
-				_options[_selection].setFillColor(sf::Color::White);
+				std::get<0>(_options[old_selection]).setFillColor(sf::Color::Black);
+				std::get<0>(_options[_selection]).setFillColor(sf::Color::White);
 			}
 
 			if (im.pressed({sf::Mouse::Left, sf::Keyboard::Return, sf::Keyboard::Space})) {
-				_cont(_selection);
 				close();
+				std::get<1>(_options(_selection))();
 				return;
 			}
 		}

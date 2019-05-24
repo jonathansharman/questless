@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "world/world.hpp"
+#include "world/world_space.hpp"
 
 #include "cancel/quantity.hpp"
 
@@ -45,25 +45,22 @@ namespace vecx {
 			//! Unit vector in the given direction.
 			constexpr static vector unit(direction direction) {
 				switch (direction) {
-					default: [[fallthrough]]; // Impossible case.
+					default: [[fallthrough]] ; // Impossible case.
 					case direction::one:   return vector{1, 0};
 					case direction::two:   return vector{0, 1};
 					case direction::three: return vector{-1, 1};
 					case direction::four:  return vector{-1, 0};
-					case direction::five:  return vector{ 0, -1};
-					case direction::six:   return vector{ 1, -1};
+					case direction::five:  return vector{0, -1};
+					case direction::six:   return vector{1, -1};
 				};
 			}
 
 			constexpr explicit vector() : q{0}, r{0}, s{0} {}
 			constexpr explicit vector(length_t q, length_t r) : q{q}, r{r}, s{-q - r} {}
 			constexpr explicit vector(length_t q, length_t r, length_t s) : q{q}, r{r}, s{s} {}
-			constexpr explicit vector(double q, double r)
-				: vector{q, r, -q - r}
-			{}
 
-			constexpr explicit vector(double q, double r, double s) {
-				auto round = [this](double v) { return static_cast<typename length_t::rep>(v + 0.5); };
+			constexpr explicit vector(float q, float r, float s) {
+				auto round = [this](float v) { return static_cast<typename length_t::rep>(v + 0.5); };
 				if (gcem::abs(q - round(q)) > gcem::abs(r - round(r)) && gcem::abs(q - round(q)) > gcem::abs(s - round(s))) {
 					this->q = length_t{-round(r) - round(s)};
 					this->r = length_t{round(r)};
@@ -73,11 +70,11 @@ namespace vecx {
 					this->r = length_t{gcem::abs(r - round(r)) > gcem::abs(s - round(s))
 						? -round(q) - round(s)
 						: round(r)
-						};
+					};
 					this->s = length_t{gcem::abs(r - round(r)) > gcem::abs(s - round(s))
 						? round(s)
 						: -round(q) - round(r)
-						};
+					};
 				}
 			}
 
@@ -86,15 +83,15 @@ namespace vecx {
 			constexpr vector operator -() { return vector{-q, -r, -s}; }
 
 			friend constexpr vector operator -(vector v1, vector v2) { return vector{v1.q - v2.q, v1.r - v2.r, v1.s - v2.s}; }
-		
+
 			friend constexpr vector operator *(vector h, int k) { return vector{k * h.q.value, k * h.r.value, k * h.s.value}; }
 			friend constexpr vector operator *(int k, vector h) { return vector{k * h.q.value, k * h.r.value, k * h.s.value}; }
 
-			friend constexpr vector operator *(vector h, double k) { return vector{k * h.q.value, k * h.r.value, k * h.s.value}; }
-			friend constexpr vector operator *(double k, vector h) { return vector{k * h.q.value, k * h.r.value, k * h.s.value}; }
+			friend constexpr vector operator *(vector h, length_t k) { return vector{k * h.q.value, k * h.r.value, k * h.s.value}; }
+			friend constexpr vector operator *(length_t k, vector h) { return vector{k * h.q.value, k * h.r.value, k * h.s.value}; }
 
 			friend constexpr vector operator /(vector h, int k) { return vector{h.q.value / k, h.r.value / k, h.s.value / k}; }
-			friend constexpr vector operator /(vector h, double k) { return vector{h.q.value / k, h.r.value / k, h.s.value / k}; }
+			friend constexpr vector operator /(vector h, length_t k) { return vector{h.q.value / k, h.r.value / k, h.s.value / k}; }
 
 			friend constexpr bool operator ==(vector v1, vector v2) { return v1.q == v2.q && v1.r == v2.r && v1.s == v2.s; }
 			friend constexpr bool operator !=(vector v1, vector v2) { return v1.q != v2.q || v1.r != v2.r || v1.s != v2.s; }
@@ -106,7 +103,7 @@ namespace vecx {
 
 			//! The unit vector nearest this vector. This vector must be non-zero.
 			constexpr vector unit() const {
-				auto const l = static_cast<double>(length().value);
+				auto const l = static_cast<length_t>(length().value);
 				assert(l != 0.0 && "Unit vector of a zero-length vector is undefined.");
 				return *this / l;
 			}
@@ -156,12 +153,9 @@ namespace vecx {
 			constexpr explicit point() : q{0}, r{0}, s{0} {}
 			constexpr explicit point(length_t q, length_t r) : q{q}, r{r}, s{-q - r} {}
 			constexpr explicit point(length_t q, length_t r, length_t s) : q{q}, r{r}, s{s} {}
-			constexpr explicit point(double q, double r)
-				: point{q, r, -q - r}
-			{}
 
-			constexpr explicit point(double q, double r, double s) {
-				auto round = [this](double v) { return static_cast<typename length_t::rep>(v + 0.5); };
+			constexpr explicit point(float q, float r, float s) {
+				auto round = [this](float v) { return static_cast<typename length_t::rep>(v + 0.5f); };
 				if (gcem::abs(q - round(q)) > gcem::abs(r - round(r)) && gcem::abs(q - round(q)) > gcem::abs(s - round(s))) {
 					this->q = length_t{-round(r) - round(s)};
 					this->r = length_t{round(r)};
@@ -171,11 +165,11 @@ namespace vecx {
 					this->r = length_t{gcem::abs(r - round(r)) > gcem::abs(s - round(s))
 						? -round(q) - round(s)
 						: round(r)
-						};
+					};
 					this->s = length_t{gcem::abs(r - round(r)) > gcem::abs(s - round(s))
 						? round(s)
 						: -round(q) - round(r)
-						};
+					};
 				}
 			}
 
@@ -196,25 +190,25 @@ namespace vecx {
 			std::vector<point> line_to(point dest) const {
 				int n = (dest - *this).length().value;
 				std::vector<point> results;
-				double step = 1.0 / std::max(n, 1);
+				length_t step = 1.0 / std::max(n, 1);
 				for (int i = 0; i <= n; i++) {
 					results.push_back(lerp(dest, step * i));
 				}
 				return results;
 			}
 
-			constexpr point lerp(point dest, double t) const {
+			constexpr point lerp(point dest, length_t t) const {
 				return point{(this->q + (dest.q - this->q)).value * t, (this->r + (dest.r - this->r)).value * t, (this->s + (dest.s - this->s)).value * t};
 			}
 
-			constexpr point lerp(vector heading, double t) const {
+			constexpr point lerp(vector heading, length_t t) const {
 				return point{this->q + (heading.q - this->q) * t, this->r + (heading.r - this->r) * t, this->s + (heading.s - this->s) * t};
 			}
 
 			//! Neighboring point in the given direction.
 			constexpr point neighbor(direction direction) const {
 				switch (direction) {
-					default: [[fallthrough]]; // Impossible case.
+					default: [[fallthrough]] ; // Impossible case.
 					case direction::one:   return point{q + length_t{1}, r + length_t{0}};
 					case direction::two:   return point{q + length_t{0}, r + length_t{1}};
 					case direction::three: return point{q - length_t{1}, r + length_t{1}};
@@ -235,34 +229,34 @@ namespace vecx {
 		// Forward matrix, used to go from hex coords to world coords.
 		//  [[f0 f1]
 		//   [f2 f2]]
-		double f0;
-		double f1;
-		double f2;
-		double f3;
+		float f0;
+		float f1;
+		float f2;
+		float f3;
 		// Backwards matrix (inverse of forward matrix), used to go from world coords to hex coords.
 		//  [[b0 b1]
 		//   [b2 b3]]
-		double b0;
-		double b1;
-		double b2;
-		double b3;
-		double start_angle;
+		float b0;
+		float b1;
+		float b2;
+		float b3;
+		float start_angle;
 
-		constexpr hex_orientation(double f0, double f1, double f2, double f3, double b0, double b1, double b2, double b3, double start_angle)
+		constexpr hex_orientation(float f0, float f1, float f2, float f3, float b0, float b1, float b2, float b3, float start_angle)
 			: f0{f0}, f1{f1}, f2{f2}, f3{f3}, b0{b0}, b1{b1}, b2{b2}, b3{b3}, start_angle{start_angle}
 		{}
 
-		constexpr hex_orientation(double f0, double f1, double f2, double f3, double start_angle)
+		constexpr hex_orientation(float f0, float f1, float f2, float f3, float start_angle)
 			: f0{f0}, f1{f1}, f2{f2}, f3{f3}
-			, b0{1.0 / (f0 * f3 - f1 * f2) * f3}
-			, b1{1.0 / (f0 * f3 - f1 * f2) * -f1}
-			, b2{1.0 / (f0 * f3 - f1 * f2) * -f2}
-			, b3{1.0 / (f0 * f3 - f1 * f2) * f0}
+			, b0{1.0f / (f0 * f3 - f1 * f2) * f3}
+			, b1{1.0f / (f0 * f3 - f1 * f2) * -f1}
+			, b2{1.0f / (f0 * f3 - f1 * f2) * -f2}
+			, b3{1.0f / (f0 * f3 - f1 * f2) * f0}
 			, start_angle{start_angle}
 		{}
 
-		constexpr static auto pointy() { return hex_orientation{gcem::sqrt(3.0), gcem::sqrt(3.0) / 2.0, 0.0, 3.0 / 2.0, 0.5}; }
-		constexpr static auto flat() { return hex_orientation{3.0 / 2.0, 0.0, gcem::sqrt(3.0) / 2.0, gcem::sqrt(3.0), 0.0}; }
+		constexpr static auto pointy() { return hex_orientation{gcem::sqrt(3.0f), gcem::sqrt(3.0f) / 2.0f, 0.0f, 1.5f, 0.5f}; }
+		constexpr static auto flat() { return hex_orientation{1.5f, 0.0f, gcem::sqrt(3.0f) / 2.0f, gcem::sqrt(3.0f), 0.0f}; }
 	};
 
 	struct hex_layout {
@@ -277,24 +271,22 @@ namespace vecx {
 		template <typename HexCoordsType>
 		constexpr ql::world::point to_world(HexCoordsType h) const {
 			//! @todo This function should just work for region_tile::point.
-			return world::point
-				{ ((orientation.f0 * h.q + orientation.f1 * h.r) * x(size) + x(origin))
-				, ((orientation.f2 * h.q + orientation.f3 * h.r) * y(size) + y(origin))
-				};
+			auto const x = ((orientation.f0 * h.q + orientation.f1 * h.r) * x(size) + x(origin));
+			auto const y = ((orientation.f2 * h.q + orientation.f3 * h.r) * y(size) + y(origin));
+			return world::point{x, y};
 		}
 
 		template <typename HexCoordsType>
 		constexpr HexCoordsType to_hex_coords(ql::world::point p) const {
 			//! @todo This function should just work for region_tile::point.
-			return HexCoordsType
-				{ orientation.b0 * (x(p) - x(origin)) / x(size) + orientation.b1 * (y(p) - y(origin)) / y(size)
-				, orientation.b2 * (x(p) - x(origin)) / x(size) + orientation.b3 * (y(p) - y(origin)) / y(size)
-				};
+			auto const px = orientation.b0 * (x(p) - x(origin)) / x(size) + orientation.b1 * (y(p) - y(origin)) / y(size);
+			auto const py = orientation.b2 * (x(p) - x(origin)) / x(size) + orientation.b3 * (y(p) - y(origin)) / y(size);
+			return HexCoordsType{px, py};
 		}
 
 		ql::world::point hex_corner_offset(int corner) {
 			radians angle = circle_rad * (corner + orientation.start_angle) / 6.0;
-			return ql::world::point{x(size) * cos(angle.value), y(size) * sin(angle.value)};
+			return ql::world::point{x(size) * static_cast<float>(cos(angle.value)), y(size) * static_cast<float>(sin(angle.value))};
 		}
 
 		template <typename HexCoordsType>

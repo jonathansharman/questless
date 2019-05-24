@@ -7,44 +7,48 @@
 #include "ui/dialog.hpp"
 
 #include "magic/spell.hpp"
-#include "world/world.hpp"
+#include "world/world_space.hpp"
 
-namespace ql::qte {
-	//! Quick time event for incanting a spell.
-	struct incant : dialog {
-		//! @param gatestone The gatestone used for incantation.
-		//! @param cont The dialog continuation function.
-		incant(sf::Window const& window,
-			rsrc::fonts const& fonts,
-			gatestone& gatestone,
-			std::function<void(std::optional<magic::spell> const&)> cont);
+namespace ql {
+	struct gatestone;
 
-		~incant();
+	namespace qte {
+		//! Quick time event for incanting a spell.
+		struct incant : dialog {
+			//! @param gatestone The gatestone used for incantation.
+			//! @param cont The dialog continuation function.
+			incant(sf::Window const& window,
+				rsrc::fonts const& fonts,
+				gatestone& gatestone,
+				std::function<void(std::optional<magic::spell> const&)> cont);
 
-		void update(sec elapsed_time, input_manager& im) final;
+			~incant();
 
-		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
+			void update(sec elapsed_time, input_manager& im) final;
 
-	private:
-		enum class note { left, right, up, down };
-		enum class side { left, right };
+			void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 
-		static constexpr double time_factor = 4.0;
+		private:
+			enum class note { left, right, up, down };
+			enum class side { left, right };
 
-		gatestone& _gatestone;
-		continuation<std::optional<magic::spell> const&> _cont;
+			static constexpr double time_factor = 4.0;
 
-		side _side = side::right;
+			gatestone& _gatestone;
+			continuation<std::optional<magic::spell> const&> _cont;
 
-		bool _begun = false;
+			side _side = side::right;
 
-		//! Amount of time since the dialog started.
-		sec _total_elapsed_time = 0.0_s;
+			bool _begun = false;
 
-		std::vector<note> _notes;
+			//! Amount of time since the dialog started.
+			sec _total_elapsed_time = 0.0_s;
 
-		sf::Text _title;
-		sf::Text _prompt;
-		sf::RectangleShape _metronome;
-	};
+			std::vector<note> _notes;
+
+			sf::Text _title;
+			sf::Text _prompt;
+			sf::RectangleShape _metronome;
+		};
+	}
 }

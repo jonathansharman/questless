@@ -4,19 +4,12 @@
 
 #pragma once
 
-#include "quantities/game_time.hpp"
+#include "reg.hpp"
+#include "world/coordinates.hpp"
 
 namespace ql {
 	//! A simple source of heat and light.
-	struct campfire {
-		double transparency() const {
-			return 1.0;
-		}
+	struct campfire {};
 
-		bool blocks_movement() const {
-			return true;
-		}
-
-		void update(tick /*elapsed*/) {}
-	};
+	void make_campfire(ent id, location location);
 }

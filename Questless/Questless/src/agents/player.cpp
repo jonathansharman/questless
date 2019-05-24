@@ -27,8 +27,8 @@
 using std::function;
 
 namespace ql {
-	player::player(sf::Window const& window, rsrc::fonts const& fonts, ql::being& being)
-		: agent{being}, _window{window}, _fonts{fonts}, _hud{being.id} {}
+	player::player(ent id, sf::Window const& window, rsrc::fonts const& fonts)
+		: agent{id}, _window{window}, _fonts{fonts}, _hud{id} {}
 
 	player::~player() = default;
 
@@ -37,10 +37,17 @@ namespace ql {
 	}
 
 	void player::update_view() {
-		_world_view = umake<ql::world_view>(being);
+		_world_view = umake<ql::world_view>(reg.get<being>(id));
 	}
 
-	complete player::act() {
+	std::vector<std::tuple<sf::String>, std::function<void()>> player::get_item_options(agent& agent, ent item_id) {
+		std::vector<std::tuple<sf::String>, std::function<void()>> result;
+		result.emplace_back("Drop", [this, item_id] { drop(item_id); });
+		result.emplace_back("Toss", [this, item_id] { toss(item_id); });
+		return result;
+	}
+
+	action::result player::act() {
 		return query_player_choice([this](player_action_dialog::choice player_choice) {
 			return match(std::move(player_choice), //
 				[this](player_action_dialog::idle const& idle) {
@@ -69,7 +76,7 @@ namespace ql {
 					} else {
 						// Turn towards the chosen direction or move in that direction if already
 						// facing that way.
-						if (this->being.cond.direction == move.direction) {
+						if (reg.get<conditions>(id).direction == move.direction) {
 							return this->walk(move.direction, [this](action::result result) {
 								if (result == action::result::aborted) {
 									// Chosen action aborted. Player must try to act again.
@@ -90,18 +97,9 @@ namespace ql {
 				},
 				[this](player_action_dialog::use const& use) {
 					//! @todo Sync the hotbar with changes to the inventory.
-					if (std::optional<id<item>> opt_item_id = _hud.hotbar()[use.index]) {
-						item& item = the_game().items.ref(*opt_item_id);
-						// Get a list of the item's actions. It's shared, so the lambda that captures
-						// it is copyable, so the lambda can be passed as a std::function.
-						auto actions = smake<std::vector<uptr<action>>>(item.actions);
-						// Get the action names from the list of actions.
-						std::vector<sf::String> action_names;
-						std::transform(actions->begin(),
-							actions->end(),
-							std::back_inserter(action_names),
-							[](uptr<action> const& action) { return action->name(); });
+					if (std::optional<ent> opt_item_id = _hud.hotbar()[use.index]) {
 						// Open list dialog for the player to choose an action.
+						auto [action_names, cont] = get_item_action_names_and_conts(*opt_item_id);
 						auto dialog = umake<list_dialog>(_window,
 							_fonts,
 							sf::Vector2f{sf::Mouse::getPosition()},
@@ -234,19 +232,6 @@ namespace ql {
 		return complete{};
 	}
 
-	complete player::query_direction(queries::direction::query query,
-		function<complete(std::optional<region_tile::direction>)> cont) {
-		auto [title, prompt] = std::visit(
-			[&](auto&& query) -> std::array<sf::String, 2> {
-				(void)query;
-				return {"", ""}; // No direction queries currently.
-			},
-			query);
-
-		_dialogs.push_back(umake<direction_dialog>(_window, _fonts, title, prompt, std::move(cont)));
-		return complete{};
-	}
-
 	complete player::query_vector(queries::vector::query query,
 		std::optional<region_tile::point> origin,
 		std::function<bool(region_tile::vector)> predicate,
@@ -264,45 +249,8 @@ namespace ql {
 		return complete{};
 	}
 
-	complete player::query_being(queries::being::query /*query*/,
-		function<bool(ql::being&)> /*predicate*/,
-		function<complete(std::optional<ql::being*>)> cont) //
-	{
-		// magic::heal: "heal Target", "Select a being to be healed."
-		//! @todo This.
-		return cont(std::nullopt);
-	}
-
-	complete player::query_item(queries::item::query /*query*/,
-		ql::being& /*source*/,
-		function<bool(ql::being&)> /*predicate*/,
-		function<complete(std::optional<item*>)> cont) //
-	{
-		//! @todo This.
-		return cont(std::nullopt);
-	}
-
 	complete player::query_player_choice(function<void(player_action_dialog::choice)> cont) {
 		_dialogs.push_back(umake<player_action_dialog>(_window, _fonts, _hud, move(cont)));
-		return complete{};
-	}
-
-	// Quick Time Events
-
-	complete player::aim_missile(region_tile::point source_coords,
-		ql::being& target_being,
-		std::function<complete(body_part*)> cont) {
-		_dialogs.push_back(umake<qte::aim_missile>(source_coords, target_being, std::move(cont)));
-		return complete{};
-	}
-
-	complete player::get_shock_quality(region_tile::point target_coords, std::function<complete(double)> cont) {
-		_dialogs.push_back(umake<qte::shock>(_window, _fonts, target_coords, std::move(cont)));
-		return complete{};
-	}
-
-	complete player::incant(gatestone& gatestone, std::function<complete(std::optional<magic::spell> const&)> cont) {
-		_dialogs.push_back(umake<qte::incant>(_window, _fonts, gatestone, std::move(cont)));
 		return complete{};
 	}
 }

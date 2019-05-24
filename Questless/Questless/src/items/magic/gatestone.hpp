@@ -14,19 +14,13 @@
 
 namespace ql {
 	//! A gem that can hold spell charges.
-	struct gatestone : equipment_base<gatestone> {
-		gatestone(mana capacity, mana charge, tick cooldown, magic::color color, ql::id<item> id = ql::id<item>::make())
-			: item{id}, charge{charge, 0.0_mp, capacity}, _capacity{capacity}, _cooldown{cooldown}, _color{color} {}
-
-		std::string name() const final {
-			return "Gatestone";
-		}
+	struct gatestone {
+		gatestone(mana capacity, mana charge, tick cooldown, magic::color color)
+			: charge{charge, 0.0_mp, capacity}, _capacity{capacity}, _cooldown{cooldown}, _color{color} {}
 
 		ql::mass mass() const final {
 			return 0.1_mass;
 		}
-
-		std::vector<uptr<action>> actions() final;
 
 		void update(tick elapsed) final;
 

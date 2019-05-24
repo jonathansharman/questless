@@ -5,7 +5,6 @@
 #pragma once
 
 #include "items/weapons/modal_weapon.hpp"
-#include "utility/id.hpp"
 
 namespace ql {
 	struct quarterstaff : modal_weapon_base<quarterstaff> {

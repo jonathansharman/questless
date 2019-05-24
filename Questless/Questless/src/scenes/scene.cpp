@@ -61,22 +61,15 @@ namespace ql::scene {
 			}
 		} else {
 			// Over budget. Add to time debt.
-			_time_debt +=
+			_time_debt += time_spent - target_frame_duration;
 		}
 
-		// Increase time debt if too much time was spent on the last frame.
-		_time_debt += std::max(0.0_s, time_spent - target_frame_duration);
-
-		// Sleep if not enough time has passed.
-		sec const sleep_duration = std::max(0.0_s, target_frame_duration - time_spent);
-		std::this_thread::sleep_for(to_chrono_sec(sleep_duration));
-
 		// Update FPS buffer.
-		if (frame_duration != 0.0_s) { _fps_buffer.push_back(1.0 / frame_duration); }
+		if (time_spent != 0.0_s) { _fps_buffer.push_back(1.0 / time_spent); }
 		constexpr std::size_t max_fps_buffer_size = 25;
 		if (_fps_buffer.size() > max_fps_buffer_size) { _fps_buffer.pop_front(); }
 
-		return frame_duration;
+		return time_spent;
 	}
 
 	void scene::draw_fps(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -86,7 +79,6 @@ namespace ql::scene {
 		fps_text.setColor(sf::Color::White);
 		fps_text.setOrigin(fps_text.getLocalBounds().width, fps_text.getLocalBounds().height);
 		fps_text.setPosition(sf::Vector2f{_window.getSize()});
-		fps_text.draw(target, states);
+		target.draw(fps_text, states);
 	}
-
 }

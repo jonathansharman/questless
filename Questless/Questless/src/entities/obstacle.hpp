@@ -2,10 +2,9 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "object.hpp"
+#pragma once
 
 namespace ql {
-	void object::update(tick /*elapsed*/) {
-		//! @todo This.
-	}
+	//! Component for objects that block movement.
+	struct obstacle {};
 }

@@ -31,17 +31,17 @@ namespace ql::magic {
 		return match(value, [&](auto const& spell) { return spell.cast(actor, gatestone, cont); });
 	}
 
-	uptr<action> spell::cast_action(id<item> gatestone_id) const {
+	uptr<action> spell::cast_action(ent gatestone_id) const {
 		struct cast : action {
-			cast(magic::spell spell, id<item> gatestone_id) : _spell{std::move(spell)}, _gatestone_id{gatestone_id} {}
+			cast(magic::spell spell, ent gatestone_id) : _spell{std::move(spell)}, _gatestone_id{gatestone_id} {}
 
 			std::string name() const final {
 				return "cast " + _spell.name();
 			}
 
 			complete perform(being& actor, cont cont) final {
-				if (auto gatestone = the_game().items.ptr_as<ql::gatestone>(_gatestone_id)) {
-					return _spell.cast(actor, *gatestone, std::move(cont));
+				if (reg.valid(_gatestone_id)) {
+					return _spell.cast(actor, reg.get<gatestone>(_gatestone_id), std::move(cont));
 				} else {
 					return actor.agent().send_message(
 						queries::message::gatestone_missing{}, [cont] { return cont(result::aborted); });
@@ -50,7 +50,7 @@ namespace ql::magic {
 
 		private:
 			magic::spell _spell;
-			id<item> _gatestone_id;
+			ent _gatestone_id;
 		};
 
 		return umake<cast>(*this, gatestone_id);

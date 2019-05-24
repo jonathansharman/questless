@@ -15,7 +15,7 @@
 using namespace vecx;
 
 namespace ql {
-	body::body(id<being> owner_id, body_part root)
+	body::body(ent owner_id, body_part root)
 		: blood{0.0_blood,
 			  [] { return 0.0_blood; },
 			  [owner_id] {

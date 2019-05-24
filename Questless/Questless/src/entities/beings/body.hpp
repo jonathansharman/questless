@@ -19,7 +19,7 @@ namespace ql {
 
 		//! @param owner The ID of the being that owns this body.
 		//! @param root The root of the body parts tree.
-		body(id<being> owner_id, body_part root);
+		body(ent owner_id, body_part root);
 
 		//! The root body part, to which all other body parts are attached.
 		body_part const& root() const {
@@ -42,16 +42,11 @@ namespace ql {
 			return _parts;
 		}
 
-		//! The body part on this body with the given ID or nullptr if none exists.
-		body_part const* find_part(id<body_part> id) const;
-		//! The body part on this body with the given ID or nullptr if none exists.
-		body_part* find_part(id<body_part> id);
-
 		//! Advances this body and all its parts by @p elapsed.
 		void update(tick elapsed);
 
 	private:
-		id<being> _owner_id;
+		ent _owner_id;
 
 		body_part _root;
 

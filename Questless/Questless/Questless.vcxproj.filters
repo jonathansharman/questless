@@ -61,9 +61,6 @@
     <Filter Include="src\magic">
       <UniqueIdentifier>{ea4c9649-02c6-4da1-bd4a-6628b0a695e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\agents\queries">
-      <UniqueIdentifier>{d65d58a9-9956-4554-aded-f5024ef84482}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\effects">
       <UniqueIdentifier>{31be0034-c41d-4864-a06d-da8ee5627416}</UniqueIdentifier>
     </Filter>
@@ -102,9 +99,6 @@
     <ClInclude Include="src\utility\complete.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\utility\container_view.hpp">
-      <Filter>src\utility</Filter>
-    </ClInclude>
     <ClInclude Include="src\utility\debug.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
@@ -115,9 +109,6 @@
       <Filter>src\utility</Filter>
     </ClInclude>
     <ClInclude Include="src\utility\event.hpp">
-      <Filter>src\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utility\id.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
     <ClInclude Include="src\utility\initializer.hpp">
@@ -146,12 +137,6 @@
     </ClInclude>
     <ClInclude Include="src\utility\visitor_pattern.hpp">
       <Filter>src\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utility\cache.hpp">
-      <Filter>src\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\agents\queries\message.hpp">
-      <Filter>src\agents\queries</Filter>
     </ClInclude>
     <ClInclude Include="src\agents\player.hpp">
       <Filter>src\agents</Filter>
@@ -351,13 +336,7 @@
     <ClInclude Include="src\items\equipment.hpp">
       <Filter>src\items</Filter>
     </ClInclude>
-    <ClInclude Include="src\items\inventory.hpp">
-      <Filter>src\items</Filter>
-    </ClInclude>
     <ClInclude Include="src\items\item.hpp">
-      <Filter>src\items</Filter>
-    </ClInclude>
-    <ClInclude Include="src\items\item_visitor.hpp">
       <Filter>src\items</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\beings\stats\vision.hpp">
@@ -381,12 +360,6 @@
     <ClInclude Include="src\entities\beings\being.hpp">
       <Filter>src\entities\beings</Filter>
     </ClInclude>
-    <ClInclude Include="src\entities\objects\object.hpp">
-      <Filter>src\entities\objects</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\objects\item_box.hpp">
-      <Filter>src\entities\objects</Filter>
-    </ClInclude>
     <ClInclude Include="src\entities\objects\corpse.hpp">
       <Filter>src\entities\objects</Filter>
     </ClInclude>
@@ -396,35 +369,11 @@
     <ClInclude Include="src\entities\all_entities.hpp">
       <Filter>src\entities</Filter>
     </ClInclude>
-    <ClInclude Include="src\entities\entity.hpp">
-      <Filter>src\entities</Filter>
-    </ClInclude>
     <ClInclude Include="src\entities\perception.hpp">
       <Filter>src\entities</Filter>
     </ClInclude>
     <ClInclude Include="src\magic\color.hpp">
       <Filter>src\magic</Filter>
-    </ClInclude>
-    <ClInclude Include="src\agents\queries\being.hpp">
-      <Filter>src\agents\queries</Filter>
-    </ClInclude>
-    <ClInclude Include="src\agents\queries\count.hpp">
-      <Filter>src\agents\queries</Filter>
-    </ClInclude>
-    <ClInclude Include="src\agents\queries\direction.hpp">
-      <Filter>src\agents\queries</Filter>
-    </ClInclude>
-    <ClInclude Include="src\agents\queries\item.hpp">
-      <Filter>src\agents\queries</Filter>
-    </ClInclude>
-    <ClInclude Include="src\agents\queries\magnitude.hpp">
-      <Filter>src\agents\queries</Filter>
-    </ClInclude>
-    <ClInclude Include="src\agents\queries\tile.hpp">
-      <Filter>src\agents\queries</Filter>
-    </ClInclude>
-    <ClInclude Include="src\agents\queries\vector.hpp">
-      <Filter>src\agents\queries</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\beings\statuses\healing.hpp">
       <Filter>src\entities\beings\statuses</Filter>
@@ -436,9 +385,6 @@
       <Filter>src\entities\beings\statuses</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\beings\statuses\deaf.hpp">
-      <Filter>src\entities\beings\statuses</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\eagle_eyed.hpp">
       <Filter>src\entities\beings\statuses</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\beings\statuses\illuminated.hpp">
@@ -521,9 +467,6 @@
     </ClInclude>
     <ClInclude Include="external\vecx\undef_macros.hpp">
       <Filter>external\vecx</Filter>
-    </ClInclude>
-    <ClInclude Include="src\world\world.hpp">
-      <Filter>src\world</Filter>
     </ClInclude>
     <ClInclude Include="external\vecx\serialization\polygon.hpp">
       <Filter>external\vecx\serialization</Filter>
@@ -630,13 +573,7 @@
     <ClInclude Include="src\utility\visitation.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\agents\queries\all.hpp">
-      <Filter>src\agents\queries</Filter>
-    </ClInclude>
     <ClInclude Include="src\entities\beings\conditions.hpp">
-      <Filter>src\entities\beings</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\species.hpp">
       <Filter>src\entities\beings</Filter>
     </ClInclude>
     <ClInclude Include="src\ui\widget.hpp">
@@ -665,6 +602,30 @@
     </ClInclude>
     <ClInclude Include="src\items\common_actions.hpp">
       <Filter>src\items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\reg.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\items\inventory.hpp">
+      <Filter>src\items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\transparency.hpp">
+      <Filter>src\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\world\terrain.hpp">
+      <Filter>src\world</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\entity.hpp">
+      <Filter>src\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\obstacle.hpp">
+      <Filter>src\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\statuses\telescoped.hpp">
+      <Filter>src\entities\beings\statuses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\world\world_space.hpp">
+      <Filter>src\world</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -716,13 +677,7 @@
     <ClCompile Include="src\damage\group.cpp">
       <Filter>src\damage</Filter>
     </ClCompile>
-    <ClCompile Include="src\damage\damage.cpp">
-      <Filter>src\damage</Filter>
-    </ClCompile>
     <ClCompile Include="src\entities\objects\campfire.cpp">
-      <Filter>src\entities\objects</Filter>
-    </ClCompile>
-    <ClCompile Include="src\entities\objects\object.cpp">
       <Filter>src\entities\objects</Filter>
     </ClCompile>
     <ClCompile Include="src\entities\beings\stats\vision.cpp">
@@ -753,9 +708,6 @@
       <Filter>src\entities\beings</Filter>
     </ClCompile>
     <ClCompile Include="src\items\equipment.cpp">
-      <Filter>src\items</Filter>
-    </ClCompile>
-    <ClCompile Include="src\items\inventory.cpp">
       <Filter>src\items</Filter>
     </ClCompile>
     <ClCompile Include="src\items\item.cpp">
@@ -845,13 +797,7 @@
     <ClCompile Include="src\agents\basic_ai.cpp">
       <Filter>src\agents</Filter>
     </ClCompile>
-    <ClCompile Include="src\agents\lazy_ai.cpp">
-      <Filter>src\agents</Filter>
-    </ClCompile>
     <ClCompile Include="src\agents\player.cpp">
-      <Filter>src\agents</Filter>
-    </ClCompile>
-    <ClCompile Include="src\agents\action.cpp">
       <Filter>src\agents</Filter>
     </ClCompile>
     <ClCompile Include="src\utility\debug.cpp">
@@ -949,6 +895,18 @@
     </ClCompile>
     <ClCompile Include="src\items\common_actions.cpp">
       <Filter>src\items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\items\inventory.cpp">
+      <Filter>src\items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\objects\corpse.cpp">
+      <Filter>src\entities\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\world\tile.cpp">
+      <Filter>src\world</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\entity.cpp">
+      <Filter>src\entities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

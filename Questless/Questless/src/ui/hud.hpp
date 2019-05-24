@@ -7,7 +7,6 @@
 #include "widget.hpp"
 
 #include "ui/view_space.hpp"
-#include "utility/id.hpp"
 #include "utility/reference.hpp"
 
 #include <array>
@@ -15,13 +14,10 @@
 #include <vector>
 
 namespace ql {
-	struct being;
-	struct item;
-
 	//! The head-up display controls and displays various elements, such as conditions, the hotbar, and the inventory.
 	struct hud : widget {
 		//! @param player_being_id The ID of the player-controlled being.
-		hud(id<being> player_being_id) : _player_being_id{player_being_id} {}
+		hud(ent player_being_id) : _player_being_id{player_being_id} {}
 
 		void update(sec elapsed_time, input_manager& im) final;
 
@@ -40,14 +36,14 @@ namespace ql {
 	private:
 		static constexpr size_t _hotbar_size = 10;
 
-		id<being> _player_being_id;
-		std::array<std::optional<id<item>>, _hotbar_size> _hotbar;
+		ent _player_being_id;
+		std::array<std::optional<ent>, _hotbar_size> _hotbar;
 		bool _inv_open = false;
 		int _inv_page = 0; //! @todo Replace with filters and a scrollable view.
 		sf::IntRect _inv_layout;
 		int _inv_row_count;
 		int _inv_column_count;
-		std::vector<cref<item>> _displayed_items;
+		std::vector<ent> _displayed_items;
 
 		void update_displayed_items(being const& player_being);
 	};

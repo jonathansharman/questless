@@ -4,94 +4,92 @@
 
 #include "agent.hpp"
 
-#include "queries/all.hpp"
-
 #include "entities/beings/being.hpp"
 #include "game.hpp"
+#include "items/inventory.hpp"
 #include "magic/spell.hpp"
 #include "utility/random.hpp"
 #include "world/region.hpp"
+#include "world/tile.hpp"
 
 namespace ql {
-	// Quick Time Events
-
-	complete agent::aim_missile(region_tile::point /*source_coords*/,
-		ql::being& target_being,
-		std::function<complete(body_part*)> cont) {
-		//! @todo There should be a miss chance based on distance and some internal skill stat. The agent should also
-		//! prioritize certain parts depending on goals. Return a random body part for now.
-		auto it = target_being.body.parts().begin();
-		std::advance(it, uniform(std::size_t{0}, target_being.body.parts().size() - 1));
-		return cont(&it->get());
+	action::result agent::idle(tick duration) {
+		reg.get<conditions>(id).busy_time += duration;
+		return action::result::success;
 	}
 
-	complete agent::get_shock_quality(region_tile::point /*target_coords*/, std::function<complete(double)> cont) {
-		return cont(1.0);
-	}
-
-	complete agent::incant(gatestone& /*gatestone*/, std::function<complete(std::optional<magic::spell> const&)> cont) {
-		return cont(std::nullopt);
-	}
-
-	// Actions
-
-	complete agent::idle(action::cont cont) {
-		return query_count(queries::count::wait_time{}, 10, 0, std::nullopt, [this, cont](std::optional<int> duration) {
-			if (duration) {
-				this->being.cond.busy_time += tick{*duration}; //! @todo Ticks query?
-				return cont(action::result::success);
-			} else {
-				return cont(action::result::aborted);
-			}
-		});
-	}
-
-	complete agent::idle(tick duration) {
-		being.cond.busy_time += duration;
-		return complete{};
-	}
-
-	complete agent::turn(region_tile::direction direction, action::cont cont) {
-		if (being.stats.a.agility > 0.0_agi) {
+	action::result agent::turn(region_tile::direction direction) {
+		auto [stats, cond] = reg.get<stats::being, conditions>(id);
+		if (stats.a.agility > 0.0_agi) {
 			// Base cost of turning any amount.
 			constexpr auto base_delay = 1_tick;
 
 			// Cost per turning distance from current direction to new direction.
 			constexpr auto delay_per_turn = 1_tick;
 
-			auto const agility_factor = 100.0_agi / being.stats.a.agility.value();
-			auto const turn_delay = delay_per_turn * region_tile::distance(being.cond.direction, direction);
-			being.cond.busy_time += cancel::quantity_cast<tick>(agility_factor * (base_delay + turn_delay));
-			being.cond.direction = direction;
+			auto const agility_factor = 100.0_agi / stats.a.agility.value();
+			auto const turn_delay = delay_per_turn * region_tile::distance(cond.direction, direction);
+			cond.busy_time += cancel::quantity_cast<tick>(agility_factor * (base_delay + turn_delay));
+			cond.direction = direction;
 
-			return cont(action::result::success);
+			return action::result::success;
 		} else {
-			return cont(action::result::aborted);
+			return action::result::failure;
 		}
 	}
 
-	complete agent::walk(region_tile::direction direction, action::cont cont) {
-		if (being.stats.a.agility > 0.0_agi) {
-			// Base cost of moving.
-			constexpr auto base_delay = 1_tick;
+	action::result agent::walk(region_tile::direction direction) {
+		auto [stats, location] = reg.get<ql::stats::being, ql::location>(id);
 
-			// Cost per turning distance from direction faced to direction moved.
-			constexpr auto delay_per_turn = 1_tick;
+		if (stats.a.agility <= 0.0_agi) { return action::result::failure; }
 
-			auto const agility_factor = 100.0_agi / being.stats.a.agility.value();
-			if (being.location.region->try_move(being, being.location.coords.neighbor(direction))) {
-				auto const strafe_delay = delay_per_turn * region_tile::distance(being.cond.direction, direction);
-				//! @todo Account for terrain.
-				being.cond.busy_time += cancel::quantity_cast<tick>(agility_factor * (base_delay + strafe_delay));
+		// Base cost of moving.
+		constexpr auto base_delay = 1_tick;
 
-				return cont(action::result::success);
-			}
-		}
-		return cont(action::result::aborted);
+		// Cost per turning distance from direction faced to direction moved.
+		constexpr auto delay_per_turn = 1_tick;
+
+		auto const agility_factor = 100.0_agi / stats.a.agility.value();
+		auto& region = reg.get<ql::region>(location.region_id);
+
+		// Move the being.
+		if (!region.try_move(id, location.coords.neighbor(direction))) { return action::result::failure; }
+
+		// Increase busy time.
+		auto& cond = reg.get<conditions>(id);
+		auto const strafe_delay = delay_per_turn * region_tile::distance(cond.direction, direction);
+		//! @todo Account for terrain.
+		cond.busy_time += cancel::quantity_cast<tick>(agility_factor * (base_delay + strafe_delay));
+
+		return action::result::success;
 	}
 
-	complete agent::fly() {
+	action::result agent::fly() {
 		//! @todo This.
-		return complete{};
+		return action::result::failure;
+	}
+
+	action::result agent::drop(ent item_id) {
+		auto& inv = reg.get<inventory>(id);
+		if (auto it = inv.item_ids.find(item_id) != inv.item_ids.end()) {
+			// Remove item from inventory.
+			inv.item_ids.erase(it);
+			// Get region.
+			auto const& location = reg.get<ql::location>(id);
+			auto& region = reg.get<ql::region>(location.region_id);
+			// The tile certainly exists because a being is located on it, so it's safe to dereference without a check here.
+			ent tile_id = *region.tile_at(location.coords);
+			// Add item to the tile's inventory.
+			reg.get<inventory>(tile_id).add(item_id);
+
+			return action::result::success;
+		} else {
+			return action::result::failure;
+		}
+	}
+
+	action::result agent::toss(ent item_id) {
+		//! @todo This.
+		return drop(item_id);
 	}
 }

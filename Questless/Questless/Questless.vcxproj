@@ -128,15 +128,15 @@
     <Import Project="library-paths.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(SFML_PATH)include;$(RANGE_V3_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(GCEM_PATH)include;$(FMT_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(SFML_PATH)include;$(RANGE_V3_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(GCEM_PATH)include;$(FMT_PATH)include;$(ENTT_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(SFML_PATH)lib;$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Temp|Win32'">
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(SFML_PATH)include;$(RANGE_V3_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(GCEM_PATH)include;$(FMT_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(SFML_PATH)include;$(RANGE_V3_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(GCEM_PATH)include;$(FMT_PATH)include;$(ENTT_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(SFML_PATH)lib;$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(SFML_PATH)include;$(RANGE_V3_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(GCEM_PATH)include;$(FMT_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(SFML_PATH)include;$(RANGE_V3_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(GCEM_PATH)include;$(FMT_PATH)include;$(ENTT_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(SFML_PATH)lib;$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -152,7 +152,7 @@
     <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(SFML_PATH)include;$(RANGE_V3_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(GCEM_PATH)include;$(FMT_PATH)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(SFML_PATH)include;$(RANGE_V3_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(GCEM_PATH)include;$(FMT_PATH)include;$(ENTT_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(SFML_PATH)lib;$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -353,15 +353,6 @@
     <ClInclude Include="src\agents\cost.hpp" />
     <ClInclude Include="src\agents\lazy_ai.hpp" />
     <ClInclude Include="src\agents\player.hpp" />
-    <ClInclude Include="src\agents\queries\all.hpp" />
-    <ClInclude Include="src\agents\queries\being.hpp" />
-    <ClInclude Include="src\agents\queries\count.hpp" />
-    <ClInclude Include="src\agents\queries\direction.hpp" />
-    <ClInclude Include="src\agents\queries\item.hpp" />
-    <ClInclude Include="src\agents\queries\magnitude.hpp" />
-    <ClInclude Include="src\agents\queries\message.hpp" />
-    <ClInclude Include="src\agents\queries\tile.hpp" />
-    <ClInclude Include="src\agents\queries\vector.hpp" />
     <ClInclude Include="src\animation\animation.hpp" />
     <ClInclude Include="src\animation\animators.hpp" />
     <ClInclude Include="src\animation\bleeding.hpp" />
@@ -399,7 +390,6 @@
     <ClInclude Include="src\entities\beings\body_part.hpp" />
     <ClInclude Include="src\entities\beings\conditions.hpp" />
     <ClInclude Include="src\entities\beings\human.hpp" />
-    <ClInclude Include="src\entities\beings\species.hpp" />
     <ClInclude Include="src\entities\beings\stats\aggregate.hpp" />
     <ClInclude Include="src\entities\beings\stats\modifier.hpp" />
     <ClInclude Include="src\entities\beings\stats\part.hpp" />
@@ -408,7 +398,7 @@
     <ClInclude Include="src\entities\beings\statuses\blind.hpp" />
     <ClInclude Include="src\entities\beings\statuses\confused.hpp" />
     <ClInclude Include="src\entities\beings\statuses\deaf.hpp" />
-    <ClInclude Include="src\entities\beings\statuses\eagle_eyed.hpp" />
+    <ClInclude Include="src\entities\beings\statuses\telescoped.hpp" />
     <ClInclude Include="src\entities\beings\statuses\healing.hpp" />
     <ClInclude Include="src\entities\beings\statuses\illuminated.hpp" />
     <ClInclude Include="src\entities\beings\statuses\mute.hpp" />
@@ -420,9 +410,9 @@
     <ClInclude Include="src\entities\entity.hpp" />
     <ClInclude Include="src\entities\objects\campfire.hpp" />
     <ClInclude Include="src\entities\objects\corpse.hpp" />
-    <ClInclude Include="src\entities\objects\item_box.hpp" />
-    <ClInclude Include="src\entities\objects\object.hpp" />
+    <ClInclude Include="src\entities\obstacle.hpp" />
     <ClInclude Include="src\entities\perception.hpp" />
+    <ClInclude Include="src\entities\transparency.hpp" />
     <ClInclude Include="src\game.hpp" />
     <ClInclude Include="src\items\armor\armor.hpp" />
     <ClInclude Include="src\items\breakable.hpp" />
@@ -431,7 +421,6 @@
     <ClInclude Include="src\items\equipment.hpp" />
     <ClInclude Include="src\items\inventory.hpp" />
     <ClInclude Include="src\items\item.hpp" />
-    <ClInclude Include="src\items\item_visitor.hpp" />
     <ClInclude Include="src\items\magic\gatestone.hpp" />
     <ClInclude Include="src\items\potions\potion.hpp" />
     <ClInclude Include="src\items\scroll.hpp" />
@@ -454,6 +443,7 @@
     <ClInclude Include="src\quantities\game_time.hpp" />
     <ClInclude Include="src\quantities\misc.hpp" />
     <ClInclude Include="src\quantities\wall_time.hpp" />
+    <ClInclude Include="src\reg.hpp" />
     <ClInclude Include="src\rsrc\entity.hpp" />
     <ClInclude Include="src\rsrc\fonts.hpp" />
     <ClInclude Include="src\rsrc\item.hpp" />
@@ -489,15 +479,12 @@
     <ClInclude Include="src\ui\vector_dialog.hpp" />
     <ClInclude Include="src\ui\world_widget.hpp" />
     <ClInclude Include="src\utility\bounded.hpp" />
-    <ClInclude Include="src\utility\cache.hpp" />
     <ClInclude Include="src\utility\complete.hpp" />
-    <ClInclude Include="src\utility\container_view.hpp" />
     <ClInclude Include="src\utility\debug.hpp" />
     <ClInclude Include="src\utility\delegate.hpp" />
     <ClInclude Include="src\utility\dynamic_bounded.hpp" />
     <ClInclude Include="src\utility\dynamic_property.hpp" />
     <ClInclude Include="src\utility\event.hpp" />
-    <ClInclude Include="src\utility\id.hpp" />
     <ClInclude Include="src\utility\initializer.hpp" />
     <ClInclude Include="src\utility\io.hpp" />
     <ClInclude Include="src\utility\lazy_bounded.hpp" />
@@ -514,15 +501,14 @@
     <ClInclude Include="src\world\light_source.hpp" />
     <ClInclude Include="src\world\region.hpp" />
     <ClInclude Include="src\world\section.hpp" />
+    <ClInclude Include="src\world\terrain.hpp" />
     <ClInclude Include="src\world\tile.hpp" />
-    <ClInclude Include="src\world\world.hpp" />
+    <ClInclude Include="src\world\world_space.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="external\fmt\format.cc" />
-    <ClCompile Include="src\agents\action.cpp" />
     <ClCompile Include="src\agents\agent.cpp" />
     <ClCompile Include="src\agents\basic_ai.cpp" />
-    <ClCompile Include="src\agents\lazy_ai.cpp" />
     <ClCompile Include="src\agents\player.cpp" />
     <ClCompile Include="src\animation\animation.cpp" />
     <ClCompile Include="src\animation\animators.cpp" />
@@ -545,7 +531,6 @@
     <ClCompile Include="src\animation\still_shape.cpp" />
     <ClCompile Include="src\animation\sprite_animation.cpp" />
     <ClCompile Include="src\animation\still_image.cpp" />
-    <ClCompile Include="src\damage\damage.cpp" />
     <ClCompile Include="src\damage\group.cpp" />
     <ClCompile Include="src\effects\effect.cpp" />
     <ClCompile Include="src\entities\beings\being.cpp" />
@@ -557,8 +542,9 @@
     <ClCompile Include="src\entities\beings\statuses\poisoned.cpp" />
     <ClCompile Include="src\entities\beings\statuses\status.cpp" />
     <ClCompile Include="src\entities\beings\world_view.cpp" />
+    <ClCompile Include="src\entities\entity.cpp" />
     <ClCompile Include="src\entities\objects\campfire.cpp" />
-    <ClCompile Include="src\entities\objects\object.cpp" />
+    <ClCompile Include="src\entities\objects\corpse.cpp" />
     <ClCompile Include="src\game.cpp" />
     <ClCompile Include="src\items\armor\armor.cpp" />
     <ClCompile Include="src\items\common_actions.cpp" />
@@ -612,6 +598,7 @@
     <ClCompile Include="src\world\light_source.cpp" />
     <ClCompile Include="src\world\region.cpp" />
     <ClCompile Include="src\world\section.cpp" />
+    <ClCompile Include="src\world\tile.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

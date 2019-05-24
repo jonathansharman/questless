@@ -21,26 +21,17 @@
 using std::function;
 
 namespace ql {
-	being::being(const function<uptr<ql::agent>(being&)>& make_agent, ql::id<being> id, ql::species species)
+	being::being(ent id, ql::species species)
 		: id{id}
 		, species{std::move(species)}
 		, body{this->species.make_body(id)}
 		, base_stats{this->species.make_base_stats()}
 		, stats{base_stats}
-		, cond{stats}
-		, _agent{make_agent(*this)} //
+		, cond{stats} //
 	{
 		refresh_stats();
 
-		cond.energy = stats.a.stamina;
-		cond.energy.lower_bound_getter = [] { return 0.0_ep; };
-		cond.energy.upper_bound_getter = [this] { return stats.a.stamina; };
-
-		cond.direction = static_cast<region_tile::direction>(uniform(1, 6));
-
-		// Only set busy time mutator after initialization so that it won't try to access the being's region before it's
-		// placed in one.
-		cond.busy_time.set_mutator(busy_time_mutator(), false);
+		cond.direction = random_direction();
 	}
 
 	stats::being being::load_stats(char const* filepath) {
@@ -103,14 +94,14 @@ namespace ql {
 		}
 	}
 
-	complete being::add_delayed_action(tick delay, action::cont cont, uptr<action> action) {
+	complete being::add_delayed_action(tick delay, uptr<action> action) {
 		// If there are no enqueued delayed actions, just incur the delay immediately instead of enqueueing it.
 		if (_delayed_actions.empty()) {
 			cond.busy_time += delay;
 		} else {
 			_action_delays.push_back(delay);
 		}
-		_delayed_actions.push_back(std::make_tuple(std::move(action), std::move(cont)));
+		_delayed_actions.push_back(std::move(action));
 		return complete{};
 	}
 
@@ -210,7 +201,7 @@ namespace ql {
 		}
 	}
 
-	void being::take_damage(dmg::group& damage, body_part& target_part, std::optional<ql::id<being>> opt_source_id) {
+	void being::take_damage(dmg::group& damage, body_part& target_part, std::optional<ent> opt_source_id) {
 		// Store whether the being was already dead upon taking this damage.
 		bool const was_already_dead = cond.mortality == mortality::dead;
 
@@ -353,7 +344,7 @@ namespace ql {
 		}
 	}
 
-	void being::heal(ql::health amount, body_part& part, std::optional<ql::id<being>> opt_source_id) {
+	void being::heal(ql::health amount, body_part& part, std::optional<ent> opt_source_id) {
 		// Get source.
 		being* source = opt_source_id ? the_game().beings.ptr(*opt_source_id) : nullptr;
 
@@ -405,17 +396,9 @@ namespace ql {
 		if (cond.starving()) {
 			result.regen = 0_per_tick;
 		} else if (cond.hungry()) {
-			result.regen *= 0.5;
+			result.regen /= 2;
 		}
 
 		return result;
-	}
-
-	std::function<void(tick&, tick const&)> being::busy_time_mutator() {
-		return [this](tick& busy_time, tick const& new_busy_time) {
-			location.region->remove_from_turn_queue(*this);
-			busy_time = new_busy_time;
-			location.region->add_to_turn_queue(*this);
-		};
 	}
 }

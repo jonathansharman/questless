@@ -59,10 +59,6 @@ namespace ql::dmg {
 				[this](shock_factor shock_factor) { shock = shock_factor; });
 		}
 
-		static constexpr Derived zero() {
-			return Derived{};
-		}
-
 		constexpr friend Derived operator+(Derived const& d1, Derived const& d2) {
 			return Derived{
 				d1.slash + d2.slash,

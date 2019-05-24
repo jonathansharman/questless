@@ -5,21 +5,18 @@
 #pragma once
 
 #include "agents/cost.hpp"
-#include "utility/quantities.hpp"
+#include "quantities/misc.hpp"
 
 namespace ql {
 	struct gatestone;
 
 	//! The cost of .
 	struct charge_cost : cost {
-		charge_cost(gatestone& gatestone, mana amount) : _gatestone{gatestone}, _amount{amount} {}
+		gatestone& gatestone;
+		mana amount;
 
-		complete check(being& actor, cont cont) const final;
+		bool can_pay() const final;
 
-		void incur(being& actor) const final;
-
-	private:
-		gatestone& _gatestone;
-		mana _amount;
+		void pay() final;
 	};
 }

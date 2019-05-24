@@ -14,38 +14,27 @@ namespace ql {
 
 	//! The cost of performing an action.
 	struct cost {
-		//! Type of continuations to call when a cost is satisfied.
-		using cont = std::function<complete()>;
-
 		virtual ~cost() = default;
 
-		//! Checks that the actor is able to pay the cost and executes the continuation if so.
-		//! @param actor The being that is performing the action.
-		//! @param cont The continuation function to call if the cost is satisfied.
-		//! @note This does not incur the cost. To incur cost, call incur() after, or use check_and_incur() instead.
-		virtual complete check(being& actor, cont cont) const = 0;
+		//! Checks whether this cost can be paid.
+		//! @note Does not incur this cost. To incur cost, call @p pay() after, or use @p check_and_pay() instead.
+		[[nodiscard]] virtual bool can_pay() const = 0;
 
-		//! Incurs the cost on the given actor.
-		//! @param actor
-		virtual void incur(being& actor) const = 0;
+		//! Incurs this cost.
+		virtual void pay() = 0;
 
-		//! Checks that the actor is able to pay the cost and if so, incurs cost and then executes the continuation.
-		//! @param actor The being that is performing the action.
-		//! @param cont The continuation function to call if the cost is satisfied.
-		complete check_and_incur(being& actor, cont cont) const {
-			return check(actor, [&, this]() {
-				incur(actor);
-				return cont();
-			});
+		//! Checks that this cost can be paid and if so pays it.
+		[[nodiscard]] bool check_and_pay() {
+			if (can_pay()) { pay(); };
 		}
 	};
 
 	//! The trivial cost, for actions that don't require anything.
 	struct free : cost {
-		complete check(being&, cont cont) const final {
-			return cont();
+		bool can_pay() const final {
+			return true;
 		}
 
-		void incur(being&) const final {}
+		void pay() final {}
 	};
 }

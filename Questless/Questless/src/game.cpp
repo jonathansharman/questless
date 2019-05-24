@@ -21,19 +21,6 @@
 using namespace std::chrono;
 
 namespace ql {
-	id<being> game::get_being_id(uptr<being> const& being) {
-		return being->id;
-	}
-	id<object> game::get_object_id(uptr<object> const& object) {
-		return object->id;
-	}
-	id<item> game::get_item_id(uptr<item> const& item) {
-		return item->id;
-	}
-	id<light_source> game::get_light_source_id(uptr<light_source> const& light_source) {
-		return light_source->id;
-	}
-
 	game::game(bool fullscreen) {
 #if true
 		constexpr int _dflt_window_width = 1024;
