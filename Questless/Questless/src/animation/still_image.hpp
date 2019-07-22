@@ -6,9 +6,7 @@
 
 #include "animation.hpp"
 
-namespace sf {
-	class Texture;
-}
+#include <SFML/Graphics.hpp>
 
 namespace ql {
 	//! An animation composed of a single still image.

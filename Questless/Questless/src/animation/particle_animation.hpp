@@ -4,11 +4,12 @@
 
 #pragma once
 
-#include <deque>
-
 #include "animation.hpp"
 #include "particles/particle.hpp"
+
 #include "utility/reference.hpp"
+
+#include <deque>
 
 namespace ql {
 	//! Abstract base for animations composed of particle effects.

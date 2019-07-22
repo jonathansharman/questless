@@ -6,7 +6,8 @@
 #pragma once
 
 #include "utility.hpp"
-#include "world/world_space.hpp"
+
+#include "world/coordinates.hpp"
 
 #include <random>
 #include <type_traits>
@@ -67,19 +68,21 @@ namespace ql {
 	//! A displacement based on a uniform random distance and uniform random angle.
 	//! @param min_length The minimum possible length of the displacement.
 	//! @param max_length The maximum possible length of the displacement.
-	typename world::vector random_displacement(world::length min_length, world::length max_length) {
+	template <typename QuantityType>
+	auto random_displacement(QuantityType min_length, QuantityType max_length) {
 		return make_polar_vector(uniform(min_length, max_length), random_radians());
 	}
 
 	//! A displacement based on a uniform random distance and uniform random angle.
 	//! @param max_length The maximum possible length of the displacement.
-	typename world::vector random_displacement(world::length max_length) {
-		return random_displacement(world::length{0.0}, max_length);
+	template <typename QuantityType>
+	auto random_displacement(QuantityType max_length) {
+		return make_polar_vector(uniform(QuantityType(0), max_length), random_radians());
 	}
 
 	//! A uniformly randomly sampled point from within the bounds of @p box.
 	inline world::point random_point_within(world::box box) { //! @todo Check containment logic here.
 		return box.position +
-			   world::vector{uniform(world::length{0.0}, width(box)), uniform(world::length{0.0}, height(box))};
+			world::vector{uniform(world::length{0.0}, width(box)), uniform(world::length{0.0}, height(box))};
 	}
 }

@@ -4,41 +4,38 @@
 
 #pragma once
 
-#include "items/weapons/quarterstaff.hpp"
+#include "quarterstaff.hpp"
+
+#include "items/breakable.hpp"
+#include "items/equipment.hpp"
+#include "items/item.hpp"
 
 namespace ql {
-	quarterstaff::quarterstaff(ql::id<item> id)
-		: item{id}
-		, modal_weapon_base<quarterstaff>{durability(), umake<standard_form>(*this)}
-	{}
+	void quarterstaff::strike() {
+		//! @todo This.
 
-	std::vector<uptr<action>> quarterstaff::standard_form::actions() {
-		std::vector<uptr<action>> actions;
-		if (weapon().equipped()) {
-			actions.push_back(_strike->launch());
-			actions.push_back(_jab->launch());
-			actions.push_back(switch_form<half_staff_form>::make(weapon(), "Switch to half-staff grip"));
-			actions.push_back(unequip::make(weapon()));
-		} else {
-			actions.push_back(equip::make(weapon()));
-			actions.push_back(drop::make(weapon()));
-			actions.push_back(toss::make(weapon()));
-		}
-		return actions;
+		dmg::group damage = 24_bludgeon;
+		tick cooldown = 20_tick;
 	}
 
-	std::vector<uptr<action>> quarterstaff::half_staff_form::actions() {
-		std::vector<uptr<action>> actions;
-		if (weapon().equipped()) {
-			actions.push_back(_strike->launch());
-			actions.push_back(_jab->launch());
-			actions.push_back(switch_form<standard_form>::make(weapon(), "Switch to quarterstaff grip"));
-			actions.push_back(unequip::make(weapon()));
-		} else {
-			actions.push_back(equip::make(weapon()));
-			actions.push_back(drop::make(weapon()));
-			actions.push_back(toss::make(weapon()));
-		}
-		return actions;
+	void quarterstaff::jab() {
+		//! @todo This.
+
+		dmg::group damage = 12_bludgeon;
+		tick cooldown = 13_tick;
+	}
+
+	void make_quarterstaff(ent id) {
+		make_item(id, 2.5_mass);
+
+		make_breakable(id, 500.0_integrity, 500.0_integrity);
+
+		make_equipment(id,
+			std::nullopt,
+			{equipment::tab{body_part::tag::hand, std::nullopt}, equipment::tab{body_part::tag::hand, std::nullopt}},
+			1_tick, // Equip time
+			1_tick); // Unequip time
+
+		reg.assign<quarterstaff>(id, id);
 	}
 }

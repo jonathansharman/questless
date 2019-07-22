@@ -117,13 +117,13 @@ namespace vecx {
 	};
 
 	template <typename Quantity, std::size_t N>
-	box(point<Quantity, N>, vector<Quantity, N>) -> box<Quantity, N>;
+	box(point<Quantity, N>, vector<Quantity, N>)->box<Quantity, N>;
 }
 
 #ifndef _DEBUG
 #define DOCTEST_CONFIG_DISABLE
 #endif
-#include <doctest.h>
+#include <doctest/doctest.h>
 #undef near // Defined in minwindef.h (!)
 #undef far // Defined in minwindef.h (!)
 

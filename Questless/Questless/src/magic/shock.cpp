@@ -2,12 +2,11 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "magic/shock.hpp"
+#include "shock.hpp"
 
 #include "agents/agent.hpp"
 #include "effects/effect.hpp"
 #include "entities/beings/being.hpp"
-#include "game.hpp"
 #include "magic/charge_cost.hpp"
 #include "utility/random.hpp"
 #include "world/region.hpp"
@@ -16,18 +15,15 @@
 #include "entities/beings/body_part.hpp"
 
 namespace ql::magic {
-	action::result shock::cast::perform(being& caster) {
+	void cast(ent caster_id, ent gatestone_id, region_tile::point target, dmg::shock damage) {
 		// Check range.
-		auto const caster_location = reg.get<location>(caster.id);
-		if ((caster_location.coords - target).length() > 3_span) { return result::failure; }
-
-		// Get gatestone.
-		if (!reg.valid(gatestone_id)) { return result::failure; }
-		auto& gatestone = reg.get<ql::gatestone>(gatestone_id);
+		auto const caster_location = reg.get<location>(caster_id);
+		if ((caster_location.coords - target).length() > 3_span) { return; }
 
 		// Check and pay cost.
-		constexpr auto cost_factor = 0.2_mp / 1.0_shock / 1.0_shock;
-		if (!charge_cost{gatestone, cost_factor * damage * damage}.check_and_pay()) { return result::failure; }
+		auto& gatestone = reg.get<ql::gatestone>(gatestone_id);
+		auto const mana_cost = cancel::quantity<double, struct mana_tag>{0.2} / 1.0_shock / 1.0_shock * damage * damage;
+		if (!charge_cost{gatestone, mana_cost}.check_and_pay()) { return; }
 
 		//! @todo Shock quality.
 		double const quality = 1.0;
@@ -50,15 +46,11 @@ namespace ql::magic {
 				}
 				// Deal percentage-based damage, split across all struck parts.
 				for (auto struck_part : struck_parts) {
-					dmg::group shock = damage * quality * uniform(0.5, 1.5) * part->stats.a.vitality.value() /
-									   (4.0_hp * struck_parts.size());
-					struck_part->take_damage(shock, caster.id);
+					dmg::group shock = damage * quality * uniform(0.5, 1.5) * part->stats.vitality.value() /
+						(4.0_hp * struck_parts.size());
+					struck_part->take_damage(shock, caster_id);
 				}
-
-				return result::success;
 			}
 		}
-
-		return result::failure;
 	}
 }

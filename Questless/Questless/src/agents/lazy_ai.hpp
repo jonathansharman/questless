@@ -4,17 +4,22 @@
 
 #pragma once
 
-#include "agent.hpp"
+#include "reg.hpp"
+#include "utility/future.hpp"
 
 namespace ql {
-	//! An AI that does nothing.
-	struct lazy_ai : agent {
-		lazy_ai(ent id) : agent{id} {}
+	namespace effects {
+		struct effect;
+	}
 
-		complete act() final {
-			return complete{};
+	//! An AI that does nothing.
+	struct lazy_ai {
+		ent id;
+
+		std::future<void> act() {
+			return make_ready_future();
 		}
 
-		void perceive(effects::effect const&) final {}
+		void perceive(effects::effect const&) {}
 	};
 }

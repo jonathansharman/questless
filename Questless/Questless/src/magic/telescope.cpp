@@ -11,14 +11,10 @@
 #include "world/region.hpp"
 
 namespace ql::magic {
-	action::result telescope::cast::perform(being& caster) {
-		// Get gatestone.
-		if (!reg.valid(gatestone_id)) { return result::failure; }
-		auto& gatestone = reg.get<ql::gatestone>(gatestone_id);
-
+	void cast(ent caster_id, ent gatestone_id) {
 		// Check and pay cost.
 		auto& gatestone = reg.get<ql::gatestone>(gatestone_id);
-		if (!charge_cost{gatestone, 10.0_mp}.check_and_pay()) { return result::failure; }
+		if (!charge_cost{gatestone, 10_mp}.check_and_pay()) { return; }
 
 		// Add status to caster.
 		caster.add_status(umake<telescoped>(caster.stats.a.vision.acuity, 50_tick, caster.id)); //! @todo Get duration.
@@ -27,7 +23,5 @@ namespace ql::magic {
 		// Add telescope effect to region.
 		auto& region = reg.get<ql::region>(caster_location.region_id);
 		region.add_effect(effects::telescope{caster.coords, caster.id});
-
-		return action::result::success;
 	}
 }

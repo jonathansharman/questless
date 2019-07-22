@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "ui/dialog.hpp"
+#include "ui/dialog/dialog.hpp"
 
 #include "magic/spell.hpp"
 #include "world/world_space.hpp"
@@ -14,15 +14,10 @@ namespace ql {
 
 	namespace qte {
 		//! Quick time event for incanting a spell.
-		struct incant : dialog {
+		struct incant : dialog<std::optional<magic::spell>> {
 			//! @param gatestone The gatestone used for incantation.
 			//! @param cont The dialog continuation function.
-			incant(sf::Window const& window,
-				rsrc::fonts const& fonts,
-				gatestone& gatestone,
-				std::function<void(std::optional<magic::spell> const&)> cont);
-
-			~incant();
+			incant(sf::Window const& window, rsrc::fonts const& fonts, gatestone& gatestone);
 
 			void update(sec elapsed_time, input_manager& im) final;
 
@@ -35,7 +30,6 @@ namespace ql {
 			static constexpr double time_factor = 4.0;
 
 			gatestone& _gatestone;
-			continuation<std::optional<magic::spell> const&> _cont;
 
 			side _side = side::right;
 
@@ -46,8 +40,8 @@ namespace ql {
 
 			std::vector<note> _notes;
 
-			sf::Text _title;
-			sf::Text _prompt;
+			label _title;
+			label _prompt;
 			sf::RectangleShape _metronome;
 		};
 	}

@@ -4,9 +4,9 @@
 
 #pragma once
 
+#include "bounded/static.hpp"
 #include "quantities/wall_time.hpp"
 #include "utility/reference.hpp"
-#include "utility/static_bounded.hpp"
 
 #include <SFML/Graphics.hpp>
 

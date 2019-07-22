@@ -13,5 +13,7 @@
 
 namespace ql::magic {
 	//! A magical spell that can be cast by a being.
-	using spell = std::variant<heal, shock, teleport, telescope>;
+	struct spell {
+		std::variant<heal, shock, teleport, telescope> value;
+	};
 }

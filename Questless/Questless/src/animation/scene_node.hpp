@@ -5,6 +5,7 @@
 #pragma once
 
 #include "animation.hpp"
+
 #include "utility/reference.hpp"
 
 #include <range/v3/view/reverse.hpp>

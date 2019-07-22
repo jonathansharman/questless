@@ -14,11 +14,6 @@ namespace ql::magic {
 		static constexpr magic::color color = magic::color::yellow;
 		static constexpr tick cooldown = 15_tick;
 
-		struct cast : action {
-			ent gatestone_id;
-			region_tile::point target;
-
-			result perform(being& caster) final;
-		};
+		void cast(ent caster_id, ent gatestone_id, region_tile::point target);
 	};
 }

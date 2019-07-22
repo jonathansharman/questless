@@ -2,6 +2,7 @@
 AccessModifierOffset: '-4'
 AlignAfterOpenBracket: 'DontAlign'
 AlignEscapedNewlinesLeft: 'true'
+AlignOperands: 'false'
 AlignTrailingComments: 'false'
 AllowAllParametersOfDeclarationOnNextLine: 'false'
 AllowShortBlocksOnASingleLine: 'true'
@@ -52,6 +53,6 @@ SpacesInAngles: 'false'
 SpacesInParentheses: 'false'
 Standard: Auto
 TabWidth: '4'
-UseTab: ForContinuationAndIndentation
+UseTab: Always
 
 ...

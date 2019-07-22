@@ -2,9 +2,9 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "animation/flame.hpp"
+#include "flame.hpp"
 
-#include "animation/particles/flame_particle.hpp"
+#include "particles/flame_particle.hpp"
 
 namespace ql {
 	void flame::particle_animation_subupdate(sec elapsed_time) {

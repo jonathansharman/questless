@@ -4,9 +4,7 @@
 
 #include "game.hpp"
 
-#include "animation/entity_animator.hpp"
 #include "entities/beings/being.hpp"
-#include "entities/objects/object.hpp"
 #include "scenes/scene.hpp"
 #include "scenes/splash.hpp"
 #include "utility/io.hpp"

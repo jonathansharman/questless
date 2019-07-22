@@ -25,7 +25,7 @@ namespace vecx {
 		constexpr point(point&&) = default;
 
 		template <typename... Args, typename = std::enable_if_t<(std::is_convertible_v<Args, scalar_t> && ...)>>
-		constexpr point(Args&&... args) : components{std::forward<Args>(args)...} {}
+		constexpr point(Args && ... args) : components{std::forward<Args>(args)...} {}
 
 		constexpr point& operator =(point const&) = default;
 		constexpr point& operator =(point&&) = default;
@@ -58,9 +58,9 @@ namespace vecx {
 		//! Creates a new point by applying @p f to each component of this point, in order.
 		template <typename MapOp>
 		constexpr auto map(MapOp const& f) const {
-			return std::apply([this, f](auto const&... components) {
-				return vector{f(components)...};
-			}, components);
+			return std::apply([this, f](auto const& ... components) {
+				return vector<std::invoke_result_t<MapOp, scalar_t>, n>{f(components)...};
+				}, components);
 		}
 
 		//! Creates a new point from the application of @p f to the corresponding components of this point and @p that.
@@ -127,7 +127,7 @@ namespace vecx {
 	};
 
 	template <typename T, typename... U>
-	point(T, U...) -> point<std::remove_cv_t<std::remove_reference_t<T>>, 1 + sizeof...(U)>;
+	point(T, U...)->point<std::remove_cv_t<std::remove_reference_t<T>>, 1 + sizeof...(U)>;
 
 	//! The sum of point @p p and vector @p v.
 	template <typename QuantityPoint, typename QuantityVector, std::size_t N>
@@ -161,7 +161,7 @@ namespace vecx {
 #ifndef _DEBUG
 #define DOCTEST_CONFIG_DISABLE
 #endif
-#include <doctest.h>
+#include <doctest/doctest.h>
 #undef near // Defined in minwindef.h (!)
 #undef far // Defined in minwindef.h (!)
 

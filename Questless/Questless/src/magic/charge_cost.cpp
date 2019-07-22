@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "magic/charge_cost.hpp"
+#include "charge_cost.hpp"
 
 #include "items/magic/gatestone.hpp"
 

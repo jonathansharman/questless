@@ -2,28 +2,19 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "ui/qte/incant.hpp"
+#include "incant.hpp"
 
-#include "game.hpp"
 #include "items/magic/gatestone.hpp"
 
-using namespace media;
-
 namespace ql::qte {
-	incant::incant(sf::Window const& window,
-		rsrc::fonts const& fonts,
-		gatestone& gatestone,
-		std::function<void(std::optional<magic::spell> const&)> cont)
+	incant::incant(sf::Window const& window, rsrc::fonts const& fonts, gatestone& gatestone)
 		: dialog{window, fonts}
-		, _gatestone{gatestone}
-		, _cont{std::move(cont)} //
+		, _gatestone{gatestone} //
 	{
 		_title = make_title("Incant a spell!");
 		_prompt = make_prompt("Use the arrow keys to control the pitch, and type the magic words.");
 		_metronome.setOrigin({0, 5});
 	}
-
-	incant::~incant() {}
 
 	void incant::update(sec elapsed_time, input_manager& im) {
 		_metronome.setSize({10, _window.getSize().y});
@@ -39,12 +30,6 @@ namespace ql::qte {
 
 			_side = side;
 			_metronome.setFillColor(sf::Color::Red);
-
-			static auto metronome_sound_buffer_handle = the_sound_buffer_manager().add(
-				"resources/sounds/menu/hover.wav"); //! @todo This is a placeholder.
-			static auto metronome_sound_handle = the_sound_manager().add(
-				the_sound_buffer_manager()[metronome_sound_buffer_handle]);
-			the_sound_manager()[metronome_sound_handle].play();
 
 			bool left = im.down(sf::Keyboard::Left);
 			bool right = im.down(sf::Keyboard::Right);
@@ -63,7 +48,7 @@ namespace ql::qte {
 				}
 			} else if (_begun) {
 				// Done with incantation. Interpret results.
-				_cont([&]() -> std::optional<magic::spell> {
+				_promise.set_value([&]() -> std::optional<magic::spell> {
 					if (_notes.empty()) return std::nullopt;
 					if (_notes.front() == note::left) {
 						return magic::heal{};
@@ -75,14 +60,11 @@ namespace ql::qte {
 						return magic::telescope{};
 					}
 				}());
-				close();
 				return;
 			}
 		} else {
 			_metronome.setFillColor(sf::Color::White);
 		}
-
-		return state::open;
 	}
 
 	void incant::draw(sf::RenderTarget& target, sf::RenderStates states) const {

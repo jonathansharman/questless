@@ -2,15 +2,13 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "ui/digraph_menu.hpp"
+#include "digraph_menu.hpp"
 
-#include <algorithm>
+#include "view_space.hpp"
 
-#include "units/spaces::window.hpp"
 #include "utility/utility.hpp"
 
-using namespace media;
-using namespace units;
+#include <algorithm>
 
 namespace ql {
 	texture_handle digraph_menu::_ul_handle;
@@ -50,8 +48,7 @@ namespace ql {
 		, _min_height{min_height}
 		, _content_width{0}
 		, _content_height{0}
-		, _render_is_current{false}
-	{}
+		, _render_is_current{false} {}
 
 	void digraph_menu::add_page(std::string title) {
 		if (!find(title)) {
@@ -77,7 +74,8 @@ namespace ql {
 		if (location_page_index) {
 			std::optional<int> target_index = find(target_page_title);
 			if (target_index) {
-				_pages[location_page_index.value()].options.push_back(page::option(std::move(option_name), target_index.value()));
+				_pages[location_page_index.value()].options.push_back(
+					page::option(std::move(option_name), target_index.value()));
 				_render_is_current = false;
 			} else {
 				throw std::invalid_argument("Attempted to add an option linking to a nonexistent menu page.");
@@ -96,7 +94,7 @@ namespace ql {
 		}
 		throw std::invalid_argument("Attempted to navigate to a nonexistent menu page.");
 	}
-	
+
 	void digraph_menu::set_option(std::string_view page_title, int option_index) {
 		std::optional<int> page_index = find(page_title);
 		if (!page_index) {
@@ -116,9 +114,7 @@ namespace ql {
 	}
 
 	void digraph_menu::update() {
-		if (_pages.size() == 0 || !_render_is_current) {
-			return;
-		}
+		if (_pages.size() == 0 || !_render_is_current) { return; }
 
 		static auto hover_sound_handle = the_sound_manager().add("resources/sounds/menu/hover.wav");
 		static auto select_sound_handle = the_sound_manager().add("resources/sounds/menu/select.wav");
@@ -129,10 +125,8 @@ namespace ql {
 		spaces::window::point position = _content_position;
 		position.y() += _title_height;
 		for (size_t i = 0; i < _pages[_page_index].options.size(); ++i) {
-			spaces::window::box box = spaces::window::box
-				{ spaces::window::point{position.x(), position.y()}
-				, _page_views[_page_index].option_textures[i].size()
-				};
+			spaces::window::box box = spaces::window::box{
+				spaces::window::point{position.x(), position.y()}, _page_views[_page_index].option_textures[i].size()};
 			spaces::window::point point = im.mouse_position();
 			if (box.contains(point)) {
 				hovered_option_index = static_cast<int>(i);
@@ -167,7 +161,8 @@ namespace ql {
 
 		// Check for selection.
 
-		if (im.presses(sf::Keyboard::RETURN) || im.presses(sf::Keyboard::SPACE) || hovered_option_index && im.pressed(mouse_button::left)) {
+		if (im.presses(sf::Keyboard::RETURN) || im.presses(sf::Keyboard::SPACE) ||
+			hovered_option_index && im.pressed(mouse_button::left)) {
 			the_sound_manager()[select_sound_handle].play();
 			digraph_menu::page::option selection = _pages[_page_index].options[_pages[_page_index].option_index];
 			if (selection.target) {
@@ -184,10 +179,10 @@ namespace ql {
 		return selections;
 	}
 
-	void digraph_menu::draw(spaces::window::point origin, spaces::window::h_align horizontal_alignment, spaces::window::v_align vertical_alignment) {
-		if (!_render_is_current) {
-			render();
-		}
+	void digraph_menu::draw(spaces::window::point origin,
+		spaces::window::h_align horizontal_alignment,
+		spaces::window::v_align vertical_alignment) {
+		if (!_render_is_current) { render(); }
 
 		_content_position = origin;
 		switch (horizontal_alignment) {
@@ -222,18 +217,19 @@ namespace ql {
 		constexpr auto unselected_color_vector = colors::black_vector();
 		constexpr auto selected_color_vector = colors::red_vector();
 		for (int i = 0; i < static_cast<int>(_page_views[_page_index].option_textures.size()); ++i) {
-			colors::color_vector option_color_vector = _pages[_page_index].option_index == i ? selected_color_vector : unselected_color_vector;
+			colors::color_vector option_color_vector = _pages[_page_index].option_index == i ? selected_color_vector
+																							 : unselected_color_vector;
 
-			spaces::window::point option_position{_content_position.x(), _content_position.y() + _title_height + i * _option_height};
-			_page_views[_page_index].option_textures[i].draw(option_position, spaces::window::align_left, spaces::window::align_top, option_color_vector);
+			spaces::window::point option_position{
+				_content_position.x(), _content_position.y() + _title_height + i * _option_height};
+			_page_views[_page_index].option_textures[i].draw(
+				option_position, spaces::window::align_left, spaces::window::align_top, option_color_vector);
 		}
 	}
 
 	std::optional<int> digraph_menu::find(std::string_view page_title) {
 		for (size_t i = 0; i < _pages.size(); ++i) {
-			if (_pages[i].title == page_title) {
-				return static_cast<int>(i);
-			}
+			if (_pages[i].title == page_title) { return static_cast<int>(i); }
 		}
 		return std::nullopt;
 	}
@@ -249,7 +245,8 @@ namespace ql {
 
 		static bool first_call = true;
 		if (first_call) {
-			// Initialize these on first call to render() rather than at static initialization since they rely on loaded textures.
+			// Initialize these on first call to render() rather than at static initialization since they rely on loaded
+			// textures.
 
 			_top_margin = the_texture_manager()[_u_handle].height();
 			_bottom_margin = the_texture_manager()[_d_handle].height();
@@ -268,53 +265,54 @@ namespace ql {
 
 		_page_views.clear();
 		for (size_t i = 0; i < _pages.size(); ++i) {
-			_content_height = std::max(_content_height, static_cast<int>(_title_height + _pages[_page_index].options.size() * _option_height));
+			_content_height = std::max(
+				_content_height, static_cast<int>(_title_height + _pages[_page_index].options.size() * _option_height));
 			std::vector<texture> option_textures;
 			for (size_t j = 0; j < _pages[i].options.size(); ++j) {
-				option_textures.push_back(the_font_manager()[option_font_handle].render(_pages[i].options[j].name.c_str(), colors::white()));
+				option_textures.push_back(
+					the_font_manager()[option_font_handle].render(_pages[i].options[j].name.c_str(), colors::white()));
 				_content_width = std::max(_content_width, option_textures[j].width());
 			}
-			_page_views.emplace_back(the_font_manager()[title_font_handle].render(_pages[i].title.c_str(), title_color), std::move(option_textures));
+			_page_views.emplace_back(the_font_manager()[title_font_handle].render(_pages[i].title.c_str(), title_color),
+				std::move(option_textures));
 		}
 
 		int const width_remainder = _content_width % _tile_width;
-		if (width_remainder > 0) {
-			_content_width += _tile_width - width_remainder;
-		}
+		if (width_remainder > 0) { _content_width += _tile_width - width_remainder; }
 
 		int const height_remainder = _content_height % _tile_height;
-		if (height_remainder > 0) {
-			_content_height += _tile_height - height_remainder;
-		}
+		if (height_remainder > 0) { _content_height += _tile_height - height_remainder; }
 
 		// Render background.
 
-		_background = umake<texture>(spaces::window::vector
-			{ _content_width + _left_margin + _right_margin
-			, _content_height + _top_margin + _bottom_margin
-			});
+		_background = umake<texture>(spaces::window::vector{
+			_content_width + _left_margin + _right_margin, _content_height + _top_margin + _bottom_margin});
 		_background->as_target([&] {
 			// Interior
 			for (int x = 0; x < _content_width / _tile_width; ++x) {
 				for (int y = 0; y < _content_height / _tile_height; ++y) {
-					the_texture_manager()[_tile_handle].draw(spaces::window::point{_left_margin + _tile_width * x, _top_margin + _tile_height * y});
+					the_texture_manager()[_tile_handle].draw(
+						spaces::window::point{_left_margin + _tile_width * x, _top_margin + _tile_height * y});
 				}
 			}
 			// Top and bottom margins
 			for (int x = 0; x < _content_width / _tile_width; ++x) {
 				the_texture_manager()[_u_handle].draw(spaces::window::point{_left_margin + _tile_width * x, 0});
-				the_texture_manager()[_d_handle].draw(spaces::window::point{_left_margin + _tile_width * x, _top_margin + _content_height});
+				the_texture_manager()[_d_handle].draw(
+					spaces::window::point{_left_margin + _tile_width * x, _top_margin + _content_height});
 			}
 			// Left and right margins
 			for (int y = 0; y < _content_height / _tile_height; ++y) {
 				the_texture_manager()[_l_handle].draw(spaces::window::point{0, _top_margin + _tile_width * y});
-				the_texture_manager()[_r_handle].draw(spaces::window::point{_left_margin + _content_width, _top_margin + _tile_width * y});
+				the_texture_manager()[_r_handle].draw(
+					spaces::window::point{_left_margin + _content_width, _top_margin + _tile_width * y});
 			}
 			// Corners
 			the_texture_manager()[_ul_handle].draw(spaces::window::point{0, 0});
 			the_texture_manager()[_ur_handle].draw(spaces::window::point{_left_margin + _content_width, 0});
 			the_texture_manager()[_dl_handle].draw(spaces::window::point{0, _top_margin + _content_height});
-			the_texture_manager()[_dr_handle].draw(spaces::window::point{_left_margin + _content_width, _top_margin + _content_height});
+			the_texture_manager()[_dr_handle].draw(
+				spaces::window::point{_left_margin + _content_width, _top_margin + _content_height});
 		});
 
 		_render_is_current = true;

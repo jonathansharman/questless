@@ -10,7 +10,6 @@
 #include <optional>
 
 namespace ql {
-	struct being;
 	struct body_part;
 
 	namespace effects {
@@ -19,7 +18,7 @@ namespace ql {
 			dmg::group const damage;
 			ent target_being_id;
 			ent target_part_id;
-			std::optional<ent> opt_source_id;
+			std::optional<ent> o_source_id;
 
 			constexpr span range() const {
 				return 7_span;

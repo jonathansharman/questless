@@ -6,9 +6,6 @@
 
 #include "main_menu.hpp"
 
-using namespace media;
-using namespace units;
-
 namespace ql::scene {
 	main_menu::main_menu() {
 		// Add pages.
@@ -24,23 +21,23 @@ namespace ql::scene {
 		_main_menu.add_option("Settings", "Cancel", "Questless");
 	}
 
-	update_result main_menu::subupdate() {
+	update_result main_menu::scene_subupdate(sec elapsed_time, input_manager& im) {
 		_main_menu.update();
-		for (auto const&[page, option] : _main_menu.poll_selections()) {
+		for (auto const& [page, option] : _main_menu.poll_selections()) {
 			if (page == "Questless") {
 				if (option == "Continue" || option == "Begin Anew") {
 					_state = state::playing;
 				} else if (option == "Being Editor") {
 					_state = state::being_editor;
 				} else if (option == "Quit") {
-					return update_result::game_over;
+					return game_over{};
 				}
 			}
 		}
-		return update_result::continue_game;
+		return continue_scene{};
 	};
 
-	void main_menu::subdraw() {
+	void main_menu::scene_subdraw(sf::RenderTarget& target, sf::RenderStates states) const {
 		_main_menu.draw(the_window().window_center(), window_space::align_center, window_space::align_middle);
 	}
 }

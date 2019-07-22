@@ -7,7 +7,6 @@
 #include "scene.hpp"
 
 #include "ui/hud.hpp"
-#include "ui/world_widget.hpp"
 #include "utility/reference.hpp"
 
 namespace ql::scene {
@@ -16,19 +15,17 @@ namespace ql::scene {
 		playing(sf::Window& window, rsrc::fonts const& fonts);
 
 	private:
-		sf::RenderWindow& _window;
-
 		sf::View _view;
 
-		std::optional<ent> _player_id = std::nullopt;
+		hud _hud;
+
+		std::optional<ent> _opt_player_id = std::nullopt;
 
 		ent _region_id;
 
-		sf::Font _fnt_20pt;
-
 		// UI
 
-		uptr<ql::world_widget> _world_widget;
+		hud _hud;
 
 		sf::Texture _txt_hex_highlight;
 		sf::Texture _txt_hex_circle;
@@ -38,7 +35,5 @@ namespace ql::scene {
 		void scene_subdraw(sf::RenderTarget& target, sf::RenderStates states) const final;
 
 		void spawn_player();
-
-		void update_view();
 	};
 }

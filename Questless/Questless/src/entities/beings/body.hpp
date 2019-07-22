@@ -4,59 +4,49 @@
 
 #pragma once
 
-#include "entities/beings/body_part.hpp"
+#include "body_cond.hpp"
+#include "body_status_set.hpp"
+#include "stats/body.hpp"
 
-#include <memory>
-#include <vector>
+#include "quantities/misc.hpp"
+#include "reg.hpp"
+
+#include <functional>
 
 namespace ql {
-	struct being;
+	struct body_part;
 
 	//! A being's body, which is composed of a tree of body parts.
 	struct body {
-		//! The amount of blood in this body.
-		lazy_bounded<ql::blood> blood;
+		ent id;
 
-		//! @param owner The ID of the being that owns this body.
-		//! @param root The root of the body parts tree.
-		body(ent owner_id, body_part root);
+		//! The ID of the root body part, to which all other body parts are attached.
+		ent root_part_id;
 
-		//! The root body part, to which all other body parts are attached.
-		body_part const& root() const {
-			return _root;
-		}
-		//! The root body part, to which all other body parts are attached.
-		body_part& root() {
-			return _root;
-		}
+		//! This body's conditions.
+		body_cond cond;
 
-		//! The cumulative vitality of all parts of this body.
-		ql::health total_vitality() const {
-			return _total_vitality;
-		}
+		//! This body's base stats, before any stat-modifying effects are applied.
+		stats::body base_stats;
 
-		std::vector<cref<body_part>> const& parts() const {
-			return _c_parts;
-		}
-		std::vector<ref<body_part>> const& parts() {
-			return _parts;
-		}
+		//! This body's current stats.
+		stats::body stats;
+
+		body_status_set status_set;
+
+		body(ent id, ent root_part_id, body_cond cond, stats::body base_stats);
+
+		//! Performs @p f for each body part in this body. See also @p for_enabled_parts.
+		void for_all_parts(std::function<void(body_part const&)> const& f) const;
+		//! Performs @p f for each body part in this body. See also @p for_enabled_parts.
+		void for_all_parts(std::function<void(body_part&)> const& f);
+
+		//! Performs @p f for each enabled body part in this body. See also @p for_all_parts.
+		void for_enabled_parts(std::function<void(body_part const&)> const& f) const;
+		//! Performs @p f for each enabled body part in this body. See also @p for_all_parts.
+		void for_enabled_parts(std::function<void(body_part&)> const& f);
 
 		//! Advances this body and all its parts by @p elapsed.
 		void update(tick elapsed);
-
-	private:
-		ent _owner_id;
-
-		body_part _root;
-
-		std::vector<ref<body_part>> _parts;
-		std::vector<cref<body_part>> _c_parts;
-
-		// Cumulative attributes
-		ql::health _total_vitality;
 	};
-
-	struct animation;
-	uptr<animation> get_animation(body const& body);
 }

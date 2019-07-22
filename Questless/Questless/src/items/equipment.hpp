@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "items/item.hpp"
+#include "item.hpp"
 
 #include "entities/beings/body_part.hpp"
 
@@ -20,13 +20,13 @@ namespace ql {
 			//! The type of part this tab can slot into.
 			body_part::tag tag;
 			//! The body part this tab is slotted into or nullopt if none.
-			std::optional<ent> opt_part_id;
+			std::optional<ent> o_part_id;
 		};
 
 		ent id;
 
 		//! The ID of the bearer of this equipment, or nullopt if not equipped.
-		std::optional<ent> opt_bearer_id;
+		std::optional<ent> o_bearer_id;
 
 		//! The list of "tabs" that "slot" into the bearer's body parts.
 		std::vector<tab> tabs;
@@ -39,20 +39,18 @@ namespace ql {
 
 		//! Whether the item is currently equipped to some being.
 		bool equipped() const {
-			return opt_bearer_id.has_value();
+			return o_bearer_id.has_value();
 		}
 
-		//! Unequips the item from its bearer, without incurring the unequip time.
+		//! Equips this to the being with ID @p bearer_id.
+		void equip(ent bearer_id);
+
+		//! If equipped, unequips from the bearer, incurring costs.
 		void unequip();
+
+		//! If equipped, immediately unequips from the bearer, without incurring costs.
+		void forced_unequip();
 	};
 
-	struct equip : action {
-		ent equipment_id;
-		result perform(being& actor) final;
-	};
-
-	struct unequip : action {
-		ent equipment_id;
-		result perform(being& actor) final;
-	};
+	void make_equipment(ent id, std::optional<ent> o_bearer_id, std::vector<equipment::tab> tabs, tick equip_time, tick unequip_time);
 }

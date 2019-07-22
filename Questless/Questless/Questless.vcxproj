@@ -17,14 +17,6 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Temp|Win32">
-      <Configuration>Temp</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Temp|x64">
-      <Configuration>Temp</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Test|Win32">
       <Configuration>Test</Configuration>
       <Platform>Win32</Platform>
@@ -44,51 +36,38 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Temp|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
-    <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Temp|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Test|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -97,41 +76,23 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="library-paths.props" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Temp|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="library-paths.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="library-paths.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="library-paths.props" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Temp|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="library-paths.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Test|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="library-paths.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="library-paths.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="library-paths.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(SFML_PATH)include;$(RANGE_V3_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(GCEM_PATH)include;$(FMT_PATH)include;$(ENTT_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>$(SFML_PATH)lib;$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Temp|Win32'">
     <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(SFML_PATH)include;$(RANGE_V3_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(GCEM_PATH)include;$(FMT_PATH)include;$(ENTT_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(SFML_PATH)lib;$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -140,24 +101,20 @@
     <LibraryPath>$(SFML_PATH)lib;$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Program Files (x86)\Windows Kits\8.1\Include\shared\;$(SourcePath)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(VC_IncludePath)</IncludePath>
-    <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Temp|x64'">
-    <IncludePath>C:\Program Files (x86)\Windows Kits\8.1\Include\shared\;$(SourcePath)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(VC_IncludePath)</IncludePath>
-    <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files (x86)\Windows Kits\8.1\Include\shared\;$(SourcePath)include;$(VC_IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Test|x64'">
-    <IncludePath>C:\Program Files (x86)\Windows Kits\8.1\Include\shared\;$(SourcePath)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(VC_IncludePath)</IncludePath>
-    <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files (x86)\Windows Kits\8.1\Include\shared\;$(SourcePath)include;$(VC_IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(ProjectDir)src;$(ProjectDir)external;$(SFML_PATH)include;$(RANGE_V3_PATH)include;$(GLEW_PATH)include\GL;$(GLM_PATH);$(GSL_PATH)include;$(BOOST_PATH);$(DOCTEST_PATH);$(CEREAL_PATH)include;$(NLOHMANN_JSON_PATH)include;$(GCEM_PATH)include;$(FMT_PATH)include;$(ENTT_PATH);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(SFML_PATH)lib;$(GLEW_PATH)lib\Release\Win32;$(SDL_PATH)lib\x86;$(SDL_IMAGE_PATH)lib\x86;$(SDL_MIXER_PATH)lib\x86;$(SDL_TTF_PATH)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Program Files (x86)\Windows Kits\8.1\Include\shared\;$(SourcePath)include;$(SDL_PATH)SDL2-2.0.4\include;$(SDL_PATH)SDL2_ttf-2.0.14\include;$(SDL_PATH)SDL2_mixer-2.0.1\include;$(SDL_PATH)SDL2_image-2.0.1\include;$(VC_IncludePath)</IncludePath>
-    <LibraryPath>$(SDL_PATH)SDL2-2.0.4\lib\x86;$(SDL_PATH)SDL2_ttf-2.0.14\lib\x86;$(SDL_PATH)SDL2_mixer-2.0.1\lib\x86;$(SDL_PATH)SDL2_image-2.0.1\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files (x86)\Windows Kits\8.1\Include\shared\;$(SourcePath)include;$(VC_IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -170,37 +127,10 @@
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
       <DisableSpecificWarnings>4268;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <EnableModules>true</EnableModules>
-    </ClCompile>
-    <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>
-      </AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-audio-d.lib;sfml-graphics-d.lib;sfml-main-d.lib;sfml-system-d.lib;sfml-window-d.lib;opengl32.lib;glew32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <SubSystem>Windows</SubSystem>
-      <PerUserRedirection>false</PerUserRedirection>
-      <OptimizeReferences>
-      </OptimizeReferences>
-      <EnableCOMDATFolding>
-      </EnableCOMDATFolding>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Temp|Win32'">
-    <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalOptions>/std:c++latest /permissive- %(AdditionalOptions)</AdditionalOptions>
-      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
-      <DisableSpecificWarnings>4268;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <FunctionLevelLinking>
-      </FunctionLevelLinking>
-      <IntrinsicFunctions>false</IntrinsicFunctions>
-      <MinimalRebuild>true</MinimalRebuild>
-      <EnableModules>true</EnableModules>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <DisableLanguageExtensions>
+      </DisableLanguageExtensions>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -226,6 +156,10 @@
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
       <DisableSpecificWarnings>4268;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <EnableModules>true</EnableModules>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <DisableLanguageExtensions>
+      </DisableLanguageExtensions>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -246,24 +180,10 @@
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4268;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-    </ClCompile>
-    <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <SubSystem>Windows</SubSystem>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Temp|x64'">
-    <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
-      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
-      <DisableSpecificWarnings>4268;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <EnableModules>true</EnableModules>
+      <ConformanceMode>true</ConformanceMode>
+      <DisableLanguageExtensions />
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -279,6 +199,10 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <EnableModules>true</EnableModules>
+      <ConformanceMode>true</ConformanceMode>
+      <DisableLanguageExtensions />
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -301,6 +225,9 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>true</EnableModules>
+      <DisableLanguageExtensions>
+      </DisableLanguageExtensions>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -312,11 +239,16 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <EnableModules>true</EnableModules>
+      <ConformanceMode>true</ConformanceMode>
+      <DisableLanguageExtensions />
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -347,7 +279,7 @@
     <ClInclude Include="external\vecx\sphere.hpp" />
     <ClInclude Include="external\vecx\undef_macros.hpp" />
     <ClInclude Include="external\vecx\vector.hpp" />
-    <ClInclude Include="src\agents\action.hpp" />
+    <ClInclude Include="src\agents\actions.hpp" />
     <ClInclude Include="src\agents\agent.hpp" />
     <ClInclude Include="src\agents\basic_ai.hpp" />
     <ClInclude Include="src\agents\cost.hpp" />
@@ -375,6 +307,16 @@
     <ClInclude Include="src\animation\sprite_animation.hpp" />
     <ClInclude Include="src\animation\sprite_sheet.hpp" />
     <ClInclude Include="src\animation\still_image.hpp" />
+    <ClInclude Include="src\bounded\bounded.hpp" />
+    <ClInclude Include="src\bounded\dynamic.hpp" />
+    <ClInclude Include="src\bounded\dynamic_nonnegative.hpp" />
+    <ClInclude Include="src\bounded\dynamic_property.hpp" />
+    <ClInclude Include="src\bounded\lazy.hpp" />
+    <ClInclude Include="src\bounded\nonnegative.hpp" />
+    <ClInclude Include="src\bounded\static.hpp" />
+    <ClInclude Include="src\bounded\static_property.hpp" />
+    <ClInclude Include="src\damage\armor.hpp" />
+    <ClInclude Include="src\damage\coverage.hpp" />
     <ClInclude Include="src\damage\damage.hpp" />
     <ClInclude Include="src\damage\group.hpp" />
     <ClInclude Include="src\damage\multiplier.hpp" />
@@ -384,50 +326,36 @@
     <ClInclude Include="src\effects\injury.hpp" />
     <ClInclude Include="src\effects\lightning_bolt.hpp" />
     <ClInclude Include="src\effects\telescope.hpp" />
-    <ClInclude Include="src\entities\all_entities.hpp" />
     <ClInclude Include="src\entities\beings\being.hpp" />
     <ClInclude Include="src\entities\beings\body.hpp" />
     <ClInclude Include="src\entities\beings\body_part.hpp" />
-    <ClInclude Include="src\entities\beings\conditions.hpp" />
+    <ClInclude Include="src\entities\beings\body_cond.hpp" />
+    <ClInclude Include="src\entities\beings\body_part_cond.hpp" />
+    <ClInclude Include="src\entities\beings\body_part_status.hpp" />
+    <ClInclude Include="src\entities\beings\body_part_status_set.hpp" />
+    <ClInclude Include="src\entities\beings\body_status.hpp" />
+    <ClInclude Include="src\entities\beings\body_status_set.hpp" />
     <ClInclude Include="src\entities\beings\human.hpp" />
     <ClInclude Include="src\entities\beings\stats\aggregate.hpp" />
-    <ClInclude Include="src\entities\beings\stats\modifier.hpp" />
     <ClInclude Include="src\entities\beings\stats\part.hpp" />
-    <ClInclude Include="src\entities\beings\stats\being.hpp" />
+    <ClInclude Include="src\entities\beings\stats\body.hpp" />
+    <ClInclude Include="src\entities\beings\stats\stat.hpp" />
     <ClInclude Include="src\entities\beings\stats\vision.hpp" />
-    <ClInclude Include="src\entities\beings\statuses\blind.hpp" />
-    <ClInclude Include="src\entities\beings\statuses\confused.hpp" />
-    <ClInclude Include="src\entities\beings\statuses\deaf.hpp" />
-    <ClInclude Include="src\entities\beings\statuses\telescoped.hpp" />
-    <ClInclude Include="src\entities\beings\statuses\healing.hpp" />
-    <ClInclude Include="src\entities\beings\statuses\illuminated.hpp" />
-    <ClInclude Include="src\entities\beings\statuses\mute.hpp" />
-    <ClInclude Include="src\entities\beings\statuses\nauseated.hpp" />
-    <ClInclude Include="src\entities\beings\statuses\numb.hpp" />
-    <ClInclude Include="src\entities\beings\statuses\poisoned.hpp" />
-    <ClInclude Include="src\entities\beings\statuses\status.hpp" />
     <ClInclude Include="src\entities\beings\world_view.hpp" />
+    <ClInclude Include="src\entities\beings\wounds.hpp" />
     <ClInclude Include="src\entities\entity.hpp" />
     <ClInclude Include="src\entities\objects\campfire.hpp" />
-    <ClInclude Include="src\entities\objects\corpse.hpp" />
-    <ClInclude Include="src\entities\obstacle.hpp" />
     <ClInclude Include="src\entities\perception.hpp" />
     <ClInclude Include="src\entities\transparency.hpp" />
     <ClInclude Include="src\game.hpp" />
-    <ClInclude Include="src\items\armor\armor.hpp" />
     <ClInclude Include="src\items\breakable.hpp" />
-    <ClInclude Include="src\items\common_actions.hpp" />
-    <ClInclude Include="src\items\craftable.hpp" />
     <ClInclude Include="src\items\equipment.hpp" />
     <ClInclude Include="src\items\inventory.hpp" />
     <ClInclude Include="src\items\item.hpp" />
     <ClInclude Include="src\items\magic\gatestone.hpp" />
-    <ClInclude Include="src\items\potions\potion.hpp" />
-    <ClInclude Include="src\items\scroll.hpp" />
+    <ClInclude Include="src\items\magic\scroll.hpp" />
     <ClInclude Include="src\items\weapons\arrow.hpp" />
-    <ClInclude Include="src\items\weapons\attack.hpp" />
     <ClInclude Include="src\items\weapons\bow.hpp" />
-    <ClInclude Include="src\items\weapons\modal_weapon.hpp" />
     <ClInclude Include="src\items\weapons\quarterstaff.hpp" />
     <ClInclude Include="src\items\weapons\quiver.hpp" />
     <ClInclude Include="src\items\weapons\weapon.hpp" />
@@ -458,45 +386,35 @@
     <ClInclude Include="src\scenes\scene.hpp" />
     <ClInclude Include="src\scenes\splash.hpp" />
     <ClInclude Include="src\ui\being_widget.hpp" />
-    <ClInclude Include="src\ui\count_dialog.hpp" />
-    <ClInclude Include="src\ui\dialog.hpp" />
+    <ClInclude Include="src\ui\dialog\count_dialog.hpp" />
+    <ClInclude Include="src\ui\dialog\dialog.hpp" />
+    <ClInclude Include="src\ui\dialog\direction_dialog.hpp" />
+    <ClInclude Include="src\ui\dialog\list_dialog.hpp" />
+    <ClInclude Include="src\ui\dialog\magnitude_dialog.hpp" />
+    <ClInclude Include="src\ui\dialog\message_dialog.hpp" />
+    <ClInclude Include="src\ui\dialog\tile_dialog.hpp" />
+    <ClInclude Include="src\ui\dialog\vector_dialog.hpp" />
     <ClInclude Include="src\ui\digraph_menu.hpp" />
-    <ClInclude Include="src\ui\direction_dialog.hpp" />
     <ClInclude Include="src\ui\object_widget.hpp" />
     <ClInclude Include="src\ui\tile_widget.hpp" />
     <ClInclude Include="src\ui\view_space.hpp" />
     <ClInclude Include="src\ui\widget.hpp" />
     <ClInclude Include="src\ui\hud.hpp" />
     <ClInclude Include="src\ui\input_manager.hpp" />
-    <ClInclude Include="src\ui\list_dialog.hpp" />
-    <ClInclude Include="src\ui\magnitude_dialog.hpp" />
-    <ClInclude Include="src\ui\message_dialog.hpp" />
-    <ClInclude Include="src\ui\player_action_dialog.hpp" />
-    <ClInclude Include="src\ui\qte\aim_missile.hpp" />
     <ClInclude Include="src\ui\qte\incant.hpp" />
     <ClInclude Include="src\ui\qte\shock.hpp" />
-    <ClInclude Include="src\ui\tile_dialog.hpp" />
-    <ClInclude Include="src\ui\vector_dialog.hpp" />
     <ClInclude Include="src\ui\world_widget.hpp" />
-    <ClInclude Include="src\utility\bounded.hpp" />
-    <ClInclude Include="src\utility\complete.hpp" />
     <ClInclude Include="src\utility\debug.hpp" />
     <ClInclude Include="src\utility\delegate.hpp" />
-    <ClInclude Include="src\utility\dynamic_bounded.hpp" />
-    <ClInclude Include="src\utility\dynamic_property.hpp" />
     <ClInclude Include="src\utility\event.hpp" />
+    <ClInclude Include="src\utility\future.hpp" />
     <ClInclude Include="src\utility\initializer.hpp" />
     <ClInclude Include="src\utility\io.hpp" />
-    <ClInclude Include="src\utility\lazy_bounded.hpp" />
-    <ClInclude Include="src\utility\nonnegative.hpp" />
+    <ClInclude Include="src\utility\unreachable.hpp" />
     <ClInclude Include="src\utility\visitation.hpp" />
-    <ClInclude Include="src\utility\static_property.hpp" />
     <ClInclude Include="src\utility\random.hpp" />
     <ClInclude Include="src\utility\reference.hpp" />
-    <ClInclude Include="src\utility\static_bounded.hpp" />
-    <ClInclude Include="src\utility\type_list.hpp" />
     <ClInclude Include="src\utility\utility.hpp" />
-    <ClInclude Include="src\utility\visitor_pattern.hpp" />
     <ClInclude Include="src\world\coordinates.hpp" />
     <ClInclude Include="src\world\light_source.hpp" />
     <ClInclude Include="src\world\region.hpp" />
@@ -506,15 +424,13 @@
     <ClInclude Include="src\world\world_space.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="external\fmt\format.cc" />
-    <ClCompile Include="src\agents\agent.cpp" />
+    <ClCompile Include="src\agents\actions.cpp" />
     <ClCompile Include="src\agents\basic_ai.cpp" />
     <ClCompile Include="src\agents\player.cpp" />
     <ClCompile Include="src\animation\animation.cpp" />
     <ClCompile Include="src\animation\animators.cpp" />
     <ClCompile Include="src\animation\bleeding.cpp" />
     <ClCompile Include="src\animation\flame.cpp" />
-    <ClCompile Include="src\animation\item_animator.cpp" />
     <ClCompile Include="src\animation\particles\arrow_particle.cpp" />
     <ClCompile Include="src\animation\particles\black_magic_particle.cpp" />
     <ClCompile Include="src\animation\particles\blood_particle.cpp" />
@@ -536,27 +452,24 @@
     <ClCompile Include="src\entities\beings\being.cpp" />
     <ClCompile Include="src\entities\beings\body.cpp" />
     <ClCompile Include="src\entities\beings\body_part.cpp" />
+    <ClCompile Include="src\entities\beings\body_part_status.cpp" />
+    <ClCompile Include="src\entities\beings\body_part_status_set.cpp" />
+    <ClCompile Include="src\entities\beings\body_status.cpp" />
+    <ClCompile Include="src\entities\beings\body_status_set.cpp" />
     <ClCompile Include="src\entities\beings\human.cpp" />
-    <ClCompile Include="src\entities\beings\stats\vision.cpp" />
-    <ClCompile Include="src\entities\beings\statuses\healing.cpp" />
-    <ClCompile Include="src\entities\beings\statuses\poisoned.cpp" />
-    <ClCompile Include="src\entities\beings\statuses\status.cpp" />
     <ClCompile Include="src\entities\beings\world_view.cpp" />
     <ClCompile Include="src\entities\entity.cpp" />
     <ClCompile Include="src\entities\objects\campfire.cpp" />
-    <ClCompile Include="src\entities\objects\corpse.cpp" />
+    <ClCompile Include="src\entities\perception.cpp" />
     <ClCompile Include="src\game.cpp" />
-    <ClCompile Include="src\items\armor\armor.cpp" />
-    <ClCompile Include="src\items\common_actions.cpp" />
+    <ClCompile Include="src\items\breakable.cpp" />
     <ClCompile Include="src\items\equipment.cpp" />
     <ClCompile Include="src\items\inventory.cpp" />
     <ClCompile Include="src\items\item.cpp" />
     <ClCompile Include="src\items\magic\gatestone.cpp" />
-    <ClCompile Include="src\items\scroll.cpp" />
+    <ClCompile Include="src\items\magic\scroll.cpp" />
     <ClCompile Include="src\items\weapons\arrow.cpp" />
-    <ClCompile Include="src\items\weapons\attack.cpp" />
     <ClCompile Include="src\items\weapons\bow.cpp" />
-    <ClCompile Include="src\items\weapons\modal_weapon.cpp" />
     <ClCompile Include="src\items\weapons\quarterstaff.cpp" />
     <ClCompile Include="src\items\weapons\quiver.cpp" />
     <ClCompile Include="src\items\weapons\weapon.cpp" />
@@ -564,7 +477,6 @@
     <ClCompile Include="src\magic\heal.cpp" />
     <ClCompile Include="src\magic\charge_cost.cpp" />
     <ClCompile Include="src\magic\shock.cpp" />
-    <ClCompile Include="src\magic\spell.cpp" />
     <ClCompile Include="src\magic\teleport.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\scenes\main_menu.cpp" />
@@ -572,25 +484,23 @@
     <ClCompile Include="src\scenes\scene.cpp" />
     <ClCompile Include="src\scenes\splash.cpp" />
     <ClCompile Include="src\ui\being_widget.cpp" />
-    <ClCompile Include="src\ui\count_dialog.cpp" />
-    <ClCompile Include="src\ui\dialog.cpp" />
+    <ClCompile Include="src\ui\dialog\count_dialog.cpp" />
+    <ClCompile Include="src\ui\dialog\dialog.cpp" />
+    <ClCompile Include="src\ui\dialog\direction_dialog.cpp" />
+    <ClCompile Include="src\ui\dialog\list_dialog.cpp" />
+    <ClCompile Include="src\ui\dialog\magnitude_dialog.cpp" />
+    <ClCompile Include="src\ui\dialog\message_dialog.cpp" />
+    <ClCompile Include="src\ui\dialog\tile_dialog.cpp" />
+    <ClCompile Include="src\ui\dialog\vector_dialog.cpp" />
     <ClCompile Include="src\ui\digraph_menu.cpp" />
-    <ClCompile Include="src\ui\direction_dialog.cpp" />
     <ClCompile Include="src\ui\hud.cpp" />
     <ClCompile Include="src\ui\input_manager.cpp" />
     <ClCompile Include="src\ui\label.cpp" />
-    <ClCompile Include="src\ui\list_dialog.cpp" />
-    <ClCompile Include="src\ui\magnitude_dialog.cpp" />
-    <ClCompile Include="src\ui\message_dialog.cpp" />
     <ClCompile Include="src\ui\object_widget.cpp" />
-    <ClCompile Include="src\ui\player_action_dialog.cpp" />
-    <ClCompile Include="src\ui\qte\aim_missile.cpp" />
     <ClCompile Include="src\ui\qte\incant.cpp" />
     <ClCompile Include="src\ui\qte\shock.cpp" />
     <ClCompile Include="src\ui\label.hpp" />
-    <ClCompile Include="src\ui\tile_dialog.cpp" />
     <ClCompile Include="src\ui\tile_widget.cpp" />
-    <ClCompile Include="src\ui\vector_dialog.cpp" />
     <ClCompile Include="src\ui\world_widget.cpp" />
     <ClCompile Include="src\utility\debug.cpp" />
     <ClCompile Include="src\utility\io.cpp" />

@@ -6,11 +6,9 @@
 
 #include "color.hpp"
 
-#include "agents/action.hpp"
 #include "quantities/game_time.hpp"
 #include "quantities/misc.hpp"
 #include "reg.hpp"
-#include "utility/complete.hpp"
 
 namespace ql::magic {
 	//! Heals a being.
@@ -18,12 +16,6 @@ namespace ql::magic {
 		static constexpr magic::color color = magic::color::white;
 		static constexpr tick cooldown = 5_tick;
 
-		struct cast : action {
-			ent gatestone_id;
-			ent target_id;
-			health healing;
-
-			result perform(being& caster) final;
-		};
+		void cast(ent caster_id, ent gatestone_id, ent target_id, health healing);
 	};
 }

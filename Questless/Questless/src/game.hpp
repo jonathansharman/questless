@@ -10,16 +10,15 @@
 #include <SFML/Graphics.hpp>
 
 namespace ql {
-	struct being;
-	struct item;
-	struct light_source;
-	struct object;
 	namespace scene {
 		class scene;
 	}
 
 	//! Represents an instance of the game Questless.
 	struct game {
+		//! @param fullscreen Whether to run the game in fullscreen mode.
+		game(bool fullscreen);
+
 		~game();
 
 		//! Runs a new game of Questless.
@@ -33,9 +32,6 @@ namespace ql {
 		input_manager _im{_window};
 
 		uptr<scene::scene> _scene;
-
-		//! @param fullscreen Whether to run the game in fullscreen mode.
-		game(bool fullscreen);
 
 		void load_textures();
 	};

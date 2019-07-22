@@ -7,8 +7,8 @@
 #include "items/item.hpp"
 
 namespace ql {
-	struct arrow : item_base<arrow> {
-		arrow(ql::id<item> id = ql::id<item>::make()) : item_base<arrow>{id} {}
+	struct arrow {
+		ent id;
 
 		std::string name() const final {
 			return "Arrow";

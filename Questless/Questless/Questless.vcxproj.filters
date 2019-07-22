@@ -34,9 +34,6 @@
     <Filter Include="src\items\weapons">
       <UniqueIdentifier>{3e77930b-d355-48ea-adea-73e32287077b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\entities\beings\statuses">
-      <UniqueIdentifier>{a2a83533-6206-4551-ac7f-82a37b385f35}</UniqueIdentifier>
-    </Filter>
     <Filter Include="include">
       <UniqueIdentifier>{67d163b0-2a95-4f45-b4bd-ec4125d1597c}</UniqueIdentifier>
     </Filter>
@@ -64,9 +61,6 @@
     <Filter Include="src\effects">
       <UniqueIdentifier>{31be0034-c41d-4864-a06d-da8ee5627416}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\items\potions">
-      <UniqueIdentifier>{4ae1ed48-f706-4d8e-815a-5781992433b6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="external">
       <UniqueIdentifier>{502881e6-cf08-47ad-81ec-ad1c3e04bb7a}</UniqueIdentifier>
     </Filter>
@@ -82,9 +76,6 @@
     <Filter Include="external\cancel">
       <UniqueIdentifier>{131fc6ea-ecf3-42d9-b809-e9efc0976d2a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="external\fmt">
-      <UniqueIdentifier>{58aaeb9e-8661-4247-b968-1c3724debed0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\scenes">
       <UniqueIdentifier>{394fbcfc-b9cc-4463-8eda-2db6c36593ca}</UniqueIdentifier>
     </Filter>
@@ -94,18 +85,15 @@
     <Filter Include="src\ui\dialog">
       <UniqueIdentifier>{e03010e9-148b-46df-9026-2c29d231895e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\bounded">
+      <UniqueIdentifier>{0bc1268d-f149-4f0a-be38-44b12e299541}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\utility\complete.hpp">
-      <Filter>src\utility</Filter>
-    </ClInclude>
     <ClInclude Include="src\utility\debug.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
     <ClInclude Include="src\utility\delegate.hpp">
-      <Filter>src\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utility\dynamic_bounded.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
     <ClInclude Include="src\utility\event.hpp">
@@ -117,31 +105,16 @@
     <ClInclude Include="src\utility\io.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\utility\lazy_bounded.hpp">
-      <Filter>src\utility</Filter>
-    </ClInclude>
     <ClInclude Include="src\utility\random.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
     <ClInclude Include="src\utility\reference.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\utility\static_bounded.hpp">
-      <Filter>src\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utility\type_list.hpp">
-      <Filter>src\utility</Filter>
-    </ClInclude>
     <ClInclude Include="src\utility\utility.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\utility\visitor_pattern.hpp">
-      <Filter>src\utility</Filter>
-    </ClInclude>
     <ClInclude Include="src\agents\player.hpp">
-      <Filter>src\agents</Filter>
-    </ClInclude>
-    <ClInclude Include="src\agents\action.hpp">
       <Filter>src\agents</Filter>
     </ClInclude>
     <ClInclude Include="src\agents\agent.hpp">
@@ -243,40 +216,10 @@
     <ClInclude Include="src\ui\qte\shock.hpp">
       <Filter>src\ui\qte</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\qte\aim_missile.hpp">
-      <Filter>src\ui\qte</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\count_dialog.hpp">
-      <Filter>src\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\dialog.hpp">
-      <Filter>src\ui</Filter>
-    </ClInclude>
     <ClInclude Include="src\ui\digraph_menu.hpp">
       <Filter>src\ui</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\direction_dialog.hpp">
-      <Filter>src\ui</Filter>
-    </ClInclude>
     <ClInclude Include="src\ui\hud.hpp">
-      <Filter>src\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\list_dialog.hpp">
-      <Filter>src\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\magnitude_dialog.hpp">
-      <Filter>src\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\message_dialog.hpp">
-      <Filter>src\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\player_action_dialog.hpp">
-      <Filter>src\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\tile_dialog.hpp">
-      <Filter>src\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\vector_dialog.hpp">
       <Filter>src\ui</Filter>
     </ClInclude>
     <ClInclude Include="src\magic\charge_cost.hpp">
@@ -294,14 +237,8 @@
     <ClInclude Include="src\magic\teleport.hpp">
       <Filter>src\magic</Filter>
     </ClInclude>
-    <ClInclude Include="src\items\armor\armor.hpp">
-      <Filter>src\items\armor</Filter>
-    </ClInclude>
     <ClInclude Include="src\items\magic\gatestone.hpp">
       <Filter>src\items\magic</Filter>
-    </ClInclude>
-    <ClInclude Include="src\items\potions\potion.hpp">
-      <Filter>src\items\potions</Filter>
     </ClInclude>
     <ClInclude Include="src\items\weapons\weapon.hpp">
       <Filter>src\items\weapons</Filter>
@@ -309,13 +246,7 @@
     <ClInclude Include="src\items\weapons\arrow.hpp">
       <Filter>src\items\weapons</Filter>
     </ClInclude>
-    <ClInclude Include="src\items\weapons\attack.hpp">
-      <Filter>src\items\weapons</Filter>
-    </ClInclude>
     <ClInclude Include="src\items\weapons\bow.hpp">
-      <Filter>src\items\weapons</Filter>
-    </ClInclude>
-    <ClInclude Include="src\items\weapons\modal_weapon.hpp">
       <Filter>src\items\weapons</Filter>
     </ClInclude>
     <ClInclude Include="src\items\weapons\quarterstaff.hpp">
@@ -324,13 +255,7 @@
     <ClInclude Include="src\items\weapons\quiver.hpp">
       <Filter>src\items\weapons</Filter>
     </ClInclude>
-    <ClInclude Include="src\items\scroll.hpp">
-      <Filter>src\items</Filter>
-    </ClInclude>
     <ClInclude Include="src\items\breakable.hpp">
-      <Filter>src\items</Filter>
-    </ClInclude>
-    <ClInclude Include="src\items\craftable.hpp">
       <Filter>src\items</Filter>
     </ClInclude>
     <ClInclude Include="src\items\equipment.hpp">
@@ -340,9 +265,6 @@
       <Filter>src\items</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\beings\stats\vision.hpp">
-      <Filter>src\entities\beings\stats</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\stats\modifier.hpp">
       <Filter>src\entities\beings\stats</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\beings\world_view.hpp">
@@ -360,14 +282,8 @@
     <ClInclude Include="src\entities\beings\being.hpp">
       <Filter>src\entities\beings</Filter>
     </ClInclude>
-    <ClInclude Include="src\entities\objects\corpse.hpp">
-      <Filter>src\entities\objects</Filter>
-    </ClInclude>
     <ClInclude Include="src\entities\objects\campfire.hpp">
       <Filter>src\entities\objects</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\all_entities.hpp">
-      <Filter>src\entities</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\perception.hpp">
       <Filter>src\entities</Filter>
@@ -375,53 +291,11 @@
     <ClInclude Include="src\magic\color.hpp">
       <Filter>src\magic</Filter>
     </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\healing.hpp">
-      <Filter>src\entities\beings\statuses</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\blind.hpp">
-      <Filter>src\entities\beings\statuses</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\confused.hpp">
-      <Filter>src\entities\beings\statuses</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\deaf.hpp">
-      <Filter>src\entities\beings\statuses</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\illuminated.hpp">
-      <Filter>src\entities\beings\statuses</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\mute.hpp">
-      <Filter>src\entities\beings\statuses</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\nauseated.hpp">
-      <Filter>src\entities\beings\statuses</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\numb.hpp">
-      <Filter>src\entities\beings\statuses</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\poisoned.hpp">
-      <Filter>src\entities\beings\statuses</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\status.hpp">
-      <Filter>src\entities\beings\statuses</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utility\nonnegative.hpp">
-      <Filter>src\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\stats\being.hpp">
-      <Filter>src\entities\beings\stats</Filter>
-    </ClInclude>
     <ClInclude Include="src\entities\beings\stats\aggregate.hpp">
       <Filter>src\entities\beings\stats</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\beings\stats\part.hpp">
       <Filter>src\entities\beings\stats</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utility\dynamic_property.hpp">
-      <Filter>src\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utility\bounded.hpp">
-      <Filter>src\utility</Filter>
     </ClInclude>
     <ClInclude Include="src\quantities\mass.hpp">
       <Filter>src\quantities</Filter>
@@ -434,9 +308,6 @@
     </ClInclude>
     <ClInclude Include="src\quantities\game_time.hpp">
       <Filter>src\quantities</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utility\static_property.hpp">
-      <Filter>src\utility</Filter>
     </ClInclude>
     <ClInclude Include="external\vecx\angle.hpp">
       <Filter>external\vecx</Filter>
@@ -573,9 +444,6 @@
     <ClInclude Include="src\utility\visitation.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\entities\beings\conditions.hpp">
-      <Filter>src\entities\beings</Filter>
-    </ClInclude>
     <ClInclude Include="src\ui\widget.hpp">
       <Filter>src\ui</Filter>
     </ClInclude>
@@ -600,9 +468,6 @@
     <ClInclude Include="src\ui\view_space.hpp">
       <Filter>src\ui</Filter>
     </ClInclude>
-    <ClInclude Include="src\items\common_actions.hpp">
-      <Filter>src\items</Filter>
-    </ClInclude>
     <ClInclude Include="src\reg.hpp">
       <Filter>src</Filter>
     </ClInclude>
@@ -618,14 +483,101 @@
     <ClInclude Include="src\entities\entity.hpp">
       <Filter>src\entities</Filter>
     </ClInclude>
-    <ClInclude Include="src\entities\obstacle.hpp">
-      <Filter>src\entities</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entities\beings\statuses\telescoped.hpp">
-      <Filter>src\entities\beings\statuses</Filter>
-    </ClInclude>
     <ClInclude Include="src\world\world_space.hpp">
       <Filter>src\world</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\dialog\list_dialog.hpp">
+      <Filter>src\ui\dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\dialog\magnitude_dialog.hpp">
+      <Filter>src\ui\dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\dialog\message_dialog.hpp">
+      <Filter>src\ui\dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\dialog\tile_dialog.hpp">
+      <Filter>src\ui\dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\dialog\vector_dialog.hpp">
+      <Filter>src\ui\dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\dialog\count_dialog.hpp">
+      <Filter>src\ui\dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\dialog\dialog.hpp">
+      <Filter>src\ui\dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\dialog\direction_dialog.hpp">
+      <Filter>src\ui\dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\agents\actions.hpp">
+      <Filter>src\agents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\items\magic\scroll.hpp">
+      <Filter>src\items\magic</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utility\future.hpp">
+      <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\damage\coverage.hpp">
+      <Filter>src\damage</Filter>
+    </ClInclude>
+    <ClInclude Include="src\damage\armor.hpp">
+      <Filter>src\damage</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bounded\lazy.hpp">
+      <Filter>src\bounded</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bounded\nonnegative.hpp">
+      <Filter>src\bounded</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bounded\static.hpp">
+      <Filter>src\bounded</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bounded\static_property.hpp">
+      <Filter>src\bounded</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bounded\bounded.hpp">
+      <Filter>src\bounded</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bounded\dynamic.hpp">
+      <Filter>src\bounded</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bounded\dynamic_property.hpp">
+      <Filter>src\bounded</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bounded\dynamic_nonnegative.hpp">
+      <Filter>src\bounded</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utility\unreachable.hpp">
+      <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\wounds.hpp">
+      <Filter>src\entities\beings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\stats\body.hpp">
+      <Filter>src\entities\beings\stats</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\body_cond.hpp">
+      <Filter>src\entities\beings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\body_part_cond.hpp">
+      <Filter>src\entities\beings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\body_status_set.hpp">
+      <Filter>src\entities\beings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\body_status.hpp">
+      <Filter>src\entities\beings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\body_part_status.hpp">
+      <Filter>src\entities\beings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\body_part_status_set.hpp">
+      <Filter>src\entities\beings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\beings\stats\stat.hpp">
+      <Filter>src\entities\beings\stats</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -680,18 +632,6 @@
     <ClCompile Include="src\entities\objects\campfire.cpp">
       <Filter>src\entities\objects</Filter>
     </ClCompile>
-    <ClCompile Include="src\entities\beings\stats\vision.cpp">
-      <Filter>src\entities\beings\stats</Filter>
-    </ClCompile>
-    <ClCompile Include="src\entities\beings\statuses\healing.cpp">
-      <Filter>src\entities\beings\statuses</Filter>
-    </ClCompile>
-    <ClCompile Include="src\entities\beings\statuses\poisoned.cpp">
-      <Filter>src\entities\beings\statuses</Filter>
-    </ClCompile>
-    <ClCompile Include="src\entities\beings\statuses\status.cpp">
-      <Filter>src\entities\beings\statuses</Filter>
-    </ClCompile>
     <ClCompile Include="src\entities\beings\human.cpp">
       <Filter>src\entities\beings</Filter>
     </ClCompile>
@@ -713,19 +653,10 @@
     <ClCompile Include="src\items\item.cpp">
       <Filter>src\items</Filter>
     </ClCompile>
-    <ClCompile Include="src\items\scroll.cpp">
-      <Filter>src\items</Filter>
-    </ClCompile>
-    <ClCompile Include="src\items\armor\armor.cpp">
-      <Filter>src\items\armor</Filter>
-    </ClCompile>
     <ClCompile Include="src\items\magic\gatestone.cpp">
       <Filter>src\items\magic</Filter>
     </ClCompile>
     <ClCompile Include="src\items\weapons\weapon.cpp">
-      <Filter>src\items\weapons</Filter>
-    </ClCompile>
-    <ClCompile Include="src\items\weapons\attack.cpp">
       <Filter>src\items\weapons</Filter>
     </ClCompile>
     <ClCompile Include="src\items\weapons\bow.cpp">
@@ -737,40 +668,13 @@
     <ClCompile Include="src\magic\shock.cpp">
       <Filter>src\magic</Filter>
     </ClCompile>
-    <ClCompile Include="src\magic\spell.cpp">
-      <Filter>src\magic</Filter>
-    </ClCompile>
     <ClCompile Include="src\magic\teleport.cpp">
       <Filter>src\magic</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\player_action_dialog.cpp">
-      <Filter>src\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\tile_dialog.cpp">
-      <Filter>src\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\vector_dialog.cpp">
-      <Filter>src\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\count_dialog.cpp">
-      <Filter>src\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\dialog.cpp">
-      <Filter>src\ui</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\digraph_menu.cpp">
       <Filter>src\ui</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\direction_dialog.cpp">
-      <Filter>src\ui</Filter>
-    </ClCompile>
     <ClCompile Include="src\ui\hud.cpp">
-      <Filter>src\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\magnitude_dialog.cpp">
-      <Filter>src\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\message_dialog.cpp">
       <Filter>src\ui</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\qte\shock.cpp">
@@ -791,9 +695,6 @@
     <ClCompile Include="src\world\light_source.cpp">
       <Filter>src\world</Filter>
     </ClCompile>
-    <ClCompile Include="src\agents\agent.cpp">
-      <Filter>src\agents</Filter>
-    </ClCompile>
     <ClCompile Include="src\agents\basic_ai.cpp">
       <Filter>src\agents</Filter>
     </ClCompile>
@@ -809,9 +710,6 @@
     <ClCompile Include="src\animation\particles\arrow_particle.cpp">
       <Filter>src\animation\particles</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\qte\aim_missile.cpp">
-      <Filter>src\ui\qte</Filter>
-    </ClCompile>
     <ClCompile Include="src\animation\bleeding.cpp">
       <Filter>src\animation</Filter>
     </ClCompile>
@@ -819,9 +717,6 @@
       <Filter>src\items\weapons</Filter>
     </ClCompile>
     <ClCompile Include="src\items\weapons\quiver.cpp">
-      <Filter>src\items\weapons</Filter>
-    </ClCompile>
-    <ClCompile Include="src\items\weapons\modal_weapon.cpp">
       <Filter>src\items\weapons</Filter>
     </ClCompile>
     <ClCompile Include="src\magic\charge_cost.cpp">
@@ -832,12 +727,6 @@
     </ClCompile>
     <ClCompile Include="src\animation\particles\sprite_particle.cpp">
       <Filter>src\animation\particles</Filter>
-    </ClCompile>
-    <ClCompile Include="external\fmt\format.cc">
-      <Filter>external\fmt</Filter>
-    </ClCompile>
-    <ClCompile Include="src\animation\item_animator.cpp">
-      <Filter>src\animation</Filter>
     </ClCompile>
     <ClCompile Include="src\animation\still_image.cpp">
       <Filter>src\animation</Filter>
@@ -858,9 +747,6 @@
       <Filter>src\scenes</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\input_manager.cpp">
-      <Filter>src\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\list_dialog.cpp">
       <Filter>src\ui</Filter>
     </ClCompile>
     <ClCompile Include="src\magic\telescope.cpp">
@@ -893,20 +779,62 @@
     <ClCompile Include="src\items\weapons\arrow.cpp">
       <Filter>src\items\weapons</Filter>
     </ClCompile>
-    <ClCompile Include="src\items\common_actions.cpp">
-      <Filter>src\items</Filter>
-    </ClCompile>
     <ClCompile Include="src\items\inventory.cpp">
       <Filter>src\items</Filter>
-    </ClCompile>
-    <ClCompile Include="src\entities\objects\corpse.cpp">
-      <Filter>src\entities\objects</Filter>
     </ClCompile>
     <ClCompile Include="src\world\tile.cpp">
       <Filter>src\world</Filter>
     </ClCompile>
     <ClCompile Include="src\entities\entity.cpp">
       <Filter>src\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\dialog\list_dialog.cpp">
+      <Filter>src\ui\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\dialog\magnitude_dialog.cpp">
+      <Filter>src\ui\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\dialog\message_dialog.cpp">
+      <Filter>src\ui\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\dialog\tile_dialog.cpp">
+      <Filter>src\ui\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\dialog\vector_dialog.cpp">
+      <Filter>src\ui\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\dialog\count_dialog.cpp">
+      <Filter>src\ui\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\dialog\dialog.cpp">
+      <Filter>src\ui\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\dialog\direction_dialog.cpp">
+      <Filter>src\ui\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\agents\actions.cpp">
+      <Filter>src\agents</Filter>
+    </ClCompile>
+    <ClCompile Include="src\items\magic\scroll.cpp">
+      <Filter>src\items\magic</Filter>
+    </ClCompile>
+    <ClCompile Include="src\items\breakable.cpp">
+      <Filter>src\items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\perception.cpp">
+      <Filter>src\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\beings\body_status_set.cpp">
+      <Filter>src\entities\beings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\beings\body_status.cpp">
+      <Filter>src\entities\beings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\beings\body_part_status.cpp">
+      <Filter>src\entities\beings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\beings\body_part_status_set.cpp">
+      <Filter>src\entities\beings</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -2,24 +2,23 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include <filesystem>
-#include <fstream>
-#include <limits.h>
-#include <sstream>
+#include "region.hpp"
+#include "light_source.hpp"
+#include "tile.hpp"
 
 #include "agents/agent.hpp"
 #include "agents/basic_ai.hpp"
 #include "agents/lazy_ai.hpp"
 #include "effects/effect.hpp"
-#include "entities/all_entities.hpp"
 #include "entities/beings/being.hpp"
-#include "game.hpp"
 #include "items/weapons/quarterstaff.hpp"
 #include "utility/random.hpp"
 #include "utility/utility.hpp"
-#include "world/light_source.hpp"
-#include "world/region.hpp"
-#include "world/tile.hpp"
+
+#include <filesystem>
+#include <fstream>
+#include <limits.h>
+#include <sstream>
 
 using std::function;
 using std::string;
@@ -27,20 +26,13 @@ using std::vector;
 namespace fs = std::filesystem;
 
 namespace ql {
-	bool turn_order_function(being const& first, being const& second) {
-		// Sort beings in the turn queue by lower busy-time first, then lower entity ID.
-		tick f_b = first.cond.busy_time;
-		tick s_b = second.cond.busy_time;
-		return f_b < s_b || (f_b == s_b && first.id < second.id);
-	}
-
 	region::region(string region_name)
 		: _name{std::move(region_name)}
 		, _time{0}
 		, _time_of_day{get_time_of_day()}
 		, _period_of_day{get_period_of_day()}
-		, _turn_queue{turn_order_function}
-		, _ambient_illuminance{get_ambient_illuminance()} {
+		, _ambient_illuminance{get_ambient_illuminance()} //
+	{
 		auto const r_radius = 1_section_span;
 		auto const q_radius = 1_section_span;
 
@@ -50,13 +42,13 @@ namespace ql {
 
 				// Create a section with random terrain.
 				string data;
-				for (span q = 0_span; q < section::diameter; ++q) {
-					for (span r = 0_span; r < section::diameter; ++r) {
-						// if (r == section::diameter - 1 || q == section::diameter - 1) {
+				for (span q = 0_span; q < section_diameter; ++q) {
+					for (span r = 0_span; r < section_diameter; ++r) {
+						// if (r == section_diameter - 1 || q == section_diameter - 1) {
 						//	data += std::to_string(static_cast<int>(ql::subtype::edge)) + ' ' + std::to_string(0.0) + '
 						//'; } else {
 						data += std::to_string(uniform(0, static_cast<int>(terrain::terrain_count) - 1)) + ' ' +
-								std::to_string(0.0) + ' ';
+							std::to_string(0.0) + ' ';
 						//}
 
 						// Every tile is snow (nice for testing lighting).
@@ -66,8 +58,8 @@ namespace ql {
 				std::istringstream data_stream{data};
 				_section_map.insert(std::make_pair(section_coords, section{section_coords, data_stream}));
 				// Add beings randomly.
-				for (span q = 0_span; q < section::diameter; ++q) {
-					for (span r = 0_span; r < section::diameter; ++r) {
+				for (span q = 0_span; q < section_diameter; ++q) {
+					for (span r = 0_span; r < section_diameter; ++r) {
 						if ((section_r != 0_section_span || section_q != 0_section_span) && uniform(0, 10) == 0) {
 							auto entity_coords = section::region_tile_coords(section_coords, section_tile::point{q, r});
 							if (!uniform(0, 12)) {
@@ -77,16 +69,17 @@ namespace ql {
 								bool const success = try_spawn(campfire, entity_coords);
 								assert(success);
 							} else {
-								// Create goblin.
-								auto goblin = reg.create();
-								make_goblin(goblin); //! @todo Implement make_goblin().
-								reg.assign<basic_ai>(goblin, goblin);
+								// Create human.
+								auto human_id = reg.create();
+								make_human(human_id, location{id, entity_coords});
+								// Give it a basic AI.
+								reg.assign<basic_ai>(human_id, human_id);
 								// Create quarterstaff.
-								ent quarterstaff = reg.create();
-								make_quarterstaff(quarterstaff); //! @todo Implement make_quarterstaff().
-								// Give quarterstaff to goblin.
-								reg.get<inventory>(goblin).add(quarterstaff);
-								// Spawn goblin.
+								ent quarterstaff_id = reg.create();
+								make_quarterstaff(quarterstaff_id); //! @todo Implement make_quarterstaff().
+								// Give quarterstaff to human.
+								reg.get<inventory>(human_id).add(quarterstaff_id);
+								// Spawn human.
 								bool const success = try_spawn(std::move(new_being), entity_coords);
 								assert(success);
 							}
@@ -199,34 +192,9 @@ namespace ql {
 #endif
 	}
 
-	void region::remove_from_turn_queue(ent being_id) {
-		if (being.cond.busy_time <= 0_tick) _turn_queue.erase(being);
-	}
-
-	void region::add_to_turn_queue(ent being_id) {
-		if (being.cond.busy_time <= 0_tick) _turn_queue.insert(being);
-	}
-
-	being* region::next_ready_being() {
-		if (_turn_queue.empty()) {
-			return nullptr;
-		} else {
-			being& next = *_turn_queue.begin();
-			return &next;
-		}
-	}
-
-	std::optional<id<being>> region::being_id_at(region_tile::point region_tile_coords) const {
+	std::optional<ent> region::entity_id_at(region_tile::point region_tile_coords) const {
 		if (section const* section = containing_section(region_tile_coords)) {
-			return section->being_id(region_tile_coords);
-		} else {
-			return std::nullopt;
-		}
-	}
-
-	std::optional<id<object>> region::object_id_at(region_tile::point region_tile_coords) const {
-		if (section const* section = containing_section(region_tile_coords)) {
-			return section->object_id(region_tile_coords);
+			return section->entity_id_at(region_tile_coords);
 		} else {
 			return std::nullopt;
 		}
@@ -237,8 +205,8 @@ namespace ql {
 
 		// Put the player's character somewhere in the middle section.
 
-		span q{uniform(-section::radius.value, section::radius.value)};
-		span r{uniform(-section::radius.value, section::radius.value)};
+		span q{uniform(-section_radius.value, section_radius.value)};
+		span r{uniform(-section_radius.value, section_radius.value)};
 		region_tile::point player_coords{q, r};
 
 		// Erase the being currently there, if any.
@@ -255,8 +223,6 @@ namespace ql {
 			location.region_id = id;
 			location.coords = region_tile_coords;
 
-			if (reg.has<being>(entity_id)) { add_to_turn_queue(entity_id); }
-
 			return section->try_add(entity_id);
 		} else {
 			//! @todo What to do when adding outside current sections?
@@ -264,41 +230,24 @@ namespace ql {
 		}
 	}
 
-	bool region::try_add(ql::object& object, region_tile::point region_tile_coords) {
-		if (section* section = containing_section(region_tile_coords)) {
-			object.location.region = this;
-			object.location.coords = region_tile_coords;
-
-			return section->try_add(object);
-		} else {
-			//! @todo What to do when adding outside current sections?
-			return false;
-		}
-	}
-
-	bool region::try_move(being& being, region_tile::point region_tile_coords) {
-		if (being.location.region != this) {
-			// The being is not in this region to begin with.
+	bool region::try_move(ent entity_id, region_tile::point region_tile_coords) {
+		auto& location = reg.get<ql::location>(entity_id);
+		if (location.region_id != id) {
+			// The entity is not in this region to begin with.
 			return false;
 		}
 
-		section& src_section = *containing_section(being.location.coords);
+		section& src_section = *containing_section(location.coords);
 		section* dst_section = containing_section(region_tile_coords);
 		if (dst_section != &src_section) {
 			if (dst_section != nullptr) {
-				if (dst_section->being_id(region_tile_coords)) {
-					// Collision with another being. Prevent movement.
+				if (dst_section->entity_id_at(region_tile_coords)) {
+					// Collision with another entity. Prevent movement.
 					return false;
 				}
-				if (auto object_id = dst_section->object_id(region_tile_coords)) {
-					if (the_game().objects.cref(*object_id).blocks_movement()) {
-						// Collision with an obstructing object. Prevent movement.
-						return false;
-					}
-				}
 
-				src_section.remove(being);
-				being.location.coords = region_tile_coords;
+				src_section.remove(entity_id);
+				location.coords = region_tile_coords;
 				return dst_section->try_add(being);
 			} else {
 				//! @todo Need to deal with null destination case.
@@ -350,18 +299,11 @@ namespace ql {
 		}
 	}
 
-	void region::remove(being& being) {
+	void region::remove(ent entity_id) {
 		if (section* section = containing_section(being.location.coords)) {
 			being.location.region = nullptr;
 			remove_from_turn_queue(being);
 			section->remove(being);
-		}
-	}
-
-	void region::remove(ql::object& object) {
-		if (section* section = containing_section(object.location.coords)) {
-			object.location.region = nullptr;
-			section->remove(object);
 		}
 	}
 
@@ -531,16 +473,8 @@ namespace ql {
 	}
 
 	being* region::being_helper(region_tile::point region_tile_coords) const {
-		if (auto opt_id = being_id_at(region_tile_coords)) {
-			return the_game().beings.ptr(*opt_id);
-		} else {
-			return nullptr;
-		}
-	}
-
-	object* region::object_helper(region_tile::point region_tile_coords) const {
-		if (auto opt_id = object_id_at(region_tile_coords)) {
-			return the_game().objects.ptr(*opt_id);
+		if (auto o_id = being_id_at(region_tile_coords)) {
+			return the_game().beings.ptr(*o_id);
 		} else {
 			return nullptr;
 		}

@@ -9,17 +9,19 @@
 
 #include "world/world_space.hpp"
 
+#include "utility/unreachable.hpp"
+
 #include "cancel/quantity.hpp"
 
 #include <gcem.hpp>
 
 #include <algorithm>
-#include <cassert> //! @todo Remove when contracts available.
 #include <exception>
 #include <vector>
 
 namespace vecx {
 	//! A hexagonal space.
+	//! @tparam Tag A type tag used to distinguish between hex spaces with the same length quantity type.
 	//! @tparam LengthQuantity A quantity type representing a distance in this hex space.
 	template <typename Tag, typename LengthQuantity>
 	struct hex_space {
@@ -40,7 +42,8 @@ namespace vecx {
 		struct vector {
 			length_t q;
 			length_t r;
-			length_t s;
+
+			constexpr length_t s() const { return -q - r; }
 
 			//! Unit vector in the given direction.
 			constexpr static vector unit(direction direction) {
@@ -55,62 +58,54 @@ namespace vecx {
 				};
 			}
 
-			constexpr explicit vector() : q{0}, r{0}, s{0} {}
-			constexpr explicit vector(length_t q, length_t r) : q{q}, r{r}, s{-q - r} {}
-			constexpr explicit vector(length_t q, length_t r, length_t s) : q{q}, r{r}, s{s} {}
+			constexpr explicit vector() : q{0}, r{0} {}
+			constexpr explicit vector(length_t q, length_t r) : q{q}, r{r} {}
 
 			constexpr explicit vector(float q, float r, float s) {
 				auto round = [this](float v) { return static_cast<typename length_t::rep>(v + 0.5); };
 				if (gcem::abs(q - round(q)) > gcem::abs(r - round(r)) && gcem::abs(q - round(q)) > gcem::abs(s - round(s))) {
 					this->q = length_t{-round(r) - round(s)};
 					this->r = length_t{round(r)};
-					this->s = length_t{round(s)};
 				} else {
 					this->q = length_t{round(q)};
 					this->r = length_t{gcem::abs(r - round(r)) > gcem::abs(s - round(s))
 						? -round(q) - round(s)
 						: round(r)
 					};
-					this->s = length_t{gcem::abs(r - round(r)) > gcem::abs(s - round(s))
-						? round(s)
-						: -round(q) - round(r)
-					};
 				}
 			}
 
-			friend constexpr vector operator +(vector v1, vector v2) { return vector{v1.q + v2.q, v1.r + v2.r, v1.s + v2.s}; }
+			friend constexpr auto operator +(vector v1, vector v2) { return vector{v1.q + v2.q, v1.r + v2.r}; }
 
-			constexpr vector operator -() { return vector{-q, -r, -s}; }
+			constexpr auto operator -() { return vector{-q, -r}; }
 
-			friend constexpr vector operator -(vector v1, vector v2) { return vector{v1.q - v2.q, v1.r - v2.r, v1.s - v2.s}; }
+			friend constexpr auto operator -(vector v1, vector v2) { return vector{v1.q - v2.q, v1.r - v2.r}; }
 
-			friend constexpr vector operator *(vector h, int k) { return vector{k * h.q.value, k * h.r.value, k * h.s.value}; }
-			friend constexpr vector operator *(int k, vector h) { return vector{k * h.q.value, k * h.r.value, k * h.s.value}; }
+			friend constexpr auto operator *(vector h, int k) { return vector{k * h.q, k * h.r}; }
+			friend constexpr auto operator *(int k, vector h) { return vector{k * h.q, k * h.r}; }
 
-			friend constexpr vector operator *(vector h, length_t k) { return vector{k * h.q.value, k * h.r.value, k * h.s.value}; }
-			friend constexpr vector operator *(length_t k, vector h) { return vector{k * h.q.value, k * h.r.value, k * h.s.value}; }
+			friend constexpr auto operator *(vector h, length_t k) { return vector{k * h.q, k * h.r}; }
+			friend constexpr auto operator *(length_t k, vector h) { return vector{k * h.q, k * h.r}; }
 
-			friend constexpr vector operator /(vector h, int k) { return vector{h.q.value / k, h.r.value / k, h.s.value / k}; }
-			friend constexpr vector operator /(vector h, length_t k) { return vector{h.q.value / k, h.r.value / k, h.s.value / k}; }
+			friend constexpr auto operator /(vector h, int k) { return vector{h.q / k, h.r / k}; }
+			friend constexpr auto operator /(vector h, length_t k) { return hex_space<Tag, cancel::unitless<length_t::rep>>::vector{h.q / k, h.r / k}; }
 
-			friend constexpr bool operator ==(vector v1, vector v2) { return v1.q == v2.q && v1.r == v2.r && v1.s == v2.s; }
-			friend constexpr bool operator !=(vector v1, vector v2) { return v1.q != v2.q || v1.r != v2.r || v1.s != v2.s; }
+			auto operator <=>(vector const& other) const = default;
 
-			//! Arbitrary less-than function so that HexCoords are comparable.
-			friend constexpr bool operator <(vector v1, vector v2) { return v1.q < v2.q || (v1.q == v2.q && v1.r < v2.r); }
-
-			constexpr length_t length() const { return static_cast<length_t>((gcem::abs(q) + gcem::abs(r) + gcem::abs(s)) / 2); }
+			constexpr length_t length() const { return static_cast<length_t>((gcem::abs(q) + gcem::abs(r) + gcem::abs(s())) / 2); }
 
 			//! The unit vector nearest this vector. This vector must be non-zero.
-			constexpr vector unit() const {
+			constexpr auto unit() const {
 				auto const l = static_cast<length_t>(length().value);
-				assert(l != 0.0 && "Unit vector of a zero-length vector is undefined.");
+				assert(l != length_t(0) && "Unit vector of a zero-length vector is undefined.");
 				return *this / l;
 			}
 
+			//! @todo Add non-zero precondition to direction when available.
+
 			//! The nearest direction this vector points towards. This vector must be non-zero.
 			constexpr direction direction() const {
-				vector const u = unit();
+				auto const u = unit();
 				switch (u.q.value) {
 					case -1:
 						switch (u.r.value) {
@@ -133,9 +128,7 @@ namespace vecx {
 					default:
 						break;
 				}
-				//! @todo Replace with precondition when available, and remove dummy return statement.
-				assert(false && "Vector has no direction.");
-				return direction::one;
+				UNREACHABLE;
 			}
 
 			//! Simple hash function.
@@ -148,53 +141,46 @@ namespace vecx {
 		struct point {
 			length_t q;
 			length_t r;
-			length_t s;
 
-			constexpr explicit point() : q{0}, r{0}, s{0} {}
-			constexpr explicit point(length_t q, length_t r) : q{q}, r{r}, s{-q - r} {}
-			constexpr explicit point(length_t q, length_t r, length_t s) : q{q}, r{r}, s{s} {}
+			constexpr length_t s() const { return -q - r; }
+
+			constexpr explicit point() : q{0}, r{0} {}
+			constexpr explicit point(length_t q, length_t r) : q{q}, r{r} {}
+			constexpr explicit point(length_t q, length_t r, length_t s) : q{q}, r{r} {}
 
 			constexpr explicit point(float q, float r, float s) {
 				auto round = [this](float v) { return static_cast<typename length_t::rep>(v + 0.5f); };
 				if (gcem::abs(q - round(q)) > gcem::abs(r - round(r)) && gcem::abs(q - round(q)) > gcem::abs(s - round(s))) {
 					this->q = length_t{-round(r) - round(s)};
 					this->r = length_t{round(r)};
-					this->s = length_t{round(s)};
 				} else {
 					this->q = length_t{round(q)};
 					this->r = length_t{gcem::abs(r - round(r)) > gcem::abs(s - round(s))
 						? -round(q) - round(s)
 						: round(r)
 					};
-					this->s = length_t{gcem::abs(r - round(r)) > gcem::abs(s - round(s))
-						? round(s)
-						: -round(q) - round(r)
-					};
 				}
 			}
 
-			friend constexpr point operator +(point p, vector v) { return point{p.q + v.q, p.r + v.r, p.s + v.s}; }
-			friend constexpr point operator +(vector v, point p) { return point{v.q + p.q, v.r + p.r, v.s + p.s}; }
+			friend constexpr point operator +(point p, vector v) { return point{p.q + v.q, p.r + v.r}; }
+			friend constexpr point operator +(vector v, point p) { return point{v.q + p.q, v.r + p.r}; }
 
-			friend constexpr vector operator -(point h1, point h2) { return vector{h1.q - h2.q, h1.r - h2.r, h1.s - h2.s}; }
-			friend constexpr point operator -(point p, vector v) { return point{p.q - v.q, p.r - v.r, p.s - v.s}; }
+			friend constexpr vector operator -(point h1, point h2) { return vector{h1.q - h2.q, h1.r - h2.r}; }
+			friend constexpr point operator -(point p, vector v) { return point{p.q - v.q, p.r - v.r}; }
 
-			friend constexpr bool operator ==(point p1, point p2) { return p1.q == p2.q && p1.r == p2.r && p1.s == p2.s; }
-			friend constexpr bool operator !=(point p1, point p2) { return p1.q != p2.q || p1.r != p2.r || p1.s != p2.s; }
-
-			//! Arbitrary less-than function so that HexPoints are comparable.
-			friend constexpr bool operator <(point h1, point h2) { return h1.q < h2.q || (h1.q == h2.q && h1.r < h2.r); }
+			auto operator <=>(point const& other) const = default;
 
 			//! @todo Make this lazy?
 
 			std::vector<point> line_to(point dest) const {
 				int n = (dest - *this).length().value;
-				std::vector<point> results;
+				std::vector<point> result;
+				result.reserve(n + 1);
 				length_t step = 1.0 / std::max(n, 1);
 				for (int i = 0; i <= n; i++) {
-					results.push_back(lerp(dest, step * i));
+					result.push_back(lerp(dest, step * i));
 				}
-				return results;
+				return result;
 			}
 
 			constexpr point lerp(point dest, length_t t) const {
@@ -208,13 +194,13 @@ namespace vecx {
 			//! Neighboring point in the given direction.
 			constexpr point neighbor(direction direction) const {
 				switch (direction) {
-					default: [[fallthrough]] ; // Impossible case.
 					case direction::one:   return point{q + length_t{1}, r + length_t{0}};
 					case direction::two:   return point{q + length_t{0}, r + length_t{1}};
 					case direction::three: return point{q - length_t{1}, r + length_t{1}};
 					case direction::four:  return point{q - length_t{1}, r + length_t{0}};
 					case direction::five:  return point{q + length_t{0}, r - length_t{1}};
 					case direction::six:   return point{q + length_t{1}, r - length_t{1}};
+					default: UNREACHABLE;
 				};
 			}
 

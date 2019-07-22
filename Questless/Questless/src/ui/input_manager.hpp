@@ -8,6 +8,7 @@
 
 #include <SFML/Window.hpp>
 
+#include <compare>
 #include <optional>
 #include <set>
 #include <stdexcept>
@@ -25,12 +26,7 @@ namespace ql {
 			input input;
 			bool pressed;
 
-			constexpr bool operator==(input_event const& other) const {
-				return this->input == other.input && this->pressed == other.pressed;
-			}
-			constexpr bool operator!=(input_event const& other) const {
-				return !(*this == other);
-			}
+			auto operator<=>(input_event const& other) const = default;
 		};
 
 		//! The window whose events this input manager polls.

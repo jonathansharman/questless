@@ -5,9 +5,8 @@
 #pragma once
 
 #include "quantities/wall_time.hpp"
-#include "utility/nonnegative.hpp"
-
 #include "ui/view_space.hpp"
+#include "bounded/nonnegative.hpp"
 #include "world/world_space.hpp"
 
 #include <SFML/Graphics.hpp>

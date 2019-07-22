@@ -4,44 +4,25 @@
 
 #pragma once
 
-#include "utility/static_bounded.hpp"
+#include "bounded/static.hpp"
+#include "entities/beings/stats/vision.hpp"
+#include "quantities/misc.hpp"
+#include "reg.hpp"
+#include "world/coordinates.hpp"
 
 #include "cancel/quantity.hpp"
 
-namespace ql::perception {
-	//! The degree to which a being perceives an entity.
-	using level = cancel::quantity<double, cancel::unit_t<struct perception_leve_tag>>;
-
-	constexpr auto minimum_level = level{0.0};
-	constexpr auto maximum_level = level{100.0};
-
-	using bounded_level = static_bounded<perception::level, perception::minimum_level, perception::maximum_level>;
-
-	//! The category of a being's perception of an entity.
-	enum class category
-		{ none   //!< Unperceived.
-		, low    //!< Presence perceived.
-		, medium //!< Type of entity perceived.
-		, high   //!< Attributes such as health and equipped items perceived.
-		, full   //!< All attributes perceived.
-		};
-
-	//! Maps perception level to perception category.
-	constexpr category get_category(level level) {
-		if (level > perception::level{75.0}) {
-			return category::full;
-		} else if (level > perception::level{50.0}) {
-			return category::high;
-		} else if (level > perception::level{25.0}) {
-			return category::medium;
-		} else if (level > perception::level{0.0}) {
-			return category::low;
-		} else {
-			return category::none;
-		}
-	}
-}
+#include <vector>
 
 namespace ql {
-	constexpr perception::level operator "" _perception(long double value) { return perception::level{static_cast<double>(value)}; }
+	constexpr auto min_perception = 0_perception;
+	constexpr auto max_perception = 100_perception;
+
+	using bounded_perception = static_bounded<perception, min_perception, max_perception>;
+
+	//! The maximum possible distance a being with vision list @p vision_sources could see.
+	span max_visual_range(std::vector<stats::vision> const& vision_sources);
+
+	//! The perception of the @p target tile by the being with ID @p perceptor_id.
+	perception perception_of(ent perceptor_id, region_tile::point target);
 }

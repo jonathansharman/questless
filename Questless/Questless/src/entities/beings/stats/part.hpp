@@ -6,35 +6,22 @@
 
 #include "aggregate.hpp"
 
-#include "damage/multiplier.hpp"
-#include "damage/protect.hpp"
-
-#include <cereal/cereal.hpp>
+#include "damage/armor.hpp"
 
 namespace ql::stats {
 	//! Stats belonging only to a particular body part.
 	struct part {
 		aggregate a{};
 
-		nonnegative<ql::dexterity> dexterity = 0.0_dex;
+		nonnegative<int> regen_factor = 0;
+		nonnegative<blood_per_tick> bleeding = 0.0_blood_per_tick;
+		ql::temperature min_temp = 0.0_temp;
+		ql::temperature max_temp = 0.0_temp;
+		dmg::armor armor{};
 
-		dmg::protect protect;
-		dmg::resist resist;
-		dmg::vuln vuln;
-
-		part() = default;
-
-		part(aggregate a, ql::dexterity dexterity, dmg::protect protect, dmg::resist resist, dmg::vuln vuln)
-			: a{std::move(a)}, dexterity{dexterity}, protect{protect}, resist{resist}, vuln{vuln} {}
-
-		template <typename Archive>
-		void save(Archive& archive) const {
-			archive(CEREAL_NVP(a), CEREAL_NVP(dexterity), CEREAL_NVP(protect), CEREAL_NVP(resist), CEREAL_NVP(vuln));
-		}
-
-		template <typename Archive>
-		void load(Archive& archive) {
-			archive(CEREAL_NVP(a), CEREAL_NVP(dexterity), CEREAL_NVP(protect), CEREAL_NVP(resist), CEREAL_NVP(vuln));
+		blood_per_tick blood_regen() const {
+			// Blood regen is proportional to maximum vitality and the regen factor.
+			return 0.01_blood / 1_tick / 1_hp * a.vitality.upper_bound() * regen_factor.value();
 		}
 	};
 }

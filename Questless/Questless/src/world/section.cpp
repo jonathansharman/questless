@@ -7,8 +7,6 @@
 #include "tile.hpp"
 
 #include "entities/beings/being.hpp"
-#include "entities/objects/object.hpp"
-#include "game.hpp"
 #include "magic/spell.hpp"
 #include "world/light_source.hpp"
 #include "world/region.hpp"
@@ -16,41 +14,9 @@
 #include <fstream>
 
 namespace ql {
-	ref<being> section::being_entry_to_ref(std::pair<region_tile::point const, id<being>> being_entry) {
-		return the_game().beings.ref(being_entry.second);
-	}
-	cref<being> section::being_entry_to_cref(std::pair<region_tile::point const, id<being>> being_entry) {
-		return the_game().beings.ref(being_entry.second);
-	}
-
-	ref<object> section::object_entry_to_ref(std::pair<region_tile::point const, id<object>> object_entry) {
-		return the_game().objects.ref(object_entry.second);
-	}
-	cref<object> section::object_entry_to_cref(std::pair<region_tile::point const, id<object>> object_entry) {
-		return the_game().objects.ref(object_entry.second);
-	}
-
-	ref<light_source> section::light_source_id_to_ref(id<light_source> light_source_id) {
-		return the_game().light_sources.ref(light_source_id);
-	}
-	cref<light_source> section::light_source_id_to_cref(id<light_source> light_source_id) {
-		return the_game().light_sources.ref(light_source_id);
-	}
-
-	region_section::point section::region_section_coords(region_tile::point region_tile_coords) {
-		auto q = region_tile_coords.q >= 0_span
-					 ? 1_section_span * (region_tile_coords.q + section::radius) / section::diameter
-					 : 1_section_span * (region_tile_coords.q - section::radius) / section::diameter;
-		auto r = region_tile_coords.r >= 0_span
-					 ? 1_section_span * (region_tile_coords.r + section::radius) / section::diameter
-					 : 1_section_span * (region_tile_coords.r - section::radius) / section::diameter;
-		return region_section::point{q, r};
-	}
-
-	section::section(region_section::point coords, std::istream& data_stream)
-		: beings{_being_map}, objects{_object_map}, light_sources{_light_source_ids}, _coords{coords} {
-		for (auto& slice : _tiles) {
-			for (auto& tile : slice) {
+	section::section(region_section::point coords, std::istream& data_stream) : _coords{coords} {
+		for (auto& slice : _tile_ids) {
+			for (ent tile_id : slice) {
 				int c;
 				temperature temperature_offset;
 
@@ -85,57 +51,33 @@ namespace ql {
 		}
 	}
 
-	section::section(section&& that)
-		: beings{_being_map}
-		, objects{_object_map}
-		, light_sources{_light_source_ids}
-		, _tiles{std::move(that._tiles)}
-		, _coords{that._coords}
-		, _being_map{std::move(that._being_map)}
-		, _object_map{std::move(that._object_map)} {}
-
-	section& section::operator=(section&& that) {
-		beings.container = _being_map;
-		objects.container = _object_map;
-		light_sources.container = _light_source_ids;
-		_tiles = std::move(that._tiles);
-		_coords = that._coords;
-		_being_map = std::move(that._being_map);
-		_object_map = std::move(that._object_map);
-		return *this;
-	}
-
 	section::~section() {}
 
 	void section::save(char const* filename) {
 		std::ofstream fout{filename};
-		for (auto& r_row : _tiles) {
+		for (auto& r_row : _tile_ids) {
 			for (auto& tile : r_row) {
 				fout << static_cast<char>(tile->subtype()) << ' ' << tile->temperature_offset.value << ' ';
 			}
 		}
 	}
 
-	std::optional<id<being>> section::entity_id_at(region_tile::point tile_coords) const {
-		auto it = _entity_map.find(tile_coords);
-		return it != _being_map.end() ? std::make_optional(it->second) : std::nullopt;
+	std::optional<ent> section::entity_id_at(region_tile::point tile_coords) const {
+		auto it = entity_id_map.find(tile_coords);
+		return it != entity_id_map.end() ? std::make_optional(it->second) : std::nullopt;
 	}
 
-	bool section::try_add(being& being) {
-		being.section = this;
-		auto result = _being_map.insert({being.coords, being.id});
+	bool section::try_add(ent entity_id) {
+		auto result = entity_id_map.insert({reg.get<location>(entity_id).coords, entity_id});
 		return result.second;
 	}
 
-	typename void section::remove_entity(region_tile::point coords) {
-		auto it = _being_map.find(coords);
-		if (it != _being_map.end()) {
-			if (being* removed_being = the_game().beings.ptr(it->second)) { removed_being->section = nullptr; }
-			_being_map.erase(it);
-		}
+	typename void section::remove_at(region_tile::point coords) {
+		auto it = entity_id_map.find(coords);
+		if (it != entity_id_map.end()) { entity_id_map.erase(it); }
 	}
 
-	void section::remove(being& being) {
-		remove_entity(being.coords);
+	void section::remove(ent entity_id) {
+		remove_at(reg.get<location>(entity_id).coords);
 	}
 }

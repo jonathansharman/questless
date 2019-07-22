@@ -34,7 +34,7 @@ namespace ql {
 	struct world_view;
 
 	//! Handles interaction with the world, as the player sees it.
-	struct world_widget {
+	struct world_widget : widget {
 		//! @param world_view The initial world view to render.
 		world_widget( //
 			world_view const& world_view,
@@ -67,6 +67,8 @@ namespace ql {
 		//! Clears the current highlight predicate so that no tiles are highlighted.
 		void clear_highlight_predicate();
 
+		void render_effect(effects::effect const& effect);
+
 	private:
 		rsrc::world_renderer _resources;
 		rsrc::entity const& _entity_resources;
@@ -86,7 +88,6 @@ namespace ql {
 
 		void render_terrain(world_view const& view);
 		void render_entities(world_view const& view);
-		void visit_effects(std::vector<effects::effect> const& effects);
 
 		animation& cache_tile_animation(tile const& tile);
 		animation& cache_entity_animation(entity const& entity);

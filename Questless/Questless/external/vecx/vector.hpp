@@ -33,7 +33,7 @@ namespace vecx {
 		constexpr vector(vector&&) = default;
 
 		template<typename... Args, typename = std::enable_if_t<(std::is_convertible_v<Args, scalar_t> && ...)>>
-		constexpr vector(Args&&... args) : components{std::forward<Args>(args)...} {}
+		constexpr vector(Args && ... args) : components{std::forward<Args>(args)...} {}
 
 		constexpr vector& operator =(vector const&) = default;
 		constexpr vector& operator =(vector&&) = default;
@@ -66,10 +66,9 @@ namespace vecx {
 		//! Creates a new vector by applying @p f to each component of this vector, in order.
 		template <typename MapOp>
 		constexpr auto map(MapOp const& f) const {
-			return std::apply([this, f](auto const&... components) {
-				using mapped_type = decltype(f(std::declval<scalar_t>()));
-				return vector<mapped_type, n>{f(components)...};
-			}, components);
+			return std::apply([this, f](auto const& ... components) {
+				return vector<std::invoke_result_t<MapOp, scalar_t>, n>{f(components)...};
+				}, components);
 		}
 
 		//! Creates a new vector from the application of @p f to the corresponding components of this vector and @p that.
@@ -162,7 +161,7 @@ namespace vecx {
 		constexpr auto length_squared() const {
 			return reduce(scalar_t(0) * scalar_t(0), [](auto const& acc, auto const& component) {
 				return acc + component * component;
-			});
+				});
 		}
 
 		//! The vector's length. Only defined if all components have the same units.
@@ -172,7 +171,7 @@ namespace vecx {
 		//! The angle of this vector in the @p axis1 to @p axis2 plane, in radians.
 		constexpr radians angle(std::size_t axis1 = 0, std::size_t axis2 = 1) const {
 			static_assert
-				( std::is_convertible_v<scalar_t::rep, double>
+				(std::is_convertible_v<scalar_t::rep, double>
 				, "Scalar representation must be convertible to double to find the vector angle."
 				);
 			return radians{gcem::atan2(static_cast<double>(components[axis2].value), static_cast<double>(components[axis1].value))};
@@ -180,7 +179,7 @@ namespace vecx {
 	};
 
 	template <typename T, typename... U>
-	vector(T, U...) -> vector<std::remove_cv_t<std::remove_reference_t<T>>, 1 + sizeof...(U)>;
+	vector(T, U...)->vector<std::remove_cv_t<std::remove_reference_t<T>>, 1 + sizeof...(U)>;
 
 	//! Constructs a vector from a magnitude and direction.
 	//! @param magnitude The magnitude or length of the vector. Must be a quantity.
@@ -241,7 +240,7 @@ namespace vecx {
 #ifndef _DEBUG
 #define DOCTEST_CONFIG_DISABLE
 #endif
-#include <doctest.h>
+#include <doctest/doctest.h>
 #undef near // Defined in minwindef.h (!)
 #undef far // Defined in minwindef.h (!)
 

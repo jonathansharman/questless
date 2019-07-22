@@ -4,11 +4,6 @@
 
 #pragma once
 
-#include <functional>
-#include <memory>
-
-#include "utility/complete.hpp"
-
 namespace ql {
 	struct being;
 

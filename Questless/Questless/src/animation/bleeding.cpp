@@ -4,7 +4,7 @@
 
 #include "bleeding.hpp"
 
-#include "animation/particles/blood_particle.hpp"
+#include "particles/blood_particle.hpp"
 
 namespace ql {
 	void bleeding::particle_animation_subupdate(sec elapsed_time) {

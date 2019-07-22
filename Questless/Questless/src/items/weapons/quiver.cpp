@@ -2,23 +2,23 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "items/weapons/quiver.hpp"
+#include "quiver.hpp"
+
+#include "items/equipment.hpp"
+#include "items/item.hpp"
 
 namespace ql {
-	quiver::quiver(ql::inventory inventory, ql::id<item> id)
-		: item{id}
-		, inventory{std::move(inventory)}
-	{}
+	void make_quiver(ent id) {
+		make_item(id, 0.5_mass);
 
-	std::vector<uptr<action>> quiver::actions() {
-		std::vector<uptr<action>> actions;
-		if (equipped()) {
-			actions.push_back(unequip::make(*this));
-		} else {
-			actions.push_back(equip::make(*this));
-			actions.push_back(drop::make(*this));
-			actions.push_back(toss::make(*this));
-		}
-		return actions;
+		//! @todo Equiping and unequiping a bow shouldn't take a long time (or actions). Stringing and unstringing a bow
+		//! should take a lot of time (or actions).
+		make_equipment(id,
+			std::nullopt,
+			{equipment::tab{body_part::tag::torso, std::nullopt}},
+			1_tick, // Equip time
+			1_tick); // Unequip time
+
+		reg.assign<quiver>(id, id, inventory{});
 	}
 }

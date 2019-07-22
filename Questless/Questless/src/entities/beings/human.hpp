@@ -4,8 +4,10 @@
 
 #pragma once
 
-#include "stats/being.hpp"
+#include "agents/agent.hpp"
+#include "reg.hpp"
+#include "world/coordinates.hpp"
 
 namespace ql {
-	void make_human(ent id, location location);
+	void make_human(ent id, location location, agent agent);
 }

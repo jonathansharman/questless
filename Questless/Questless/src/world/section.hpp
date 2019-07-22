@@ -4,9 +4,10 @@
 
 #pragma once
 
+#include "coordinates.hpp"
+
 #include "reg.hpp"
 #include "utility/reference.hpp"
-#include "world/coordinates.hpp"
 
 #include "vecx/hex_space.hpp"
 
@@ -26,33 +27,18 @@ namespace ql {
 
 	//! An rhomboid section of hexes in a region.
 	struct section {
-		static constexpr span radius = 10_span;
-		static constexpr span diameter = 2 * radius + 1_span;
-
-		//! The coordinates of the section that contains the tile at @p region_tile_coords.
-		static region_section::point region_section_coords(region_tile::point region_tile_coords);
+		std::unordered_map<region_tile::point, ent> entity_id_map;
 
 		//! The coordinates of @p region_tile_coords relative to the section that contains them.
 		static section_tile::point section_tile_coords(region_tile::point region_tile_coords) {
-			return section_tile::point{((region_tile_coords.q + section::radius) % section::diameter.value + section::diameter) %
-										   section::diameter.value,
-				((region_tile_coords.r + section::radius) % section::diameter.value + section::diameter) %
-					section::diameter.value};
+			return section_tile::point{
+				((region_tile_coords.q + section_radius) % section_diameter.value + section_diameter) % section_diameter.value,
+				((region_tile_coords.r + section_radius) % section_diameter.value + section_diameter) % section_diameter.value};
 		}
-
-		std::unordered_map<region_tile::point, ent> being_id_map;
-		std::unordered_map<region_tile::point, ent> object_id_map;
-		std::unordered_set<ent> light_source_ids;
 
 		//! @param coords The coordinates of the section within its region.
 		//! @param data_stream A stream of section data.
 		section(region_section::point coords, std::istream& data_stream);
-
-		section(section const& that) = delete;
-		section(section&& that);
-
-		section& operator=(section&) = delete;
-		section& operator=(section&& that);
 
 		~section();
 
@@ -68,31 +54,21 @@ namespace ql {
 		//! The ID of the entity at @p tile_coords or nullopt if there is none.
 		std::optional<ent> entity_id_at(region_tile::point tile_coords) const;
 
-		//! Tries to add the given being to the section. Returns true on success or false
-		//! if there is already a being at the being's coordinates.
-		[[nodiscard]] bool try_add(being& being);
-
-		//! Tries to add the given object to the section. Returns true on success or false
-		//! if there is already an object at the object's coordinates.
-		[[nodiscard]] bool try_add(object& object);
+		//! Tries to add the given entity to the section. Returns true on success or false if there is already an entity
+		//! at the entity's coordinates.
+		[[nodiscard]] bool try_add(ent being_id);
 
 		//! Removes the being at the given region tile coordinates, if present.
-		void remove_being(region_tile::point coords);
+		void remove_at(region_tile::point coords);
 
-		//! Removes the object at the given region tile coordinates, if present.
-		void remove_object(region_tile::point coords);
-
-		//! Removes @p being from the section, if present.
-		void remove(being& being);
-
-		//! Removes @p object from the section, if present.
-		void remove(object& object);
+		//! Removes the entity with ID @p entity_id from the section, if present.
+		void remove(ent entity_id);
 
 		//! Region tile coordinates from @p region_section_coords and @p section_tile_coords.
 		static region_tile::point region_tile_coords(region_section::point region_section_coords,
 			section_tile::point section_tile_coords) {
-			span q = region_section_coords.q.value * diameter + section_tile_coords.q - radius;
-			span r = region_section_coords.r.value * diameter + section_tile_coords.r - radius;
+			span q = region_section_coords.q.value * section_diameter + section_tile_coords.q - section_radius;
+			span r = region_section_coords.r.value * section_diameter + section_tile_coords.r - section_radius;
 			return region_tile::point{q, r};
 		}
 
@@ -101,19 +77,15 @@ namespace ql {
 			return region_tile_coords(_coords, section_tile_coords);
 		}
 
-		//! The tile at @p section_tile_coords in this section.
-		ql::tile const& tile_at(section_tile::point section_tile_coords) const {
-			return *_tiles[section_tile_coords.q.value][section_tile_coords.r.value];
-		}
-		//! The tile at @p section_tile_coords in this section.
-		ql::tile& tile_at(section_tile::point section_tile_coords) {
-			return *_tiles[section_tile_coords.q.value][section_tile_coords.r.value];
+		//! The ID of the tile at @p section_tile_coords in this section.
+		ent tile_id_at(section_tile::point section_tile_coords) const {
+			return _tile_ids[section_tile_coords.q.value][section_tile_coords.r.value];
 		}
 
 	private:
 		//! A q-major array of tiles, representing a rhomboid section of world data centered around the section's hex
 		//! coordinates.
-		std::array<std::array<uptr<ql::tile>, diameter.value>, diameter.value> _tiles;
+		std::array<std::array<ent, section_diameter.value>, section_diameter.value> _tile_ids;
 		//! The hex coordinates of the section within the region. The section's center's region tile coordinates are
 		//! _coords * section_diameter.
 		region_section::point _coords;

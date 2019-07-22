@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "animation/particle_animation.hpp"
+#include "particle_animation.hpp"
 
 namespace ql {
 	void particle_animation::animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const {

@@ -7,6 +7,10 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 namespace ql {
+	sf::FloatRect label::get_bounding_box() const {
+		return text.getGlobalBounds();
+	}
+
 	void label::update(sec, input_manager&) {}
 
 	void label::draw(sf::RenderTarget& target, sf::RenderStates states) const {

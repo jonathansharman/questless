@@ -7,8 +7,6 @@
 #include "world/coordinates.hpp"
 
 namespace ql {
-	struct being;
-
 	namespace effects {
 		struct telescope {
 			region_tile::point origin;

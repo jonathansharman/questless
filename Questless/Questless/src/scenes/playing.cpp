@@ -6,7 +6,6 @@
 
 #include "playing.hpp"
 
-#include "game.hpp"
 #include "utility/reference.hpp"
 #include "world/region.hpp"
 #include "world/world_space.hpp"
@@ -15,12 +14,13 @@
 #include "agents/player.hpp"
 #include "entities/beings/human.hpp"
 #include "items/magic/gatestone.hpp"
-#include "items/scroll.hpp"
+#include "items/magic/scroll.hpp"
 #include "items/weapons/arrow.hpp"
 #include "items/weapons/bow.hpp"
 #include "items/weapons/quarterstaff.hpp"
 #include "items/weapons/quiver.hpp"
 #include "magic/spell.hpp"
+#include "rsrc/fonts.hpp"
 
 #include <fmt/format.h>
 
@@ -33,8 +33,6 @@ namespace ql::scene {
 		reg.assign<region>(_region_id, "Region1");
 
 		spawn_player();
-		// Update the player's initial world view.
-		_player->update_view();
 		// Initialize the world renderer.
 		_world_renderer = umake<ql::world_renderer>(_player->world_view());
 		// Set the view relative to the player's being.
@@ -43,7 +41,7 @@ namespace ql::scene {
 
 	update_result playing::scene_subupdate(sec elapsed_time, input_manager& im) {
 		// Update HUD.
-		_hud->update();
+		_hud.update(elapsed_time, im);
 
 		// Update dialogs.
 		if (!_dialogs.empty()) {
@@ -55,9 +53,6 @@ namespace ql::scene {
 					// End of player's turn.
 				}
 			}
-		} else if (_player_action_dialog) {
-			_player_action_dialog->update();
-			if (_player_action_dialog->closed()) { _player_action_dialog = nullptr; }
 		} else {
 			// Take turns.
 
@@ -88,9 +83,6 @@ namespace ql::scene {
 			}
 		}
 
-		// Update world widget.
-		_world_widget->update(elapsed_time);
-
 		// Disable camera controls during dialogs (except player action dialog).
 		if (_dialogs.empty()) {
 			float const zoom = _window.getSize().x / _view.getViewport().width;
@@ -119,13 +111,8 @@ namespace ql::scene {
 	}
 
 	void playing::scene_subdraw(sf::RenderTarget& target, sf::RenderStates states) const {
-		_world_widget->draw_terrain(target, states);
-
-		_world_renderer->draw_entities();
-		_world_renderer->draw_effects();
-
 		// Draw HUD.
-		_hud->draw();
+		_hud.draw(target, states);
 
 		// Draw dialogs.
 		for (auto const& dialog : _dialogs) {
@@ -133,7 +120,6 @@ namespace ql::scene {
 		}
 
 		{ // Draw time.
-			std::ostringstream ss_time;
 			auto const& region = reg.get<ql::region>(_region_id);
 			tick const time_of_day = region.time_of_day();
 			std::string time_name;
@@ -157,15 +143,17 @@ namespace ql::scene {
 					time_name = "Dawn";
 					break;
 			}
-			ss_time << "Time: " << region.time().value << " (" << time_of_day.value << ", " << time_name << ')';
-			texture txt_turn = _fnt_20pt.render(ss_time.str().c_str(), colors::white());
-				target.draw(txt_turn.draw({0, 50});
+			std::string time_string = fmt::format("Time: {} ({}, {})", region.time().value, time_of_day.value, time_name);
+			sf::Text time_text{time_string, _fonts.firamono, 20};
+			time_text.setColor(sf::Color::White);
+			time_text.setPosition({0, 50});
+			target.draw(time_text, states);
 		}
 
 		{ // Draw q- and r-axes.
-			region_tile::point origin{0, 0};
-			region_tile::point q_axis{5, 0};
-			region_tile::point r_axis{0, 5};
+			region_tile::point origin{0_span, 0_span};
+			region_tile::point q_axis{5_span, 0_span};
+			region_tile::point r_axis{0_span, 5_span};
 			_camera.draw_lines({to_world(origin), to_world(q_axis)}, sf::Color::Green);
 			_camera.draw_lines({to_world(origin), to_world(r_axis)}, sf::Color::Red);
 		}
@@ -174,7 +162,7 @@ namespace ql::scene {
 	void playing::spawn_player() {
 		auto player_being = umake<human>(agent::make<player>);
 		_player = dynamic_cast<player*>(&player_being->agent());
-		_player_being_id = player_being->id;
+		_opt_player_id = player_being->id;
 		player_being->inventory.add(items.add(umake<scroll>(umake<magic::shock>())).id);
 		player_being->inventory.add(items.add(umake<scroll>(umake<magic::heal>())).id);
 		player_being->inventory.add(items.add(umake<scroll>(umake<magic::teleport>())).id);
@@ -189,18 +177,7 @@ namespace ql::scene {
 			}
 			player_being->inventory.add(items.add(umake<quiver>(std::move(inventory))).id);
 		}
-		player_being->inventory.add(items.add(umake<gatestone>(100.0_mp, 100.0_mp, 0_tick, magic::color::green)).id);
+		player_being->inventory.add(items.add(umake<gatestone>(100_mp, 100_mp, 0_tick, magic::color::green)).id);
 		_region->spawn_player(std::move(player_being));
-	}
-
-	void playing::update_view() {
-		//! @todo Do something reasonable with the player view when the player dies.
-		being const* player_being = beings.cptr(*_player_being_id);
-		if (player_being && player_being->mortality != ql::mortality::dead) {
-			// Update the player's world view.
-			_player->update_view();
-			// Update the world renderer's world view.
-			_world_renderer->update_view(_player->world_view(), player_being->agent()->poll_perceived_effects());
-		}
 	}
 }

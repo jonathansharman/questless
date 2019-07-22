@@ -22,7 +22,7 @@ namespace vecx {
 		constexpr polygon(polygon&&) = default;
 
 		template <typename... Args>
-		constexpr polygon(Args&&... args) : vertices{std::forward<Args>(args)...} {}
+		constexpr polygon(Args&& ... args) : vertices{std::forward<Args>(args)...} {}
 
 		template <typename ThatQuantity>
 		constexpr bool operator ==(polygon<ThatQuantity> const& that) const {
@@ -60,19 +60,19 @@ namespace vecx {
 						result = !result;
 					}
 				}
- 			}
+			}
 			return result;
 		}
 	};
 
 	template <typename T, typename... U>
-	polygon(T, U...) -> polygon<T>;
+	polygon(T, U...)->polygon<T>;
 }
 
 #ifndef _DEBUG
 #define DOCTEST_CONFIG_DISABLE
 #endif
-#include <doctest.h>
+#include <doctest/doctest.h>
 #undef near // Defined in minwindef.h (!)
 #undef far // Defined in minwindef.h (!)
 
@@ -94,12 +94,11 @@ TEST_CASE("[polygon] operations") {
 	p_t p3{q_t{0.0}, q_t{1.0}};
 	poly_t poly{p1, p2, p3};
 
-	SUBCASE("bounding box")
-	{
+	SUBCASE("bounding box") {
 		box_t const bounding_box
-			{ p_t{q_t{0.0}, q_t{1.0}}
-			, v_t{q_t{1.0}, q_t{1.0}}
-			};
+		{p_t{q_t{0.0}, q_t{1.0}}
+		, v_t{q_t{1.0}, q_t{1.0}}
+		};
 		CHECK(poly.bounding_box() == bounding_box);
 	}
 }

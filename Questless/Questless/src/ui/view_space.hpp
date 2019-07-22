@@ -10,6 +10,8 @@
 #include "vecx/sphere.hpp"
 #include "vecx/vector.hpp"
 
+#include <SFML/Graphics.hpp>
+
 #include "vecx/define_macros.hpp"
 
 namespace ql::view {

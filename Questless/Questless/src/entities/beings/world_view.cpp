@@ -5,31 +5,26 @@
 #include "entities/beings/world_view.hpp"
 
 #include "entities/beings/being.hpp"
-#include "entities/objects/object.hpp"
-#include "game.hpp"
 #include "world/region.hpp"
 
 #include "vecx/hex_space.hpp"
 
 #include <set>
 
-using namespace media;
-
 namespace ql {
-	world_view::world_view(being const& being)
-		: _region{*being.location.region}
-		, _origin{being.location.coords}
-		, _visual_range{being.stats.a.vision.max_range()} //
+	world_view::world_view(ent being_id)
+		: location{reg.get<ql::location>(being_id)}
+		, visual_range{max_visual_range(reg.get<body>(being_id).stats.a.vision_sources)} //
 	{
-		ql::region const& region = _region;
+		auto& region = reg.get<ql::region>(location.region_id);
 
 		// Find the set of coordinates of sections possibly visible to the being.
 		std::set<region_section::point> section_coords_set;
-		for (span q = -_visual_range; q <= _visual_range; ++q) {
-			for (span r = -_visual_range; r <= _visual_range; ++r) {
+		for (span q = -visual_range; q <= visual_range; ++q) {
+			for (span r = -visual_range; r <= visual_range; ++r) {
 				region_tile::vector const offset{q, r};
-				if (offset.length() <= _visual_range) {
-					if (section const* section = region.containing_section(being.location.coords + offset)) {
+				if (offset.length() <= visual_range) {
+					if (section const* section = region.containing_section(location.coords + offset)) {
 						section_coords_set.insert(section->coords());
 					}
 				}
@@ -41,40 +36,26 @@ namespace ql {
 			section_view section_view;
 			section_view.coords = section_coords;
 
-			for (span q = 0_span; q < section::diameter; ++q) {
-				for (span r = 0_span; r < section::diameter; ++r) {
+			for (span q = 0_span; q < section_diameter; ++q) {
+				for (span r = 0_span; r < section_diameter; ++r) {
 					auto const region_tile_coords = section::region_tile_coords(section_coords, section_tile::point{q, r});
-					section_view.tile_perceptions[q.value][r.value] = being.perception_of(region_tile_coords);
+					section_view.tile_perceptions[q.value][r.value] = perception_of(being_id, region_tile_coords);
 				}
 			}
 
-			_section_views.push_back(std::move(section_view));
+			section_views.push_back(std::move(section_view));
 
-			// Calculate being visibilities.
-			for (ql::being const& other_being : region.section_at(section_coords)->beings) {
-				if (other_being.id == being.id) {
+			// Calculate entity visibilities.
+			for (auto [other_coords, other_id] : region.section_at(section_coords)->entity_id_map) {
+				if (other_id == being_id) {
 					// Can always perceive self fully.
-					_entity_views.emplace_back(other_being.id, perception::maximum_level);
+					entity_views.emplace_back(other_id, max_perception);
 				} else {
-					region_tile::point other_coords = other_being.location.coords;
-					if ((being.location.coords - other_coords).length() <= _visual_range) {
-						section_tile::point other_section_coords = section::section_tile_coords(other_coords);
-						perception::level tile_perception =
-							section_view.tile_perceptions[other_section_coords.q.value][other_section_coords.r.value];
-
-						_entity_views.emplace_back(other_being.id, tile_perception);
-					}
-				}
-			}
-
-			// Calculate object visibilities.
-			for (object const& object : region.section_at(section_coords)->objects) {
-				region_tile::point other_coords = object.location.coords;
-				if ((being.location.coords - other_coords).length() <= _visual_range) {
-					section_tile::point other_section_coords = section::section_tile_coords(other_coords);
-					perception::level tile_perception =
+					section_tile::point const other_section_coords = section::section_tile_coords(other_coords);
+					perception tile_perception =
 						section_view.tile_perceptions[other_section_coords.q.value][other_section_coords.r.value];
-					_entity_views.emplace_back(object.id, tile_perception);
+
+					entity_views.emplace_back(other_id, tile_perception);
 				}
 			}
 		}

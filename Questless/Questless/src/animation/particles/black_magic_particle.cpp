@@ -4,7 +4,6 @@
 
 #include "black_magic_particle.hpp"
 
-#include "game.hpp"
 #include "rsrc/particle.hpp"
 #include "utility/random.hpp"
 

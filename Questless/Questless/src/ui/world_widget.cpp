@@ -17,11 +17,10 @@
 #include "entities/beings/being.hpp"
 #include "entities/beings/world_view.hpp"
 #include "entities/entity.hpp"
-#include "entities/objects/object.hpp"
-#include "game.hpp"
 #include "rsrc/entity.hpp"
 #include "rsrc/fonts.hpp"
 #include "rsrc/tile.hpp"
+#include "utility/unreachable.hpp"
 #include "utility/utility.hpp"
 #include "utility/visitation.hpp"
 #include "world/region.hpp"
@@ -43,12 +42,11 @@ namespace ql {
 		, _world_view{world_view} //
 	{}
 
-	void world_widget::render_view(world_view const& view, std::vector<effects::effect> const& effects) {
+	void world_widget::render_view(world_view const& view) {
 		_world_view = view;
 
 		render_terrain(view);
 		render_entities(view);
-		visit_effects(effects);
 	}
 
 	void world_widget::update(sec elapsed_time) {
@@ -76,38 +74,38 @@ namespace ql {
 		}
 	}
 
-	void world_renderer::draw_terrain(sf::RenderTarget& target, sf::RenderStates states) const {
+	void world_widget::draw_terrain(sf::RenderTarget& target, sf::RenderStates states) const {
 		for (auto const& [id, animation] : _tile_animations) {
 			animation->draw(target, states);
 		}
 	}
 
-	void world_renderer::draw_entities(sf::RenderTarget& target, sf::RenderStates states) const {
+	void world_widget::draw_entities(sf::RenderTarget& target, sf::RenderStates states) const {
 		for (auto const& [id, animation] : _entity_animations) {
 			animation->draw(target, states);
 		}
 	}
 
-	void world_renderer::draw_effects(sf::RenderTarget& target, sf::RenderStates states) const {
+	void world_widget::draw_effects(sf::RenderTarget& target, sf::RenderStates states) const {
 		for (auto const& animation : _effect_animations) {
 			target.draw(*animation, states);
 		}
 	}
 
-	void world_renderer::set_highlight_predicate(std::function<bool(region_tile::point)> predicate) {
+	void world_widget::set_highlight_predicate(std::function<bool(region_tile::point)> predicate) {
 		_highlight_predicate = std::move(predicate);
 	}
 
-	void world_renderer::clear_highlight_predicate() {
+	void world_widget::clear_highlight_predicate() {
 		_highlight_predicate = std::nullopt;
 	}
 
-	void world_renderer::render_terrain(world_view const& view) {
+	void world_widget::render_terrain(world_view const& view) {
 		for (auto const& section_view : view.section_views()) {
 			section const* section = view.region().section_at(section_view.coords);
 			if (!section) continue;
-			for (span q = 0_span; q < section::diameter; ++q) {
-				for (span r = 0_span; r < section::diameter; ++r) {
+			for (span q = 0_span; q < section_diameter; ++q) {
+				for (span r = 0_span; r < section_diameter; ++r) {
 					section_tile::point const section_tile_coords{q, r};
 
 					perception::level tile_perception =
@@ -153,7 +151,7 @@ namespace ql {
 		}
 	}
 
-	void world_renderer::render_entities(world_view const& view) {
+	void world_widget::render_entities(world_view const& view) {
 		// Created a view of the entities sorted by y-coordinates.
 		auto y_sort = [](world_view::entity_view const& a, world_view::entity_view const& b) {
 			if (entity const* entity_a = get_entity_cptr(a.id)) {
@@ -204,7 +202,7 @@ namespace ql {
 						break;
 					}
 					default:
-						assert(false && "Invalid perception category.");
+						UNREACHABLE;
 				}
 			} else {
 				// Remove the being from the animation cache if it doesn't exist anymore.
@@ -213,110 +211,108 @@ namespace ql {
 		}
 	}
 
-	void world_renderer::visit_effects(std::vector<effects::effect> const& effects) {
-		for (auto const& effect : effects) {
-			match(effect.value,
-				[&](effects::arrow_attack const& e) {
-					world::point source = to_world(e.origin);
-					world::point target = to_world(e.target);
-					_effect_animations.push_back(umake<arrow_particle>(source, target));
-					_resources.sfx.arrow.play();
-				},
-				[&](effects::injury const& e) {
-					being const* const target_being = the_game().beings.cptr(e.target_being_id);
-					body_part const* const target_part = target_being ? target_being->body.find_part(e.target_part_id) : nullptr;
-					// Assume vitality = 100 if being no longer exists to check.
-					auto const target_vitality = target_part ? target_part->stats.a.vitality.value() : 100.0_hp;
-					//! @todo Pass along the vitality in the event object if it's needed here (to avoid having to make
-					//! up a number).
+	void world_widget::render_effect(effects::effect const& effect) {
+		match(effect.value,
+			[&](effects::arrow_attack const& e) {
+				world::point source = to_world(e.origin);
+				world::point target = to_world(e.target);
+				_effect_animations.push_back(umake<arrow_particle>(source, target));
+				_resources.sfx.arrow.play();
+			},
+			[&](effects::injury const& e) {
+				being const* const target_being = the_game().beings.cptr(e.target_being_id);
+				body_part const* const target_part = target_being ? target_being->body.find_part(e.target_part_id) : nullptr;
+				// Assume vitality = 100 if being no longer exists to check.
+				auto const target_vitality = target_part ? target_part->stats.vitality.value() : 100.0_hp;
+				//! @todo Pass along the vitality in the event object if it's needed here (to avoid having to make
+				//! up a number).
 
-					world::point const position = to_world(e.origin);
+				world::point const position = to_world(e.origin);
 
-					dmg::group const& damage = e.damage;
+				dmg::group const& damage = e.damage;
 
-					for (auto const& part : damage.parts()) {
-						static constexpr sec text_duration = 2.0_s;
+				for (auto const& part : damage.parts()) {
+					static constexpr sec text_duration = 2.0_s;
 
-						auto& font = _fonts.firamono;
+					auto& font = _fonts.firamono;
 
-						auto spawn_blood = [&](double const damage) {
-							constexpr double scaling_factor = 20.0;
-							int const n = static_cast<int>(damage / target_vitality.value * scaling_factor);
-							for (int i = 0; i < n; ++i) {
-								_effect_animations.push_back(umake<blood_particle>());
-							}
-						};
+					auto spawn_blood = [&](double const damage) {
+						constexpr double scaling_factor = 20.0;
+						int const n = static_cast<int>(damage / target_vitality.value * scaling_factor);
+						for (int i = 0; i < n; ++i) {
+							_effect_animations.push_back(umake<blood_particle>());
+						}
+					};
 
-						auto render_slash_or_pierce = [&](double const amount) {
-							spawn_blood(amount);
+					auto render_slash_or_pierce = [&](double const amount) {
+						spawn_blood(amount);
+						_effect_animations.push_back(
+							umake<text_particle>(text_duration, font, std::to_string(lround(amount)), sf::Color::White));
+						_effect_animations.back()->setPosition(to_sfml(position));
+						_resources.sfx.pierce.play();
+					};
+
+					auto render_cleave_or_bludgeon = [&](double const amount) {
+						spawn_blood(amount);
+						_effect_animations.push_back(
+							umake<text_particle>(text_duration, font, std::to_string(lround(amount)), sf::Color::White));
+						_effect_animations.back()->setPosition(to_sfml(position));
+						_resources.sfx.hit.play();
+					};
+
+					match(part,
+						[&](dmg::slash const& slash) { render_slash_or_pierce(slash.value); },
+						[&](dmg::pierce const& pierce) { render_slash_or_pierce(pierce.value); },
+						[&](dmg::cleave const& cleave) { render_cleave_or_bludgeon(cleave.value); },
+						[&](dmg::bludgeon const& bludgeon) { render_cleave_or_bludgeon(bludgeon.value); },
+						[&](dmg::burn const& burn) {
 							_effect_animations.push_back(umake<text_particle>(
-								text_duration, font, std::to_string(lround(amount)), sf::Color::White));
+								text_duration, font, std ::to_string(lround(burn.value)), sf::Color{255, 128, 0}));
 							_effect_animations.back()->setPosition(to_sfml(position));
-							_resources.sfx.pierce.play();
-						};
-
-						auto render_cleave_or_bludgeon = [&](double const amount) {
-							spawn_blood(amount);
+						},
+						[&](dmg::freeze const& freeze) {
 							_effect_animations.push_back(umake<text_particle>(
-								text_duration, font, std::to_string(lround(amount)), sf::Color::White));
+								text_duration, font, std::to_string(lround(freeze.value)), sf::Color::Cyan));
 							_effect_animations.back()->setPosition(to_sfml(position));
-							_resources.sfx.hit.play();
-						};
-
-						match(part,
-							[&](dmg::slash const& slash) { render_slash_or_pierce(slash.value); },
-							[&](dmg::pierce const& pierce) { render_slash_or_pierce(pierce.value); },
-							[&](dmg::cleave const& cleave) { render_cleave_or_bludgeon(cleave.value); },
-							[&](dmg::bludgeon const& bludgeon) { render_cleave_or_bludgeon(bludgeon.value); },
-							[&](dmg::burn const& burn) {
-								_effect_animations.push_back(umake<text_particle>(
-									text_duration, font, std ::to_string(lround(burn.value)), sf::Color{255, 128, 0}));
-								_effect_animations.back()->setPosition(to_sfml(position));
-							},
-							[&](dmg::freeze const& freeze) {
-								_effect_animations.push_back(umake<text_particle>(
-									text_duration, font, std::to_string(lround(freeze.value)), sf::Color::Cyan));
-								_effect_animations.back()->setPosition(to_sfml(position));
-							},
-							[&](dmg::blight const& blight) {
-								_effect_animations.push_back(umake<text_particle>(
-									text_duration, font, std::to_string(lround(blight.value)), sf::Color::Black));
-								_effect_animations.back()->setPosition(to_sfml(position));
-							},
-							[&](dmg::poison const& poison) {
-								_effect_animations.push_back(umake<text_particle>(
-									text_duration, font, std::to_string(lround(poison.value)), sf::Color{128, 0, 192}));
-								_effect_animations.back()->setPosition(to_sfml(position));
-							},
-							[&](dmg::shock const& shock) {
-								_effect_animations.push_back(umake<text_particle>(
-									text_duration, font, std::to_string(lround(shock.value)), sf::Color::Yellow));
-								_effect_animations.back()->setPosition(to_sfml(position));
-							});
-					}
-				},
-				[&](effects::lightning_bolt const& e) {
-					world::point position = to_world(e.origin);
-					for (int i = 0; i < 35; ++i) {
-						auto p = umake<yellow_magic_particle>();
-						p->setPosition(to_sfml(position));
-						_effect_animations.push_back(std::move(p));
-					}
-					_resources.sfx.shock.play();
-				},
-				[&](effects::telescope const& e) {
-					world::point position = to_world(e.origin);
-					for (int i = 0; i < 50; ++i) {
-						auto particle = umake<green_magic_particle>(_particle_resources);
-						particle->setPosition(to_sfml(position));
-						_effect_animations.push_back(std::move(particle));
-					}
-					_resources.sfx.telescope.play();
-				});
-		}
+						},
+						[&](dmg::blight const& blight) {
+							_effect_animations.push_back(umake<text_particle>(
+								text_duration, font, std::to_string(lround(blight.value)), sf::Color::Black));
+							_effect_animations.back()->setPosition(to_sfml(position));
+						},
+						[&](dmg::poison const& poison) {
+							_effect_animations.push_back(umake<text_particle>(
+								text_duration, font, std::to_string(lround(poison.value)), sf::Color{128, 0, 192}));
+							_effect_animations.back()->setPosition(to_sfml(position));
+						},
+						[&](dmg::shock const& shock) {
+							_effect_animations.push_back(umake<text_particle>(
+								text_duration, font, std::to_string(lround(shock.value)), sf::Color::Yellow));
+							_effect_animations.back()->setPosition(to_sfml(position));
+						});
+				}
+			},
+			[&](effects::lightning_bolt const& e) {
+				world::point position = to_world(e.origin);
+				for (int i = 0; i < 35; ++i) {
+					auto p = umake<yellow_magic_particle>();
+					p->setPosition(to_sfml(position));
+					_effect_animations.push_back(std::move(p));
+				}
+				_resources.sfx.shock.play();
+			},
+			[&](effects::telescope const& e) {
+				world::point position = to_world(e.origin);
+				for (int i = 0; i < 50; ++i) {
+					auto particle = umake<green_magic_particle>(_particle_resources);
+					particle->setPosition(to_sfml(position));
+					_effect_animations.push_back(std::move(particle));
+				}
+				_resources.sfx.telescope.play();
+			});
 	}
 
-	animation& world_renderer::cache_tile_animation(tile const& tile) {
+	animation& world_widget::cache_tile_animation(tile const& tile) {
 		_tile_animations[tile.id] = animate(_tile_resources, tile);
 		return *_tile_animations[tile.id];
 	};

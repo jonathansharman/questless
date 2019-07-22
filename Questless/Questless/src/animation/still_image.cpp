@@ -2,7 +2,7 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "animation/still_image.hpp"
+#include "still_image.hpp"
 
 #include <SFML/Graphics/Texture.hpp>
 

@@ -4,15 +4,15 @@
 
 #pragma once
 
-#include <array>
-#include <optional>
-#include <variant>
-#include <vector>
-
 #include "entities/perception.hpp"
 #include "world/coordinates.hpp"
 #include "world/section.hpp"
 #include "world/world_space.hpp"
+
+#include <array>
+#include <optional>
+#include <variant>
+#include <vector>
 
 namespace ql {
 	struct being;
@@ -21,51 +21,26 @@ namespace ql {
 	struct world_view {
 		struct section_view {
 			region_section::point coords;
-			std::array<std::array<perception::bounded_level, section::diameter.value>, section::diameter.value> tile_perceptions;
+			std::array<std::array<bounded_perception, section_diameter.value>, section_diameter.value> tile_perceptions;
 		};
 
 		struct entity_view {
 			ent id;
-			perception::bounded_level perception;
+			bounded_perception perception;
 		};
 
-		//! Constructs the world view of the given being.
-		//! @param being The being whose perspective this world view represents.
-		world_view(being const& being);
+		std::vector<section_view> section_views;
+		std::vector<entity_view> entity_views;
+		location location;
+		span visual_range;
 
-		//! Copy constructor.
+		//! Constructs the world view of being with id @p being_id.
+		world_view(ent being_id);
+
 		world_view(world_view const&) = default;
-
-		//! Move constructor.
 		world_view(world_view&&) = default;
 
-		//! Copy assignment operator.
 		world_view& operator=(world_view const&) & = default;
-
-		//! Move assignment operator.
 		world_view& operator=(world_view&&) & = default;
-
-		std::vector<section_view> const& section_views() const {
-			return _section_views;
-		}
-		std::vector<entity_view> const& entity_views() const {
-			return _entity_views;
-		}
-		ql::region const& region() const {
-			return _region;
-		}
-		region_tile::point origin() const {
-			return _origin;
-		}
-		span visual_range() const {
-			return _visual_range;
-		}
-
-	private:
-		std::vector<section_view> _section_views;
-		std::vector<entity_view> _entity_views;
-		std::reference_wrapper<const ql::region> _region;
-		region_tile::point _origin;
-		span _visual_range;
 	};
 }

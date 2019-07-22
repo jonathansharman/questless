@@ -4,17 +4,23 @@
 
 #pragma once
 
-#include "agent.hpp"
 #include "reg.hpp"
 
+#include <future>
+#include <variant>
+
 namespace ql {
+	namespace effects {
+		struct effect;
+	}
+
 	//! A basic AI, suitable for most NPCs.
-	struct basic_ai : agent {
-		basic_ai(ent id) : agent{id} {}
+	struct basic_ai {
+		ent id;
 
-		action::result act() final;
+		std::future<void> act();
 
-		void perceive(effects::effect const& effect) final;
+		void perceive(effects::effect const& effect);
 
 	private:
 		struct idle_state {};

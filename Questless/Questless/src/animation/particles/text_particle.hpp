@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include <string>
+#include "particle.hpp"
 
-#include "animation/particles/particle.hpp"
+#include <string>
 
 namespace ql {
 	//! A particle composed of colored text.

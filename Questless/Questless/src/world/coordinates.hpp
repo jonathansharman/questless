@@ -19,6 +19,9 @@ namespace ql {
 	//! The space of tiles in a section.
 	using section_tile = vecx::hex_space<struct section_tile_tag, span>;
 
+	static constexpr span section_radius = 10_span;
+	static constexpr span section_diameter = 2 * section_radius + 1_span;
+
 	//! The space of tiles in a region.
 	using region_tile = vecx::hex_space<struct region_tile_tag, span>;
 
@@ -36,14 +39,25 @@ namespace ql {
 		world::vector{world::length{30.0}, world::length{36.0} / gcem::sqrt(3.0f)},
 		world::point{world::length{0.0}, world::length{0.0}}};
 
+	//! The coordinates of the section that contains the tile at @p region_tile_coords.
+	region_section::point region_section_coords(region_tile::point region_tile_coords) {
+		auto const q = region_tile_coords.q >= 0_span
+			? 1_section_span * (region_tile_coords.q + section_radius) / section_diameter
+			: 1_section_span * (region_tile_coords.q - section_radius) / section_diameter;
+		auto const r = region_tile_coords.r >= 0_span
+			? 1_section_span * (region_tile_coords.r + section_radius) / section_diameter
+			: 1_section_span * (region_tile_coords.r - section_radius) / section_diameter;
+		return region_section::point{q, r};
+	}
+
 	// Conversions between world and region tile coordinates.
 
 	//! Converts @p p to a world space point.
 	constexpr auto to_world(region_tile::point p) {
 		auto const px = ((hex_layout.orientation.f0 * p.q.value + hex_layout.orientation.f1 * p.r.value) * x(hex_layout.size) +
-						 x(hex_layout.origin));
+			x(hex_layout.origin));
 		auto const py = ((hex_layout.orientation.f2 * p.q.value + hex_layout.orientation.f3 * p.r.value) * y(hex_layout.size) +
-						 y(hex_layout.origin));
+			y(hex_layout.origin));
 		return world::point{px, py};
 	}
 	//! Converts @p v to a world space vector.

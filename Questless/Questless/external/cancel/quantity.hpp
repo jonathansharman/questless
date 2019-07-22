@@ -8,6 +8,7 @@
 
 #include <gcem.hpp>
 
+#include <compare>
 #include <cmath>
 #include <utility>
 
@@ -43,14 +44,6 @@ namespace cancel {
 		constexpr quantity(quantity<rep, ThatUnit>&& that) noexcept(std::is_nothrow_move_constructible_v<rep>) : value{std::move(that.value)} {
 			static_assert(detail::is_same_unit_v<unit, ThatUnit>, "Attempted to initialize from quantity of a different unit.");
 		};
-
-		//! cereal-compatible save function.
-		template <typename Archive>
-		void save(Archive& archive) const { archive(value); }
-
-		//! cereal-compatible load function.
-		template <typename Archive>
-		void load(Archive& archive) { archive(value); }
 
 		//! Copy-assign from an object of the same representation and unit.
 		template <typename ThatRep, typename ThatUnit>
@@ -166,46 +159,18 @@ namespace cancel {
 	using unitless = quantity<Rep, unit_t<>>;
 
 	template <typename Rep1, typename Unit1, typename Rep2, typename Unit2>
-	constexpr bool operator ==(quantity<Rep1, Unit1> const& q1, quantity<Rep2, Unit2> const& q2) {
+	constexpr auto operator ==(quantity<Rep1, Unit1> const& q1, quantity<Rep2, Unit2> const& q2) {
 		static_assert(std::is_convertible_v<Rep1, Rep2> || std::is_convertible_v<Rep2, Rep1>, "Attempted to compare quantities with incompatible representations.");
 		static_assert(detail::is_same_unit_v<Unit1, Unit2>, "Attempted to compare quantities of different units.");
 		using common_rep = std::common_type_t<Rep1, Rep2>;
 		return static_cast<common_rep>(q1.value) == static_cast<common_rep>(q2.value);
 	}
 	template <typename Rep1, typename Unit1, typename Rep2, typename Unit2>
-	constexpr bool operator !=(quantity<Rep1, Unit1> const& q1, quantity<Rep2, Unit2> const& q2) {
+	constexpr auto operator <=>(quantity<Rep1, Unit1> const& q1, quantity<Rep2, Unit2> const& q2) {
 		static_assert(std::is_convertible_v<Rep1, Rep2> || std::is_convertible_v<Rep2, Rep1>, "Attempted to compare quantities with incompatible representations.");
 		static_assert(detail::is_same_unit_v<Unit1, Unit2>, "Attempted to compare quantities of different units.");
 		using common_rep = std::common_type_t<Rep1, Rep2>;
-		return static_cast<common_rep>(q1.value) != static_cast<common_rep>(q2.value);
-	}
-	template <typename Rep1, typename Unit1, typename Rep2, typename Unit2>
-	constexpr bool operator <(quantity<Rep1, Unit1> const& q1, quantity<Rep2, Unit2> const& q2) {
-		static_assert(std::is_convertible_v<Rep1, Rep2> || std::is_convertible_v<Rep2, Rep1>, "Attempted to compare quantities with incompatible representations.");
-		static_assert(detail::is_same_unit_v<Unit1, Unit2>, "Attempted to compare quantities of different units.");
-		using common_rep = std::common_type_t<Rep1, Rep2>;
-		return static_cast<common_rep>(q1.value) < static_cast<common_rep>(q2.value);
-	}
-	template <typename Rep1, typename Unit1, typename Rep2, typename Unit2>
-	constexpr bool operator <=(quantity<Rep1, Unit1> const& q1, quantity<Rep2, Unit2> const& q2) {
-		static_assert(std::is_convertible_v<Rep1, Rep2> || std::is_convertible_v<Rep2, Rep1>, "Attempted to compare quantities with incompatible representations.");
-		static_assert(detail::is_same_unit_v<Unit1, Unit2>, "Attempted to compare quantities of different units.");
-		using common_rep = std::common_type_t<Rep1, Rep2>;
-		return static_cast<common_rep>(q1.value) <= static_cast<common_rep>(q2.value);
-	}
-	template <typename Rep1, typename Unit1, typename Rep2, typename Unit2>
-	constexpr bool operator >(quantity<Rep1, Unit1> const& q1, quantity<Rep2, Unit2> const& q2) {
-		static_assert(std::is_convertible_v<Rep1, Rep2> || std::is_convertible_v<Rep2, Rep1>, "Attempted to compare quantities with incompatible representations.");
-		static_assert(detail::is_same_unit_v<Unit1, Unit2>, "Attempted to compare quantities of different units.");
-		using common_rep = std::common_type_t<Rep1, Rep2>;
-		return static_cast<common_rep>(q1.value) > static_cast<common_rep>(q2.value);
-	}
-	template <typename Rep1, typename Unit1, typename Rep2, typename Unit2>
-	constexpr bool operator >=(quantity<Rep1, Unit1> const& q1, quantity<Rep2, Unit2> const& q2) {
-		static_assert(std::is_convertible_v<Rep1, Rep2> || std::is_convertible_v<Rep2, Rep1>, "Attempted to compare quantities with incompatible representations.");
-		static_assert(detail::is_same_unit_v<Unit1, Unit2>, "Attempted to compare quantities of different units.");
-		using common_rep = std::common_type_t<Rep1, Rep2>;
-		return static_cast<common_rep>(q1.value) >= static_cast<common_rep>(q2.value);
+		return static_cast<common_rep>(q1.value) <=> static_cast<common_rep>(q2.value);
 	}
 
 	//! Add quantities of compatible representation and the same unit.

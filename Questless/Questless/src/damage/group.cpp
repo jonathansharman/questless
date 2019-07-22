@@ -2,66 +2,59 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
-#include "damage/group.hpp"
+#include "group.hpp"
+#include "damage.hpp"
 
 #include "utility/visitation.hpp"
 
 namespace ql::dmg {
-	group group::with(protect const& protection, resist const& resistance, vuln const& vulnerability) const {
+	group group::against(armor const& armor) const {
 		group result = *this;
 
-		bool const bypassed = result.bypass > protection.coverage ? protect{} : protection;
-		for (auto& part : result._parts) {
-			if (!bypassed) {
-				// Apply protection if not bypassed.
-				match(part,
-					[&](slash& slash) {
-						slash -= protection.pad.value() * slash_per_pad + protection.deflect.value() * slash_per_deflect;
-					},
-					[&](pierce& pierce) {
-						pierce -= protection.pad.value() * pierce_per_pad + protection.deflect.value() * pierce_per_deflect;
-					},
-					[&](cleave& cleave) {
-						cleave -= protection.pad.value() * cleave_per_pad + protection.deflect.value() * cleave_per_deflect;
-					},
-					[&](bludgeon& bludgeon) {
-						bludgeon -= protection.pad.value() * bludgeon_per_pad + protection.deflect.value() * bludgeon_per_deflect;
-					},
-					[&](burn& burn) { burn -= protection.fireproof.value() * burn_per_fireproof; },
-					[&](freeze& freeze) { freeze -= protection.frostproof.value() * freeze_per_frostproof; },
-					[&](blight& blight) { blight -= protection.fortify.value() * blight_per_fortify; },
-					[&](poison& poison) { poison -= protection.immunize.value() * poison_per_immunize; },
-					[&](shock& shock) { shock -= protection.insulate.value() * shock_per_insulate; });
-			}
+		// Return the damage unmodified if the armor was bypassed.
+		if (result.bypass > armor.coverage) { return result; }
+
+		for (auto& part : result.parts) {
+			// Apply protection if not bypassed.
+			match(
+				part,
+				[&](slash& slash) { slash -= armor.protect.slash.value(); },
+				[&](pierce& pierce) { pierce -= armor.protect.pierce.value(); },
+				[&](cleave& cleave) { cleave -= armor.protect.cleave.value(); },
+				[&](bludgeon& bludgeon) { bludgeon -= armor.protect.bludgeon.value(); },
+				[&](scorch& scorch) { scorch -= armor.protect.scorch.value(); },
+				[&](freeze& freeze) { freeze -= armor.protect.freeze.value(); },
+				[&](shock& shock) { shock -= armor.protect.shock.value(); },
+				[&](poison& poison) { poison -= armor.protect.poison.value(); },
+				[&](rot& rot) { rot -= armor.protect.rot.value(); });
 			// Apply vulnerability and resistance.
-			match(part,
+			match(
+				part,
 				[&](slash& slash) {
-					slash += slash * (vulnerability.slash.value() - resistance.slash.value()) / 100.0_slash_factor;
+					slash += slash * (armor.vuln.slash.value() - armor.resist.slash.value()) / 100_slash_factor;
 				},
 				[&](pierce& pierce) {
-					pierce += pierce * (vulnerability.pierce.value() - resistance.pierce.value()) / 100.0_pierce_factor;
+					pierce += pierce * (armor.vuln.pierce.value() - armor.resist.pierce.value()) / 100_pierce_factor;
 				},
 				[&](cleave& cleave) {
-					cleave += cleave * (vulnerability.cleave.value() - resistance.cleave.value()) / 100.0_cleave_factor;
+					cleave += cleave * (armor.vuln.cleave.value() - armor.resist.cleave.value()) / 100_cleave_factor;
 				},
 				[&](bludgeon& bludgeon) {
-					bludgeon += bludgeon * (vulnerability.bludgeon.value() - resistance.bludgeon.value()) / 100.0_bludgeon_factor;
+					bludgeon += bludgeon * (armor.vuln.bludgeon.value() - armor.resist.bludgeon.value()) / 100_bludgeon_factor;
 				},
-				[&](burn& burn) {
-					burn += burn * (vulnerability.burn.value() - resistance.burn.value()) / 100.0_burn_factor;
+				[&](scorch& scorch) {
+					scorch += scorch * (armor.vuln.scorch.value() - armor.resist.scorch.value()) / 100_scorch_factor;
 				},
 				[&](freeze& freeze) {
-					freeze += freeze * (vulnerability.freeze.value() - resistance.freeze.value()) / 100.0_freeze_factor;
-				},
-				[&](blight& blight) {
-					blight += blight * (vulnerability.blight.value() - resistance.blight.value()) / 100.0_blight_factor;
-				},
-				[&](poison& poison) {
-					poison += poison * (vulnerability.poison.value() - resistance.poison.value()) / 100.0_poison_factor;
+					freeze += freeze * (armor.vuln.freeze.value() - armor.resist.freeze.value()) / 100_freeze_factor;
 				},
 				[&](shock& shock) {
-					shock += shock * (vulnerability.shock.value() - resistance.shock.value()) / 100.0_shock_factor;
-				});
+					shock += shock * (armor.vuln.shock.value() - armor.resist.shock.value()) / 100_shock_factor;
+				},
+				[&](poison& poison) {
+					poison += poison * (armor.vuln.poison.value() - armor.resist.poison.value()) / 100_poison_factor;
+				},
+				[&](rot& rot) { rot += rot * (armor.vuln.rot.value() - armor.resist.rot.value()) / 100_rot_factor; });
 		}
 		return result;
 	}

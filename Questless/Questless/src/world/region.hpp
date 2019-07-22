@@ -44,12 +44,6 @@ namespace ql {
 		//! @param save_name The name of the region's save file.
 		void save(char const* save_name);
 
-		//! Removes @p being_id from the turn queue if it's there.
-		void remove_from_turn_queue(ent being_id);
-
-		//! Adds @p being to the turn queue if it's not busy.
-		void add_to_turn_queue(ent being_id);
-
 		//! The being whose turn it is to act or null if none are ready.
 		being* next_ready_being();
 
@@ -59,8 +53,8 @@ namespace ql {
 		//! Spawns the player-controlled being @p player_being_id in the region at an arbitrary location.
 		void spawn_player(ent player_being_id);
 
-		//! Adds @p being to the region, setting its coordinates to @p region_tile_coords.
-		[[nodiscard]] bool try_add(being& being, region_tile::point region_tile_coords);
+		//! Adds @p entity_id to the region, setting its coordinates to @p region_tile_coords.
+		[[nodiscard]] bool try_add(ent entity_id, region_tile::point region_tile_coords);
 
 		//! Moves @p entity_id to the tile at @p region_tile_coords.
 		//! @return Whether @p being was successfully moved.
@@ -166,7 +160,6 @@ namespace ql {
 		tick _time_of_day;
 		ql::period_of_day _period_of_day;
 
-		std::set<ref<being>, bool (*)(being const&, being const&)> _turn_queue;
 		lum _ambient_illuminance;
 
 		//////////////////////
@@ -196,7 +189,7 @@ namespace ql {
 		}
 
 		section* containing_section_helper(region_tile::point region_tile_coords) const {
-			auto it = _section_map.find(section::region_section_coords(region_tile_coords));
+			auto it = _section_map.find(region_section_coords(region_tile_coords));
 			return it == _section_map.end() ? nullptr : const_cast<section*>(&it->second);
 		}
 	};

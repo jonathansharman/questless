@@ -4,42 +4,27 @@
 
 #pragma once
 
-#include "action.hpp"
+#include "basic_ai.hpp"
+#include "lazy_ai.hpp"
+#include "player.hpp"
 
-#include "magic/spell.hpp"
-#include "quantities/misc.hpp"
-#include "reg.hpp"
-#include "utility/complete.hpp"
-#include "utility/reference.hpp"
-#include "world/coordinates.hpp"
+#include "utility/visitation.hpp"
 
-#include <functional>
-#include <optional>
+#include <variant>
 
 namespace ql {
-	namespace effects {
-		struct effect;
-	}
-
 	//! Facilitates control of a being. Includes AIs and the player.
 	struct agent {
-		ent id;
+		std::variant<basic_ai, lazy_ai, player> value;
 
-		agent(ent id) : id{id} {}
+		//! Allows the agent to perform actions.
+		std::future<void> act() {
+			return match(value, [](auto& value) { return value.act(); });
+		}
 
-		//! Chooses and executes an action for the agent's being to perform.
-		virtual action::result act() = 0;
-
-		//! Causes the agent to perceive the given effect, possibly updating its state accordingly.
-		//! @param effect The effect to perceive.
-		virtual void perceive(effects::effect const& effect) = 0;
-
-	protected:
-		action::result idle(tick duration);
-		action::result turn(region_tile::direction direction);
-		action::result walk(region_tile::direction direction);
-		action::result fly();
-		action::result drop(ent item_id);
-		action::result toss(ent item_id);
+		//! Causes the agent to perceive @p effect, possibly updating its state accordingly.
+		virtual void perceive(effects::effect const& effect) {
+			match(value, [&](auto& value) { value.perceive(effect); });
+		}
 	};
 }

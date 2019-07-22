@@ -6,7 +6,6 @@
 
 #include "color.hpp"
 
-#include "agents/action.hpp"
 #include "damage/damage.hpp"
 #include "quantities/game_time.hpp"
 #include "reg.hpp"
@@ -18,12 +17,6 @@ namespace ql::magic {
 		static constexpr magic::color color = magic::color::red;
 		static constexpr tick cooldown = 5_tick;
 
-		struct cast : action {
-			ent gatestone_id;
-			region_tile::point target;
-			dmg::shock damage;
-
-			result perform(being& caster) final;
-		};
+		void cast(ent caster_id, ent gatestone_id, region_tile::point target, dmg::shock damage);
 	};
 }

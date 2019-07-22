@@ -13,11 +13,12 @@ namespace ql::scene {
 	//! The splash screen scene.
 	struct main_menu : scene {
 		main_menu();
+
 	private:
 		digraph_menu _main_menu{480, 640};
 
-		update_result subupdate() final;
+		update_result scene_subupdate(sec elapsed_time, input_manager& im) final;
 
-		void subdraw() final;
+		void scene_subdraw(sf::RenderTarget& target, sf::RenderStates states) const final;
 	};
 }
