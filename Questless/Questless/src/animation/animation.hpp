@@ -4,9 +4,9 @@
 
 #pragma once
 
+#include "bounded/nonnegative.hpp"
 #include "quantities/wall_time.hpp"
 #include "ui/view_space.hpp"
-#include "bounded/nonnegative.hpp"
 #include "world/world_space.hpp"
 
 #include <SFML/Graphics.hpp>
@@ -18,7 +18,7 @@ namespace ql {
 		, public sf::Transformable //
 	{
 		//! The time scale of the animation. E.g., a time scale of 2.0 plays the animation at double speed.
-		nonnegative<double> time_scale = 1.0;
+		nonnegative<float> time_scale = 1.0;
 
 		virtual ~animation() = default;
 

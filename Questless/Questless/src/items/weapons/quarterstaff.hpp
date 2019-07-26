@@ -14,5 +14,5 @@ namespace ql {
 		void jab();
 	};
 
-	void make_quarterstaff(ent id);
+	ent make_quarterstaff(ent id);
 }

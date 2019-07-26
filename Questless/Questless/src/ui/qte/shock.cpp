@@ -17,7 +17,7 @@ namespace ql::qte {
 		_prompt = make_prompt("Circle the target counter-clockwise as fast as you can!");
 	}
 
-	void shock::update(sec elapsed_time, input_manager& im) {
+	void shock::update(sec elapsed_time, std::vector<sf::Event>& events) {
 		constexpr auto time_limit = 5.0_s;
 		constexpr int charges_per_quadrant = 4;
 		constexpr double expected_charges = charges_per_quadrant * 70.0;

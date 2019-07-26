@@ -5,7 +5,9 @@
 #pragma once
 
 #include "color.hpp"
-#include "spell.hpp"
+
+#include "quantities/game_time.hpp"
+#include "reg.hpp"
 
 namespace ql::magic {
 	//! Temporarily increases the caster's visual acuity.

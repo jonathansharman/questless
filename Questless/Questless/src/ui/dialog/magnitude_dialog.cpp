@@ -21,7 +21,7 @@ namespace ql {
 		, _selector{make_selector(std::to_string(_magnitude))} //
 	{}
 
-	void magnitude_dialog::update(sec elapsed_time, input_manager& im) {
+	void magnitude_dialog::update(sec elapsed_time, std::vector<sf::Event>& events) {
 		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) {
 			_cont(std::nullopt);
 			close();

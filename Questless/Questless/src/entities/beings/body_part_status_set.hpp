@@ -10,8 +10,8 @@
 namespace ql {
 	//! A status that expires after some time.
 	struct timed_body_part_status {
-		body_part_status status;
 		tick duration;
+		body_part_status status;
 	};
 
 	//! Component for storing a being's status modifiers.

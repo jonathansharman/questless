@@ -31,11 +31,11 @@ namespace ql {
 		//! The list of "tabs" that "slot" into the bearer's body parts.
 		std::vector<tab> tabs;
 
-		//! The amount of time required to equip the item.
-		tick equip_time;
+		//! The action points required to equip this.
+		action equip_cost;
 
-		//! The amount of time required to unequip the item.
-		tick unequip_time;
+		//! The action points required to unequip this.
+		action unequip_cost;
 
 		//! Whether the item is currently equipped to some being.
 		bool equipped() const {
@@ -52,5 +52,5 @@ namespace ql {
 		void forced_unequip();
 	};
 
-	void make_equipment(ent id, std::optional<ent> o_bearer_id, std::vector<equipment::tab> tabs, tick equip_time, tick unequip_time);
+	void make_equipment(ent id, std::optional<ent> o_bearer_id, std::vector<equipment::tab> tabs, action equip_cost, action unequip_cost);
 }

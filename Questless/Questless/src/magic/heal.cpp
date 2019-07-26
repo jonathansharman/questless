@@ -4,30 +4,25 @@
 
 #include "heal.hpp"
 
-#include "charge_cost.hpp"
-
-#include "entities/beings/being.hpp"
+#include "entities/beings/body.hpp"
+#include "entities/beings/body_part.hpp"
+#include "items/magic/gatestone.hpp"
 #include "world/coordinates.hpp"
 
 namespace ql::magic {
 	void heal::cast(ent caster_id, ent gatestone_id, ent target_id, health healing) {
-		// Get target components.
-		auto& target_being = reg.get<being>(target_id);
-		auto const target_location = reg.get<location>(target_id);
-
 		// Check range.
 		auto const caster_location = reg.get<location>(caster_id);
+		auto const target_location = reg.get<location>(target_id);
 		if ((caster_location.coords - target_location.coords).length() > 5_span) { return; }
 
 		// Check and pay cost.
 		auto& gatestone = reg.get<ql::gatestone>(gatestone_id);
-		auto const mana_cost = 1_mp / 1.0_hp / 1.0_hp * healing * healing;
-		if (!charge_cost{gatestone, mana_cost}.check_and_pay()) { return; }
+		auto const mana_cost = 1_mp / 1_hp / 1_hp * healing * healing;
+		if (gatestone.charge < mana_cost) { return; }
+		gatestone.charge -= mana_cost;
 
-		//! @todo Part targeting. For now, just heal everything.
-		auto& target_being = reg.get<being>(target_id);
-		for (body_part& part : target_being.body.parts()) {
-			target_being.heal(healing, part, caster_id);
-		}
+		//! @todo Part targeting, wound type, amount, etc. For now, just heal all wounds.
+		reg.get<body>(target_id).for_all_parts([](body_part& part) { part.status_set.wounds.clear(); });
 	}
 }

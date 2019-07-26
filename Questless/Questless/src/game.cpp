@@ -5,6 +5,7 @@
 #include "game.hpp"
 
 #include "entities/beings/being.hpp"
+#include "rsrc/utility.hpp"
 #include "scenes/scene.hpp"
 #include "scenes/splash.hpp"
 #include "utility/io.hpp"
@@ -27,35 +28,26 @@ namespace ql {
 		constexpr int _dflt_window_width = 1920;
 		constexpr int _dflt_window_height = 1080;
 #endif
-		_window.sf::RenderWindow window{sf::VideoMode{_dflt_window_width, _dflt_window_height}, "Questless"};
-		sf::Image icon;
-		icon.loadFromFile("resources/textures/icon.png");
-		window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-
-		// Load textures and graphics.
-
-		load_textures();
+		auto const window_style = fullscreen ? sf::Style::Fullscreen : sf::Style::Default;
+		_window.create(sf::VideoMode{_dflt_window_width, _dflt_window_height}, "Questless", window_style);
+		auto icon = rsrc::load<sf::Image>("resources/textures/icon.png");
+		_window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
 		// Initialize game state.
 
-		_scene = umake<scene::splash>();
+		_scene = umake<scenes::splash>(_window, _fonts);
 	}
 
 	game::~game() = default;
 
-	void game::load_textures() {
-		_txt_hex_highlight = umake<texture>("resources/textures/terrain/tile.png");
-
-		_txt_hex_circle = umake<texture>("resources/textures/ui/hex_circle.png");
-	}
-
 	void game::run() {
 		bool running = true;
 		while (running) {
-			match(_scene->update(_im), //
-				[&](scene::continue_scene) { _window.draw(*_scene); },
-				[&](scene::switch_scene ss) { _scene = std::move(ss.new_scene); },
-				[&](scene::game_over) { running = false; });
+			match(
+				_scene->update(_im), //
+				[&](scenes::continue_scene) { _window.draw(*_scene); },
+				[&](scenes::switch_scene ss) { _scene = std::move(ss.new_scene); },
+				[&](scenes::game_over) { running = false; });
 		}
 	}
 }

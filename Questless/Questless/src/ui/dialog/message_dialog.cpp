@@ -5,7 +5,7 @@
 #include "message_dialog.hpp"
 
 namespace ql {
-	void message_dialog::update(sec elapsed_time, input_manager& im) {
+	void message_dialog::update(sec elapsed_time, std::vector<sf::Event>& events) {
 		if (im.any_pressed()) {
 			_cont();
 			close();

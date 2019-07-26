@@ -4,15 +4,24 @@
 
 #pragma once
 
-#include "utility/initializer.hpp"
+#include "input_manager.hpp"
+#include "view_space.hpp"
+#include "widget.hpp"
+
+#include "rsrc/menu.hpp"
 #include "utility/reference.hpp"
 
+#include <optional>
+
 namespace ql {
+	namespace rsrc {
+		struct fonts;
+	}
+
 	//! A menu consisting of linked pages of options.
-	struct digraph_menu {
-		//! @param min_width The minimum width of the menu, including margins. If necessary, the menu will stretch to fit its contents.
-		//! @param min_height The minimum height of the menu, including margins. If necessary, the menu will stretch to fit its contents.
-		digraph_menu(int min_width, int min_height);
+	struct digraph_menu : widget {
+		//! @param min_size The minimum size of the menu including margins. The menu will stretch to fit its contents.
+		digraph_menu(widget& parent, rsrc::fonts const& fonts, view::vector min_size);
 
 		//! Adds a blank page to the menu.
 		//! @param title The page title.
@@ -31,34 +40,25 @@ namespace ql {
 		//! @param target_page_title The title of the page to which the option links.
 		void add_option(std::string_view location_page_title, std::string option_name, std::string_view target_page_title);
 
-		//! Navigates to the specified page of the menu.
-		//! @param title The title of the page.
-		void set_page(std::string_view title);
-
 		//! Selects the specified option on the specified page.
 		//! @param page_title The title of the page whose option index is to be set.
 		//! @param option_index The index of the option to be selected.
 		void set_option(std::string_view page_title, int option_index);
 
-		//! Removes all pages from the menu.
-		void clear();
+		view::vector get_local_offset() const final;
 
-		//! Updates the menu. Should be called once per frame.
-		void update();
+		view::vector get_size() const final;
+
+		//! Updates the menu.
+		void update(sec elapsed_time, std::vector<sf::Event>& events);
 
 		//! Gets all the terminal menu selections since the last call to poll_selections().
-		//! @return A vector of pairs of strings, each representing a page name and option name. The pairs are ordered from least to most recently selected.
+		//! @return A vector of pairs of strings, each representing a page name and option name. The pairs are ordered
+		//! from least to most recently selected.
 		std::vector<std::pair<std::string, std::string>> poll_selections();
 
-		//! Draws the menu at @p origin.
-		//! @param origin The origin point of the menu on the screen.
-		//! @param horizontal_alignment The horizontal alignment of the menu relative to the origin point.
-		//! @param vertical_alignment The vertical alignment of the menu relative to the origin point.
-		void draw
-			( spaces::window::point origin
-			, spaces::window::h_align horizontal_alignment = spaces::window::align_left
-			, spaces::window::v_align vertical_alignment = spaces::window::align_top
-			);
+		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
+
 	private:
 		struct page {
 			struct option {
@@ -78,35 +78,30 @@ namespace ql {
 		};
 
 		struct page_view {
-			media::texture title_texture;
-			mutable std::vector<media::texture> option_textures;
+			sf::Texture title_texture;
+			mutable std::vector<sf::Texture> option_textures;
 
-			page_view(media::texture title_texture, std::vector<media::texture> option_textures)
-				: title_texture{std::move(title_texture)}, option_textures{std::move(option_textures)}
-			{}
+			page_view(sf::Texture title_texture, std::vector<sf::Texture> option_textures)
+				: title_texture{std::move(title_texture)}, option_textures{std::move(option_textures)} {}
 		};
 
-		static constexpr int _title_height = 60;
-		static constexpr int _option_height = 32;
+		rsrc::menu resources;
+		rsrc::fonts const& fonts;
 
-		static media::texture_handle _ul_handle, _ur_handle, _dl_handle, _dr_handle, _u_handle, _d_handle, _l_handle, _r_handle, _tile_handle;
-
-		static int _top_margin, _bottom_margin, _left_margin, _right_margin, _tile_width, _tile_height;
-
-		friend class initializer<digraph_menu>;
-		static initializer<digraph_menu> _initializer;
-		static void initialize();
+		view::vector _top_left_margin;
+		view::vector _bottom_right_margin;
+		view::vector _tile_size;
 
 		std::vector<page> _pages;
-		int _page_index;
+		int _page_index = 0;
 		std::vector<std::pair<std::string, std::string>> _selections;
 
 		std::vector<page_view> _page_views;
-		spaces::window::point _content_position;
-		int _min_width, _min_height;
-		int _content_width, _content_height;
-		uptr<media::texture> _background;
-		bool _render_is_current;
+		view::point _content_position{0.0_px, 0.0_px};
+		view::vector _min_size;
+		view::vector _content_size;
+		uptr<sf::Texture> _background;
+		bool _render_is_current = false;
 
 		//! Finds the first page with the given page title, if it exists.
 		//! @param page_title The title of the page to be found.

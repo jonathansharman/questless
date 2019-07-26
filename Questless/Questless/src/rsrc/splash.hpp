@@ -18,8 +18,8 @@ namespace ql::rsrc {
 		} txtr;
 
 		struct {
-			sf::SoundBuffer flame_buffer = load_sound_buffer("resources/sounds/splash.wav");
-			sf::Sound flame{flame_sound_buffer};
+			sf::SoundBuffer flame_buffer = load<sf::SoundBuffer>("resources/sounds/splash.wav");
+			sf::Sound flame{flame_buffer};
 		} sfx;
 	};
 }

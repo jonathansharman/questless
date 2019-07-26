@@ -14,7 +14,7 @@
 namespace ql {
 	world_view::world_view(ent being_id)
 		: location{reg.get<ql::location>(being_id)}
-		, visual_range{max_visual_range(reg.get<body>(being_id).stats.a.vision_sources)} //
+		, visual_range{max_visual_range(reg.get<body>(being_id).stats.a.vision_sources.cur)} //
 	{
 		auto& region = reg.get<ql::region>(location.region_id);
 
@@ -49,13 +49,13 @@ namespace ql {
 			for (auto [other_coords, other_id] : region.section_at(section_coords)->entity_id_map) {
 				if (other_id == being_id) {
 					// Can always perceive self fully.
-					entity_views.emplace_back(other_id, max_perception);
+					entity_views.push_back({other_id, max_perception});
 				} else {
 					section_tile::point const other_section_coords = section::section_tile_coords(other_coords);
 					perception tile_perception =
 						section_view.tile_perceptions[other_section_coords.q.value][other_section_coords.r.value];
 
-					entity_views.emplace_back(other_id, tile_perception);
+					entity_views.push_back({other_id, tile_perception});
 				}
 			}
 		}

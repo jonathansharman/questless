@@ -11,7 +11,7 @@
 #include "entities/entity.hpp"
 
 namespace ql {
-	void make_human(ent id, location location, agent agent) {
+	ent make_human(ent id, location location, agent agent) {
 		auto const root_id = reg.create();
 		body_part root;
 		root.id = root_id;
@@ -21,6 +21,8 @@ namespace ql {
 		stats::body base_stats; // load_base_stats_or_whatever("resources/beings/human/base_stats.json");
 		body body{id, root.id, cond, base_stats};
 
-		make_being(id, location, agent, body, transparency{0.5});
+		make_being(id, location, agent, body);
+
+		return id;
 	}
 }

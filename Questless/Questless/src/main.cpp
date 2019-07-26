@@ -7,7 +7,7 @@
 #define DOCTEST_CONFIG_DISABLE
 #endif
 #define DOCTEST_CONFIG_IMPLEMENT
-#include <doctest.h>
+#include <doctest/doctest.h>
 #undef near // Defined in minwindef.h (!)
 #undef far // Defined in minwindef.h (!)
 
@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 #endif
 
 	//	try {
-	ql::game{}.run();
+	ql::game{false}.run();
 	//	} catch (std::exception& ex) {
 	//		std::string message = ex.what();
 	//		//! @todo Try-catch for exception for last-resort error reporting. (Should log the message or something.)

@@ -13,7 +13,7 @@ namespace ql {
 		: loop{loop}
 		, _sprite_sheet{std::move(sprite_sheet)}
 		, _frames{std::move(frames)}
-		, _accrued_time{start_time == start_time::random ? uniform(0.0, 1.0) * duration() : 0.0_s} {}
+		, _accrued_time{start_time == start_time::random ? uniform(0.0f, 1.0f) * duration() : 0.0_s} {}
 
 	sec sprite_animation::duration() const {
 		return std::accumulate(
@@ -23,7 +23,7 @@ namespace ql {
 	void sprite_animation::reset(start_time start_time) {
 		if (start_time == start_time::random) {
 			// The next time update() is called, the animation will advance to a random point.
-			_accrued_time = uniform(0.0, 1.0) * duration();
+			_accrued_time = uniform(0.0f, 1.0f) * duration();
 		}
 		_frame_index = 0;
 		_loops = 0;

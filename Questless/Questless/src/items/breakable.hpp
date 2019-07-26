@@ -4,26 +4,23 @@
 
 #pragma once
 
+#include "bounded/dynamic_nonnegative.hpp"
 #include "quantities/misc.hpp"
 #include "reg.hpp"
-#include "bounded/lazy.hpp"
 
 namespace ql {
 	//! Component for items that can be worn down and broken.
 	struct breakable {
 		ent id;
 
-		//! The item's integrity, which ranges from zero to its durability. The item is broken if integrity is zero.
-		lazy_bounded<ql::integrity> integrity{durability, [] { return 0.0_integrity; }, [this] { return durability; }};
-
-		//! The item's durability, i.e. its maximum integrity.
-		ql::integrity durability;
+		//! The item's current and maximum durability. The item is broken if durability is zero.
+		dynamic_nonnegative<ql::durability> durability;
 
 		//! Whether the item is broken, i.e. integrity is zero.
 		bool broken() const {
-			return integrity.value() <= 0.0_integrity;
+			return durability.value() <= 0_durability;
 		}
 	};
 
-	void make_breakable(ent id, ql::integrity integrity, ql::integrity durability);
+	void make_breakable(ent id, dynamic_nonnegative<ql::durability> durability);
 }

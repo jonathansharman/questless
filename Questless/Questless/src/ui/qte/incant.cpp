@@ -16,7 +16,7 @@ namespace ql::qte {
 		_metronome.setOrigin({0, 5});
 	}
 
-	void incant::update(sec elapsed_time, input_manager& im) {
+	void incant::update(sec elapsed_time, std::vector<sf::Event>& events) {
 		_metronome.setSize({10, _window.getSize().y});
 
 		_total_elapsed_time += elapsed_time;

@@ -14,28 +14,30 @@ namespace ql {
 	void quarterstaff::strike() {
 		//! @todo This.
 
-		dmg::group damage = 24_bludgeon;
+		dmg::group damage = {24_bludgeon};
 		tick cooldown = 20_tick;
 	}
 
 	void quarterstaff::jab() {
 		//! @todo This.
 
-		dmg::group damage = 12_bludgeon;
+		dmg::group damage = {12_bludgeon};
 		tick cooldown = 13_tick;
 	}
 
-	void make_quarterstaff(ent id) {
+	ent make_quarterstaff(ent id) {
 		make_item(id, 2.5_mass);
 
-		make_breakable(id, 500.0_integrity, 500.0_integrity);
+		make_breakable(id, {500_durability, 500_durability});
 
 		make_equipment(id,
 			std::nullopt,
 			{equipment::tab{body_part::tag::hand, std::nullopt}, equipment::tab{body_part::tag::hand, std::nullopt}},
-			1_tick, // Equip time
-			1_tick); // Unequip time
+			1_ap,
+			1_ap);
 
 		reg.assign<quarterstaff>(id, id);
+
+		return id;
 	}
 }

@@ -8,7 +8,12 @@ namespace ql::stats {
 	//! Encapsulates a single stat, which has a base value and current value.
 	template <typename T>
 	struct stat {
-		T base;
-		T cur;
+		T base{};
+		T cur{};
+
+		//! Resets current value to base value.
+		void reset() {
+			cur = base;
+		}
 	};
 }

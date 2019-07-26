@@ -48,8 +48,8 @@ namespace ql {
 	struct nauseated {
 		static constexpr body_status_category category = body_status_category::detrimental;
 		using nausea = cancel::quantity<int, cancel::unit_t<struct nausea_tag>>;
-		static constexpr auto strength_penalty = 1.0_str / nausea{1};
-		static constexpr auto max_energy_penalty = 1.0_ep / nausea{1};
+		static constexpr auto strength_penalty = 1_str / nausea{1};
+		static constexpr auto max_energy_penalty = 1_ep / nausea{1};
 
 		nausea magnitude;
 		std::optional<ent> o_source_id;

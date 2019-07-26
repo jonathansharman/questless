@@ -13,7 +13,7 @@ namespace ql {
 
 	//! Allows interaction with a being in the world.
 	struct being_widget : widget {
-		void update(sec elapsed_time, input_manager& im) final;
+		void update(sec elapsed_time, std::vector<sf::Event>& events) final;
 
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 

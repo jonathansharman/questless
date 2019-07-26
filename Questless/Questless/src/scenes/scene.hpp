@@ -19,7 +19,9 @@ namespace ql {
 	}
 	struct input_manager;
 
-	namespace scene {
+	namespace scenes {
+		struct scene;
+
 		struct continue_scene {};
 		struct switch_scene {
 			uptr<scene> new_scene;
@@ -31,13 +33,12 @@ namespace ql {
 		//! A scene in the game.
 		struct scene : public sf::Drawable {
 			//! @param window The window in which this scene will be drawn.
-			scene(sf::Window& window, rsrc::fonts const& fonts);
+			scene(sf::RenderWindow& window, rsrc::fonts const& fonts);
 
 			virtual ~scene() = default;
 
 			//! Advances this scene according to the amount of time that has passed since the last update.
-			//! @param im The input manager to use when updating this scene.
-			update_result update(input_manager& im);
+			update_result update();
 
 			void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 
@@ -47,7 +48,7 @@ namespace ql {
 			}
 
 		protected:
-			sf::Window& _window;
+			sf::RenderWindow& _window;
 			rsrc::fonts const& _fonts;
 
 		private:
@@ -67,7 +68,7 @@ namespace ql {
 			std::deque<per_sec> _fps_buffer;
 
 			//! Specialized update logic for the scene subclass.
-			virtual update_result scene_subupdate(sec elapsed_time, input_manager& im) = 0;
+			virtual update_result scene_subupdate(sec elapsed_time, std::vector<sf::Event>& events) = 0;
 
 			//! Specialized render logic for the scene subclass.
 			virtual void scene_subdraw(sf::RenderTarget& target, sf::RenderStates states) const = 0;

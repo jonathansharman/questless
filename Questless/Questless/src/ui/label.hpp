@@ -10,9 +10,11 @@ namespace ql {
 	struct label : widget {
 		sf::Text text;
 
-		sf::FloatRect get_bounding_box() const final;
+		view::vector get_local_offset() const final;
 
-		void update(sec, input_manager&) final;
+		view::vector get_size() const final;
+
+		void update(sec, std::vector<sf::Event>&) final;
 
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 	};

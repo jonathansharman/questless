@@ -8,7 +8,7 @@
 #include "items/item.hpp"
 
 namespace ql {
-	void make_quiver(ent id) {
+	ent make_quiver(ent id, inventory inventory) {
 		make_item(id, 0.5_mass);
 
 		//! @todo Equiping and unequiping a bow shouldn't take a long time (or actions). Stringing and unstringing a bow
@@ -16,9 +16,11 @@ namespace ql {
 		make_equipment(id,
 			std::nullopt,
 			{equipment::tab{body_part::tag::torso, std::nullopt}},
-			1_tick, // Equip time
-			1_tick); // Unequip time
+			1_ap, // Equip time
+			1_ap); // Unequip time
 
-		reg.assign<quiver>(id, id, inventory{});
+		reg.assign<quiver>(id, id, std::move(inventory));
+
+		return id;
 	}
 }

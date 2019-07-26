@@ -15,7 +15,7 @@ namespace ql {
 		ent id;
 
 		//! Allows a part to be used to perform actions.
-		dynamic_nonnegative<ability> ability = {0_ap, 0_ap};
+		dynamic_nonnegative<action> action;
 
 		//! Whether this body part is immortal.
 		bool immortal = false;
@@ -28,5 +28,11 @@ namespace ql {
 		constexpr bool disabled() const {
 			return ableness == ableness::disabled;
 		}
+
+		ql::poisoning poisoning;
+
+		ql::decay decay;
+
+		ql::hypovolemia_damage hypovolemia_damage;
 	};
 }

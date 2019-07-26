@@ -60,7 +60,7 @@ namespace ql {
 		}
 	}
 
-	void list_dialog::update(sec /*elapsed_time*/, input_manager& im) {
+	void list_dialog::update(sec /*elapsed_time*/, std::vector<sf::Event>& events) {
 		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) {
 			_cont(std::nullopt);
 			close();

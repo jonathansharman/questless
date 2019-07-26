@@ -7,7 +7,7 @@
 #include "agents/agent.hpp"
 #include "effects/effect.hpp"
 #include "entities/beings/being.hpp"
-#include "magic/charge_cost.hpp"
+#include "items/magic/gatestone.hpp"
 #include "utility/random.hpp"
 #include "world/region.hpp"
 
@@ -15,15 +15,16 @@
 #include "entities/beings/body_part.hpp"
 
 namespace ql::magic {
-	void cast(ent caster_id, ent gatestone_id, region_tile::point target, dmg::shock damage) {
+	void shock::cast(ent caster_id, ent gatestone_id, region_tile::point target, dmg::shock damage) {
 		// Check range.
 		auto const caster_location = reg.get<location>(caster_id);
 		if ((caster_location.coords - target).length() > 3_span) { return; }
 
 		// Check and pay cost.
 		auto& gatestone = reg.get<ql::gatestone>(gatestone_id);
-		auto const mana_cost = cancel::quantity<double, struct mana_tag>{0.2} / 1.0_shock / 1.0_shock * damage * damage;
-		if (!charge_cost{gatestone, mana_cost}.check_and_pay()) { return; }
+		auto const mana_cost = cancel::quantity_cast<mana>(0.2 * 1_mp / 1_shock / 1_shock * damage * damage);
+		if (gatestone.charge < mana_cost) { return; }
+		gatestone.charge -= mana_cost;
 
 		//! @todo Shock quality.
 		double const quality = 1.0;
@@ -33,22 +34,26 @@ namespace ql::magic {
 		region.add_effect({effects::lightning_bolt{target}});
 
 		if (auto target_entity_id = region.entity_id_at(target)) {
-			//! @todo What about damaging non-being objects?
-			if (auto target_being = reg.try_get<being>(*target_entity_id)) {
+			//! @todo What about damaging objects?
+			if (auto target_body = reg.try_get<body>(*target_entity_id)) {
 				//! @todo Experimental body part stuff here... Delete or fix.
 
-				// Pick a random strike path from the root to a leaf part.
-				body_part* part = &target_being->body.root();
-				std::vector<body_part*> struck_parts{part};
-				while (!part->attachments.empty()) {
-					part = &*part->attachments[uniform(std::size_t{0}, part->attachments.size() - 1)]->part;
-					struck_parts.push_back(part);
-				}
-				// Deal percentage-based damage, split across all struck parts.
-				for (auto struck_part : struck_parts) {
-					dmg::group shock = damage * quality * uniform(0.5, 1.5) * part->stats.vitality.value() /
-						(4.0_hp * struck_parts.size());
-					struck_part->take_damage(shock, caster_id);
+				// Pick a random strike path from the root to a leaf part and deal progressively lower damage to each part.
+				dmg::group group = {cancel::quantity_cast<dmg::shock>(quality * damage)};
+				body_part* part = &reg.get<body_part>(target_body->root_part_id);
+				for (;;) {
+					// Deal damage to the current part.
+					part->take_damage(group, caster_id);
+					// Reduce the damage by half.
+					group /= 2;
+					// Stop if there are no attachments.
+					if (part->attachments.empty()) { break; }
+					// Pick a random attachment.
+					auto& attachment = part->attachments[uniform(std::size_t{0}, part->attachments.size() - 1)];
+					// Stop if the attachment has no attached part.
+					if (!attachment.o_part_id) { break; }
+					// Descend the tree.
+					part = &reg.get<body_part>(*attachment.o_part_id);
 				}
 			}
 		}

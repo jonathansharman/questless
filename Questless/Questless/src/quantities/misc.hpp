@@ -15,9 +15,9 @@ namespace ql {
 	// General
 
 	//! In-game temperature.
-	using temperature = cancel::quantity<double, cancel::unit_t<struct temperature_tag>>;
-	constexpr auto operator"" _temp(long double value) {
-		return temperature{static_cast<double>(value)};
+	using temperature = cancel::quantity<int, cancel::unit_t<struct temperature_tag>>;
+	constexpr auto operator"" _temp(unsigned long long value) {
+		return temperature{static_cast<int>(value)};
 	}
 
 	//! In-game unit of illuminance.
@@ -38,34 +38,34 @@ namespace ql {
 		return mana{static_cast<int>(value)};
 	}
 
-	using strength = cancel::quantity<double, cancel::unit_t<struct strength_tag>>;
-	constexpr auto operator"" _str(long double value) {
-		return strength{static_cast<double>(value)};
+	using strength = cancel::quantity<int, cancel::unit_t<struct strength_tag>>;
+	constexpr auto operator"" _str(unsigned long long value) {
+		return strength{static_cast<int>(value)};
 	}
 
-	using energy = cancel::quantity<double, cancel::unit_t<struct energy_tag>>;
-	constexpr auto operator"" _ep(long double value) {
-		return energy{static_cast<double>(value)};
+	using energy = cancel::quantity<int, cancel::unit_t<struct energy_tag>>;
+	constexpr auto operator"" _ep(unsigned long long value) {
+		return energy{static_cast<int>(value)};
 	}
 
-	using ability = cancel::quantity<int, cancel::unit_t<struct ability_tag>>;
+	using action = cancel::quantity<int, cancel::unit_t<struct action_tag>>;
 	constexpr auto operator"" _ap(unsigned long long value) {
-		return ability{static_cast<int>(value)};
+		return action{static_cast<int>(value)};
 	}
 
-	using hearing = cancel::quantity<double, cancel::unit_t<struct hearing_tag>>;
-	constexpr auto operator"" _hear(long double value) {
-		return hearing{static_cast<double>(value)};
+	using hearing = cancel::quantity<int, cancel::unit_t<struct hearing_tag>>;
+	constexpr auto operator"" _hear(unsigned long long value) {
+		return hearing{static_cast<int>(value)};
 	}
 
-	using speech = cancel::quantity<double, cancel::unit_t<struct speech_tag>>;
-	constexpr auto operator"" _speech(long double value) {
-		return speech{static_cast<double>(value)};
+	using speech = cancel::quantity<int, cancel::unit_t<struct speech_tag>>;
+	constexpr auto operator"" _speech(unsigned long long value) {
+		return speech{static_cast<int>(value)};
 	}
 
-	using intellect = cancel::quantity<double, cancel::unit_t<struct intellect_tag>>;
-	constexpr auto operator"" _int(long double value) {
-		return intellect{static_cast<double>(value)};
+	using intellect = cancel::quantity<int, cancel::unit_t<struct intellect_tag>>;
+	constexpr auto operator"" _int(unsigned long long value) {
+		return intellect{static_cast<int>(value)};
 	}
 
 	using perception = cancel::quantity<int, cancel::unit_t<struct perception_tag>>;
@@ -95,6 +95,11 @@ namespace ql {
 	using decay = cancel::quantity<int, cancel::unit_t<struct decay_tag>>;
 	constexpr auto operator"" _decay(unsigned long long value) {
 		return decay{static_cast<int>(value)};
+	}
+
+	using hypovolemia_damage = cancel::quantity<int, cancel::unit_t<struct hypovolemia_damage_tag>>;
+	constexpr auto operator"" _hypovolemia_damage(unsigned long long value) {
+		return hypovolemia_damage{static_cast<int>(value)};
 	}
 
 	using undeath = cancel::quantity<int, cancel::unit_t<struct undeath_tag>>;
@@ -131,8 +136,8 @@ namespace ql {
 
 	// Items
 
-	using integrity = cancel::quantity<double, cancel::unit_t<struct integrity_tag>>;
-	constexpr auto operator"" _integrity(long double value) {
-		return integrity{static_cast<double>(value)};
+	using durability = cancel::quantity<int, cancel::unit_t<struct integrity_tag>>;
+	constexpr auto operator"" _durability(unsigned long long value) {
+		return durability{static_cast<int>(value)};
 	}
 }

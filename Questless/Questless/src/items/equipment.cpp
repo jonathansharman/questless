@@ -10,8 +10,8 @@
 #include "entities/beings/being.hpp"
 
 namespace ql {
-	void make_equipment(ent id, std::optional<ent> o_bearer_id, std::vector<equipment::tab> tabs, tick equip_time, tick unequip_time) {
-		reg.assign<equipment>(id, id, o_bearer_id, std::move(tabs), equip_time, unequip_time);
+	void make_equipment(ent id, std::optional<ent> o_bearer_id, std::vector<equipment::tab> tabs, action equip_cost, action unequip_cost) {
+		reg.assign<equipment>(id, id, o_bearer_id, std::move(tabs), equip_cost, unequip_cost);
 	}
 
 	void equipment::equip(ent actor_id) {
@@ -29,12 +29,12 @@ namespace ql {
 			if (!found) { forced_unequip(); }
 		}
 		o_bearer_id = actor_id;
-		reg.get<body>(actor_id).cond.busy_time += equip_time;
+		//! @todo Incur equip cost.
 	}
 
 	void equipment::unequip() {
 		if (!equipped()) return;
-		reg.get<body>(*o_bearer_id).cond.busy_time += unequip_time;
+		//! @todo Incur unequip cost.
 		forced_unequip();
 	}
 

@@ -14,5 +14,5 @@ namespace ql {
 		inventory inventory;
 	};
 
-	void make_quiver(ent id);
+	ent make_quiver(ent id, inventory inventory);
 }

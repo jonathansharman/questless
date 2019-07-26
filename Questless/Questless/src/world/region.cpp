@@ -90,68 +90,6 @@ namespace ql {
 		}
 	}
 
-	region::region(char const* save_name, string region_name)
-		: _name{std::move(region_name)}
-		, _time{0}
-		, _time_of_day{get_time_of_day()}
-		, _period_of_day{get_period_of_day()}
-		, _turn_queue{turn_order_function}
-		, _ambient_illuminance{get_ambient_illuminance()} //
-	{
-		fs::path saves_dir{"saves"};
-		fs::path save_filename{save_name};
-		fs::path regions_dir{"regions"};
-		fs::path region_filename{_name};
-		fs::path region_path = saves_dir / save_filename / regions_dir / region_filename;
-
-		for (fs::directory_iterator it(region_path); it != fs::directory_iterator(); ++it) {
-			string section_stem = it->path().stem().string();
-			string q_string, r_string;
-			bool reading_q = true;
-			for (char c : section_stem) {
-				if (c == '_') {
-					reading_q = false;
-				} else if (reading_q) {
-					q_string += c;
-				} else {
-					r_string += c;
-				}
-			}
-			section_span section_q{std::stoi(q_string)};
-			section_span section_r{std::stoi(r_string)};
-			region_section::point section_coords{section_q, section_r};
-
-			std::ifstream data_stream{(region_path / it->path()).string()};
-			if (data_stream.fail()) { throw std::logic_error("Could not open section file."); }
-			_section_map.insert(std::make_pair(section_coords, section{section_coords, data_stream}));
-		}
-
-		fs::path entities_filename{"entities"};
-		std::ifstream fin;
-		fin.open((region_path / entities_filename).string());
-		if (fin.fail()) { throw std::logic_error("Could not open region's entities file."); }
-		string line;
-		while (std::getline(fin, line)) {
-			std::istringstream sin(line, std::ios::hexfloat);
-
-			unsigned entity_id;
-			sin >> entity_id;
-			switch (static_cast<entity_subtype>(entity_id)) {
-				case entity_subtype::goblin_class: {
-					// being& goblin = the_game().beings.add(umake<ql::goblin>(sin));
-					// if (!try_add(goblin, goblin.coords)) {
-					//	throw std::logic_error("Overlapping beings in save file.");
-					//}
-					break;
-				}
-				case entity_subtype::troll_class:
-					break;
-				default:
-					throw std::logic_error("Unknown entity type in entities file.");
-			}
-		}
-	}
-
 	void region::save(char const* /*save_name*/) {
 		//! @todo Reenable someday. Use SQLite or something to save games.
 
@@ -200,10 +138,10 @@ namespace ql {
 		}
 	}
 
-	void region::spawn_player(uptr<being> player_being) {
-		//! @todo More advanced player spawning.
+	location region::get_spawn_location() {
+		//! @todo More advanced spawning.
 
-		// Put the player's character somewhere in the middle section.
+		// Spawn somewhere in the middle section.
 
 		span q{uniform(-section_radius.value, section_radius.value)};
 		span r{uniform(-section_radius.value, section_radius.value)};
@@ -211,10 +149,10 @@ namespace ql {
 
 		// Erase the being currently there, if any.
 		section* section = containing_section(player_coords);
-		section->remove_being(player_coords);
+		section->remove_at(player_coords);
 
-		bool const success = try_spawn(std::move(player_being), player_coords);
-		assert(success);
+		// Return the now guaranteed-empty location.
+		return location{id, player_coords};
 	}
 
 	bool region::try_add(ent entity_id, region_tile::point region_tile_coords) {
@@ -364,8 +302,8 @@ namespace ql {
 		auto line = start.line_to(end);
 		double result = 1.0;
 		for (std::size_t i = 1; i < line.size() - 1; ++i) {
-			if (being const* other = the_game().region().being_at(line[i])) { result *= other->transparency(); }
-			if (object const* other = the_game().region().object_at(line[i])) { result *= other->transparency(); }
+			//! @todo Handle transparency/occlusion in a more sensible way.
+			if (entity_id_at(line[i])) { result *= 0.5; }
 		}
 		return result;
 	}
@@ -488,5 +426,10 @@ namespace ql {
 		} else {
 			return nullptr;
 		}
+	}
+
+	ent make_region(ent id, std::string name) {
+		reg.assign<region>(reg.create(), std::move(name));
+		return id;
 	}
 }

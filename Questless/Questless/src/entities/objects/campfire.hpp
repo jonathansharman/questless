@@ -11,5 +11,5 @@ namespace ql {
 	//! A simple source of heat and light.
 	struct campfire {};
 
-	void make_campfire(ent id, location location);
+	ent make_campfire(ent id, location location);
 }

@@ -7,6 +7,8 @@
 #include "color.hpp"
 
 #include "quantities/game_time.hpp"
+#include "reg.hpp"
+#include "world/coordinates.hpp"
 
 namespace ql::magic {
 	//! Teleports the caster some distance from its current location.

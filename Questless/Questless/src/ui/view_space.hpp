@@ -79,24 +79,34 @@ namespace ql::view {
 
 	// Conversions from view space to SFML
 
+	//! Converts from a @p view::vector into an @p sf::Vector.
 	sf::Vector2f to_sfml(vector v) {
 		return {v[0].value, v[1].value};
 	}
 
+	//! Converts from a @p view::point into an @p sf::Vector.
 	sf::Vector2f to_sfml(point p) {
 		return {p[0].value, p[1].value};
 	}
 
 	// Conversions from SFML to view space
 
+	//! Converts from an @p sf::Vector to a @p view::vector.
 	template <typename T>
 	vector vector_from_sfml(sf::Vector2<T> const& v) {
-		return {px{v.x}, px{v.y}};
+		return {px(v.x), px(v.y)};
 	}
 
+	//! Converts from an @p sf::Vector to a @p view::point.
 	template <typename T>
 	point point_from_sfml(sf::Vector2<T> const& p) {
-		return {px{p.x}, px{p.y}};
+		return {px(p.x), px(p.y)};
+	}
+
+	//! Extracts the size from an @p sf::Rect as a @p view::vector.
+	template <typename T>
+	vector vector_from_sfml_rect_size(sf::Rect<T> const& r) {
+		return {px(r.width), px(r.height)};
 	}
 }
 

@@ -7,11 +7,15 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 namespace ql {
-	sf::FloatRect label::get_bounding_box() const {
-		return text.getGlobalBounds();
+	view::vector label::get_local_offset() const {
+		return {0.0_px, 0.0_px};
 	}
 
-	void label::update(sec, input_manager&) {}
+	view::vector label::get_size() const {
+		return vector_from_sfml_rect(text.getLocalBounds());
+	}
+
+	void label::update(sec, std::vector<sf::Event>&) {}
 
 	void label::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 		target.draw(text, states);

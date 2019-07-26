@@ -31,7 +31,7 @@ namespace ql {
 
 		world::angular_vel angular_velocity = vecx::radians{0.0} / 0.0_s;
 
-		cancel::unitless<double> scale{1.0};
+		cancel::unitless<float> scale{1.0f};
 
 		per_sec scale_velocity = 0.0_hz;
 

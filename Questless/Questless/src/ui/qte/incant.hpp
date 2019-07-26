@@ -19,7 +19,7 @@ namespace ql {
 			//! @param cont The dialog continuation function.
 			incant(sf::Window const& window, rsrc::fonts const& fonts, gatestone& gatestone);
 
-			void update(sec elapsed_time, input_manager& im) final;
+			void update(sec elapsed_time, std::vector<sf::Event>& events) final;
 
 			void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 

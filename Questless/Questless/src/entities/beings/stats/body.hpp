@@ -12,6 +12,12 @@ namespace ql::stats {
 	//! The stats of a being as a whole.
 	struct body {
 		aggregate a{};
-		dmg::armor armor{};
+		stat<dmg::armor> armor;
+
+		//! Resets current stats to base stats.
+		void reset() {
+			a.reset();
+			armor.reset();
+		}
 	};
 }

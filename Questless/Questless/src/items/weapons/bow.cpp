@@ -12,7 +12,7 @@
 #include "items/item.hpp"
 
 namespace ql {
-	void bow::nock(ent arrow_id) {
+	void bow::nock(ent /*arrow_id*/) {
 		//! @todo This.
 	}
 	void bow::draw() {
@@ -22,19 +22,21 @@ namespace ql {
 		//! @todo This.
 	}
 
-	void make_bow(ent id) {
+	ent make_bow(ent id) {
 		make_item(id, 1.5_mass);
 
-		make_breakable(id, 400.0_integrity, 400.0_integrity);
+		make_breakable(id, {400_durability, 400_durability});
 
 		//! @todo Equiping and unequiping a bow shouldn't take a long time (or actions). Stringing and unstringing a bow
 		//! should take a lot of time (or actions).
 		make_equipment(id,
 			std::nullopt,
 			{equipment::tab{body_part::tag::hand, std::nullopt}, equipment::tab{body_part::tag::hand, std::nullopt}},
-			12_tick, // Equip time
-			3_tick); // Unequip time
+			12_ap,
+			3_ap);
 
 		reg.assign<bow>(id, id);
+
+		return id;
 	}
 }

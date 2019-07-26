@@ -17,28 +17,25 @@ namespace ql {
 		void apply_status(body_part& part, body_part_status const& status, tick elapsed) {
 			match(
 				status,
-				[&](healing const& h) { part.stats.regen_factor += h.additional_regen_factor; },
-				[&](poisoned const& p) {
-					dmg::group damage = elapsed * p.rate;
-					part.take_damage(damage, p.o_source_id);
-				});
+				[&](healing const& h) { part.stats.regen_factor.cur += h.additional_regen_factor; },
+				[&](poisoned const& p) { part.cond.poisoning += p.rate * elapsed; });
 		}
 
 		void apply_wound(body_part& part, wound const& w, tick /*elapsed*/) {
 			match(
 				w,
 				[&](laceration const& l) {
-					part.stats.a.vitality -= l * 1_hp / 1_laceration;
-					part.stats.bleeding += l * 0.1_blood_per_tick / 1_laceration;
+					part.stats.a.vitality.cur -= l * 1_hp / 1_laceration;
+					part.stats.bleeding.cur += l * 0.1_blood_per_tick / 1_laceration;
 				},
 				[&](puncture const& p) {
-					part.stats.a.vitality -= 1_hp / 1_puncture * p;
-					part.stats.bleeding += 0.2_blood_per_tick / 1_puncture * p;
+					part.stats.a.vitality.cur -= 1_hp / 1_puncture * p;
+					part.stats.bleeding.cur += 0.2_blood_per_tick / 1_puncture * p;
 				},
-				[&](bruise const& b) { part.stats.a.vitality -= 1_hp / 1_bruise * b; },
-				[&](fracture const& f) { part.stats.a.vitality -= 1_hp / 1_fracture * f; },
-				[&](burn const& b) { part.stats.a.vitality -= 1_hp / 1_burn * b; },
-				[&](frostbite const& f) { part.stats.a.vitality -= 1_hp / 1_frostbite * f; });
+				[&](bruise const& b) { part.stats.a.vitality.cur -= 1_hp / 1_bruise * b; },
+				[&](fracture const& f) { part.stats.a.vitality.cur -= 1_hp / 1_fracture * f; },
+				[&](burn const& b) { part.stats.a.vitality.cur -= 1_hp / 1_burn * b; },
+				[&](frostbite const& f) { part.stats.a.vitality.cur -= 1_hp / 1_frostbite * f; });
 		}
 	}
 
@@ -92,6 +89,6 @@ namespace ql {
 		}
 
 		// Cap bleeding here, after aggregating all sources of bleeding.
-		part.stats.bleeding = std::min(part.stats.bleeding.value(), part.stats.a.max_bleeding());
+		part.stats.bleeding.cur = std::min(part.stats.bleeding.cur, part.stats.a.max_bleeding());
 	}
 }

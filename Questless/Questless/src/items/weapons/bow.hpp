@@ -21,5 +21,5 @@ namespace ql {
 		void loose();
 	};
 
-	void make_bow(ent id);
+	ent make_bow(ent id);
 }

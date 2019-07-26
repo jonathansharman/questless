@@ -21,7 +21,7 @@ namespace ql {
 		, _selector{make_selector(window, font, std::to_string(_count))} //
 	{}
 
-	void count_dialog::update(sec elapsed_time, input_manager& im) {
+	void count_dialog::update(sec elapsed_time, std::vector<sf::Event>& events) {
 		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) {
 			_promise.set_value(std::nullopt);
 			return;

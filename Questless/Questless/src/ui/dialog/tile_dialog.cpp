@@ -18,7 +18,7 @@ namespace ql {
 		, _title{make_title(title)}
 		, _prompt{make_prompt(prompt)} {}
 
-	void tile_dialog::update(sec elapsed_time, input_manager& im) {
+	void tile_dialog::update(sec elapsed_time, std::vector<sf::Event>& events) {
 		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) {
 			the_game().world_renderer().clear_highlight_predicate();
 			_cont(std::nullopt);

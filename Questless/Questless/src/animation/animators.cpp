@@ -89,10 +89,10 @@ namespace ql {
 
 			// Bleeding animation
 			auto total_bleeding = 0.0_blood_per_tick;
-			body->for_all_parts([&](body_part const& part) { total_bleeding += part.stats.bleeding.value(); });
+			body->for_all_parts([&](body_part const& part) { total_bleeding += part.stats.bleeding.cur; });
 			if (total_bleeding > 0.0_blood_per_tick) {
-				// Severity of bleeding is the rate of blood loss over the being's total vitality.
-				auto const severity = total_bleeding / body->base_stats.a.vitality.value();
+				// Severity of bleeding is the rate of blood loss over the being's base vitality.
+				auto const severity = total_bleeding / body->stats.a.vitality.base;
 				// Converts the severity of bleeding to drops of animated blood per second.
 				constexpr auto conversion_factor = ql::bleeding::drops{5.0} / 1.0_s / (1.0_blood_per_tick / 1_hp);
 				auto bleeding = umake<ql::bleeding>(particle_resources, severity * conversion_factor);

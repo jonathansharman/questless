@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "stat.hpp"
 #include "vision.hpp"
 
 #include "bounded/dynamic_nonnegative.hpp"
@@ -13,21 +14,20 @@
 namespace ql::stats {
 	//! The stats of a being that are based on aggregating stats of different body parts.
 	struct aggregate {
-		dynamic_nonnegative<health> vitality = {0_hp, 0_hp};
-		nonnegative<mana> spirit = 0_mp;
-		nonnegative<strength> strength = 0.0_str;
-		nonnegative<energy> stamina = 0.0_ep;
-		nonnegative<hearing> hearing = 0.0_hear;
-		nonnegative<speech> speech = 0.0_speech;
-		nonnegative<intellect> intellect = 0.0_int;
-		nonnegative<mass> mass = 0.0_mass;
-		nonnegative<undeath> undeath = 0_undeath;
-		std::vector<vision> vision_sources{};
+		stat<health> vitality;
+		stat<mana> spirit;
+		stat<strength> strength;
+		stat<energy> stamina;
+		stat<hearing> hearing;
+		stat<speech> speech;
+		stat<intellect> intellect;
+		stat<mass> mass;
+		stat<undeath> undeath;
+		stat<std::vector<vision>> vision_sources;
 
 		//! The maximum volume of blood that can be stored in something with these stats.
 		blood max_blood() const {
-			constexpr auto max_blood_per_vitality = 1.0_blood / 1_hp;
-			return max_blood_per_vitality * vitality.upper_bound();
+			return vitality.base * 1.0_blood / 1_hp;
 		}
 
 		//! The maximum rate at which something with these stats can lose blood.
@@ -35,23 +35,31 @@ namespace ql::stats {
 			return max_blood() / 10_tick;
 		}
 
-		aggregate& operator+=(aggregate const& that) {
-			vitality += that.vitality;
-			spirit += that.spirit;
-			strength += that.strength;
-			stamina += that.stamina;
-			hearing += that.hearing;
-			speech += that.speech;
-			intellect += that.intellect;
-			mass += that.mass;
-			vision_sources.insert(vision_sources.end(), that.vision_sources.begin(), that.vision_sources.end());
-			return *this;
+		//! Combines this aggregate with @p that, per stat.
+		void combine_with(aggregate const& that) {
+			vitality.base += that.vitality.base;
+			spirit.base += that.spirit.base;
+			strength.base += that.strength.base;
+			stamina.base += that.stamina.base;
+			hearing.base += that.hearing.base;
+			speech.base += that.speech.base;
+			intellect.base += that.intellect.base;
+			mass.base += that.mass.base;
+			vision_sources.base.insert(
+				vision_sources.base.end(), that.vision_sources.base.begin(), that.vision_sources.base.end());
 		}
 
-		aggregate operator+(aggregate const& that) {
-			aggregate result = *this;
-			result += that;
-			return result;
+		//! Resets current stats to base stats.
+		void reset() {
+			vitality.reset();
+			spirit.reset();
+			strength.reset();
+			stamina.reset();
+			hearing.reset();
+			speech.reset();
+			intellect.reset();
+			mass.reset();
+			vision_sources.reset();
 		}
 	};
 }

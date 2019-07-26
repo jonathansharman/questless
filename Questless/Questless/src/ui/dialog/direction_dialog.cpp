@@ -5,7 +5,7 @@
 #include "ui/dialog/direction_dialog.hpp"
 
 namespace ql {
-	void direction_dialog::update(sec elapsed_time, input_manager& im) {
+	void direction_dialog::update(sec elapsed_time, std::vector<sf::Event>& events) {
 		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) {
 			_promise.set_value(std::nullopt);
 			return;

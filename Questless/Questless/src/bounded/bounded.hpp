@@ -52,11 +52,31 @@ namespace ql {
 			return value();
 		}
 
-		auto operator<=>(Derived const& d) const {
-			return value() <=> d.value();
+		// Comparison Operators
+
+		friend auto operator<=>(Derived const& d1, Derived const& d2) {
+			return d1.value() <=> d2.value();
 		}
-		auto operator==(Derived const& d) const {
-			return value() == d.value();
+		friend auto operator==(Derived const& d1, Derived const& d2) {
+			return d1.value() <=> d2.value();
+		}
+
+		template <typename OtherValueType>
+		friend auto operator<=>(Derived const& d, OtherValueType const& v) {
+			return d.value() <=> v;
+		}
+		template <typename OtherValueType>
+		friend auto operator==(Derived const& d, OtherValueType const& v) {
+			return d.value() == v;
+		}
+
+		template <typename OtherValueType>
+		friend auto operator<=>(OtherValueType const& v, Derived const& d) {
+			return v <=> d.value();
+		}
+		template <typename OtherValueType>
+		friend auto operator==(OtherValueType const& v, Derived const& d) {
+			return v == d.value();
 		}
 
 		// Arithmetic Operators

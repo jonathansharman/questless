@@ -4,14 +4,15 @@
 
 #pragma once
 
+#include "rsrc/fonts.hpp"
 #include "ui/input_manager.hpp"
 #include "utility/reference.hpp"
 
 #include <SFML/Graphics.hpp>
 
 namespace ql {
-	namespace scene {
-		class scene;
+	namespace scenes {
+		struct scene;
 	}
 
 	//! Represents an instance of the game Questless.
@@ -29,10 +30,10 @@ namespace ql {
 
 		sf::RenderWindow _window;
 
+		rsrc::fonts _fonts;
+
 		input_manager _im{_window};
 
-		uptr<scene::scene> _scene;
-
-		void load_textures();
+		uptr<scenes::scene> _scene;
 	};
 }

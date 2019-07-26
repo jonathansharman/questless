@@ -99,9 +99,6 @@
     <ClInclude Include="src\utility\event.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\utility\initializer.hpp">
-      <Filter>src\utility</Filter>
-    </ClInclude>
     <ClInclude Include="src\utility\io.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
@@ -121,9 +118,6 @@
       <Filter>src\agents</Filter>
     </ClInclude>
     <ClInclude Include="src\agents\basic_ai.hpp">
-      <Filter>src\agents</Filter>
-    </ClInclude>
-    <ClInclude Include="src\agents\cost.hpp">
       <Filter>src\agents</Filter>
     </ClInclude>
     <ClInclude Include="src\agents\lazy_ai.hpp">
@@ -222,9 +216,6 @@
     <ClInclude Include="src\ui\hud.hpp">
       <Filter>src\ui</Filter>
     </ClInclude>
-    <ClInclude Include="src\magic\charge_cost.hpp">
-      <Filter>src\magic</Filter>
-    </ClInclude>
     <ClInclude Include="src\magic\heal.hpp">
       <Filter>src\magic</Filter>
     </ClInclude>
@@ -239,9 +230,6 @@
     </ClInclude>
     <ClInclude Include="src\items\magic\gatestone.hpp">
       <Filter>src\items\magic</Filter>
-    </ClInclude>
-    <ClInclude Include="src\items\weapons\weapon.hpp">
-      <Filter>src\items\weapons</Filter>
     </ClInclude>
     <ClInclude Include="src\items\weapons\arrow.hpp">
       <Filter>src\items\weapons</Filter>
@@ -474,9 +462,6 @@
     <ClInclude Include="src\items\inventory.hpp">
       <Filter>src\items</Filter>
     </ClInclude>
-    <ClInclude Include="src\entities\transparency.hpp">
-      <Filter>src\entities</Filter>
-    </ClInclude>
     <ClInclude Include="src\world\terrain.hpp">
       <Filter>src\world</Filter>
     </ClInclude>
@@ -579,6 +564,18 @@
     <ClInclude Include="src\entities\beings\stats\stat.hpp">
       <Filter>src\entities\beings\stats</Filter>
     </ClInclude>
+    <ClInclude Include="src\world\spawn_player.hpp">
+      <Filter>src\world</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\inventory_widget.hpp">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rsrc\menu.hpp">
+      <Filter>src\rsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\layout.hpp">
+      <Filter>src\ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -656,9 +653,6 @@
     <ClCompile Include="src\items\magic\gatestone.cpp">
       <Filter>src\items\magic</Filter>
     </ClCompile>
-    <ClCompile Include="src\items\weapons\weapon.cpp">
-      <Filter>src\items\weapons</Filter>
-    </ClCompile>
     <ClCompile Include="src\items\weapons\bow.cpp">
       <Filter>src\items\weapons</Filter>
     </ClCompile>
@@ -718,9 +712,6 @@
     </ClCompile>
     <ClCompile Include="src\items\weapons\quiver.cpp">
       <Filter>src\items\weapons</Filter>
-    </ClCompile>
-    <ClCompile Include="src\magic\charge_cost.cpp">
-      <Filter>src\magic</Filter>
     </ClCompile>
     <ClCompile Include="src\animation\flame.cpp">
       <Filter>src\animation</Filter>
@@ -835,6 +826,12 @@
     </ClCompile>
     <ClCompile Include="src\entities\beings\body_part_status_set.cpp">
       <Filter>src\entities\beings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\world\spawn_player.cpp">
+      <Filter>src\world</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\inventory_widget.cpp">
+      <Filter>src\ui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

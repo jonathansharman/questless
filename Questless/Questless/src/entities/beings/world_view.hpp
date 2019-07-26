@@ -21,12 +21,12 @@ namespace ql {
 	struct world_view {
 		struct section_view {
 			region_section::point coords;
-			std::array<std::array<bounded_perception, section_diameter.value>, section_diameter.value> tile_perceptions;
+			std::array<std::array<perception, section_diameter.value>, section_diameter.value> tile_perceptions;
 		};
 
 		struct entity_view {
 			ent id;
-			bounded_perception perception;
+			perception perception;
 		};
 
 		std::vector<section_view> section_views;

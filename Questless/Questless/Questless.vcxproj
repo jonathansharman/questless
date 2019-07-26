@@ -184,6 +184,7 @@
       <EnableModules>true</EnableModules>
       <ConformanceMode>true</ConformanceMode>
       <DisableLanguageExtensions />
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -203,6 +204,7 @@
       <EnableModules>true</EnableModules>
       <ConformanceMode>true</ConformanceMode>
       <DisableLanguageExtensions />
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -249,6 +251,7 @@
       <ConformanceMode>true</ConformanceMode>
       <DisableLanguageExtensions />
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -282,7 +285,6 @@
     <ClInclude Include="src\agents\actions.hpp" />
     <ClInclude Include="src\agents\agent.hpp" />
     <ClInclude Include="src\agents\basic_ai.hpp" />
-    <ClInclude Include="src\agents\cost.hpp" />
     <ClInclude Include="src\agents\lazy_ai.hpp" />
     <ClInclude Include="src\agents\player.hpp" />
     <ClInclude Include="src\animation\animation.hpp" />
@@ -346,7 +348,6 @@
     <ClInclude Include="src\entities\entity.hpp" />
     <ClInclude Include="src\entities\objects\campfire.hpp" />
     <ClInclude Include="src\entities\perception.hpp" />
-    <ClInclude Include="src\entities\transparency.hpp" />
     <ClInclude Include="src\game.hpp" />
     <ClInclude Include="src\items\breakable.hpp" />
     <ClInclude Include="src\items\equipment.hpp" />
@@ -358,8 +359,6 @@
     <ClInclude Include="src\items\weapons\bow.hpp" />
     <ClInclude Include="src\items\weapons\quarterstaff.hpp" />
     <ClInclude Include="src\items\weapons\quiver.hpp" />
-    <ClInclude Include="src\items\weapons\weapon.hpp" />
-    <ClInclude Include="src\magic\charge_cost.hpp" />
     <ClInclude Include="src\magic\color.hpp" />
     <ClInclude Include="src\magic\telescope.hpp" />
     <ClInclude Include="src\magic\heal.hpp" />
@@ -375,6 +374,7 @@
     <ClInclude Include="src\rsrc\entity.hpp" />
     <ClInclude Include="src\rsrc\fonts.hpp" />
     <ClInclude Include="src\rsrc\item.hpp" />
+    <ClInclude Include="src\rsrc\menu.hpp" />
     <ClInclude Include="src\rsrc\particle.hpp" />
     <ClInclude Include="src\rsrc\spell.hpp" />
     <ClInclude Include="src\rsrc\splash.hpp" />
@@ -386,6 +386,7 @@
     <ClInclude Include="src\scenes\scene.hpp" />
     <ClInclude Include="src\scenes\splash.hpp" />
     <ClInclude Include="src\ui\being_widget.hpp" />
+    <ClInclude Include="src\ui\layout.hpp" />
     <ClInclude Include="src\ui\dialog\count_dialog.hpp" />
     <ClInclude Include="src\ui\dialog\dialog.hpp" />
     <ClInclude Include="src\ui\dialog\direction_dialog.hpp" />
@@ -395,6 +396,7 @@
     <ClInclude Include="src\ui\dialog\tile_dialog.hpp" />
     <ClInclude Include="src\ui\dialog\vector_dialog.hpp" />
     <ClInclude Include="src\ui\digraph_menu.hpp" />
+    <ClInclude Include="src\ui\inventory_widget.hpp" />
     <ClInclude Include="src\ui\object_widget.hpp" />
     <ClInclude Include="src\ui\tile_widget.hpp" />
     <ClInclude Include="src\ui\view_space.hpp" />
@@ -408,7 +410,6 @@
     <ClInclude Include="src\utility\delegate.hpp" />
     <ClInclude Include="src\utility\event.hpp" />
     <ClInclude Include="src\utility\future.hpp" />
-    <ClInclude Include="src\utility\initializer.hpp" />
     <ClInclude Include="src\utility\io.hpp" />
     <ClInclude Include="src\utility\unreachable.hpp" />
     <ClInclude Include="src\utility\visitation.hpp" />
@@ -419,6 +420,7 @@
     <ClInclude Include="src\world\light_source.hpp" />
     <ClInclude Include="src\world\region.hpp" />
     <ClInclude Include="src\world\section.hpp" />
+    <ClInclude Include="src\world\spawn_player.hpp" />
     <ClInclude Include="src\world\terrain.hpp" />
     <ClInclude Include="src\world\tile.hpp" />
     <ClInclude Include="src\world\world_space.hpp" />
@@ -472,10 +474,8 @@
     <ClCompile Include="src\items\weapons\bow.cpp" />
     <ClCompile Include="src\items\weapons\quarterstaff.cpp" />
     <ClCompile Include="src\items\weapons\quiver.cpp" />
-    <ClCompile Include="src\items\weapons\weapon.cpp" />
     <ClCompile Include="src\magic\telescope.cpp" />
     <ClCompile Include="src\magic\heal.cpp" />
-    <ClCompile Include="src\magic\charge_cost.cpp" />
     <ClCompile Include="src\magic\shock.cpp" />
     <ClCompile Include="src\magic\teleport.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -495,6 +495,7 @@
     <ClCompile Include="src\ui\digraph_menu.cpp" />
     <ClCompile Include="src\ui\hud.cpp" />
     <ClCompile Include="src\ui\input_manager.cpp" />
+    <ClCompile Include="src\ui\inventory_widget.cpp" />
     <ClCompile Include="src\ui\label.cpp" />
     <ClCompile Include="src\ui\object_widget.cpp" />
     <ClCompile Include="src\ui\qte\incant.cpp" />
@@ -508,6 +509,7 @@
     <ClCompile Include="src\world\light_source.cpp" />
     <ClCompile Include="src\world\region.cpp" />
     <ClCompile Include="src\world\section.cpp" />
+    <ClCompile Include="src\world\spawn_player.cpp" />
     <ClCompile Include="src\world\tile.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

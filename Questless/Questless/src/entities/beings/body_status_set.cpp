@@ -19,16 +19,16 @@ namespace ql {
 			match(
 				status,
 				[&](blind const& b) {
-					for (auto& v : body.stats.a.vision_sources) {
+					for (auto& v : body.stats.a.vision_sources.cur) {
 						v.acuity -= b.acuity_reduction;
 					}
 				},
-				[&](confused const& c) { body.stats.a.intellect -= c.reduction; },
-				[&](deaf const& d) { body.stats.a.hearing -= d.reduction; },
-				[&](mute const& m) { body.stats.a.speech -= m.reduction; },
+				[&](confused const& c) { body.stats.a.intellect.cur -= c.reduction; },
+				[&](deaf const& d) { body.stats.a.hearing.cur -= d.reduction; },
+				[&](mute const& m) { body.stats.a.speech.cur -= m.reduction; },
 				[&](nauseated const& n) {
-					body.stats.a.strength += n.strength_penalty * n.magnitude;
-					body.stats.a.stamina += n.max_energy_penalty * n.magnitude;
+					body.stats.a.strength.cur += n.strength_penalty * n.magnitude;
+					body.stats.a.stamina.cur += n.max_energy_penalty * n.magnitude;
 				},
 				[&](numb const&) {
 					//! @todo Reduce action points.
@@ -36,7 +36,7 @@ namespace ql {
 					// stats.dexterity += numb::dexterity_penalty * n.magnitude;
 				},
 				[&](telescoped const& t) {
-					for (auto& v : body.stats.a.vision_sources) {
+					for (auto& v : body.stats.a.vision_sources.cur) {
 						v.acuity += t.acuity_bonus;
 					}
 				});

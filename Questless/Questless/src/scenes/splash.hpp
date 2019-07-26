@@ -16,10 +16,10 @@ namespace ql {
 		struct fonts;
 	}
 
-	namespace scene {
-		//! The splash screen scene.
+	namespace scenes {
+		//! The splash screen.
 		struct splash : scene {
-			splash(sf::Window& window, rsrc::fonts const& fonts);
+			splash(sf::RenderWindow& window, rsrc::fonts const& fonts);
 
 		private:
 			bool _sound_played = false;
@@ -27,7 +27,7 @@ namespace ql {
 
 			rsrc::splash _rsrc;
 
-			update_result scene_subupdate(sec elapsed_time, input_manager& im) final;
+			update_result scene_subupdate(sec elapsed_time, std::vector<sf::Event>& events) final;
 
 			void scene_subdraw(sf::RenderTarget& target, sf::RenderStates states) const final;
 		};

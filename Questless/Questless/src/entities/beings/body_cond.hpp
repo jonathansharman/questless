@@ -17,8 +17,8 @@ namespace ql {
 	struct body_cond {
 		ent id;
 
-		static constexpr auto min_energy = 0.0_ep;
-		static constexpr auto max_energy = 100.0_ep;
+		static constexpr auto min_energy = 0_ep;
+		static constexpr auto max_energy = 100_ep;
 		static_bounded<ql::energy, min_energy, max_energy> energy;
 		constexpr bool weary() const {
 			return energy.value() < min_energy + (max_energy - min_energy) / 4;
@@ -91,10 +91,6 @@ namespace ql {
 		}
 
 		ql::blood blood;
-
-		ql::poisoning poisoning;
-
-		ql::hypovolemia hypovolemia;
 
 		ql::mortality mortality = ql::mortality::alive;
 	};

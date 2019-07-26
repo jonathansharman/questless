@@ -23,18 +23,13 @@ namespace ql {
 		//! The ID of the root body part, to which all other body parts are attached.
 		ent root_part_id;
 
-		//! This body's conditions.
 		body_cond cond;
 
-		//! This body's base stats, before any stat-modifying effects are applied.
-		stats::body base_stats;
-
-		//! This body's current stats.
 		stats::body stats;
 
 		body_status_set status_set;
 
-		body(ent id, ent root_part_id, body_cond cond, stats::body base_stats);
+		body(ent id, ent root_part_id, body_cond cond, stats::body stats);
 
 		//! Performs @p f for each body part in this body. See also @p for_enabled_parts.
 		void for_all_parts(std::function<void(body_part const&)> const& f) const;

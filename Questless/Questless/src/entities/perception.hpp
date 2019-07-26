@@ -15,10 +15,7 @@
 #include <vector>
 
 namespace ql {
-	constexpr auto min_perception = 0_perception;
-	constexpr auto max_perception = 100_perception;
-
-	using bounded_perception = static_bounded<perception, min_perception, max_perception>;
+	static constexpr auto max_perception = 100_perception;
 
 	//! The maximum possible distance a being with vision list @p vision_sources could see.
 	span max_visual_range(std::vector<stats::vision> const& vision_sources);

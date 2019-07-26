@@ -7,7 +7,7 @@
 #include "breakable.hpp"
 
 namespace ql {
-	void make_breakable(ent id, ql::integrity integrity, ql::integrity durability) {
-		reg.assign<breakable>(id, id, integrity, durability);
+	void make_breakable(ent id, dynamic_nonnegative<ql::durability> durability) {
+		reg.assign<breakable>(id, id, durability);
 	}
 }

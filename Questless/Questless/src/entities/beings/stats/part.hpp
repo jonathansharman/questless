@@ -11,17 +11,27 @@
 namespace ql::stats {
 	//! Stats belonging only to a particular body part.
 	struct part {
-		aggregate a{};
+		aggregate a;
 
-		nonnegative<int> regen_factor = 0;
-		nonnegative<blood_per_tick> bleeding = 0.0_blood_per_tick;
-		ql::temperature min_temp = 0.0_temp;
-		ql::temperature max_temp = 0.0_temp;
-		dmg::armor armor{};
+		stat<int> regen_factor;
+		stat<blood_per_tick> bleeding;
+		stat<ql::temperature> min_temp;
+		stat<ql::temperature> max_temp;
+		stat<dmg::armor> armor;
 
 		blood_per_tick blood_regen() const {
-			// Blood regen is proportional to maximum vitality and the regen factor.
-			return 0.01_blood / 1_tick / 1_hp * a.vitality.upper_bound() * regen_factor.value();
+			// Blood regen is proportional to base vitality and the regen factor.
+			return a.vitality.base * regen_factor.cur * 0.01_blood / 1_tick / 1_hp;
+		}
+
+		//! Resets current stats to base stats.
+		void reset() {
+			a.reset();
+			regen_factor.reset();
+			bleeding.reset();
+			min_temp.reset();
+			max_temp.reset();
+			armor.reset();
 		}
 	};
 }

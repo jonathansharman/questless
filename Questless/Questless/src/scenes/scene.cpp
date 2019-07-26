@@ -8,27 +8,34 @@
 #include "ui/input_manager.hpp"
 #include "utility/visitation.hpp"
 
+#include "cancel/serialization.hpp"
+
 #include <SFML/Graphics.hpp>
 #include <fmt/format.h>
+#include <fmt/ostream.h>
 
 #include <numeric>
 #include <thread>
 
-namespace ql::scene {
-	scene::scene(sf::Window& window, rsrc::fonts const& fonts) : _window{window}, _fonts{fonts} {}
+namespace ql::scenes {
+	scene::scene(sf::RenderWindow& window, rsrc::fonts const& fonts) : _window{window}, _fonts{fonts} {}
 
-	update_result scene::update(input_manager& im) {
+	update_result scene::update() {
 		// Regulate timing and get the elapsed time.
 		auto const elapsed_time = regulate_timing();
 
-		// Update the input manager.
-		im.update();
+		// Build event list.
+		std::vector<sf::Event> events;
+		sf::Event event;
+		while (_window.pollEvent(event)) {
+			events.push_back(event);
+		}
 
 		// End the game if there was a quit event.
 		if (im.quit() || im.alt() && im.pressed(sf::Keyboard::F4)) { return game_over{}; }
 
 		// Perform scene-specific updates.
-		return scene_subupdate(elapsed_time, im);
+		return scene_subupdate(elapsed_time, events);
 	}
 
 	void scene::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -65,7 +72,7 @@ namespace ql::scene {
 		}
 
 		// Update FPS buffer.
-		if (time_spent != 0.0_s) { _fps_buffer.push_back(1.0 / time_spent); }
+		if (time_spent != 0.0_s) { _fps_buffer.push_back(1.0f / time_spent); }
 		constexpr std::size_t max_fps_buffer_size = 25;
 		if (_fps_buffer.size() > max_fps_buffer_size) { _fps_buffer.pop_front(); }
 
@@ -73,10 +80,10 @@ namespace ql::scene {
 	}
 
 	void scene::draw_fps(sf::RenderTarget& target, sf::RenderStates states) const {
-		auto const fps_buffer_sum = std::reduce(_fps_buffer.begin(), _fps_buffer.end(), 0.0_hz, std::plus<per_sec>{});
-		auto const fps_buffer_avg = fps_buffer_sum / _fps_buffer.size();
+		per_sec const fps_buffer_sum = std::reduce(_fps_buffer.begin(), _fps_buffer.end(), 0.0_hz, std::plus<per_sec>{});
+		per_sec const fps_buffer_avg = fps_buffer_sum / _fps_buffer.size();
 		sf::Text fps_text{fmt::format("{:.2f}", fps_buffer_avg), _fonts.firamono, 20};
-		fps_text.setColor(sf::Color::White);
+		fps_text.setFillColor(sf::Color::White);
 		fps_text.setOrigin(fps_text.getLocalBounds().width, fps_text.getLocalBounds().height);
 		fps_text.setPosition(sf::Vector2f{_window.getSize()});
 		target.draw(fps_text, states);

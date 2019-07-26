@@ -7,17 +7,19 @@
 #include "scene.hpp"
 
 #include "ui/digraph_menu.hpp"
+#include "ui/layout.hpp"
 #include "utility/reference.hpp"
 
-namespace ql::scene {
-	//! The splash screen scene.
+namespace ql::scenes {
+	//! The scene for the main menu.
 	struct main_menu : scene {
-		main_menu();
+		main_menu(sf::RenderWindow& window, rsrc::fonts const& fonts);
 
 	private:
-		digraph_menu _main_menu{480, 640};
+		layout _layout;
+		digraph_menu _main_menu;
 
-		update_result scene_subupdate(sec elapsed_time, input_manager& im) final;
+		update_result scene_subupdate(sec elapsed_time, std::vector<sf::Event>& events) final;
 
 		void scene_subdraw(sf::RenderTarget& target, sf::RenderStates states) const final;
 	};

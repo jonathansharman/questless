@@ -26,7 +26,7 @@ namespace ql {
 	//! Deals blight damage over time.
 	struct poisoned {
 		static constexpr body_part_status_category category = body_part_status_category::detrimental;
-		cancel::quotient_t<dmg::poison, tick> rate;
+		cancel::quotient_t<poisoning, tick> rate;
 		std::optional<ent> o_source_id;
 	};
 

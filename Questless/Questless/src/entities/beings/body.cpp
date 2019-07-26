@@ -14,13 +14,13 @@
 
 namespace ql {
 	namespace {
-		stats::body get_stats(body const& b) {
-			auto result = b.base_stats;
+		void reset_stats(body& b) {
+			b.stats.reset();
 			// Aggregate part stats.
-			b.for_enabled_parts([&](body_part const& part) { result.a += part.stats.a; });
+			b.for_enabled_parts([&](body_part const& part) { b.stats.a.combine_with(part.stats.a); });
 			// Apply condition effects.
-			if (b.cond.weary()) { result.a.strength /= 2; }
-			if (b.cond.sleepy()) { result.a.intellect /= 2; }
+			if (b.cond.weary()) { b.stats.a.strength.cur /= 2; }
+			if (b.cond.sleepy()) { b.stats.a.intellect.cur /= 2; }
 		}
 
 		template <typename ConstQualifiedBodyPartType, typename F>
@@ -32,7 +32,7 @@ namespace ql {
 				ent part_id = work_list.front();
 				ConstQualifiedBodyPartType part = reg.get<body_part>(part_id);
 				// Check ableness condition before proceeding into this branch.
-				if (include_disabled || part.enabled()) {
+				if (include_disabled || part.cond.enabled()) {
 					// Apply the function.
 					f(part);
 					// Add any children of the current part to the work list.
@@ -46,13 +46,14 @@ namespace ql {
 		}
 	}
 
-	body::body(ent id, ent root_part_id, body_cond cond, stats::body base_stats)
+	body::body(ent id, ent root_part_id, body_cond cond, stats::body stats)
 		: id{id}
 		, root_part_id{root_part_id}
 		, cond{std::move(cond)}
-		, base_stats{std::move(base_stats)}
-		, stats{get_stats(*this)} //
-	{}
+		, stats{std::move(stats)} //
+	{
+		reset_stats(*this);
+	}
 
 	void body::for_all_parts(std::function<void(body_part const&)> const& f) const {
 		for_parts_impl<body_part const&>(*this, true, f);
@@ -69,18 +70,18 @@ namespace ql {
 	}
 
 	void body::update(tick elapsed) {
-		// Recompute stats.
-		stats = get_stats(*this);
+		// Reset and aggregate stats.
+		reset_stats(*this);
 
 		// Update conditions.
 		cond.satiety -= (cond.awake() ? 0.05_sat : 0.025_sat) / 1_tick * elapsed;
-		cond.energy += (cond.awake() ? 1.0_ep : 3.0_ep) / 1_tick * elapsed;
+		cond.energy += (cond.awake() ? 1_ep : 3_ep) / 1_tick * elapsed;
 		cond.alertness += (cond.awake() ? -0.1_alert : 0.2_alert) / 1_tick * elapsed;
 
 		// Bleed and regenerate blood.
 		for_all_parts([&](body_part const& part) {
 			// Intermediate blood values may leave the valid range.
-			cond.blood += (part.stats.blood_regen() - part.stats.bleeding.value()) * elapsed;
+			cond.blood += (part.stats.blood_regen() - part.stats.bleeding.cur) * elapsed;
 		});
 		// After all blood contributions have been added, clamp blood into the valid region.
 		cond.blood = std::clamp(cond.blood, 0.0_blood, stats.a.max_blood());
@@ -108,8 +109,9 @@ namespace ql {
 				// Stage 3: confusion.
 
 				// Intellect reduction as a factor of stage-3 blood loss.
-				constexpr auto intellect_loss_rate = 50.0_int;
-				stats.a.intellect -= (pct_blood_lost - stage_2_max) / (1.0 - stage_2_max) * intellect_loss_rate;
+				constexpr auto intellect_loss_rate = 50_int;
+				stats.a.intellect.cur -= cancel::quantity_cast<intellect>(
+					(pct_blood_lost - stage_2_max) / (1.0 - stage_2_max) * intellect_loss_rate);
 			}
 			if (pct_blood_lost > stage_3_max) {
 				// Stage 4: lethargy, loss of consciousness, damage.
@@ -117,8 +119,8 @@ namespace ql {
 				double const pct_stage_4_blood_lost = (pct_blood_lost - stage_3_max) / (1.0 - stage_3_max);
 
 				// Energy loss as a factor of stage-4 blood loss.
-				constexpr auto energy_loss_rate = 1.0_ep / 1_tick;
-				cond.energy -= pct_stage_4_blood_lost * energy_loss_rate * elapsed;
+				constexpr auto energy_loss_rate = 1_ep / 1_tick;
+				cond.energy -= cancel::quantity_cast<energy>(pct_stage_4_blood_lost * energy_loss_rate * elapsed);
 
 				// Alertness loss as a factor of stage-4 blood loss.
 				constexpr auto alertness_loss_rate = 1.0_alert / 1_tick;
@@ -127,7 +129,8 @@ namespace ql {
 				// Reduce vitality in proportion to stage-4 blood loss.
 				constexpr auto decay_rate = 1_decay / 1_tick;
 				for_all_parts([&](body_part& part) {
-					part.stats.a.vitality -= part.stats.a.vitality.upper_bound() * pct_stage_4_blood_lost;
+					part.stats.a.vitality.cur -= cancel::quantity_cast<health>(
+						part.stats.a.vitality.base * pct_stage_4_blood_lost);
 				});
 			}
 		}
@@ -135,9 +138,9 @@ namespace ql {
 		// Update mortality state.
 		switch (cond.mortality) {
 			case mortality::alive:
-				if (stats.a.vitality <= 0_hp) {
+				if (stats.a.vitality.cur <= 0_hp) {
 					// Alive with no vitality...
-					cond.mortality = stats.a.undeath.value() > 0_undeath
+					cond.mortality = stats.a.undeath.cur > 0_undeath
 						// ...with undeath -> undead.
 						? mortality::undead
 						// ...without undeath -> dead.
@@ -146,11 +149,11 @@ namespace ql {
 				break;
 			case mortality::dead:
 				// Dead with undeath -> undead.
-				if (stats.a.undeath.value() > 0_undeath) { cond.mortality = mortality::undead; }
+				if (stats.a.undeath.cur > 0_undeath) { cond.mortality = mortality::undead; }
 				break;
 			case mortality::undead:
 				// Undead without undeath -> dead.
-				if (stats.a.undeath.value() <= 0_undeath) { cond.mortality = mortality::dead; }
+				if (stats.a.undeath.cur <= 0_undeath) { cond.mortality = mortality::dead; }
 				break;
 			case mortality::immortal:
 				// Immortal -> immortal.

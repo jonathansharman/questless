@@ -6,49 +6,28 @@
 
 #include "view_space.hpp"
 
+#include "rsrc/fonts.hpp"
 #include "utility/utility.hpp"
 
 #include <algorithm>
 
 namespace ql {
-	texture_handle digraph_menu::_ul_handle;
-	texture_handle digraph_menu::_ur_handle;
-	texture_handle digraph_menu::_dl_handle;
-	texture_handle digraph_menu::_dr_handle;
-	texture_handle digraph_menu::_u_handle;
-	texture_handle digraph_menu::_d_handle;
-	texture_handle digraph_menu::_l_handle;
-	texture_handle digraph_menu::_r_handle;
-	texture_handle digraph_menu::_tile_handle;
+	using namespace view::literals;
 
-	int digraph_menu::_top_margin;
-	int digraph_menu::_bottom_margin;
-	int digraph_menu::_left_margin;
-	int digraph_menu::_right_margin;
-	int digraph_menu::_tile_width;
-	int digraph_menu::_tile_height;
-
-	initializer<digraph_menu> digraph_menu::_initializer;
-	void digraph_menu::initialize() {
-		_ul_handle = the_texture_manager().add("resources/textures/menu/ul.png");
-		_ur_handle = the_texture_manager().add("resources/textures/menu/ur.png");
-		_dl_handle = the_texture_manager().add("resources/textures/menu/dl.png");
-		_dr_handle = the_texture_manager().add("resources/textures/menu/dr.png");
-		_u_handle = the_texture_manager().add("resources/textures/menu/u.png");
-		_d_handle = the_texture_manager().add("resources/textures/menu/d.png");
-		_l_handle = the_texture_manager().add("resources/textures/menu/l.png");
-		_r_handle = the_texture_manager().add("resources/textures/menu/r.png");
-		_tile_handle = the_texture_manager().add("resources/textures/menu/tile.png");
+	namespace {
+		constexpr auto title_height = 60.0_px;
+		constexpr auto option_height = 32.0_px;
 	}
 
-	digraph_menu::digraph_menu(int min_width, int min_height)
-		: _content_position{0, 0}
-		, _page_index{0}
-		, _min_width{min_width}
-		, _min_height{min_height}
-		, _content_width{0}
-		, _content_height{0}
-		, _render_is_current{false} {}
+	digraph_menu::digraph_menu(widget& parent, rsrc::fonts const& fonts, view::vector min_size)
+		: widget{&parent}
+		, fonts{fonts}
+		, _min_size{min_size} //
+	{
+		_top_left_margin = view::vector_from_sfml(resources.txtr.ul.getSize());
+		_bottom_right_margin = view::vector_from_sfml(resources.txtr.dr.getSize());
+		_tile_size = view::vector_from_sfml(resources.txtr.tile.getSize());
+	}
 
 	void digraph_menu::add_page(std::string title) {
 		if (!find(title)) {
@@ -85,16 +64,6 @@ namespace ql {
 		}
 	}
 
-	void digraph_menu::set_page(std::string_view title) {
-		for (size_t index = 0; index < _pages.size(); ++index) {
-			if (_pages[index].title == title) {
-				_page_index = static_cast<int>(index);
-				return;
-			}
-		}
-		throw std::invalid_argument("Attempted to navigate to a nonexistent menu page.");
-	}
-
 	void digraph_menu::set_option(std::string_view page_title, int option_index) {
 		std::optional<int> page_index = find(page_title);
 		if (!page_index) {
@@ -107,32 +76,26 @@ namespace ql {
 		}
 	}
 
-	void digraph_menu::clear() {
-		_pages.clear();
-		_page_index = 0;
-		_render_is_current = false;
-	}
+	view::vector digraph_menu::get_local_offset() const {}
 
-	void digraph_menu::update() {
+	view::vector digraph_menu::get_size() const {}
+
+	void digraph_menu::update(sec elapsed_time, std::vector<sf::Event>& events) {
 		if (_pages.size() == 0 || !_render_is_current) { return; }
-
-		static auto hover_sound_handle = the_sound_manager().add("resources/sounds/menu/hover.wav");
-		static auto select_sound_handle = the_sound_manager().add("resources/sounds/menu/select.wav");
 
 		// Get index of option over which the mouse is hovering, if any.
 
 		std::optional<int> hovered_option_index = std::nullopt;
-		spaces::window::point position = _content_position;
-		position.y() += _title_height;
+		view::point position = _content_position;
+		position[1] += title_height;
 		for (size_t i = 0; i < _pages[_page_index].options.size(); ++i) {
-			spaces::window::box box = spaces::window::box{
-				spaces::window::point{position.x(), position.y()}, _page_views[_page_index].option_textures[i].size()};
-			spaces::window::point point = im.mouse_position();
+			view::box box = {position, view::vector_from_sfml(_page_views[_page_index].option_textures[i].getSize())};
+			view::point point = im.mouse_position();
 			if (box.contains(point)) {
 				hovered_option_index = static_cast<int>(i);
 				break;
 			}
-			position.y() += _option_height;
+			position[1] += option_height;
 		}
 
 		// Change option index, if necessary.
@@ -140,16 +103,16 @@ namespace ql {
 		int& current_option_index = _pages[_page_index].option_index;
 		if (im.mouse_moved() && hovered_option_index) {
 			if (current_option_index != hovered_option_index.value()) {
-				the_sound_manager()[hover_sound_handle].play();
+				resources.sfx.hover.play();
 				current_option_index = hovered_option_index.value();
 			}
 		} else {
-			if (im.presses(sf::Keyboard::DOWN)) {
-				the_sound_manager()[hover_sound_handle].play();
+			if (im.pressed(sf::Keyboard::Down)) {
+				resources.sfx.hover.play();
 				++current_option_index;
 			}
-			if (im.presses(sf::Keyboard::UP)) {
-				the_sound_manager()[hover_sound_handle].play();
+			if (im.pressed(sf::Keyboard::Up)) {
+				resources.sfx.hover.play();
 				--current_option_index;
 			}
 			if (current_option_index < 0) {
@@ -160,10 +123,8 @@ namespace ql {
 		}
 
 		// Check for selection.
-
-		if (im.presses(sf::Keyboard::RETURN) || im.presses(sf::Keyboard::SPACE) ||
-			hovered_option_index && im.pressed(mouse_button::left)) {
-			the_sound_manager()[select_sound_handle].play();
+		if (im.pressed({sf::Keyboard::Return, sf::Keyboard::Space}) || hovered_option_index && im.pressed(sf::Mouse::Left)) {
+			resources.sfx.select.play();
 			digraph_menu::page::option selection = _pages[_page_index].options[_pages[_page_index].option_index];
 			if (selection.target) {
 				_page_index = selection.target.value();
@@ -179,51 +140,25 @@ namespace ql {
 		return selections;
 	}
 
-	void digraph_menu::draw(spaces::window::point origin,
-		spaces::window::h_align horizontal_alignment,
-		spaces::window::v_align vertical_alignment) {
-		if (!_render_is_current) { render(); }
-
-		_content_position = origin;
-		switch (horizontal_alignment) {
-			case spaces::window::align_left:
-				break;
-			case spaces::window::align_center:
-				_content_position.x() -= _content_width / 2;
-				break;
-			case spaces::window::align_right:
-				_content_position.x() -= _content_width;
-				break;
-		}
-		switch (vertical_alignment) {
-			case spaces::window::align_top:
-				break;
-			case spaces::window::align_middle:
-				_content_position.y() -= _content_height / 2;
-				break;
-			case spaces::window::align_bottom:
-				_content_position.y() -= _content_height;
-				break;
-		}
+	void digraph_menu::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+		auto const position = get_position();
+		_content_position = position + _top_left_margin;
 
 		// Draw background.
 
-		_background->draw(spaces::window::point{_content_position.x() - _left_margin, _content_position.y() - _top_margin});
+		_background->draw(position);
 
 		// Draw text.
 
 		_page_views[_page_index].title_texture.draw(_content_position);
 
-		constexpr auto unselected_color_vector = colors::black_vector();
-		constexpr auto selected_color_vector = colors::red_vector();
+		auto const unselected_color = sf::Color::Black;
+		auto const selected_color = sf::Color::Red;
 		for (int i = 0; i < static_cast<int>(_page_views[_page_index].option_textures.size()); ++i) {
-			colors::color_vector option_color_vector = _pages[_page_index].option_index == i ? selected_color_vector
-																							 : unselected_color_vector;
+			auto const option_color = _pages[_page_index].option_index == i ? selected_color : unselected_color;
 
-			spaces::window::point option_position{
-				_content_position.x(), _content_position.y() + _title_height + i * _option_height};
-			_page_views[_page_index].option_textures[i].draw(
-				option_position, spaces::window::align_left, spaces::window::align_top, option_color_vector);
+			view::point option_position{_content_position.x(), _content_position.y() + title_height + i * _option_height};
+			_page_views[_page_index].option_textures[i].draw(option_position, option_color);
 		}
 	}
 
@@ -235,46 +170,30 @@ namespace ql {
 	}
 
 	void digraph_menu::render() {
-		constexpr int title_font_size = 48;
 		constexpr int option_font_size = 30;
 
 		static auto title_font_handle = the_font_manager().add("resources/fonts/dumbledor1.ttf", title_font_size);
 		static auto option_font_handle = the_font_manager().add("resources/fonts/dumbledor1.ttf", option_font_size);
 
-		constexpr auto title_color = colors::black();
-
-		static bool first_call = true;
-		if (first_call) {
-			// Initialize these on first call to render() rather than at static initialization since they rely on loaded
-			// textures.
-
-			_top_margin = the_texture_manager()[_u_handle].height();
-			_bottom_margin = the_texture_manager()[_d_handle].height();
-			_left_margin = the_texture_manager()[_l_handle].width();
-			_right_margin = the_texture_manager()[_r_handle].width();
-			_tile_width = the_texture_manager()[_tile_handle].width();
-			_tile_height = the_texture_manager()[_tile_handle].height();
-
-			first_call = false;
-		}
-
-		_content_width = _min_width - _left_margin - _right_margin;
-		_content_height = _min_height - _top_margin - _bottom_margin;
+		// Initialize content size to minimum, then expand as necessary.
+		_content_size = _min_size - _top_left_margin - _bottom_right_margin;
 
 		// Render text.
 
 		_page_views.clear();
 		for (size_t i = 0; i < _pages.size(); ++i) {
-			_content_height = std::max(
-				_content_height, static_cast<int>(_title_height + _pages[_page_index].options.size() * _option_height));
-			std::vector<texture> option_textures;
+			_content_size[1] = std::max(_content_size[1],
+				title_height + static_cast<float>(_pages[_page_index].options.size()) * option_height);
+			std::vector<sf::Text> option_texts;
 			for (size_t j = 0; j < _pages[i].options.size(); ++j) {
-				option_textures.push_back(
-					the_font_manager()[option_font_handle].render(_pages[i].options[j].name.c_str(), colors::white()));
-				_content_width = std::max(_content_width, option_textures[j].width());
+				sf::Text option_text{_pages[i].options[j].name, fonts.dumbledor1, 30};
+				option_text.setFillColor(sf::Color::White);
+				option_texts.push_back(option_text);
+				_content_size[0] = std::max(_content_size[0], view::px{option_texts.back().getLocalBounds().width});
 			}
-			_page_views.emplace_back(the_font_manager()[title_font_handle].render(_pages[i].title.c_str(), title_color),
-				std::move(option_textures));
+			sf::Text title_text{_pages[i].title, fonts.dumbledor1, 48};
+			title_text.setFillColor(sf::Color::Black);
+			_page_views.emplace_back(title_text, std::move(option_texts));
 		}
 
 		int const width_remainder = _content_width % _tile_width;

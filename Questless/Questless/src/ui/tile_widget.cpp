@@ -7,7 +7,7 @@
 #include "animation/animation.hpp"
 
 namespace ql {
-	void tile_widget::update(sec elapsed_time, input_manager& im) {
+	void tile_widget::update(sec elapsed_time, std::vector<sf::Event>& events) {
 		_ani->update(elapsed_time);
 	}
 

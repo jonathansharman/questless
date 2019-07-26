@@ -18,7 +18,7 @@ namespace ql {
 		, _title{make_title{window, font, title}}
 		, _prompt{make_prompt{window, font, prompt}} {}
 
-	void vector_dialog::update(sec elapsed_time, input_manager& im) {
+	void vector_dialog::update(sec elapsed_time, std::vector<sf::Event>& events) {
 		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) {
 			_promise.set_value(std::nullopt);
 			return;

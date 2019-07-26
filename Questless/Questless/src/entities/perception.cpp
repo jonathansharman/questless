@@ -19,7 +19,7 @@ namespace ql {
 			vision_sources.begin(),
 			vision_sources.end(),
 			[](stats::vision const& v1, stats::vision const& v2) { return v1.acuity < v2.acuity; });
-		return max_element->acuity / perception_loss_per_span;
+		return max_element->acuity.value() / perception_loss_per_span;
 	}
 
 	//! Determines whether @p target is in the field of vision specified by @p location and @p direction.
@@ -61,7 +61,7 @@ namespace ql {
 		auto const& body = reg.get<ql::body>(perceptor_id);
 
 		// Check that the perceptor has at least one source of vision.
-		if (body.stats.a.vision_sources.empty()) { return 0_perception; }
+		if (body.stats.a.vision_sources.cur.empty()) { return 0_perception; }
 
 		auto const location = reg.get<ql::location>(perceptor_id);
 
@@ -69,7 +69,7 @@ namespace ql {
 		if (!inside_field_of_vision(location, body.cond.direction, target)) { return 0_perception; }
 
 		// Check that the target within the maximum possible visual range.
-		if ((target - location.coords).length() < max_visual_range(body.stats.a.vision_sources)) {
+		if ((target - location.coords).length() < max_visual_range(body.stats.a.vision_sources.cur)) {
 			return 0_perception;
 		}
 
@@ -78,8 +78,8 @@ namespace ql {
 		// Find the best possible visual perception, factoring in the light level at the target.
 		auto const illuminance = region.illuminance(target);
 		auto const best_light_adjusted_perception = std::reduce( //
-			body.stats.a.vision_sources.begin(),
-			body.stats.a.vision_sources.end(),
+			body.stats.a.vision_sources.cur.begin(),
+			body.stats.a.vision_sources.cur.end(),
 			0_perception,
 			[&](perception acc, stats::vision v) { return std::max(acc, light_adjusted_perception(v, illuminance)); });
 
@@ -89,7 +89,7 @@ namespace ql {
 
 		// Account for occlusions between the perceptor and the target.
 		double const occlusion = region.occlusion(location.coords, target);
-		auto const best_perception = (1.0 - occlusion) * best_distance_adjusted_perception;
+		auto const best_perception = cancel::quantity_cast<perception>((1.0 - occlusion) * best_distance_adjusted_perception);
 
 		return best_perception;
 	}

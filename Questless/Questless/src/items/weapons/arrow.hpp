@@ -9,20 +9,7 @@
 namespace ql {
 	struct arrow {
 		ent id;
-
-		std::string name() const final {
-			return "Arrow";
-		}
-
-		ql::mass mass() const final {
-			return 0.1_mass;
-		}
-
-		std::vector<uptr<action>> actions() final {
-			std::vector<uptr<action>> actions;
-			actions.push_back(drop::make(*this));
-			actions.push_back(toss::make(*this));
-			return actions;
-		}
 	};
+
+	ent make_arrow(ent id);
 }

@@ -11,10 +11,11 @@
 #include "magic/spell.hpp"
 
 namespace ql {
-	void make_gatestone(ent id, magic::color color, dynamic_nonnegative<mana> charge, dynamic_nonnegative<tick> cooldown) {
+	ent make_gatestone(ent id, magic::color color, dynamic_nonnegative<mana> charge, dynamic_nonnegative<tick> cooldown) {
 		make_item(id, 1.0_mass);
-		make_equipment(id, std::nullopt, {{body_part::tag::hand, std::nullopt}}, 10_tick, 10_tick);
+		make_equipment(id, std::nullopt, {{body_part::tag::hand, std::nullopt}}, 10_ap, 10_ap);
 		reg.assign<gatestone>(id, id, color, charge, cooldown);
+		return id;
 	}
 
 	void gatestone::update(tick elapsed) {

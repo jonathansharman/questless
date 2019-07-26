@@ -4,8 +4,7 @@
 
 #include "hud.hpp"
 
-#include "entities/beings/being.hpp"
-#include "entities/beings/conditions.hpp"
+#include "entities/beings/body.hpp"
 #include "items/equipment.hpp"
 #include "items/weapons/bow.hpp"
 #include "items/weapons/quarterstaff.hpp"
@@ -17,11 +16,15 @@ namespace ql {
 		sf::Vector2i const item_icon_size{55, 55};
 	}
 
-	sf::FloatRect hud::get_bounding_box() const {
-		return {sf::Vector2f{_window.getPosition()}, sf::Vector2f{_window.getSize()}};
+	view::vector hud::get_local_offset() const {
+		return {};
 	}
 
-	void hud::update(sec elapsed_time, input_manager& im) {
+	view::vector hud::get_size() const {
+		return parent->get_size();
+	}
+
+	void hud::update(sec elapsed_time, std::vector<sf::Event>& events) {
 		body const& player_body = reg.get<body>(_player_id);
 		update_displayed_items(_player_id);
 
@@ -32,21 +35,7 @@ namespace ql {
 		}
 
 		if (_inv_open) {
-			int row = (sf::Mouse::getPosition().y - _inv_layout.top) / item_icon_size.y;
-			int column = (sf::Mouse::getPosition().x - _inv_layout.left) / item_icon_size.x;
-			int index = row * _inv_column_count + column;
-
-			bool row_in_bounds = _inv_layout.top <= sf::Mouse::getPosition().y && row < _inv_row_count;
-			bool column_in_bounds = _inv_layout.left <= sf::Mouse::getPosition().x && column < _inv_column_count;
-			bool index_in_bounds = 0 <= index && index < static_cast<int>(_displayed_items.size());
-
-			if (row_in_bounds && column_in_bounds && index_in_bounds) {
-				for (std::size_t key_index = 0; key_index < 10; ++key_index) {
-					if (im.pressed(input_manager::index_to_num_key(key_index))) {
-						_hotbar[key_index] = _displayed_items[index];
-					}
-				}
-			}
+			... update the inventory.
 		} else {
 			//! @todo Move the "move" and "use" functions.
 			auto move = [&](region_tile::direction direction, bool strafe) {
@@ -227,48 +216,7 @@ namespace ql {
 			}
 
 			// Draw the inventory if it's open.
-			if (_inv_open) {
-				static constexpr float inv_width_pct = 0.7f;
-				static constexpr float inv_height_pct = 0.7f;
-
-				// Update the inventory layout if the window was resized.
-				if (im.window_resized()) {
-					// Calculate number of visible inventory rows and columns.
-					_inv_row_count = std::max(1l, lround(inv_height_pct * the_window().getSize().y / item_icon_size.y));
-					_inv_column_count = std::max(1l, lround(inv_width_pct * the_window().getSize().x / item_icon_size.x));
-
-					_inv_layout = spaces::window::box{the_window().getSize() / 2,
-						spaces::window::vector{_inv_column_count * item_icon_size.x, _inv_row_count * item_icon_size.y},
-						{spaces::window::align_center, spaces::window::align_middle}};
-				}
-
-				the_renderer().draw_box(_inv_layout, 1, sf::Color::Black, sf::Color{128, 128, 128});
-
-				{ // Draw selection.
-					auto const mouse_pos = sf::Mouse::getPosition();
-					int const row = (mouse_pos.y - _inv_layout.top) / item_icon_size.y;
-					int const column = (x_mouse - _inv_layout.left) / item_icon_size.x;
-					if (_inv_layout.top <= y_mouse && row < _inv_row_count && _inv_layout.left <= x_mouse &&
-						column < _inv_column_count) {
-						the_renderer().draw_box(
-							spaces::window::box{spaces::window::point{_inv_layout.left + item_icon_size.x * column,
-													_inv_layout.top + item_icon_size.y * row},
-								item_icon_size},
-							1,
-							sf::Color::Black,
-							sf::Color{192, 192, 192});
-					}
-				}
-
-				// Draw item icons.
-				for (size_t i = 0; i < _displayed_items.size(); ++i) {
-					int row = i / _inv_column_count;
-					int column = i % _inv_column_count;
-					item_animator texturer{spaces::window::point{
-						_inv_layout.left + column * item_icon_size.x, _inv_layout.top + row * item_icon_size.y}};
-					_displayed_items[i].get().accept(texturer);
-				}
-			}
+			if (_inv_open) { ... draw the inventory. }
 		}
 	}
 

@@ -33,98 +33,88 @@ namespace cancel {
 		//! Explicitly move-constructs a quantity from a value.
 		explicit constexpr quantity(rep&& value) noexcept(std::is_nothrow_move_constructible_v<rep>) : value{std::move(value)} {}
 
-		//! Copy-constructs a quantity from an object of the same representation and unit.
-		template <typename ThatUnit>
-		constexpr quantity(quantity<rep, ThatUnit> const& that) noexcept(std::is_nothrow_copy_constructible_v<rep>) : value{that.value} {
+		//! Copy-constructs a quantity from an object of compatible representation and the same unit.
+		template <typename ThatRep, typename ThatUnit>
+		constexpr quantity(quantity<ThatRep, ThatUnit> const& that) noexcept(std::is_nothrow_copy_constructible_v<rep>) : value{that.value} {
 			static_assert(detail::is_same_unit_v<unit, ThatUnit>, "Attempted to initialize from quantity of a different unit.");
 		};
 
-		//! Move-constructs a quantity from an object of the same representation and unit.
-		template <typename ThatUnit>
-		constexpr quantity(quantity<rep, ThatUnit>&& that) noexcept(std::is_nothrow_move_constructible_v<rep>) : value{std::move(that.value)} {
+		//! Move-constructs a quantity from an object of compatible representation and the same unit.
+		template <typename ThatRep, typename ThatUnit>
+		constexpr quantity(quantity<ThatRep, ThatUnit>&& that) noexcept(std::is_nothrow_move_constructible_v<rep>) : value{std::move(that.value)} {
 			static_assert(detail::is_same_unit_v<unit, ThatUnit>, "Attempted to initialize from quantity of a different unit.");
 		};
 
-		//! Copy-assign from an object of the same representation and unit.
+		//! Copy-assign from an object of compatible representation and the same unit.
 		template <typename ThatRep, typename ThatUnit>
 		constexpr auto& operator =(quantity<ThatRep, ThatUnit> const& that) noexcept(std::is_nothrow_copy_assignable_v<rep>) {
-			static_assert(std::is_convertible_v<ThatRep, rep>, "Attempted to assign from a quantity with an incompatible representation.");
 			static_assert(detail::is_same_unit_v<unit, ThatUnit>, "Attempted to assign from a quantity of a different unit.");
-			value = static_cast<rep>(that.value);
+			value = rep{that.value};
 			return *this;
 		};
 
-		//! Move-assign from an object of the same representation and unit.
+		//! Move-assign from an object of compatible representation and the same unit.
 		template <typename ThatRep, typename ThatUnit>
 		constexpr auto& operator =(quantity<ThatRep, ThatUnit>&& that) noexcept(std::is_nothrow_move_assignable_v<rep>) {
-			static_assert(std::is_convertible_v<ThatRep, rep>, "Attempted to assign from a quantity with an incompatible representation.");
 			static_assert(detail::is_same_unit_v<unit, ThatUnit>, "Attempted to assign from a quantity of a different unit.");
-			value = std::move(static_cast<rep>(that.value));
+			value = rep{std::move(that.value)};
 			return *this;
 		};
 
 		//! Add a quantity of compatible representation and the same unit.
 		template <typename ThatRep, typename ThatUnit>
 		constexpr auto& operator +=(quantity<ThatRep, ThatUnit> const& that) {
-			static_assert(std::is_convertible_v<ThatRep, rep>, "Attempted to add a quantity with an incompatible representation.");
 			static_assert(detail::is_same_unit_v<unit, ThatUnit>, "Attempted to add a quantity of a different unit.");
-			value += static_cast<rep>(that.value);
+			value += rep{that.value};
 			return *this;
 		}
 
 		//! Subtract a quantity of compatible representation and the same unit.
 		template <typename ThatRep, typename ThatUnit>
 		constexpr auto& operator -=(quantity<ThatRep, ThatUnit> const& that) {
-			static_assert(std::is_convertible_v<ThatRep, rep>, "Attempted to substract a quantity with an incompatible representation.");
 			static_assert(detail::is_same_unit_v<unit, ThatUnit>, "Attempted to subtract a quantity of a different unit.");
-			value -= static_cast<rep>(that.value);
+			value -= rep{that.value};
 			return *this;
 		}
 
 		//! Multiply by a scalar.
 		template <typename K>
 		constexpr auto& operator *=(K const& k) {
-			static_assert(std::is_convertible_v<K, rep>, "Argument is not convertible to quantity's representation type.");
-			value *= static_cast<rep>(k);
+			value *= rep{k};
 			return *this;
 		}
 		//! Multiply by a unitless quantity.
 		template <typename K>
 		constexpr auto& operator *=(quantity<K, unit_t<>> const& k) {
-			static_assert(std::is_convertible_v<K, rep>, "Argument is not convertible to quantity's representation type.");
-			value *= static_cast<rep>(k.value);
+			value *= rep{k.value};
 			return *this;
 		}
 
 		//! Divide by a scalar.
 		template <typename K>
 		constexpr auto& operator /=(K const& k) {
-			static_assert(std::is_convertible_v<K, rep>, "Argument is not convertible to quantity's representation type.");
-			value /= static_cast<rep>(k);
+			value /= rep{k};
 			return *this;
 		}
 		//! Divide by a unitless quantity.
 		template <typename K>
 		constexpr auto& operator /=(quantity<K, unit_t<>> const& k) {
-			static_assert(std::is_convertible_v<K, rep>, "Argument is not convertible to quantity's representation type.");
-			value /= static_cast<rep>(k.value);
+			value /= rep{k.value};
 			return *this;
 		}
 
 		//! Mod by a scalar.
 		template <typename K>
 		constexpr auto& operator %=(K const& k) {
-			static_assert(std::is_convertible_v<K, rep>, "Argument is not convertible to quantity's representation type.");
-			value %= static_cast<rep>(k);
+			value %= rep{k};
 			return *this;
 		}
 
 		//! Mod by a quantity of compatible representation and the same unit.
 		template <typename ThatRep, typename ThatUnit>
 		constexpr auto& operator %=(quantity<ThatRep, ThatUnit> const& that) const {
-			static_assert(std::is_convertible_v<ThatRep, rep>, "Attempted to mod by a quantity with an incompatible representation.");
 			static_assert(detail::is_same_unit_v<unit, ThatUnit>, "Attempted to mod by a quantity of a different unit.");
-			value %= static_cast<rep>(that.value);
+			value %= rep{that.value};
 			return *this;
 		}
 

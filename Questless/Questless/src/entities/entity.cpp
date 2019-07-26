@@ -8,8 +8,8 @@
 
 namespace ql {
 	//! Makes @p id an entity: a being or object that can exist in the world.
-	void make_entity(ent id, location location, transparency transparency) {
+	ent make_entity(ent id, location location) {
 		reg.assign<ql::location>(id, location);
-		reg.assign<ql::transparency>(id, transparency);
+		return id;
 	}
 }

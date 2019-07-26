@@ -32,9 +32,6 @@ namespace ql {
 		//! @param name The name of the new region.
 		region(std::string region_name);
 
-		//! Loads the region with filename @p save_name from disk.
-		region(char const* save_name, std::string region_name);
-
 		//! The region's name.
 		std::string name() const {
 			return _name;
@@ -50,8 +47,8 @@ namespace ql {
 		//! The ID of the entity at @p region_tile_coords or nullopt if none.
 		std::optional<ent> entity_id_at(region_tile::point region_tile_coords) const;
 
-		//! Spawns the player-controlled being @p player_being_id in the region at an arbitrary location.
-		void spawn_player(ent player_being_id);
+		//! Finds a suitable spawn location.
+		location get_spawn_location();
 
 		//! Adds @p entity_id to the region, setting its coordinates to @p region_tile_coords.
 		[[nodiscard]] bool try_add(ent entity_id, region_tile::point region_tile_coords);
@@ -193,4 +190,6 @@ namespace ql {
 			return it == _section_map.end() ? nullptr : const_cast<section*>(&it->second);
 		}
 	};
+
+	ent make_region(ent id, std::string name);
 }

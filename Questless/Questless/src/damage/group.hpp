@@ -33,32 +33,31 @@ namespace ql::dmg {
 		//! Constructs a damage group from a single damage component.
 		//! @param part The single component of this damage group.
 		//! @param bypass The amount of coverage this group can bypass.
-		template <typename Damage>
-		group(Damage damage_part, coverage bypass = 0.0_coverage) : group{damage{damage_part}, bypass} {}
+		group(damage damage, coverage bypass = 0.0_coverage) : parts{{damage}}, bypass{bypass} {}
 
-		friend group operator*(group const& d, double k) {
+		friend group operator*(group const& d, int k) {
 			group product = d;
 			product *= k;
 			return product;
 		}
-		friend group operator*(double k, group const& d) {
+		friend group operator*(int k, group const& d) {
 			group product = d;
 			product *= k;
 			return product;
 		}
-		friend group operator/(group const& d, double k) {
+		friend group operator/(group const& d, int k) {
 			group quotient = d;
 			quotient /= k;
 			return quotient;
 		}
 
-		group& operator*=(double k) {
+		group& operator*=(int k) {
 			for (auto& part : parts) {
 				std::visit([k](auto& part) { part *= k; }, part);
 			}
 			return *this;
 		}
-		group& operator/=(double k) {
+		group& operator/=(int k) {
 			for (auto& part : parts) {
 				std::visit([k](auto& part) { part /= k; }, part);
 			}
@@ -67,9 +66,5 @@ namespace ql::dmg {
 
 		//! Damage group adjusted after going through @p armor.
 		group against(armor const& armor) const;
-
-	private:
-		//! Helper for constructing a damage group from a single damage part and optional protection bypass.
-		group(damage damage_part, coverage bypass = 0.0_coverage) : parts{{damage_part}}, bypass{bypass} {}
 	};
 }
