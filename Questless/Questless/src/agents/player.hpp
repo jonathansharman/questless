@@ -4,8 +4,9 @@
 
 #pragma once
 
-#include "effects/effect.hpp"
-#include "ui/dialog/dialog.hpp"
+#include "reg.hpp"
+
+#include <future>
 
 namespace ql {
 	namespace effects {

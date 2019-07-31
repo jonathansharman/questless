@@ -6,12 +6,13 @@
 
 #include "widget.hpp"
 
+#include "items/inventory.hpp"
+
 namespace ql {
 	//! A UI element.
 	struct inventory_widget : widget {
-		inventory_widget(widget& parent) : widget{&parent} {}
-
-		view::vector get_local_offset() const final;
+		//! @param inventory The inventory this widget will be used to interact with.
+		inventory_widget(widget& parent, inventory& inventory);
 
 		view::vector get_size() const final;
 
@@ -20,9 +21,8 @@ namespace ql {
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 
 	private:
-		bool _inv_open = false;
+		inventory& _inv;
 		int _inv_page = 0; //! @todo Replace with filters and a scrollable view.
-		sf::IntRect _inv_layout;
 		int _inv_row_count;
 		int _inv_column_count;
 		std::vector<ent> _displayed_items;

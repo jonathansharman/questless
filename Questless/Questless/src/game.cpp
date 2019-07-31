@@ -35,7 +35,7 @@ namespace ql {
 
 		// Initialize game state.
 
-		_scene = umake<scenes::splash>(_window, _fonts);
+		_scene = umake<scenes::splash>(view::vector_from_sfml(_window.getSize()), _fonts);
 	}
 
 	game::~game() = default;
@@ -44,8 +44,11 @@ namespace ql {
 		bool running = true;
 		while (running) {
 			match(
-				_scene->update(_im), //
-				[&](scenes::continue_scene) { _window.draw(*_scene); },
+				_scene->update(_window),
+				[&](scenes::continue_scene) {
+					_window.draw(*_scene);
+					_window.display();
+				},
 				[&](scenes::switch_scene ss) { _scene = std::move(ss.new_scene); },
 				[&](scenes::game_over) { running = false; });
 		}

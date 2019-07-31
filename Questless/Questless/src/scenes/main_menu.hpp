@@ -6,18 +6,16 @@
 
 #include "scene.hpp"
 
-#include "ui/digraph_menu.hpp"
-#include "ui/layout.hpp"
+#include "ui/window_widget.hpp"
 #include "utility/reference.hpp"
 
 namespace ql::scenes {
 	//! The scene for the main menu.
 	struct main_menu : scene {
-		main_menu(sf::RenderWindow& window, rsrc::fonts const& fonts);
+		main_menu(view::vector window_size, rsrc::fonts const& fonts);
 
 	private:
-		layout _layout;
-		digraph_menu _main_menu;
+		view::vector _window_size;
 
 		update_result scene_subupdate(sec elapsed_time, std::vector<sf::Event>& events) final;
 

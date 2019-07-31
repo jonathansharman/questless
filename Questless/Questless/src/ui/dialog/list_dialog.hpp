@@ -18,7 +18,8 @@ namespace ql {
 
 	//! Retrieves the player's choice from a list of options.
 	struct list_dialog : dialog<std::tuple<sf::String, std::function<void()>>> {
-		list_dialog(sf::Window const& window,
+		list_dialog( //
+			widget& parent,
 			rsrc::fonts const& fonts,
 			sf::Vector2f origin,
 			sf::String title,

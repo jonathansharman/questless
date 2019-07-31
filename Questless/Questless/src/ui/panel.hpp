@@ -6,18 +6,18 @@
 
 #include "widget.hpp"
 
-#include "utility/reference.hpp"
-
 namespace ql {
-	struct animation;
+	//! Holds any number of elements.
+	struct panel : widget {
+		//! The widgets contained in this panel.
+		std::vector<widget*> children;
 
-	//! Allows interaction with a being in the world.
-	struct being_widget : widget {
+		panel(widget& parent);
+
+		view::vector get_size() const final;
+
 		void update(sec elapsed_time, std::vector<sf::Event>& events) final;
 
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
-
-	private:
-		uptr<animation> _ani;
 	};
 }

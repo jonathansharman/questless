@@ -11,8 +11,10 @@
 namespace ql {
 	struct animation;
 
-	//! Allows interaction with an object in the world.
-	struct object_widget : widget {
+	//! Allows interaction with an entity in the world.
+	struct entity_widget : widget {
+		view::vector get_size() const final;
+
 		void update(sec elapsed_time, std::vector<sf::Event>& events) final;
 
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;

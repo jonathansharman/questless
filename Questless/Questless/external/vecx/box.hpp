@@ -51,13 +51,7 @@ namespace vecx {
 			return *this;
 		}
 
-		constexpr bool operator ==(box const& that) const {
-			return position == that.position && size == that.size;
-		};
-
-		constexpr bool operator !=(box const& that) const {
-			return position != that.position || size != that.size;
-		}
+		constexpr bool operator ==(box const& that) const = default;
 
 		//! Creates a box of size @p size at @p position with alignment @p alignment.
 		//! @param position The position of the box relative to its origin.

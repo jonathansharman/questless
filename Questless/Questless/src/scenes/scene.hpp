@@ -17,7 +17,6 @@ namespace ql {
 	namespace rsrc {
 		struct fonts;
 	}
-	struct input_manager;
 
 	namespace scenes {
 		struct scene;
@@ -32,13 +31,15 @@ namespace ql {
 
 		//! A scene in the game.
 		struct scene : public sf::Drawable {
-			//! @param window The window in which this scene will be drawn.
-			scene(sf::RenderWindow& window, rsrc::fonts const& fonts);
+			rsrc::fonts const& fonts;
+
+			scene(rsrc::fonts const& fonts);
 
 			virtual ~scene() = default;
 
-			//! Advances this scene according to the amount of time that has passed since the last update.
-			update_result update();
+			//! Advances this scene by one frame.
+			//! @param window The window containing this scene.
+			update_result update(sf::Window& window);
 
 			void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 
@@ -47,9 +48,10 @@ namespace ql {
 				return _start_time;
 			}
 
-		protected:
-			sf::RenderWindow& _window;
-			rsrc::fonts const& _fonts;
+			//! The length of time the game has been in this scene.
+			sec get_time_in_state() const {
+				return to_sec(clock::now() - _start_time);
+			}
 
 		private:
 			//! When the scene started.

@@ -15,8 +15,6 @@
 #include "utility/random.hpp"
 #include "utility/utility.hpp"
 
-#include <filesystem>
-#include <fstream>
 #include <limits.h>
 #include <sstream>
 
@@ -186,62 +184,28 @@ namespace ql {
 
 				src_section.remove(entity_id);
 				location.coords = region_tile_coords;
-				return dst_section->try_add(being);
+				return dst_section->try_add(entity_id);
 			} else {
 				//! @todo Need to deal with null destination case.
 				return false;
 			}
 		} else {
-			if (src_section.being_id(region_tile_coords)) {
-				// Collision with another being. Prevent movement.
+			if (src_section.entity_id_at(region_tile_coords)) {
+				// Collision with another entity. Prevent movement.
 				return false;
 			}
-			if (auto object_id = src_section.object_id(region_tile_coords)) {
-				if (the_game().objects.cref(*object_id).blocks_movement()) {
-					// Collision with an obstructing object. Prevent movement.
-					return false;
-				}
-			}
-			src_section.remove(being);
-			being.location.coords = region_tile_coords;
-			return src_section.try_add(being);
+			src_section.remove(entity_id);
+			location.coords = region_tile_coords;
+			return src_section.try_add(entity_id);
 		}
 		return true;
 	}
 
-	bool region::try_move(ql::object& object, region_tile::point region_tile_coords) {
-		if (section* src_section = containing_section(object.location.coords)) {
-			section* dst_section = containing_section(region_tile_coords);
-			if (dst_section != src_section) {
-				if (dst_section != nullptr) {
-					if (dst_section->being_id(region_tile_coords) || dst_section->object_id(region_tile_coords)) {
-						// Collision. Prevent movement.
-						return false;
-					}
-					src_section->remove(object);
-					object.location.coords = region_tile_coords;
-					return dst_section->try_add(object);
-				} else {
-					//! @todo Need to deal with null destination case.
-					return false;
-				}
-			} else {
-				if (src_section->object_id(region_tile_coords)) {
-					// Collision. Prevent movement.
-					return false;
-				}
-				src_section->remove(object);
-				object.location.coords = region_tile_coords;
-				return src_section->try_add(object);
-			}
-		}
-	}
-
 	void region::remove(ent entity_id) {
-		if (section* section = containing_section(being.location.coords)) {
-			being.location.region = nullptr;
-			remove_from_turn_queue(being);
-			section->remove(being);
+		auto& location = reg.get<ql::location>(entity_id);
+		if (section* section = containing_section(location.coords)) {
+			remove_from_turn_queue(entity_id);
+			section->remove(entity_id);
 		}
 	}
 
@@ -284,6 +248,16 @@ namespace ql {
 		}
 	}
 
+	std::optional<ent> tile_at(region_tile::point region_tile_coords) {
+		section* section = containing_section(region_tile_coords);
+		if (section) {
+			section_tile::point section_tile_coords = section::section_tile_coords(region_tile_coords);
+			return section->tile_id_at(section_tile_coords);
+		} else {
+			return std::nullopt;
+		}
+	}
+
 	lum region::illuminance(region_tile::point region_tile_coords) const {
 		lum result = _ambient_illuminance;
 		if (section const* s = containing_section(region_tile_coords)) {
@@ -295,7 +269,11 @@ namespace ql {
 	}
 
 	ql::temperature region::temperature(region_tile::point region_tile_coords) const {
-		return tile_at(region_tile_coords)->temperature_offset;
+		if (auto tile_id = tile_at(region_tile_coords)) {
+			return reg.get<tile>(*tile_id).temperature_offset;
+		} else {
+			return 0_temp;
+		}
 	}
 
 	double region::occlusion(region_tile::point start, region_tile::point end) const {
@@ -309,29 +287,11 @@ namespace ql {
 	}
 
 	void region::update(tick elapsed) {
-		// Advance local time by one time unit per update.
 		_time += elapsed;
 		_time_of_day = get_time_of_day();
 		_period_of_day = get_period_of_day();
 
 		_ambient_illuminance = get_ambient_illuminance();
-
-		std::vector<id<being>> beings_to_update;
-		std::vector<id<object>> objects_to_update;
-		for_each_loaded_section([&](section& section) {
-			for (being& being : section.beings) {
-				beings_to_update.push_back(being.id);
-			}
-			for (object& object : section.objects) {
-				objects_to_update.push_back(object.id);
-			}
-		});
-		for (id<being> being_id : beings_to_update) {
-			if (being* being = the_game().beings.ptr(being_id)) { being->update(elapsed); }
-		}
-		for (id<object> object_id : objects_to_update) {
-			if (object* object = the_game().objects.ptr(object_id)) { object->update(elapsed); }
-		}
 	}
 
 	void region::add_effect(effects::effect const& effect) {
@@ -407,24 +367,6 @@ namespace ql {
 				region_section::point section_coords{q, r};
 				if (section* s = section_at(section_coords)) { f(*s); }
 			}
-		}
-	}
-
-	being* region::being_helper(region_tile::point region_tile_coords) const {
-		if (auto o_id = being_id_at(region_tile_coords)) {
-			return the_game().beings.ptr(*o_id);
-		} else {
-			return nullptr;
-		}
-	}
-
-	std::optional<ent> region::tile_helper(region_tile::point region_tile_coords) const {
-		section* section = containing_section_helper(region_tile_coords);
-		if (section) {
-			section_tile::point section_tile_coords = section::section_tile_coords(region_tile_coords);
-			return &section->tile_at(section_tile_coords);
-		} else {
-			return nullptr;
 		}
 	}
 

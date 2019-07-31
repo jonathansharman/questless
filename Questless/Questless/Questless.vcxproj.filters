@@ -210,9 +210,6 @@
     <ClInclude Include="src\ui\qte\shock.hpp">
       <Filter>src\ui\qte</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\digraph_menu.hpp">
-      <Filter>src\ui</Filter>
-    </ClInclude>
     <ClInclude Include="src\ui\hud.hpp">
       <Filter>src\ui</Filter>
     </ClInclude>
@@ -384,9 +381,6 @@
     <ClInclude Include="src\scenes\main_menu.hpp">
       <Filter>src\scenes</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\input_manager.hpp">
-      <Filter>src\ui</Filter>
-    </ClInclude>
     <ClInclude Include="src\magic\telescope.hpp">
       <Filter>src\magic</Filter>
     </ClInclude>
@@ -403,9 +397,6 @@
       <Filter>src\rsrc</Filter>
     </ClInclude>
     <ClInclude Include="src\rsrc\utility.hpp">
-      <Filter>src\rsrc</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rsrc\world_renderer.hpp">
       <Filter>src\rsrc</Filter>
     </ClInclude>
     <ClInclude Include="src\rsrc\entity.hpp">
@@ -437,12 +428,6 @@
     </ClInclude>
     <ClInclude Include="src\rsrc\particle.hpp">
       <Filter>src\rsrc</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\being_widget.hpp">
-      <Filter>src\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\object_widget.hpp">
-      <Filter>src\ui</Filter>
     </ClInclude>
     <ClInclude Include="src\ui\tile_widget.hpp">
       <Filter>src\ui</Filter>
@@ -573,7 +558,25 @@
     <ClInclude Include="src\rsrc\menu.hpp">
       <Filter>src\rsrc</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\layout.hpp">
+    <ClInclude Include="src\ui\window_widget.hpp">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\entity_widget.hpp">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\hotbar.hpp">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\split_panel.hpp">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rsrc\world_widget.hpp">
+      <Filter>src\rsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rsrc\hud.hpp">
+      <Filter>src\rsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\panel.hpp">
       <Filter>src\ui</Filter>
     </ClInclude>
   </ItemGroup>
@@ -665,9 +668,6 @@
     <ClCompile Include="src\magic\teleport.cpp">
       <Filter>src\magic</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\digraph_menu.cpp">
-      <Filter>src\ui</Filter>
-    </ClCompile>
     <ClCompile Include="src\ui\hud.cpp">
       <Filter>src\ui</Filter>
     </ClCompile>
@@ -737,9 +737,6 @@
     <ClCompile Include="src\scenes\playing.cpp">
       <Filter>src\scenes</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\input_manager.cpp">
-      <Filter>src\ui</Filter>
-    </ClCompile>
     <ClCompile Include="src\magic\telescope.cpp">
       <Filter>src\magic</Filter>
     </ClCompile>
@@ -753,12 +750,6 @@
       <Filter>src\ui</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\label.cpp">
-      <Filter>src\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\being_widget.cpp">
-      <Filter>src\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\object_widget.cpp">
       <Filter>src\ui</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\tile_widget.cpp">
@@ -831,6 +822,18 @@
       <Filter>src\world</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\inventory_widget.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\entity_widget.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\hotbar.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\split_panel.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\panel.cpp">
       <Filter>src\ui</Filter>
     </ClCompile>
   </ItemGroup>

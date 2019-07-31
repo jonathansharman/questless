@@ -54,29 +54,20 @@ namespace ql {
 
 		// Comparison Operators
 
-		friend auto operator<=>(Derived const& d1, Derived const& d2) {
-			return d1.value() <=> d2.value();
+		auto operator<=>(Derived const& that) const {
+			return value() <=> that.value();
 		}
-		friend auto operator==(Derived const& d1, Derived const& d2) {
-			return d1.value() <=> d2.value();
-		}
-
-		template <typename OtherValueType>
-		friend auto operator<=>(Derived const& d, OtherValueType const& v) {
-			return d.value() <=> v;
-		}
-		template <typename OtherValueType>
-		friend auto operator==(Derived const& d, OtherValueType const& v) {
-			return d.value() == v;
+		auto operator==(Derived const& that) const {
+			return value() <=> that.value();
 		}
 
 		template <typename OtherValueType>
-		friend auto operator<=>(OtherValueType const& v, Derived const& d) {
-			return v <=> d.value();
+		auto operator<=>(OtherValueType const& v) const {
+			return value() <=> v;
 		}
 		template <typename OtherValueType>
-		friend auto operator==(OtherValueType const& v, Derived const& d) {
-			return v == d.value();
+		auto operator==(OtherValueType const& v) const {
+			return value() == v;
 		}
 
 		// Arithmetic Operators

@@ -13,6 +13,8 @@ namespace ql {
 
 	//! Allows interaction with a tile in the world.
 	struct tile_widget : widget {
+		view::vector get_size() const final;
+
 		void update(sec elapsed_time, std::vector<sf::Event>& events) final;
 
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;

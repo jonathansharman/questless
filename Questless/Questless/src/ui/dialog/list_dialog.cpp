@@ -7,17 +7,15 @@
 #include "rsrc/fonts.hpp"
 
 namespace ql {
-	list_dialog(sf::Window const& window,
+	list_dialog::list_dialog( //
+		widget& parent,
 		rsrc::fonts const& fonts,
 		sf::Vector2f origin,
 		sf::String title,
 		std::vector<std::tuple<sf::String, std::function<void()>>> options)
-		: dialog{window}
+		: dialog{parent}
 		, _title{make_title(window, title, sf::Color::Black)} //
 	{
-		//! @todo Replace with precondition.
-		assert(!option_texts.empty());
-
 		sf::Vector2f const padding{10, 10};
 
 		_bg.setPosition(origin);
@@ -61,10 +59,13 @@ namespace ql {
 	}
 
 	void list_dialog::update(sec /*elapsed_time*/, std::vector<sf::Event>& events) {
-		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) {
-			_cont(std::nullopt);
-			close();
-			return;
+		for (auto event : events) {
+			if (event.type == sf::Event::KeyPressed) {
+				if (event.key.code == sf::Keyboard::Backspace || sf::Keyboard::Escape) {
+					_promise.set_value(std::nullopt);
+					return;
+				}
+			}
 		}
 
 		int const option_count = static_cast<int>(_options.size());
@@ -113,7 +114,7 @@ namespace ql {
 		target.draw(_title);
 		// Draw options.
 		for (auto const& option : _options) {
-			target.draw(option);
+			target.draw(option, states);
 		}
 	}
 }

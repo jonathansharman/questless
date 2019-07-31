@@ -4,7 +4,7 @@
 
 #include "telescope.hpp"
 
-#include "effects/telescope.hpp"
+#include "effects/effect.hpp"
 #include "entities/beings/being.hpp"
 #include "entities/beings/body_status.hpp"
 #include "items/magic/gatestone.hpp"

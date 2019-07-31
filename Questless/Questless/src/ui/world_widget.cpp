@@ -17,9 +17,7 @@
 #include "entities/beings/being.hpp"
 #include "entities/beings/world_view.hpp"
 #include "entities/entity.hpp"
-#include "rsrc/entity.hpp"
 #include "rsrc/fonts.hpp"
-#include "rsrc/tile.hpp"
 #include "utility/unreachable.hpp"
 #include "utility/utility.hpp"
 #include "utility/visitation.hpp"
@@ -27,29 +25,19 @@
 #include "world/tile.hpp"
 
 namespace ql {
-	world_widget::world_widget( //
-		world_view const& world_view,
-		rsrc::world_renderer resources,
-		rsrc::entity const& entity_resources,
-		rsrc::fonts const& fonts,
-		rsrc::tile const& tile_resources,
-		rsrc::particle const& particle_resources)
-		: _resources{resources}
-		, _entity_resources{entity_resources}
-		, _fonts{fonts}
-		, _tile_resources{tile_resources}
-		, _particle_resources{particle_resources}
-		, _world_view{world_view} //
-	{}
+	world_widget::world_widget(widget& parent, rsrc::world_widget const& resources)
+		: widget{&parent}, _resources{resources} {}
 
 	void world_widget::render_view(world_view const& view) {
-		_world_view = view;
-
 		render_terrain(view);
 		render_entities(view);
 	}
 
-	void world_widget::update(sec elapsed_time) {
+	view::vector world_widget::get_size() const {
+		return parent()->get_size();
+	}
+
+	void world_widget::update(sec elapsed_time, std::vector<sf::Event>& events) {
 		// Update tile selector animation.
 		_tile_resources.ani.selector.update(elapsed_time);
 
@@ -72,6 +60,38 @@ namespace ql {
 				++i;
 			}
 		}
+
+		{ // Camera controls.
+			for (auto e : events) {}
+			float const zoom = _window.getSize().x / _view.getViewport().width;
+			// Pan camera.
+			if (im.down(sf::Mouse::Middle)) {
+				auto const world_mouse_movement = _window.mapPixelToCoords(im.mouse_movement());
+				_view.move(world_mouse_movement / zoom);
+			}
+			constexpr double pan_amount = 10.0;
+			if (im.down(sf::Keyboard::Numpad8)) { _view.move(sf::Vector2f{0.0, pan_amount} / zoom); }
+			if (im.down(sf::Keyboard::Numpad4)) { _view.move(sf::Vector2f{-pan_amount, 0.0} / zoom); }
+			if (im.down(sf::Keyboard::Numpad2)) { _view.move(sf::Vector2f{0.0, -pan_amount} / zoom); }
+			if (im.down(sf::Keyboard::Numpad6)) { _view.move(sf::Vector2f{pan_amount, 0.0} / zoom); }
+
+			// Scale camera.
+			_view.zoom(1.0f + im.scroll() / 10.0f);
+
+			// Rotate camera.
+			degrees angle = degrees{_view.getRotation()};
+			if (im.down(sf::Keyboard::Numpad9)) {
+				_view.rotate(static_cast<float>((-3.0_deg - angle / 20.0).value));
+			} else if (im.down(sf::Keyboard::Numpad7)) {
+				_view.rotate(static_cast<float>((3.0_deg - angle / 20.0).value));
+			}
+		}
+	}
+
+	void world_widget::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+		draw_terrain(target, states);
+		draw_entities(target, states);
+		draw_effects(target, states);
 	}
 
 	void world_widget::draw_terrain(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -101,17 +121,18 @@ namespace ql {
 	}
 
 	void world_widget::render_terrain(world_view const& view) {
-		for (auto const& section_view : view.section_views()) {
-			section const* section = view.region().section_at(section_view.coords);
+		for (auto const& section_view : view.section_views) {
+			auto const& region = reg.get<ql::region>(view.center.region_id);
+			section const* section = region.section_at(section_view.coords);
 			if (!section) continue;
 			for (span q = 0_span; q < section_diameter; ++q) {
 				for (span r = 0_span; r < section_diameter; ++r) {
 					section_tile::point const section_tile_coords{q, r};
 
-					perception::level tile_perception =
+					perception tile_perception =
 						section_view.tile_perceptions[section_tile_coords.q.value][section_tile_coords.r.value];
 
-					if (perception::get_category(tile_perception) != perception::category::none) {
+					if (tile_perception > 0_perception) {
 						//! @todo Use time_game_point or remove these lines if no longer needed.
 						region_tile::point const region_tile_coords = section->region_tile_coords(section_tile_coords);
 						world::point const tile_game_point = to_world(region_tile_coords);
@@ -123,8 +144,8 @@ namespace ql {
 						// If it's there, use it. Otherwise, create and cache.
 						animation& tile_animation = it != _tile_animations.end() ? *it->second : cache_tile_animation(tile);
 
-						auto const perception_above_minimum = tile_perception - perception::minimum_level;
-						auto const perception_range = perception::maximum_level - perception::minimum_level;
+						auto const perception_above_minimum = tile_perception - minimum_perception;
+						auto const perception_range = maximum_perception - minimum_perception;
 						sf::Uint8 const intensity = to_uint8(perception_above_minimum / perception_range);
 
 						//! @todo Use draw_color.
@@ -212,7 +233,8 @@ namespace ql {
 	}
 
 	void world_widget::render_effect(effects::effect const& effect) {
-		match(effect.value,
+		match(
+			effect.value,
 			[&](effects::arrow_attack const& e) {
 				world::point source = to_world(e.origin);
 				world::point target = to_world(e.target);
@@ -231,7 +253,7 @@ namespace ql {
 
 				dmg::group const& damage = e.damage;
 
-				for (auto const& part : damage.parts()) {
+				for (auto const& part : damage.parts) {
 					static constexpr sec text_duration = 2.0_s;
 
 					auto& font = _fonts.firamono;
@@ -260,7 +282,8 @@ namespace ql {
 						_resources.sfx.hit.play();
 					};
 
-					match(part,
+					match(
+						part,
 						[&](dmg::slash const& slash) { render_slash_or_pierce(slash.value); },
 						[&](dmg::pierce const& pierce) { render_slash_or_pierce(pierce.value); },
 						[&](dmg::cleave const& cleave) { render_cleave_or_bludgeon(cleave.value); },
@@ -311,9 +334,4 @@ namespace ql {
 				_resources.sfx.telescope.play();
 			});
 	}
-
-	animation& world_widget::cache_tile_animation(tile const& tile) {
-		_tile_animations[tile.id] = animate(_tile_resources, tile);
-		return *_tile_animations[tile.id];
-	};
 }

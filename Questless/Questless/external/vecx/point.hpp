@@ -41,14 +41,6 @@ namespace vecx {
 			return true;
 		}
 
-		template <typename ThatQuantity>
-		constexpr bool operator !=(point<ThatQuantity, n> const& that) const {
-			for (std::size_t i = 0; i < n; ++i) {
-				if (components[i] != that[i]) return true;
-			}
-			return false;
-		}
-
 		//! Gets the component at index @p index.
 		constexpr auto& operator [](std::size_t index) { return components[index]; }
 

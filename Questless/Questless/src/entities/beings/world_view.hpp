@@ -31,7 +31,7 @@ namespace ql {
 
 		std::vector<section_view> section_views;
 		std::vector<entity_view> entity_views;
-		location location;
+		location center;
 		span visual_range;
 
 		//! Constructs the world view of being with id @p being_id.

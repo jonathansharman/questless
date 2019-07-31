@@ -18,9 +18,6 @@ namespace ql {
 	namespace effects {
 		struct effect;
 	}
-	struct being;
-	struct game;
-	struct object;
 
 	enum class period_of_day { morning, afternoon, dusk, evening, night, dawn };
 
@@ -40,9 +37,6 @@ namespace ql {
 		//! Saves the region to disk.
 		//! @param save_name The name of the region's save file.
 		void save(char const* save_name);
-
-		//! The being whose turn it is to act or null if none are ready.
-		being* next_ready_being();
 
 		//! The ID of the entity at @p region_tile_coords or nullopt if none.
 		std::optional<ent> entity_id_at(region_tile::point region_tile_coords) const;
@@ -66,29 +60,15 @@ namespace ql {
 		//! Removes @p light_source from the region's light sources, if present.
 		void remove(light_source const& light_source);
 
-		//! The tile at @p region_tile_coords or nullptr if none.
-		std::optional<ent> tile_at(region_tile::point region_tile_coords) {
-			return tile_helper(region_tile_coords);
-		}
+		//! The tile at @p region_tile_coords or nullopt if none.
+		std::optional<ent> tile_at(region_tile::point region_tile_coords) const;
 
-		//! The tile at @p region_tile_coords or nullptr if none.
-		std::optional<ent> tile_at(region_tile::point region_tile_coords) const {
-			return tile_helper(region_tile_coords);
-		}
-
-		//! The section at @p region_section_coords.
-		section* section_at(region_section::point region_section_coords) {
-			return section_helper(region_section_coords);
-		}
 		//! The section at @p region_section_coords.
 		section const* section_at(region_section::point region_section_coords) const {
-			return section_helper(region_section_coords);
+			auto it = _section_map.find(region_section_coords);
+			return it == _section_map.end() ? nullptr : const_cast<section*>(&it->second);
 		}
 
-		//! The section that contains @p region_tile_coords or nullptr if none.
-		section* containing_section(region_tile::point region_tile_coords) {
-			return containing_section_helper(region_tile_coords);
-		}
 		//! The section that contains @p region_tile_coords or nullptr if none.
 		section const* containing_section(region_tile::point region_tile_coords) const {
 			return containing_section_helper(region_tile_coords);
@@ -118,7 +98,7 @@ namespace ql {
 		//! The proportion of light/vision occluded between @p start and @p end, as a number in [0, 1].
 		double occlusion(region_tile::point start, region_tile::point end) const;
 
-		//! Advances local time by @elapsed then updates everything contained in the region.
+		//! Advances this region by @elapsed time.
 		void update(tick elapsed);
 
 		//! Adds an effect to this region, notifying beings within range of its occurrence.
@@ -175,15 +155,6 @@ namespace ql {
 		void for_each_loaded_section(std::function<void(section&)> const& f);
 
 		// Helper methods to avoid duplicating code for const and non-const versions of methods.
-
-		being* entity_helper(region_tile::point region_tile_coords) const;
-
-		std::optional<ent> tile_helper(region_tile::point region_tile_coords) const;
-
-		section* section_helper(region_section::point region_section_coords) const {
-			auto it = _section_map.find(region_section_coords);
-			return it == _section_map.end() ? nullptr : const_cast<section*>(&it->second);
-		}
 
 		section* containing_section_helper(region_tile::point region_tile_coords) const {
 			auto it = _section_map.find(region_section_coords(region_tile_coords));

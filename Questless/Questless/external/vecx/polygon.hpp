@@ -29,11 +29,6 @@ namespace vecx {
 			return vertices == that.vertices;
 		}
 
-		template <typename ThatQuantity>
-		constexpr bool operator !=(polygon<ThatQuantity> const& that) const {
-			return vertices != that.vertices;
-		}
-
 		//! The smallest box that contains this polygon.
 		constexpr auto bounding_box() const {
 			//! @todo Check that the edge cases are correct here. Calling .contains(v) on the result of this function should work for all v in polygon.

@@ -6,27 +6,36 @@
 
 #include "scene.hpp"
 
+#include "rsrc/entity.hpp"
+#include "rsrc/item.hpp"
+#include "rsrc/particle.hpp"
+#include "rsrc/tile.hpp"
 #include "ui/hud.hpp"
-#include "ui/layout.hpp"
+#include "ui/window_widget.hpp"
 #include "utility/reference.hpp"
 
 namespace ql::scenes {
 	//! The scene for an active game.
 	struct playing : scene {
-		playing(sf::RenderWindow& window, rsrc::fonts const& fonts, ent region_id);
+		playing(view::vector window_size, rsrc::fonts const& fonts, ent region_id);
 
 	private:
-		sf::View _view;
+		// Resources
+
+		rsrc::entity _entity_resources;
+		rsrc::item _item_resources;
+		rsrc::particle _particle_resources;
+		rsrc::tile _tile_resources;
+
+		// Entities
 
 		ent _region_id;
-
 		ent _player_id;
 
-		layout _layout;
-		hud _hud;
+		// UI
 
-		sf::Texture _txt_hex_highlight;
-		sf::Texture _txt_hex_circle;
+		window_widget _root;
+		hud _hud;
 
 		update_result scene_subupdate(sec elapsed_time, std::vector<sf::Event>& events) final;
 

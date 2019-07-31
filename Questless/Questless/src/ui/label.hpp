@@ -7,10 +7,9 @@
 #include <SFML/Graphics/Text.hpp>
 
 namespace ql {
+	//! Displays some text.
 	struct label : widget {
 		sf::Text text;
-
-		view::vector get_local_offset() const final;
 
 		view::vector get_size() const final;
 

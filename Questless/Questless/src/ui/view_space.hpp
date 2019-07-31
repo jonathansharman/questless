@@ -77,7 +77,9 @@ namespace ql::view {
 
 	using polygon = vecx::polygon<px>;
 
-	// Conversions from view space to SFML
+	/////////////////////////////////////////////////////////
+	// Conversions between view space types and SFML types //
+	/////////////////////////////////////////////////////////
 
 	//! Converts from a @p view::vector into an @p sf::Vector.
 	sf::Vector2f to_sfml(vector v) {
@@ -93,20 +95,43 @@ namespace ql::view {
 
 	//! Converts from an @p sf::Vector to a @p view::vector.
 	template <typename T>
-	vector vector_from_sfml(sf::Vector2<T> const& v) {
-		return {px(v.x), px(v.y)};
+	auto vector_from_sfml(sf::Vector2<T> const& v) {
+		return vector{px{static_cast<px::rep>(v.x)}, px{static_cast<px::rep>(v.y)}};
+	}
+
+	//! Converts from an sf::SizeEvent to a view::vector.
+	auto vector_from_size_event(sf::Event::SizeEvent size_event) {
+		return vector{px{static_cast<px::rep>(size_event.width)}, px{static_cast<px::rep>(size_event.height)}};
+	}
+
+	//! Converts the size of an sf::Rect<T> to a view::vector.
+	template <typename T>
+	auto vector_from_sfml_rect(sf::Rect<T> rect) {
+		return vector{px{static_cast<px::rep>(rect.width)}, px{static_cast<px::rep>(rect.height)}};
 	}
 
 	//! Converts from an @p sf::Vector to a @p view::point.
 	template <typename T>
-	point point_from_sfml(sf::Vector2<T> const& p) {
-		return {px(p.x), px(p.y)};
+	auto point_from_sfml(sf::Vector2<T> const& p) {
+		return point{px{static_cast<px::rep>(p.x)}, px{static_cast<px::rep>(p.y)}};
 	}
 
 	//! Extracts the size from an @p sf::Rect as a @p view::vector.
 	template <typename T>
-	vector vector_from_sfml_rect_size(sf::Rect<T> const& r) {
-		return {px(r.width), px(r.height)};
+	auto get_size(sf::Rect<T> const& r) {
+		return vector{px{static_cast<px::rep>(r.width)}, px{static_cast<px::rep>(r.height)}};
+	}
+
+	//! Extracts the width from an @p sf::Vector as a @p view::px.
+	template <typename T>
+	auto get_width(sf::Vector2<T> const& v) {
+		return px{static_cast<px::rep>(v.x)};
+	}
+
+	//! Extracts the height from an @p sf::Vector as a @p view::px.
+	template <typename T>
+	auto get_height(sf::Vector2<T> const& v) {
+		return px{static_cast<px::rep>(v.y)};
 	}
 }
 

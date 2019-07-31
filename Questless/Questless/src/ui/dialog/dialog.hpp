@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include "ui/input_manager.hpp"
 #include "ui/label.hpp"
 #include "ui/widget.hpp"
 
@@ -21,17 +20,15 @@ namespace ql {
 	//! A UI element used to exchange information with the player.
 	template <typename T>
 	struct dialog : widget {
-		dialog(widget* parent, rsrc::fonts const& fonts) : widget{parent}, _fonts{fonts} {}
+		rsrc::fonts const& fonts;
 
-		virtual ~dialog() = default;
+		dialog(widget& parent, rsrc::fonts const& fonts) : widget{&parent}, fonts{fonts} {}
 
 		std::future<std::optional<T>> get_future() {
 			return _promise.get_future();
 		}
 
 	protected:
-		rsrc::fonts const& _fonts;
-
 		std::promise<std::optional<T>> _promise;
 
 		static constexpr int _title_font_size = 32;

@@ -6,7 +6,11 @@
 
 #include "playing.hpp"
 
+#include "agents/agent.hpp"
+#include "entities/beings/body.hpp"
+#include "items/magic/gatestone.hpp"
 #include "rsrc/fonts.hpp"
+#include "rsrc/hud.hpp"
 #include "utility/reference.hpp"
 #include "world/region.hpp"
 #include "world/spawn_player.hpp"
@@ -18,95 +22,40 @@ using namespace vecx;
 using namespace vecx::literals;
 
 namespace ql::scenes {
-	playing::playing(sf::RenderWindow& window, rsrc::fonts const& fonts, ent region_id)
-		: scene{window, fonts}
+	playing::playing(view::vector window_size, rsrc::fonts const& fonts, ent region_id)
+		: scene{fonts}
 		, _region_id{region_id}
 		, _player_id{spawn_player(_region_id, &_hud)}
-		, _layout{window}
-		, _hud{_layout, window, fonts, _player_id} //
+		, _root{_hud, window_size}
+		, _hud{_root, rsrc::hud{_entity_resources, fonts, _item_resources, _particle_resources, _tile_resources}, _player_id} //
 	{}
 
 	update_result playing::scene_subupdate(sec elapsed_time, std::vector<sf::Event>& events) {
-		// Update HUD.
+		// Update the HUD.
 		_hud.update(elapsed_time, events);
 
-		// Update dialogs.
-		if (!_dialogs.empty()) {
-			_dialogs.front()->update();
-			if (_dialogs.front()->closed()) {
-				_dialogs.pop_front();
+		auto const elapsed_ticks = 1_tick;
 
-				if (_dialogs.empty()) {
-					// End of player's turn.
-				}
-			}
-		} else {
-			// Take turns.
+		// Update gatestones.
+		reg.view<gatestone>().each([&](gatestone& gatestone) { gatestone.update(elapsed_ticks); });
 
-			// Work through the beings ready to take their turns, until all have acted or one of them can't finish
-			// acting yet.
-			while (being* next_ready_being = _region->next_ready_being()) {
-				if (next_ready_being->id == _player_id) {
-					// Update the player view before the player acts.
-					_player->update_view();
-				}
-				next_ready_being->act();
-				if (next_ready_being->id == _player_id) {
-					// Update the player view after the player acts.
-					_player->update_view();
-				}
+		// For each being, update its body and allow it to act.
+		reg.view<body, agent>().each([&](body& body, agent& agent) {
+			body.update(elapsed_ticks);
+			agent.act().get();
+		});
 
-				if (_player_action_dialog || !_dialogs.empty()) {
-					// Awaiting player input to complete current action. Stop taking turns, and start at the next agent
-					// once this action is complete.
-					break;
-				}
-			}
-			if (!_player_action_dialog && _dialogs.empty()) {
-				// Update the region.
-				_region->update(ticks_per_turn);
-				// Update the player view after each time unit passes.
-				_player->update_view();
-			}
-		}
+		// Update the region.
+		reg.get<region>(_region_id).update(elapsed_ticks);
 
-		// Disable camera controls during dialogs (except player action dialog).
-		if (_dialogs.empty()) {
-			float const zoom = _window.getSize().x / _view.getViewport().width;
-			// Pan camera.
-			if (im.down(sf::Mouse::Middle)) {
-				auto const world_mouse_movement = _window.mapPixelToCoords(im.mouse_movement());
-				_view.move(world_mouse_movement / zoom);
-			}
-			constexpr double pan_amount = 10.0;
-			if (im.down(sf::Keyboard::Numpad8)) { _view.move(sf::Vector2f{0.0, pan_amount} / zoom); }
-			if (im.down(sf::Keyboard::Numpad4)) { _view.move(sf::Vector2f{-pan_amount, 0.0} / zoom); }
-			if (im.down(sf::Keyboard::Numpad2)) { _view.move(sf::Vector2f{0.0, -pan_amount} / zoom); }
-			if (im.down(sf::Keyboard::Numpad6)) { _view.move(sf::Vector2f{pan_amount, 0.0} / zoom); }
-
-			// Scale camera.
-			_view.zoom(1.0f + im.scroll() / 10.0f);
-
-			// Rotate camera.
-			degrees angle = degrees{_view.getRotation()};
-			if (im.down(sf::Keyboard::Numpad9)) {
-				_view.rotate(static_cast<float>((-3.0_deg - angle / 20.0).value));
-			} else if (im.down(sf::Keyboard::Numpad7)) {
-				_view.rotate(static_cast<float>((3.0_deg - angle / 20.0).value));
-			}
-		}
+		return continue_scene{};
 	}
 
 	void playing::scene_subdraw(sf::RenderTarget& target, sf::RenderStates states) const {
-		// Draw HUD.
+		// Draw the HUD.
 		_hud.draw(target, states);
 
-		// Draw dialogs.
-		for (auto const& dialog : _dialogs) {
-			dialog->draw();
-		}
-
-		{ // Draw time.
+		{ // Draw the current time.
 			auto const& region = reg.get<ql::region>(_region_id);
 			tick const time_of_day = region.time_of_day();
 			std::string time_name;
@@ -131,7 +80,7 @@ namespace ql::scenes {
 					break;
 			}
 			std::string time_string = fmt::format("Time: {} ({}, {})", region.time().value, time_of_day.value, time_name);
-			sf::Text time_text{time_string, _fonts.firamono, 20};
+			sf::Text time_text{time_string, fonts.firamono, 20};
 			time_text.setFillColor(sf::Color::White);
 			time_text.setPosition({0, 50});
 			target.draw(time_text, states);

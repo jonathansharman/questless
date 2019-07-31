@@ -68,107 +68,15 @@ Recipes
 	Lich Potion
 		Ingredients: blood of suffering, black gatestone, ???
 		Incantation: black
-		Effect: Curse of the Lich: drinker becomes a lich if it dies while the curse is active
+		Effects:
+			1) Gain Lich status (timed)
+				Provides undeath
+			2) Learn Siphon Life
+				Deals damage to another being and extends Curse of the Lich.
+			3) Instant undeath
 		Steps:
-			1) Add blood of suffering.
-			2) Crush black gatestone into powder.
-			3) Add black gatestone powder.
-			4) Incant.
-
-================================================================================
-Spellcasting
-================================================================================
-Player acquires new spells through various means along the way
-	Spells may be discovered by entering a trance - a color-dependent mini-game
-		Different type of trance for each color
-		At the conclusion, a new spell may be obtained, if a scroll is available
-	Spells may be bought or traded for
-	Spells may be stolen or looted from corpses, found lying around, etc.
-Must be written on magic scrolls or in a grimoire (both reusable) and recited to take effect
-	Each scroll or grimoire page may be labeled to describe the effect of the spell
-	Scrolls may be inserted into the grimoire as a new page at no cost
-	Spell labels may be changed later
-	Spell runes may not be changed
-	Player may acquire a notebook (possibly given at the start) to write/rewrite freely in
-NPCs may use spells, but only if they are not mute (beasts are mute)
-	The game will play the sound effect of the spell, allowing the player to copy it if he/she can discern what is said (still doing this?)
-When casting a spell, the caster may choose the magnitude and duration of the spell, if applicable. The cost of the casting is typically linear with the duration and quasilinear (n log n) with the magnitude.
-
-================================================================================
-Attributes
-================================================================================
-Vitality
-	Determines maximum health
-Spirit
-	Determines maximum mana
-Health Regeneration
-	Determines healing rate
-Mana Regeneration
-	Determines mana restoration rate
-Strength
-	Affects attack power, carry capacity
-Endurance
-	Determines defense power
-Stamina
-	Determines maximum energy
-Agility
-	Determines movement speed
-Dexterity
-	Determines attack speed
-Stealth
-	Makes it more difficult to be sensed by other beings
-		Attacking from stealth does more damage, in proportion to the degree of stealth (e.g., attacking a sleeping opponent does enormous damage; attacking from the shadows does somewhat less damage)
-	Makes it more difficult for other beings to discern stats, abilities, and actions (counters intellect)
-Vision
-	Improves ability to attributes of other beings and to identify carried items
-	Reduces enemy stealth
-	Enables wider field of view
-Light Affinity
-	Determines preferred light level. Visual range is maximal when ambient light level matches light affinity.
-		Effective vision at a given point is vision - abs(light level - light affinity) * factor / distance
-Hearing
-	Reduces enemy stealth
-Intellect
-	Improves ability to discern stats, abilities, and actions of opponents, nature of new items
-Minimum Temperature
-	The minimum temperature the being can endure before taking freeze damage
-Maximum Temperature
-	The maximum temperature the being can endure before taking burn damage
-
-================================================================================
-Conditions
-================================================================================
-Health
-	Regenerates slowly over time, faster while asleep
-Mana
-	Regenerates over time, faster while asleep
-Weariness
-	The result of performing actions
-		Each attack with a weapon costs weariness in proportion to its weight ??
-	Reduces strength, endurance
-	Reduced by sleeping or idling
-Hunger
-	Occurs over time and also as a result of performing actions
-	Accrues more slowly while asleep
-	Reduces regeneration
-Sleepiness
-	Increases over time
-	Reduces agility, intellect
-
-================================================================================
-Statuses
-================================================================================
-Nauseated - Reduces strength, endurance
-Confused - Reduces intellect
-Numb - Reduces agility, dexterity
-Poisoned - Causes damage over time
-Mute - Disables casting of spells
-Blind - Reduces vision
-Deaf - Reduces hearing
-Healing - Restores health over time
-Drunk - Causes unpredictable movement, reduces intellect, dexterity, vision
-Possessed - Allows the being who inflicted the possession to control the target being
-Illuminated - Reduces stealth and black magic
+			1) Mix blood of suffering and black gatestone powder.
+			2) Incant.
 
 ================================================================================
 World Mechanics
@@ -176,82 +84,6 @@ World Mechanics
 Travel from one tile to the next requires a certain number of turns
 	Dependent on factors like agility and tile material
 Flying beings can traverse tiles that others cannot
-
-================================================================================
-Combat Mechanics
-================================================================================
-Has elements of both real-time and turn-based combat
-	Everything that occurs has duration, but the next action may be chosen at one's own pace (sort of similar to FTL)
-Every action has a wind-up time and follow-through time
-	Wind-up - Time until the action completes
-	Follow-through - Time until a new action may be started
-Once started, an action cannot be canceled by the being that started it
-Damage
-	Types
-		Slash
-		Bludgeon
-		Pierce
-		Burn
-		Freeze
-		Blight
-	Can be dealt to a body part or to the being directly.
-		Damage dealt to a body part is also dealt to the being itself. I.e., part damage is strictly better than being damage.
-	Passive shields apply unconditionally to all damage.
-		Applied newest to oldest, so that temporary shields will soak more damage than permanent ones.
-	Body part armor applies to all damage targeting its part.
-	Resistance and vulnerability apply a multiplier to damage
-		Damage with multipliers = original damage * (1 + max(0, total vulnerability - total resistance) / 100)
-	Resistance and vulnerability are applied after all protection
-	The damage algorithm for part damage is roughly as follows:
-		1) Shields take wear, reduce damage, and contribute to total resistance.
-		2) Shields take resistance wear proportional to maximum possible reduction to current damage.
-		3) The part's armor takes wear, reduces damage, and contributes to total resistance.
-		4) Damage is reduced by the part's and the being's protection attributes.
-		5) Repeat step 2 for the part's armor.
-		6) Damage is modified according to total resistance and vulnerability, from all sources.
-		7) Part and being lose health based on total damage and the being's endurance.
-Protection
-	Protection reduces effective damage by a constant amount per hit
-	No damage component can deceed 0
-	Types
-		Pad
-			100% to bludgeon
-			50% to slash
-			25% to pierce
-		Deflect
-			100% to slash
-			50% to pierce
-			25% to bludgeon
-		Fireproof
-			100% to burn
-		Frostproof
-			100% to freeze
-		Cleanse
-			100% to blight
-Weapon attributes
-	Base damage - The base amount of damage per hit
-	Damage rate - Quotient of base damage and sum of ready and recovery times
-	Wind-up - Time after attack is initiated before attack completes
-	Follow-through - Time after attack connects before another action can be performed
-	Cooldown - Time after attack connects before the weapon can be used again
-	Equip time
-	Unequip time
-Relevant item attributes
-	Durability - Determines how quickly the item wears out
-		When integrity reaches zero, the weapon or armor breaks
-		Each use of a weapon decreases its integrity in proportion to its base damage and wear ratio
-			wear_per_hit = total(base_damage) * wear_ratio
-		Each hit absorbed by armor decreases its integrity in proportion to effective damage reduced and its wear ratio
-			wear_per_hit = effective_damage_reduction * wear_ratio
-		A weapon does less damage (down to 50%) the lower its integrity
-			damage = base_damage * (1 + integrity / durability) / 2
-		Armor protects against less damage the lower the integrity
-			protection = base_protection * (1 + integrity / durability) / 2
-	Weight
-		Affects strength requirements of weapons and armor
-	Size - tiny, small, medium, large, titanic
-Melee attacks require being adjacent to the target, i.e. one tile away, on the turn the attack connects
-	Relax this for polearms?
 
 ================================================================================
 Enemy Ideas
@@ -287,14 +119,16 @@ Utility
 			The chance of mutation for each item is based on the amount of time it has spent in the satchel
 				This makes chaos satchels a great place to store junk and a bad place to store valuables
 			Smaller mutation chance for higher "quality" satchel
+		Retrieving items from the choas satchel takes a long time
+			This prevents being able to rapidly swap out equipment during a fight
 	Stasis chest
 		Stores some volume of items in Stasis
 		Has a fixed (small) mass and volume, regardless of its contents
 		Items in the chest do not experience the passage of time
 			This makes stasis chests ideal for storage of perishables
-		Inventory is tied to the coordinates of the chest
+		Inventory is tied to the coordinates of the chest, so the chest can't be moved while retaining its items
 	Heat sink
-		Just an object with extremely high specific heat
+		Just an object with magically high specific heat
 		Can be used to stay warm in cold weather or cool in hot weather
 		This could be a crafting material for clothing
 Weapons
@@ -407,16 +241,17 @@ Armor
 Magic
 ================================================================================
 NPCs can have explicit specializations. Spells will all fit roughly into the specializations. But players need not choose an explicit specialization.
-White - good - light - revelation
+White - good - life - light
 	Specializations
 		Celestial mage
 		Healer
 		Lightmage
-			Light, detection, alertness
+			Light, detection, revelation, alertness
 	Celestial
 		Comfort - Increase a being's joy.
 		Encourage - Increase a being's courage.
-		Exorcise - Drain a being's black gatestones and remove possession from it.
+		Exorcise - Drain a being's black gatestones and remove possession from it?
+		Dispel Undeath - Reduce a target's undeath by X for Y ticks.
 		Immortalize - Make a being temporarily immortal.
 		Divine - Temporarily gain complete perception of a being.
 		Raise Ladder - Create a ladder from the Nexus to Heaven, allowing travel between the realms. Can only cast while in the Nexus or Heaven.
@@ -425,7 +260,7 @@ White - good - light - revelation
 	Restorative
 		Cleanse - Remove a bane from a being. The bane's power must be lower than the invocation power.
 		Immunize - Give a being X blight resistance for Y ticks.
-		Mend - Restore X% health to a body part.
+		Mend - Heal a wound.
 		Regenerate - Restore a being's body to full health and replenish its blood.
 		Resurrect - Return a corpse to life, with X% of its health.
 	Light
@@ -434,12 +269,12 @@ White - good - light - revelation
 		Illuminate - Increase the light level in an area around yourself for X ticks.
 		Lumiphile - Temporarily become a lumiphile. Lumiphiles have increased agility and health regen while in bright light.
 		Dawnlight - Increase a being's alertness and prevent it from sleeping for a certain duration.
-Black - evil - darkness - illusion
+Black - evil - death - darkness
 	Specializations
 		Demon master
 		Necromage
 		Shadowmage
-			Darkness, stealth, sleep
+			Darkness, stealth, illusion, sleep
 	Demonic
 		Terrify - Lower another being's courage.
 		Depress - Reduce a being's joy.
@@ -451,13 +286,14 @@ Black - evil - darkness - illusion
 		Enslave Fiend - Enslave a fiend, making it loyal to you for X ticks.
 		Open Hellmouth - Can only cast while in the Nexus or Hell. Create a hellmouth from the Nexus to Hell, allowing travel between the realms.
 		Summon demons and devils
-	Necrotic
-		Rot - Afflict target with rot, causing blight damage over time.
+	Necromagic
+		Rot - Inflict decay on a target body part.
 		Enfeeble - Give a target a chosen amount of blight vulnerability for a chosen duration.
 		Defile?
-		Exanimate - Extract a target's soul, resulting in a corpse and a wraith under the caster's control.
+		Exanimate - Extract a target's soul, resulting in a corpse and an undead wraith.
 		Exsanguinate - Cause a being to bleed from all its parts.
-		Raise Dead - Raise a target corpse to undeath under the caster's control. The undead being's stats depend on the spell magnitude, and it returns to death after the spell's duration elapses.
+		Raise Dead - Give a corpse zombie status. Zombies gain undeath but have greatly reduced speech and intellect.
+		Enslave Undead - Force an undead being with X intellect or less to serve the caster.
 		Summon spirits
 	Shadow
 		Night Vision - Temporarily raise a being's darkness tolerance.
@@ -719,6 +555,8 @@ Mythic
 	Guardian - lawful neutral
 Host
 	The heavenly host are immortal and thus cannot be slain; however, they can be defeated in battle and incapacitated temporarily. They return to heaven immediately when defeated outside heaven.
+	Idea for the function of angels' immortality (also affects appearance)
+		Angels are actually just halos that float above the bodies that they control. The bodies are destructible, but the halos themselves are indestructible. After "recharging" a halo will regenerate an attached body.
 	Seraph (seraphim) - lawful good
 		Worshipers
 		Magic: white
@@ -760,6 +598,7 @@ Host
 		Appearance: winged humanoid
 Fiend (Legion)
 	Like the heavenly host, many fiends are immortal and can only be incapacitated temporarily. They return to hell immediately when defeated outside hell.
+	I'm not sure what the fiendish version of a halo should be, if anything. What could give demons their immortality?
 	Demonic
 		Demon - chaotic evil
 		Imp - neutral evil

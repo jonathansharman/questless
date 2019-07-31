@@ -13,10 +13,10 @@
 
 namespace ql {
 	world_view::world_view(ent being_id)
-		: location{reg.get<ql::location>(being_id)}
+		: center{reg.get<ql::location>(being_id)}
 		, visual_range{max_visual_range(reg.get<body>(being_id).stats.a.vision_sources.cur)} //
 	{
-		auto& region = reg.get<ql::region>(location.region_id);
+		auto& region = reg.get<ql::region>(center.region_id);
 
 		// Find the set of coordinates of sections possibly visible to the being.
 		std::set<region_section::point> section_coords_set;
@@ -24,7 +24,7 @@ namespace ql {
 			for (span r = -visual_range; r <= visual_range; ++r) {
 				region_tile::vector const offset{q, r};
 				if (offset.length() <= visual_range) {
-					if (section const* section = region.containing_section(location.coords + offset)) {
+					if (section const* section = region.containing_section(center.coords + offset)) {
 						section_coords_set.insert(section->coords());
 					}
 				}

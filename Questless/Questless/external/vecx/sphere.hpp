@@ -30,11 +30,6 @@ namespace vecx {
 			return center == that.center && radius == that.radius;
 		}
 
-		template <typename ThatQuantity>
-		constexpr bool operator !=(sphere<ThatQuantity, n> const& that) const {
-			return center != that.center || radius != that.radius;
-		}
-
 		//! Whether this sphere contains @p point. Points on the border are included.
 		constexpr bool contains_inclusive(point<scalar_t, n> const& point) const {
 			return (center - point).length_squared() <= radius * radius;
@@ -65,7 +60,7 @@ namespace vecx {
 			}
 		}
 	};
-}
+				}
 
 #ifndef _DEBUG
 #define DOCTEST_CONFIG_DISABLE

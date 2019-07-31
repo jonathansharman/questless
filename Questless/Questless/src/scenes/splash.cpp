@@ -8,7 +8,6 @@
 
 #include "main_menu.hpp"
 
-#include "ui/input_manager.hpp"
 #include "utility/random.hpp"
 
 #include <algorithm>
@@ -22,16 +21,20 @@ namespace ql::scenes {
 		constexpr sec duration = fade_out_duration + fade_in_duration;
 	}
 
-	splash::splash(sf::RenderWindow& window, rsrc::fonts const& fonts) : scene{window, fonts} {
+	splash_widget::splash_widget(widget& parent) : widget{parent} {
 		static constexpr int flame_count = 20;
+		auto const window_size = parent.get_size();
 		for (int i = 0; i < flame_count; ++i) {
-			view::px const x = uniform(0.0_px, view::px{_window.getSize().x - 1.0f});
-			view::px const y{static_cast<float>((i + 1) * _window.getSize().y / flame_count)};
-			_flame_positions.push_back({x, y});
+			_flame_positions.emplace_back(cancel::unitless<float>{uniform(0.0f, 1.0f)},
+				cancel::unitless<float>{static_cast<float>(i + 1) / flame_count});
 		}
 	}
 
-	update_result splash::scene_subupdate(sec elapsed_time, std::vector<sf::Event>& events) {
+	view::vector splash_widget::get_size() const {
+		return parent()->get_size();
+	}
+
+	void splash_widget::update(sec elapsed_time, std::vector<sf::Event>& events) {
 		// Play the splash sound effect on the first frame of the splash screen.
 		if (!_sound_played) {
 			_sound_played = true;
@@ -39,64 +42,93 @@ namespace ql::scenes {
 		}
 
 		// Move splash flames.
+		auto const window_size = parent()->get_size();
 		for (auto& position : _flame_positions) {
-			constexpr auto splash_flames_vy = -2800.0_px / 1.0_s;
-			position[1] += splash_flames_vy * elapsed_time;
-			if (position[1] < 0.0_px) {
-				position[1] += view::px{static_cast<float>(_window.getSize().y + _rsrc.txtr.flame.getSize().y)};
-				position[0] = uniform(0.0_px, view::px{_window.getSize().x - 1.0f});
+			constexpr auto flame_speed = 2800.0_px / 1.0_s;
+			position[1] += flame_speed / window_size[1] * elapsed_time;
+			if (position[1] > 1.0f) {
+				position[0] = {uniform(0.0f, 1.0f)};
+				position[1] = {0.0f};
 			}
 		}
 
-		if (im.any_press_count() || to_sec(clock::now() - start_time()) >= duration) {
-			_rsrc.sfx.flame.stop();
-			return switch_scene{umake<main_menu>()};
-		};
+		// End scene if a key or button is pressed.
+		for (auto event : events) {
+			switch (event.type) {
+				case sf::Event::KeyPressed:
+					_skip = true;
+					break;
+				case sf::Event::MouseButtonPressed:
+					_skip = true;
+					break;
+				default:
+					break;
+			}
+		}
+		if (_skip) { _rsrc.sfx.flame.stop(); }
 	}
 
-	void splash::scene_subdraw(sf::RenderTarget& target, sf::RenderStates states) const {
-		// Get intensity, used for fading in and out.
-		auto const intensity = to_uint8([&]() -> float {
-			if (to_sec(clock::now() - start_time()) < fade_in_duration) {
-				auto time_fading_in = to_sec(clock::now() - start_time());
-				return time_fading_in / fade_in_duration;
-			} else {
-				auto time_fading_out = (to_sec(clock::now() - start_time()) - fade_in_duration);
-				return 1.0f - time_fading_out / fade_out_duration;
-			}
-		}());
-
+	void splash_widget::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+		// Get the size of the parent widget.
+		auto const parent_size = parent()->get_size();
 		// Create logo sprite.
 		sf::Sprite logo_sprite{_rsrc.txtr.logo};
 		{ // Set logo position.
 			constexpr auto max_jiggle = 3.0_px;
 			view::vector const logo_jiggle{uniform(-max_jiggle, max_jiggle), uniform(-max_jiggle, max_jiggle)};
-			auto const logo_position = view::point{} + view::vector_from_sfml(_window.getSize()) / 2.0f + logo_jiggle;
+			auto const logo_position = view::point{} + parent_size / 2.0f + logo_jiggle;
 			logo_sprite.setPosition(view::to_sfml(logo_position));
 		}
 		{ // Set logo origin to center.
 			auto const logo_size = _rsrc.txtr.logo.getSize();
 			logo_sprite.setOrigin(logo_size.x / 2.0f, logo_size.y / 2.0f);
 		}
-		{ // Set logo color.
-			logo_sprite.setColor(sf::Color(intensity, intensity, intensity));
-		}
 		// Draw logo.
 		target.draw(logo_sprite, states);
 
-		// Create flame sprite.
-		sf::Sprite flame_sprite{_rsrc.txtr.flame};
-		{ // Set flame origin to bottom-center.
+		{ // Draw flames.
+			sf::Sprite flame_sprite{_rsrc.txtr.flame};
 			auto const flame_size = _rsrc.txtr.flame.getSize();
-			flame_sprite.setOrigin(flame_size.x / 2.0f, static_cast<float>(flame_size.y));
+			for (auto position : _flame_positions) {
+				// Set origin such that flames just go off-screen at position = 0 and position = 1.
+				flame_sprite.setOrigin(flame_size.x / 2.0f, position[1].value * flame_size.y);
+				// Set position based on the parent widget size, and then draw.
+				flame_sprite.setPosition(to_sfml(vecx::component_wise_product(parent_size, position)));
+				target.draw(flame_sprite, states);
+			}
 		}
-		{ // Set flame color.
-			flame_sprite.setColor(sf::Color(intensity, intensity, intensity));
+	}
+
+	splash::splash(view::vector window_size, rsrc::fonts const& fonts)
+		: scene{fonts}
+		, _root{_splash_widget, window_size}
+		, _splash_widget{_root} //
+	{
+		_fade_shader.loadFromFile("resources/shaders/fade.frag", sf::Shader::Type::Fragment);
+	}
+
+	update_result splash::scene_subupdate(sec elapsed_time, std::vector<sf::Event>& events) {
+		// Update UI.
+		_root.update(elapsed_time, events);
+
+		auto const time_in_state = get_time_in_state();
+
+		// End scene if user skipped or if time has elapsed.
+		if (_splash_widget.skip() || time_in_state >= duration) {
+			return switch_scene{umake<main_menu>(_root.get_size(), fonts)};
 		}
-		for (auto position : _flame_positions) {
-			// Position and draw each flame.
-			flame_sprite.setPosition(to_sfml(position));
-			target.draw(flame_sprite, states);
-		}
+
+		// Set fade-in/fade-out intensity.
+		auto const intensity = time_in_state < fade_in_duration //
+			? time_in_state / fade_in_duration
+			: 1.0f - (time_in_state - fade_in_duration) / fade_out_duration;
+		_fade_shader.setUniform("intensity", intensity);
+
+		return continue_scene{};
+	}
+
+	void splash::scene_subdraw(sf::RenderTarget& target, sf::RenderStates states) const {
+		states.shader = &_fade_shader;
+		target.draw(_root, states);
 	}
 }

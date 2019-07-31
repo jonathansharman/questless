@@ -4,7 +4,7 @@
 
 #include "teleport.hpp"
 
-#include "effects/lightning_bolt.hpp"
+#include "effects/effect.hpp"
 #include "entities/beings/being.hpp"
 #include "items/magic/gatestone.hpp"
 #include "world/region.hpp"
