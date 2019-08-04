@@ -24,13 +24,13 @@ namespace ql {
 
 		void update(sec elapsed_time, std::vector<sf::Event>& events) final;
 
-		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
-
 	private:
 		std::optional<region_tile::point> _origin;
 		std::function<bool(region_tile::point)> _predicate;
 
 		label _title;
 		label _prompt;
+
+		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 	};
 }

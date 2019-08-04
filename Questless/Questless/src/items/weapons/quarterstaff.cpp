@@ -25,7 +25,7 @@ namespace ql {
 		tick cooldown = 13_tick;
 	}
 
-	ent make_quarterstaff(ent id) {
+	id make_quarterstaff(id id) {
 		make_item(id, 2.5_mass);
 
 		make_breakable(id, {500_durability, 500_durability});

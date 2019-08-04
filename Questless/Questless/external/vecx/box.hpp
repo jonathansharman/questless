@@ -85,12 +85,11 @@ namespace vecx {
 			return size.reduce(scalar_t(1), std::multiplies{});
 		}
 
-		//! Whether @p box contains @p point.
+		//! Whether this box contains @p point.
 		//! @note Lower bounds are inclusive, and upper bounds are exclusive.
-		template <typename... Quantities>
-		constexpr bool contains(box<Quantities...> const& box, point<Quantities...> const& point) {
+		constexpr bool contains(point<scalar_t, n> const& point) {
 			for (int i = 0; i < n; ++i) {
-				if (point[i] < box.position[i] || point[i] >= box.position[i] + box.size[i]) {
+				if (point[i] < position[i] || point[i] >= position[i] + size[i]) {
 					return false;
 				}
 			}

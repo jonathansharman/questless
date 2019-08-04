@@ -10,7 +10,7 @@
 
 namespace ql {
 	struct light_source {
-		ent id;
+		id id;
 
 		//! How brightly this light source shines.
 		lum luminance;

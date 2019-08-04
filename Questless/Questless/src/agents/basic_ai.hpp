@@ -16,7 +16,7 @@ namespace ql {
 
 	//! A basic AI, suitable for most NPCs.
 	struct basic_ai {
-		ent id;
+		id id;
 
 		std::future<void> act();
 
@@ -26,7 +26,7 @@ namespace ql {
 		struct idle_state {};
 		struct walk_state {};
 		struct attack_state {
-			ent target_id;
+			ql::id target_id;
 		};
 
 		std::variant<idle_state, walk_state, attack_state> _state = idle_state{};

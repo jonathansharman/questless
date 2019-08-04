@@ -5,7 +5,7 @@
 #include "arrow.hpp"
 
 namespace ql {
-	ent make_arrow(ent id) {
+	id make_arrow(id id) {
 		make_item(id, 0.1_mass);
 		reg.assign<arrow>(id, id);
 		return id;

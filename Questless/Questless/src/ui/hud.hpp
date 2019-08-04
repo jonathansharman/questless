@@ -10,10 +10,10 @@
 #include "inventory_widget.hpp"
 #include "panel.hpp"
 #include "view_space.hpp"
-#include "window_widget.hpp"
 #include "world_widget.hpp"
 
 #include "reg.hpp"
+#include "rsrc/hud.hpp"
 
 #include <future>
 
@@ -21,46 +21,50 @@ namespace ql {
 	namespace effects {
 		struct effect;
 	}
-	namespace rsrc {
-		struct fonts;
-		struct hud;
-	}
-	struct inventory_widget;
+	struct list_dialog;
 
-	//! Head-up display, the root element for interfacing with the player.
+	//! The primary interface with the player during gameplay.
 	struct hud : widget {
 		//! @param player_id The ID of the player-controlled being.
-		hud( //
-			widget& parent,
-			rsrc::hud const& resources,
-			ent player_id);
+		hud(rsrc::fonts const& fonts, id region_id, id player_id);
 
-		view::vector get_size() const final;
+		auto get_size() const -> view::vector final;
 
-		void update(sec elapsed_time, std::vector<sf::Event>& events) final;
+		auto update(sec elapsed_time) -> void final;
 
-		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
+		auto set_position(view::point position) -> void final;
 
-		//! Renders @p effect for the player.
-		void render_effect(effects::effect const& effect);
+		auto get_position() const -> view::point final;
+
+		//! Renders @p effect to be perceived by the player.
+		auto render_effect(effects::effect const& effect) -> void;
 
 		//! Gets a future which is set after the player passes the current turn.
-		std::future<void> pass_future() {
+		auto pass_future() {
 			return _pass_promise.get_future();
 		}
 
+		auto on_parent_resize(view::vector parent_size) -> void final;
+
+		auto on_key_press(sf::Event::KeyEvent const& event) -> event_handled final;
+
 	private:
-		ent _player_id;
+		id _region_id;
+		id _player_id;
 		std::promise<void> _pass_promise;
 
-		rsrc::hud const& _resources;
-		panel _panel;
+		rsrc::hud _resources;
+		view::point _position;
+		view::vector _size;
 		world_widget _world_widget;
 		hotbar _hotbar;
 		inventory_widget _inv;
+		uptr<list_dialog> _item_dialog;
 		bool _show_inv = false;
 
-		std::vector<std::tuple<sf::String, std::function<void()>>> get_item_options(ent item_id);
+		auto draw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
+
+		auto get_item_options(id item_id) -> std::vector<std::tuple<sf::String, std::function<void()>>>;
 
 		void pass();
 	};

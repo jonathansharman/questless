@@ -10,9 +10,9 @@
 namespace ql {
 	//! An item for containing projectiles, such as arrows.
 	struct quiver {
-		ent id;
+		id id;
 		inventory inventory;
 	};
 
-	ent make_quiver(ent id, inventory inventory);
+	id make_quiver(id id, inventory inventory);
 }

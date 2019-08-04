@@ -16,7 +16,7 @@ namespace ql {
 
 	//! The agent representing the player's control over his or her character.
 	struct player {
-		ent id;
+		id id;
 
 		hud* hud = nullptr;
 

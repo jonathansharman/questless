@@ -21,15 +21,12 @@ namespace ql {
 	}
 	struct animation;
 
-	//! Creates an animation for @p tile.
-	uptr<animation> animate_tile(rsrc::tile const& resources, ent tile_id);
-
 	//! Creates an animation for @p spell.
 	uptr<animation> animate(rsrc::spell const& resources, magic::spell const& spell);
 
 	//! Creates an animation for @p entity.
-	uptr<animation> animate_entity(rsrc::entity const& entity_resources, rsrc::particle const& particle_resources, ent entity_id);
+	uptr<animation> animate_entity(rsrc::entity const& entity_resources, rsrc::particle const& particle_resources, id entity_id);
 
 	//! Creates an animation for @p item.
-	uptr<animation> animate_item(rsrc::item const& item_resources, rsrc::spell const& spell_resources, ent item_id);
+	uptr<animation> animate_item(rsrc::item const& item_resources, rsrc::spell const& spell_resources, id item_id);
 }

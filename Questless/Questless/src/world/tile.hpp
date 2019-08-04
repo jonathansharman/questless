@@ -14,5 +14,5 @@ namespace ql {
 	//! @param terrain The terrain on this tile.
 	//! @param temperature The temperature at this tile.
 	//! @param luminance The amount of light at this tile.
-	void make_tile(ent id, terrain terrain, temperature temperature, lum luminance);
+	void make_tile(id id, terrain terrain, temperature temperature, lum luminance);
 }

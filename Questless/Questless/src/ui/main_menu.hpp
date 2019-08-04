@@ -6,14 +6,19 @@
 
 #include "widget.hpp"
 
-#include "items/inventory.hpp"
+#include "utility/reference.hpp"
 
 namespace ql {
-	struct hotbar;
+	namespace rsrc {
+		struct fonts;
+	}
+	struct hud;
 
-	//! Interfaces with an inventory.
-	struct inventory_widget : widget {
-		inventory_widget(inventory& inventory, hotbar& hotbar);
+	//! The scene for the main menu.
+	struct main_menu : widget {
+		main_menu(uptr<widget>& root, rsrc::fonts const& fonts);
+
+		~main_menu();
 
 		auto get_size() const -> view::vector final;
 
@@ -25,20 +30,13 @@ namespace ql {
 
 		auto on_parent_resize(view::vector parent_size) -> void final;
 
-		auto on_key_press(sf::Event::KeyEvent const&) -> event_handled final;
-
 	private:
-		inventory& _inv;
-		hotbar& _hotbar;
+		uptr<widget>& _root;
+		uptr<hud> _hud;
+
 		view::point _position;
 		view::vector _size;
-		int _inv_page = 0; //! @todo Replace with filters and a scrollable view.
-		int _row_count;
-		int _col_count;
-		std::vector<id> _displayed_items;
 
 		auto draw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
-
-		void assign_idx(size_t hotbar_idx);
 	};
 }

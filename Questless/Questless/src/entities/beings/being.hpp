@@ -11,5 +11,5 @@
 #include "world/coordinates.hpp"
 
 namespace ql {
-	ent make_being(ent id, location location, agent agent, body body);
+	id make_being(id id, location location, agent agent, body body);
 }

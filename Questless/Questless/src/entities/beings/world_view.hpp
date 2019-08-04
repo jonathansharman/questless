@@ -25,7 +25,7 @@ namespace ql {
 		};
 
 		struct entity_view {
-			ent id;
+			id id;
 			perception perception;
 		};
 
@@ -35,7 +35,7 @@ namespace ql {
 		span visual_range;
 
 		//! Constructs the world view of being with id @p being_id.
-		world_view(ent being_id);
+		world_view(id being_id);
 
 		world_view(world_view const&) = default;
 		world_view(world_view&&) = default;

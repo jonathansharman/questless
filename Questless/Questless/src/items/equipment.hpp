@@ -20,13 +20,13 @@ namespace ql {
 			//! The type of part this tab can slot into.
 			body_part::tag tag;
 			//! The body part this tab is slotted into or nullopt if none.
-			std::optional<ent> o_part_id;
+			std::optional<id> o_part_id;
 		};
 
-		ent id;
+		id id;
 
 		//! The ID of the bearer of this equipment, or nullopt if not equipped.
-		std::optional<ent> o_bearer_id;
+		std::optional<ql::id> o_bearer_id;
 
 		//! The list of "tabs" that "slot" into the bearer's body parts.
 		std::vector<tab> tabs;
@@ -43,7 +43,7 @@ namespace ql {
 		}
 
 		//! Equips this to the being with ID @p bearer_id.
-		void equip(ent bearer_id);
+		void equip(ql::id bearer_id);
 
 		//! If equipped, unequips from the bearer, incurring costs.
 		void unequip();
@@ -52,5 +52,5 @@ namespace ql {
 		void forced_unequip();
 	};
 
-	void make_equipment(ent id, std::optional<ent> o_bearer_id, std::vector<equipment::tab> tabs, action equip_cost, action unequip_cost);
+	void make_equipment(ql::id id, std::optional<ql::id> o_bearer_id, std::vector<equipment::tab> tabs, action equip_cost, action unequip_cost);
 }

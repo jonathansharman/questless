@@ -11,7 +11,7 @@
 namespace ql {
 	//! Retrieves a count from the player.
 	struct count_dialog : dialog<int> {
-		count_dialog(sf::Window const& window,
+		count_dialog( //
 			sf::Font const& font,
 			sf::String const& title,
 			sf::String const& prompt,
@@ -19,7 +19,7 @@ namespace ql {
 			std::optional<int> min,
 			std::optional<int> max);
 
-		void update(sec elapsed_time, std::vector<sf::Event>& events) final;
+		void update(sec elapsed_time) final;
 
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 

@@ -11,15 +11,15 @@
 namespace ql {
 	//! An ordinary war bow.
 	struct bow {
-		ent id;
+		id id;
 
-		std::optional<ent> string_id;
-		std::optional<ent> nocked_arrow_id;
+		std::optional<ql::id> string_id;
+		std::optional<ql::id> nocked_arrow_id;
 
-		void nock(ent arrow_id);
+		void nock(ql::id arrow_id);
 		void draw();
 		void loose();
 	};
 
-	ent make_bow(ent id);
+	id make_bow(id id);
 }

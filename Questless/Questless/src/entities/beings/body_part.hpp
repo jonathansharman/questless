@@ -26,10 +26,10 @@ namespace ql {
 	//! An attachment point on a body part.
 	struct attachment {
 		//! The ID of the being that owns this body part attachment.
-		ent owner_id;
+		id owner_id;
 
 		//! The body part currently attached here or nullopt if there is no attached part.
-		std::optional<ent> o_part_id;
+		std::optional<id> o_part_id;
 
 		//! The offset from the parent part's origin to the child part's origin.
 		sf::Vector2f offset;
@@ -43,8 +43,8 @@ namespace ql {
 		//! Creates an instance of the body part that attaches here by default.
 		//! @param owner_id The ID of the being that owns the new body part.
 		//! @return The ID of the new body part.
-		ent make_default() {
-			ent id = reg.create();
+		id make_default() {
+			id id = reg.create();
 			//! @todo This component assignment is not compiling. Why?
 			// reg.assign<body_part>(id, id, default_part, owner_id);
 			return id;
@@ -55,10 +55,10 @@ namespace ql {
 	struct body_part {
 		enum class tag : int { head = 0, torso, arm, hand, leg, foot, wing, tail };
 
-		ent id;
+		id id;
 
 		//! The ID of the being that owns this body part.
-		ent owner_id;
+		ql::id owner_id;
 
 		//! The player-visisble name of this body part.
 		std::string name;
@@ -81,7 +81,7 @@ namespace ql {
 		int layer = 0;
 
 		//! The ID of the item equipped to this body or nullopt if none.
-		std::optional<ent> equipped_item_id = std::nullopt;
+		std::optional<ql::id> equipped_item_id = std::nullopt;
 
 		//! The body part attachment points on this body part.
 		std::vector<attachment> attachments{};
@@ -94,7 +94,7 @@ namespace ql {
 		//! Causes this part to take damage.
 		//! @param damage Damage to be applied to this part.
 		//! @param o_source_id The ID of the being which caused the damage, if any.
-		void take_damage(dmg::group& damage, std::optional<ent> o_source_id);
+		void take_damage(dmg::group& damage, std::optional<ql::id> o_source_id);
 
 		//! Recursively generates each missing attached body part using default parts.
 		void generate_attached_parts();

@@ -7,7 +7,7 @@
 #include <entt/entity/registry.hpp>
 
 namespace ql {
-	using ent = entt::registry::entity_type;
+	using id = entt::registry::entity_type;
 
 	//! @brief The global ECS registry.
 	inline entt::registry reg;

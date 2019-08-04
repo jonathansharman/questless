@@ -18,12 +18,12 @@ namespace ql {
 		std::variant<basic_ai, lazy_ai, player> value;
 
 		//! Allows the agent to perform actions.
-		std::future<void> act() {
+		auto act() -> std::future<void> {
 			return match(value, [](auto& value) { return value.act(); });
 		}
 
 		//! Causes the agent to perceive @p effect, possibly updating its state accordingly.
-		virtual void perceive(effects::effect const& effect) {
+		virtual auto perceive(effects::effect const& effect) -> void {
 			match(value, [&](auto& value) { value.perceive(effect); });
 		}
 	};

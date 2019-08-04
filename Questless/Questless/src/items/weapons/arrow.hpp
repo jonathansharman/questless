@@ -8,8 +8,8 @@
 
 namespace ql {
 	struct arrow {
-		ent id;
+		id id;
 	};
 
-	ent make_arrow(ent id);
+	id make_arrow(id id);
 }

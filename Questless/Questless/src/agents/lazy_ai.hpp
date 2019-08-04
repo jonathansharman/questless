@@ -14,7 +14,7 @@ namespace ql {
 
 	//! An AI that does nothing.
 	struct lazy_ai {
-		ent id;
+		id id;
 
 		std::future<void> act() {
 			return make_ready_future();

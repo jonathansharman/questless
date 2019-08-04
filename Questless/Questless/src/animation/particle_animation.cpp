@@ -7,7 +7,7 @@
 namespace ql {
 	void particle_animation::animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const {
 		for (auto& particle : particles) {
-			particle->draw(target, states);
+			target.draw(*particle, states);
 		}
 	}
 

@@ -10,64 +10,60 @@
 namespace ql {
 	//! A UI element.
 	struct widget : public sf::Drawable {
-		enum class event_handled { yes, no };
-
-		//! The offset of this widget's position from its parent's.
-		view::vector local_offset{};
-
-		widget(widget* parent) : _parent{parent} {}
+		//! Used to indicate whether an event has been handled and should no longer be propagated to other widgets.
+		enum class [[nodiscard]] event_handled{yes, no};
 
 		virtual ~widget() = default;
 
-		widget* parent() const {
-			return _parent;
-		}
-
 		//! The size of this widget's bounding box.
-		virtual view::vector get_size() const = 0;
+		virtual auto get_size() const -> view::vector = 0;
 
 		//! Updates the widget. To be called once per frame.
 		//! @param elapsed_time The amount of time since the last update.
-		virtual void update(sec elapsed_time) = 0;
+		virtual auto update(sec elapsed_time) -> void = 0;
+
+		//! Sets this widget's absolute position in the window to @p position.
+		virtual auto set_position(view::point position) -> void = 0;
 
 		//! This widget's absolute position in the window.
-		view::point get_position() const {
-			return (_parent ? _parent->get_position() : view::point{}) + local_offset;
-		}
+		virtual auto get_position() const -> view::point = 0;
 
 		//! The bounding box around this widget in the window.
-		auto get_bounding_box() const {
-			return view::box{get_position(), get_size()};
-		}
+		auto get_bounding_box() const -> view::box;
 
 		// Event Handlers
 
-		virtual event_handled on_parent_resize(view::vector) {
-			return event_handled::no;
-		};
-		virtual event_handled on_key_press(sf::Event::KeyEvent const&) {
-			return event_handled::no;
-		}
-		virtual event_handled on_key_release(sf::Event::KeyEvent const&) {
-			return event_handled::no;
-		}
-		virtual event_handled on_text_entry(sf::Uint32 unicode) {
-			return event_handled::no;
-		}
-		virtual event_handled on_mouse_press(sf::Event::MouseButtonEvent const&) {
-			return event_handled::no;
-		}
-		virtual event_handled on_mouse_release(sf::Event::MouseButtonEvent const&) {
-			return event_handled::no;
-		}
-		virtual event_handled on_mouse_move(view::point) {
-			return event_handled::no;
-		}
-		virtual event_handled on_mouse_wheel_scroll(sf::Event::MouseWheelScrollEvent const&) {
-			return event_handled::no;
-		}
+		//! Called when the parent widget is resized. A container widget should always call this initially to inform its
+		//! children of its initial size.
+		//! @param parent_size The new size of the parent widget.
+		virtual auto on_parent_resize(view::vector parent_size) -> void;
 
-	private:
-		widget* _parent;
+		//! Called when a keyboard key is pressed down.
+		//! @param event The key event that occurred.
+		virtual auto on_key_press(sf::Event::KeyEvent const& event) -> event_handled;
+
+		//! Called when a keyboard key is released.
+		//! @param event The key event that occurred.
+		virtual auto on_key_release(sf::Event::KeyEvent const& event) -> event_handled;
+
+		//! Called when text is entered.
+		//! @param unicode The Unicode character that was entered.
+		virtual auto on_text_entry(sf::Uint32 unicode) -> event_handled;
+
+		//! Called when a mouse button is pressed.
+		//! @param event The mouse button event that occurred.
+		virtual auto on_mouse_press(sf::Event::MouseButtonEvent const& event) -> event_handled;
+
+		//! Called when a mouse button is released.
+		//! @param event The mouse button event that occurred.
+		virtual auto on_mouse_release(sf::Event::MouseButtonEvent const& event) -> event_handled;
+
+		//! Called when the mouse moves.
+		//! @param mouse_position The new position of the mouse.
+		virtual auto on_mouse_move(view::point mouse_position) -> void;
+
+		//! Called when the mouse wheel is scrolled.
+		//! @param event The mouse wheel scroll event that occurred.
+		virtual auto on_mouse_wheel_scroll(sf::Event::MouseWheelScrollEvent const& event) -> event_handled;
 	};
 }

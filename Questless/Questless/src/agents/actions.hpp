@@ -9,9 +9,16 @@
 #include "world/coordinates.hpp"
 
 namespace ql {
-	void turn(ent turner_id, region_tile::direction direction);
-	void walk(ent walker_id, region_tile::direction direction);
-	void fly(ent flyer_id);
-	void drop(ent dropper_id, ent item_id);
-	void toss(ent thrower_id, ent item_id);
+	auto turn(id turner_id, region_tile::direction direction) -> void;
+
+	auto walk(id walker_id, region_tile::direction direction) -> void;
+
+	//! Moves or turns towards the given direction, depending on the current heading and the value of @p strafe.
+	auto move(id mover_id, region_tile::direction direction, bool strafe) -> void;
+
+	auto fly(id flyer_id) -> void;
+
+	auto drop(id dropper_id, id item_id) -> void;
+
+	auto toss(id thrower_id, id item_id) -> void;
 }

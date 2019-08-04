@@ -45,7 +45,7 @@ namespace ql {
 		}
 	}
 
-	void body_part::take_damage(dmg::group& damage, std::optional<ent> o_source_id) {
+	void body_part::take_damage(dmg::group& damage, std::optional<ql::id> o_source_id) {
 		// Apply part's equipped item's armor.
 		if (equipped_item_id) {
 			if (auto armor = reg.try_get<dmg::armor>(*equipped_item_id)) { damage = damage.against(*armor); }
@@ -88,7 +88,7 @@ namespace ql {
 
 	void body_part::generate_attached_parts() {
 		for (auto& attachment : attachments) {
-			ent const part_id = attachment.make_default();
+			auto const part_id = attachment.make_default();
 			attachment.o_part_id = part_id;
 			reg.get<body_part>(part_id).generate_attached_parts();
 		}

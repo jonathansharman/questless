@@ -22,11 +22,9 @@
 #include "rsrc/fonts.hpp"
 
 namespace ql {
-	//! Spawns a being into the world for the player.
-	//! @return The ID of the spawned player.
-	ent spawn_player(ent region_id, hud* hud) {
+	auto create_and_spawn_player(id player_id, id region_id, hud* hud) -> void {
 		location location = reg.get<region>(region_id).get_spawn_location();
-		ent player_id = make_human(reg.create(), location, {player{player_id, hud}});
+		id player_id = make_human(reg.create(), location, {player{player_id, hud}});
 
 		// Fill inventory with starting items.
 		auto& player_inv = reg.get<inventory>(player_id);

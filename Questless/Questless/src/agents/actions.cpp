@@ -11,7 +11,7 @@
 #include "world/region.hpp"
 
 namespace ql {
-	void turn(ent turner_id, region_tile::direction direction) {
+	auto turn(id turner_id, region_tile::direction direction) -> void {
 		auto& body = reg.get<ql::body>(turner_id);
 
 		constexpr auto base_cost = 1_ap;
@@ -23,7 +23,7 @@ namespace ql {
 		body.cond.direction = direction;
 	}
 
-	void walk(ent walker_id, region_tile::direction direction) {
+	auto walk(id walker_id, region_tile::direction direction) -> void {
 		auto [body, location] = reg.get<ql::body, ql::location>(walker_id);
 
 		constexpr auto base_cost = 1_ap;
@@ -43,11 +43,25 @@ namespace ql {
 		auto const strafe_cost = cost_per_turn * region_tile::distance(body.cond.direction, direction);
 	}
 
-	void fly(ent /*flyer_id*/) {
+	auto move(id mover_id, region_tile::direction direction, bool strafe) -> void {
+		if (strafe) {
+			// Strafe.
+			walk(mover_id, direction);
+		} else {
+			// Turn towards the chosen direction or move in that direction if already facing that way.
+			if (reg.get<body>(mover_id).cond.direction == direction) {
+				walk(mover_id, direction);
+			} else {
+				turn(mover_id, direction);
+			}
+		}
+	}
+
+	auto fly(id /*flyer_id*/) -> void {
 		//! @todo This.
 	}
 
-	void drop(ent dropper_id, ent item_id) {
+	auto drop(id dropper_id, id item_id) -> void {
 		// Get dropper's inventory.
 		auto& inv = reg.get<inventory>(dropper_id);
 		// Find item in inventory.
@@ -60,12 +74,12 @@ namespace ql {
 		auto const& location = reg.get<ql::location>(dropper_id);
 		auto& region = reg.get<ql::region>(location.region_id);
 		// The tile certainly exists because a being is located on it, so it's safe to dereference without a check here.
-		ent tile_id = *region.tile_at(location.coords);
+		id tile_id = *region.tile_at(location.coords);
 		// Add item to the tile's inventory.
 		reg.get<inventory>(tile_id).add(item_id);
 	}
 
-	void toss(ent thrower_id, ent item_id) {
+	auto toss(id thrower_id, id item_id) -> void {
 		//! @todo This.
 		return drop(thrower_id, item_id);
 	}

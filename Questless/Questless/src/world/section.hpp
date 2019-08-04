@@ -27,7 +27,7 @@ namespace ql {
 
 	//! An rhomboid section of hexes in a region.
 	struct section {
-		std::unordered_map<region_tile::point, ent> entity_id_map;
+		std::unordered_map<region_tile::point, id> entity_id_map;
 
 		//! The coordinates of @p region_tile_coords relative to the section that contains them.
 		static section_tile::point section_tile_coords(region_tile::point region_tile_coords) {
@@ -52,17 +52,17 @@ namespace ql {
 		}
 
 		//! The ID of the entity at @p tile_coords or nullopt if there is none.
-		std::optional<ent> entity_id_at(region_tile::point tile_coords) const;
+		std::optional<id> entity_id_at(region_tile::point tile_coords) const;
 
 		//! Tries to add the given entity to the section. Returns true on success or false if there is already an entity
 		//! at the entity's coordinates.
-		[[nodiscard]] bool try_add(ent being_id);
+		[[nodiscard]] bool try_add(id being_id);
 
 		//! Removes the being at the given region tile coordinates, if present.
 		void remove_at(region_tile::point coords);
 
 		//! Removes the entity with ID @p entity_id from the section, if present.
-		void remove(ent entity_id);
+		void remove(id entity_id);
 
 		//! Region tile coordinates from @p region_section_coords and @p section_tile_coords.
 		static region_tile::point region_tile_coords(region_section::point region_section_coords,
@@ -78,14 +78,14 @@ namespace ql {
 		}
 
 		//! The ID of the tile at @p section_tile_coords in this section.
-		ent tile_id_at(section_tile::point section_tile_coords) const {
+		id tile_id_at(section_tile::point section_tile_coords) const {
 			return _tile_ids[section_tile_coords.q.value][section_tile_coords.r.value];
 		}
 
 	private:
 		//! A q-major array of tiles, representing a rhomboid section of world data centered around the section's hex
 		//! coordinates.
-		std::array<std::array<ent, section_diameter.value>, section_diameter.value> _tile_ids;
+		std::array<std::array<id, section_diameter.value>, section_diameter.value> _tile_ids;
 		//! The hex coordinates of the section within the region. The section's center's region tile coordinates are
 		//! _coords * section_diameter.
 		region_section::point _coords;

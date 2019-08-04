@@ -25,11 +25,11 @@ namespace ql {
 
 		template <typename ConstQualifiedBodyPartType, typename F>
 		void for_parts_impl(body const& body, bool include_disabled, F const& f) {
-			std::queue<ent> work_list;
+			std::queue<id> work_list;
 			work_list.push(body.root_part_id);
 			while (!work_list.empty()) {
 				// Get the next part from the work list.
-				ent part_id = work_list.front();
+				id part_id = work_list.front();
 				ConstQualifiedBodyPartType part = reg.get<body_part>(part_id);
 				// Check ableness condition before proceeding into this branch.
 				if (include_disabled || part.cond.enabled()) {
@@ -46,7 +46,7 @@ namespace ql {
 		}
 	}
 
-	body::body(ent id, ent root_part_id, body_cond cond, stats::body stats)
+	body::body(ql::id id, ql::id root_part_id, body_cond cond, stats::body stats)
 		: id{id}
 		, root_part_id{root_part_id}
 		, cond{std::move(cond)}

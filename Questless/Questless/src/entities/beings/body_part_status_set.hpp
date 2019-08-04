@@ -16,7 +16,7 @@ namespace ql {
 
 	//! Component for storing a being's status modifiers.
 	struct body_part_status_set {
-		ent id;
+		id id;
 
 		//! Status modifiers that cannot be removed.
 		std::vector<body_part_status> permanent;

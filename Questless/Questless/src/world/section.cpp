@@ -16,7 +16,7 @@
 namespace ql {
 	section::section(region_section::point coords, std::istream& data_stream) : _coords{coords} {
 		for (auto& slice : _tile_ids) {
-			for (ent tile_id : slice) {
+			for (id tile_id : slice) {
 				int c;
 				temperature temperature_offset;
 
@@ -62,12 +62,12 @@ namespace ql {
 		}
 	}
 
-	std::optional<ent> section::entity_id_at(region_tile::point tile_coords) const {
+	std::optional<id> section::entity_id_at(region_tile::point tile_coords) const {
 		auto it = entity_id_map.find(tile_coords);
 		return it != entity_id_map.end() ? std::make_optional(it->second) : std::nullopt;
 	}
 
-	bool section::try_add(ent entity_id) {
+	bool section::try_add(id entity_id) {
 		auto result = entity_id_map.insert({reg.get<location>(entity_id).coords, entity_id});
 		return result.second;
 	}
@@ -77,7 +77,7 @@ namespace ql {
 		if (it != entity_id_map.end()) { entity_id_map.erase(it); }
 	}
 
-	void section::remove(ent entity_id) {
+	void section::remove(id entity_id) {
 		remove_at(reg.get<location>(entity_id).coords);
 	}
 }

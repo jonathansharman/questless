@@ -23,7 +23,7 @@ namespace ql {
 
 	//! A large set of connected sections of hexagonal tiles.
 	struct region {
-		ent id;
+		id id;
 
 		//! Pseudo-randomly generates a new region.
 		//! @param name The name of the new region.
@@ -39,20 +39,20 @@ namespace ql {
 		void save(char const* save_name);
 
 		//! The ID of the entity at @p region_tile_coords or nullopt if none.
-		std::optional<ent> entity_id_at(region_tile::point region_tile_coords) const;
+		std::optional<ql::id> entity_id_at(region_tile::point region_tile_coords) const;
 
 		//! Finds a suitable spawn location.
 		location get_spawn_location();
 
 		//! Adds @p entity_id to the region, setting its coordinates to @p region_tile_coords.
-		[[nodiscard]] bool try_add(ent entity_id, region_tile::point region_tile_coords);
+		[[nodiscard]] bool try_add(ql::id entity_id, region_tile::point region_tile_coords);
 
 		//! Moves @p entity_id to the tile at @p region_tile_coords.
 		//! @return Whether @p being was successfully moved.
-		[[nodiscard]] bool try_move(ent entity_id, region_tile::point region_tile_coords);
+		[[nodiscard]] bool try_move(ql::id entity_id, region_tile::point region_tile_coords);
 
 		//! Removes @p entity_id from the region, if present.
-		void remove(ent entity_id);
+		void remove(ql::id entity_id);
 
 		//! Adds @p light_source to the region's light sources.
 		void add(light_source const& light_source);
@@ -61,7 +61,7 @@ namespace ql {
 		void remove(light_source const& light_source);
 
 		//! The tile at @p region_tile_coords or nullopt if none.
-		std::optional<ent> tile_at(region_tile::point region_tile_coords) const;
+		std::optional<ql::id> tile_at(region_tile::point region_tile_coords) const;
 
 		//! The section at @p region_section_coords.
 		section const* section_at(region_section::point region_section_coords) const {
@@ -162,5 +162,5 @@ namespace ql {
 		}
 	};
 
-	ent make_region(ent id, std::string name);
+	id make_region(id id, std::string name);
 }

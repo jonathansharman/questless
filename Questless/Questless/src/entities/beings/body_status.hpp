@@ -20,28 +20,28 @@ namespace ql {
 	struct blind {
 		static constexpr body_status_category category = body_status_category::detrimental;
 		perception acuity_reduction;
-		std::optional<ent> o_source_id;
+		std::optional<id> o_source_id;
 	};
 
 	//! Reduces intellect.
 	struct confused {
 		static constexpr body_status_category category = body_status_category::detrimental;
 		intellect reduction;
-		std::optional<ent> o_source_id;
+		std::optional<id> o_source_id;
 	};
 
 	//! Reduces hearing.
 	struct deaf {
 		static constexpr body_status_category category = body_status_category::detrimental;
 		hearing reduction;
-		std::optional<ent> o_source_id;
+		std::optional<id> o_source_id;
 	};
 
 	//! Reduces speech.
 	struct mute {
 		static constexpr body_status_category category = body_status_category::detrimental;
 		speech reduction;
-		std::optional<ent> o_source_id;
+		std::optional<id> o_source_id;
 	};
 
 	//! Reduces strength and max energy.
@@ -52,7 +52,7 @@ namespace ql {
 		static constexpr auto max_energy_penalty = 1_ep / nausea{1};
 
 		nausea magnitude;
-		std::optional<ent> o_source_id;
+		std::optional<id> o_source_id;
 	};
 
 	//! Reduces action points.
@@ -62,14 +62,14 @@ namespace ql {
 		static constexpr auto ability_penalty = 1_ap / numbness{1};
 
 		numbness magnitude;
-		std::optional<ent> o_source_id;
+		std::optional<id> o_source_id;
 	};
 
 	//! Increases visual acuity.
 	struct telescoped {
 		static constexpr body_status_category category = body_status_category::beneficial;
 		perception acuity_bonus;
-		std::optional<ent> o_source_id;
+		std::optional<id> o_source_id;
 	};
 
 	//! A body status modifier.

@@ -8,7 +8,7 @@
 #include "items/item.hpp"
 
 namespace ql {
-	ent make_quiver(ent id, inventory inventory) {
+	id make_quiver(id id, inventory inventory) {
 		make_item(id, 0.5_mass);
 
 		//! @todo Equiping and unequiping a bow shouldn't take a long time (or actions). Stringing and unstringing a bow

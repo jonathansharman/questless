@@ -57,7 +57,7 @@ namespace ql {
 		}
 	}
 
-	perception perception_of(ent perceptor_id, region_tile::point target) {
+	perception perception_of(id perceptor_id, region_tile::point target) {
 		auto const& body = reg.get<ql::body>(perceptor_id);
 
 		// Check that the perceptor has at least one source of vision.

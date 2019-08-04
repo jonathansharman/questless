@@ -10,11 +10,11 @@
 #include "entities/beings/being.hpp"
 
 namespace ql {
-	void make_equipment(ent id, std::optional<ent> o_bearer_id, std::vector<equipment::tab> tabs, action equip_cost, action unequip_cost) {
+	void make_equipment(ql::id id, std::optional<ql::id> o_bearer_id, std::vector<equipment::tab> tabs, action equip_cost, action unequip_cost) {
 		reg.assign<equipment>(id, id, o_bearer_id, std::move(tabs), equip_cost, unequip_cost);
 	}
 
-	void equipment::equip(ent actor_id) {
+	void equipment::equip(ql::id actor_id) {
 		//! @todo Allow bearer to choose where to equip item.
 
 		for (auto& tab : tabs) {

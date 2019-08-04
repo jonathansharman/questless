@@ -8,7 +8,7 @@
 #include "world/light_source.hpp"
 
 namespace ql {
-	ent make_campfire(ent id, location location) {
+	id make_campfire(id id, location location) {
 		make_entity(id, location);
 		reg.assign<light_source>(id, id, 100_lum);
 		return id;

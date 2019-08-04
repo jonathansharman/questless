@@ -13,9 +13,9 @@
 namespace ql {
 	//! A magic scroll for inscribing spells.
 	struct scroll {
-		ent id;
+		id id;
 		std::optional<magic::spell> spell;
 	};
 
-	ent make_scroll(ent id, std::optional<magic::spell> spell);
+	id make_scroll(id id, std::optional<magic::spell> spell);
 }

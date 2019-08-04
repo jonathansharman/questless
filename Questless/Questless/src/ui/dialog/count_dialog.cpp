@@ -5,15 +5,14 @@
 #include "count_dialog.hpp"
 
 namespace ql {
-	count_dialog::count_dialog(sf::Window const& window,
+	count_dialog::count_dialog( //
 		sf::Font const& font,
 		sf::String const& title,
 		sf::String const& prompt,
 		int default_value,
 		std::optional<int> min,
 		std::optional<int> max)
-		: dialog{window}
-		, _count{default_value}
+		: _count{default_value}
 		, _min{min}
 		, _max{max}
 		, _title{make_title(window, font, title)}
@@ -21,7 +20,7 @@ namespace ql {
 		, _selector{make_selector(window, font, std::to_string(_count))} //
 	{}
 
-	void count_dialog::update(sec elapsed_time, std::vector<sf::Event>& events) {
+	void count_dialog::update(sec elapsed_time) {
 		if (im.pressed({sf::Keyboard::Backspace, sf::Keyboard::Escape})) {
 			_promise.set_value(std::nullopt);
 			return;

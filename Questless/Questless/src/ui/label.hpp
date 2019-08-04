@@ -9,12 +9,22 @@
 namespace ql {
 	//! Displays some text.
 	struct label : widget {
-		sf::Text text;
+		auto get_size() const -> view::vector final;
 
-		view::vector get_size() const final;
+		auto update(sec) -> void final;
 
-		void update(sec, std::vector<sf::Event>&) final;
+		auto set_position(view::point position) -> void final;
 
-		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
+		auto get_position() const -> view::point final;
+
+		//! Sets this label's text to @p text.
+		auto set_text(sf::Text text) -> void;
+
+	private:
+		sf::Text _text;
+		view::point _position;
+		view::vector _size;
+
+		auto draw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
 	};
 }

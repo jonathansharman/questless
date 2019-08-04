@@ -13,10 +13,11 @@
 namespace ql::rsrc {
 	//! Contains resources for the world renderer.
 	struct hud {
-		entity const& entity;
 		fonts const& fonts;
-		item const& item;
-		particle const& particle;
-		tile const& tile;
+
+		entity entity;
+		item item;
+		particle particle;
+		tile tile;
 	};
 }

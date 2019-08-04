@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "item_widget.hpp"
 #include "widget.hpp"
 
 #include "reg.hpp"
@@ -11,35 +12,37 @@
 #include <optional>
 
 namespace ql {
-	//! Holds frequently used items.
+	//! Holds items for ready use.
 	struct hotbar : widget {
-		hotbar(widget& parent);
+		auto get_size() const -> view::vector final;
 
-		view::vector get_size() const final;
+		auto update(sec elapsed_time) -> void final;
 
-		void update(sec elapsed_time, std::vector<sf::Event>& events) final;
+		auto set_position(view::point position) -> void final;
 
-		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
+		auto get_position() const -> view::point final;
 
-		auto const& o_item_ids() const {
-			return _o_item_ids;
-		}
+		auto on_key_press(sf::Event::KeyEvent const&) -> event_handled final;
 
-		//! Gets the most recent selections, oldest to newest, and then clears the selection buffer.
-		std::vector<int> poll_selections();
+		auto on_mouse_press(sf::Event::MouseButtonEvent const& event) -> event_handled final;
 
-		//! The most recent selection made or 0 if no selection has been made yet.
-		auto most_recent_selection() const;
+		//! Sets the item ID of the @p idx item widget to @p o_item_id.
+		auto set_item(size_t idx, std::optional<id> o_item_id) -> void;
+
+		//! Copies @p handler to the @p on_click handler for each of this hotbar's item widgets.
+		auto set_on_click(std::function<void(std::optional<id>)> handler) -> void;
 
 	private:
-		static constexpr size_t _item_count = 10;
+		view::point _position;
 
-		std::array<std::optional<ent>, 10> _o_item_ids;
+		std::array<item_widget, 10> _item_widgets;
 		std::vector<int> _selections;
-		int _most_recent_selection = 0;
+		size_t _most_recent_idx = 0;
 
 		sf::Texture _slot_texture;
 
-		void add(int selection);
+		auto draw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
+
+		void click(size_t idx);
 	};
 }

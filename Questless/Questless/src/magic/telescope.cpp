@@ -11,7 +11,7 @@
 #include "world/region.hpp"
 
 namespace ql::magic {
-	void telescope::cast(ent caster_id, ent gatestone_id) {
+	void telescope::cast(id caster_id, id gatestone_id) {
 		//! @todo Pick duration and bonus and compute cost accordingly.
 
 		// Check and pay cost.

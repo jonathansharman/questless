@@ -8,11 +8,11 @@
 
 namespace ql {
 	struct quarterstaff {
-		ent id;
+		id id;
 
 		void strike();
 		void jab();
 	};
 
-	ent make_quarterstaff(ent id);
+	id make_quarterstaff(id id);
 }

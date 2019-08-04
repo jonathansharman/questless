@@ -12,7 +12,7 @@
 namespace ql {
 	//! Encapsulates the temporary conditions of a body part.
 	struct body_part_cond {
-		ent id;
+		id id;
 
 		//! Allows a part to be used to perform actions.
 		dynamic_nonnegative<action> action;

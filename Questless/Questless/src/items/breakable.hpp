@@ -11,7 +11,7 @@
 namespace ql {
 	//! Component for items that can be worn down and broken.
 	struct breakable {
-		ent id;
+		id id;
 
 		//! The item's current and maximum durability. The item is broken if durability is zero.
 		dynamic_nonnegative<ql::durability> durability;
@@ -22,5 +22,5 @@ namespace ql {
 		}
 	};
 
-	void make_breakable(ent id, dynamic_nonnegative<ql::durability> durability);
+	void make_breakable(id id, dynamic_nonnegative<ql::durability> durability);
 }

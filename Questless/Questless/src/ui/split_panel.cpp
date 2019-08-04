@@ -9,61 +9,76 @@
 #include "utility/visitation.hpp"
 
 namespace ql {
-	split_panel::split_panel(widget& parent, ql::split_line split_line) : widget{&parent}, split_line{split_line} {}
+	using namespace view::literals;
 
-	view::vector split_panel::get_size() const {
-		return parent()->get_size();
+	split_panel::split_panel(ql::split_line split_line) : split_line{split_line} {}
+
+	auto split_panel::get_size() const -> view::vector {
+		return _size;
 	};
 
-	void split_panel::update(sec elapsed_time, std::vector<sf::Event>& events) {
-		for (auto event : events) {
-			if (event.type == sf::Event::Resized) {
-				if (_first) { arrange_first(); }
-				if (_second) { arrange_second(); }
-			}
-		}
-		if (_first) { _first->update(elapsed_time, events); }
-		if (_second) { _second->update(elapsed_time, events); }
+	auto split_panel::update(sec elapsed_time) -> void {
+		if (_first) { _first->update(elapsed_time); }
+		if (_second) { _second->update(elapsed_time); }
 	}
 
-	void split_panel::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	auto split_panel::draw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
 		if (_first) { target.draw(*_first, states); }
 		if (_second) { target.draw(*_second, states); }
 	}
 
-	void split_panel::set_first_child(widget* first_child) {
+	auto split_panel::set_position(view::point position) -> void {
+		_position = position;
+		arrange_first();
+		arrange_second();
+	}
+
+	auto split_panel::get_position() const -> view::point {
+		return _position;
+	}
+
+	auto split_panel::on_parent_resize(view::vector parent_size) -> void {
+		_size = parent_size;
+		arrange_first();
+		arrange_second();
+	}
+
+	auto split_panel::set_first_child(widget* first_child) -> void {
 		_first = first_child;
 		arrange_first();
 	}
 
-	void split_panel::set_second_child(widget* second_child) {
+	auto split_panel::set_second_child(widget* second_child) -> void {
 		_second = second_child;
 		arrange_second();
 	}
 
-	void split_panel::arrange_first() {
-		_first->local_offset = local_offset;
+	auto split_panel::arrange_first() -> void {
+		if (_first) {
+			_first->on_parent_resize(_size);
+			_first->set_position(get_position());
+		}
 	}
 
-	void split_panel::arrange_second() {
-		// Initially set second child's local offset to the panel's.
-		_second->local_offset = local_offset;
-		// Then adjust according to the split orientation and location.
-		switch (split_line) {
-			case split_line::horizontal:
-				auto const offset = match( //
-					split_location,
-					[](view::px px) { return px; },
-					[&](float proportion) { return get_size()[1] * proportion; });
-				_second->local_offset[1] += offset;
-				break;
-			case split_line::vertical:
-				auto const offset = match( //
-					split_location,
-					[](view::px px) { return px; },
-					[&](float proportion) { return get_size()[0] * proportion; });
-				_second->local_offset[0] += offset;
-				break;
+	auto split_panel::arrange_second() -> void {
+		if (_second) {
+			_second->on_parent_resize(_size);
+			switch (split_line) {
+				case split_line::horizontal:
+					auto const y = match(
+						split_location,
+						[](view::px px) { return px; },
+						[&](float proportion) { return get_size()[1] * proportion; });
+					_second->set_position(get_position() + view::vector{0.0_px, y});
+					break;
+				case split_line::vertical:
+					auto const x = match(
+						split_location,
+						[](view::px px) { return px; },
+						[&](float proportion) { return get_size()[0] * proportion; });
+					_second->set_position(get_position() + view::vector{x, 0.0_px});
+					break;
+			}
 		}
 	}
 }

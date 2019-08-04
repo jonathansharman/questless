@@ -16,9 +16,9 @@ namespace ql {
 		struct injury {
 			region_tile::point origin;
 			dmg::group const damage;
-			ent target_being_id;
-			ent target_part_id;
-			std::optional<ent> o_source_id;
+			id target_being_id;
+			id target_part_id;
+			std::optional<id> o_source_id;
 
 			constexpr span range() const {
 				return 7_span;

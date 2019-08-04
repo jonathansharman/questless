@@ -4,15 +4,17 @@
 
 #pragma once
 
+#include "bounded/static.hpp"
+#include "quantities/wall_time.hpp"
 #include "rsrc/fonts.hpp"
 #include "utility/reference.hpp"
 
 #include <SFML/Graphics.hpp>
 
+#include <deque>
+
 namespace ql {
-	namespace scenes {
-		struct scene;
-	}
+	struct widget;
 
 	//! Represents an instance of the game Questless.
 	struct game {
@@ -25,12 +27,32 @@ namespace ql {
 		void run();
 
 	private:
-		enum class state { being_editor }; //! @todo Should not be needed. Replace with scene.
-
 		sf::RenderWindow _window;
 
 		rsrc::fonts _fonts;
-		
-		uptr<scenes::scene> _scene;
+
+		uptr<widget> _root;
+
+		// Timing
+
+		//! The last time the game updated.
+		clock::time_point _last_update_time = clock::now();
+
+		//! Time debt is nonnegative.
+		static constexpr sec min_time_debt = 0.0_s;
+		//! Capped to prevent too much "fast-forwarding".
+		static constexpr sec max_time_debt = 1.0_s;
+		//! How far behind the target frame duration the scene is.
+		static_bounded<sec, min_time_debt, max_time_debt> _time_debt = 0.0_s;
+
+		//! The last however many instantaneous FPS counts, used to smooth out the FPS estimation.
+		std::deque<per_sec> _fps_buffer;
+
+		//! Tries to keep the scene running at the target frame rate.
+		//! @return The duration of the last frame.
+		auto regulate_timing() -> sec;
+
+		//! Draws the FPS counter.
+		auto draw_fps() -> void;
 	};
 }

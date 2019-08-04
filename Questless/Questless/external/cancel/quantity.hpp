@@ -240,11 +240,27 @@ namespace cancel {
 
 	//! The square root of a quantity.
 	//! @note The powers of the quantity's units must be divisible by two.
-	//! @note Uses ADL to find a @p sqrt() function for the quantity's representation, defaulting to @p std::sqrt().
+	//! @note Uses ADL to find a @p sqrt() function for the quantity's representation, defaulting to @p gcem::sqrt().
 	template <typename Rep, typename Unit>
 	constexpr auto sqrt(quantity<Rep, Unit> const& q) {
 		using gcem::sqrt;
 		return quantity<Rep, cancel::exponential_t<1, 2, Unit>>{static_cast<Rep>(sqrt(q.value))};
+	}
+
+	//! The floor of a quantity.
+	//! @note Uses ADL to find a @p floor() function for the quantity's representation, defaulting to @p gcem::floor().
+	template<typename Rep, typename Unit>
+	constexpr auto floor(quantity<Rep, Unit> const& q) {
+		using gcem::floor;
+		return quantity<Rep, Unit>{static_cast<Rep>(floor(q.value))};
+	}
+
+	//! The ceiling of a quantity.
+	//! @note Uses ADL to find a @p ceil() function for the quantity's representation, defaulting to @p gcem::ceil().
+	template<typename Rep, typename Unit>
+	constexpr auto ceil(quantity<Rep, Unit> const& q) {
+		using gcem::ceil;
+		return quantity<Rep, Unit>{static_cast<Rep>(ceil(q.value))};
 	}
 
 	//! Floating-point mod a quantity by a scalar.

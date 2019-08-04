@@ -11,8 +11,11 @@
 #include "items/weapons/bow.hpp"
 #include "items/weapons/quarterstaff.hpp"
 #include "rsrc/hud.hpp"
+#include "world/region.hpp"
 
 #include "agents/actions.hpp"
+
+#include <fmt/format.h>
 
 namespace ql {
 	namespace {
@@ -24,153 +27,148 @@ namespace ql {
 	}
 
 	hud::hud( //
-		widget& parent,
-		rsrc::hud const& resources,
-		ent player_id)
-		: widget{&parent}
-		, _resources{resources}
-		, _panel{*this}
+		rsrc::fonts const& fonts,
+		id region_id,
+		id player_id)
+		: _resources{fonts}
+		, _region_id{region_id}
 		, _player_id{player_id}
-		, _world_widget{_panel, get_world_widget_resources(resources)}
-		, _hotbar{_panel}
-		, _inv{_panel, reg.get<inventory>(player_id)} //
+		, _world_widget{get_world_widget_resources(_resources)}
+		, _hotbar{}
+		, _inv{reg.get<inventory>(player_id), _hotbar} //
 	{
-		_panel.children.push_back(&_world_widget);
-		_panel.children.push_back(&_hotbar);
-		_panel.children.push_back(&_inv);
-	}
-
-	view::vector hud::get_size() const {
-		return parent()->get_size();
-	}
-
-	void hud::update(sec elapsed_time, std::vector<sf::Event>& events) {
-		body const& player_body = reg.get<body>(_player_id);
-
-		for (auto event : events) {
-			switch (event.type) {
-				case sf::Event::KeyPressed:
-					switch (event.key.code) {
-						case sf::Keyboard::Escape:
-							_show_inv = false;
-							break;
-						case sf::Keyboard::Tab:
-							_show_inv = !_show_inv;
-							break;
-						default:
-							break;
-					}
+		// When a hotbar item is selected, open a list dialog to choose an action.
+		_hotbar.set_on_click([this](std::optional<id> o_item_id) {
+			if (o_item_id) {
+				_item_dialog = umake<list_dialog>(_resources.fonts, "Act...", get_item_options(*o_item_id));
+				_item_dialog->on_parent_resize(get_size());
+				_item_dialog->set_position(view::point_from_sfml(sf::Mouse::getPosition()));
 			}
-		}
+		});
+	}
 
-		if (_show_inv) {
-			_inv.update(elapsed_time, events);
+	auto hud::get_size() const -> view::vector {
+		return _size;
+	}
+
+	auto hud::update(sec elapsed_time) -> void {
+		if (_item_dialog) {
+			_item_dialog->update(elapsed_time);
+		} else if (_show_inv) {
+			_inv.update(elapsed_time);
 		} else {
-			//! @todo Move the "move" and "use" functions.
-			auto move = [&](region_tile::direction direction, bool strafe) {
-				if (strafe) {
-					// Strafe.
-					walk(_player_id, direction);
-				} else {
-					// Turn towards the chosen direction or move in that direction if already facing that way.
-					if (player_body.cond.direction == direction) {
-						walk(_player_id, direction);
-					} else {
-						turn(_player_id, direction);
-					}
-				}
-			};
-
 			// Pass the turn as long as X is held.
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) { return pass(); }
 
-			for (auto event : events) {
-				switch (event.type) {
-					case sf::Event::KeyPressed:
-						switch (event.key.code) {
-							// Pass a single turn if Z or Return is pressed.
-							case sf::Keyboard::Z:
-								[[fallthrough]];
-							case sf::Keyboard::Return:
-								return pass();
-							// Movement commands.
-							case sf::Keyboard::E:
-								move(region_tile::direction::one, event.key.shift);
-							case sf::Keyboard::W:
-								move(region_tile::direction::two, event.key.shift);
-							case sf::Keyboard::Q:
-								move(region_tile::direction::three, event.key.shift);
-							case sf::Keyboard::A:
-								move(region_tile::direction::four, event.key.shift);
-							case sf::Keyboard::S:
-								move(region_tile::direction::five, event.key.shift);
-							case sf::Keyboard::D:
-								move(region_tile::direction::six, event.key.shift);
-							default:
-								break;
-						}
-					default:
-						break;
-				}
-			}
-
-			// Update hotbar and check for item use.
-			_hotbar.update(elapsed_time, events);
-			for (int idx : _hotbar.poll_selections()) {
-				if (std::optional<ent> o_item_id = _hotbar.o_item_ids()[idx]) {
-					// Open list dialog for the player to choose an action.
-					auto dialog = umake<list_dialog>( //
-						_window,
-						_resources.fonts,
-						view::point_from_sfml(sf::Mouse::getPosition()),
-						"Act...",
-						get_item_options(*o_item_id));
-					_dialogs.push_back(std::move(dialog));
-				}
-			}
+			_hotbar.update(elapsed_time);
 		}
 	}
 
-	void hud::render_effect(effects::effect const& effect) {
+	auto hud::render_effect(effects::effect const& effect) -> void {
 		_world_widget.render_effect(effect);
 	}
 
-	void hud::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	auto hud::draw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
 		constexpr int conditions_count = 2;
 		constexpr int condition_bar_width = 10;
 		constexpr int condition_bar_height = 100;
 
-		// Draw condition bars.
-		auto [body, cond, stats] = reg.get<ql::body, body_cond, ql::stats::being>(_player_id);
-		the_renderer().draw_box(spaces::window::box{spaces::window::point{0, screen_bottom},
-									spaces::window::vector{condition_bar_width * conditions_count, condition_bar_height},
-									{spaces::window::align_left, spaces::window::align_bottom}},
-			colors::black());
-		auto draw_bar = [condition_bar_width, condition_bar_height, screen_bottom, left = 0](
-							double ratio, sf::Color const& color) mutable {
-			the_renderer().draw_box(
-				spaces::window::box{spaces::window::point{left + 1, screen_bottom},
-					spaces::window::vector{condition_bar_width - 2, lround(condition_bar_height * ratio) - 1},
-					{spaces::window::align_left, spaces::window::align_bottom}},
-				color);
-			left += condition_bar_width;
-		};
+		//! @todo Condition bars.
 		// Blood
-		draw_bar((body.blood.value() / body.total_vitality() / body_part::blood_per_vitality).value, sf::Color::Red);
 		// Energy
-		draw_bar((cond.energy.value() / stats.a.stamina.value()).value, sf::Color::Cyan);
 		// Satiety
-		draw_bar((cond.satiety.value() / body_cond::max_satiety).value, sf::Color{130, 80, 40});
 		// Alertness
-		draw_bar((cond.alertness.value() / body_cond::max_alertness).value, sf::Color::Yellow);
 
-		_hotbar.draw(target, states);
+		target.draw(_hotbar, states);
 
 		// Draw the inventory if it's open.
-		if (_show_inv) { _inv.draw(target, states); }
+		if (_show_inv) { target.draw(_inv, states); }
+
+		{ // Draw the current time.
+			auto const& region = reg.get<ql::region>(_region_id);
+			tick const time_of_day = region.time_of_day();
+			std::string time_name;
+			switch (region.period_of_day()) {
+				case period_of_day::morning:
+					time_name = "Morning";
+					break;
+				case period_of_day::afternoon:
+					time_name = "Afternoon";
+					break;
+				case period_of_day::dusk:
+					time_name = "Dusk";
+					break;
+				case period_of_day::evening:
+					time_name = "Evening";
+					break;
+				case period_of_day::night:
+					time_name = "Night";
+					break;
+				case period_of_day::dawn:
+					time_name = "Dawn";
+					break;
+			}
+			std::string time_string = fmt::format("Time: {} ({}, {})", region.time(), time_of_day, time_name);
+			sf::Text time_text{time_string, _resources.fonts.firamono, 20};
+			time_text.setFillColor(sf::Color::White);
+			time_text.setPosition({0, 50});
+			target.draw(time_text, states);
+		}
 	}
 
-	std::vector<std::tuple<sf::String, std::function<void()>>> hud::get_item_options(ent item_id) {
+	auto hud::set_position(view::point position) -> void {
+		_position = position;
+	}
+
+	auto hud::get_position() const -> view::point {
+		return _position;
+	}
+
+	auto hud::on_parent_resize(view::vector parent_size) -> void {
+		_size = parent_size;
+	}
+
+	auto hud::on_key_press(sf::Event::KeyEvent const& event) -> event_handled {
+		switch (event.code) {
+			// Hide inventory.
+			case sf::Keyboard::Escape:
+				_show_inv = false;
+				break;
+			// Toggle inventory.
+			case sf::Keyboard::Tab:
+				_show_inv = !_show_inv;
+				break;
+			// Pass a single turn if Z or Return is pressed.
+			case sf::Keyboard::Z:
+				[[fallthrough]];
+			case sf::Keyboard::Return:
+				pass();
+				return event_handled::yes;
+			// Movement commands.
+			case sf::Keyboard::E:
+				move(_player_id, region_tile::direction::one, event.shift);
+				break;
+			case sf::Keyboard::W:
+				move(_player_id, region_tile::direction::two, event.shift);
+				break;
+			case sf::Keyboard::Q:
+				move(_player_id, region_tile::direction::three, event.shift);
+				break;
+			case sf::Keyboard::A:
+				move(_player_id, region_tile::direction::four, event.shift);
+				break;
+			case sf::Keyboard::S:
+				move(_player_id, region_tile::direction::five, event.shift);
+				break;
+			case sf::Keyboard::D:
+				move(_player_id, region_tile::direction::six, event.shift);
+				break;
+			default:
+				break;
+		}
+	}
+
+	auto hud::get_item_options(id item_id) -> std::vector<std::tuple<sf::String, std::function<void()>>> {
 		std::vector<std::tuple<sf::String, std::function<void()>>> result;
 		if (auto equipment = reg.try_get<ql::equipment>(item_id)) {
 			if (equipment->equipped()) {
@@ -200,7 +198,7 @@ namespace ql {
 		return result;
 	}
 
-	void hud::pass() {
+	auto hud::pass() -> void {
 		// Pass control by satisfying the current pass promise.
 		_pass_promise.set_value();
 		// Reassign the pass promise in preparation for next turn.

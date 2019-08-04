@@ -76,9 +76,6 @@
     <Filter Include="external\cancel">
       <UniqueIdentifier>{131fc6ea-ecf3-42d9-b809-e9efc0976d2a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\scenes">
-      <UniqueIdentifier>{394fbcfc-b9cc-4463-8eda-2db6c36593ca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\rsrc">
       <UniqueIdentifier>{73cabe8c-8c07-4b98-b860-1b9fc23de138}</UniqueIdentifier>
     </Filter>
@@ -369,18 +366,6 @@
     <ClInclude Include="src\animation\still_shape.hpp">
       <Filter>src\animation</Filter>
     </ClInclude>
-    <ClInclude Include="src\scenes\playing.hpp">
-      <Filter>src\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="src\scenes\scene.hpp">
-      <Filter>src\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="src\scenes\splash.hpp">
-      <Filter>src\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="src\scenes\main_menu.hpp">
-      <Filter>src\scenes</Filter>
-    </ClInclude>
     <ClInclude Include="src\magic\telescope.hpp">
       <Filter>src\magic</Filter>
     </ClInclude>
@@ -558,9 +543,6 @@
     <ClInclude Include="src\rsrc\menu.hpp">
       <Filter>src\rsrc</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\window_widget.hpp">
-      <Filter>src\ui</Filter>
-    </ClInclude>
     <ClInclude Include="src\ui\entity_widget.hpp">
       <Filter>src\ui</Filter>
     </ClInclude>
@@ -577,6 +559,15 @@
       <Filter>src\rsrc</Filter>
     </ClInclude>
     <ClInclude Include="src\ui\panel.hpp">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\splash.hpp">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\main_menu.hpp">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\item_widget.hpp">
       <Filter>src\ui</Filter>
     </ClInclude>
   </ItemGroup>
@@ -725,18 +716,6 @@
     <ClCompile Include="src\animation\still_shape.cpp">
       <Filter>src\animation</Filter>
     </ClCompile>
-    <ClCompile Include="src\scenes\scene.cpp">
-      <Filter>src\scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scenes\splash.cpp">
-      <Filter>src\scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scenes\main_menu.cpp">
-      <Filter>src\scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scenes\playing.cpp">
-      <Filter>src\scenes</Filter>
-    </ClCompile>
     <ClCompile Include="src\magic\telescope.cpp">
       <Filter>src\magic</Filter>
     </ClCompile>
@@ -788,9 +767,6 @@
     <ClCompile Include="src\ui\dialog\count_dialog.cpp">
       <Filter>src\ui\dialog</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\dialog\dialog.cpp">
-      <Filter>src\ui\dialog</Filter>
-    </ClCompile>
     <ClCompile Include="src\ui\dialog\direction_dialog.cpp">
       <Filter>src\ui\dialog</Filter>
     </ClCompile>
@@ -834,6 +810,18 @@
       <Filter>src\ui</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\panel.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\widget.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\splash.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\main_menu.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\item_widget.cpp">
       <Filter>src\ui</Filter>
     </ClCompile>
   </ItemGroup>

@@ -8,7 +8,7 @@
 #include "items/inventory.hpp"
 
 namespace ql {
-	ent make_being(ent id, location location, agent agent, body body) {
+	id make_being(id id, location location, agent agent, body body) {
 		make_entity(id, location);
 		reg.assign<ql::agent>(id, std::move(agent));
 		reg.assign<ql::body>(id, std::move(body));

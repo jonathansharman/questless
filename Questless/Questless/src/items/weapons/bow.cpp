@@ -12,7 +12,7 @@
 #include "items/item.hpp"
 
 namespace ql {
-	void bow::nock(ent /*arrow_id*/) {
+	void bow::nock(ql::id /*arrow_id*/) {
 		//! @todo This.
 	}
 	void bow::draw() {
@@ -22,7 +22,7 @@ namespace ql {
 		//! @todo This.
 	}
 
-	ent make_bow(ent id) {
+	id make_bow(ql::id id) {
 		make_item(id, 1.5_mass);
 
 		make_breakable(id, {400_durability, 400_durability});

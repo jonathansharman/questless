@@ -21,8 +21,6 @@ namespace ql {
 
 			void update(sec elapsed_time, std::vector<sf::Event>& events) final;
 
-			void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
-
 		private:
 			enum class note { left, right, up, down };
 			enum class side { left, right };
@@ -43,6 +41,8 @@ namespace ql {
 			label _title;
 			label _prompt;
 			sf::RectangleShape _metronome;
+
+			void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 		};
 	}
 }

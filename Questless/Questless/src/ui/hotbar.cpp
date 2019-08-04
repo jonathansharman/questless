@@ -6,104 +6,92 @@
 
 #include "hotbar.hpp"
 
-#include "rsrc/utility.hpp"
-
 namespace ql {
 	using namespace view::literals;
 
-	namespace {
-		constexpr auto interslot_gap = 2.0_px;
-		constexpr auto bottom_gap = 2.0_px;
-		constexpr auto slot_size = view::vector{65.0_px, 65.0_px};
-		constexpr auto slot_h_padding = 5.0_px;
-		constexpr auto slot_v_padding = 5.0_px;
+	auto hotbar::get_size() const -> view::vector {
+		return {static_cast<float>(_item_widgets.size()) * item_widget::size[0], item_widget::size[1]};
 	}
 
-	hotbar::hotbar(widget& parent)
-		: widget{&parent}
-		, _slot_texture{rsrc::load<sf::Texture>("resources/textures/ui/hud/hotbar-slot.png")} //
-	{}
+	auto hotbar::update(sec /*elapsed_time*/) -> void {}
 
-	view::vector hotbar::get_size() const {
-		view::px const width = static_cast<float>(_item_count) * (slot_size[0] + slot_h_padding) + slot_size[0];
-		view::px const height = slot_size[1] + slot_v_padding;
-		return {width, height};
-	}
-
-	void hotbar::update(sec /*elapsed_time*/, std::vector<sf::Event>& events) {
-		//! @todo Update item widgets.
-
-		for (auto event : events) {
-			switch (event.type) {
-				case sf::Event::KeyPressed:
-					switch (event.key.code) {
-						case sf::Keyboard::Space:
-							add(_most_recent_selection);
-							break;
-						case sf::Keyboard::Num1:
-							add(0);
-							break;
-						case sf::Keyboard::Num2:
-							add(1);
-							break;
-						case sf::Keyboard::Num3:
-							add(2);
-							break;
-						case sf::Keyboard::Num4:
-							add(3);
-							break;
-						case sf::Keyboard::Num5:
-							add(4);
-							break;
-						case sf::Keyboard::Num6:
-							add(5);
-							break;
-						case sf::Keyboard::Num7:
-							add(6);
-							break;
-						case sf::Keyboard::Num8:
-							add(7);
-							break;
-						case sf::Keyboard::Num9:
-							add(8);
-							break;
-						case sf::Keyboard::Num0:
-							add(9);
-							break;
-						default:
-							break;
-					}
-				default:
-					break;
-			}
+	auto hotbar::draw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
+		for (auto const& item_widget : _item_widgets) {
+			target.draw(item_widget, states);
 		}
 	}
 
-	void hotbar::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-		auto const layout = get_bounding_box();
-
-		sf::Sprite slot_sprite{_slot_texture};
-		for (size_t i = 0; i < _o_item_ids.size(); ++i) {
-			view::px const x = layout.position[0] + (slot_size[0] + interslot_gap) * static_cast<float>(i);
-			view::px const y = layout.position[1];
-			slot_sprite.setPosition(view::to_sfml(view::point{x, y}));
-			target.draw(slot_sprite, states);
-			//! @todo Draw items.
+	auto hotbar::set_position(view::point position) -> void {
+		_position = position;
+		for (size_t i = 0; i < _item_widgets.size(); ++i) {
+			view::vector offset{static_cast<float>(i) * item_widget::size[0], item_widget::size[1]};
+			_item_widgets[i].set_position(_position + offset);
 		}
 	}
 
-	std::vector<int> hotbar::poll_selections() {
-		auto result = std::move(_selections);
-		_selections.clear();
-		return result;
+	auto hotbar::get_position() const -> view::point {
+		return _position;
 	}
 
-	auto hotbar::most_recent_selection() const {
-		return _most_recent_selection;
+	auto hotbar::on_key_press(sf::Event::KeyEvent const& event) -> event_handled {
+		switch (event.code) {
+			case sf::Keyboard::Space:
+				click(_most_recent_idx);
+				return event_handled::yes;
+			case sf::Keyboard::Num1:
+				click(0);
+				return event_handled::yes;
+			case sf::Keyboard::Num2:
+				click(1);
+				return event_handled::yes;
+			case sf::Keyboard::Num3:
+				click(2);
+				return event_handled::yes;
+			case sf::Keyboard::Num4:
+				click(3);
+				return event_handled::yes;
+			case sf::Keyboard::Num5:
+				click(4);
+				return event_handled::yes;
+			case sf::Keyboard::Num6:
+				click(5);
+				return event_handled::yes;
+			case sf::Keyboard::Num7:
+				click(6);
+				return event_handled::yes;
+			case sf::Keyboard::Num8:
+				click(7);
+				return event_handled::yes;
+			case sf::Keyboard::Num9:
+				click(8);
+				return event_handled::yes;
+			case sf::Keyboard::Num0:
+				click(9);
+				return event_handled::yes;
+			default:
+				return event_handled::no;
+		}
 	}
 
-	void hotbar::add(int selection) {
-		_selections.push_back(selection);
-		_most_recent_selection = selection;
+	auto hotbar::on_mouse_press(sf::Event::MouseButtonEvent const& event) -> event_handled {
+		for (auto& item_widget : _item_widgets) {
+			if (item_widget.on_mouse_press(event) == event_handled::yes) { return event_handled::yes; }
+		}
+		return event_handled::no;
+	}
+
+	auto hotbar::set_item(size_t idx, std::optional<id> o_item_id) -> void {
+		_item_widgets[idx].o_item_id = o_item_id;
+	}
+
+	auto hotbar::set_on_click(std::function<void(std::optional<id>)> handler) -> void {
+		for (auto& item_widget : _item_widgets) {
+			item_widget.on_click = handler;
+		}
+	}
+
+	auto hotbar::click(size_t idx) -> void {
+		_most_recent_idx = idx;
+		_item_widgets[idx].on_click(_item_widgets[idx].o_item_id);
 	}
 }

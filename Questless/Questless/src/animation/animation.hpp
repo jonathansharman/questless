@@ -50,8 +50,6 @@ namespace ql {
 		//! Advances this animation by @p elapsed_time.
 		void update(sec elapsed_time);
 
-		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
-
 	protected:
 		//! Marks this animation as not stopped.
 		void restart() {
@@ -61,6 +59,8 @@ namespace ql {
 	private:
 		bool _stopped = false;
 		bool _paused = false;
+
+		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 
 		//! Advances this animation by @p elapsed_time in a subtype-specific way.
 		virtual void animation_subupdate(sec elapsed_time) = 0;

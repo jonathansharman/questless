@@ -17,10 +17,10 @@ namespace ql {
 
 		void update(sec elapsed_time, std::vector<sf::Event>& events) final;
 
-		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
-
 	private:
 		label _title;
 		label _prompt;
+
+		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 	};
 }

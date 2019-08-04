@@ -20,14 +20,14 @@ namespace ql {
 	struct healing {
 		static constexpr body_part_status_category category = body_part_status_category::beneficial;
 		int additional_regen_factor;
-		std::optional<ent> o_source_id;
+		std::optional<id> o_source_id;
 	};
 
 	//! Deals blight damage over time.
 	struct poisoned {
 		static constexpr body_part_status_category category = body_part_status_category::detrimental;
 		cancel::quotient_t<poisoning, tick> rate;
-		std::optional<ent> o_source_id;
+		std::optional<id> o_source_id;
 	};
 
 	//! A body part status modifier.

@@ -22,8 +22,6 @@ namespace ql {
 
 		void update(sec elapsed_time, std::vector<sf::Event>& events) final;
 
-		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
-
 	private:
 		double _magnitude;
 		std::optional<double> _min;
@@ -32,5 +30,7 @@ namespace ql {
 		sf::Text _title;
 		sf::Text _prompt;
 		sf::Text _selector;
+
+		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 	};
 }

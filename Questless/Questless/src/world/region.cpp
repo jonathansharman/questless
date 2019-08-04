@@ -62,7 +62,7 @@ namespace ql {
 							auto entity_coords = section::region_tile_coords(section_coords, section_tile::point{q, r});
 							if (!uniform(0, 12)) {
 								// Create and spawn campfire.
-								ent campfire = reg.create();
+								id campfire = reg.create();
 								make_campfire(campfire, location{id, entity_coords});
 								bool const success = try_spawn(campfire, entity_coords);
 								assert(success);
@@ -73,7 +73,7 @@ namespace ql {
 								// Give it a basic AI.
 								reg.assign<basic_ai>(human_id, human_id);
 								// Create quarterstaff.
-								ent quarterstaff_id = reg.create();
+								id quarterstaff_id = reg.create();
 								make_quarterstaff(quarterstaff_id); //! @todo Implement make_quarterstaff().
 								// Give quarterstaff to human.
 								reg.get<inventory>(human_id).add(quarterstaff_id);
@@ -128,7 +128,7 @@ namespace ql {
 #endif
 	}
 
-	std::optional<ent> region::entity_id_at(region_tile::point region_tile_coords) const {
+	std::optional<id> region::entity_id_at(region_tile::point region_tile_coords) const {
 		if (section const* section = containing_section(region_tile_coords)) {
 			return section->entity_id_at(region_tile_coords);
 		} else {
@@ -153,7 +153,7 @@ namespace ql {
 		return location{id, player_coords};
 	}
 
-	bool region::try_add(ent entity_id, region_tile::point region_tile_coords) {
+	bool region::try_add(id entity_id, region_tile::point region_tile_coords) {
 		if (section* section = containing_section(region_tile_coords)) {
 			auto& location = reg.get<ql::location>(entity_id);
 			location.region_id = id;
@@ -166,7 +166,7 @@ namespace ql {
 		}
 	}
 
-	bool region::try_move(ent entity_id, region_tile::point region_tile_coords) {
+	bool region::try_move(id entity_id, region_tile::point region_tile_coords) {
 		auto& location = reg.get<ql::location>(entity_id);
 		if (location.region_id != id) {
 			// The entity is not in this region to begin with.
@@ -201,7 +201,7 @@ namespace ql {
 		return true;
 	}
 
-	void region::remove(ent entity_id) {
+	void region::remove(id entity_id) {
 		auto& location = reg.get<ql::location>(entity_id);
 		if (section* section = containing_section(location.coords)) {
 			remove_from_turn_queue(entity_id);
@@ -248,7 +248,7 @@ namespace ql {
 		}
 	}
 
-	std::optional<ent> tile_at(region_tile::point region_tile_coords) {
+	std::optional<id> tile_at(region_tile::point region_tile_coords) {
 		section* section = containing_section(region_tile_coords);
 		if (section) {
 			section_tile::point section_tile_coords = section::section_tile_coords(region_tile_coords);
@@ -370,7 +370,7 @@ namespace ql {
 		}
 	}
 
-	ent make_region(ent id, std::string name) {
+	id make_region(id id, std::string name) {
 		reg.assign<region>(reg.create(), std::move(name));
 		return id;
 	}

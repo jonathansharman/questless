@@ -30,7 +30,7 @@ namespace ql {
 
 	//! Location within the entire world.
 	struct location {
-		ent region_id;
+		id region_id;
 		region_tile::point coords;
 	};
 

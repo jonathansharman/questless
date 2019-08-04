@@ -9,5 +9,5 @@
 
 namespace ql {
 	//! Makes @p id an item that can be picked up, used by beings, etc.
-	void make_item(ent id, mass mass);
+	void make_item(id id, mass mass);
 }

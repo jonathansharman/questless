@@ -12,7 +12,7 @@
 #include <set>
 
 namespace ql {
-	world_view::world_view(ent being_id)
+	world_view::world_view(id being_id)
 		: center{reg.get<ql::location>(being_id)}
 		, visual_range{max_visual_range(reg.get<body>(being_id).stats.a.vision_sources.cur)} //
 	{

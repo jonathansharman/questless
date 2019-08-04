@@ -10,7 +10,7 @@ namespace ql {
 	namespace effects {
 		struct telescope {
 			region_tile::point origin;
-			ent const caster_id;
+			id const caster_id;
 
 			constexpr span range() const {
 				return 3_span;

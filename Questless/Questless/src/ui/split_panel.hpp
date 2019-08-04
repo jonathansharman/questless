@@ -20,25 +20,37 @@ namespace ql {
 		std::variant<view::px, float> split_location = 0.5f;
 
 		//! @param split_line The proportion of the panel's area that should be held by the first child.
-		split_panel(widget& parent, ql::split_line split_line);
+		split_panel(ql::split_line split_line);
 
-		view::vector get_size() const final;
+		auto get_size() const -> view::vector final;
 
-		void update(sec elapsed_time, std::vector<sf::Event>& events) final;
+		auto update(sec elapsed_time) -> void final;
 
-		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
+		auto set_position(view::point position) -> void final;
 
-		//! Sets the first child widget to @p first_child.
-		void set_first_child(widget* first_child);
+		auto get_position() const -> view::point final;
 
-		//! Sets the second child widget to @p second_child and .
-		void set_second_child(widget* second_child);
+		auto on_parent_resize(view::vector parent_size) -> void final;
+
+		//! Sets the first child widget to @p first_child and arranges it.
+		auto set_first_child(widget* first_child) -> void;
+
+		//! Sets the second child widget to @p second_child and arranges it.
+		auto set_second_child(widget* second_child) -> void;
 
 	private:
+		view::point _position;
+		view::vector _size;
+
 		widget* _first;
 		widget* _second;
 
+		auto draw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
+
+		//! Calls the first child's @p on_parent_resize and sets its position.
 		void arrange_first();
+
+		//! Calls the second child's @p on_parent_resize and sets its position.
 		void arrange_second();
 	};
 }

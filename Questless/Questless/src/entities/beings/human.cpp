@@ -11,7 +11,7 @@
 #include "entities/entity.hpp"
 
 namespace ql {
-	ent make_human(ent id, location location, agent agent) {
+	id make_human(id id, location location, agent agent) {
 		auto const root_id = reg.create();
 		body_part root;
 		root.id = root_id;

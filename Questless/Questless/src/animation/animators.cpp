@@ -10,6 +10,7 @@
 #include "bleeding.hpp"
 #include "flame.hpp"
 #include "scene_node.hpp"
+#include "sprite_animation.hpp"
 #include "still_image.hpp"
 #include "still_shape.hpp"
 
@@ -26,34 +27,10 @@
 #include "rsrc/item.hpp"
 #include "rsrc/particle.hpp"
 #include "rsrc/spell.hpp"
-#include "rsrc/tile.hpp"
 #include "utility/utility.hpp"
 #include "utility/visitation.hpp"
-#include "world/terrain.hpp"
 
 namespace ql {
-	uptr<animation> animate_tile(rsrc::tile const& resources, ent tile_id) {
-		switch (reg.get<terrain>(tile_id)) {
-			case terrain::dirt:
-				return umake<still_image>(resources.txtr.dirt);
-			case terrain::edge:
-				//! @todo Edge tiles should simply not be drawn.
-				return umake<still_image>(resources.txtr.blank);
-			case terrain::grass:
-				return umake<still_image>(resources.txtr.grass);
-			case terrain::sand:
-				return umake<still_image>(resources.txtr.sand);
-			case terrain::snow:
-				return umake<still_image>(resources.txtr.snow);
-			case terrain::stone:
-				return umake<still_image>(resources.txtr.stone);
-			case terrain::water:
-				return umake<still_image>(resources.txtr.water);
-			default:
-				UNREACHABLE;
-		}
-	}
-
 	uptr<animation> animate(rsrc::spell const& resources, magic::spell const& spell) {
 		return match(
 			spell.value,
@@ -63,7 +40,7 @@ namespace ql {
 			[&](magic::teleport const&) { return umake<still_image>(resources.txtr.teleport); });
 	}
 
-	uptr<animation> animate_entity(rsrc::entity const& entity_resources, rsrc::particle const& particle_resources, ent entity_id) {
+	uptr<animation> animate_entity(rsrc::entity const& entity_resources, rsrc::particle const& particle_resources, id entity_id) {
 		if (reg.has<campfire>(entity_id)) {
 			auto firewood = umake<still_image>(entity_resources.txtr.firewood);
 			firewood->set_relative_origin({0.5f, 0.5f});
@@ -104,7 +81,7 @@ namespace ql {
 		UNREACHABLE;
 	}
 
-	uptr<animation> animate_item(rsrc::item const& item_resources, rsrc::spell const& spell_resources, ent item_id) {
+	uptr<animation> animate_item(rsrc::item const& item_resources, rsrc::spell const& spell_resources, id item_id) {
 		if (reg.has<bow>(item_id)) {
 			return umake<still_image>(item_resources.bow);
 		} else if (reg.has<quarterstaff>(item_id)) {

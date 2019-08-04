@@ -18,8 +18,6 @@ namespace ql::qte {
 
 		void update(sec elapsed_time, std::vector<sf::Event>& events) final;
 
-		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
-
 	private:
 		struct charge {
 			world::point position;
@@ -35,5 +33,7 @@ namespace ql::qte {
 
 		label _title;
 		label _prompt;
+
+		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 	};
 }
