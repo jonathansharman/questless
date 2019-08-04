@@ -7,7 +7,7 @@
 #include "entities/beings/being.hpp"
 #include "world/region.hpp"
 
-#include "vecx/hex_space.hpp"
+#include "world/hex_space.hpp"
 
 #include <set>
 

@@ -4,8 +4,8 @@
 
 #include "particle.hpp"
 
+#include "ui/view_space.hpp"
 #include "utility/random.hpp"
-#include "world/world_space.hpp"
 
 namespace ql {
 	particle::particle(sec lifetime) : lifetime{lifetime} {}
@@ -21,7 +21,7 @@ namespace ql {
 		// Update physics.
 		displacement += velocity * elapsed_time;
 		velocity += acceleration * elapsed_time;
-		if (face_towards_heading() && velocity != world::vel::zero()) {
+		if (face_towards_heading() && velocity != view::vel::zero()) {
 			angle = velocity.angle();
 		} else {
 			angle += angular_velocity * elapsed_time;

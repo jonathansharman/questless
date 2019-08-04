@@ -81,8 +81,7 @@ namespace ql {
 	}
 
 	//! A uniformly randomly sampled point from within the bounds of @p box.
-	inline world::point random_point_within(world::box box) { //! @todo Check containment logic here.
-		return box.position +
-			world::vector{uniform(world::length{0.0}, width(box)), uniform(world::length{0.0}, height(box))};
+	inline view::point random_point_within(view::box box) { //! @todo Check containment logic here.
+		return box.position + view::vector{uniform(view::px{0.0}, width(box)), uniform(view::px{0.0}, height(box))};
 	}
 }

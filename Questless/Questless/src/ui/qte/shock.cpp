@@ -6,7 +6,7 @@
 
 #include "utility/random.hpp"
 
-using namespace ql::world::literals;
+using namespace ql::view::literals;
 
 namespace ql::qte {
 	shock::shock(sf::Window const& window, rsrc::fonts const& fonts, region_tile::point target_coords, std::function<void(double)> cont)
@@ -30,28 +30,28 @@ namespace ql::qte {
 
 		bool accelerate = false;
 		{ // Acclerate only when the mouse moves to the next quadrant over.
-			world::vector const v = the_game().camera().point_hovered() - _target_point;
+			view::vector const v = the_game().camera().point_hovered() - _target_point;
 			switch (_quadrant) {
 				case quadrant::ur:
-					if (v[0] > 0.0_world_length && v[1] > 0.0_world_length) {
+					if (v[0] > 0.0_px && v[1] > 0.0_px) {
 						_quadrant = quadrant::ul;
 						accelerate = true;
 					}
 					break;
 				case quadrant::ul:
-					if (v[0] < 0.0_world_length && v[1] > 0.0_world_length) {
+					if (v[0] < 0.0_px && v[1] > 0.0_px) {
 						_quadrant = quadrant::ll;
 						accelerate = true;
 					}
 					break;
 				case quadrant::ll:
-					if (v[0] < 0.0_world_length && v[1] < 0.0_world_length) {
+					if (v[0] < 0.0_px && v[1] < 0.0_px) {
 						_quadrant = quadrant::lr;
 						accelerate = true;
 					}
 					break;
 				case quadrant::lr:
-					if (v[0] > 0.0_world_length && v[1] < 0.0_world_length) {
+					if (v[0] > 0.0_px && v[1] < 0.0_px) {
 						_quadrant = quadrant::ur;
 						accelerate = true;
 					}
@@ -59,29 +59,29 @@ namespace ql::qte {
 			}
 		}
 		for (int i = 0; i < charges_per_quadrant; ++i) {
-			_charges.push_back(charge{_target_point + random_displacement(100.0_world_length),
-				vecx::make_polar_vector(random_radians(), 100.0_world_length / 1.0_s)});
+			_charges.push_back(charge{_target_point + random_displacement(100.0_px),
+				vecx::make_polar_vector(random_radians(), 100.0_px / 1.0_s)});
 		}
 
 		for (auto& point_charge : _charges) {
 			// Get displacement to target.
-			world::vector r = _target_point - point_charge.position;
+			view::vector r = _target_point - point_charge.position;
 			// Get distance to target.
 			auto d = r.length();
 
 			if (accelerate) {
 				// Accelerate counter-clockwise from the target.
-				point_charge.velocity += 7'000.0 * world::vector{-r[1], r[0]} / (d * d);
+				point_charge.velocity += 7'000.0 * view::vector{-r[1], r[0]} / (d * d);
 			}
 
 			// Apply drag.
 			point_charge.velocity *= 0.99;
 			// Apply random acceleration.
-			point_charge.velocity += random_displacement(50.0_world_length / 1.0_s);
+			point_charge.velocity += random_displacement(50.0_px / 1.0_s);
 			// Apply attractive and repulsive forces.
-			point_charge.velocity += 20'000.0 * r / std::max(1.0_world_length * 1.0_world_length, (d * d));
+			point_charge.velocity += 20'000.0 * r / std::max(1.0_px * 1.0_px, (d * d));
 			point_charge.velocity -= 800'000.0 * r /
-				std::max(1.0_world_length * 1.0_world_length * 1.0_world_length, (d * d * d));
+				std::max(1.0_px * 1.0_px * 1.0_px, (d * d * d));
 			// Update position.
 			point_charge.position += point_charge.velocity * elapsed_time;
 		}

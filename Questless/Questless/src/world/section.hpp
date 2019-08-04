@@ -9,8 +9,6 @@
 #include "reg.hpp"
 #include "utility/reference.hpp"
 
-#include "vecx/hex_space.hpp"
-
 #include <array>
 #include <iostream>
 #include <memory>
@@ -20,10 +18,7 @@
 #include <unordered_set>
 
 namespace ql {
-	struct being;
 	struct light_source;
-	struct object;
-	struct tile;
 
 	//! An rhomboid section of hexes in a region.
 	struct section {

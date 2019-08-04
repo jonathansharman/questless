@@ -7,7 +7,7 @@
 
 #include "reference.hpp"
 
-#include "world/world_space.hpp"
+#include "ui/view_space.hpp"
 
 #include <range/v3/all.hpp>
 

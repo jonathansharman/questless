@@ -16,10 +16,10 @@ namespace ql {
 		//! @param resources Particle resources used to animate this particle.
 		//! @param source Where the arrow is shot from.
 		//! @param target Where the arrow is headed towards.
-		arrow_particle(rsrc::particle const& resources, world::point source, world::point target);
+		arrow_particle(rsrc::particle const& resources, view::point source, view::point target);
 
 	private:
-		world::point _target;
+		view::point _target;
 
 		bool fade_out() const final {
 			return false;

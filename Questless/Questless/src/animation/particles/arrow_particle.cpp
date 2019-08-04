@@ -8,21 +8,21 @@
 #include "utility/random.hpp"
 
 namespace ql {
-	using namespace world::literals;
+	using namespace view::literals;
 
-	arrow_particle::arrow_particle(rsrc::particle const& resources, world::point source, world::point target)
+	arrow_particle::arrow_particle(rsrc::particle const& resources, view::point source, view::point target)
 		: sprite_particle{0.0_s, resources.arrow}
 		, _target{target} //
 	{
 		setPosition(to_sfml(source));
 		angle = random_radians();
 		auto target_vector = target - source;
-		if (target_vector == world::vector::zero()) {
+		if (target_vector == view::vector::zero()) {
 			lifetime = 0.0_s;
 		} else {
 			// Set velocity towards the target.
 			auto heading = target_vector / target_vector.length();
-			velocity = heading * 1'000.0_world_length / 1.0_s;
+			velocity = heading * 1'000.0_px / 1.0_s;
 			// Set lifetime / time left such that the arrow will disappear when it reaches the target.
 			lifetime = target_vector.length() / velocity.length();
 			time_left = lifetime;

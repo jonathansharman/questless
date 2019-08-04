@@ -11,10 +11,10 @@ namespace ql {
 	white_magic_particle::white_magic_particle(rsrc::particle const& resources)
 		: sprite_particle{uniform(2.0_s, 2.5_s), resources.white_magic} //
 	{
-		using namespace world::literals;
+		using namespace view::literals;
 
-		velocity = random_displacement(80.0_world_length) / 1.0_s;
-		acceleration = world::vector{0.0_world_length, 50.0_world_length} / 1.0_s / 1.0_s;
+		velocity = random_displacement(80.0_px) / 1.0_s;
+		acceleration = view::vector{0.0_px, 50.0_px} / 1.0_s / 1.0_s;
 		angle = random_radians();
 		angular_velocity = uniform(-2.0, 2.0) * vecx::circle_rad / 1.0_s;
 	}

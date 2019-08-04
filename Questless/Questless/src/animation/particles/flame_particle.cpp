@@ -11,13 +11,13 @@ using namespace vecx;
 using namespace vecx::literals;
 
 namespace ql {
-	using namespace world::literals;
+	using namespace view::literals;
 
 	flame_particle::flame_particle(rsrc::particle const& resources)
 		: sprite_particle{uniform(1.0_s, 1.5_s), resources.glow_small} //
 	{
-		displacement = random_displacement(5.0_world_length);
-		acceleration = world::vector{0.0_world_length, 30.0_world_length} / 1.0_s / 1.0_s;
+		displacement = random_displacement(5.0_px);
+		acceleration = view::vector{0.0_px, 30.0_px} / 1.0_s / 1.0_s;
 		scale = {0.75};
 		color_factor = sf::Color{255, 128, 0};
 	}

@@ -270,7 +270,6 @@
     <ClInclude Include="external\vecx\angle.hpp" />
     <ClInclude Include="external\vecx\box.hpp" />
     <ClInclude Include="external\vecx\constants.hpp" />
-    <ClInclude Include="external\vecx\hex_space.hpp" />
     <ClInclude Include="external\vecx\define_macros.hpp" />
     <ClInclude Include="external\vecx\point.hpp" />
     <ClInclude Include="external\vecx\polygon.hpp" />
@@ -416,13 +415,13 @@
     <ClInclude Include="src\utility\reference.hpp" />
     <ClInclude Include="src\utility\utility.hpp" />
     <ClInclude Include="src\world\coordinates.hpp" />
+    <ClInclude Include="src\world\hex_space.hpp" />
     <ClInclude Include="src\world\light_source.hpp" />
     <ClInclude Include="src\world\region.hpp" />
     <ClInclude Include="src\world\section.hpp" />
     <ClInclude Include="src\world\spawn_player.hpp" />
     <ClInclude Include="src\world\terrain.hpp" />
     <ClInclude Include="src\world\tile.hpp" />
-    <ClInclude Include="src\world\world_space.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\agents\actions.cpp" />

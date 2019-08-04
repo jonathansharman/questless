@@ -47,8 +47,6 @@ namespace ql {
 
 		auto on_mouse_move(view::point mouse_position) -> void final;
 
-		auto on_mouse_wheel_scroll(sf::Event::MouseWheelScrollEvent const& event) -> event_handled final;
-
 		//! Causes the tiles for which @p predicate returns true to be highlighted.
 		auto set_highlight_predicate(std::function<bool(region_tile::point)> predicate) -> void;
 

@@ -21,15 +21,15 @@ namespace ql {
 		sec time_left = lifetime;
 
 		//! Displacement of this particle from its animation position.
-		world::vector displacement = world::vector::zero();
+		view::vector displacement{};
 
-		world::vel velocity = world::vel::zero();
+		view::vel velocity{};
 
-		world::accel acceleration = world::accel::zero();
+		view::accel acceleration{};
 
 		vecx::radians angle = vecx::radians{0.0};
 
-		world::angular_vel angular_velocity = vecx::radians{0.0} / 0.0_s;
+		view::angular_vel angular_velocity = vecx::radians{0.0} / 0.0_s;
 
 		cancel::unitless<float> scale{1.0f};
 

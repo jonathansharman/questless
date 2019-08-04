@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "quantities/wall_time.hpp"
+
 #include "vecx/box.hpp"
 #include "vecx/point.hpp"
 #include "vecx/polygon.hpp"
@@ -26,11 +28,9 @@ namespace ql::view {
 
 	using vector = vecx::vector<px, 2>;
 	using point = vecx::point<px, 2>;
-
-	DEFINE_VECTOR_INDEX_NAME(vector, 0, x);
-	DEFINE_VECTOR_INDEX_NAME(vector, 1, y);
-	DEFINE_VECTOR_INDEX_NAME(point, 0, x);
-	DEFINE_VECTOR_INDEX_NAME(point, 1, y);
+	using vel = decltype(vector{} / sec{});
+	using accel = decltype(vel{} / sec{});
+	using angular_vel = cancel::quotient_t<vecx::radians, sec>;
 
 	// Box
 
@@ -57,10 +57,10 @@ namespace ql::view {
 		return box.position;
 	}
 	constexpr auto top_right(box const& box) {
-		return point{x(box.position) + x(box.size), y(box.position)};
+		return point{box.position[0] + box.size[0], box.position[1]};
 	}
 	constexpr auto bottom_left(box const& box) {
-		return point{x(box.position), y(box.position) + y(box.size)};
+		return point{box.position[0], box.position[1] + box.size[1]};
 	}
 	constexpr auto bottom_right(box const& box) {
 		return box.position + box.size;

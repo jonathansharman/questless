@@ -11,14 +11,14 @@ using namespace vecx;
 using namespace vecx::literals;
 
 namespace ql {
-	using namespace world::literals;
+	using namespace view::literals;
 
 	green_magic_particle::green_magic_particle(rsrc::particle const& resources)
 		: sprite_particle{uniform(1.8_s, 2.2_s), resources.green_magic}
 		, _turning_right{random_bool()} //
 	{
-		displacement = world::vector::zero();
-		velocity = random_displacement(20.0_world_length, 50.0_world_length) / 1.0_s;
+		displacement = view::vector::zero();
+		velocity = random_displacement(20.0_px, 50.0_px) / 1.0_s;
 		angle = random_radians();
 		angular_velocity = uniform(-2.0, 2.0) * circle_rad / 1.0_s;
 		scale_velocity = -scale / lifetime;

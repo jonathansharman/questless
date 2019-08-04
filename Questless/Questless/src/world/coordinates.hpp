@@ -5,28 +5,27 @@
 
 #pragma once
 
-#include "world_space.hpp"
+#include "hex_space.hpp"
 
 #include "quantities/distance.hpp"
 #include "quantities/misc.hpp"
 #include "reg.hpp"
-
-#include "vecx/hex_space.hpp"
+#include "ui/view_space.hpp"
 
 namespace ql {
 	struct region;
 
 	//! The space of tiles in a section.
-	using section_tile = vecx::hex_space<struct section_tile_tag, span>;
+	using section_tile = hex_space<struct section_tile_tag, span>;
 
 	static constexpr span section_radius = 10_span;
 	static constexpr span section_diameter = 2 * section_radius + 1_span;
 
 	//! The space of tiles in a region.
-	using region_tile = vecx::hex_space<struct region_tile_tag, span>;
+	using region_tile = hex_space<struct region_tile_tag, span>;
 
 	//! The space of sections in a region.
-	using region_section = vecx::hex_space<struct region_section_tag, section_span>;
+	using region_section = hex_space<struct region_section_tag, section_span>;
 
 	//! Location within the entire world.
 	struct location {
@@ -35,9 +34,10 @@ namespace ql {
 	};
 
 	//! The hex layout used in Questless.
-	constexpr auto hex_layout = vecx::hex_layout{vecx::hex_orientation::flat(),
-		world::vector{world::length{30.0}, world::length{36.0} / gcem::sqrt(3.0f)},
-		world::point{world::length{0.0}, world::length{0.0}}};
+	constexpr hex_layout world_layout{//
+		hex_orientation::flat(),
+		view::vector{view::px{30.0}, view::px{36.0} / gcem::sqrt(3.0f)},
+		view::point{view::px{0.0}, view::px{0.0}}};
 
 	//! The coordinates of the section that contains the tile at @p region_tile_coords.
 	region_section::point region_section_coords(region_tile::point region_tile_coords) {
@@ -52,35 +52,37 @@ namespace ql {
 
 	// Conversions between world and region tile coordinates.
 
-	//! Converts @p p to a world space point.
-	constexpr auto to_world(region_tile::point p) {
-		auto const px = ((hex_layout.orientation.f0 * p.q.value + hex_layout.orientation.f1 * p.r.value) * x(hex_layout.size) +
-			x(hex_layout.origin));
-		auto const py = ((hex_layout.orientation.f2 * p.q.value + hex_layout.orientation.f3 * p.r.value) * y(hex_layout.size) +
-			y(hex_layout.origin));
-		return world::point{px, py};
+	//! Converts @p p to a view space point.
+	constexpr auto to_view_space(region_tile::point p) {
+		auto const x = (world_layout.orientation.f0 * p.q.value + world_layout.orientation.f1 * p.r.value) *
+				world_layout.size[0] +
+			world_layout.origin[0];
+		auto const y = (world_layout.orientation.f2 * p.q.value + world_layout.orientation.f3 * p.r.value) *
+				world_layout.size[1] +
+			world_layout.origin[1];
+		return view::point{x, y};
 	}
 	//! Converts @p v to a world space vector.
 	constexpr auto to_world(region_tile::vector v) {
-		return world::point{
-			((hex_layout.orientation.f0 * v.q.value + hex_layout.orientation.f1 * v.r.value) * x(hex_layout.size)),
-			((hex_layout.orientation.f2 * v.q.value + hex_layout.orientation.f3 * v.r.value) * y(hex_layout.size))};
+		return view::point{
+			(world_layout.orientation.f0 * v.q.value + world_layout.orientation.f1 * v.r.value) * world_layout.size[0],
+			(world_layout.orientation.f2 * v.q.value + world_layout.orientation.f3 * v.r.value) * world_layout.size[1]};
 	}
 
 	//! Converts @p p to a region tile space point.
-	constexpr auto to_region_tile(world::point p) {
-		auto const r0 = hex_layout.orientation.b0 * (x(p) - x(hex_layout.origin)) / x(hex_layout.size);
-		auto const r1 = hex_layout.orientation.b1 * (y(p) - y(hex_layout.origin)) / y(hex_layout.size);
-		auto const r2 = hex_layout.orientation.b2 * (x(p) - x(hex_layout.origin)) / x(hex_layout.size);
-		auto const r3 = hex_layout.orientation.b3 * (y(p) - y(hex_layout.origin)) / y(hex_layout.size);
+	constexpr auto to_region_tile(view::point p) {
+		auto const r0 = world_layout.orientation.b0 * (p[0] - world_layout.origin[0]) / world_layout.size[0];
+		auto const r1 = world_layout.orientation.b1 * (p[1] - world_layout.origin[1]) / world_layout.size[1];
+		auto const r2 = world_layout.orientation.b2 * (p[0] - world_layout.origin[0]) / world_layout.size[0];
+		auto const r3 = world_layout.orientation.b3 * (p[1] - world_layout.origin[1]) / world_layout.size[1];
 		return region_tile::point{span{static_cast<int>((r0 + r1).value)}, span{static_cast<int>((r2 + r3).value)}};
 	}
 	//! Converts @p v to a region tile space vector.
-	constexpr auto to_region_tile(world::vector v) {
-		auto const r0 = hex_layout.orientation.b0 * x(v) / x(hex_layout.size);
-		auto const r1 = hex_layout.orientation.b1 * y(v) / y(hex_layout.size);
-		auto const r2 = hex_layout.orientation.b2 * x(v) / x(hex_layout.size);
-		auto const r3 = hex_layout.orientation.b3 * y(v) / y(hex_layout.size);
+	constexpr auto to_region_tile(view::vector v) {
+		auto const r0 = world_layout.orientation.b0 * v[0] / world_layout.size[0];
+		auto const r1 = world_layout.orientation.b1 * v[1] / world_layout.size[1];
+		auto const r2 = world_layout.orientation.b2 * v[0] / world_layout.size[0];
+		auto const r3 = world_layout.orientation.b3 * v[1] / world_layout.size[1];
 		return region_tile::vector{span{static_cast<int>((r0 + r1).value)}, span{static_cast<int>((r2 + r3).value)}};
 	}
 }

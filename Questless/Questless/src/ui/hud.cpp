@@ -6,6 +6,7 @@
 
 #include "dialog/list_dialog.hpp"
 
+#include "agents/actions.hpp"
 #include "entities/beings/body.hpp"
 #include "items/equipment.hpp"
 #include "items/weapons/bow.hpp"
@@ -13,9 +14,10 @@
 #include "rsrc/hud.hpp"
 #include "world/region.hpp"
 
-#include "agents/actions.hpp"
+#include "cancel/serialization.hpp"
 
 #include <fmt/format.h>
+#include <fmt/ostream.h>
 
 namespace ql {
 	namespace {
@@ -164,8 +166,9 @@ namespace ql {
 				move(_player_id, region_tile::direction::six, event.shift);
 				break;
 			default:
-				break;
+				return event_handled::no;
 		}
+		return event_handled::yes;
 	}
 
 	auto hud::get_item_options(id item_id) -> std::vector<std::tuple<sf::String, std::function<void()>>> {

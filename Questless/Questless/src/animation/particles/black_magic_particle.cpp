@@ -10,14 +10,14 @@
 using namespace vecx::literals;
 
 namespace ql {
-	using namespace world::literals;
+	using namespace view::literals;
 
 	black_magic_particle::black_magic_particle(rsrc::particle const& resources)
 		: sprite_particle{2.0_s, resources.black_magic} //
 	{
 		constexpr auto dtheta_max = 2.0 * vecx::circle_rad;
-		constexpr auto min_vel = 5.0_world_length;
-		constexpr auto max_vel = 25.0_world_length;
+		constexpr auto min_vel = 5.0_px;
+		constexpr auto max_vel = 25.0_px;
 
 		velocity = vecx::make_polar_vector(uniform(min_vel, max_vel), random_radians()) / 1.0_s;
 		angle = random_radians();

@@ -300,9 +300,6 @@
     <ClInclude Include="external\vecx\constants.hpp">
       <Filter>external\vecx</Filter>
     </ClInclude>
-    <ClInclude Include="external\vecx\hex_space.hpp">
-      <Filter>external\vecx</Filter>
-    </ClInclude>
     <ClInclude Include="external\vecx\point.hpp">
       <Filter>external\vecx</Filter>
     </ClInclude>
@@ -438,9 +435,6 @@
     <ClInclude Include="src\entities\entity.hpp">
       <Filter>src\entities</Filter>
     </ClInclude>
-    <ClInclude Include="src\world\world_space.hpp">
-      <Filter>src\world</Filter>
-    </ClInclude>
     <ClInclude Include="src\ui\dialog\list_dialog.hpp">
       <Filter>src\ui\dialog</Filter>
     </ClInclude>
@@ -569,6 +563,9 @@
     </ClInclude>
     <ClInclude Include="src\ui\item_widget.hpp">
       <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\world\hex_space.hpp">
+      <Filter>src\world</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -71,15 +71,18 @@ namespace ql {
 
 		{ // Camera controls.
 			constexpr auto pan_rate = 10.0_px;
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad8)) { _pan += view::vector{0.0_px, pan_rate} / _zoom; }
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad4)) { _pan += view::vector{-pan_rate, 0.0_px} / _zoom; }
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad2)) { _pan += view::vector{0.0_px, -pan_rate} / _zoom; }
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad6)) { _pan += view::vector{pan_rate, 0.0_px} / _zoom; }
-
-			// Apply transforms to view.
-			_view.setViewport({0.0f, 0.0f, 1.0f, 1.0f});
-			_view.setCenter(to_sfml(_pan));
-			_view.zoom(_zoom);
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad8)) {
+				set_position(_position + view::vector{0.0_px, -pan_rate});
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad4)) {
+				set_position(_position + view::vector{pan_rate, 0.0_px});
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad2)) {
+				set_position(_position + view::vector{0.0_px, pan_rate});
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad6)) {
+				set_position(_position + view::vector{-pan_rate, 0.0_px});
+			}
 		}
 	}
 
@@ -132,14 +135,9 @@ namespace ql {
 	auto world_widget::on_mouse_move(view::point mouse_position) -> void {
 		if (_o_drag_start) {
 			// Pan camera.
-			_pan += mouse_position - *_o_drag_start;
+			set_position(_position + (mouse_position - *_o_drag_start));
 			_o_drag_start = mouse_position;
 		}
-	}
-
-	auto world_widget::on_mouse_wheel_scroll(sf::Event::MouseWheelScrollEvent const& event) -> event_handled {
-		// Zoom camera.
-		_zoom += event.y / 10.0f;
 	}
 
 	void world_widget::set_highlight_predicate(std::function<bool(region_tile::point)> predicate) {
@@ -166,7 +164,7 @@ namespace ql {
 					if (tile_perception > 0_perception) {
 						//! @todo Use tile_game_point or remove these lines if no longer needed.
 						region_tile::point const region_tile_coords = section->region_tile_coords(section_tile_coords);
-						world::point const tile_game_point = to_world(region_tile_coords);
+						view::point const tile_game_point = to_world(region_tile_coords);
 
 						// Get the current tile.
 						id tile_id = section->tile_id_at(section_tile_coords);
@@ -234,8 +232,8 @@ namespace ql {
 		match(
 			effect.value,
 			[&](effects::arrow_attack const& e) {
-				world::point source = to_world(e.origin);
-				world::point target = to_world(e.target);
+				view::point source = to_world(e.origin);
+				view::point target = to_world(e.target);
 				_effect_animations.push_back(umake<arrow_particle>(source, target));
 				_arrow_sound.play();
 			},
@@ -247,7 +245,7 @@ namespace ql {
 				//! @todo Pass along the vitality in the event object if it's needed here (to avoid having to make
 				//! up a number).
 
-				world::point const position = to_world(e.origin);
+				view::point const position = to_world(e.origin);
 
 				dmg::group const& damage = e.damage;
 
@@ -309,7 +307,7 @@ namespace ql {
 				}
 			},
 			[&](effects::lightning_bolt const& e) {
-				world::point position = to_world(e.origin);
+				view::point position = to_world(e.origin);
 				for (int i = 0; i < 35; ++i) {
 					auto p = umake<yellow_magic_particle>();
 					p->setPosition(to_sfml(position));
@@ -318,7 +316,7 @@ namespace ql {
 				_shock_sound.play();
 			},
 			[&](effects::telescope const& e) {
-				world::point position = to_world(e.origin);
+				view::point position = to_world(e.origin);
 				for (int i = 0; i < 50; ++i) {
 					auto particle = umake<green_magic_particle>(_rsrc.particle);
 					particle->setPosition(to_sfml(position));

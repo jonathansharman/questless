@@ -20,11 +20,11 @@ namespace ql::qte {
 
 	private:
 		struct charge {
-			world::point position;
-			world::vel velocity;
+			view::point position;
+			view::vel velocity;
 		};
 
-		world::point _target_point;
+		view::point _target_point;
 
 		sec _elapsed_time = 0.0_s;
 		enum class quadrant { ur, ul, ll, lr } _quadrant = quadrant::ur;

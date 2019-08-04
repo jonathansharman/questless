@@ -7,7 +7,6 @@
 #include "entities/perception.hpp"
 #include "world/coordinates.hpp"
 #include "world/section.hpp"
-#include "world/world_space.hpp"
 
 #include <array>
 #include <optional>
