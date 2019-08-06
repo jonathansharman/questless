@@ -20,6 +20,6 @@ namespace ql {
 	//! The maximum possible distance a being with vision list @p vision_sources could see.
 	span max_visual_range(std::vector<stats::vision> const& vision_sources);
 
-	//! The perception of the @p target tile by the being with ID @p perceptor_id.
+	//! The nonnegative perception of the @p target tile by the being with ID @p perceptor_id.
 	perception perception_of(id perceptor_id, region_tile::point target);
 }

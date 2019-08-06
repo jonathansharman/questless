@@ -8,56 +8,21 @@
 
 #include "entities/beings/being.hpp"
 #include "magic/spell.hpp"
+#include "utility/random.hpp"
 #include "world/light_source.hpp"
 #include "world/region.hpp"
 
-#include <fstream>
-
 namespace ql {
-	section::section(region_section::point coords, std::istream& data_stream) : _coords{coords} {
-		for (auto& slice : _tile_ids) {
-			for (id tile_id : slice) {
-				int c;
-				temperature temperature_offset;
-
-				data_stream >> c >> temperature_offset.value;
-
-				switch (static_cast<tile_subtype>(c)) {
-					case tile_subtype::dirt:
-						tile = umake<dirt_tile>(temperature_offset);
-						break;
-					case tile_subtype::edge:
-						tile = umake<edge_tile>(temperature_offset);
-						break;
-					case tile_subtype::grass:
-						tile = umake<grass_tile>(temperature_offset);
-						break;
-					case tile_subtype::sand:
-						tile = umake<sand_tile>(temperature_offset);
-						break;
-					case tile_subtype::snow:
-						tile = umake<snow_tile>(temperature_offset);
-						break;
-					case tile_subtype::stone:
-						tile = umake<stone_tile>(temperature_offset);
-						break;
-					case tile_subtype::water:
-						tile = umake<water_tile>(temperature_offset);
-						break;
-					default:
-						assert(false && "Unrecognized tile type.");
-				}
-			}
-		}
-	}
-
-	section::~section() {}
-
-	void section::save(char const* filename) {
-		std::ofstream fout{filename};
-		for (auto& r_row : _tile_ids) {
-			for (auto& tile : r_row) {
-				fout << static_cast<char>(tile->subtype()) << ' ' << tile->temperature_offset.value << ' ';
+	section::section(id region_id, region_section::point coords) : _coords{coords} {
+		// Create a section with random tiles.
+		for (span q = 0_span; q < section_diameter; ++q) {
+			for (span r = 0_span; r < section_diameter; ++r) {
+				auto const terrain = static_cast<ql::terrain>(uniform(0, static_cast<int>(terrain::terrain_count)));
+				auto const rtc = region_tile_coords(coords, section_tile::point{q, r});
+				location location{region_id, rtc};
+				id const tile_id = reg.create();
+				make_tile(tile_id, terrain, location, 0_temp, 0_lum);
+				_tile_ids[q.value][r.value] = tile_id;
 			}
 		}
 	}

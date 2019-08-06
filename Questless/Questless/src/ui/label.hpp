@@ -7,8 +7,10 @@
 #include <SFML/Graphics/Text.hpp>
 
 namespace ql {
-	//! Displays some text.
+	//! Displays text.
 	struct label : widget {
+		label(sf::String const& text, sf::Font const& font, unsigned size, sf::Color fill_color = sf::Color::Black);
+
 		auto get_size() const -> view::vector final;
 
 		auto update(sec) -> void final;
@@ -17,8 +19,17 @@ namespace ql {
 
 		auto get_position() const -> view::point final;
 
-		//! Sets this label's text to @p text.
-		auto set_text(sf::Text text) -> void;
+		auto set_text(sf::String const& text) -> void;
+
+		auto set_font(sf::Font const& font) -> void;
+
+		auto set_font_size(unsigned font_size) -> void;
+
+		auto set_fill_color(sf::Color const& fill_color) -> void;
+
+		auto set_outline_color(sf::Color const& fill_color) -> void;
+
+		auto set_outline_thickness(float thickness) -> void;
 
 	private:
 		sf::Text _text;
@@ -26,5 +37,7 @@ namespace ql {
 		view::vector _size;
 
 		auto draw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
+
+		auto update_size() -> void;
 	};
 }

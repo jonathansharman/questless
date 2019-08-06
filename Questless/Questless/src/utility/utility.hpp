@@ -71,4 +71,25 @@ namespace ql {
 	static auto cast_transform() {
 		return ranges::view::transform([](auto arg) { return static_cast<T>(arg); });
 	}
+
+	//! Computes the ratio of quantities @p q1 and @p q2 after casting them to @p RatioType.
+	//! Useful
+	template <typename RatioType, typename Rep, typename Unit>
+	auto ratio(cancel::quantity<Rep, Unit> const& q1, cancel::quantity<Rep, Unit> const& q2) {
+		return static_cast<RatioType>(q1.value) / static_cast<RatioType>(q2.value);
+	}
+
+	//! Scales @p q by @p scale via static casting. Useful for scaling operations that require narrowing conversions.
+	template <typename ScaleType, typename Rep, typename Unit>
+	auto scale(cancel::quantity<Rep, Unit> const& q, ScaleType const& scale) {
+		using common = std::common_type<ScaleType, Rep>;
+		return cancel::quantity<Rep, Unit>(static_cast<Rep>(static_cast<common>(q.value) * static_cast<common>(scale)));
+	}
+
+	//! Scales @p q by @p scale via static casting. Useful for scaling operations that require narrowing conversions.
+	template <typename ScaleType, typename Rep, typename Unit>
+	auto scale(ScaleType const& scale, cancel::quantity<Rep, Unit> const& q) {
+		using common = std::common_type<ScaleType, Rep>;
+		return cancel::quantity<Rep, Unit>(static_cast<Rep>(static_cast<common>(scale) * static_cast<common>(q.value)));
+	}
 }

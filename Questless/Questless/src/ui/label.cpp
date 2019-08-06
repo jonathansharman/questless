@@ -7,6 +7,13 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 namespace ql {
+	label::label(sf::String const& text, sf::Font const& font, unsigned size, sf::Color fill_color = sf::Color::Black) {
+		_text.setString(text);
+		_text.setFont(font);
+		_text.setCharacterSize(size);
+		_text.setFillColor(fill_color);
+	}
+
 	view::vector label::get_size() const {
 		return _size;
 	}
@@ -27,8 +34,34 @@ namespace ql {
 		return _position;
 	}
 
-	auto label::set_text(sf::Text text) -> void {
-		_text = std::move(text);
+	auto label::set_text(sf::String const& text) -> void {
+		_text.setString(text);
+		update_size();
+	}
+
+	auto label::set_font(sf::Font const& font) -> void {
+		_text.setFont(font);
+		update_size();
+	}
+
+	auto label::set_font_size(unsigned font_size) -> void {
+		_text.setCharacterSize(font_size);
+		update_size();
+	}
+
+	auto label::set_fill_color(sf::Color const& fill_color) -> void {
+		_text.setFillColor(fill_color);
+	}
+
+	auto label::set_outline_color(sf::Color const& outline_color) -> void {
+		_text.setOutlineColor(outline_color);
+	}
+
+	auto label::set_outline_thickness(float thickness) -> void {
+		_text.setOutlineThickness(thickness);
+	}
+
+	auto label::update_size() -> void {
 		_size = view::vector_from_sfml_rect(_text.getLocalBounds());
 	}
 }

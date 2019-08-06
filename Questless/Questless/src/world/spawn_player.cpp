@@ -48,7 +48,5 @@ namespace ql {
 
 		// Add a gatestone.
 		player_inv.add(make_gatestone(reg.create(), magic::color::green, {100_mp, 100_mp}, {0_tick, 10_tick}));
-
-		return player_id;
 	}
 }

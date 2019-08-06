@@ -22,11 +22,11 @@ namespace ql {
 		//! @param drop_rate The number of drops of blood to create per second. Can be less than one.
 		bleeding(rsrc::particle const& resources, decltype(drops{} / sec{}) drop_rate)
 			: drop_rate{drop_rate}
-			, _resources{resources} //
+			, _rsrc{resources} //
 		{}
 
 	private:
-		rsrc::particle const& _resources;
+		rsrc::particle const& _rsrc;
 
 		//! The current accumulation of drops of blood.
 		drops _drops{0.0};

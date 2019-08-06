@@ -29,13 +29,5 @@ namespace ql::rsrc {
 			sf::Texture goblin = load<sf::Texture>("resources/textures/entities/beings/goblin.png");
 			sf::Texture human = load<sf::Texture>("resources/textures/entities/beings/human.png");
 		} ss;
-
-		struct {
-			still_image unknown;
-		} ani;
-
-		entity() : ani{txtr.unknown} {
-			ani.unknown.set_relative_origin({0.5f, 0.5f});
-		}
 	};
 }

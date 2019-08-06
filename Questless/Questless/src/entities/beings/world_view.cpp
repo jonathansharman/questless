@@ -5,57 +5,50 @@
 #include "entities/beings/world_view.hpp"
 
 #include "entities/beings/being.hpp"
-#include "world/region.hpp"
-
 #include "world/hex_space.hpp"
+#include "world/region.hpp"
 
 #include <set>
 
 namespace ql {
-	world_view::world_view(id being_id)
-		: center{reg.get<ql::location>(being_id)}
-		, visual_range{max_visual_range(reg.get<body>(being_id).stats.a.vision_sources.cur)} //
+	world_view::world_view(id viewer_id)
+		: center{reg.get<ql::location>(viewer_id)}
+		, visual_range{max_visual_range(reg.get<body>(viewer_id).stats.a.vision_sources.cur)} //
 	{
 		auto& region = reg.get<ql::region>(center.region_id);
 
-		// Find the set of coordinates of sections possibly visible to the being.
-		std::set<region_section::point> section_coords_set;
+		// Iterate over the rhomboid specified by the location and visual range to find visible tiles and beings.
 		for (span q = -visual_range; q <= visual_range; ++q) {
 			for (span r = -visual_range; r <= visual_range; ++r) {
-				region_tile::vector const offset{q, r};
-				if (offset.length() <= visual_range) {
-					if (section const* section = region.containing_section(center.coords + offset)) {
-						section_coords_set.insert(section->coords());
-					}
-				}
-			}
-		}
+				auto const offset = region_tile::vector{q, r};
 
-		// Calculate tile visibilities for each section.
-		for (region_section::point section_coords : section_coords_set) {
-			section_view section_view;
-			section_view.coords = section_coords;
+				// Skip corner tiles that are out of range.
+				if (offset.length() > visual_range) { continue; }
+				auto const tile_coords = center.coords + offset;
 
-			for (span q = 0_span; q < section_diameter; ++q) {
-				for (span r = 0_span; r < section_diameter; ++r) {
-					auto const region_tile_coords = section::region_tile_coords(section_coords, section_tile::point{q, r});
-					section_view.tile_perceptions[q.value][r.value] = perception_of(being_id, region_tile_coords);
-				}
-			}
+				// Skip missing tiles.
+				auto const o_tile_id = region.tile_id_at(tile_coords);
+				if (!o_tile_id) { continue; }
+				auto const tile_id = *o_tile_id;
 
-			section_views.push_back(std::move(section_view));
+				// Get tile perception and position.
+				auto const tile_perception = perception_of(viewer_id, tile_coords);
+				auto const tile_position = to_view_space(tile_coords);
 
-			// Calculate entity visibilities.
-			for (auto [other_coords, other_id] : region.section_at(section_coords)->entity_id_map) {
-				if (other_id == being_id) {
-					// Can always perceive self fully.
-					entity_views.push_back({other_id, max_perception});
-				} else {
-					section_tile::point const other_section_coords = section::section_tile_coords(other_coords);
-					perception tile_perception =
-						section_view.tile_perceptions[other_section_coords.q.value][other_section_coords.r.value];
+				// Add tile view if perceptible.
+				if (tile_perception > 0_perception) { tile_views.push_back({tile_id, tile_perception, tile_position}); }
 
-					entity_views.push_back({other_id, tile_perception});
+				// Check for an entity on this tile.
+				auto const o_other_id = region.entity_id_at(tile_coords);
+				if (!o_other_id) { continue; }
+				auto const other_id = *o_other_id;
+
+				// Can always perceive self fully. Otherwise perception matches tile perception.
+				auto const other_perception = other_id == viewer_id ? max_perception : tile_perception;
+
+				// Add entity view if perceptible.
+				if (other_perception > 0_perception) {
+					entity_views.push_back({other_id, other_perception, tile_position});
 				}
 			}
 		}

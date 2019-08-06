@@ -32,17 +32,17 @@ namespace ql {
 		rsrc::fonts const& fonts,
 		id region_id,
 		id player_id)
-		: _resources{fonts}
+		: _rsrc{fonts}
 		, _region_id{region_id}
 		, _player_id{player_id}
-		, _world_widget{get_world_widget_resources(_resources)}
+		, _world_widget{get_world_widget_resources(_rsrc)}
 		, _hotbar{}
 		, _inv{reg.get<inventory>(player_id), _hotbar} //
 	{
 		// When a hotbar item is selected, open a list dialog to choose an action.
 		_hotbar.set_on_click([this](std::optional<id> o_item_id) {
 			if (o_item_id) {
-				_item_dialog = umake<list_dialog>(_resources.fonts, "Act...", get_item_options(*o_item_id));
+				_item_dialog = umake<list_dialog>(this, _rsrc.fonts, "Act...", get_item_options(*o_item_id));
 				_item_dialog->on_parent_resize(get_size());
 				_item_dialog->set_position(view::point_from_sfml(sf::Mouse::getPosition()));
 			}
@@ -111,7 +111,7 @@ namespace ql {
 					break;
 			}
 			std::string time_string = fmt::format("Time: {} ({}, {})", region.time(), time_of_day, time_name);
-			sf::Text time_text{time_string, _resources.fonts.firamono, 20};
+			sf::Text time_text{time_string, _rsrc.fonts.firamono, 20};
 			time_text.setFillColor(sf::Color::White);
 			time_text.setPosition({0, 50});
 			target.draw(time_text, states);

@@ -91,6 +91,6 @@ namespace ql {
 		double const occlusion = region.occlusion(location.coords, target);
 		auto const best_perception = cancel::quantity_cast<perception>((1.0 - occlusion) * best_distance_adjusted_perception);
 
-		return best_perception;
+		return std::max(0_perception, best_perception);
 	}
 }

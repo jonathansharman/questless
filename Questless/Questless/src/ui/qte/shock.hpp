@@ -9,31 +9,38 @@
 #include "quantities/wall_time.hpp"
 #include "world/coordinates.hpp"
 
-namespace ql::qte {
-	//! Quick time event for determining shock strength.
-	struct shock : dialog<double> {
-		//! @param target_coords The target strike coordinates.
-		//! @param cont The dialog continuation function.
-		shock(sf::Window const& window, rsrc::fonts const& fonts, region_tile::point target_coords, std::function<void(double)> cont);
+namespace ql {
+	namespace rsrc {
+		struct fonts;
+		struct particle;
+	}
 
-		void update(sec elapsed_time, std::vector<sf::Event>& events) final;
+	namespace qte {
+		//! Quick time event for determining shock strength.
+		struct shock : dialog<float> {
+			//! @param target_coords The target strike coordinates.
+			shock(rsrc::particle const& particle_resources, region_tile::point target_coords);
 
-	private:
-		struct charge {
-			view::point position;
-			view::vel velocity;
+			auto update(sec elapsed_time) -> void final;
+
+			auto on_mouse_move(view::point mouse_position) -> void final;
+
+		private:
+			struct charge {
+				view::point position;
+				view::vel velocity;
+			};
+
+			rsrc::particle const& _particle_resources;
+
+			view::point _target_point;
+
+			sec _elapsed_time = 0.0_s;
+			enum class quadrant { ur, ul, ll, lr } _quadrant = quadrant::ur;
+
+			std::vector<charge> _charges;
+
+			void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 		};
-
-		view::point _target_point;
-
-		sec _elapsed_time = 0.0_s;
-		enum class quadrant { ur, ul, ll, lr } _quadrant = quadrant::ur;
-
-		std::vector<charge> _charges;
-
-		label _title;
-		label _prompt;
-
-		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
-	};
+	}
 }

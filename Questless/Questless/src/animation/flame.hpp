@@ -13,7 +13,7 @@ namespace ql {
 
 	//! Creates sparks, smoke, and flame.
 	struct flame : particle_animation {
-		flame(rsrc::particle const& resources) : _resources{resources} {}
+		flame(rsrc::particle const& resources) : _rsrc{resources} {}
 
 		//! Unit of flames, for use in flame animations.
 		using flames = cancel::quantity<double, cancel::unit_t<struct flame_particle_tag>>;
@@ -22,7 +22,7 @@ namespace ql {
 		decltype(flames{} / sec{}) flame_rate = flames{2} / 1.0_s;
 
 	private:
-		rsrc::particle const& _resources;
+		rsrc::particle const& _rsrc;
 
 		//! The current accumulation of flames.
 		flames _flames{0.0};

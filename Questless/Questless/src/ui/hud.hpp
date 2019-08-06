@@ -53,7 +53,7 @@ namespace ql {
 		id _player_id;
 		std::promise<void> _pass_promise;
 
-		rsrc::hud _resources;
+		rsrc::hud _rsrc;
 		view::point _position;
 		view::vector _size;
 		world_widget _world_widget;

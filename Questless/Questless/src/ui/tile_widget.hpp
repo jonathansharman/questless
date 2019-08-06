@@ -6,6 +6,7 @@
 
 #include "widget.hpp"
 
+#include "entities/beings/world_view.hpp"
 #include "reg.hpp"
 #include "utility/reference.hpp"
 
@@ -19,10 +20,8 @@ namespace ql {
 
 	//! Allows interaction with a tile in the world.
 	struct tile_widget : widget {
-		//! The tile this widget interfaces with.
-		std::optional<id> o_tile_id;
-
-		tile_widget(rsrc::tile const& resources);
+		//! @param entity_view A view of the tile this widget interfaces with.
+		tile_widget(rsrc::tile const& resources, world_view::tile_view tile_view);
 
 		auto get_size() const -> view::vector final;
 
@@ -32,12 +31,10 @@ namespace ql {
 
 		auto get_position() const -> view::point final;
 
-		//! Updates this tile's appearance. Call only when the tile's state may have changed.
-		auto render() -> void;
-
 	private:
 		rsrc::tile const& _rsrc;
 
+		world_view::tile_view _tv;
 		view::point _position;
 		uptr<animation> _ani;
 

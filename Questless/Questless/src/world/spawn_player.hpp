@@ -14,5 +14,5 @@ namespace ql {
 	//! initialized as a player character.
 	//! @param region_id The ID of an already-initialized region.
 	//! @return The ID of the spawned player.
-	id create_and_spawn_player(id player_id, id region_id, hud* hud);
+	auto create_and_spawn_player(id player_id, id region_id, hud* hud) -> void;
 }

@@ -14,7 +14,7 @@
 
 #include "damage/damage.hpp"
 #include "effects/effect.hpp"
-#include "entities/beings/being.hpp"
+#include "entities/beings/body_part.hpp"
 #include "entities/beings/world_view.hpp"
 #include "entities/entity.hpp"
 #include "rsrc/fonts.hpp"
@@ -122,14 +122,26 @@ namespace ql {
 		_size = parent_size;
 	}
 
-	auto world_widget::on_key_press(sf::Event::KeyEvent const&) -> event_handled {}
+	auto world_widget::on_key_press(sf::Event::KeyEvent const&) -> event_handled {
+		return event_handled::no;
+	}
 
 	auto world_widget::on_mouse_press(sf::Event::MouseButtonEvent const& event) -> event_handled {
-		if (event.button == sf::Mouse::Button::Middle) { _o_drag_start = view::point_from_mouse_button_event(event); }
+		if (event.button == sf::Mouse::Button::Middle) {
+			_o_drag_start = view::point_from_mouse_button_event(event);
+			return event_handled::yes;
+		} else {
+			return event_handled::no;
+		}
 	}
 
 	auto world_widget::on_mouse_release(sf::Event::MouseButtonEvent const& event) -> event_handled {
-		if (event.button == sf::Mouse::Button::Middle) { _o_drag_start = std::nullopt; }
+		if (event.button == sf::Mouse::Button::Middle) {
+			_o_drag_start = std::nullopt;
+			return event_handled::yes;
+		} else {
+			return event_handled::no;
+		}
 	}
 
 	auto world_widget::on_mouse_move(view::point mouse_position) -> void {
@@ -150,81 +162,27 @@ namespace ql {
 
 	void world_widget::render_terrain(world_view const& view) {
 		_tile_widgets.clear();
-		for (auto const& section_view : view.section_views) {
-			auto const& region = reg.get<ql::region>(view.center.region_id);
-			section const* section = region.section_at(section_view.coords);
-			if (!section) continue;
-			for (span q = 0_span; q < section_diameter; ++q) {
-				for (span r = 0_span; r < section_diameter; ++r) {
-					section_tile::point const section_tile_coords{q, r};
-
-					perception tile_perception =
-						section_view.tile_perceptions[section_tile_coords.q.value][section_tile_coords.r.value];
-
-					if (tile_perception > 0_perception) {
-						//! @todo Use tile_game_point or remove these lines if no longer needed.
-						region_tile::point const region_tile_coords = section->region_tile_coords(section_tile_coords);
-						view::point const tile_game_point = to_world(region_tile_coords);
-
-						// Get the current tile.
-						id tile_id = section->tile_id_at(section_tile_coords);
-
-						auto& tile_widget = _tile_widgets[tile_id];
-						tile_widget.o_tile_id = tile_id;
-						tile_widget.render();
-						tile_widget.on_parent_resize(_size);
-						tile_widget.set_position(tile_game_point);
-
-						//! @todo Use some kind of shader to indicate perception level.
-					}
-				}
-			}
+		for (auto const& tv : view.tile_views) {
+			auto& tile_widget = _tile_widgets.try_emplace(tv.id, _rsrc.tile, tv).first->second;
+			tile_widget.on_parent_resize(_size);
+			tile_widget.set_position(tv.position);
 		}
 	}
 
 	void world_widget::render_entities(world_view const& view) {
-		// Draw from the sorted view.
-		for (auto const& entity_view : sorted_entity_views) {
-			// Attempt to load the entity.
-			if (entity const* entity = get_entity_cptr(entity_view.id)) {
-				auto& entity_animation = [&]() -> animation& {
-					// Search for the entity's animation in the cache.
-					auto it = _entity_animations.find(entity_view.id);
-					// If it's there, use it. Otherwise, create and cache the animation.
-					if (it != _entity_animations.end()) {
-						return *(it->second);
-					} else {
-						auto result = _entity_animations.insert({entity_view.id, animate(_entity_resources, *entity)});
-						return *result.first->second;
-					}
-				}();
+		using ev = world_view::entity_view;
 
-				auto const perception_above_minimum = entity_view.perception.value() - perception::minimum_level;
-				auto const perception_range = perception::maximum_level - perception::minimum_level;
-				sf::Uint8 const intensity = to_uint8(perception_above_minimum / perception_range);
-
-				switch (get_category(entity_view.perception)) {
-					case perception_category::none:
-						break;
-					case perception::category::low:
-						_entity_resources.ani.unknown.setPosition(to_sfml(to_world(entity->location().coords)));
-						_entity_resources.ani.unknown.set_color({intensity, intensity, intensity});
-						break;
-					case perception::category::medium:
-					case perception::category::high:
-					case perception::category::full: {
-						entity_animation.setPosition(to_sfml(to_world(entity->location().coords)));
-						//! @todo: Incorporate color.
-						// entity_animation.setColor(sf::Color{intensity, intensity, intensity});
-						break;
-					}
-					default:
-						UNREACHABLE;
-				}
-			} else {
-				// Remove the being from the animation cache if it doesn't exist anymore.
-				_entity_animations.erase(entity_view.id);
-			}
+		_entity_widgets.clear();
+		// Create a list of entity IDs sorted by y-coordinate.
+		std::vector<ev> sorted_entity_views = view.entity_views;
+		std::sort(sorted_entity_views.begin(), sorted_entity_views.end(), [](ev const& ev1, ev const& ev2) {
+			return ev1.position[1] < ev2.position[1];
+		});
+		// Render sorted entities.
+		for (auto const& ev : sorted_entity_views) {
+			auto& entity_widget = _entity_widgets.try_emplace(ev.id, _rsrc.entity, _rsrc.particle, ev).first->second;
+			entity_widget.on_parent_resize(_size);
+			entity_widget.set_position(ev.position);
 		}
 	}
 
@@ -232,20 +190,19 @@ namespace ql {
 		match(
 			effect.value,
 			[&](effects::arrow_attack const& e) {
-				view::point source = to_world(e.origin);
-				view::point target = to_world(e.target);
-				_effect_animations.push_back(umake<arrow_particle>(source, target));
+				view::point source = to_view_space(e.origin);
+				view::point target = to_view_space(e.target);
+				_effect_animations.push_back(umake<arrow_particle>(_rsrc.particle, source, target));
 				_arrow_sound.play();
 			},
 			[&](effects::injury const& e) {
-				being const* const target_being = the_game().beings.cptr(e.target_being_id);
-				body_part const* const target_part = target_being ? target_being->body.find_part(e.target_part_id) : nullptr;
+				body_part const* const target_part = reg.try_get<body_part>(e.target_part_id);
 				// Assume vitality = 100 if being no longer exists to check.
-				auto const target_vitality = target_part ? target_part->stats.vitality.value() : 100.0_hp;
+				auto const target_vitality = target_part ? target_part->stats.a.vitality.cur : 100_hp;
 				//! @todo Pass along the vitality in the event object if it's needed here (to avoid having to make
 				//! up a number).
 
-				view::point const position = to_world(e.origin);
+				view::point const position = to_view_space(e.origin);
 
 				dmg::group const& damage = e.damage;
 
@@ -254,28 +211,28 @@ namespace ql {
 
 					auto const& font = _rsrc.fonts.firamono;
 
-					auto spawn_blood = [&](double const damage) {
-						constexpr double scaling_factor = 20.0;
-						int const n = static_cast<int>(damage / target_vitality.value * scaling_factor);
+					auto spawn_blood = [&](int const damage) {
+						constexpr int scaling_factor = 20;
+						int const n = damage * scaling_factor / target_vitality.value;
 						for (int i = 0; i < n; ++i) {
-							_effect_animations.push_back(umake<blood_particle>());
+							_effect_animations.push_back(umake<blood_particle>(_rsrc.particle));
 						}
 					};
 
-					auto render_slash_or_pierce = [&](double const amount) {
+					auto render_slash_or_pierce = [&](int const amount) {
 						spawn_blood(amount);
 						_effect_animations.push_back(
-							umake<text_particle>(text_duration, font, std::to_string(lround(amount)), sf::Color::White));
-						_effect_animations.back()->setPosition(to_sfml(position));
-						_resources.sfx.pierce.play();
+							umake<text_particle>(text_duration, font, std::to_string(amount), sf::Color::White));
+						_effect_animations.back()->setPosition(view::to_sfml(position));
+						_pierce_sound.play();
 					};
 
-					auto render_cleave_or_bludgeon = [&](double const amount) {
+					auto render_cleave_or_bludgeon = [&](int const amount) {
 						spawn_blood(amount);
 						_effect_animations.push_back(
-							umake<text_particle>(text_duration, font, std::to_string(lround(amount)), sf::Color::White));
-						_effect_animations.back()->setPosition(to_sfml(position));
-						_resources.sfx.hit.play();
+							umake<text_particle>(text_duration, font, std::to_string(amount), sf::Color::White));
+						_effect_animations.back()->setPosition(view::to_sfml(position));
+						_hit_sound.play();
 					};
 
 					match(
@@ -284,39 +241,44 @@ namespace ql {
 						[&](dmg::pierce const& pierce) { render_slash_or_pierce(pierce.value); },
 						[&](dmg::cleave const& cleave) { render_cleave_or_bludgeon(cleave.value); },
 						[&](dmg::bludgeon const& bludgeon) { render_cleave_or_bludgeon(bludgeon.value); },
-						[&](dmg::scorch const& burn) {
+						[&](dmg::scorch const& scorch) {
 							_effect_animations.push_back(umake<text_particle>(
-								text_duration, font, std ::to_string(lround(burn.value)), sf::Color{255, 128, 0}));
-							_effect_animations.back()->setPosition(to_sfml(position));
+								text_duration, font, std::to_string(scorch.value), sf::Color{255, 128, 0}));
+							_effect_animations.back()->setPosition(view::to_sfml(position));
 						},
 						[&](dmg::freeze const& freeze) {
-							_effect_animations.push_back(umake<text_particle>(
-								text_duration, font, std::to_string(lround(freeze.value)), sf::Color::Cyan));
-							_effect_animations.back()->setPosition(to_sfml(position));
+							_effect_animations.push_back(
+								umake<text_particle>(text_duration, font, std::to_string(freeze.value), sf::Color::Cyan));
+							_effect_animations.back()->setPosition(view::to_sfml(position));
+						},
+						[&](dmg::shock const& shock) {
+							_effect_animations.push_back(
+								umake<text_particle>(text_duration, font, std::to_string(shock.value), sf::Color::Yellow));
+							_effect_animations.back()->setPosition(view::to_sfml(position));
 						},
 						[&](dmg::poison const& poison) {
 							_effect_animations.push_back(umake<text_particle>(
-								text_duration, font, std::to_string(lround(poison.value)), sf::Color{128, 0, 192}));
-							_effect_animations.back()->setPosition(to_sfml(position));
+								text_duration, font, std::to_string(poison.value), sf::Color{128, 0, 192}));
+							_effect_animations.back()->setPosition(view::to_sfml(position));
 						},
-						[&](dmg::shock const& shock) {
+						[&](dmg::rot const& rot) {
 							_effect_animations.push_back(umake<text_particle>(
-								text_duration, font, std::to_string(lround(shock.value)), sf::Color::Yellow));
-							_effect_animations.back()->setPosition(to_sfml(position));
+								text_duration, font, std::to_string(rot.value), sf::Color{96, 96, 96}));
+							_effect_animations.back()->setPosition(view::to_sfml(position));
 						});
 				}
 			},
 			[&](effects::lightning_bolt const& e) {
-				view::point position = to_world(e.origin);
+				view::point position = to_view_space(e.origin);
 				for (int i = 0; i < 35; ++i) {
-					auto p = umake<yellow_magic_particle>();
+					auto p = umake<yellow_magic_particle>(_rsrc.particle);
 					p->setPosition(to_sfml(position));
 					_effect_animations.push_back(std::move(p));
 				}
 				_shock_sound.play();
 			},
 			[&](effects::telescope const& e) {
-				view::point position = to_world(e.origin);
+				view::point position = to_view_space(e.origin);
 				for (int i = 0; i < 50; ++i) {
 					auto particle = umake<green_magic_particle>(_rsrc.particle);
 					particle->setPosition(to_sfml(position));

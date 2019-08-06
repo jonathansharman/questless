@@ -14,9 +14,6 @@
 #include "still_image.hpp"
 #include "still_shape.hpp"
 
-#include "entities/beings/body.hpp"
-#include "entities/beings/body_part.hpp"
-#include "entities/objects/campfire.hpp"
 #include "items/magic/gatestone.hpp"
 #include "items/magic/scroll.hpp"
 #include "items/weapons/bow.hpp"
@@ -38,47 +35,6 @@ namespace ql {
 			[&](magic::heal const&) { return umake<still_image>(resources.txtr.heal); },
 			[&](magic::shock const&) { return umake<still_image>(resources.txtr.shock); },
 			[&](magic::teleport const&) { return umake<still_image>(resources.txtr.teleport); });
-	}
-
-	uptr<animation> animate_entity(rsrc::entity const& entity_resources, rsrc::particle const& particle_resources, id entity_id) {
-		if (reg.has<campfire>(entity_id)) {
-			auto firewood = umake<still_image>(entity_resources.txtr.firewood);
-			firewood->set_relative_origin({0.5f, 0.5f});
-			auto scene_node = umake<ql::scene_node>(std::move(firewood));
-
-			auto flame = umake<ql::flame>(particle_resources);
-			// Pre-update the flame so it's steady immediately.
-			flame->update(2.0_s);
-
-			scene_node->front_children.push_back(umake<ql::scene_node>(std::move(flame)));
-			return scene_node;
-		} else if (auto body = reg.try_get<ql::body>(entity_id)) {
-			// Sprite animation
-			auto scene_node = umake<ql::scene_node>(umake<ql::sprite_animation>( //
-				ql::sprite_sheet{entity_resources.ss.human, {3, 1}},
-				std::vector<sprite_animation::frame>{//
-					{0.2_s, {0, 0}, {0, 12}},
-					{0.2_s, {1, 0}, {0, 12}},
-					{0.2_s, {2, 0}, {0, 12}},
-					{0.2_s, {1, 0}, {0, 12}}},
-				sprite_animation::loop_type::looping,
-				sprite_animation::start_time::random));
-
-			// Bleeding animation
-			auto total_bleeding = 0.0_blood_per_tick;
-			body->for_all_parts([&](body_part const& part) { total_bleeding += part.stats.bleeding.cur; });
-			if (total_bleeding > 0.0_blood_per_tick) {
-				// Severity of bleeding is the rate of blood loss over the being's base vitality.
-				auto const severity = total_bleeding / body->stats.a.vitality.base;
-				// Converts the severity of bleeding to drops of animated blood per second.
-				constexpr auto conversion_factor = ql::bleeding::drops{5.0} / 1.0_s / (1.0_blood_per_tick / 1_hp);
-				auto bleeding = umake<ql::bleeding>(particle_resources, severity * conversion_factor);
-				scene_node->front_children.push_back(std::move(bleeding));
-			}
-			return scene_node;
-		}
-		// Above cases are exhaustive.
-		UNREACHABLE;
 	}
 
 	uptr<animation> animate_item(rsrc::item const& item_resources, rsrc::spell const& spell_resources, id item_id) {

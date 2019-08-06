@@ -63,7 +63,7 @@ namespace ql {
 		return view::point{x, y};
 	}
 	//! Converts @p v to a world space vector.
-	constexpr auto to_world(region_tile::vector v) {
+	constexpr auto to_view_space(region_tile::vector v) {
 		return view::point{
 			(world_layout.orientation.f0 * v.q.value + world_layout.orientation.f1 * v.r.value) * world_layout.size[0],
 			(world_layout.orientation.f2 * v.q.value + world_layout.orientation.f3 * v.r.value) * world_layout.size[1]};

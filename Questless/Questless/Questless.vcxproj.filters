@@ -201,9 +201,6 @@
     <ClInclude Include="src\world\coordinates.hpp">
       <Filter>src\world</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\qte\incant.hpp">
-      <Filter>src\ui\qte</Filter>
-    </ClInclude>
     <ClInclude Include="src\ui\qte\shock.hpp">
       <Filter>src\ui\qte</Filter>
     </ClInclude>
@@ -438,25 +435,7 @@
     <ClInclude Include="src\ui\dialog\list_dialog.hpp">
       <Filter>src\ui\dialog</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\dialog\magnitude_dialog.hpp">
-      <Filter>src\ui\dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\dialog\message_dialog.hpp">
-      <Filter>src\ui\dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\dialog\tile_dialog.hpp">
-      <Filter>src\ui\dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\dialog\vector_dialog.hpp">
-      <Filter>src\ui\dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\dialog\count_dialog.hpp">
-      <Filter>src\ui\dialog</Filter>
-    </ClInclude>
     <ClInclude Include="src\ui\dialog\dialog.hpp">
-      <Filter>src\ui\dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\dialog\direction_dialog.hpp">
       <Filter>src\ui\dialog</Filter>
     </ClInclude>
     <ClInclude Include="src\agents\actions.hpp">
@@ -662,9 +641,6 @@
     <ClCompile Include="src\ui\qte\shock.cpp">
       <Filter>src\ui\qte</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\qte\incant.cpp">
-      <Filter>src\ui\qte</Filter>
-    </ClCompile>
     <ClCompile Include="src\utility\utility.cpp">
       <Filter>src\utility</Filter>
     </ClCompile>
@@ -747,24 +723,6 @@
       <Filter>src\entities</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\dialog\list_dialog.cpp">
-      <Filter>src\ui\dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\dialog\magnitude_dialog.cpp">
-      <Filter>src\ui\dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\dialog\message_dialog.cpp">
-      <Filter>src\ui\dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\dialog\tile_dialog.cpp">
-      <Filter>src\ui\dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\dialog\vector_dialog.cpp">
-      <Filter>src\ui\dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\dialog\count_dialog.cpp">
-      <Filter>src\ui\dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\dialog\direction_dialog.cpp">
       <Filter>src\ui\dialog</Filter>
     </ClCompile>
     <ClCompile Include="src\agents\actions.cpp">

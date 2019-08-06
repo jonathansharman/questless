@@ -6,6 +6,8 @@
 
 #include "dialog.hpp"
 
+#include "ui/label.hpp"
+
 #include <SFML/Window.hpp>
 
 #include <string>
@@ -19,7 +21,11 @@ namespace ql {
 	//! Retrieves the player's choice from a list of options.
 	struct list_dialog : dialog<std::function<void()>> {
 		//! @param options The list of pairs of option names and their callbacks. Must be non-empty.
-		list_dialog(rsrc::fonts const& fonts, sf::String title, std::vector<std::tuple<sf::String, std::function<void()>>> options);
+		list_dialog( //
+			widget* parent,
+			rsrc::fonts const& fonts,
+			sf::String const& title,
+			std::vector<std::tuple<sf::String, std::function<void()>>> options);
 
 		auto get_size() const -> view::vector final;
 
@@ -38,16 +44,17 @@ namespace ql {
 		auto on_mouse_wheel_scroll(sf::Event::MouseWheelScrollEvent const& event) -> event_handled final;
 
 	private:
-		static constexpr float _title_height = 40;
-		static constexpr float _option_height = 20;
+		widget* _parent;
 
 		view::point _position;
+		view::vector _size;
+		view::vector _parent_size;
 
 		int _selection = 0;
 
 		sf::RectangleShape _bg;
-		sf::Text _title;
-		std::vector<std::tuple<sf::Text, std::function<void()>>> _options;
+		label _title;
+		std::vector<std::tuple<label, std::function<void()>>> _options;
 
 		auto draw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
 
@@ -56,5 +63,8 @@ namespace ql {
 
 		//! Chooses the currently selected option.
 		auto choose() -> void;
+
+		//! Repositions the list dialog so that it fits inside its parent.
+		auto confine_to_parent() -> void;
 	};
 }

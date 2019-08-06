@@ -11,91 +11,62 @@
 namespace ql {
 	using namespace view::literals;
 
+	namespace {
+		constexpr auto title_height = 40.0_px;
+		constexpr auto option_height = 20.0_px;
+		constexpr view::vector padding{10.0_px, 10.0_px};
+	}
+
 	list_dialog::list_dialog( //
+		widget* parent,
 		rsrc::fonts const& fonts,
-		sf::String title,
+		sf::String const& title,
 		std::vector<std::tuple<sf::String, std::function<void()>>> options)
-		: _title{title, fonts.dumbledor1, 28} //
+		: _parent{parent}
+		, _title{title, fonts.dumbledor1, 28, sf::Color::Black} //
 	{
 		assert(!options.empty());
-
-		constexpr view::vector padding{10.0_px, 10.0_px};
-
-		_title.setFillColor(sf::Color::Black);
 
 		_bg.setOutlineThickness(1.0f);
 		_bg.setOutlineColor(sf::Color::Black);
 		_bg.setFillColor(sf::Color{255, 192, 153});
 
-		float bg_width = _title.getLocalBounds().width;
+		// Initialize background size.
+		auto bg_size = [&]() -> view::vector {
+			auto const width{_title.get_size()[0]};
+			view::px const height{static_cast<float>(_options.size()) * option_height};
+			return {width, height};
+		}();
 
 		// Create options.
 		for (auto& [string, callback] : options) {
-			sf::Text option_text{string, fonts.dumbledor1, 20};
-			option_text.setFillColor(sf::Color::Black);
-			option_text.setOutlineColor(sf::Color::Black);
-			option_text.setOutlineThickness(2.0f);
+			label option_label{string, fonts.dumbledor1, 20};
+			option_label.set_outline_color(sf::Color::Black);
+			option_label.set_outline_thickness(2.0f);
 			// Update background to fit this option's text.
-			bg_width = std::max(bg_width, option_text.getLocalBounds().width);
+			bg_size[0] = std::max(bg_size[0], option_label.get_size()[0]);
 			// Move new option into options list.
-			_options.emplace_back(std::move(option_text), std::move(callback));
+			_options.emplace_back(std::move(option_label), std::move(callback));
 		}
+
+		// Add padding to background size.
+		bg_size += 2.0f * padding;
+		// Pass background size to background shape.
+		_bg.setSize(view::to_sfml(bg_size));
 
 		// Highlight first option.
-		std::get<0>(_options.front()).setFillColor(sf::Color::White);
-
-		// Add width padding to background and set size.
-		bg_width += 2.0f * padding[0];
-		_bg.setSize({bg_width, _title_height + static_cast<int>(_options.size()) * _option_height + 2 * padding.y});
-
-		// Confine bounds to window.
-		auto bg_bounds = _bg.getGlobalBounds();
-		if (bg_bounds.left + bg_bounds.width > _window.getSize().x) { _bg.move(-bg_bounds.width, 0); }
-		if (bg_bounds.top + bg_bounds.height > _window.getSize().y) { _bg.move(0, -bg_bounds.height); }
-
-		// Position contents relative to background.
-		_title.setPosition(_bg.getPosition() + padding);
-		for (std::size_t i = 0; i < _options.size(); ++i) {
-			std::get<0>(_options[i])
-				.setPosition(
-					_bg.getPosition() + padding + sf::Vector2f{0, _title_height + static_cast<float>(i) * _option_height});
-		}
+		std::get<0>(_options.front()).set_fill_color(sf::Color::White);
 	}
 
 	auto list_dialog::get_size() const -> view::vector {
-		return view::vector_from_sfml(_bg.getSize());
+		return _size;
 	}
 
-	void list_dialog::update(sec /*elapsed_time*/) {
-		int const option_count = static_cast<int>(_options.size());
-
-		if (!_options.empty()) {
-			int const old_selection = _selection;
-
-			_selection = _selection % option_count;
-			_selection = _selection < 0 ? _selection + option_count : _selection;
-
-			if (old_selection != _selection) {
-				// Selection changed. Update colors.
-				std::get<0>(_options[old_selection]).setFillColor(sf::Color::Black);
-				std::get<0>(_options[_selection]).setFillColor(sf::Color::White);
-			}
-		}
-	}
-
-	void list_dialog::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-		// Draw background.
-		target.draw(_bg);
-		// Draw title.
-		target.draw(_title);
-		// Draw options.
-		for (auto const& option : _options) {
-			target.draw(option, states);
-		}
-	}
+	void list_dialog::update(sec /*elapsed_time*/) {}
 
 	auto list_dialog::set_position(view::point position) -> void {
 		_position = position;
+		confine_to_parent();
 	}
 
 	auto list_dialog::get_position() const -> view::point {
@@ -103,7 +74,8 @@ namespace ql {
 	}
 
 	auto list_dialog::on_parent_resize(view::vector parent_size) -> void {
-		_bg.setPosition(origin);
+		_parent_size = parent_size;
+		confine_to_parent();
 	}
 
 	auto list_dialog::on_key_press(sf::Event::KeyEvent const& event) -> event_handled {
@@ -152,14 +124,16 @@ namespace ql {
 				select(9);
 				break;
 			// Move selection up/down.
-			case sf::Keyboard::Up:
+			case sf::Keyboard::Up: {
 				int const options_count = static_cast<int>(_options.size());
 				select((_selection - 1 + options_count) % options_count);
 				break;
-			case sf::Keyboard::Down:
+			}
+			case sf::Keyboard::Down: {
 				int const options_count = static_cast<int>(_options.size());
 				select((_selection + 1) % options_count);
 				break;
+			}
 			default:
 				return event_handled::no;
 		}
@@ -168,7 +142,7 @@ namespace ql {
 
 	auto list_dialog::on_mouse_press(sf::Event::MouseButtonEvent const& event) -> event_handled {
 		if (event.button == sf::Mouse::Left) {
-			select(_selection, true);
+			choose();
 			return event_handled::yes;
 		} else {
 			return event_handled::no;
@@ -177,17 +151,54 @@ namespace ql {
 
 	auto list_dialog::on_mouse_wheel_scroll(sf::Event::MouseWheelScrollEvent const& event) -> event_handled {
 		select(_selection + event.y);
+		return event_handled::no;
+	}
+
+	void list_dialog::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+		// Draw background.
+		target.draw(_bg);
+		// Draw title.
+		target.draw(_title);
+		// Draw options.
+		for (auto const& option : _options) {
+			target.draw(std::get<0>(option), states);
+		}
 	}
 
 	auto list_dialog::select(int selection) -> void {
-		if (selection < _options.size()) {
+		if (selection < static_cast<int>(_options.size())) {
 			int const previous_selection = _selection;
 			_selection = selection;
-			if (_selection != previous_selection) {}
+			if (_selection != previous_selection) {
+				// Selection changed. Update colors.
+				std::get<0>(_options[previous_selection]).set_fill_color(sf::Color::Black);
+				std::get<0>(_options[_selection]).set_fill_color(sf::Color::White);
+			}
 		}
 	}
 
 	auto list_dialog::choose() -> void {
-		_promise.set_value(std::move(_options[_selection]));
+		_promise.set_value(std::move(std::get<1>(_options[_selection])));
+	}
+
+	auto list_dialog::confine_to_parent() -> void {
+		{ // Move up/left if list dialog goes past the parent's bounding box.
+			auto parent_box = _parent->get_bounding_box();
+			if (_position[0] + _size[0] > right(parent_box)) { _position[0] -= _size[0]; }
+			if (_position[1] + _size[1] > bottom(parent_box)) { _position[1] -= _size[1]; }
+		}
+
+		// Set background position.
+		_bg.setPosition(view::to_sfml(_position));
+
+		auto content_position = _position + padding;
+		// Set title position.
+		_title.set_position(content_position);
+		// Set option positions.
+		content_position[1] += title_height;
+		for (std::size_t i = 0; i < _options.size(); ++i) {
+			std::get<0>(_options[i]).set_position(content_position);
+			content_position[1] += option_height;
+		}
 	}
 }

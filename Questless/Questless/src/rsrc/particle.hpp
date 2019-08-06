@@ -6,8 +6,6 @@
 
 #include "utility.hpp"
 
-#include "animation/still_image.hpp"
-
 #include <SFML/Graphics.hpp>
 
 namespace ql::rsrc {

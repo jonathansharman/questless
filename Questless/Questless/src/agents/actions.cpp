@@ -74,7 +74,7 @@ namespace ql {
 		auto const& location = reg.get<ql::location>(dropper_id);
 		auto& region = reg.get<ql::region>(location.region_id);
 		// The tile certainly exists because a being is located on it, so it's safe to dereference without a check here.
-		id tile_id = *region.tile_at(location.coords);
+		auto tile_id = *region.tile_id_at(location.coords);
 		// Add item to the tile's inventory.
 		reg.get<inventory>(tile_id).add(item_id);
 	}

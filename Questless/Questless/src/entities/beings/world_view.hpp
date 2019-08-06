@@ -18,23 +18,29 @@ namespace ql {
 
 	//! Represents everything an agent can perceive about its being's environment.
 	struct world_view {
-		struct section_view {
-			region_section::point coords;
-			std::array<std::array<perception, section_diameter.value>, section_diameter.value> tile_perceptions;
+		struct tile_view {
+			id id;
+			perception perception;
+
+			// Position is included here (redundantly) for efficiency because it's required in various places.
+			view::point position;
 		};
 
 		struct entity_view {
 			id id;
 			perception perception;
+
+			// Position is included here (redundantly) for efficiency because it's required in various places.
+			view::point position;
 		};
 
-		std::vector<section_view> section_views;
+		std::vector<tile_view> tile_views;
 		std::vector<entity_view> entity_views;
 		location center;
 		span visual_range;
 
-		//! Constructs the world view of being with id @p being_id.
-		world_view(id being_id);
+		//! Constructs the world view of the being with id @p viewer_id.
+		world_view(id viewer_id);
 
 		world_view(world_view const&) = default;
 		world_view(world_view&&) = default;

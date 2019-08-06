@@ -25,21 +25,16 @@ namespace ql {
 		std::unordered_map<region_tile::point, id> entity_id_map;
 
 		//! The coordinates of @p region_tile_coords relative to the section that contains them.
-		static section_tile::point section_tile_coords(region_tile::point region_tile_coords) {
+		static auto section_tile_coords(region_tile::point region_tile_coords) {
 			return section_tile::point{
 				((region_tile_coords.q + section_radius) % section_diameter.value + section_diameter) % section_diameter.value,
 				((region_tile_coords.r + section_radius) % section_diameter.value + section_diameter) % section_diameter.value};
 		}
 
+		//! Generates a new section.
+		//! @param region_tile The ID of the region containing this section.
 		//! @param coords The coordinates of the section within its region.
-		//! @param data_stream A stream of section data.
-		section(region_section::point coords, std::istream& data_stream);
-
-		~section();
-
-		//! Saves the section to the specified file.
-		//! @param filename The section's filename.
-		void save(char const* filename);
+		section(id region_tile, region_section::point coords);
 
 		//! The hex coordinates of this section within the region's sections.
 		region_section::point coords() const {
