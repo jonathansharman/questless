@@ -8,6 +8,7 @@
 
 #include "hud.hpp"
 
+#include "agents/player.hpp"
 #include "world/region.hpp"
 #include "world/spawn_player.hpp"
 
@@ -17,12 +18,12 @@ namespace ql {
 
 		// Create the main region.
 		id region_id = make_region(reg.create(), "Region 1");
-		// Create an empty player entity.
-		auto player_id = reg.create();
+		// Spawn the player into the main region.
+		auto player_id = create_and_spawn_player(region_id);
 		// Create HUD.
 		_hud = umake<ql::hud>(fonts, region_id, player_id);
-		// Spawn the player into the main region.
-		create_and_spawn_player(player_id, region_id, _hud.get());
+		// Set the player's HUD pointer.
+		reg.get<player>(player_id).set_hud(_hud.get());
 	}
 
 	main_menu::~main_menu() = default;

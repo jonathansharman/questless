@@ -19,7 +19,7 @@ namespace ql {
 		//! Quick time event for determining shock strength.
 		struct shock : dialog<float> {
 			//! @param target_coords The target strike coordinates.
-			shock(rsrc::particle const& particle_resources, region_tile::point target_coords);
+			shock(rsrc::particle const& particle_resources, tile_hex::point target_coords);
 
 			auto update(sec elapsed_time) -> void final;
 

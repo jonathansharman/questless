@@ -22,62 +22,48 @@ namespace ql {
 
 	//! An rhomboid section of hexes in a region.
 	struct section {
-		std::unordered_map<region_tile::point, id> entity_id_map;
-
-		//! The coordinates of @p region_tile_coords relative to the section that contains them.
-		static auto section_tile_coords(region_tile::point region_tile_coords) {
-			return section_tile::point{
-				((region_tile_coords.q + section_radius) % section_diameter.value + section_diameter) % section_diameter.value,
-				((region_tile_coords.r + section_radius) % section_diameter.value + section_diameter) % section_diameter.value};
-		}
-
 		//! Generates a new section.
-		//! @param region_tile The ID of the region containing this section.
+		//! @param region_id The ID of the region containing this section.
 		//! @param coords The coordinates of the section within its region.
-		section(id region_tile, region_section::point coords);
+		section(id region_id, section_hex::point coords);
 
-		//! The hex coordinates of this section within the region's sections.
-		region_section::point coords() const {
-			return _coords;
-		}
+		//! The hex coordinates of this section within its region's sections.
+		auto section_coords() const;
+
+		//! The coordinates of this section's center tile.
+		auto center_coords() const -> tile_hex::point;
+
+		//! A map in this section of tile coordinates to occupying entities.
+		auto entity_id_map() const -> std::unordered_map<tile_hex::point, id> const&;
 
 		//! The ID of the entity at @p tile_coords or nullopt if there is none.
-		std::optional<id> entity_id_at(region_tile::point tile_coords) const;
+		auto entity_id_at(tile_hex::point tile_coords) const -> std::optional<id>;
 
 		//! Tries to add the given entity to the section. Returns true on success or false if there is already an entity
 		//! at the entity's coordinates.
-		[[nodiscard]] bool try_add(id being_id);
+		[[nodiscard]] auto try_add(id being_id) -> bool;
 
 		//! Removes the being at the given region tile coordinates, if present.
-		void remove_at(region_tile::point coords);
+		auto remove_at(tile_hex::point coords) -> void;
 
-		//! Removes the entity with ID @p entity_id from the section, if present.
-		void remove(id entity_id);
+		//! Removes the entity with ID @p entity_id from this section, if present.
+		auto remove(id entity_id) -> void;
 
-		//! Region tile coordinates from @p region_section_coords and @p section_tile_coords.
-		static region_tile::point region_tile_coords(region_section::point region_section_coords,
-			section_tile::point section_tile_coords) {
-			span q = region_section_coords.q.value * section_diameter + section_tile_coords.q - section_radius;
-			span r = region_section_coords.r.value * section_diameter + section_tile_coords.r - section_radius;
-			return region_tile::point{q, r};
-		}
-
-		//! Region tile coordinates from @p section_tile_coords in this section.
-		region_tile::point region_tile_coords(section_tile::point section_tile_coords) const {
-			return region_tile_coords(_coords, section_tile_coords);
-		}
-
-		//! The ID of the tile at @p section_tile_coords in this section.
-		id tile_id_at(section_tile::point section_tile_coords) const {
-			return _tile_ids[section_tile_coords.q.value][section_tile_coords.r.value];
-		}
+		//! The ID of the tile at @p coords in this section.
+		//! @note Behavior is undefined if @p coords is not within this section.
+		auto tile_id_at(tile_hex::point coords) const -> id;
 
 	private:
-		//! A q-major array of tiles, representing a rhomboid section of world data centered around the section's hex
-		//! coordinates.
+		//! A q-major array of tiles, representing a rhomboid section of tiles centered on this section's hex coordinates.
 		std::array<std::array<id, section_diameter.value>, section_diameter.value> _tile_ids;
-		//! The hex coordinates of the section within the region. The section's center's region tile coordinates are
-		//! _coords * section_diameter.
-		region_section::point _coords;
+
+		std::unordered_map<tile_hex::point, id> _entity_id_map;
+
+		//! The hex coordinates of this section within its region.
+		section_hex::point _coords;
+
+		//! The array indices of the tile at @p coords.
+		//! @note Behavior is undefined if @p coords is not within this section.
+		auto indices(tile_hex::point coords) const -> std::tuple<size_t, size_t>;
 	};
 }

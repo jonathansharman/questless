@@ -16,13 +16,15 @@ namespace ql {
 
 	//! A basic AI, suitable for most NPCs.
 	struct basic_ai {
-		id id;
+		basic_ai(id id);
 
 		std::future<void> act();
 
 		void perceive(effects::effect const& effect);
 
 	private:
+		id _id;
+
 		struct idle_state {};
 		struct walk_state {};
 		struct attack_state {

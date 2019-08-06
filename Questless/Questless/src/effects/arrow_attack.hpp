@@ -8,8 +8,8 @@
 
 namespace ql::effects {
 	struct arrow_attack {
-		region_tile::point origin;
-		region_tile::point const target;
+		tile_hex::point origin;
+		tile_hex::point const target;
 
 		constexpr span range() const {
 			return 2 * (target - origin).length();

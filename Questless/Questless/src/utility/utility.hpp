@@ -82,14 +82,14 @@ namespace ql {
 	//! Scales @p q by @p scale via static casting. Useful for scaling operations that require narrowing conversions.
 	template <typename ScaleType, typename Rep, typename Unit>
 	auto scale(cancel::quantity<Rep, Unit> const& q, ScaleType const& scale) {
-		using common = std::common_type<ScaleType, Rep>;
+		using common = std::common_type_t<ScaleType, Rep>;
 		return cancel::quantity<Rep, Unit>(static_cast<Rep>(static_cast<common>(q.value) * static_cast<common>(scale)));
 	}
 
 	//! Scales @p q by @p scale via static casting. Useful for scaling operations that require narrowing conversions.
 	template <typename ScaleType, typename Rep, typename Unit>
 	auto scale(ScaleType const& scale, cancel::quantity<Rep, Unit> const& q) {
-		using common = std::common_type<ScaleType, Rep>;
+		using common = std::common_type_t<ScaleType, Rep>;
 		return cancel::quantity<Rep, Unit>(static_cast<Rep>(static_cast<common>(scale) * static_cast<common>(q.value)));
 	}
 }

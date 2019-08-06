@@ -21,5 +21,5 @@ namespace ql {
 	span max_visual_range(std::vector<stats::vision> const& vision_sources);
 
 	//! The nonnegative perception of the @p target tile by the being with ID @p perceptor_id.
-	perception perception_of(id perceptor_id, region_tile::point target);
+	perception perception_of(id perceptor_id, tile_hex::point target);
 }

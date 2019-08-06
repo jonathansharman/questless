@@ -17,7 +17,7 @@ namespace ql {
 	}
 
 	//! Makes a @p std::future<void> that is immediately ready.
-	std::future<void> make_ready_future() {
+	inline std::future<void> make_ready_future() {
 		std::promise<void> promise;
 		promise.set_value();
 		return promise.get_future();

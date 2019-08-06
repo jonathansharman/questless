@@ -14,7 +14,7 @@
 
 namespace ql {
 	//! A pseudorandom number generator.
-	std::mt19937_64& prng() {
+	inline std::mt19937_64& prng() {
 		static auto result = [] {
 			std::random_device seeder{};
 			return std::mt19937_64{seeder()};
@@ -51,17 +51,17 @@ namespace ql {
 	}
 
 	//! A uniformly randomly chosen direction in region tile space.
-	inline region_tile::direction random_direction() {
-		return static_cast<region_tile::direction>(uniform(1, 6));
+	inline tile_hex::direction random_direction() {
+		return static_cast<tile_hex::direction>(uniform(1, 6));
 	}
 
 	//! A random angle in degrees.
-	typename vecx::radians random_radians() {
+	inline typename vecx::radians random_radians() {
 		return uniform(vecx::radians{0.0}, vecx::circle_rad);
 	}
 
 	//! A random angle in degrees.
-	typename vecx::degrees random_degrees() {
+	inline typename vecx::degrees random_degrees() {
 		return uniform(vecx::degrees{0.0}, vecx::circle_deg);
 	}
 

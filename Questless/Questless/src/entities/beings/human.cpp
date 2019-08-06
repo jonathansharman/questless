@@ -8,8 +8,6 @@
 #include "body.hpp"
 #include "body_part.hpp"
 
-#include "entities/entity.hpp"
-
 namespace ql {
 	id make_human(id id, location location, agent agent) {
 		auto const root_id = reg.create();

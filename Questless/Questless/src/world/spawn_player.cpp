@@ -22,9 +22,10 @@
 #include "rsrc/fonts.hpp"
 
 namespace ql {
-	auto create_and_spawn_player(id player_id, id region_id, hud* hud) -> void {
-		location location = reg.get<region>(region_id).get_spawn_location();
-		id player_id = make_human(reg.create(), location, {player{player_id, hud}});
+	auto create_and_spawn_player(id region_id) -> id {
+		location const location = reg.get<region>(region_id).get_spawn_location();
+		id const player_id = reg.create();
+		make_human(player_id, location, {player{}});
 
 		// Fill inventory with starting items.
 		auto& player_inv = reg.get<inventory>(player_id);
@@ -48,5 +49,7 @@ namespace ql {
 
 		// Add a gatestone.
 		player_inv.add(make_gatestone(reg.create(), magic::color::green, {100_mp, 100_mp}, {0_tick, 10_tick}));
+
+		return player_id;
 	}
 }

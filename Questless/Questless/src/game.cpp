@@ -135,7 +135,7 @@ namespace ql {
 	void game::draw_fps() {
 		per_sec const fps_buffer_sum = std::reduce(_fps_buffer.begin(), _fps_buffer.end(), 0.0_hz, std::plus<per_sec>{});
 		per_sec const fps_buffer_avg = fps_buffer_sum / _fps_buffer.size();
-		sf::Text fps_text{fmt::format("{:.2f}", fps_buffer_avg), _fonts.firamono, 20};
+		sf::Text fps_text{fmt::format("{}", fps_buffer_avg), _fonts.firamono, 20};
 		fps_text.setFillColor(sf::Color::White);
 		_window.draw(fps_text);
 	}

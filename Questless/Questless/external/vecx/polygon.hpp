@@ -90,10 +90,7 @@ TEST_CASE("[polygon] operations") {
 	poly_t poly{p1, p2, p3};
 
 	SUBCASE("bounding box") {
-		box_t const bounding_box
-		{p_t{q_t{0.0}, q_t{1.0}}
-		, v_t{q_t{1.0}, q_t{1.0}}
-		};
+		box_t const bounding_box{p_t{q_t{0.0}, q_t{0.0}}, v_t{q_t{1.0}, q_t{1.0}}};
 		CHECK(poly.bounding_box() == bounding_box);
 	}
 }

@@ -19,7 +19,7 @@ namespace ql::effects {
 		std::variant<arrow_attack, injury, lightning_bolt, telescope> value;
 
 		//! The coordinates from which @p effect originates.
-		region_tile::point origin() const;
+		tile_hex::point origin() const;
 
 		//! The maximum distance from the origin at which @p effect may be perceived.
 		span range() const;

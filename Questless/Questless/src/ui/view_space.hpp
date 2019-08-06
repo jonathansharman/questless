@@ -82,13 +82,13 @@ namespace ql::view {
 	/////////////////////////////////////////////////////////
 
 	//! Converts from a @p view::vector into an @p sf::Vector.
-	sf::Vector2f to_sfml(vector v) {
-		return {v[0].value, v[1].value};
+	inline auto to_sfml(vector v) {
+		return sf::Vector2f{v[0].value, v[1].value};
 	}
 
 	//! Converts from a @p view::point into an @p sf::Vector.
-	sf::Vector2f to_sfml(point p) {
-		return {p[0].value, p[1].value};
+	inline auto to_sfml(point p) {
+		return sf::Vector2f{p[0].value, p[1].value};
 	}
 
 	// Conversions from SFML to view space
@@ -100,7 +100,7 @@ namespace ql::view {
 	}
 
 	//! Converts from an @p sf::SizeEvent to a @p view::vector.
-	auto vector_from_size_event(sf::Event::SizeEvent size_event) {
+	inline auto vector_from_size_event(sf::Event::SizeEvent size_event) {
 		return vector{px{static_cast<px::rep>(size_event.width)}, px{static_cast<px::rep>(size_event.height)}};
 	}
 
@@ -117,12 +117,12 @@ namespace ql::view {
 	}
 
 	//! Converts from an @p sf::MouseButtonEvent to a @p view::point.
-	auto point_from_mouse_button_event(sf::Event::MouseButtonEvent mouse_button_event) {
+	inline auto point_from_mouse_button_event(sf::Event::MouseButtonEvent mouse_button_event) {
 		return point{px{static_cast<px::rep>(mouse_button_event.x)}, px{static_cast<px::rep>(mouse_button_event.y)}};
 	}
 
 	//! Converts from an @p sf::MouseMoveEvent to a @p view::point.
-	auto point_from_mouse_move_event(sf::Event::MouseMoveEvent mouse_move_event) {
+	inline auto point_from_mouse_move_event(sf::Event::MouseMoveEvent mouse_move_event) {
 		return point{px{static_cast<px::rep>(mouse_move_event.x)}, px{static_cast<px::rep>(mouse_move_event.y)}};
 	}
 

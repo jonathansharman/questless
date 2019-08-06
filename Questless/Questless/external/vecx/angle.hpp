@@ -46,13 +46,13 @@ TEST_CASE("[angle] operations") {
 	SUBCASE("conversions") {
 		using namespace vecx;
 
-		CHECK(circle_rad * deg_per_rad == circle_deg);
-		CHECK(circle_rad * grad_per_rad == circle_grad);
+		CHECK((circle_rad * deg_per_rad).value == doctest::Approx(circle_deg.value));
+		CHECK((circle_rad * grad_per_rad).value == doctest::Approx(circle_grad.value));
 
-		CHECK(circle_deg * rad_per_deg == circle_rad);
-		CHECK(circle_deg * grad_per_deg == circle_grad);
+		CHECK((circle_deg * rad_per_deg).value == doctest::Approx(circle_rad.value));
+		CHECK((circle_deg * grad_per_deg).value == doctest::Approx(circle_grad.value));
 
-		CHECK(circle_grad * rad_per_grad == circle_rad);
-		CHECK(circle_grad * deg_per_grad == circle_deg);
+		CHECK((circle_grad * rad_per_grad).value == doctest::Approx(circle_rad.value));
+		CHECK((circle_grad * deg_per_grad).value == doctest::Approx(circle_deg.value));
 	}
 }

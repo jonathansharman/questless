@@ -9,12 +9,12 @@
 #include "world/coordinates.hpp"
 
 namespace ql {
-	auto turn(id turner_id, region_tile::direction direction) -> void;
+	auto turn(id turner_id, tile_hex::direction direction) -> void;
 
-	auto walk(id walker_id, region_tile::direction direction) -> void;
+	auto walk(id walker_id, tile_hex::direction direction) -> void;
 
 	//! Moves or turns towards the given direction, depending on the current heading and the value of @p strafe.
-	auto move(id mover_id, region_tile::direction direction, bool strafe) -> void;
+	auto move(id mover_id, tile_hex::direction direction, bool strafe) -> void;
 
 	auto fly(id flyer_id) -> void;
 

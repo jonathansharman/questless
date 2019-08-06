@@ -13,36 +13,62 @@
 #include "world/region.hpp"
 
 namespace ql {
-	section::section(id region_id, region_section::point coords) : _coords{coords} {
+	section::section(id region_id, section_hex::point coords) : _coords{coords} {
 		// Create a section with random tiles.
-		for (span q = 0_span; q < section_diameter; ++q) {
-			for (span r = 0_span; r < section_diameter; ++r) {
+		auto const center = center_coords();
+		for (span q = -section_radius; q <= section_radius; ++q) {
+			for (span r = -section_radius; r <= section_radius; ++r) {
 				auto const terrain = static_cast<ql::terrain>(uniform(0, static_cast<int>(terrain::terrain_count)));
-				auto const rtc = region_tile_coords(coords, section_tile::point{q, r});
-				location location{region_id, rtc};
+				auto const tile_coords = center + tile_hex::vector{q, r};
+				location location{region_id, tile_coords};
 				id const tile_id = reg.create();
 				make_tile(tile_id, terrain, location, 0_temp, 0_lum);
-				_tile_ids[q.value][r.value] = tile_id;
+
+				// Add the tile's ID to the tile ID array.
+				auto [i, j] = indices(tile_coords);
+				_tile_ids[i][j] = tile_id;
 			}
 		}
 	}
 
-	std::optional<id> section::entity_id_at(region_tile::point tile_coords) const {
-		auto it = entity_id_map.find(tile_coords);
-		return it != entity_id_map.end() ? std::make_optional(it->second) : std::nullopt;
+	auto section::section_coords() const {
+		return _coords;
+	}
+
+	auto section::center_coords() const -> tile_hex::point {
+		return tile_hex::point{_coords.q.value * section_diameter, _coords.r.value * section_diameter};
+	}
+
+	auto section::entity_id_map() const -> std::unordered_map<tile_hex::point, id> const& {
+		return _entity_id_map;
+	}
+
+	std::optional<id> section::entity_id_at(tile_hex::point tile_coords) const {
+		auto it = _entity_id_map.find(tile_coords);
+		return it != _entity_id_map.end() ? std::make_optional(it->second) : std::nullopt;
 	}
 
 	bool section::try_add(id entity_id) {
-		auto result = entity_id_map.insert({reg.get<location>(entity_id).coords, entity_id});
+		auto result = _entity_id_map.insert({reg.get<location>(entity_id).coords, entity_id});
 		return result.second;
 	}
 
-	typename void section::remove_at(region_tile::point coords) {
-		auto it = entity_id_map.find(coords);
-		if (it != entity_id_map.end()) { entity_id_map.erase(it); }
+	typename void section::remove_at(tile_hex::point coords) {
+		auto it = _entity_id_map.find(coords);
+		if (it != _entity_id_map.end()) { _entity_id_map.erase(it); }
 	}
 
 	void section::remove(id entity_id) {
 		remove_at(reg.get<location>(entity_id).coords);
+	}
+
+	auto section::tile_id_at(tile_hex::point coords) const -> id {
+		auto [i, j] = indices(coords);
+		return _tile_ids[i][j];
+	}
+
+	auto section::indices(tile_hex::point coords) const -> std::tuple<size_t, size_t> {
+		auto const offset = center_coords() - coords + tile_hex::vector{section_radius, section_radius};
+		return std::make_tuple(static_cast<size_t>(offset.q.value), static_cast<size_t>(offset.r.value));
 	}
 }

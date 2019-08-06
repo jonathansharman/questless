@@ -10,7 +10,7 @@
 #include "world/region.hpp"
 
 namespace ql::magic {
-	void teleport::cast(id caster_id, id gatestone_id, region_tile::point target) {
+	void teleport::cast(id caster_id, id gatestone_id, tile_hex::point target) {
 		// Check range.
 		auto const caster_location = reg.get<location>(caster_id);
 		auto const distance = (caster_location.coords - target).length();

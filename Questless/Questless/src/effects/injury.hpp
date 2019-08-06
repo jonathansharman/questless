@@ -14,7 +14,7 @@ namespace ql {
 
 	namespace effects {
 		struct injury {
-			region_tile::point origin;
+			tile_hex::point origin;
 			dmg::group const damage;
 			id target_being_id;
 			id target_part_id;

@@ -152,7 +152,7 @@ namespace ql {
 		}
 	}
 
-	void world_widget::set_highlight_predicate(std::function<bool(region_tile::point)> predicate) {
+	void world_widget::set_highlight_predicate(std::function<bool(tile_hex::point)> predicate) {
 		_highlight_predicate = std::move(predicate);
 	}
 

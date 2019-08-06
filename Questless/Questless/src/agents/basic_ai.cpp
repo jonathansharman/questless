@@ -14,6 +14,8 @@
 #include "utility/visitation.hpp"
 
 namespace ql {
+	basic_ai::basic_ai(id id) : _id{id} {}
+
 	std::future<void> basic_ai::act() {
 		return match(
 			_state,
@@ -25,12 +27,12 @@ namespace ql {
 				return make_ready_future();
 			},
 			[this](walk_state) {
-				auto const& cond = reg.get<body_cond const>(id);
+				auto const& cond = reg.get<body_cond const>(_id);
 				// Randomly either move in current direction or turn towards a random direction.
 				if (random_bool()) {
-					walk(id, cond.direction);
+					walk(_id, cond.direction);
 				} else {
-					turn(id, random_direction());
+					turn(_id, random_direction());
 				}
 				// Idle next time.
 				_state = idle_state{};
@@ -43,7 +45,7 @@ namespace ql {
 					return make_ready_future();
 				}
 				auto const& target_location = reg.get<location>(as.target_id);
-				if (perception_of(id, target_location.coords) <= 0_perception) {
+				if (perception_of(_id, target_location.coords) <= 0_perception) {
 					// Target not visible. Switch to idle state.
 					_state = idle_state{};
 					return make_ready_future();
@@ -53,7 +55,7 @@ namespace ql {
 					auto const& target_body = reg.get<body>(as.target_id);
 					if (target_body.cond.direction != target_direction) {
 						// Facing away from target. Turn towards it.
-						turn(id, target_direction);
+						turn(_id, target_direction);
 						return make_ready_future();
 					} else {
 						// Facing towards target.
@@ -64,7 +66,7 @@ namespace ql {
 							return make_ready_future();
 						} else {
 							// Out of range. Move towards target.
-							walk(id, target_direction);
+							walk(_id, target_direction);
 							return make_ready_future();
 						}
 					}
@@ -76,7 +78,7 @@ namespace ql {
 		if (std::holds_alternative<effects::injury>(effect.value)) {
 			// Retaliate against injuries.
 			effects::injury const& injury = std::get<effects::injury>(effect.value);
-			if (injury.o_source_id && injury.target_being_id == id) { _state = attack_state{*injury.o_source_id}; }
+			if (injury.o_source_id && injury.target_being_id == _id) { _state = attack_state{*injury.o_source_id}; }
 		} else {
 			// Ignore all other effects.
 		}

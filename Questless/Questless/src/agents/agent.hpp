@@ -15,16 +15,19 @@
 namespace ql {
 	//! Facilitates control of a being. Includes AIs and the player.
 	struct agent {
-		std::variant<basic_ai, lazy_ai, player> value;
+		agent(std::variant<basic_ai, lazy_ai, player> value) : _value{std::move(value)} {}
 
 		//! Allows the agent to perform actions.
 		auto act() -> std::future<void> {
-			return match(value, [](auto& value) { return value.act(); });
+			return match(_value, [](auto& value) { return value.act(); });
 		}
 
 		//! Causes the agent to perceive @p effect, possibly updating its state accordingly.
 		virtual auto perceive(effects::effect const& effect) -> void {
-			match(value, [&](auto& value) { value.perceive(effect); });
+			match(_value, [&](auto& value) { value.perceive(effect); });
 		}
+
+	private:
+		std::variant<basic_ai, lazy_ai, player> _value;
 	};
 }

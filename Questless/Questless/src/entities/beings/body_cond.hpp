@@ -80,7 +80,7 @@ namespace ql {
 			return serenity.value() > min_serenity + 3 * (max_serenity - min_serenity) / 4;
 		}
 
-		region_tile::direction direction;
+		tile_hex::direction direction;
 
 		ql::awakeness awakeness = awakeness::awake;
 		constexpr bool awake() const {

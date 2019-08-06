@@ -215,23 +215,25 @@ namespace ql {
 				int n = (dest - *this).length().value;
 				std::vector<point> result;
 				result.reserve(n + 1);
-				length_t step = 1.0 / std::max(n, 1);
+				float step = 1.0f / std::max(n, 1);
 				for (int i = 0; i <= n; i++) {
 					result.push_back(lerp(dest, step * i));
 				}
 				return result;
 			}
 
-			constexpr point lerp(point dest, length_t t) const {
-				return point{(this->q + (dest.q - this->q)).value * t,
-					(this->r + (dest.r - this->r)).value * t,
-					(this->s + (dest.s - this->s)).value * t};
+			constexpr point lerp(point dest, float t) const {
+				return point{//
+					this->q.value + (dest.q - this->q).value * t,
+					this->r.value + (dest.r - this->r).value * t,
+					this->s().value + (dest.s() - this->s()).value * t};
 			}
 
-			constexpr point lerp(vector heading, length_t t) const {
-				return point{this->q + (heading.q - this->q) * t,
-					this->r + (heading.r - this->r) * t,
-					this->s + (heading.s - this->s) * t};
+			constexpr point lerp(vector heading, float t) const {
+				return point{//
+					this->q.value + heading.q.value * t,
+					this->r.value + heading.r.value * t,
+					this->s().value + heading.s().value * t};
 			}
 
 			//! Neighboring point in the given direction.
@@ -310,7 +312,7 @@ namespace ql {
 
 		template <typename HexCoordsType>
 		constexpr view::point to_view_space(HexCoordsType h) const {
-			//! @todo This function should just work for region_tile::point.
+			//! @todo This function should just work for tile_hex::point.
 			auto const x = ((orientation.f0 * h.q + orientation.f1 * h.r) * x(size) + x(origin));
 			auto const y = ((orientation.f2 * h.q + orientation.f3 * h.r) * y(size) + y(origin));
 			return to_view_space::point{x, y};
@@ -318,7 +320,7 @@ namespace ql {
 
 		template <typename HexCoordsType>
 		constexpr HexCoordsType to_hex_coords(view::point p) const {
-			//! @todo This function should just work for region_tile::point.
+			//! @todo This function should just work for tile_hex::point.
 			auto const x = orientation.b0 * (p[0] - origin[0]) / size[0] + orientation.b1 * (p[1] - origin[1]) / size[1];
 			auto const y = orientation.b2 * (p[0] - origin[0]) / size[0] + orientation.b3 * (p[1] - origin[1]) / size[1];
 			return HexCoordsType{x, y};
@@ -331,7 +333,7 @@ namespace ql {
 
 		template <typename HexCoordsType>
 		std::vector<view::point> corner_points(HexCoordsType h) {
-			//! @todo This function should just work for region_tile::point.
+			//! @todo This function should just work for tile_hex::point.
 			std::vector<view::point> corners;
 			view::point const center = to_view_space_f(h);
 			for (int i = 0; i < 6; i++) {

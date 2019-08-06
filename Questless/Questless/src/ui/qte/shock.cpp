@@ -10,7 +10,7 @@
 namespace ql::qte {
 	using namespace view::literals;
 
-	shock::shock(rsrc::particle const& particle_resources, region_tile::point target_coords)
+	shock::shock(rsrc::particle const& particle_resources, tile_hex::point target_coords)
 		: _particle_resources{particle_resources}
 		, _target_point{to_view_space(target_coords)} //
 	{}

@@ -91,23 +91,23 @@ namespace ql {
 			}
 		};
 
-		protect operator+(protect p1, protect const& p2) {
+		inline protect operator+(protect p1, protect const& p2) {
 			p1 += p2;
 			return p1;
 		}
-		protect operator-(protect p1, protect const& p2) {
+		inline protect operator-(protect p1, protect const& p2) {
 			p1 -= p2;
 			return p1;
 		}
-		protect operator*(protect p, int k) {
+		inline protect operator*(protect p, int k) {
 			p *= k;
 			return p;
 		}
-		protect operator*(int k, protect const& p) {
+		inline protect operator*(int k, protect const& p) {
 			// Multiplication of int is commutative, so it's okay to delegate to p * k.
 			return p * k;
 		}
-		protect operator/(protect p, int k) {
+		inline protect operator/(protect p, int k) {
 			p /= k;
 			return p;
 		}

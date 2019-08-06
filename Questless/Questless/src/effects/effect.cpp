@@ -9,7 +9,7 @@
 #include "utility/visitation.hpp"
 
 namespace ql::effects {
-	region_tile::point effect::origin() const {
+	tile_hex::point effect::origin() const {
 		return match(value, [](auto const& effect) { return effect.origin; });
 	}
 

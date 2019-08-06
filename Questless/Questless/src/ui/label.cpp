@@ -7,14 +7,14 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 namespace ql {
-	label::label(sf::String const& text, sf::Font const& font, unsigned size, sf::Color fill_color = sf::Color::Black) {
+	label::label(sf::String const& text, sf::Font const& font, unsigned size, sf::Color fill_color) {
 		_text.setString(text);
 		_text.setFont(font);
 		_text.setCharacterSize(size);
 		_text.setFillColor(fill_color);
 	}
 
-	view::vector label::get_size() const {
+	auto label::get_size() const -> view::vector {
 		return _size;
 	}
 

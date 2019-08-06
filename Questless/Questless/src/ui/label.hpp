@@ -2,6 +2,8 @@
 //! @author Jonathan Sharman
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 
+#pragma once
+
 #include "widget.hpp"
 
 #include <SFML/Graphics/Text.hpp>

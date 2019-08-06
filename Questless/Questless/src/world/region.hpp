@@ -34,30 +34,24 @@ namespace ql {
 			return _name;
 		}
 
-		//! The ID of the entity at @p region_tile_coords or nullopt if none.
-		std::optional<ql::id> entity_id_at(region_tile::point region_tile_coords) const;
+		//! The ID of the entity at @p tile_coords or nullopt if none.
+		std::optional<ql::id> entity_id_at(tile_hex::point tile_coords) const;
 
 		//! Finds a suitable spawn location.
 		location get_spawn_location();
 
-		//! Adds @p entity_id to the region, setting its coordinates to @p region_tile_coords.
-		[[nodiscard]] auto try_add(ql::id entity_id, region_tile::point region_tile_coords) -> bool;
+		//! Adds @p entity_id to the region, setting its coordinates to @p tile_coords.
+		[[nodiscard]] auto try_add(ql::id entity_id, tile_hex::point tile_coords) -> bool;
 
-		//! Moves @p entity_id to the tile at @p region_tile_coords.
+		//! Moves @p entity_id to the tile at @p tile_coords.
 		//! @return Whether @p being was successfully moved.
-		[[nodiscard]] auto try_move(ql::id entity_id, region_tile::point region_tile_coords) -> bool;
+		[[nodiscard]] auto try_move(ql::id entity_id, tile_hex::point tile_coords) -> bool;
 
 		//! Removes @p entity_id from the region, if present.
 		void remove(ql::id entity_id);
 
-		//! The tile at @p region_tile_coords or nullopt if none.
-		auto tile_id_at(region_tile::point region_tile_coords) const -> std::optional<ql::id>;
-
-		//! The section that contains @p region_tile_coords or nullptr if none.
-		auto containing_section(region_tile::point region_tile_coords) -> section*;
-
-		//! The section that contains @p region_tile_coords or nullptr if none.
-		auto containing_section(region_tile::point region_tile_coords) const -> section const*;
+		//! The tile at @p tile_coords or nullopt if none.
+		auto tile_id_at(tile_hex::point tile_coords) const -> std::optional<ql::id>;
 
 		//! The total in-game time in this region.
 		tick time() const {
@@ -74,14 +68,14 @@ namespace ql {
 			return _period_of_day;
 		}
 
-		//! The illuminance of the tile at @p region_tile_coords.
-		lum illuminance(region_tile::point region_tile_coords) const;
+		//! The illuminance of the tile at @p tile_coords.
+		lum illuminance(tile_hex::point tile_coords) const;
 
-		//! The temperature of the tile at @p region_tile_coords.
-		ql::temperature temperature(region_tile::point region_tile_coords) const;
+		//! The temperature of the tile at @p tile_coords.
+		ql::temperature temperature(tile_hex::point tile_coords) const;
 
 		//! The proportion of light/vision occluded between @p start and @p end, as a number in [0, 1].
-		double occlusion(region_tile::point start, region_tile::point end) const;
+		double occlusion(tile_hex::point start, tile_hex::point end) const;
 
 		//! Advances this region by @elapsed time.
 		void update(tick elapsed);
@@ -96,8 +90,8 @@ namespace ql {
 		/////////////////
 
 		std::string _name;
-		std::map<region_section::point, section> _section_map;
-		region_section::point center_section_coords{0_span, 0_span};
+		std::map<section_hex::point, section> _section_map;
+		section_hex::point center_section_coords{0_section_span, 0_section_span};
 
 		tick _time;
 		tick _time_of_day;
@@ -108,6 +102,12 @@ namespace ql {
 		//////////////////////
 		// Member Functions //
 		//////////////////////
+
+		//! The section that contains @p tile_coords or nullptr if none.
+		auto containing_section(tile_hex::point tile_coords) -> section*;
+
+		//! The section that contains @p tile_coords or nullptr if none.
+		auto containing_section(tile_hex::point tile_coords) const -> section const*;
 
 		auto get_time_of_day() const -> tick;
 		auto get_period_of_day() const -> ql::period_of_day;
