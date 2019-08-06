@@ -58,10 +58,10 @@ namespace ql {
 		// Move splash flames.
 		for (auto& position : _flame_positions) {
 			constexpr auto flame_speed = 2800.0_px / 1.0_s;
-			position[1] += flame_speed / _size[1] * elapsed_time;
-			if (position[1] > 1.0f) {
+			position[1] -= flame_speed / _size[1] * elapsed_time;
+			if (position[1] < 0.0f) {
 				position[0] = {uniform(0.0f, 1.0f)};
-				position[1] = {0.0f};
+				position[1] += cancel::unitless<float>{1.0f};
 			}
 		}
 
@@ -76,21 +76,6 @@ namespace ql {
 		// Activate the fade shader.
 		states.shader = &_fade_shader;
 
-		// Create logo sprite.
-		sf::Sprite logo_sprite{_rsrc.txtr.logo};
-		{ // Set logo position.
-			constexpr auto max_jiggle = 3.0_px;
-			view::vector const logo_jiggle{uniform(-max_jiggle, max_jiggle), uniform(-max_jiggle, max_jiggle)};
-			auto const logo_position = get_position() + _size / 2.0f + logo_jiggle;
-			logo_sprite.setPosition(view::to_sfml(logo_position));
-		}
-		{ // Set logo origin to center.
-			auto const logo_size = _rsrc.txtr.logo.getSize();
-			logo_sprite.setOrigin(logo_size.x / 2.0f, logo_size.y / 2.0f);
-		}
-		// Draw logo.
-		target.draw(logo_sprite, states);
-
 		{ // Draw flames.
 			sf::Sprite flame_sprite{_rsrc.txtr.flame};
 			auto const flame_size = _rsrc.txtr.flame.getSize();
@@ -101,6 +86,19 @@ namespace ql {
 				flame_sprite.setPosition(to_sfml(vecx::component_wise_product(_size, position)));
 				target.draw(flame_sprite, states);
 			}
+		}
+
+		{ // Draw logo.
+			sf::Sprite logo_sprite{_rsrc.txtr.logo};
+			// Set logo position.
+			constexpr auto max_jiggle = 3.0_px;
+			view::vector const logo_jiggle{uniform(-max_jiggle, max_jiggle), uniform(-max_jiggle, max_jiggle)};
+			auto const logo_position = get_position() + _size / 2.0f + logo_jiggle;
+			logo_sprite.setPosition(view::to_sfml(logo_position));
+			// Set logo origin to center.
+			auto const logo_size = _rsrc.txtr.logo.getSize();
+			logo_sprite.setOrigin(logo_size.x / 2.0f, logo_size.y / 2.0f);
+			target.draw(logo_sprite, states);
 		}
 	}
 

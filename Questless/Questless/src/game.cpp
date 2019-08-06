@@ -49,14 +49,21 @@ namespace ql {
 				// Shove the event_handled object into an unused variable because the root is the only handler.
 				[[maybe_unused]] auto handled = widget::event_handled::yes;
 				switch (event.type) {
-					// End the game immediately if there was a quit event. Otherwise pass it on.
 					case sf::Event::Closed:
+						// End immediately if the window is closed.
 						return;
-					case sf::Event::Resized:
+					case sf::Event::Resized: {
+						// Rescale view to fit the new window size.
+						auto const float_width = static_cast<float>(event.size.width);
+						auto const float_height = static_cast<float>(event.size.height);
+						_window.setView(sf::View{sf::FloatRect{0.0f, 0.0f, float_width, float_height}});
+						// Inform the root widget.
 						_root->on_parent_resize(view::vector_from_size_event(event.size));
 						break;
+					}
 					case sf::Event::KeyPressed:
 						if (event.key.alt && event.key.code == sf::Keyboard::F4) {
+							// End immediately on Alt-F4.
 							return;
 						} else {
 							handled = _root->on_key_press(event.key);
