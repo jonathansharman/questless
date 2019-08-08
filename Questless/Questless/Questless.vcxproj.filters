@@ -384,9 +384,6 @@
     <ClInclude Include="src\rsrc\fonts.hpp">
       <Filter>src\rsrc</Filter>
     </ClInclude>
-    <ClInclude Include="src\animation\animators.hpp">
-      <Filter>src\animation</Filter>
-    </ClInclude>
     <ClInclude Include="src\effects\lightning_bolt.hpp">
       <Filter>src\effects</Filter>
     </ClInclude>
@@ -431,9 +428,6 @@
     </ClInclude>
     <ClInclude Include="src\entities\entity.hpp">
       <Filter>src\entities</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\dialog\list_dialog.hpp">
-      <Filter>src\ui\dialog</Filter>
     </ClInclude>
     <ClInclude Include="src\ui\dialog\dialog.hpp">
       <Filter>src\ui\dialog</Filter>
@@ -545,6 +539,12 @@
     </ClInclude>
     <ClInclude Include="src\world\hex_space.hpp">
       <Filter>src\world</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\dialog\list_dialog.hpp">
+      <Filter>src\ui\dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\label.hpp">
+      <Filter>src\ui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -692,17 +692,8 @@
     <ClCompile Include="src\magic\telescope.cpp">
       <Filter>src\magic</Filter>
     </ClCompile>
-    <ClCompile Include="src\animation\animators.cpp">
-      <Filter>src\animation</Filter>
-    </ClCompile>
     <ClCompile Include="src\effects\effect.cpp">
       <Filter>src\effects</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\label.hpp">
-      <Filter>src\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\label.cpp">
-      <Filter>src\ui</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\tile_widget.cpp">
       <Filter>src\ui</Filter>
@@ -721,9 +712,6 @@
     </ClCompile>
     <ClCompile Include="src\entities\entity.cpp">
       <Filter>src\entities</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\dialog\list_dialog.cpp">
-      <Filter>src\ui\dialog</Filter>
     </ClCompile>
     <ClCompile Include="src\agents\actions.cpp">
       <Filter>src\agents</Filter>
@@ -777,6 +765,12 @@
       <Filter>src\ui</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\item_widget.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\dialog\list_dialog.cpp">
+      <Filter>src\ui\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\label.cpp">
       <Filter>src\ui</Filter>
     </ClCompile>
   </ItemGroup>

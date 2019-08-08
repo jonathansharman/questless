@@ -9,6 +9,24 @@
 namespace ql {
 	using namespace view::literals;
 
+	//! @todo Is there a DRYer way to initialize the item widgets?
+
+	hotbar::hotbar(rsrc::item const& item_resources, rsrc::spell const& spell_resources)
+		: _item_resources{item_resources}
+		, _spell_resources{spell_resources}
+		, _item_widgets{//
+			  item_widget{item_resources, spell_resources},
+			  item_widget{item_resources, spell_resources},
+			  item_widget{item_resources, spell_resources},
+			  item_widget{item_resources, spell_resources},
+			  item_widget{item_resources, spell_resources},
+			  item_widget{item_resources, spell_resources},
+			  item_widget{item_resources, spell_resources},
+			  item_widget{item_resources, spell_resources},
+			  item_widget{item_resources, spell_resources},
+			  item_widget{item_resources, spell_resources}}//
+	{}
+
 	auto hotbar::get_size() const -> view::vector {
 		return {static_cast<float>(_item_widgets.size()) * item_widget::size[0], item_widget::size[1]};
 	}
@@ -81,7 +99,7 @@ namespace ql {
 	}
 
 	auto hotbar::set_item(size_t idx, std::optional<id> o_item_id) -> void {
-		_item_widgets[idx].o_item_id = o_item_id;
+		_item_widgets[idx].set_o_item_id(o_item_id);
 	}
 
 	auto hotbar::set_on_click(std::function<void(std::optional<id>)> handler) -> void {
@@ -92,6 +110,6 @@ namespace ql {
 
 	auto hotbar::click(size_t idx) -> void {
 		_most_recent_idx = idx;
-		_item_widgets[idx].on_click(_item_widgets[idx].o_item_id);
+		_item_widgets[idx].on_click(_item_widgets[idx].get_o_item_id());
 	}
 }

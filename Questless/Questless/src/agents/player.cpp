@@ -7,16 +7,18 @@
 #include "ui/hud.hpp"
 
 namespace ql {
-	auto player::set_hud(hud* hud) -> void {
-		_hud = hud;
-	}
+	player::player(hud* hud) : _hud{hud} {}
 
-	std::future<void> player::act() {
+	auto player::act() -> std::future<void> {
 		// Allow the player to perform actions via the HUD until passing the turn.
 		return _hud->pass_future();
 	}
 
-	void player::perceive(effects::effect const& effect) {
+	auto player::perceive(effects::effect const& effect) -> void {
 		_hud->render_effect(effect);
+	}
+
+	auto player::set_hud(hud& hud) -> void {
+		_hud = &hud;
 	}
 }

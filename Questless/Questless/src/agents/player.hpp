@@ -16,13 +16,15 @@ namespace ql {
 
 	//! The agent representing the player's control over his or her character.
 	struct player {
-		auto set_hud(hud* hud) -> void;
+		player(hud* hud = nullptr);
 
 		std::future<void> act();
 
-		void perceive(effects::effect const& effect);
+		auto perceive(effects::effect const& effect) -> void;
+
+		auto set_hud(hud& hud) -> void;
 
 	private:
-		hud* _hud = nullptr;
+		hud* _hud;
 	};
 }

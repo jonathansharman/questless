@@ -12,6 +12,10 @@
 #include <optional>
 
 namespace ql {
+	namespace rsrc {
+		struct item;
+		struct spell;
+	}
 	struct animation;
 
 	//! Allows interaction with an item.
@@ -19,8 +23,15 @@ namespace ql {
 		//! Item widgets have a fixed size.
 		static constexpr view::vector size{view::px{55.0f}, view::px{55.0f}};
 
+		item_widget(rsrc::item const& item_resources, rsrc::spell const& spell_resources);
+
+		~item_widget();
+
 		//! The ID of the item this widget currently interfaces with, if any.
-		std::optional<id> o_item_id;
+		auto get_o_item_id() const -> std::optional<id>;
+
+		//! Sets this widget's item ID to @p item_id.
+		auto set_o_item_id(std::optional<id> o_item_id) -> void;
 
 		//! Invoked when this widget is clicked, passing the item's ID, if any.
 		std::function<void(std::optional<id>)> on_click;
@@ -36,7 +47,13 @@ namespace ql {
 		auto on_mouse_press(sf::Event::MouseButtonEvent const& event) -> event_handled final;
 
 	private:
+		rsrc::item const& _item_resources;
+		rsrc::spell const& _spell_resources;
+
+		std::optional<id> _o_item_id;
 		uptr<animation> _ani;
+
+		view::point _position;
 
 		auto draw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
 	};

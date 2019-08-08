@@ -8,7 +8,7 @@
 
 #include "hud.hpp"
 
-#include "agents/player.hpp"
+#include "agents/agent.hpp"
 #include "world/region.hpp"
 #include "world/spawn_player.hpp"
 
@@ -23,7 +23,7 @@ namespace ql {
 		// Create HUD.
 		_hud = umake<ql::hud>(fonts, region_id, player_id);
 		// Set the player's HUD pointer.
-		reg.get<player>(player_id).set_hud(_hud.get());
+		std::get<player>(reg.get<agent>(player_id).value).set_hud(*_hud.get());
 	}
 
 	main_menu::~main_menu() = default;
@@ -33,11 +33,11 @@ namespace ql {
 	}
 
 	auto main_menu::update(sec) -> void {
-		// Switch to the HUD immediately.
+		// Initialize HUD size and position.
+		_hud->on_parent_resize(_size);
+		_hud->set_position(_position);
+		// Switch to the HUD.
 		_root = std::move(_hud);
-		// Initialize size and position.
-		_root->on_parent_resize(_size);
-		_root->set_position(_position);
 	}
 
 	auto main_menu::draw(sf::RenderTarget&, sf::RenderStates) const -> void {}

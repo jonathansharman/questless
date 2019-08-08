@@ -8,9 +8,6 @@
 
 #include "ui/label.hpp"
 
-#include <SFML/Window.hpp>
-
-#include <string>
 #include <vector>
 
 namespace ql {

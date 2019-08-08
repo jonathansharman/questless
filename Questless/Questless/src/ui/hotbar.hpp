@@ -14,6 +14,8 @@
 namespace ql {
 	//! Holds items for ready use.
 	struct hotbar : widget {
+		hotbar(rsrc::item const& item_resources, rsrc::spell const& spell_resources);
+
 		auto get_size() const -> view::vector final;
 
 		auto update(sec elapsed_time) -> void final;
@@ -33,6 +35,9 @@ namespace ql {
 		auto set_on_click(std::function<void(std::optional<id>)> handler) -> void;
 
 	private:
+		rsrc::item const& _item_resources;
+		rsrc::spell const& _spell_resources;
+
 		view::point _position;
 
 		std::array<item_widget, 10> _item_widgets;

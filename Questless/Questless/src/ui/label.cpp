@@ -22,10 +22,6 @@ namespace ql {
 		_text.setPosition(to_sfml(get_position()));
 	}
 
-	auto label::draw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
-		target.draw(_text, states);
-	}
-
 	auto label::set_position(view::point position) -> void {
 		_position = position;
 	}
@@ -59,6 +55,10 @@ namespace ql {
 
 	auto label::set_outline_thickness(float thickness) -> void {
 		_text.setOutlineThickness(thickness);
+	}
+
+	auto label::draw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
+		target.draw(_text, states);
 	}
 
 	auto label::update_size() -> void {

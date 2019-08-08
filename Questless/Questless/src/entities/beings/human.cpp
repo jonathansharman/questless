@@ -11,8 +11,10 @@
 namespace ql {
 	id make_human(id id, location location, agent agent) {
 		auto const root_id = reg.create();
+		reg.assign<body_part>(root_id);
 		body_part root;
 		root.id = root_id;
+		root.owner_id = id;
 		root.generate_attached_parts();
 
 		body_cond cond;

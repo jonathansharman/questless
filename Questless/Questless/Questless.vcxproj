@@ -125,7 +125,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
-      <DisableSpecificWarnings>4268;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4268;4723;4744;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <EnableModules>true</EnableModules>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <DisableLanguageExtensions>
@@ -155,7 +155,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalOptions>/std:c++latest /permissive- %(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
-      <DisableSpecificWarnings>4268;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4268;4723;4744;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <EnableModules>true</EnableModules>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <DisableLanguageExtensions>
@@ -181,7 +181,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
-      <DisableSpecificWarnings>4268;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4268;4723;4744;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>true</EnableModules>
       <ConformanceMode>true</ConformanceMode>
@@ -208,6 +208,8 @@
       <ConformanceMode>true</ConformanceMode>
       <DisableLanguageExtensions />
       <TreatWarningAsError>true</TreatWarningAsError>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+      <DisableSpecificWarnings>4268;4723;4744;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -226,7 +228,7 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/permissive- %(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
-      <DisableSpecificWarnings>4268;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4268;4723;4744;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>true</EnableModules>
@@ -234,6 +236,7 @@
       </DisableLanguageExtensions>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -256,6 +259,9 @@
       <DisableLanguageExtensions />
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <DisableSpecificWarnings>4268;4723;4744;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -291,7 +297,6 @@
     <ClInclude Include="src\agents\lazy_ai.hpp" />
     <ClInclude Include="src\agents\player.hpp" />
     <ClInclude Include="src\animation\animation.hpp" />
-    <ClInclude Include="src\animation\animators.hpp" />
     <ClInclude Include="src\animation\bleeding.hpp" />
     <ClInclude Include="src\animation\flame.hpp" />
     <ClInclude Include="src\animation\particles\arrow_particle.hpp" />
@@ -385,15 +390,16 @@
     <ClInclude Include="src\rsrc\tile.hpp" />
     <ClInclude Include="src\rsrc\utility.hpp" />
     <ClInclude Include="src\rsrc\world_widget.hpp" />
+    <ClInclude Include="src\ui\dialog\list_dialog.hpp" />
     <ClInclude Include="src\ui\entity_widget.hpp" />
     <ClInclude Include="src\ui\hotbar.hpp" />
     <ClInclude Include="src\ui\item_widget.hpp" />
+    <ClInclude Include="src\ui\label.hpp" />
     <ClInclude Include="src\ui\main_menu.hpp" />
     <ClInclude Include="src\ui\panel.hpp" />
     <ClInclude Include="src\ui\splash.hpp" />
     <ClInclude Include="src\ui\split_panel.hpp" />
     <ClInclude Include="src\ui\dialog\dialog.hpp" />
-    <ClInclude Include="src\ui\dialog\list_dialog.hpp" />
     <ClInclude Include="src\ui\inventory_widget.hpp" />
     <ClInclude Include="src\ui\tile_widget.hpp" />
     <ClInclude Include="src\ui\view_space.hpp" />
@@ -425,7 +431,6 @@
     <ClCompile Include="src\agents\basic_ai.cpp" />
     <ClCompile Include="src\agents\player.cpp" />
     <ClCompile Include="src\animation\animation.cpp" />
-    <ClCompile Include="src\animation\animators.cpp" />
     <ClCompile Include="src\animation\bleeding.cpp" />
     <ClCompile Include="src\animation\flame.cpp" />
     <ClCompile Include="src\animation\particles\arrow_particle.cpp" />
@@ -474,8 +479,8 @@
     <ClCompile Include="src\magic\shock.cpp" />
     <ClCompile Include="src\magic\teleport.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\ui\entity_widget.cpp" />
     <ClCompile Include="src\ui\dialog\list_dialog.cpp" />
+    <ClCompile Include="src\ui\entity_widget.cpp" />
     <ClCompile Include="src\ui\hotbar.cpp" />
     <ClCompile Include="src\ui\hud.cpp" />
     <ClCompile Include="src\ui\inventory_widget.cpp" />
@@ -484,7 +489,6 @@
     <ClCompile Include="src\ui\main_menu.cpp" />
     <ClCompile Include="src\ui\panel.cpp" />
     <ClCompile Include="src\ui\qte\shock.cpp" />
-    <ClCompile Include="src\ui\label.hpp" />
     <ClCompile Include="src\ui\splash.cpp" />
     <ClCompile Include="src\ui\split_panel.cpp" />
     <ClCompile Include="src\ui\tile_widget.cpp" />

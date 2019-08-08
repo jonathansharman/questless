@@ -4,7 +4,6 @@
 
 #include "world_widget.hpp"
 
-#include "animation/animators.hpp"
 #include "animation/particles/arrow_particle.hpp"
 #include "animation/particles/blood_particle.hpp"
 #include "animation/particles/green_magic_particle.hpp"
@@ -83,30 +82,6 @@ namespace ql {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad6)) {
 				set_position(_position + view::vector{-pan_rate, 0.0_px});
 			}
-		}
-	}
-
-	void world_widget::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-		draw_terrain(target, states);
-		draw_entities(target, states);
-		draw_effects(target, states);
-	}
-
-	void world_widget::draw_terrain(sf::RenderTarget& target, sf::RenderStates states) const {
-		for (auto const& id_and_widget : _tile_widgets) {
-			target.draw(id_and_widget.second, states);
-		}
-	}
-
-	void world_widget::draw_entities(sf::RenderTarget& target, sf::RenderStates states) const {
-		for (auto const& id_and_widget : _entity_widgets) {
-			target.draw(id_and_widget.second, states);
-		}
-	}
-
-	void world_widget::draw_effects(sf::RenderTarget& target, sf::RenderStates states) const {
-		for (auto const& animation : _effect_animations) {
-			target.draw(*animation, states);
 		}
 	}
 
@@ -286,5 +261,20 @@ namespace ql {
 				}
 				_telescope_sound.play();
 			});
+	}
+
+	auto world_widget::draw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
+		// Draw tiles.
+		for (auto const& id_and_widget : _tile_widgets) {
+			target.draw(id_and_widget.second, states);
+		}
+		// Draw entities.
+		for (auto const& id_and_widget : _entity_widgets) {
+			target.draw(id_and_widget.second, states);
+		}
+		// Draw effects.
+		for (auto const& animation : _effect_animations) {
+			target.draw(*animation, states);
+		}
 	}
 }

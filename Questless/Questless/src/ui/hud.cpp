@@ -36,7 +36,7 @@ namespace ql {
 		, _region_id{region_id}
 		, _player_id{player_id}
 		, _world_widget{get_world_widget_resources(_rsrc)}
-		, _hotbar{}
+		, _hotbar{_rsrc.item, _rsrc.spell}
 		, _inv{reg.get<inventory>(player_id), _hotbar} //
 	{
 		// When a hotbar item is selected, open a list dialog to choose an action.
@@ -47,6 +47,18 @@ namespace ql {
 				_item_dialog->set_position(view::point_from_sfml(sf::Mouse::getPosition()));
 			}
 		});
+	}
+
+	auto hud::set_player_id(id player_id) -> void {
+		_player_id = player_id;
+	}
+
+	auto hud::render_effect(effects::effect const& effect) -> void {
+		_world_widget.render_effect(effect);
+	}
+
+	auto hud::pass_future() -> std::future<void> {
+		return _pass_promise.get_future();
 	}
 
 	auto hud::get_size() const -> view::vector {
@@ -63,58 +75,6 @@ namespace ql {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) { return pass(); }
 
 			_hotbar.update(elapsed_time);
-		}
-	}
-
-	auto hud::render_effect(effects::effect const& effect) -> void {
-		_world_widget.render_effect(effect);
-	}
-
-	auto hud::draw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
-		constexpr int conditions_count = 2;
-		constexpr int condition_bar_width = 10;
-		constexpr int condition_bar_height = 100;
-
-		//! @todo Condition bars.
-		// Blood
-		// Energy
-		// Satiety
-		// Alertness
-
-		target.draw(_hotbar, states);
-
-		// Draw the inventory if it's open.
-		if (_show_inv) { target.draw(_inv, states); }
-
-		{ // Draw the current time.
-			auto const& region = reg.get<ql::region>(_region_id);
-			tick const time_of_day = region.time_of_day();
-			std::string time_name;
-			switch (region.period_of_day()) {
-				case period_of_day::morning:
-					time_name = "Morning";
-					break;
-				case period_of_day::afternoon:
-					time_name = "Afternoon";
-					break;
-				case period_of_day::dusk:
-					time_name = "Dusk";
-					break;
-				case period_of_day::evening:
-					time_name = "Evening";
-					break;
-				case period_of_day::night:
-					time_name = "Night";
-					break;
-				case period_of_day::dawn:
-					time_name = "Dawn";
-					break;
-			}
-			std::string time_string = fmt::format("Time: {} ({}, {})", region.time(), time_of_day, time_name);
-			sf::Text time_text{time_string, _rsrc.fonts.firamono, 20};
-			time_text.setFillColor(sf::Color::White);
-			time_text.setPosition({0, 50});
-			target.draw(time_text, states);
 		}
 	}
 
@@ -169,6 +129,54 @@ namespace ql {
 				return event_handled::no;
 		}
 		return event_handled::yes;
+	}
+
+	auto hud::draw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
+		constexpr int conditions_count = 2;
+		constexpr int condition_bar_width = 10;
+		constexpr int condition_bar_height = 100;
+
+		//! @todo Condition bars.
+		// Blood
+		// Energy
+		// Satiety
+		// Alertness
+
+		target.draw(_hotbar, states);
+
+		// Draw the inventory if it's open.
+		if (_show_inv) { target.draw(_inv, states); }
+
+		{ // Draw the current time.
+			auto const& region = reg.get<ql::region>(_region_id);
+			tick const time_of_day = region.time_of_day();
+			std::string time_name;
+			switch (region.period_of_day()) {
+				case period_of_day::morning:
+					time_name = "Morning";
+					break;
+				case period_of_day::afternoon:
+					time_name = "Afternoon";
+					break;
+				case period_of_day::dusk:
+					time_name = "Dusk";
+					break;
+				case period_of_day::evening:
+					time_name = "Evening";
+					break;
+				case period_of_day::night:
+					time_name = "Night";
+					break;
+				case period_of_day::dawn:
+					time_name = "Dawn";
+					break;
+			}
+			std::string time_string = fmt::format("Time: {} ({}, {})", region.time(), time_of_day, time_name);
+			sf::Text time_text{time_string, _rsrc.fonts.firamono, 20};
+			time_text.setFillColor(sf::Color::White);
+			time_text.setPosition({0, 50});
+			target.draw(time_text, states);
+		}
 	}
 
 	auto hud::get_item_options(id item_id) -> std::vector<std::tuple<sf::String, std::function<void()>>> {

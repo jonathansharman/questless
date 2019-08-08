@@ -28,6 +28,15 @@ namespace ql {
 		//! @param player_id The ID of the player-controlled being.
 		hud(rsrc::fonts const& fonts, id region_id, id player_id);
 
+		//! Renders @p effect to be perceived by the player.
+		auto render_effect(effects::effect const& effect) -> void;
+
+		//! Gets a future which is set after the player passes the current turn.
+		auto pass_future() -> std::future<void>;
+
+		//! Resets this HUD's stored player ID to @p player_id.
+		auto set_player_id(id player_id) -> void;
+
 		auto get_size() const -> view::vector final;
 
 		auto update(sec elapsed_time) -> void final;
@@ -36,21 +45,13 @@ namespace ql {
 
 		auto get_position() const -> view::point final;
 
-		//! Renders @p effect to be perceived by the player.
-		auto render_effect(effects::effect const& effect) -> void;
-
-		//! Gets a future which is set after the player passes the current turn.
-		auto pass_future() {
-			return _pass_promise.get_future();
-		}
-
 		auto on_parent_resize(view::vector parent_size) -> void final;
 
 		auto on_key_press(sf::Event::KeyEvent const& event) -> event_handled final;
 
 	private:
 		id _region_id;
-		id _player_id;
+		id _player_id{};
 		std::promise<void> _pass_promise;
 
 		rsrc::hud _rsrc;

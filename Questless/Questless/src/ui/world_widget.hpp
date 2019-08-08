@@ -79,14 +79,5 @@ namespace ql {
 		void render_entities(world_view const& view);
 
 		auto draw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
-
-		//! Draws the visible terrain.
-		void draw_terrain(sf::RenderTarget& target, sf::RenderStates states) const;
-
-		//! Draws the visible entities in the world.
-		void draw_entities(sf::RenderTarget& target, sf::RenderStates states) const;
-
-		//! Draws visualizations of any active effects in the world.
-		void draw_effects(sf::RenderTarget& target, sf::RenderStates states) const;
 	};
 }

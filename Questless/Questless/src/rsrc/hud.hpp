@@ -8,6 +8,7 @@
 #include "fonts.hpp"
 #include "item.hpp"
 #include "particle.hpp"
+#include "spell.hpp"
 #include "tile.hpp"
 
 namespace ql::rsrc {
@@ -18,6 +19,7 @@ namespace ql::rsrc {
 		entity entity;
 		item item;
 		particle particle;
+		spell spell;
 		tile tile;
 	};
 }

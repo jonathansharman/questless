@@ -76,18 +76,6 @@ namespace ql {
 		// Activate the fade shader.
 		states.shader = &_fade_shader;
 
-		{ // Draw flames.
-			sf::Sprite flame_sprite{_rsrc.txtr.flame};
-			auto const flame_size = _rsrc.txtr.flame.getSize();
-			for (auto position : _flame_positions) {
-				// Set origin such that flames just go off-screen at position = 0 and position = 1.
-				flame_sprite.setOrigin(flame_size.x / 2.0f, position[1].value * flame_size.y);
-				// Set position based on current size and draw.
-				flame_sprite.setPosition(to_sfml(vecx::component_wise_product(_size, position)));
-				target.draw(flame_sprite, states);
-			}
-		}
-
 		{ // Draw logo.
 			sf::Sprite logo_sprite{_rsrc.txtr.logo};
 			// Set logo position.
@@ -99,6 +87,18 @@ namespace ql {
 			auto const logo_size = _rsrc.txtr.logo.getSize();
 			logo_sprite.setOrigin(logo_size.x / 2.0f, logo_size.y / 2.0f);
 			target.draw(logo_sprite, states);
+		}
+
+		{ // Draw flames.
+			sf::Sprite flame_sprite{_rsrc.txtr.flame};
+			auto const flame_size = _rsrc.txtr.flame.getSize();
+			for (auto position : _flame_positions) {
+				// Set origin such that flames just go off-screen at position = 0 and position = 1.
+				flame_sprite.setOrigin(flame_size.x / 2.0f, position[1].value * flame_size.y);
+				// Set position based on current size and draw.
+				flame_sprite.setPosition(to_sfml(vecx::component_wise_product(_size, position)));
+				target.draw(flame_sprite, states);
+			}
 		}
 	}
 
@@ -129,9 +129,11 @@ namespace ql {
 
 	auto splash::end_scene() -> void {
 		_flame_sound.stop();
-		_root = umake<main_menu>(_root, _fonts);
+		auto main_menu = umake<ql::main_menu>(_root, _fonts);
 		// Initialize size and position.
 		_root->on_parent_resize(_size);
 		_root->set_position(_position);
+		// Switch to main menu.
+		_root = std::move(main_menu);
 	}
 }
