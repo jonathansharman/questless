@@ -109,7 +109,7 @@ namespace ql {
 
 	auto game::regulate_timing() -> sec {
 		// Determine how much time has passed since the last call.
-		sec const time_spent = to_sec(clock::now() - _last_update_time);
+		sec time_spent = to_sec(clock::now() - _last_update_time);
 		_last_update_time = clock::now();
 
 		auto time_deficit = time_spent - target_frame_duration;
@@ -125,6 +125,7 @@ namespace ql {
 				_time_debt = 0.0_s;
 				// Sleep for remaining time surplus.
 				std::this_thread::sleep_for(to_chrono_sec(time_surplus));
+				time_spent += time_surplus;
 			} else {
 				// Still behind but can pay part of the time debt.
 				_time_debt -= time_surplus;
