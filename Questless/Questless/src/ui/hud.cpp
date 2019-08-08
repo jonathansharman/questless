@@ -40,11 +40,11 @@ namespace ql {
 		, _inv{reg.get<inventory>(player_id), _hotbar} //
 	{
 		// When a hotbar item is selected, open a list dialog to choose an action.
-		_hotbar.set_on_click([this](std::optional<id> o_item_id) {
+		_hotbar.set_on_click([this](std::optional<id> o_item_id, view::point mouse_position) {
 			if (o_item_id) {
 				_item_dialog = umake<list_dialog>(this, _rsrc.fonts, "Act...", get_item_options(*o_item_id));
 				_item_dialog->on_parent_resize(get_size());
-				_item_dialog->set_position(view::point_from_sfml(sf::Mouse::getPosition()));
+				_item_dialog->set_position(mouse_position);
 			}
 		});
 	}
@@ -80,8 +80,12 @@ namespace ql {
 
 	auto hud::set_position(view::point position) -> void {
 		_position = position;
-		_hotbar.set_position(position);
-		_inv.set_position(position);
+		{ // Set hotbar position.
+			auto const hotbar_size = _hotbar.get_size();
+			_hotbar.set_position(_position + view::vector{(_size[0] - hotbar_size[0]) / 2.0f, _size[1] - hotbar_size[1]});
+		}
+		// Set inventory position.
+		_inv.set_position(_position + (_size - _inv.get_size()) / 2.0f);
 	}
 
 	auto hud::get_position() const -> view::point {
@@ -92,6 +96,8 @@ namespace ql {
 		_size = parent_size;
 		_hotbar.on_parent_resize(_size);
 		_inv.on_parent_resize(_size);
+		// Call set_position to trigger sub-widget repositioning.
+		set_position(_position);
 	}
 
 	auto hud::on_key_press(sf::Event::KeyEvent const& event) -> event_handled {
@@ -133,6 +139,11 @@ namespace ql {
 				return event_handled::no;
 		}
 		return event_handled::yes;
+	}
+
+	auto hud::on_mouse_move(view::point mouse_position) -> void {
+		_hotbar.on_mouse_move(mouse_position);
+		_inv.on_mouse_move(mouse_position);
 	}
 
 	auto hud::draw(sf::RenderTarget& target, sf::RenderStates states) const -> void {

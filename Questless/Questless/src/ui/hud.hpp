@@ -49,6 +49,8 @@ namespace ql {
 
 		auto on_key_press(sf::Event::KeyEvent const& event) -> event_handled final;
 
+		auto on_mouse_move(view::point mouse_position) -> void final;
+
 	private:
 		id _region_id;
 		id _player_id{};

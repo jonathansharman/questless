@@ -33,8 +33,8 @@ namespace ql {
 		//! Sets this widget's item ID to @p item_id.
 		auto set_o_item_id(std::optional<id> o_item_id) -> void;
 
-		//! Invoked when this widget is clicked, passing the item's ID, if any.
-		std::function<void(std::optional<id>)> on_click;
+		//! Invoked when this widget is clicked, passing the item's ID, if any, and the mouse click coordinates.
+		std::function<void(std::optional<id>, view::point)> on_click;
 
 		auto get_size() const -> view::vector final;
 

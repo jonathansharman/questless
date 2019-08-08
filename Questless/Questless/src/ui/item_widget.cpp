@@ -152,6 +152,7 @@ namespace ql {
 		bg.setOutlineColor(sf::Color::Black);
 		bg.setOutlineThickness(1.0f);
 		bg.setFillColor(sf::Color{192, 192, 192});
+		target.draw(bg);
 		if (_ani) { target.draw(*_ani, states); }
 	}
 
@@ -165,8 +166,9 @@ namespace ql {
 	}
 
 	auto item_widget::on_mouse_press(sf::Event::MouseButtonEvent const& event) -> event_handled {
-		if (_o_item_id && get_bounding_box().contains(view::point_from_mouse_button_event(event))) {
-			on_click(_o_item_id);
+		auto const mouse_position = view::point_from_mouse_button_event(event);
+		if (_o_item_id && get_bounding_box().contains(mouse_position)) {
+			on_click(_o_item_id, mouse_position);
 			return event_handled::yes;
 		} else {
 			return event_handled::no;

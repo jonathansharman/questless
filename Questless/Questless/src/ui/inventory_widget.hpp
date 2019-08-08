@@ -27,6 +27,8 @@ namespace ql {
 
 		auto on_key_press(sf::Event::KeyEvent const&) -> event_handled final;
 
+		auto on_mouse_move(view::point mouse_position) -> void final;
+
 	private:
 		inventory& _inv;
 		hotbar& _hotbar;
@@ -36,6 +38,7 @@ namespace ql {
 		int _row_count;
 		int _col_count;
 		std::vector<id> _displayed_items;
+		view::point _mouse_position;
 
 		auto draw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
 

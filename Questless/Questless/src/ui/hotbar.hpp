@@ -28,20 +28,22 @@ namespace ql {
 
 		auto on_mouse_press(sf::Event::MouseButtonEvent const& event) -> event_handled final;
 
+		auto on_mouse_move(view::point mouse_position) -> void final;
+
 		//! Sets the item ID of the @p idx item widget to @p o_item_id.
 		auto set_item(size_t idx, std::optional<id> o_item_id) -> void;
 
 		//! Copies @p handler to the @p on_click handler for each of this hotbar's item widgets.
-		auto set_on_click(std::function<void(std::optional<id>)> handler) -> void;
+		auto set_on_click(std::function<void(std::optional<id>, view::point)> handler) -> void;
 
 	private:
 		rsrc::item const& _item_resources;
 		rsrc::spell const& _spell_resources;
 
 		view::point _position;
+		view::point _mouse_position;
 
 		std::array<item_widget, 10> _item_widgets;
-		std::vector<int> _selections;
 		size_t _most_recent_idx = 0;
 
 		sf::Texture _slot_texture;

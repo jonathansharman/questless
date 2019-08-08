@@ -39,10 +39,10 @@ namespace ql {
 		target.draw(background, states);
 
 		{ // Draw selection.
-			auto const mouse_pos = view::point_from_sfml(sf::Mouse::getPosition());
-			float const row = floor((mouse_pos[1] - top(layout)) / item_icon_size[1]);
-			float const col = floor((mouse_pos[0] - left(layout)) / item_icon_size[0]);
-			if (0.0f < row && row < _row_count && 0.0f < col && col < _col_count) {
+			auto const mouse_offset = _mouse_position - _position;
+			float const row = floor(mouse_offset[1] / item_icon_size[1]);
+			float const col = floor(mouse_offset[0] / item_icon_size[0]);
+			if (0.0f <= row && row < _row_count && 0.0f <= col && col < _col_count) {
 				sf::RectangleShape selection_box{to_sfml(item_icon_size)};
 				auto const pos = layout.position + view::vector{item_icon_size[0] * col, item_icon_size[1] * row};
 				selection_box.setPosition(to_sfml(pos));
@@ -116,16 +116,18 @@ namespace ql {
 		return event_handled::yes;
 	}
 
+	auto inventory_widget::on_mouse_move(view::point mouse_position) -> void {
+		_mouse_position = mouse_position;
+	}
+
 	void inventory_widget::assign_idx(size_t hotbar_idx) {
 		auto const layout = get_bounding_box();
 
-		auto const mouse_pos = view::point_from_sfml(sf::Mouse::getPosition());
-
 		// Ensure row is in bounds.
-		int const row = static_cast<int>(floor((mouse_pos[1] - top(layout)) / item_icon_size[1]).value);
+		int const row = static_cast<int>(floor((_mouse_position[1] - top(layout)) / item_icon_size[1]).value);
 		if (row < 0 || row >= _row_count) { return; }
 		// Ensure column is in bounds.
-		int const col = static_cast<int>(floor((mouse_pos[0] - left(layout)) / item_icon_size[0]).value);
+		int const col = static_cast<int>(floor((_mouse_position[0] - left(layout)) / item_icon_size[0]).value);
 		if (col < 0 || col >= _col_count) { return; }
 		// Ensure index is in bounds.
 		size_t const idx = row * _col_count + col;

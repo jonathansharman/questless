@@ -61,7 +61,7 @@ namespace ql {
 
 		// Move splash flames.
 		for (auto& position : _flame_positions) {
-			constexpr auto flame_speed = 1.0_hz;
+			constexpr auto flame_speed = 1.6_hz;
 			position[1] -= flame_speed * elapsed_time;
 			if (position[1] < 0.0f) {
 				position[0] = cancel::unitless<float>{uniform(0.0f, 1.0f)};
@@ -135,8 +135,8 @@ namespace ql {
 		_flame_sound.stop();
 		auto main_menu = umake<ql::main_menu>(_root, _fonts);
 		// Initialize size and position.
-		_root->on_parent_resize(_size);
-		_root->set_position(_position);
+		main_menu->on_parent_resize(_size);
+		main_menu->set_position(_position);
 		// Switch to main menu.
 		_root = std::move(main_menu);
 	}
