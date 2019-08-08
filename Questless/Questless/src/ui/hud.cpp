@@ -80,6 +80,8 @@ namespace ql {
 
 	auto hud::set_position(view::point position) -> void {
 		_position = position;
+		_hotbar.set_position(position);
+		_inv.set_position(position);
 	}
 
 	auto hud::get_position() const -> view::point {
@@ -88,6 +90,8 @@ namespace ql {
 
 	auto hud::on_parent_resize(view::vector parent_size) -> void {
 		_size = parent_size;
+		_hotbar.on_parent_resize(_size);
+		_inv.on_parent_resize(_size);
 	}
 
 	auto hud::on_key_press(sf::Event::KeyEvent const& event) -> event_handled {

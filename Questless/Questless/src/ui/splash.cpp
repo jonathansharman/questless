@@ -27,6 +27,7 @@ namespace ql {
 		, _flame_sound{_rsrc.sfx.flame} //
 	{
 		_fade_shader.loadFromFile("resources/shaders/fade.frag", sf::Shader::Type::Fragment);
+		_fade_shader.setUniform("texture", sf::Shader::CurrentTexture);
 
 		constexpr int flame_count = 20;
 		for (int i = 0; i < flame_count; ++i) {
@@ -40,6 +41,9 @@ namespace ql {
 	}
 
 	auto splash::update(sec elapsed_time) -> void {
+		static int n_updates = 0;
+		++n_updates;
+
 		// Play the splash sound effect on the first frame of the splash screen.
 		if (!_sound_played) {
 			_sound_played = true;
@@ -57,10 +61,10 @@ namespace ql {
 
 		// Move splash flames.
 		for (auto& position : _flame_positions) {
-			constexpr auto flame_speed = 2800.0_px / 1.0_s;
-			position[1] -= flame_speed / _size[1] * elapsed_time;
+			constexpr auto flame_speed = 1.0_hz;
+			position[1] -= flame_speed * elapsed_time;
 			if (position[1] < 0.0f) {
-				position[0] = {uniform(0.0f, 1.0f)};
+				position[0] = cancel::unitless<float>{uniform(0.0f, 1.0f)};
 				position[1] += cancel::unitless<float>{1.0f};
 			}
 		}
@@ -94,7 +98,7 @@ namespace ql {
 			auto const flame_size = _rsrc.txtr.flame.getSize();
 			for (auto position : _flame_positions) {
 				// Set origin such that flames just go off-screen at position = 0 and position = 1.
-				flame_sprite.setOrigin(flame_size.x / 2.0f, position[1].value * flame_size.y);
+				flame_sprite.setOrigin(flame_size.x / 2.0f, (1.0f - position[1].value) * flame_size.y);
 				// Set position based on current size and draw.
 				flame_sprite.setPosition(to_sfml(vecx::component_wise_product(_size, position)));
 				target.draw(flame_sprite, states);

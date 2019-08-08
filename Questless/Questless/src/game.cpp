@@ -95,7 +95,8 @@ namespace ql {
 			if (_root == nullptr) { return; }
 
 			// Update.
-			_root->update(regulate_timing());
+			sec const elapsed_time = regulate_timing();
+			_root->update(elapsed_time);
 			// Check if the game ended via the update.
 			if (_root == nullptr) { return; }
 
@@ -108,11 +109,11 @@ namespace ql {
 	}
 
 	auto game::regulate_timing() -> sec {
-		// Determine how much time has passed since the last call.
-		sec time_spent = to_sec(clock::now() - _last_update_time);
+		// Determine how much time has actually passed since the last call.
+		sec frame_duration = to_sec(clock::now() - _last_update_time);
 		_last_update_time = clock::now();
 
-		auto time_deficit = time_spent - target_frame_duration;
+		auto time_deficit = frame_duration - target_frame_duration;
 		if (time_deficit > 0.0_s) {
 			// Over budget. Add to time debt.
 			_time_debt += time_deficit;
@@ -124,8 +125,10 @@ namespace ql {
 				time_surplus -= _time_debt.value();
 				_time_debt = 0.0_s;
 				// Sleep for remaining time surplus.
-				std::this_thread::sleep_for(to_chrono_sec(time_surplus));
-				time_spent += time_surplus;
+				auto const sleep = std::chrono::duration_cast<std::chrono::milliseconds>(to_chrono_sec(time_surplus));
+				std::this_thread::sleep_for(sleep);
+				// Adjust frame duration to account for time slept.
+				frame_duration += time_surplus;
 			} else {
 				// Still behind but can pay part of the time debt.
 				_time_debt -= time_surplus;
@@ -133,11 +136,11 @@ namespace ql {
 		}
 
 		// Update FPS buffer.
-		if (time_spent != 0.0_s) { _fps_buffer.push_back(1.0f / time_spent); }
+		_fps_buffer.push_back(1.0f / frame_duration);
 		constexpr std::size_t max_fps_buffer_size = 25;
 		if (_fps_buffer.size() > max_fps_buffer_size) { _fps_buffer.pop_front(); }
 
-		return time_spent;
+		return frame_duration;
 	}
 
 	void game::draw_fps() {

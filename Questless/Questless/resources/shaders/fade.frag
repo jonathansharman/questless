@@ -1,9 +1,8 @@
-#version 450
-
+uniform sampler2D texture;
 uniform float intensity;
 
-out vec4 fragment;
-
 void main() {
-	fragment = vec4(color.rgb * intensity, color.a);
+    vec4 texel = texture2D(texture, gl_TexCoord[0].xy);
+
+    gl_FragColor = gl_Color * vec4(texel.rgb * intensity, texel.a);
 }

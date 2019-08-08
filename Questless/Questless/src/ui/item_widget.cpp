@@ -146,6 +146,12 @@ namespace ql {
 	}
 
 	auto item_widget::draw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
+		sf::RectangleShape bg;
+		bg.setPosition(view::to_sfml(_position));
+		bg.setSize(view::to_sfml(get_size()));
+		bg.setOutlineColor(sf::Color::Black);
+		bg.setOutlineThickness(1.0f);
+		bg.setFillColor(sf::Color{192, 192, 192});
 		if (_ani) { target.draw(*_ani, states); }
 	}
 
