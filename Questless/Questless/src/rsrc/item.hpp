@@ -11,6 +11,8 @@
 namespace ql::rsrc {
 	//! Contains textures for item animations.
 	struct item {
+		sf::Texture error = load<sf::Texture>("resources/textures/items/error.png");
+
 		sf::Texture arrow = load<sf::Texture>("resources/textures/items/arrow.png");
 		sf::Texture bow = load<sf::Texture>("resources/textures/items/bow.png");
 		sf::Texture blank_scroll = load<sf::Texture>("resources/textures/items/blank-scroll.png");

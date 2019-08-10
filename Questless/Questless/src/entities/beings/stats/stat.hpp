@@ -15,5 +15,13 @@ namespace ql::stats {
 		void reset() {
 			cur = base;
 		}
+
+		//! Clamps the current value into [0, base].
+		void clamp_zero_base() {
+			cur = std::clamp(cur, T(0), base);
+		}
+
+		//! Clamps the current value into [0, infinity).
+		void clamp_nonnegative() {}
 	};
 }

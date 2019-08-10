@@ -59,14 +59,11 @@ namespace ql {
 		}
 
 		// Update effect animations.
-		for (std::size_t i = 0; i < _effect_animations.size();) {
-			_effect_animations[i]->update(elapsed_time);
-			if (_effect_animations[i]->stopped()) {
-				_effect_animations.erase(_effect_animations.begin() + i);
-			} else {
-				++i;
-			}
+		for (auto& ani : _effect_animations) {
+			ani->update(elapsed_time);
 		}
+		// Remove stopped animations.
+		ranges::remove_if(_effect_animations, [](auto& ani) { return ani->stopped(); });
 
 		{ // Camera controls.
 			constexpr auto pan_rate = 10.0_px;

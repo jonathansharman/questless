@@ -22,16 +22,6 @@ namespace ql {
 		return static_cast<sf::Uint8>(255 * percentage);
 	}
 
-	//! Conditionally removes elements from a container using the erase-remove idiom.
-	//! @param container An iterable container.
-	//! @param predicate A predicate over elements of the container. Elements for which the predicate is true are erased.
-	template <typename Container, typename Predicate>
-	void erase_if(Container& container, Predicate&& predicate) {
-		container.erase( //
-			std::remove_if(container.begin(), container.end(), std::forward<Predicate>(predicate)),
-			container.end());
-	};
-
 	//! Moves @p pointer into a new vector and returns it.
 	template <typename T, typename U>
 	auto make_uptr_vector(uptr<U> pointer) {

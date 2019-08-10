@@ -22,10 +22,6 @@
 namespace ql {
 	namespace {
 		sf::Vector2i const item_icon_size{55, 55};
-
-		auto get_world_widget_resources(rsrc::hud const& resources) {
-			return rsrc::world_widget{resources.entity, resources.fonts, resources.particle, resources.tile};
-		}
 	}
 
 	hud::hud( //
@@ -35,7 +31,7 @@ namespace ql {
 		: _rsrc{fonts}
 		, _region_id{region_id}
 		, _player_id{player_id}
-		, _world_widget{get_world_widget_resources(_rsrc)}
+		, _world_widget{rsrc::world_widget{_rsrc.entity, _rsrc.fonts, _rsrc.particle, _rsrc.tile}}
 		, _hotbar{_rsrc.item, _rsrc.spell}
 		, _inv{reg.get<inventory>(player_id), _hotbar} //
 	{
@@ -47,6 +43,15 @@ namespace ql {
 				_item_dialog->set_position(mouse_position);
 			}
 		});
+		// Initialize hotbar with as many items as possible.
+		auto& inv = reg.get<inventory>(_player_id);
+		size_t i = 0;
+		for (auto it = inv.item_ids.begin(); it != inv.item_ids.end() && i < 10; ++it) {
+			_hotbar.set_item(i, *it);
+			++i;
+		}
+		// Render the initial world view.
+		_world_widget.render_view(world_view{player_id});
 	}
 
 	auto hud::set_player_id(id player_id) -> void {
@@ -80,6 +85,8 @@ namespace ql {
 
 	auto hud::set_position(view::point position) -> void {
 		_position = position;
+		// Set world widget position.
+		_world_widget.set_position(_position);
 		{ // Set hotbar position.
 			auto const hotbar_size = _hotbar.get_size();
 			_hotbar.set_position(_position + view::vector{(_size[0] - hotbar_size[0]) / 2.0f, _size[1] - hotbar_size[1]});
@@ -94,6 +101,7 @@ namespace ql {
 
 	auto hud::on_parent_resize(view::vector parent_size) -> void {
 		_size = parent_size;
+		_world_widget.on_parent_resize(_size);
 		_hotbar.on_parent_resize(_size);
 		_inv.on_parent_resize(_size);
 		// Call set_position to trigger sub-widget repositioning.

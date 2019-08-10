@@ -9,17 +9,18 @@
 #include "entities/beings/body.hpp"
 #include "world/region.hpp"
 
+#include <range/v3/algorithm/max.hpp>
+#include <range/v3/view/transform.hpp>
+
 namespace ql {
 	namespace {
 		static constexpr auto perception_loss_per_span = 10_perception / 1_span;
 	}
 
 	span max_visual_range(std::vector<stats::vision> const& vision_sources) {
-		auto max_element = std::max_element( //
-			vision_sources.begin(),
-			vision_sources.end(),
-			[](stats::vision const& v1, stats::vision const& v2) { return v1.acuity < v2.acuity; });
-		return max_element->acuity.value() / perception_loss_per_span;
+		if (vision_sources.empty()) { return 0_span; }
+		auto acuities = vision_sources | ranges::view::transform([](stats::vision const& v) { return v.acuity.value(); });
+		return ranges::max(acuities) / perception_loss_per_span;
 	}
 
 	//! Determines whether @p target is in the field of vision specified by @p location and @p direction.

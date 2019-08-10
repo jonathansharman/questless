@@ -773,5 +773,8 @@
     <ClCompile Include="src\ui\label.cpp">
       <Filter>src\ui</Filter>
     </ClCompile>
+    <ClCompile Include="src\animation\scene_node.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

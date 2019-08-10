@@ -15,6 +15,7 @@
 #include "animation/still_shape.hpp"
 #include "items/magic/gatestone.hpp"
 #include "items/magic/scroll.hpp"
+#include "items/weapons/arrow.hpp"
 #include "items/weapons/bow.hpp"
 #include "items/weapons/quarterstaff.hpp"
 #include "items/weapons/quiver.hpp"
@@ -59,6 +60,8 @@ namespace ql {
 			_ani = umake<still_image>(_item_resources.quarterstaff);
 		} else if (reg.has<quiver>(item_id)) {
 			_ani = umake<still_image>(_item_resources.quiver);
+		} else if (reg.has<arrow>(item_id)) {
+			_ani = umake<still_image>(_item_resources.arrow);
 		} else if (auto scroll = reg.try_get<ql::scroll>(item_id)) {
 			if (scroll->spell == std::nullopt) {
 				_ani = umake<still_image>(_item_resources.blank_scroll);
@@ -131,6 +134,9 @@ namespace ql {
 
 				_ani = std::move(node);
 			}
+		} else {
+			// No item components recognized. Fallback to an "error" sprite.
+			_ani = umake<still_image>(_item_resources.error);
 		}
 
 		// Set/reset position, in case item ID was unset last time set_position() was called.
