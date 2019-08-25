@@ -80,6 +80,6 @@ namespace ql {
 
 	private:
 		mutator_type _mutator;
-		value_type _value;
+		value_type _value{};
 	};
 }

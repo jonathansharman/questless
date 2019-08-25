@@ -31,8 +31,9 @@ namespace ql {
 		static constexpr tick end_of_night = 95 * day_length / 100;
 	}
 
-	region::region(std::string region_name)
-		: _name{std::move(region_name)}
+	region::region(ql::id id, std::string region_name)
+		: id{id}
+		, _name{std::move(region_name)}
 		, _time{0}
 		, _time_of_day{get_time_of_day()}
 		, _period_of_day{get_period_of_day()}
@@ -291,7 +292,7 @@ namespace ql {
 	}
 
 	auto make_region(id region_id, std::string name) -> id {
-		reg.assign<region>(region_id, std::move(name));
+		reg.assign<region>(region_id, region_id, std::move(name));
 		return region_id;
 	}
 }

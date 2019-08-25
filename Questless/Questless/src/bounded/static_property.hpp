@@ -59,6 +59,6 @@ namespace ql {
 		}
 
 	private:
-		value_type _value;
+		value_type _value{};
 	};
 }

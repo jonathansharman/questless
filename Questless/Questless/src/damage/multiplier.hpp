@@ -25,7 +25,8 @@ namespace ql::dmg {
 
 		constexpr multiplier() = default;
 
-		constexpr multiplier(slash_factor slash,
+		constexpr multiplier( //
+			slash_factor slash,
 			pierce_factor pierce,
 			cleave_factor cleave,
 			bludgeon_factor bludgeon,

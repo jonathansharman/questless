@@ -31,11 +31,11 @@ namespace ql {
 	}
 
 	auto scene_node::animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
-		for (auto& child : back_children | ranges::view::reverse) {
+		for (auto& child : back_children | ranges::views::reverse) {
 			target.draw(*child, states);
 		}
 		if (node_animation) { target.draw(*node_animation, states); }
-		for (auto& child : front_children | ranges::view::reverse) {
+		for (auto& child : front_children | ranges::views::reverse) {
 			target.draw(*child, states);
 		}
 	}

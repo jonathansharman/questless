@@ -23,6 +23,8 @@
 #include "world/region.hpp"
 #include "world/tile.hpp"
 
+#include <range/v3/algorithm/remove_if.hpp>
+
 namespace ql {
 	using namespace vecx;
 	using namespace vecx::literals;

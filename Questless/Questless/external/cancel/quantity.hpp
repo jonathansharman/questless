@@ -22,7 +22,7 @@ namespace cancel {
 		using unit = Unit;
 
 		//! The underlying value of this quantity.
-		rep value;
+		rep value{};
 
 		//! Constructs a quantity from the default value of the underlying type.
 		constexpr quantity() noexcept(std::is_nothrow_default_constructible_v<rep>) = default;

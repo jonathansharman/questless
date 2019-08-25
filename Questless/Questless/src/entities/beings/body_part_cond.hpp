@@ -12,10 +12,8 @@
 namespace ql {
 	//! Encapsulates the temporary conditions of a body part.
 	struct body_part_cond {
-		id id;
-
 		//! Allows a part to be used to perform actions.
-		dynamic_nonnegative<action> action;
+		dynamic_nonnegative<action> action{};
 
 		//! Whether this body part is immortal.
 		bool immortal = false;
@@ -29,10 +27,10 @@ namespace ql {
 			return ableness == ableness::disabled;
 		}
 
-		ql::poisoning poisoning;
+		ql::poisoning poisoning{};
 
-		ql::decay decay;
+		ql::decay decay{};
 
-		ql::hypovolemia_damage hypovolemia_damage;
+		ql::hypovolemia_damage hypovolemia_damage{};
 	};
 }

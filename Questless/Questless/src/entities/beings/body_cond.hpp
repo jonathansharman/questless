@@ -15,8 +15,6 @@ namespace ql {
 
 	//! Encapsulates the temporary conditions of a body.
 	struct body_cond {
-		id id;
-
 		static constexpr auto min_energy = 0_ep;
 		static constexpr auto max_energy = 100_ep;
 		static_bounded<ql::energy, min_energy, max_energy> energy;

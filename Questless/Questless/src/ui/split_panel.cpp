@@ -64,20 +64,22 @@ namespace ql {
 		if (_second) {
 			_second->on_parent_resize(_size);
 			switch (split_line) {
-				case split_line::horizontal:
+				case split_line::horizontal: {
 					auto const y = match(
 						split_location,
 						[](view::px px) { return px; },
 						[&](float proportion) { return get_size()[1] * proportion; });
 					_second->set_position(get_position() + view::vector{0.0_px, y});
 					break;
-				case split_line::vertical:
+				}
+				case split_line::vertical: {
 					auto const x = match(
 						split_location,
 						[](view::px px) { return px; },
 						[&](float proportion) { return get_size()[0] * proportion; });
 					_second->set_position(get_position() + view::vector{x, 0.0_px});
 					break;
+				}
 			}
 		}
 	}

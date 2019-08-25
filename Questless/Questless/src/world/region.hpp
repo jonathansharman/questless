@@ -26,8 +26,9 @@ namespace ql {
 		id id;
 
 		//! Pseudo-randomly generates a new region.
+		//! @param id The ID of the new region.
 		//! @param name The name of the new region.
-		region(std::string region_name);
+		region(ql::id id, std::string region_name);
 
 		//! The region's name.
 		std::string name() const {

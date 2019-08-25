@@ -9,8 +9,6 @@
 
 #include "ui/view_space.hpp"
 
-#include <range/v3/all.hpp>
-
 namespace ql {
 	//! Useful for selectively disabling constexpr branches.
 	template <typename T>
@@ -54,12 +52,6 @@ namespace ql {
 			result.push_back(f(element));
 		};
 		return result;
-	}
-
-	//! Returns a transform view to statically cast elements to type @p T.
-	template <typename T>
-	static auto cast_transform() {
-		return ranges::view::transform([](auto arg) { return static_cast<T>(arg); });
 	}
 
 	//! Computes the ratio of quantities @p q1 and @p q2 after casting them to @p RatioType.

@@ -19,7 +19,7 @@ namespace ql {
 
 	span max_visual_range(std::vector<stats::vision> const& vision_sources) {
 		if (vision_sources.empty()) { return 0_span; }
-		auto acuities = vision_sources | ranges::view::transform([](stats::vision const& v) { return v.acuity.value(); });
+		auto acuities = vision_sources | ranges::views::transform([](stats::vision const& v) { return v.acuity.value(); });
 		return ranges::max(acuities) / perception_loss_per_span;
 	}
 

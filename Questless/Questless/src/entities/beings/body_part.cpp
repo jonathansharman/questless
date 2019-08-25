@@ -8,8 +8,25 @@
 #include "entities/beings/being.hpp"
 #include "world/region.hpp"
 
+#include <range/v3/view/transform.hpp>
+
 namespace ql {
-	void body_part::update(tick elapsed) {
+	namespace {
+		auto generate_attached_parts_helper(id part_id) -> void {
+			auto const& part = reg.get<body_part>(part_id);
+			auto const n = part.attachments.size();
+			auto const owner_id = part.owner_id;
+			for (size_t i = 0; i < n; ++i) {
+				auto const attached_part_id = reg.get<body_part>(part_id).attachments[i].default_generator.make(owner_id);
+				generate_attached_parts_helper(attached_part_id);
+				reg.get<body_part>(part_id).attachments[i].o_part_id = attached_part_id;
+			}
+		}
+	}
+
+	body_part::body_part(ql::id id, ql::id owner_id) : id{id}, owner_id{owner_id} {}
+
+	auto body_part::update(tick elapsed) -> void {
 		body& owner = reg.get<body>(owner_id);
 
 		{ // Handle temperature damage.
@@ -32,7 +49,7 @@ namespace ql {
 				// Don't regenerate if starving.
 				stats.regen_factor.cur = 0;
 			} else {
-				stats.regen_factor = base_stats.regen_factor;
+				stats.regen_factor.reset();
 				if (owner.cond.asleep()) {
 					// Regenerate twice as fast while sleeping.
 					stats.regen_factor.cur *= 2;
@@ -45,7 +62,7 @@ namespace ql {
 		}
 	}
 
-	void body_part::take_damage(dmg::group& damage, std::optional<ql::id> o_source_id) {
+	auto body_part::take_damage(dmg::group& damage, std::optional<ql::id> o_source_id) -> void {
 		// Apply part's equipped item's armor.
 		if (equipped_item_id) {
 			if (auto armor = reg.try_get<dmg::armor>(*equipped_item_id)) { damage = damage.against(*armor); }
@@ -86,11 +103,7 @@ namespace ql {
 		reg.get<region>(location.region_id).add_effect({effects::injury{location.coords, damage, owner_id, id, o_source_id}});
 	}
 
-	void body_part::generate_attached_parts() {
-		for (auto& attachment : attachments) {
-			auto const part_id = attachment.make_default();
-			attachment.o_part_id = part_id;
-			reg.get<body_part>(part_id).generate_attached_parts();
-		}
+	auto body_part::generate_attached_parts() -> void {
+		generate_attached_parts_helper(id);
 	}
 }

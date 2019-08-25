@@ -49,6 +49,6 @@ namespace ql {
 		}
 
 	private:
-		arithmetic_type _value;
+		arithmetic_type _value{};
 	};
 }

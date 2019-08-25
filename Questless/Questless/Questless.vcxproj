@@ -30,7 +30,7 @@
     <ProjectGuid>{D44739D1-4AB7-4180-BCAE-393BA1F74BDA}</ProjectGuid>
     <RootNamespace>questless</RootNamespace>
     <ProjectName>Questless</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -123,7 +123,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalOptions>/experimental:external /external:anglebrackets /external:W0</AdditionalOptions>
+      <AdditionalOptions>/experimental:external /experimental:preprocessor /external:anglebrackets /external:W0</AdditionalOptions>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
       <DisableSpecificWarnings>4268;4723;4744;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <EnableModules>true</EnableModules>
@@ -338,11 +338,13 @@
     <ClInclude Include="src\effects\injury.hpp" />
     <ClInclude Include="src\effects\lightning_bolt.hpp" />
     <ClInclude Include="src\effects\telescope.hpp" />
+    <ClInclude Include="src\entities\beings\attachment.hpp" />
     <ClInclude Include="src\entities\beings\being.hpp" />
     <ClInclude Include="src\entities\beings\body.hpp" />
     <ClInclude Include="src\entities\beings\body_part.hpp" />
     <ClInclude Include="src\entities\beings\body_cond.hpp" />
     <ClInclude Include="src\entities\beings\body_part_cond.hpp" />
+    <ClInclude Include="src\entities\beings\body_part_generator.hpp" />
     <ClInclude Include="src\entities\beings\body_part_status.hpp" />
     <ClInclude Include="src\entities\beings\body_part_status_set.hpp" />
     <ClInclude Include="src\entities\beings\body_status.hpp" />
@@ -457,6 +459,7 @@
     <ClCompile Include="src\entities\beings\being.cpp" />
     <ClCompile Include="src\entities\beings\body.cpp" />
     <ClCompile Include="src\entities\beings\body_part.cpp" />
+    <ClCompile Include="src\entities\beings\body_part_generator.cpp" />
     <ClCompile Include="src\entities\beings\body_part_status.cpp" />
     <ClCompile Include="src\entities\beings\body_part_status_set.cpp" />
     <ClCompile Include="src\entities\beings\body_status.cpp" />
