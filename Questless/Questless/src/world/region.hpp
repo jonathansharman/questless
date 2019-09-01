@@ -31,15 +31,15 @@ namespace ql {
 		region(ql::id id, std::string region_name);
 
 		//! The region's name.
-		std::string name() const {
+		auto name() const -> std::string {
 			return _name;
 		}
 
 		//! The ID of the entity at @p tile_coords or nullopt if none.
-		std::optional<ql::id> entity_id_at(tile_hex::point tile_coords) const;
+		auto entity_id_at(tile_hex::point tile_coords) const -> std::optional<ql::id>;
 
 		//! Finds a suitable spawn location.
-		location get_spawn_location();
+		auto get_spawn_location() -> location;
 
 		//! Adds @p entity_id to the region, setting its coordinates to @p tile_coords.
 		[[nodiscard]] auto try_add(ql::id entity_id, tile_hex::point tile_coords) -> bool;
@@ -49,23 +49,23 @@ namespace ql {
 		[[nodiscard]] auto try_move(ql::id entity_id, tile_hex::point tile_coords) -> bool;
 
 		//! Removes @p entity_id from the region, if present.
-		void remove(ql::id entity_id);
+		auto remove(ql::id entity_id) -> void;
 
 		//! The tile at @p tile_coords or nullopt if none.
 		auto tile_id_at(tile_hex::point tile_coords) const -> std::optional<ql::id>;
 
 		//! The total in-game time in this region.
-		tick time() const {
+		auto time() const -> tick {
 			return _time;
 		}
 
 		//! The time of day in this region.
-		tick time_of_day() const {
+		auto time_of_day() const -> tick {
 			return _time_of_day;
 		}
 
 		//! The period of day in this region.
-		period_of_day period_of_day() const {
+		auto period_of_day() const -> period_of_day {
 			return _period_of_day;
 		}
 
@@ -73,17 +73,17 @@ namespace ql {
 		lum illuminance(tile_hex::point tile_coords) const;
 
 		//! The temperature of the tile at @p tile_coords.
-		ql::temperature temperature(tile_hex::point tile_coords) const;
+		auto temperature(tile_hex::point tile_coords) const -> ql::temperature;
 
 		//! The proportion of light/vision occluded between @p start and @p end, as a number in [0, 1].
-		double occlusion(tile_hex::point start, tile_hex::point end) const;
+		auto occlusion(tile_hex::point start, tile_hex::point end) const -> double;
 
 		//! Advances this region by @elapsed time.
-		void update(tick elapsed);
+		auto update(tick elapsed) -> void;
 
 		//! Adds an effect to this region, notifying beings within range of its occurrence.
 		//! @param effect The effect to add.
-		void add_effect(effects::effect const& effect);
+		auto add_effect(effects::effect const& effect) -> void;
 
 	private:
 		/////////////////
@@ -113,7 +113,7 @@ namespace ql {
 		auto get_time_of_day() const -> tick;
 		auto get_period_of_day() const -> ql::period_of_day;
 
-		lum get_ambient_illuminance();
+		auto get_ambient_illuminance() -> lum;
 
 		//! Performs some operation on each section in the loaded rhomboid of sections.
 		//! @param f The operation to perform on each section.

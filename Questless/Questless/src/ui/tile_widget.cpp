@@ -14,7 +14,8 @@ namespace ql {
 		: _rsrc{resources}
 		, _tv{tile_view} //
 	{
-		switch (reg.get<terrain>(_tv.id)) {
+		auto const terrain = reg.get<ql::terrain>(_tv.id);
+		switch (terrain) {
 			case terrain::dirt:
 				_ani = umake<still_image>(_rsrc.txtr.dirt);
 				break;
@@ -47,12 +48,12 @@ namespace ql {
 	}
 
 	auto tile_widget::update(sec elapsed_time) -> void {
-		_ani->update(elapsed_time);
+		if (_ani) { _ani->update(elapsed_time); }
 	}
 
 	auto tile_widget::set_position(view::point position) -> void {
 		_position = position;
-		_ani->setPosition(to_sfml(_position));
+		if (_ani) { _ani->setPosition(to_sfml(_position)); }
 	}
 
 	auto tile_widget::get_position() const -> view::point {
@@ -60,7 +61,9 @@ namespace ql {
 	}
 
 	auto tile_widget::draw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
-		//! @todo Use a shader to indicate perception.
-		target.draw(*_ani, states);
+		if (_ani) {
+			//! @todo Use a shader to indicate perception.
+			target.draw(*_ani, states);
+		}
 	}
 }

@@ -35,18 +35,18 @@ namespace ql::stats {
 			return max_blood() / 10_tick;
 		}
 
-		//! Combines this aggregate with @p that, per stat.
+		//! Combines current values with those of @p that.
 		void combine_with(aggregate const& that) {
-			vitality.base += that.vitality.base;
-			spirit.base += that.spirit.base;
-			strength.base += that.strength.base;
-			stamina.base += that.stamina.base;
-			hearing.base += that.hearing.base;
-			speech.base += that.speech.base;
-			intellect.base += that.intellect.base;
-			mass.base += that.mass.base;
-			vision_sources.base.insert(
-				vision_sources.base.end(), that.vision_sources.base.begin(), that.vision_sources.base.end());
+			vitality.cur += that.vitality.cur;
+			spirit.cur += that.spirit.cur;
+			strength.cur += that.strength.cur;
+			stamina.cur += that.stamina.cur;
+			hearing.cur += that.hearing.cur;
+			speech.cur += that.speech.cur;
+			intellect.cur += that.intellect.cur;
+			mass.cur += that.mass.cur;
+			vision_sources.cur.insert(
+				vision_sources.cur.end(), that.vision_sources.cur.begin(), that.vision_sources.cur.end());
 		}
 
 		//! Resets current stats to base stats.

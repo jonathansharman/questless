@@ -75,20 +75,8 @@ namespace ql::generators {
 			part.cond.action = {10_ap, 10_ap};
 
 			part.stats.a.vitality = 10_hp;
-			part.stats.a.strength = 0_str;
 			part.stats.a.stamina = 100_ep;
-			part.stats.a.hearing = 100_hear;
-			part.stats.a.speech = 100_speech;
-			part.stats.a.intellect = 100_int;
 			part.stats.a.mass = 50.0_mass;
-			part.stats.a.undeath = 0_undeath;
-			part.stats.a.vision_sources = {{stats::vision{
-				100_perception, // acuity
-				80_lum, // min_illuminance
-				120_lum, // max_illuminance
-				20_perception / 1_lum, // darkness_penalty
-				10_perception / 1_lum // glare_penalty
-			}}};
 
 			part.stats.regen_factor = 5;
 			part.stats.bleeding = 0.0_blood_per_tick;

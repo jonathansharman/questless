@@ -43,7 +43,7 @@ namespace ql {
 				if (!o_other_id) { continue; }
 				auto const other_id = *o_other_id;
 
-				// Can always perceive self fully. Otherwise perception matches tile perception.
+				// Can always perceive self fully. Otherwise perception of entity matches perception of tile.
 				auto const other_perception = other_id == viewer_id ? max_perception : tile_perception;
 
 				// Add entity view if perceptible.

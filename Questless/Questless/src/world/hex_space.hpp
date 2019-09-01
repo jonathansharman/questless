@@ -27,7 +27,7 @@ namespace ql {
 
 		static_assert(std::is_integral_v<length_t::rep>, "The length quantity of a hex space must be integral.");
 
-		enum class direction : int { one = 1, two, three, four, five, six };
+		enum class direction : int { zero = 0, one, two, three, four, five };
 
 		//! The shortest distance between the two given directions.
 		static int distance(direction d1, direction d2) {
@@ -133,27 +133,27 @@ namespace ql {
 					case -1:
 						switch (u.r.value) {
 							case 0:
-								return direction::four;
-							case 1:
 								return direction::three;
+							case 1:
+								return direction::two;
 							default:
 								break;
 						}
 					case 0:
 						switch (u.r.value) {
 							case -1:
-								return direction::five;
+								return direction::four;
 							case 1:
-								return direction::two;
+								return direction::one;
 							default:
 								break;
 						}
 					case 1:
 						switch (u.r.value) {
 							case -1:
-								return direction::six;
+								return direction::five;
 							case 0:
-								return direction::one;
+								return direction::zero;
 							default:
 								break;
 						}
@@ -239,17 +239,17 @@ namespace ql {
 			//! Neighboring point in the given direction.
 			constexpr point neighbor(direction direction) const {
 				switch (direction) {
-					case direction::one:
+					case direction::zero:
 						return point{q + length_t{1}, r + length_t{0}};
-					case direction::two:
+					case direction::one:
 						return point{q + length_t{0}, r + length_t{1}};
-					case direction::three:
+					case direction::two:
 						return point{q - length_t{1}, r + length_t{1}};
-					case direction::four:
+					case direction::three:
 						return point{q - length_t{1}, r + length_t{0}};
-					case direction::five:
+					case direction::four:
 						return point{q + length_t{0}, r - length_t{1}};
-					case direction::six:
+					case direction::five:
 						return point{q + length_t{1}, r - length_t{1}};
 					default:
 						UNREACHABLE;

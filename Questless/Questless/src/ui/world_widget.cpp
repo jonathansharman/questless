@@ -134,7 +134,7 @@ namespace ql {
 		_highlight_predicate = std::nullopt;
 	}
 
-	void world_widget::render_terrain(world_view const& view) {
+	auto world_widget::render_terrain(world_view const& view) -> void {
 		_tile_widgets.clear();
 		for (auto const& tv : view.tile_views) {
 			auto& tile_widget = _tile_widgets.try_emplace(tv.id, _rsrc.tile, tv).first->second;

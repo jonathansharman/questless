@@ -27,17 +27,17 @@ namespace ql {
 	bool inside_field_of_vision(location const& location, tile_hex::direction direction, tile_hex::point target) {
 		auto offset = target - location.coords;
 		switch (direction) {
-			case tile_hex::direction::one:
+			case tile_hex::direction::zero:
 				return offset.q >= 0_span && offset.q + offset.r >= 0_span;
-			case tile_hex::direction::two:
+			case tile_hex::direction::one:
 				return offset.r >= 0_span && offset.q + offset.r >= 0_span;
-			case tile_hex::direction::three:
+			case tile_hex::direction::two:
 				return offset.q <= 0_span && offset.r >= 0_span;
-			case tile_hex::direction::four:
+			case tile_hex::direction::three:
 				return offset.q <= 0_span && offset.q + offset.r <= 0_span;
-			case tile_hex::direction::five:
+			case tile_hex::direction::four:
 				return offset.r <= 0_span && offset.q + offset.r <= 0_span;
-			case tile_hex::direction::six:
+			case tile_hex::direction::five:
 				return offset.q >= 0_span && offset.r <= 0_span;
 			default:
 				UNREACHABLE;
@@ -70,7 +70,7 @@ namespace ql {
 		if (!inside_field_of_vision(location, body.cond.direction, target)) { return 0_perception; }
 
 		// Check that the target within the maximum possible visual range.
-		if ((target - location.coords).length() < max_visual_range(body.stats.a.vision_sources.cur)) {
+		if ((target - location.coords).length() > max_visual_range(body.stats.a.vision_sources.cur)) {
 			return 0_perception;
 		}
 
@@ -85,7 +85,7 @@ namespace ql {
 			[&](perception acc, stats::vision v) { return std::max(acc, light_adjusted_perception(v, illuminance)); });
 
 		// Account for distance.
-		span const distance{(target - location.coords).length()};
+		span const distance = (target - location.coords).length();
 		auto const best_distance_adjusted_perception = best_light_adjusted_perception - distance * perception_loss_per_span;
 
 		// Account for occlusions between the perceptor and the target.

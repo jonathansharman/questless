@@ -126,22 +126,22 @@ namespace ql {
 				return event_handled::yes;
 			// Movement commands.
 			case sf::Keyboard::E:
-				move(_player_id, tile_hex::direction::one, event.shift);
+				move(_player_id, tile_hex::direction::zero, event.shift);
 				break;
 			case sf::Keyboard::W:
-				move(_player_id, tile_hex::direction::two, event.shift);
+				move(_player_id, tile_hex::direction::one, event.shift);
 				break;
 			case sf::Keyboard::Q:
-				move(_player_id, tile_hex::direction::three, event.shift);
+				move(_player_id, tile_hex::direction::two, event.shift);
 				break;
 			case sf::Keyboard::A:
-				move(_player_id, tile_hex::direction::four, event.shift);
+				move(_player_id, tile_hex::direction::three, event.shift);
 				break;
 			case sf::Keyboard::S:
-				move(_player_id, tile_hex::direction::five, event.shift);
+				move(_player_id, tile_hex::direction::four, event.shift);
 				break;
 			case sf::Keyboard::D:
-				move(_player_id, tile_hex::direction::six, event.shift);
+				move(_player_id, tile_hex::direction::five, event.shift);
 				break;
 			default:
 				return event_handled::no;

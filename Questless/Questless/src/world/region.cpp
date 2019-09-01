@@ -188,12 +188,12 @@ namespace ql {
 
 	auto region::occlusion(tile_hex::point start, tile_hex::point end) const -> double {
 		auto line = start.line_to(end);
-		double result = 1.0;
+		double transparency = 1.0;
 		for (std::size_t i = 1; i < line.size() - 1; ++i) {
 			//! @todo Handle transparency/occlusion in a more sensible way.
-			if (entity_id_at(line[i])) { result *= 0.5; }
+			if (entity_id_at(line[i])) { transparency *= 0.5; }
 		}
-		return result;
+		return 1.0 - transparency;
 	}
 
 	auto region::update(tick elapsed) -> void {
@@ -275,7 +275,7 @@ namespace ql {
 				return scale(dawn_and_dusk_light, dawn_progress) + scale(night_light, 1.0 - dawn_progress);
 			}
 			default:
-				throw std::logic_error{"Invalid period of day."};
+				UNREACHABLE;
 		}
 	}
 

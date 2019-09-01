@@ -51,9 +51,9 @@ namespace ql {
 		auto set_highlight_predicate(std::function<bool(tile_hex::point)> predicate) -> void;
 
 		//! Clears the current highlight predicate so that no tiles are highlighted.
-		void clear_highlight_predicate();
+		auto clear_highlight_predicate() -> void;
 
-		void render_effect(effects::effect const& effect);
+		auto render_effect(effects::effect const& effect) -> void;
 
 	private:
 		rsrc::world_widget const& _rsrc;
@@ -75,8 +75,9 @@ namespace ql {
 
 		std::optional<std::function<bool(tile_hex::point)>> _highlight_predicate;
 
-		void render_terrain(world_view const& view);
-		void render_entities(world_view const& view);
+		auto render_terrain(world_view const& view) -> void;
+
+		auto render_entities(world_view const& view) -> void;
 
 		auto draw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
 	};

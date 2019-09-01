@@ -78,7 +78,7 @@ namespace ql {
 			return serenity.value() > min_serenity + 3 * (max_serenity - min_serenity) / 4;
 		}
 
-		tile_hex::direction direction;
+		tile_hex::direction direction = tile_hex::direction::zero;
 
 		ql::awakeness awakeness = awakeness::awake;
 		constexpr bool awake() const {
@@ -88,7 +88,7 @@ namespace ql {
 			return awakeness == awakeness::asleep;
 		}
 
-		ql::blood blood;
+		ql::blood blood = 0.0_blood;
 
 		ql::mortality mortality = ql::mortality::alive;
 	};
