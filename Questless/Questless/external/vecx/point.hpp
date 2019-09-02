@@ -25,7 +25,7 @@ namespace vecx {
 		constexpr point(point&&) = default;
 
 		template <typename... Args, typename = std::enable_if_t<(std::is_convertible_v<Args, scalar_t> && ...)>>
-		constexpr point(Args && ... args) : components{std::forward<Args>(args)...} {}
+		constexpr point(Args&& ... args) : components{std::forward<Args>(args)...} {}
 
 		constexpr point& operator =(point const&) = default;
 		constexpr point& operator =(point&&) = default;
@@ -150,12 +150,7 @@ namespace vecx {
 	}
 }
 
-#ifndef _DEBUG
-#define DOCTEST_CONFIG_DISABLE
-#endif
-#include <doctest/doctest.h>
-#undef near // Defined in minwindef.h (!)
-#undef far // Defined in minwindef.h (!)
+#include "doctest_wrapper/test.hpp"
 
 TEST_CASE("[point] operations") {
 	using namespace cancel;

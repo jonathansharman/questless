@@ -85,6 +85,9 @@
     <Filter Include="src\bounded">
       <UniqueIdentifier>{0bc1268d-f149-4f0a-be38-44b12e299541}</UniqueIdentifier>
     </Filter>
+    <Filter Include="external\doctest_wrapper">
+      <UniqueIdentifier>{96b7e2fd-7153-454d-a744-6da674bdfa70}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\utility\debug.hpp">
@@ -330,9 +333,6 @@
     <ClInclude Include="external\vecx\serialization\point.hpp">
       <Filter>external\vecx\serialization</Filter>
     </ClInclude>
-    <ClInclude Include="external\cancel\list.hpp">
-      <Filter>external\cancel</Filter>
-    </ClInclude>
     <ClInclude Include="external\cancel\quantity.hpp">
       <Filter>external\cancel</Filter>
     </ClInclude>
@@ -551,6 +551,18 @@
     </ClInclude>
     <ClInclude Include="src\entities\beings\body_part_generator.hpp">
       <Filter>src\entities\beings</Filter>
+    </ClInclude>
+    <ClInclude Include="external\cancel\list.hpp">
+      <Filter>external\cancel</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utility\simple_moving_average.hpp">
+      <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="external\doctest_wrapper\test.hpp">
+      <Filter>external\doctest_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="external\doctest_wrapper\impl.hpp">
+      <Filter>external\doctest_wrapper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

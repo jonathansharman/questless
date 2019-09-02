@@ -64,12 +64,7 @@ namespace vecx {
 	polygon(T, U...)->polygon<T>;
 }
 
-#ifndef _DEBUG
-#define DOCTEST_CONFIG_DISABLE
-#endif
-#include <doctest/doctest.h>
-#undef near // Defined in minwindef.h (!)
-#undef far // Defined in minwindef.h (!)
+#include "doctest_wrapper/test.hpp"
 
 TEST_CASE("[polygon] operations") {
 	//! @todo Test integral spaces.

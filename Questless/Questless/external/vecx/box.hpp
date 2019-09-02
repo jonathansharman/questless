@@ -113,12 +113,7 @@ namespace vecx {
 	box(point<Quantity, N>, vector<Quantity, N>)->box<Quantity, N>;
 }
 
-#ifndef _DEBUG
-#define DOCTEST_CONFIG_DISABLE
-#endif
-#include <doctest/doctest.h>
-#undef near // Defined in minwindef.h (!)
-#undef far // Defined in minwindef.h (!)
+#include "doctest_wrapper/test.hpp"
 
 TEST_CASE("[box] operations") {
 	//! @todo Box tests.

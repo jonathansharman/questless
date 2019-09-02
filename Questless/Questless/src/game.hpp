@@ -8,6 +8,7 @@
 #include "quantities/wall_time.hpp"
 #include "rsrc/fonts.hpp"
 #include "utility/reference.hpp"
+#include "utility/simple_moving_average.hpp"
 
 #include <SFML/Graphics.hpp>
 
@@ -45,8 +46,8 @@ namespace ql {
 		//! How far behind the target frame duration the scene is.
 		static_bounded<sec, min_time_debt, max_time_debt> _time_debt = 0.0_s;
 
-		//! The last however many instantaneous FPS counts, used to smooth out the FPS estimation.
-		std::deque<per_sec> _fps_buffer;
+		static constexpr size_t _fps_buffer_size = 25;
+		simple_moving_average<per_sec, _fps_buffer_size> _avg_fps;
 
 		//! Tries to keep the scene running at the target frame rate.
 		//! @return The duration of the last frame.

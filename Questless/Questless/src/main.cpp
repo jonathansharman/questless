@@ -3,13 +3,7 @@
 //! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
 //! @brief Runs an instance of the game Questless.
 
-#ifndef _DEBUG
-#define DOCTEST_CONFIG_DISABLE
-#endif
-#define DOCTEST_CONFIG_IMPLEMENT
-#include <doctest/doctest.h>
-#undef near // Defined in minwindef.h (!)
-#undef far // Defined in minwindef.h (!)
+#include "doctest_wrapper/impl.hpp"
 
 #include "game.hpp"
 
@@ -23,15 +17,12 @@ int main(int argc, char* argv[]) {
 	context.applyCommandLine(argc, argv);
 	result = context.run();
 #else
-	(void)argc; // Supress unused variable warning.
-	(void)argv; // Supress unused variable warning.
+	// Command-line arguments unused in release build. Supress unused variable warnings.
+	(void)argc;
+	(void)argv;
 #endif
 
-	//	try {
 	ql::game{false}.run();
-	//	} catch (std::exception& ex) {
-	//		std::string message = ex.what();
-	//		//! @todo Try-catch for exception for last-resort error reporting. (Should log the message or something.)
-	//	}
+
 	return result;
 }

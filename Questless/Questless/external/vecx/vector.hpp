@@ -33,7 +33,7 @@ namespace vecx {
 		constexpr vector(vector&&) = default;
 
 		template<typename... Args, typename = std::enable_if_t<(std::is_convertible_v<Args, scalar_t> && ...)>>
-		constexpr vector(Args && ... args) : components{std::forward<Args>(args)...} {}
+		constexpr vector(Args&& ... args) : components{std::forward<Args>(args)...} {}
 
 		constexpr vector& operator =(vector const&) = default;
 		constexpr vector& operator =(vector&&) = default;
@@ -237,12 +237,7 @@ namespace vecx {
 	}
 }
 
-#ifndef _DEBUG
-#define DOCTEST_CONFIG_DISABLE
-#endif
-#include <doctest/doctest.h>
-#undef near // Defined in minwindef.h (!)
-#undef far // Defined in minwindef.h (!)
+#include "doctest_wrapper/test.hpp"
 
 TEST_CASE("[vector] operations") {
 	using namespace cancel;

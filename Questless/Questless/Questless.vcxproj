@@ -279,6 +279,8 @@
     <ClInclude Include="external\cancel\quantity.hpp" />
     <ClInclude Include="external\cancel\serialization.hpp" />
     <ClInclude Include="external\cancel\unit.hpp" />
+    <ClInclude Include="external\doctest_wrapper\impl.hpp" />
+    <ClInclude Include="external\doctest_wrapper\test.hpp" />
     <ClInclude Include="external\vecx\angle.hpp" />
     <ClInclude Include="external\vecx\box.hpp" />
     <ClInclude Include="external\vecx\constants.hpp" />
@@ -416,6 +418,7 @@
     <ClInclude Include="src\utility\event.hpp" />
     <ClInclude Include="src\utility\future.hpp" />
     <ClInclude Include="src\utility\io.hpp" />
+    <ClInclude Include="src\utility\simple_moving_average.hpp" />
     <ClInclude Include="src\utility\unreachable.hpp" />
     <ClInclude Include="src\utility\visitation.hpp" />
     <ClInclude Include="src\utility\random.hpp" />
