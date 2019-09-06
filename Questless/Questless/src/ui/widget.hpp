@@ -22,10 +22,10 @@ namespace ql {
 		//! @param elapsed_time The amount of time since the last update.
 		virtual auto update(sec elapsed_time) -> void = 0;
 
-		//! Sets this widget's absolute position in the window to @p position.
+		//! Sets the absolute position in the window of this widget's top-left corner to @p position.
 		virtual auto set_position(view::point position) -> void = 0;
 
-		//! This widget's absolute position in the window.
+		//! The absolute position in the window of this widget's top-left corner.
 		virtual auto get_position() const -> view::point = 0;
 
 		//! The bounding box around this widget in the window.

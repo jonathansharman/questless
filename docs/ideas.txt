@@ -4,7 +4,7 @@ Realms
 The Heavens
 	The abode of hosts
 The Abyss
-	The abode of fiends, including the undead, demons, and devils
+	The abode of fiends, including the undead and demons
 Physis
 	The realm of untamed and unadulterated nature
 	Unlimited matter
@@ -69,11 +69,12 @@ Recipes
 		Ingredients: blood of suffering, black gatestone, ???
 		Incantation: black
 		Effects:
-			1) Gain Lich status (timed)
+			1) Gain Lich status
 				Provides undeath
+				Causes decay over time
 			2) Learn Siphon Life
-				Deals damage to another being and extends Curse of the Lich.
-			3) Instant undeath
+				Deals damage to another being and reverse decay.
+			3) Become undead
 		Steps:
 			1) Mix blood of suffering and black gatestone powder.
 			2) Incant.
@@ -250,13 +251,14 @@ White - good - life - light
 	Celestial
 		Comfort - Increase a being's joy.
 		Encourage - Increase a being's courage.
-		Exorcise - Drain a being's black gatestones and remove possession from it?
+		Exorcise - Remove possession effects???
 		Dispel Undeath - Reduce a target's undeath by X for Y ticks.
 		Immortalize - Make a being temporarily immortal.
 		Divine - Temporarily gain complete perception of a being.
 		Raise Ladder - Create a ladder from the Nexus to Heaven, allowing travel between the realms. Can only cast while in the Nexus or Heaven.
 		Astral Project - Temporarily project your soul from your body.
-		Summon hosts
+			How will this work?
+		Summon Guardian Angel - Summon's this being's guardian angel from the Heavens. Each being born in the Nexus has an associated guardian angel that when summoned will defend its summoner against attackers. After a fixed length of time, the angel returns to the Heavens and resets its state.
 	Restorative
 		Cleanse - Remove a bane from a being. The bane's power must be lower than the invocation power.
 		Immunize - Give a being X blight resistance for Y ticks.
@@ -278,14 +280,13 @@ Black - evil - death - darkness
 	Demonic
 		Terrify - Lower another being's courage.
 		Depress - Reduce a being's joy.
-		Corrupt - Drain a being's white gatestones.
-			I don't think this is the best use of that spell name
+		Corrupt - ???
 		Possess - Channeled, interrupted by taking 10% of vitality in damage at once. Take control of a being for X ticks. Mana cost is proportional to the target's intellect.
 		Damn - Choose a being. If you are alive after X ticks, deal Y blight damage to that being.
 		Curse - Curse an item. Carrying a cursed item deals blight damage over time. Picking up a cursed item binds it to the carrier. When a bound cursed item is removed, it explodes, destroying itself and dealing blight damage in an area around the carrier.
-		Enslave Fiend - Enslave a fiend, making it loyal to you for X ticks.
-		Open Hellmouth - Can only cast while in the Nexus or Hell. Create a hellmouth from the Nexus to Hell, allowing travel between the realms.
-		Summon demons and devils
+		Open Hellmouth - Can only cast while in the Nexus or Abyss. Create a hellmouth from the Nexus to the Abyss, allowing travel between the realms.
+		Bind Demon - Opens a channel of communication with a random demon in the Abyss. The demon will present a price, e.g. a certain amount of the caster's blood, a limb, a black gatestone. If the caster pays the price, it learns the spell "Call <Demon Name>".
+		Call <Demon Name> - Summons <Demon Name> from the Abyss in service of the caster and then erases the spell from the caster's mind. The demon returns to the Abyss after a fixed length of time.
 	Necromagic
 		Rot - Inflict decay on a target body part.
 		Enfeeble - Give a target a chosen amount of blight vulnerability for a chosen duration.
@@ -508,7 +509,6 @@ Natural
 		Lion
 		Bear
 		Shark
-		Bunny monster: https://40.media.tumblr.com/02adcb5598134a6192969371f03202e6/tumblr_o421h0bfWT1v85teno1_500.jpg
 		Pileous sable slug
 			A large slug with beautiful flowing black hair. Poisonous to eat. Its hair is a brewing ingredient.
 	Plants
@@ -521,27 +521,12 @@ Natural
 		Wobble fern - neutral
 			When ingested, causes nausea and instability.
 Mythic
-	Dragon - DO AWAY WITH THE COLOR CLICHE?? But it fits really well with the magic system, which is definitely staying...
-		White - neutral good
-			Breathes bioluminescent fog
-		Black - neutral evil
-			Breathes dark fog
-		Green - neutral
-			Breathes poison
-		Red - neutral
-			The largest and fiercest of dragons
-			Breathes fire
-		Yellow - chaotic neutral
-			Breathes plasma and generates lightning
-		Blue - lawful neutral
-			Breathes ice
-		Wyvern?
-	Chimera - neutral
-		Mix of two natural beings
-		Blends their stats and so forth
-		Could maybe achieve this using mixed body parts
+	Dragon
+	Wyvern
+	Chimera
+		Creature whose body is a mixture of the parts from two other natural creatures
 	Herbivorous predator (need to name it) - neutral
-		Has a symbiotic relationship with a certain moss species
+		Has a mutualistic relationship with a certain moss species
 		The moss grows from the creature's underside
 		The creature eats the moss
 		The creature hunts prey to feed to the moss
@@ -597,20 +582,19 @@ Host
 		Magic: white
 		Appearance: winged humanoid
 Fiend (Legion)
-	Like the heavenly host, many fiends are immortal and can only be incapacitated temporarily. They return to hell immediately when defeated outside hell.
+	Like the heavenly host, many fiends are immortal and can only be incapacitated temporarily. They return to the Abyss immediately when defeated outside it.
 	I'm not sure what the fiendish version of a halo should be, if anything. What could give demons their immortality?
 	Demonic
 		Demon - chaotic evil
 		Imp - neutral evil
 		Ghoul - neutral evil
 			Eats corpses
-	Diabolical
-		Devil - lawful evil
 	Hellhound - neutral evil
 	Undead
 		Zombie - neutral evil
 			Has lowered stats, especially intellect, and is mute
 			Causes nausea on contact
+				This should just be a feature of decayed parts, probably
 		Lich
 			Like a zombie, but with spirit intact; can cast spells
 		Wight
@@ -651,6 +635,6 @@ Constructs
 Geographical Features
 ================================================================================
 Hellmouth
-	An entrance to Hell
+	An entrance to the Abyss
 Jacob's Ladder
-	An entrance to Heaven
+	An entrance to the Heavens

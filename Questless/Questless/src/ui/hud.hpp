@@ -15,7 +15,9 @@
 #include "reg.hpp"
 #include "rsrc/hud.hpp"
 
+#include <atomic>
 #include <future>
+#include <thread>
 
 namespace ql {
 	namespace effects {
@@ -27,6 +29,8 @@ namespace ql {
 	struct hud : widget {
 		//! @param player_id The ID of the player-controlled being.
 		hud(rsrc::fonts const& fonts, id region_id, id player_id);
+
+		~hud();
 
 		//! Renders @p effect to be perceived by the player.
 		auto render_effect(effects::effect const& effect) -> void;
@@ -49,6 +53,10 @@ namespace ql {
 
 		auto on_key_press(sf::Event::KeyEvent const& event) -> event_handled final;
 
+		auto on_mouse_press(sf::Event::MouseButtonEvent const& event) -> event_handled final;
+
+		auto on_mouse_release(sf::Event::MouseButtonEvent const& event) -> event_handled final;
+
 		auto on_mouse_move(view::point mouse_position) -> void final;
 
 	private:
@@ -65,10 +73,16 @@ namespace ql {
 		uptr<list_dialog> _item_dialog;
 		bool _show_inv = false;
 
+		enum class state { player_input, game_loop, ending };
+		std::atomic<state> _state;
+		std::thread _game_logic_thread;
+
 		auto draw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
 
 		auto get_item_options(id item_id) -> std::vector<std::tuple<sf::String, std::function<void()>>>;
 
-		void pass();
+		auto pass() -> void;
+
+		auto make_game_logic_thread() -> std::thread;
 	};
 }

@@ -56,7 +56,7 @@ namespace ql {
 		auto render_effect(effects::effect const& effect) -> void;
 
 	private:
-		rsrc::world_widget const& _rsrc;
+		rsrc::world_widget _rsrc;
 		sf::Sound _arrow_sound;
 		sf::Sound _hit_sound;
 		sf::Sound _pierce_sound;

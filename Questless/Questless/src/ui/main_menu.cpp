@@ -22,8 +22,6 @@ namespace ql {
 		auto player_id = create_and_spawn_player(region_id);
 		// Create HUD.
 		_hud = umake<ql::hud>(fonts, region_id, player_id);
-		// Set the player's HUD pointer.
-		std::get<player>(reg.get<agent>(player_id).value).set_hud(*_hud.get());
 	}
 
 	main_menu::~main_menu() = default;

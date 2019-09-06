@@ -16,7 +16,8 @@ namespace ql {
 
 		//! Sets the origin as a multiple of the texture size. E.g., (0, 1) is bottom-center.
 		//! @param relative_origin The origin as a multiple of the texture size.
-		void set_relative_origin(sf::Vector2f relative_origin);
+		//! @param round If true, the origin coordinates will be rounded to whole numbers.
+		void set_relative_origin(sf::Vector2f relative_origin, bool round = false);
 
 		//! Sets the color of this still's sprite to @p color.
 		void set_color(sf::Color color);

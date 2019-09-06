@@ -23,14 +23,21 @@
 
 namespace ql {
 	auto create_and_spawn_player(id region_id) -> id {
+		// Get a valid spawn location from the region.
 		location const location = reg.get<region>(region_id).get_spawn_location();
+
+		// Create player being.
 		id const player_id = reg.create();
 		make_human(player_id, location, {player{}});
+
+		// Add to region.
+		bool const success = reg.get<region>(region_id).try_add(player_id, location.coords);
+		assert(success);
 
 		// Fill inventory with starting items.
 		auto& player_inv = reg.get<inventory>(player_id);
 
-		// Gives the player some magic scrolls.
+		// Give the player some magic scrolls.
 		player_inv.add(make_scroll(reg.create(), {{magic::shock{}}}));
 		player_inv.add(make_scroll(reg.create(), {{magic::heal{}}}));
 		player_inv.add(make_scroll(reg.create(), {{magic::teleport{}}}));

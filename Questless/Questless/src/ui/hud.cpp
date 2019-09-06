@@ -7,6 +7,7 @@
 #include "dialog/list_dialog.hpp"
 
 #include "agents/actions.hpp"
+#include "agents/agent.hpp"
 #include "entities/beings/body.hpp"
 #include "items/equipment.hpp"
 #include "items/weapons/bow.hpp"
@@ -33,8 +34,13 @@ namespace ql {
 		, _player_id{player_id}
 		, _world_widget{rsrc::world_widget{_rsrc.entity, _rsrc.fonts, _rsrc.particle, _rsrc.tile}}
 		, _hotbar{_rsrc.item, _rsrc.spell}
-		, _inv{reg.get<inventory>(player_id), _hotbar} //
+		, _inv{reg.get<inventory>(player_id), _hotbar}
+		, _state{state::player_input}
+		, _game_logic_thread{make_game_logic_thread()} //
 	{
+		// Set the player's HUD pointer.
+		std::get<player>(reg.get<agent>(_player_id).value).set_hud(*this);
+
 		// When a hotbar item is selected, open a list dialog to choose an action.
 		_hotbar.set_on_click([this](std::optional<id> o_item_id, view::point mouse_position) {
 			if (o_item_id) {
@@ -43,6 +49,7 @@ namespace ql {
 				_item_dialog->set_position(mouse_position);
 			}
 		});
+
 		// Initialize hotbar with as many items as possible.
 		auto& inv = reg.get<inventory>(_player_id);
 		size_t i = 0;
@@ -50,8 +57,23 @@ namespace ql {
 			_hotbar.set_item(i, *it);
 			++i;
 		}
+
 		// Render the initial world view.
 		_world_widget.render_view(world_view{player_id});
+
+		// Begin game loop.
+		_state.store(state::game_loop);
+	}
+
+	hud::~hud() {
+		// Pass the turn so the game loop can finish its current iteration.
+		_pass_promise.set_value();
+
+		// Inform the game loop that the game is ending.
+		_state.store(state::ending);
+
+		// Await the game loop.
+		_game_logic_thread.join();
 	}
 
 	auto hud::set_player_id(id player_id) -> void {
@@ -63,6 +85,7 @@ namespace ql {
 	}
 
 	auto hud::pass_future() -> std::future<void> {
+		_state.store(state::player_input);
 		return _pass_promise.get_future();
 	}
 
@@ -81,6 +104,7 @@ namespace ql {
 
 			_hotbar.update(elapsed_time);
 		}
+		_world_widget.update(elapsed_time);
 	}
 
 	auto hud::set_position(view::point position) -> void {
@@ -123,25 +147,32 @@ namespace ql {
 				[[fallthrough]];
 			case sf::Keyboard::Return:
 				pass();
+				_world_widget.render_view(world_view{_player_id});
 				return event_handled::yes;
 			// Movement commands.
-			case sf::Keyboard::E:
-				move(_player_id, tile_hex::direction::zero, event.shift);
+			case sf::Keyboard::Q:
+				move(_player_id, tile_hex::direction::ul, event.shift);
+				_world_widget.render_view(world_view{_player_id});
 				break;
 			case sf::Keyboard::W:
-				move(_player_id, tile_hex::direction::one, event.shift);
+				move(_player_id, tile_hex::direction::u, event.shift);
+				_world_widget.render_view(world_view{_player_id});
 				break;
-			case sf::Keyboard::Q:
-				move(_player_id, tile_hex::direction::two, event.shift);
+			case sf::Keyboard::E:
+				move(_player_id, tile_hex::direction::ur, event.shift);
+				_world_widget.render_view(world_view{_player_id});
 				break;
 			case sf::Keyboard::A:
-				move(_player_id, tile_hex::direction::three, event.shift);
+				move(_player_id, tile_hex::direction::dl, event.shift);
+				_world_widget.render_view(world_view{_player_id});
 				break;
 			case sf::Keyboard::S:
-				move(_player_id, tile_hex::direction::four, event.shift);
+				move(_player_id, tile_hex::direction::d, event.shift);
+				_world_widget.render_view(world_view{_player_id});
 				break;
 			case sf::Keyboard::D:
-				move(_player_id, tile_hex::direction::five, event.shift);
+				move(_player_id, tile_hex::direction::dr, event.shift);
+				_world_widget.render_view(world_view{_player_id});
 				break;
 			default:
 				return event_handled::no;
@@ -149,15 +180,28 @@ namespace ql {
 		return event_handled::yes;
 	}
 
+	auto hud::on_mouse_press(sf::Event::MouseButtonEvent const& event) -> event_handled {
+		auto result = _hotbar.on_mouse_press(event);
+		if (result == event_handled::no) { result = _inv.on_mouse_press(event); }
+		if (result == event_handled::no) { result = _world_widget.on_mouse_press(event); }
+		return result;
+	}
+
+	auto hud::on_mouse_release(sf::Event::MouseButtonEvent const& event) -> event_handled {
+		auto result = _hotbar.on_mouse_release(event);
+		if (result == event_handled::no) { result = _inv.on_mouse_release(event); }
+		if (result == event_handled::no) { result = _world_widget.on_mouse_release(event); }
+		return result;
+	}
+
 	auto hud::on_mouse_move(view::point mouse_position) -> void {
 		_hotbar.on_mouse_move(mouse_position);
 		_inv.on_mouse_move(mouse_position);
+		_world_widget.on_mouse_move(mouse_position);
 	}
 
 	auto hud::draw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
-		constexpr int conditions_count = 2;
-		constexpr int condition_bar_width = 10;
-		constexpr int condition_bar_height = 100;
+		target.draw(_world_widget, states);
 
 		//! @todo Condition bars.
 		// Blood
@@ -237,5 +281,35 @@ namespace ql {
 		_pass_promise.set_value();
 		// Reassign the pass promise in preparation for next turn.
 		_pass_promise = std::promise<void>{};
+		// Resume the game loop.
+		_state.store(state::game_loop);
+	}
+
+	auto hud::make_game_logic_thread() -> std::thread {
+		return std::thread{[this] {
+			for (;;) {
+				switch (_state.load()) {
+					case state::player_input:
+						// Awaiting player input.
+						break;
+					case state::game_loop: {
+						constexpr auto elapsed_ticks = 1_tick;
+
+						// Update the region.
+						reg.get<region>(_region_id).update(elapsed_ticks);
+
+						// For each being, update its body and allow it to act.
+						reg.view<body, agent>().each([this, elapsed_ticks](body& body, agent& agent) {
+							body.update(elapsed_ticks);
+							agent.act().get();
+						});
+
+						break;
+					}
+					case state::ending:
+						return;
+				}
+			}
+		}};
 	}
 }

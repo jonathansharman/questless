@@ -27,17 +27,17 @@ namespace ql {
 	bool inside_field_of_vision(location const& location, tile_hex::direction direction, tile_hex::point target) {
 		auto offset = target - location.coords;
 		switch (direction) {
-			case tile_hex::direction::zero:
+			case tile_hex::direction::dr:
 				return offset.q >= 0_span && offset.q + offset.r >= 0_span;
-			case tile_hex::direction::one:
+			case tile_hex::direction::d:
 				return offset.r >= 0_span && offset.q + offset.r >= 0_span;
-			case tile_hex::direction::two:
+			case tile_hex::direction::dl:
 				return offset.q <= 0_span && offset.r >= 0_span;
-			case tile_hex::direction::three:
+			case tile_hex::direction::ul:
 				return offset.q <= 0_span && offset.q + offset.r <= 0_span;
-			case tile_hex::direction::four:
+			case tile_hex::direction::u:
 				return offset.r <= 0_span && offset.q + offset.r <= 0_span;
-			case tile_hex::direction::five:
+			case tile_hex::direction::ur:
 				return offset.q >= 0_span && offset.r <= 0_span;
 			default:
 				UNREACHABLE;

@@ -27,7 +27,7 @@ namespace ql {
 
 		static_assert(std::is_integral_v<length_t::rep>, "The length quantity of a hex space must be integral.");
 
-		enum class direction : int { zero = 0, one, two, three, four, five };
+		enum class direction : int { dr = 0, d, dl, ul, u, ur };
 
 		//! The shortest distance between the two given directions.
 		static int distance(direction d1, direction d2) {
@@ -49,17 +49,17 @@ namespace ql {
 				switch (direction) {
 					default:
 						[[fallthrough]]; // Impossible case.
-					case direction::one:
+					case direction::dr:
 						return vector{1, 0};
-					case direction::two:
+					case direction::d:
 						return vector{0, 1};
-					case direction::three:
+					case direction::dl:
 						return vector{-1, 1};
-					case direction::four:
+					case direction::ul:
 						return vector{-1, 0};
-					case direction::five:
+					case direction::u:
 						return vector{0, -1};
-					case direction::six:
+					case direction::ur:
 						return vector{1, -1};
 				};
 			}
@@ -133,27 +133,27 @@ namespace ql {
 					case -1:
 						switch (u.r.value) {
 							case 0:
-								return direction::three;
+								return direction::ul;
 							case 1:
-								return direction::two;
+								return direction::dl;
 							default:
 								break;
 						}
 					case 0:
 						switch (u.r.value) {
 							case -1:
-								return direction::four;
+								return direction::u;
 							case 1:
-								return direction::one;
+								return direction::d;
 							default:
 								break;
 						}
 					case 1:
 						switch (u.r.value) {
 							case -1:
-								return direction::five;
+								return direction::ur;
 							case 0:
-								return direction::zero;
+								return direction::dr;
 							default:
 								break;
 						}
@@ -239,17 +239,17 @@ namespace ql {
 			//! Neighboring point in the given direction.
 			constexpr point neighbor(direction direction) const {
 				switch (direction) {
-					case direction::zero:
+					case direction::dr:
 						return point{q + length_t{1}, r + length_t{0}};
-					case direction::one:
+					case direction::d:
 						return point{q + length_t{0}, r + length_t{1}};
-					case direction::two:
+					case direction::dl:
 						return point{q - length_t{1}, r + length_t{1}};
-					case direction::three:
+					case direction::ul:
 						return point{q - length_t{1}, r + length_t{0}};
-					case direction::four:
+					case direction::u:
 						return point{q + length_t{0}, r - length_t{1}};
-					case direction::five:
+					case direction::ur:
 						return point{q + length_t{1}, r - length_t{1}};
 					default:
 						UNREACHABLE;
@@ -311,28 +311,28 @@ namespace ql {
 			: orientation{orientation}, size{std::move(size)}, origin{std::move(origin)} {}
 
 		template <typename HexCoordsType>
-		constexpr view::point to_view_space(HexCoordsType h) const {
+		constexpr auto to_view_space(HexCoordsType h) const {
 			//! @todo This function should just work for tile_hex::point.
-			auto const x = ((orientation.f0 * h.q + orientation.f1 * h.r) * x(size) + x(origin));
-			auto const y = ((orientation.f2 * h.q + orientation.f3 * h.r) * y(size) + y(origin));
-			return to_view_space::point{x, y};
+			auto const x = (orientation.f0 * h.q.value + orientation.f1 * h.r.value) * size[0] + origin[0];
+			auto const y = (orientation.f2 * h.q.value + orientation.f3 * h.r.value) * size[1] + origin[1];
+			return view::point{x, y};
 		}
 
 		template <typename HexCoordsType>
-		constexpr HexCoordsType to_hex_coords(view::point p) const {
+		constexpr auto to_hex_coords(view::point p) const {
 			//! @todo This function should just work for tile_hex::point.
 			auto const x = orientation.b0 * (p[0] - origin[0]) / size[0] + orientation.b1 * (p[1] - origin[1]) / size[1];
 			auto const y = orientation.b2 * (p[0] - origin[0]) / size[0] + orientation.b3 * (p[1] - origin[1]) / size[1];
 			return HexCoordsType{x, y};
 		}
 
-		view::point hex_corner_offset(int corner) {
+		auto hex_corner_offset(int corner) {
 			vecx::radians angle = vecx::circle_rad * (corner + orientation.start_angle) / 6.0;
 			return view::point{size[0] * static_cast<float>(cos(angle.value)), size[1] * static_cast<float>(sin(angle.value))};
 		}
 
 		template <typename HexCoordsType>
-		std::vector<view::point> corner_points(HexCoordsType h) {
+		auto corner_points(HexCoordsType h) {
 			//! @todo This function should just work for tile_hex::point.
 			std::vector<view::point> corners;
 			view::point const center = to_view_space_f(h);

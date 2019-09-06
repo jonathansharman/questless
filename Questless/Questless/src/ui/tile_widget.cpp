@@ -14,32 +14,37 @@ namespace ql {
 		: _rsrc{resources}
 		, _tv{tile_view} //
 	{
-		auto const terrain = reg.get<ql::terrain>(_tv.id);
-		switch (terrain) {
-			case terrain::dirt:
-				_ani = umake<still_image>(_rsrc.txtr.dirt);
-				break;
-			case terrain::edge:
-				_ani = nullptr;
-				break;
-			case terrain::grass:
-				_ani = umake<still_image>(_rsrc.txtr.grass);
-				break;
-			case terrain::sand:
-				_ani = umake<still_image>(_rsrc.txtr.sand);
-				break;
-			case terrain::snow:
-				_ani = umake<still_image>(_rsrc.txtr.snow);
-				break;
-			case terrain::stone:
-				_ani = umake<still_image>(_rsrc.txtr.stone);
-				break;
-			case terrain::water:
-				_ani = umake<still_image>(_rsrc.txtr.water);
-				break;
-			default:
-				UNREACHABLE;
-		}
+		_ani = [&] {
+			auto const terrain = reg.get<ql::terrain>(_tv.id);
+			uptr<still_image> image;
+			switch (terrain) {
+				case terrain::dirt:
+					image = umake<still_image>(_rsrc.txtr.dirt);
+					break;
+				case terrain::edge:
+					image = nullptr;
+					return image;
+				case terrain::grass:
+					image = umake<still_image>(_rsrc.txtr.grass);
+					break;
+				case terrain::sand:
+					image = umake<still_image>(_rsrc.txtr.sand);
+					break;
+				case terrain::snow:
+					image = umake<still_image>(_rsrc.txtr.snow);
+					break;
+				case terrain::stone:
+					image = umake<still_image>(_rsrc.txtr.stone);
+					break;
+				case terrain::water:
+					image = umake<still_image>(_rsrc.txtr.water);
+					break;
+				default:
+					UNREACHABLE;
+			}
+			image->set_relative_origin({0.5f, 0.5f}, true);
+			return image;
+		}();
 	}
 
 	auto tile_widget::get_size() const -> view::vector {

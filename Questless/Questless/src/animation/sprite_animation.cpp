@@ -46,7 +46,7 @@ namespace ql {
 					++_loops;
 				} else {
 					stop();
-					return;
+					break;
 				}
 			} else if (_frame_index >= static_cast<int>(_frames.size())) {
 				if (loop == loop_type::looping) {
@@ -54,7 +54,7 @@ namespace ql {
 					++_loops;
 				} else {
 					stop();
-					return;
+					break;
 				}
 			}
 		}
@@ -68,6 +68,7 @@ namespace ql {
 		sprite_animation::frame const& frame = _frames[_frame_index];
 		sf::Sprite sprite{_sprite_sheet.texture, _sprite_sheet.get_cel_rect(frame.cel_coords)};
 		sprite.setColor(color);
+		sprite.setOrigin(getOrigin());
 		target.draw(sprite, states);
 	}
 }

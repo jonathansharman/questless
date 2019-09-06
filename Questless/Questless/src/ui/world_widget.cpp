@@ -263,6 +263,9 @@ namespace ql {
 	}
 
 	auto world_widget::draw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
+		// Adjust states transform to account for position.
+		states.transform.translate(view::to_sfml(_position));
+
 		// Draw tiles.
 		for (auto const& id_and_widget : _tile_widgets) {
 			target.draw(id_and_widget.second, states);
@@ -274,6 +277,19 @@ namespace ql {
 		// Draw effects.
 		for (auto const& animation : _effect_animations) {
 			target.draw(*animation, states);
+		}
+		{ // Draw axes.
+			tile_hex::point origin{0_span, 0_span};
+			sf::VertexArray q_array(sf::Lines);
+			q_array.append(sf::Vertex(view::to_sfml(world_layout.to_view_space(origin)), sf::Color::Red));
+			q_array.append(sf::Vertex(
+				view::to_sfml(world_layout.to_view_space(origin + tile_hex::vector{3_span, 0_span})), sf::Color::Red));
+			target.draw(q_array, states);
+			sf::VertexArray r_array(sf::Lines);
+			r_array.append(sf::Vertex(view::to_sfml(world_layout.to_view_space(origin)), sf::Color::Green));
+			r_array.append(sf::Vertex(
+				view::to_sfml(world_layout.to_view_space(origin + tile_hex::vector{0_span, 3_span})), sf::Color::Green));
+			target.draw(r_array, states);
 		}
 	}
 }

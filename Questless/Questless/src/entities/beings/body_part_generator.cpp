@@ -138,8 +138,8 @@ namespace ql::generators {
 				100_perception, // acuity
 				80_lum, // min_illuminance
 				120_lum, // max_illuminance
-				20_perception / 1_lum, // darkness_penalty
-				10_perception / 1_lum // glare_penalty
+				2_perception / 1_lum, // darkness_penalty
+				1_perception / 1_lum // glare_penalty
 			}}};
 
 			part.stats.regen_factor = 5;

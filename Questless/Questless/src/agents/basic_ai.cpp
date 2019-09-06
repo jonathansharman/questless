@@ -27,10 +27,9 @@ namespace ql {
 				return make_ready_future();
 			},
 			[this](walk_state) {
-				auto const& cond = reg.get<body_cond const>(_id);
 				// Randomly either move in current direction or turn towards a random direction.
 				if (random_bool()) {
-					walk(_id, cond.direction);
+					walk(_id, reg.get<body_cond>(_id).direction);
 				} else {
 					turn(_id, random_direction());
 				}

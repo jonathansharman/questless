@@ -93,11 +93,8 @@ namespace ql {
 	auto region::get_spawn_location() -> location {
 		//! @todo More advanced spawning.
 
-		// Spawn somewhere in the middle section.
-
-		span q{uniform(-section_radius, section_radius)};
-		span r{uniform(-section_radius, section_radius)};
-		tile_hex::point player_coords{q, r};
+		// Spawn at the origin.
+		tile_hex::point player_coords{0_span, 0_span};
 
 		// Destroy and remove the entity currently there, if any.
 		if (auto const o_entity_id = entity_id_at(player_coords)) {
@@ -112,9 +109,7 @@ namespace ql {
 
 	auto region::try_add(ql::id entity_id, tile_hex::point tile_coords) -> bool {
 		if (auto section = containing_section(tile_coords)) {
-			auto& location = reg.get<ql::location>(entity_id);
-			location.region_id = id;
-			location.coords = tile_coords;
+			reg.get<location>(entity_id) = {id, tile_coords};
 
 			return section->try_add(entity_id);
 		} else {
