@@ -29,7 +29,7 @@ namespace ql {
 		scale += scale_velocity * elapsed_time;
 
 		// Update alpha, if fading out is enabled.
-		if (fade_out()) { color_factor.a = static_cast<sf::Uint8>(255 * (time_left / lifetime).value); }
+		if (fade_out()) { color_factor.a = to_uint8(ratio<float>(time_left, lifetime)); }
 
 		// Subupdate.
 		particle_subupdate(elapsed_time);
@@ -37,7 +37,7 @@ namespace ql {
 
 	void particle::animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const {
 		// Combine animation/other transforms with particle transforms.
-		states.transform.scale({static_cast<float>(scale.value), static_cast<float>(scale.value)});
+		states.transform.scale({scale.value, scale.value});
 		states.transform.rotate(static_cast<float>((angle * vecx::deg_per_rad).value));
 		states.transform.translate(to_sfml(displacement));
 

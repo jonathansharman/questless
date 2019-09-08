@@ -11,6 +11,7 @@ namespace ql {
 	id make_campfire(id id, location location) {
 		make_entity(id, location);
 		reg.assign<light_source>(id, id, 100_lum);
+		reg.assign<campfire>(id);
 		return id;
 	}
 }

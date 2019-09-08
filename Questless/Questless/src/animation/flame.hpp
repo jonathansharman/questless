@@ -19,7 +19,7 @@ namespace ql {
 		using flames = cancel::quantity<double, cancel::unit_t<struct flame_particle_tag>>;
 
 		//! The number of flames to create per second. Can be less than one.
-		decltype(flames{} / sec{}) flame_rate = flames{2} / 1.0_s;
+		cancel::quotient_t<flames, sec> flame_rate = flames{50} / 1.0_s;
 
 	private:
 		rsrc::particle const& _rsrc;

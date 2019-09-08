@@ -54,8 +54,8 @@ namespace ql {
 		return result;
 	}
 
-	//! Computes the ratio of quantities @p q1 and @p q2 after casting them to @p RatioType.
-	//! Useful
+	//! Computes the ratio of quantities @p q1 and @p q2 after casting their representations to @p RatioType.
+	//! Useful when the ratio between two quantities needs to use a wider type than @p Rep.
 	template <typename RatioType, typename Rep, typename Unit>
 	auto ratio(cancel::quantity<Rep, Unit> const& q1, cancel::quantity<Rep, Unit> const& q2) {
 		return static_cast<RatioType>(q1.value) / static_cast<RatioType>(q2.value);

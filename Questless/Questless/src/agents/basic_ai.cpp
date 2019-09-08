@@ -29,7 +29,7 @@ namespace ql {
 			[this](walk_state) {
 				// Randomly either move in current direction or turn towards a random direction.
 				if (random_bool()) {
-					walk(_id, reg.get<body_cond>(_id).direction);
+					walk(_id, reg.get<body>(_id).cond.direction);
 				} else {
 					turn(_id, random_direction());
 				}

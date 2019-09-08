@@ -26,46 +26,47 @@ namespace ql {
 		, _particle_resources{particle_resources}
 		, _ev{entity_view} //
 	{
-		if (_ev.perception >= 25_perception) {
-			if (reg.has<campfire>(_ev.id)) {
-				auto firewood = umake<still_image>(_entity_resources.txtr.firewood);
-				firewood->set_relative_origin({0.5f, 0.5f});
-				auto scene_node = umake<ql::scene_node>(std::move(firewood));
+		_ani = [this]() -> uptr<animation> {
+			if (_ev.perception >= 25_perception) {
+				if (reg.has<campfire>(_ev.id)) {
+					auto firewood = umake<still_image>(_entity_resources.txtr.firewood);
+					firewood->set_relative_origin({0.5f, 0.5f}, true);
+					auto scene_node = umake<ql::scene_node>(std::move(firewood));
 
-				auto flame = umake<ql::flame>(_particle_resources);
-				// Pre-update the flame so it's steady immediately.
-				flame->update(2.0_s);
+					auto flame = umake<ql::flame>(_particle_resources);
+					// Pre-update the flame so it's steady immediately.
+					flame->update(2.0_s);
 
-				scene_node->front_children.push_back(umake<ql::scene_node>(std::move(flame)));
-				_ani = std::move(scene_node);
-			} else if (auto body = reg.try_get<ql::body>(_ev.id)) {
-				// Sprite animation
-				auto scene_node = umake<ql::scene_node>(umake<sprite_animation>( //
-					ql::sprite_sheet{_entity_resources.ss.human, {3, 1}},
-					std::vector<sprite_animation::frame>{//
-						{0.2_s, {0, 0}, {0, 12}},
-						{0.2_s, {1, 0}, {0, 12}},
-						{0.2_s, {2, 0}, {0, 12}},
-						{0.2_s, {1, 0}, {0, 12}}},
-					sprite_animation::loop_type::looping,
-					sprite_animation::start_time::random));
+					scene_node->front_children.push_back(umake<ql::scene_node>(std::move(flame)));
+					return scene_node;
+				} else if (auto body = reg.try_get<ql::body>(_ev.id)) {
+					// Sprite animation
+					auto scene_node = umake<ql::scene_node>(umake<sprite_animation>( //
+						ql::sprite_sheet{_entity_resources.ss.human, {3, 1}},
+						std::vector<sprite_animation::frame>{//
+							{0.2_s, {0, 0}, {0, 12}},
+							{0.2_s, {1, 0}, {0, 12}},
+							{0.2_s, {2, 0}, {0, 12}},
+							{0.2_s, {1, 0}, {0, 12}}},
+						sprite_animation::loop_type::looping,
+						sprite_animation::start_time::random));
 
-				// Bleeding animation
-				auto total_bleeding = 0.0_blood_per_tick;
-				body->for_all_parts([&](body_part const& part) { total_bleeding += part.stats.bleeding.cur; });
-				if (total_bleeding > 0.0_blood_per_tick) {
-					// Severity of bleeding is the rate of blood loss over the being's base vitality.
-					auto const severity = total_bleeding / body->stats.a.vitality.base;
-					// Converts the severity of bleeding to drops of animated blood per second.
-					constexpr auto conversion_factor = ql::bleeding::drops{5.0} / 1.0_s / (1.0_blood_per_tick / 1_hp);
-					auto bleeding = umake<ql::bleeding>(_particle_resources, severity * conversion_factor);
-					scene_node->front_children.push_back(std::move(bleeding));
+					// Bleeding animation
+					auto total_bleeding = 0.0_blood_per_tick;
+					body->for_all_parts([&](body_part const& part) { total_bleeding += part.stats.bleeding.cur; });
+					if (total_bleeding > 0.0_blood_per_tick) {
+						// Severity of bleeding is the rate of blood loss over the being's base vitality.
+						auto const severity = total_bleeding / body->stats.a.vitality.base;
+						// Converts the severity of bleeding to drops of animated blood per second.
+						constexpr auto conversion_factor = ql::bleeding::drops{5.0} / 1.0_s / (1.0_blood_per_tick / 1_hp);
+						auto bleeding = umake<ql::bleeding>(_particle_resources, severity * conversion_factor);
+						scene_node->front_children.push_back(std::move(bleeding));
+					}
+					return scene_node;
 				}
-				_ani = std::move(scene_node);
 			}
-		} else {
-			_ani = umake<still_image>(_entity_resources.txtr.unknown);
-		}
+			return umake<still_image>(_entity_resources.txtr.unknown);
+		}();
 	}
 
 	auto entity_widget::get_size() const -> view::vector {

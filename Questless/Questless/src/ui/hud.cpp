@@ -59,7 +59,7 @@ namespace ql {
 		}
 
 		// Render the initial world view.
-		_world_widget.render_view(world_view{player_id});
+		_world_widget.render_view(world_view{_player_id});
 
 		// Begin game loop.
 		_state.store(state::game_loop);
@@ -85,6 +85,7 @@ namespace ql {
 	}
 
 	auto hud::pass_future() -> std::future<void> {
+		_world_widget.render_view(world_view{_player_id});
 		_state.store(state::player_input);
 		return _pass_promise.get_future();
 	}
@@ -147,7 +148,6 @@ namespace ql {
 				[[fallthrough]];
 			case sf::Keyboard::Return:
 				pass();
-				_world_widget.render_view(world_view{_player_id});
 				return event_handled::yes;
 			// Movement commands.
 			case sf::Keyboard::Q:
@@ -240,6 +240,8 @@ namespace ql {
 			}
 			std::string time_string = fmt::format("Time: {} ({}, {})", region.time(), time_of_day, time_name);
 			sf::Text time_text{time_string, _rsrc.fonts.firamono, 20};
+			time_text.setOutlineColor(sf::Color::Black);
+			time_text.setOutlineThickness(1.0f);
 			time_text.setFillColor(sf::Color::White);
 			time_text.setPosition({0, 50});
 			target.draw(time_text, states);

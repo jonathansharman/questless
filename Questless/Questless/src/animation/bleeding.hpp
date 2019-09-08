@@ -17,10 +17,10 @@ namespace ql {
 		using drops = cancel::quantity<double, cancel::unit_t<struct bleeding_drops_tag>>;
 
 		//! The number of drops of blood to create per second. Can be less than one.
-		decltype(drops{} / sec{}) drop_rate;
+		cancel::quotient_t<drops, sec> drop_rate;
 
 		//! @param drop_rate The number of drops of blood to create per second. Can be less than one.
-		bleeding(rsrc::particle const& resources, decltype(drops{} / sec{}) drop_rate)
+		bleeding(rsrc::particle const& resources, cancel::quotient_t<drops, sec> drop_rate)
 			: drop_rate{drop_rate}
 			, _rsrc{resources} //
 		{}

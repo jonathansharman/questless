@@ -23,7 +23,7 @@
 #include "world/region.hpp"
 #include "world/tile.hpp"
 
-#include <range/v3/algorithm/remove_if.hpp>
+#include <range/v3/action/remove_if.hpp>
 
 namespace ql {
 	using namespace vecx;
@@ -65,7 +65,7 @@ namespace ql {
 			ani->update(elapsed_time);
 		}
 		// Remove stopped animations.
-		ranges::remove_if(_effect_animations, [](auto& ani) { return ani->stopped(); });
+		ranges::actions::remove_if(_effect_animations, [](auto& ani) { return ani->stopped(); });
 
 		{ // Camera controls.
 			constexpr auto pan_rate = 10.0_px;

@@ -4,7 +4,7 @@
 
 #include "scene_node.hpp"
 
-#include <range/v3/algorithm/remove_if.hpp>
+#include <range/v3/action/remove_if.hpp>
 #include <range/v3/view/reverse.hpp>
 
 namespace ql {
@@ -12,10 +12,12 @@ namespace ql {
 
 	auto scene_node::animation_subupdate(sec elapsed_time) -> void {
 		// Update this node's animation.
-		node_animation->update(elapsed_time);
-		if (node_animation->stopped()) {
-			stop();
-			return;
+		if (node_animation) {
+			node_animation->update(elapsed_time);
+			if (node_animation->stopped()) {
+				stop();
+				return;
+			}
 		}
 
 		// Update child animations, factoring in this node's time scale.
@@ -24,7 +26,7 @@ namespace ql {
 				child->update(elapsed_time * node_animation->time_scale.value());
 			}
 			// Remove stopped children.
-			ranges::remove_if(children, [](auto& child) { return child->stopped(); });
+			ranges::actions::remove_if(children, [](auto& child) { return child->stopped(); });
 		};
 		update_children(back_children);
 		update_children(front_children);

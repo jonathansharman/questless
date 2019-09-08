@@ -143,6 +143,8 @@ namespace ql {
 
 	void game::draw_fps() {
 		sf::Text fps_text{fmt::format("{}", _avg_fps.get()), _fonts.firamono, 20};
+		fps_text.setOutlineColor(sf::Color::Black);
+		fps_text.setOutlineThickness(1.0f);
 		fps_text.setFillColor(sf::Color::White);
 		_window.draw(fps_text);
 	}

@@ -29,7 +29,7 @@ namespace ql {
 
 		vecx::radians angle = vecx::radians{0.0};
 
-		view::angular_vel angular_velocity = vecx::radians{0.0} / 0.0_s;
+		view::angular_vel angular_velocity = vecx::radians{0.0} / 1.0_s;
 
 		cancel::unitless<float> scale{1.0f};
 

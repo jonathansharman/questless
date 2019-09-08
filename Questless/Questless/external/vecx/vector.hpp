@@ -138,7 +138,7 @@ namespace vecx {
 
 		//! Rotates this vector by each of @p angles, in successive planes.
 		constexpr void rotate(std::array<radians, n - 1> const& angles) {
-			for (std::size_t i = 0; i < n; ++i) {
+			for (std::size_t i = 0; i < n - 1; ++i) {
 				rotate(angles[i], i, i + 1);
 			}
 		}

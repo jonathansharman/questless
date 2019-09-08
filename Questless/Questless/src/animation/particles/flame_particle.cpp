@@ -17,8 +17,8 @@ namespace ql {
 		: sprite_particle{uniform(1.0_s, 1.5_s), resources.glow_small} //
 	{
 		displacement = random_displacement(5.0_px);
-		acceleration = view::vector{0.0_px, 30.0_px} / 1.0_s / 1.0_s;
-		scale = {0.75};
+		acceleration = view::vector{0.0_px, -30.0_px} / 1.0_s / 1.0_s;
+		scale = {0.75f};
 		color_factor = sf::Color{255, 128, 0};
 	}
 
@@ -27,7 +27,7 @@ namespace ql {
 
 		velocity[0] -= velocity[0] * vx_pct_drag_rate * elapsed_time;
 
-		auto pct_left = static_cast<float>((time_left / lifetime).value);
+		auto pct_left = ratio<float>(time_left, lifetime);
 
 		// Add a random "flicker".
 		pct_left = std::clamp(pct_left + uniform(-0.3f, 0.3f), 0.0f, 1.0f);
