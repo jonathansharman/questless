@@ -28,14 +28,12 @@ namespace ql {
 	}
 
 	//! Generates a random value with a uniform distribution in [@p min, @p max].
-	template <typename Arithmetic>
-	typename Arithmetic uniform(Arithmetic min, Arithmetic max) {
-		if constexpr (std::is_integral_v<Arithmetic>) {
-			return std::uniform_int_distribution<Arithmetic>(min, max)(prng());
-		} else if constexpr (std::is_floating_point_v<Arithmetic>) {
-			return std::uniform_real_distribution<Arithmetic>(min, max)(prng());
-		} else {
-			static_assert(dependent_false_type<Arithmetic>::value, "Bounds type must be integral or floating-point.");
+	template <typename T>
+	typename T uniform(T min, T max) requires std::is_arithmetic_v<T> {
+		if constexpr (std::is_integral_v<T>) {
+			return std::uniform_int_distribution<T>(min, max)(prng());
+		} else if constexpr (std::is_floating_point_v<T>) {
+			return std::uniform_real_distribution<T>(min, max)(prng());
 		}
 	}
 

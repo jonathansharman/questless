@@ -44,10 +44,10 @@ namespace ql {
 					auto scene_node = umake<ql::scene_node>(umake<sprite_animation>( //
 						ql::sprite_sheet{_entity_resources.ss.human, {3, 1}},
 						std::vector<sprite_animation::frame>{//
-							{0.2_s, {0, 0}, {0, 12}},
-							{0.2_s, {1, 0}, {0, 12}},
-							{0.2_s, {2, 0}, {0, 12}},
-							{0.2_s, {1, 0}, {0, 12}}},
+							{0.4_s, {0, 0}, {14, 28}},
+							{0.4_s, {1, 0}, {14, 28}},
+							{0.4_s, {2, 0}, {14, 28}},
+							{0.4_s, {1, 0}, {14, 28}}},
 						sprite_animation::loop_type::looping,
 						sprite_animation::start_time::random));
 

@@ -26,7 +26,7 @@ namespace ql {
 			//! The cel coordinates within the sprite sheet.
 			sf::Vector2i cel_coords;
 
-			//! The origin of this frame relative to the center of its texture.
+			//! The origin of this frame relative to the top-left corner of its texture.
 			sf::Vector2i origin;
 		};
 

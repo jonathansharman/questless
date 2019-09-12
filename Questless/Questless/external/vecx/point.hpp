@@ -24,8 +24,8 @@ namespace vecx {
 		constexpr point(point const&) = default;
 		constexpr point(point&&) = default;
 
-		template <typename... Args, typename = std::enable_if_t<(std::is_convertible_v<Args, scalar_t> && ...)>>
-		constexpr point(Args&& ... args) : components{std::forward<Args>(args)...} {}
+		template <typename... Args>
+		constexpr point(Args&& ... args) requires (std::is_convertible_v<Args, scalar_t>&& ...) : components{std::forward<Args>(args)...} {}
 
 		constexpr point& operator =(point const&) = default;
 		constexpr point& operator =(point&&) = default;

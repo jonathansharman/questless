@@ -60,8 +60,7 @@ namespace ql {
 		}
 
 		// Update the origin based on the current frame.
-		sf::Vector2i const texture_center = sf::Vector2i{_sprite_sheet.texture.getSize()} / 2;
-		setOrigin(sf::Vector2f{texture_center + _frames[_frame_index].origin});
+		setOrigin(sf::Vector2f{_frames[_frame_index].origin});
 	}
 
 	void sprite_animation::animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const {

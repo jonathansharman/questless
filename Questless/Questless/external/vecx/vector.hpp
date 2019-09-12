@@ -32,8 +32,8 @@ namespace vecx {
 		constexpr vector(vector const&) = default;
 		constexpr vector(vector&&) = default;
 
-		template<typename... Args, typename = std::enable_if_t<(std::is_convertible_v<Args, scalar_t> && ...)>>
-		constexpr vector(Args&& ... args) : components{std::forward<Args>(args)...} {}
+		template<typename... Args>
+		constexpr vector(Args&& ... args) requires (std::is_convertible_v<Args, scalar_t>&& ...) : components{std::forward<Args>(args)...} {}
 
 		constexpr vector& operator =(vector const&) = default;
 		constexpr vector& operator =(vector&&) = default;
