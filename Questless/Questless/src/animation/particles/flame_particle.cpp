@@ -27,7 +27,7 @@ namespace ql {
 
 		velocity[0] -= velocity[0] * vx_pct_drag_rate * elapsed_time;
 
-		auto pct_left = ratio<float>(time_left, lifetime);
+		auto pct_left = cancel::ratio<float>(time_left, lifetime);
 
 		// Add a random "flicker".
 		pct_left = std::clamp(pct_left + uniform(-0.3f, 0.3f), 0.0f, 1.0f);

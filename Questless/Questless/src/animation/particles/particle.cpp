@@ -29,7 +29,7 @@ namespace ql {
 		scale += scale_velocity * elapsed_time;
 
 		// Update alpha, if fading out is enabled.
-		if (fade_out()) { color_factor.a = to_uint8(ratio<float>(time_left, lifetime)); }
+		if (fade_out()) { color_factor.a = to_uint8(cancel::ratio<float>(time_left, lifetime)); }
 
 		// Subupdate.
 		particle_subupdate(elapsed_time);

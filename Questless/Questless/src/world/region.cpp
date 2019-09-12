@@ -254,20 +254,20 @@ namespace ql {
 			case period_of_day::morning:
 				[[fallthrough]];
 			case period_of_day::afternoon: {
-				double const daylight_progress = sin(ratio<double>(_time, day_length) * vecx::constants::tau);
-				return dawn_and_dusk_light + scale(noon_light - dawn_and_dusk_light, daylight_progress);
+				auto const daylight_progress = sin(cancel::ratio<double>(_time, day_length) * vecx::constants::tau);
+				return dawn_and_dusk_light + cancel::scale(noon_light - dawn_and_dusk_light, daylight_progress);
 			}
 			case period_of_day::dusk: {
-				double const dusk_progress = ratio<double>(_time_of_day - end_of_afternoon, end_of_dusk - end_of_afternoon);
-				return scale(dawn_and_dusk_light, 1.0 - dusk_progress) + scale(night_light, dusk_progress);
+				auto const dusk_progress = cancel::ratio<double>(_time_of_day - end_of_afternoon, end_of_dusk - end_of_afternoon);
+				return cancel::scale(dawn_and_dusk_light, 1.0 - dusk_progress) + scale(night_light, dusk_progress);
 			}
 			case period_of_day::evening:
 				[[fallthrough]];
 			case period_of_day::night:
 				return night_light;
 			case period_of_day::dawn: {
-				double const dawn_progress = ratio<double>(_time_of_day - end_of_night, day_length - end_of_night);
-				return scale(dawn_and_dusk_light, dawn_progress) + scale(night_light, 1.0 - dawn_progress);
+				double const dawn_progress = cancel::ratio<double>(_time_of_day - end_of_night, day_length - end_of_night);
+				return cancel::scale(dawn_and_dusk_light, dawn_progress) + scale(night_light, 1.0 - dawn_progress);
 			}
 			default:
 				UNREACHABLE;
