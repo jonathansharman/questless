@@ -48,7 +48,7 @@ namespace ql::qte {
 		}
 	}
 
-	void shock::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	auto shock::draw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
 		// Draw point charges.
 		for (auto const& charge : _charges) {
 			sf::Sprite sprite{_particle_resources.glow_small};

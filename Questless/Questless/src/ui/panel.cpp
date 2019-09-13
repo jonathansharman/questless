@@ -9,17 +9,17 @@
 namespace ql {
 	panel::panel() {}
 
-	view::vector panel::get_size() const {
+	auto panel::get_size() const -> view::vector {
 		return _size;
 	}
 
-	void panel::update(sec elapsed_time) {
+	auto panel::update(sec elapsed_time) -> void {
 		for (auto child_and_offet : children) {
 			std::get<widget*>(child_and_offet)->update(elapsed_time);
 		}
 	}
 
-	void panel::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	auto panel::draw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
 		for (auto child_and_offet : children) {
 			target.draw(*std::get<widget*>(child_and_offet), states);
 		}

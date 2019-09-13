@@ -40,12 +40,12 @@ namespace vecx {
 			: position{position}, size{size}
 		{}
 
-		constexpr box& operator =(box const& other) {
+		constexpr auto operator =(box const& other) -> box& {
 			this->position = other.position;
 			this->size = other.size;
 			return *this;
 		}
-		constexpr box& operator =(box&& other) {
+		constexpr auto operator =(box&& other) -> box& {
 			this->position = std::move(other.position);
 			this->size = std::move(other.size);
 			return *this;
@@ -87,7 +87,7 @@ namespace vecx {
 
 		//! Whether this box contains @p point.
 		//! @note Lower bounds are inclusive, and upper bounds are exclusive.
-		constexpr bool contains(point<scalar_t, n> const& point) {
+		constexpr auto contains(point<scalar_t, n> const& point) -> bool {
 			for (int i = 0; i < n; ++i) {
 				if (point[i] < position[i] || point[i] >= position[i] + size[i]) {
 					return false;
@@ -97,7 +97,7 @@ namespace vecx {
 		}
 
 		//! Extends this box, if necessary, to include the given point.
-		void extend(point<scalar_t, n> const& point) {
+		auto extend(point<scalar_t, n> const& point) -> void {
 			for (int i = 0; i < n; ++i) {
 				if (point[i] < position[i]) {
 					size[i] += position[i] - point[i];

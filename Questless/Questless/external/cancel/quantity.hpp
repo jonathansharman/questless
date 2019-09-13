@@ -280,20 +280,20 @@ namespace cancel {
 	//! Computes the ratio of quantities @p q1 and @p q2 after casting their representations to @p RatioType.
 	//! Useful when the ratio between two quantities needs to use a wider type than @p Rep.
 	template <typename RatioType, typename Rep, typename Unit>
-	auto ratio(cancel::quantity<Rep, Unit> const& q1, cancel::quantity<Rep, Unit> const& q2) {
+	constexpr auto ratio(cancel::quantity<Rep, Unit> const& q1, cancel::quantity<Rep, Unit> const& q2) {
 		return static_cast<RatioType>(q1.value) / static_cast<RatioType>(q2.value);
 	}
 
 	//! Scales @p q by @p scale via static casting. Useful for scaling operations that require narrowing conversions.
 	template <typename ScaleType, typename Rep, typename Unit>
-	auto scale(cancel::quantity<Rep, Unit> const& q, ScaleType const& scale) {
+	constexpr auto scale(cancel::quantity<Rep, Unit> const& q, ScaleType const& scale) {
 		using common = std::common_type_t<ScaleType, Rep>;
 		return cancel::quantity<Rep, Unit>(static_cast<Rep>(static_cast<common>(q.value)* static_cast<common>(scale)));
 	}
 
 	//! Scales @p q by @p scale via static casting. Useful for scaling operations that require narrowing conversions.
 	template <typename ScaleType, typename Rep, typename Unit>
-	auto scale(ScaleType const& scale, cancel::quantity<Rep, Unit> const& q) {
+	constexpr auto scale(ScaleType const& scale, cancel::quantity<Rep, Unit> const& q) {
 		using common = std::common_type_t<ScaleType, Rep>;
 		return cancel::quantity<Rep, Unit>(static_cast<Rep>(static_cast<common>(scale)* static_cast<common>(q.value)));
 	}

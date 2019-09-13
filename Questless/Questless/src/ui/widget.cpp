@@ -33,7 +33,7 @@ namespace ql {
 		return event_handled::no;
 	}
 
-	void widget::on_mouse_move(view::point) {}
+	auto widget::on_mouse_move(view::point) -> void {}
 
 	auto widget::on_mouse_wheel_scroll(sf::Event::MouseWheelScrollEvent const&) -> event_handled {
 		return event_handled::no;

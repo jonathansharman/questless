@@ -11,7 +11,8 @@ using namespace ql::view::literals;
 
 namespace ql {
 	text_particle::text_particle(sec lifetime, sf::Font const& font, sf::String const& text, sf::Color color)
-		: particle{lifetime} {
+		: particle{lifetime} //
+	{
 		_text.setFont(font);
 		_text.setString(text);
 		_text.setFillColor(color);
@@ -23,7 +24,7 @@ namespace ql {
 		acceleration = view::vector{0.0_px, -400.0_px} / 1.0_s / 1.0_s;
 	}
 
-	void text_particle::particle_subdraw(sf::RenderTarget& target, sf::RenderStates states) const {
+	auto text_particle::particle_subdraw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
 		target.draw(_text, states);
 	}
 }

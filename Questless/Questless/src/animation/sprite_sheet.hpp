@@ -16,13 +16,14 @@ namespace ql {
 		sf::Vector2i cel_grid_dimensions;
 
 		//! The dimensions of a single cel.
-		sf::Vector2i cel_size() const {
-			return {static_cast<int>(texture.getSize().x) / cel_grid_dimensions.x,
-				static_cast<int>(texture.getSize().y) / cel_grid_dimensions.y};
+		auto cel_size() const {
+			auto const size = texture.getSize();
+			return sf::Vector2i{
+				static_cast<int>(size.x) / cel_grid_dimensions.x, static_cast<int>(size.y) / cel_grid_dimensions.y};
 		}
 
 		//! The rectangle of the sprite cel at the given @p cel_coords.
-		sf::IntRect get_cel_rect(sf::Vector2i cel_coords) const {
+		auto get_cel_rect(sf::Vector2i cel_coords) const {
 			auto const size = cel_size();
 			return sf::IntRect{size.x * cel_coords.x, size.y * cel_coords.y, size.x, size.y};
 		}

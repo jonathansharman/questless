@@ -5,13 +5,11 @@
 #include "animation.hpp"
 
 namespace ql {
-	void animation::update(sec elapsed_time) {
-		if (!_stopped && !_paused) {
-			animation_subupdate(elapsed_time * time_scale.value());
-		}
+	auto animation::update(sec elapsed_time) -> void {
+		if (!_stopped && !_paused) { animation_subupdate(elapsed_time * time_scale.value()); }
 	}
 
-	void animation::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	auto animation::draw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
 		states.transform *= getTransform();
 		animation_subdraw(target, states);
 	}

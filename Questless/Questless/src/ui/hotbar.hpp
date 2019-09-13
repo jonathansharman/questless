@@ -50,6 +50,6 @@ namespace ql {
 
 		auto draw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
 
-		void click(size_t idx);
+		auto click(size_t idx) -> void;
 	};
 }

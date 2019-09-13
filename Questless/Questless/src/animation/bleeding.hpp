@@ -31,6 +31,6 @@ namespace ql {
 		//! The current accumulation of drops of blood.
 		drops _drops{0.0};
 
-		void particle_animation_subupdate(sec elapsed_time) final;
+		auto particle_animation_subupdate(sec elapsed_time) -> void final;
 	};
 }

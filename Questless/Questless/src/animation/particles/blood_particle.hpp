@@ -16,14 +16,14 @@ namespace ql {
 		blood_particle(rsrc::particle const& resources);
 
 	private:
-		bool fade_out() const final {
+		auto fade_out() const -> bool final {
 			return false;
 		};
 
-		bool face_towards_heading() const final {
+		auto face_towards_heading() const -> bool final {
 			return true;
 		}
 
-		void sprite_particle_subupdate(sec) final {}
+		auto sprite_particle_subupdate(sec) -> void final {}
 	};
 }

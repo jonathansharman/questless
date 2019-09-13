@@ -5,7 +5,7 @@
 #include "still_shape.hpp"
 
 namespace ql {
-	void still_shape::animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const {
+	auto still_shape::animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
 		target.draw(*shape, states);
 	}
 }

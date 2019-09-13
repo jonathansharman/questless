@@ -21,5 +21,5 @@ namespace ql {
 		void loose();
 	};
 
-	id make_bow(id id);
+	id make_bow(id bow_id);
 }

@@ -34,5 +34,5 @@ namespace ql {
 	using body_part_status = std::variant<healing, poisoned>;
 
 	//! Retrieves the status category of @p status.
-	body_part_status_category get_category(body_part_status const& status);
+	auto get_category(body_part_status const& status) -> body_part_status_category;
 }

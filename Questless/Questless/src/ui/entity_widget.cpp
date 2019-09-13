@@ -31,14 +31,21 @@ namespace ql {
 				if (reg.has<campfire>(_ev.id)) {
 					auto firewood = umake<still_image>(_entity_resources.txtr.firewood);
 					firewood->set_relative_origin({0.5f, 0.5f}, true);
-					auto scene_node = umake<ql::scene_node>(std::move(firewood));
+
+					auto ani = umake<scene_node>(std::move(firewood));
 
 					auto flame = umake<ql::flame>(_particle_resources);
-					// Pre-update the flame so it's steady immediately.
-					flame->update(2.0_s);
+					{ // Pre-update the flame so it's steady immediately.
+						constexpr auto fast_forward = 2.0_s;
+						constexpr int step = 100;
+						for (int i = 0; i < step; ++i) {
+							flame->update(fast_forward / step);
+						}
+					}
 
-					scene_node->front_children.push_back(umake<ql::scene_node>(std::move(flame)));
-					return scene_node;
+					ani->front_children.push_back(std::move(flame));
+
+					return ani;
 				} else if (auto body = reg.try_get<ql::body>(_ev.id)) {
 					// Sprite animation
 					auto scene_node = umake<ql::scene_node>(umake<sprite_animation>( //
@@ -58,9 +65,9 @@ namespace ql {
 						// Severity of bleeding is the rate of blood loss over the being's base vitality.
 						auto const severity = total_bleeding / body->stats.a.vitality.base;
 						// Converts the severity of bleeding to drops of animated blood per second.
-						constexpr auto conversion_factor = ql::bleeding::drops{5.0} / 1.0_s / (1.0_blood_per_tick / 1_hp);
-						auto bleeding = umake<ql::bleeding>(_particle_resources, severity * conversion_factor);
-						scene_node->front_children.push_back(std::move(bleeding));
+						constexpr auto conversion_factor = bleeding::drops{5.0} / 1.0_s / (1.0_blood_per_tick / 1_hp);
+						scene_node->front_children.push_back(
+							umake<bleeding>(_particle_resources, severity * conversion_factor));
 					}
 					return scene_node;
 				}

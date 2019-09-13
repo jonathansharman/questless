@@ -9,13 +9,13 @@
 namespace vecx {
 	//! cereal-compatible save function for spheres.
 	template <typename Archive, typename Quantity, std::size_t N>
-	void save(Archive& archive, sphere<Quantity, N> const& box) {
+	auto save(Archive& archive, sphere<Quantity, N> const& box) -> void {
 		archive(sphere.center, sphere.radius);
 	}
 
 	//! cereal-compatible load function for spheres.
 	template <typename Archive, typename Quantity, std::size_t N>
-	void load(Archive& archive, sphere<Quantity, N>& box) {
+	auto load(Archive& archive, sphere<Quantity, N>& box) -> void {
 		archive(sphere.center, sphere.radius);
 	}
 }

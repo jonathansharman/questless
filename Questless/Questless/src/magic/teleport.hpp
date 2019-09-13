@@ -16,6 +16,6 @@ namespace ql::magic {
 		static constexpr magic::color color = magic::color::yellow;
 		static constexpr tick cooldown = 15_tick;
 
-		void cast(id caster_id, id gatestone_id, tile_hex::point target);
+		auto cast(id caster_id, id gatestone_id, tile_hex::point target) -> void;
 	};
 }

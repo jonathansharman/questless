@@ -19,7 +19,7 @@ namespace ql {
 		angular_velocity = uniform(-2.0, 2.0) * vecx::circle_rad / 1.0_s;
 	}
 
-	void white_magic_particle::sprite_particle_subupdate(sec elapsed_time) {
+	auto white_magic_particle::sprite_particle_subupdate(sec elapsed_time) -> void {
 		constexpr auto vx_pct_drag_rate = 1.8_hz;
 
 		velocity[0] -= velocity[0] * vx_pct_drag_rate * elapsed_time;

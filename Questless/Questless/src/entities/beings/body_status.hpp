@@ -76,5 +76,5 @@ namespace ql {
 	using body_status = std::variant<blind, confused, deaf, mute, nauseated, numb, telescoped>;
 
 	//! Retrieves the status category of @p status.
-	body_status_category get_category(body_status const& status);
+	auto get_category(body_status const& status) -> body_status_category;
 }

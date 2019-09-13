@@ -8,7 +8,7 @@
 #include <sstream>
 
 namespace ql {
-	std::string contents_of_file(char const* filepath) {
+	auto contents_of_file(char const* filepath) -> std::string {
 		std::ifstream fin(filepath);
 		std::stringstream ss;
 		ss << fin.rdbuf();

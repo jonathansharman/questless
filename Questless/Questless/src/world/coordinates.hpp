@@ -75,28 +75,28 @@ namespace ql {
 namespace std {
 	template <>
 	struct hash<ql::tile_hex::point> {
-		size_t operator()(ql::tile_hex::point const& p) const {
+		auto operator()(ql::tile_hex::point const& p) const {
 			return hash_value(p);
 		}
 	};
 
 	template <>
 	struct hash<ql::tile_hex::vector> {
-		size_t operator()(ql::tile_hex::vector const& v) const {
+		auto operator()(ql::tile_hex::vector const& v) const {
 			return hash_value(v);
 		}
 	};
 
 	template <>
 	struct hash<ql::section_hex::point> {
-		size_t operator()(ql::section_hex::point const& p) const {
+		auto operator()(ql::section_hex::point const& p) const {
 			return hash_value(p);
 		}
 	};
 
 	template <>
 	struct hash<ql::section_hex::vector> {
-		size_t operator()(ql::section_hex::vector const& v) const {
+		auto operator()(ql::section_hex::vector const& v) const {
 			return hash_value(v);
 		}
 	};

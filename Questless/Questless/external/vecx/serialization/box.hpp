@@ -9,13 +9,13 @@
 namespace vecx {
 	//! cereal-compatible save function for boxes.
 	template <typename Archive, typename Quantity, std::size_t N>
-	void save(Archive& archive, box<Quantity, N> const& box) {
+	auto save(Archive& archive, box<Quantity, N> const& box) -> void {
 		archive(box.position, box.size);
 	}
 
 	//! cereal-compatible load function for boxes.
 	template <typename Archive, typename Quantity, std::size_t N>
-	void load(Archive& archive, box<Quantity, N>& box) {
+	auto load(Archive& archive, box<Quantity, N>& box) -> void {
 		archive(box.position, box.size);
 	}
 }

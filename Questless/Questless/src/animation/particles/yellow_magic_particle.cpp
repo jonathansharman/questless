@@ -18,7 +18,7 @@ namespace ql {
 		velocity = make_polar_vector(100.0_px, random_radians()) / 1.0_s;
 	}
 
-	void yellow_magic_particle::sprite_particle_subupdate(sec elapsed_time) {
+	auto yellow_magic_particle::sprite_particle_subupdate(sec elapsed_time) -> void {
 		constexpr auto max_turn_rate = vecx::circle_rad / 0.1_s;
 		velocity.rotate(uniform(-max_turn_rate, max_turn_rate) * elapsed_time);
 	}

@@ -19,6 +19,6 @@ namespace ql {
 		//! True if the green magic particle is turning to the right (CW), false if turning left (CCW).
 		bool _turning_right;
 
-		void sprite_particle_subupdate(sec elapsed_time) final;
+		auto sprite_particle_subupdate(sec elapsed_time) -> void final;
 	};
 }

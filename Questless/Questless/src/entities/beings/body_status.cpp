@@ -9,7 +9,7 @@
 #include "utility/visitation.hpp"
 
 namespace ql {
-	body_status_category get_category(body_status const& status) {
+	auto get_category(body_status const& status) -> body_status_category {
 		return match(status, [](auto const& status) { return status.category; });
 	}
 }

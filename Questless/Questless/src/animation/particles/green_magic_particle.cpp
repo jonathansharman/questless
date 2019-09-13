@@ -15,7 +15,7 @@ namespace ql {
 
 	green_magic_particle::green_magic_particle(rsrc::particle const& resources)
 		: sprite_particle{uniform(1.8_s, 2.2_s), resources.green_magic}
-		, _turning_right{random_bool()} //
+		, _turning_right{coin_flip()} //
 	{
 		displacement = view::vector::zero();
 		velocity = random_displacement(20.0_px, 50.0_px) / 1.0_s;
@@ -24,7 +24,7 @@ namespace ql {
 		scale_velocity = -scale / lifetime;
 	}
 
-	void green_magic_particle::sprite_particle_subupdate(sec elapsed_time) {
+	auto green_magic_particle::sprite_particle_subupdate(sec elapsed_time) -> void {
 		constexpr double inflection_probability = 0.1;
 		if (bernoulli_trial(inflection_probability)) { _turning_right = !_turning_right; }
 

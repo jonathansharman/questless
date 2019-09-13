@@ -25,7 +25,7 @@ namespace vecx {
 		constexpr polygon(Args&& ... args) : vertices{std::forward<Args>(args)...} {}
 
 		template <typename ThatQuantity>
-		constexpr bool operator ==(polygon<ThatQuantity> const& that) const {
+		constexpr auto operator ==(polygon<ThatQuantity> const& that) const -> bool {
 			return vertices == that.vertices;
 		}
 

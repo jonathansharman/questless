@@ -48,30 +48,30 @@ namespace ql {
 		constexpr static_bounded(arithmetic_type const& value) noexcept
 			: _value{std::clamp(value, lower_bound, upper_bound)} {}
 
-		constexpr static_bounded& operator=(static_bounded const& bounded) noexcept {
+		constexpr auto& operator=(static_bounded const& bounded) noexcept {
 			set_value(bounded.value());
 			return *this;
 		}
-		constexpr static_bounded& operator=(static_bounded&& bounded) noexcept {
+		constexpr auto& operator=(static_bounded&& bounded) noexcept {
 			set_value(std::move(bounded.value()));
 			return *this;
 		}
-		constexpr static_bounded& operator=(arithmetic_type const& value) noexcept {
+		constexpr auto& operator=(arithmetic_type const& value) noexcept {
 			set_value(value);
 			return *this;
 		}
-		constexpr static_bounded& operator=(arithmetic_type&& value) noexcept {
+		constexpr auto& operator=(arithmetic_type&& value) noexcept {
 			set_value(std::move(value));
 			return *this;
 		}
 
 		//! The contained value.
-		constexpr arithmetic_type value() const noexcept {
+		constexpr auto value() const noexcept {
 			return _value;
 		}
 
 		//! Sets the contained value to the given new value, clamped to the valid range.
-		constexpr void set_value(arithmetic_type const& value) noexcept {
+		constexpr auto set_value(arithmetic_type const& value) noexcept -> void {
 			constexpr auto min = std::numeric_limits<arithmetic_type>::min();
 			constexpr auto max = std::numeric_limits<arithmetic_type>::max();
 			if constexpr (lower_bound == min && upper_bound == max) {

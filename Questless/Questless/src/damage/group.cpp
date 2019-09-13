@@ -8,7 +8,7 @@
 #include "utility/visitation.hpp"
 
 namespace ql::dmg {
-	group group::against(armor const& armor) const {
+	auto group::against(armor const& armor) const -> group {
 		group result = *this;
 
 		// Return the damage unmodified if the armor was bypassed.

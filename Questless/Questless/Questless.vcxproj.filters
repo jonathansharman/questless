@@ -659,9 +659,6 @@
     <ClCompile Include="src\ui\qte\shock.cpp">
       <Filter>src\ui\qte</Filter>
     </ClCompile>
-    <ClCompile Include="src\utility\utility.cpp">
-      <Filter>src\utility</Filter>
-    </ClCompile>
     <ClCompile Include="src\world\region.cpp">
       <Filter>src\world</Filter>
     </ClCompile>

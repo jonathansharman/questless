@@ -8,19 +8,19 @@
 #include "items/item.hpp"
 
 namespace ql {
-	id make_quiver(id id, inventory inventory) {
-		make_item(id, 0.5_mass);
+	auto make_quiver(id quiver_id, inventory inventory) -> id {
+		make_item(quiver_id, 0.5_mass);
 
 		//! @todo Equiping and unequiping a bow shouldn't take a long time (or actions). Stringing and unstringing a bow
 		//! should take a lot of time (or actions).
-		make_equipment(id,
+		make_equipment(quiver_id,
 			std::nullopt,
 			{equipment::tab{body_part::tag::torso, std::nullopt}},
 			1_ap, // Equip time
 			1_ap); // Unequip time
 
-		reg.assign<quiver>(id, id, std::move(inventory));
+		reg.assign<quiver>(quiver_id, quiver_id, std::move(inventory));
 
-		return id;
+		return quiver_id;
 	}
 }

@@ -41,9 +41,6 @@ namespace ql {
 	}
 
 	auto splash::update(sec elapsed_time) -> void {
-		static int n_updates = 0;
-		++n_updates;
-
 		// Play the splash sound effect on the first frame of the splash screen.
 		if (!_sound_played) {
 			_sound_played = true;
@@ -133,11 +130,11 @@ namespace ql {
 
 	auto splash::end_scene() -> void {
 		_flame_sound.stop();
-		auto main_menu = umake<ql::main_menu>(_root, _fonts);
+		auto menu = umake<main_menu>(_root, _fonts);
 		// Initialize size and position.
-		main_menu->on_parent_resize(_size);
-		main_menu->set_position(_position);
+		menu->on_parent_resize(_size);
+		menu->set_position(_position);
 		// Switch to main menu.
-		_root = std::move(main_menu);
+		_root = std::move(menu);
 	}
 }

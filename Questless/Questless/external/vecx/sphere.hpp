@@ -26,29 +26,29 @@ namespace vecx {
 		scalar_t radius;
 
 		template <typename ThatQuantity>
-		constexpr bool operator ==(sphere<ThatQuantity, n> const& that) const {
+		constexpr auto operator ==(sphere<ThatQuantity, n> const& that) const -> bool {
 			return center == that.center && radius == that.radius;
 		}
 
 		//! Whether this sphere contains @p point. Points on the border are included.
-		constexpr bool contains_inclusive(point<scalar_t, n> const& point) const {
+		constexpr auto contains_inclusive(point<scalar_t, n> const& point) const -> bool {
 			return (center - point).length_squared() <= radius * radius;
 		}
 
 		//! Whether this sphere contains @p point. Points on the border are excluded.
-		constexpr bool contains_exclusive(point<scalar_t, n> const& point) const {
+		constexpr auto contains_exclusive(point<scalar_t, n> const& point) const -> bool {
 			return (center - point).length_squared() < radius * radius;
 		}
 
 		//! Extends this sphere, if necessary, to contain @p point, exclusively.
-		constexpr void extend_exclusive(point<scalar_t, n> const& point) const {
+		constexpr auto extend_exclusive(point<scalar_t, n> const& point) const -> void {
 			if (!contains_exclusive(point)) {
 				radius = (center - point).length();
 			}
 		}
 
 		//! Extends this sphere, if necessary, to contain @p point, inclusively.
-		constexpr void extend_inclusive(point<scalar_t, n> const& point) const {
+		constexpr auto extend_inclusive(point<scalar_t, n> const& point) const -> void {
 			if (!contains_inclusive(point)) {
 				radius = (center - point).length();
 				if constexpr (std::is_integral_v<scalar_t>) {

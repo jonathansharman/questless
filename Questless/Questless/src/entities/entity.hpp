@@ -8,6 +8,6 @@
 #include "world/coordinates.hpp"
 
 namespace ql {
-	//! Makes @p id an entity: a being or object that can exist in the world.
-	id make_entity(id id, location location);
+	//! Makes @p entity_id an entity: a being or object that can exist in the world.
+	auto make_entity(id entity_id, location location) -> id;
 }

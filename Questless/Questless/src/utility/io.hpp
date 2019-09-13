@@ -9,5 +9,5 @@
 
 namespace ql {
 	//! The contents, as a string, of the file with filepath @p filepath.
-	std::string contents_of_file(char const* filepath);
+	auto contents_of_file(char const* filepath) -> std::string;
 }

@@ -42,6 +42,6 @@ namespace ql {
 
 		auto draw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
 
-		void assign_idx(size_t hotbar_idx);
+		auto assign_idx(size_t hotbar_idx) -> void;
 	};
 }

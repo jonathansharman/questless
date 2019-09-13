@@ -23,12 +23,12 @@ namespace ql {
 	namespace {
 		// Time Constants
 
-		static constexpr tick day_length = 12'000_tick;
-		static constexpr tick end_of_morning = 25 * day_length / 100;
-		static constexpr tick end_of_afternoon = 50 * day_length / 100;
-		static constexpr tick end_of_dusk = 55 * day_length / 100;
-		static constexpr tick end_of_evening = 67 * day_length / 100;
-		static constexpr tick end_of_night = 95 * day_length / 100;
+		constexpr tick day_length = 12'000_tick;
+		constexpr tick end_of_morning = 25 * day_length / 100;
+		constexpr tick end_of_afternoon = 50 * day_length / 100;
+		constexpr tick end_of_dusk = 55 * day_length / 100;
+		constexpr tick end_of_evening = 67 * day_length / 100;
+		constexpr tick end_of_night = 95 * day_length / 100;
 	}
 
 	region::region(ql::id id, std::string region_name)
@@ -275,8 +275,8 @@ namespace ql {
 	}
 
 	auto region::for_each_loaded_section(std::function<void(section&)> const& f) -> void {
-		static constexpr auto loaded_sections_q_radius = 1_section_span;
-		static constexpr auto loaded_sections_r_radius = 1_section_span;
+		constexpr auto loaded_sections_q_radius = 1_section_span;
+		constexpr auto loaded_sections_r_radius = 1_section_span;
 
 		for (section_span r = -loaded_sections_q_radius; r <= loaded_sections_q_radius; ++r) {
 			for (section_span q = -loaded_sections_r_radius; q <= loaded_sections_r_radius; ++q) {

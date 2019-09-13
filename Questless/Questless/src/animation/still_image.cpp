@@ -9,7 +9,7 @@
 namespace ql {
 	still_image::still_image(sf::Texture const& texture) : _sprite{texture} {}
 
-	void still_image::set_relative_origin(sf::Vector2f relative_origin, bool truncate) {
+	auto still_image::set_relative_origin(sf::Vector2f relative_origin, bool truncate) -> void {
 		auto const size = _sprite.getTexture()->getSize();
 		if (truncate) {
 			setOrigin(roundf(size.x * relative_origin.x), roundf(size.y * relative_origin.y));
@@ -18,11 +18,11 @@ namespace ql {
 		}
 	}
 
-	void still_image::animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const {
+	auto still_image::animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
 		target.draw(_sprite, states);
 	}
 
-	void still_image::set_color(sf::Color color) {
+	auto still_image::set_color(sf::Color color) -> void {
 		_sprite.setColor(color);
 	}
 }

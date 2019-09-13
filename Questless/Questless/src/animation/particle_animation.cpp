@@ -7,7 +7,7 @@
 #include <range/v3/action/remove_if.hpp>
 
 namespace ql {
-	void particle_animation::animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const {
+	auto particle_animation::animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
 		for (auto const& particle : particles) {
 			target.draw(*particle, states);
 		}
@@ -21,6 +21,7 @@ namespace ql {
 		// Remove stopped particles.
 		ranges::actions::remove_if(particles, [](auto const& particle) { return particle->stopped(); });
 
+		// Subupdate.
 		particle_animation_subupdate(elapsed_time);
 	}
 }

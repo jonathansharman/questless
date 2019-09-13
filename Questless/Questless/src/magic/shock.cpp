@@ -15,7 +15,7 @@
 #include "entities/beings/body_part.hpp"
 
 namespace ql::magic {
-	void shock::cast(id caster_id, id gatestone_id, tile_hex::point target, dmg::shock damage) {
+	auto shock::cast(id caster_id, id gatestone_id, tile_hex::point target, dmg::shock damage) -> void {
 		// Check range.
 		auto const caster_location = reg.get<location>(caster_id);
 		if ((caster_location.coords - target).length() > 3_span) { return; }

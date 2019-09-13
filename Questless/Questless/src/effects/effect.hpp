@@ -19,10 +19,10 @@ namespace ql::effects {
 		std::variant<arrow_attack, injury, lightning_bolt, telescope> value;
 
 		//! The coordinates from which @p effect originates.
-		tile_hex::point origin() const;
+		auto origin() const -> tile_hex::point;
 
 		//! The maximum distance from the origin at which @p effect may be perceived.
-		span range() const;
+		auto range() const -> span;
 	};
 
 	//! @todo Should effects have an origin? If so, find a good way to factor it out so it's not duplicated accross

@@ -9,9 +9,9 @@
 #include "items/item.hpp"
 
 namespace ql {
-	id make_scroll(id id, std::optional<magic::spell> spell) {
-		make_item(id, 0.01_mass);
-		reg.assign<scroll>(id, id, std::move(spell));
-		return id;
+	auto make_scroll(id scroll_id, std::optional<magic::spell> spell) -> id {
+		make_item(scroll_id, 0.01_mass);
+		reg.assign<scroll>(scroll_id, scroll_id, std::move(spell));
+		return scroll_id;
 	}
 }

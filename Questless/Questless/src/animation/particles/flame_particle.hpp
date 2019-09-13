@@ -16,6 +16,6 @@ namespace ql {
 		flame_particle(rsrc::particle const& resources);
 
 	private:
-		void sprite_particle_subupdate(sec elapsed_time) final;
+		auto sprite_particle_subupdate(sec elapsed_time) -> void final;
 	};
 }

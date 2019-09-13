@@ -30,7 +30,7 @@ namespace ql {
 		enum class direction : int { dr = 0, d, dl, ul, u, ur };
 
 		//! The shortest distance between the two given directions.
-		static int distance(direction d1, direction d2) {
+		static auto distance(direction d1, direction d2) -> int {
 			int diff = static_cast<int>(d1) - static_cast<int>(d2);
 			return std::min((diff + 6) % 6, (-diff + 6) % 6);
 		}
@@ -45,7 +45,7 @@ namespace ql {
 			}
 
 			//! Unit vector in the given direction.
-			constexpr static vector unit(direction direction) {
+			constexpr static auto unit(direction direction) -> vector {
 				switch (direction) {
 					default:
 						[[fallthrough]]; // Impossible case.
@@ -78,6 +78,8 @@ namespace ql {
 				}
 			}
 
+			auto operator<=>(vector const& other) const = default;
+
 			friend constexpr auto operator+(vector v1, vector v2) {
 				return vector{v1.q + v2.q, v1.r + v2.r};
 			}
@@ -86,34 +88,32 @@ namespace ql {
 				return vector{-q, -r};
 			}
 
-			friend constexpr auto operator-(vector v1, vector v2) {
+			friend constexpr auto operator-(vector const& v1, vector const& v2) {
 				return vector{v1.q - v2.q, v1.r - v2.r};
 			}
 
-			friend constexpr auto operator*(vector h, int k) {
-				return vector{k * h.q, k * h.r};
+			friend constexpr auto operator*(vector const& v, int k) {
+				return vector{k * v.q, k * v.r};
 			}
-			friend constexpr auto operator*(int k, vector h) {
-				return vector{k * h.q, k * h.r};
-			}
-
-			friend constexpr auto operator*(vector h, length_t k) {
-				return vector{k * h.q, k * h.r};
-			}
-			friend constexpr auto operator*(length_t k, vector h) {
-				return vector{k * h.q, k * h.r};
+			friend constexpr auto operator*(int k, vector const& v) {
+				return vector{k * v.q, k * v.r};
 			}
 
-			friend constexpr auto operator/(vector h, int k) {
-				return vector{h.q / k, h.r / k};
+			friend constexpr auto operator*(vector const& v, length_t k) {
+				return vector{k * v.q, k * v.r};
 			}
-			friend constexpr auto operator/(vector h, length_t k) {
-				return hex_space<Tag, cancel::unitless<length_t::rep>>::vector{h.q / k, h.r / k};
+			friend constexpr auto operator*(length_t k, vector v) {
+				return vector{k * v.q, k * v.r};
 			}
 
-			auto operator<=>(vector const& other) const = default;
+			friend constexpr auto operator/(vector v, int k) {
+				return vector{v.q / k, v.r / k};
+			}
+			friend constexpr auto operator/(vector v, length_t k) {
+				return hex_space<Tag, cancel::unitless<length_t::rep>>::vector{v.q / k, v.r / k};
+			}
 
-			constexpr length_t length() const {
+			constexpr auto length() const {
 				return static_cast<length_t>((gcem::abs(q) + gcem::abs(r) + gcem::abs(s())) / 2);
 			}
 
@@ -127,7 +127,7 @@ namespace ql {
 			//! @todo Add non-zero precondition to direction when available.
 
 			//! The nearest direction this vector points towards. This vector must be non-zero.
-			constexpr direction direction() const {
+			constexpr auto direction() const -> direction {
 				auto const u = unit();
 				switch (u.q.value) {
 					case -1:
@@ -163,8 +163,8 @@ namespace ql {
 				UNREACHABLE;
 			}
 
-			//! Simple hash function.
-			constexpr friend std::size_t hash_value(vector const& v) {
+			//! Simple hash function for hex vectors.
+			friend constexpr auto hash_value(vector const& v) -> std::size_t {
 				return 31 * v.q.value + v.r.value;
 			}
 		};
@@ -174,7 +174,7 @@ namespace ql {
 			length_t q;
 			length_t r;
 
-			constexpr length_t s() const {
+			constexpr auto s() const -> length_t {
 				return -q - r;
 			}
 
@@ -193,25 +193,25 @@ namespace ql {
 				}
 			}
 
-			friend constexpr point operator+(point p, vector v) {
+			auto operator<=>(point const& other) const = default;
+
+			friend constexpr auto operator+(point const& p, vector const& v) {
 				return point{p.q + v.q, p.r + v.r};
 			}
-			friend constexpr point operator+(vector v, point p) {
+			friend constexpr auto operator+(vector v, point const& p) {
 				return point{v.q + p.q, v.r + p.r};
 			}
 
-			friend constexpr vector operator-(point h1, point h2) {
-				return vector{h1.q - h2.q, h1.r - h2.r};
+			friend constexpr auto operator-(point const& p1, point const& p2) {
+				return vector{p1.q - p2.q, p1.r - p2.r};
 			}
-			friend constexpr point operator-(point p, vector v) {
+			friend constexpr auto operator-(point const& p, vector v) {
 				return point{p.q - v.q, p.r - v.r};
 			}
 
-			auto operator<=>(point const& other) const = default;
+			auto line_to(point dest) const {
+				//! @todo Make this lazy?
 
-			//! @todo Make this lazy?
-
-			std::vector<point> line_to(point dest) const {
 				int n = (dest - *this).length().value;
 				std::vector<point> result;
 				result.reserve(n + 1);
@@ -222,14 +222,14 @@ namespace ql {
 				return result;
 			}
 
-			constexpr point lerp(point dest, float t) const {
+			constexpr auto lerp(point dest, float t) const {
 				return point{//
 					this->q.value + (dest.q - this->q).value * t,
 					this->r.value + (dest.r - this->r).value * t,
 					this->s().value + (dest.s() - this->s()).value * t};
 			}
 
-			constexpr point lerp(vector heading, float t) const {
+			constexpr auto lerp(vector heading, float t) const {
 				return point{//
 					this->q.value + heading.q.value * t,
 					this->r.value + heading.r.value * t,
@@ -237,7 +237,7 @@ namespace ql {
 			}
 
 			//! Neighboring point in the given direction.
-			constexpr point neighbor(direction direction) const {
+			constexpr auto neighbor(direction direction) const -> point {
 				switch (direction) {
 					case direction::dr:
 						return point{q + length_t{1}, r + length_t{0}};
@@ -256,8 +256,8 @@ namespace ql {
 				};
 			}
 
-			//! Simple hash function.
-			constexpr friend std::size_t hash_value(point const& p) {
+			//! Simple hash function for hex points.
+			friend constexpr auto hash_value(point const& p) -> std::size_t {
 				return 31 * p.q.value + p.r.value;
 			}
 		};

@@ -40,7 +40,7 @@ namespace ql {
 
 			std::vector<charge> _charges;
 
-			void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
+			auto draw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
 		};
 	}
 }

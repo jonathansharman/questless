@@ -10,7 +10,7 @@
 namespace ql {
 	particle::particle(sec lifetime) : lifetime{lifetime} {}
 
-	void particle::animation_subupdate(sec elapsed_time) {
+	auto particle::animation_subupdate(sec elapsed_time) -> void {
 		// Timing.
 		time_left -= elapsed_time;
 		if (time_left <= 0.0_s) {
@@ -35,7 +35,7 @@ namespace ql {
 		particle_subupdate(elapsed_time);
 	}
 
-	void particle::animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const {
+	auto particle::animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
 		// Combine animation/other transforms with particle transforms.
 		states.transform.scale({scale.value, scale.value});
 		states.transform.rotate(static_cast<float>((angle * vecx::deg_per_rad).value));

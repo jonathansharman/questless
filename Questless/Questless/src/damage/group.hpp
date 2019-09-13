@@ -35,29 +35,13 @@ namespace ql::dmg {
 		//! @param bypass The amount of coverage this group can bypass.
 		group(damage damage, coverage bypass = 0.0_coverage) : parts{{damage}}, bypass{bypass} {}
 
-		friend group operator*(group const& d, int k) {
-			group product = d;
-			product *= k;
-			return product;
-		}
-		friend group operator*(int k, group const& d) {
-			group product = d;
-			product *= k;
-			return product;
-		}
-		friend group operator/(group const& d, int k) {
-			group quotient = d;
-			quotient /= k;
-			return quotient;
-		}
-
-		group& operator*=(int k) {
+		auto& operator*=(int k) {
 			for (auto& part : parts) {
 				std::visit([k](auto& part) { part *= k; }, part);
 			}
 			return *this;
 		}
-		group& operator/=(int k) {
+		auto& operator/=(int k) {
 			for (auto& part : parts) {
 				std::visit([k](auto& part) { part /= k; }, part);
 			}
@@ -65,6 +49,21 @@ namespace ql::dmg {
 		}
 
 		//! Damage group adjusted after going through @p armor.
-		group against(armor const& armor) const;
+		auto against(armor const& armor) const -> group;
 	};
+
+	inline auto operator*(group d, int k) {
+		d *= k;
+		return d;
+	}
+
+	inline auto operator*(int k, group d) {
+		// Multiplication of int is commutative, so it's okay to delegate to d * k.
+		return d * k;
+	}
+
+	inline auto operator/(group d, int k) {
+		d /= k;
+		return d;
+	}
 }

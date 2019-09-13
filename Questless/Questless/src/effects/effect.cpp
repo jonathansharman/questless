@@ -9,11 +9,11 @@
 #include "utility/visitation.hpp"
 
 namespace ql::effects {
-	tile_hex::point effect::origin() const {
+	auto effect::origin() const -> tile_hex::point {
 		return match(value, [](auto const& effect) { return effect.origin; });
 	}
 
-	span effect::range() const {
+	auto effect::range() const -> span {
 		return match(value, [](auto const& effect) { return effect.range(); });
 	}
 }

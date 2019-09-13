@@ -22,8 +22,8 @@ namespace ql {
 		color_factor = sf::Color{255, 128, 0};
 	}
 
-	void flame_particle::sprite_particle_subupdate(sec elapsed_time) {
-		static constexpr auto vx_pct_drag_rate = 1.8_hz;
+	auto flame_particle::sprite_particle_subupdate(sec elapsed_time) -> void {
+		constexpr auto vx_pct_drag_rate = 1.8_hz;
 
 		velocity[0] -= velocity[0] * vx_pct_drag_rate * elapsed_time;
 

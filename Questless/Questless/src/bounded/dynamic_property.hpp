@@ -42,38 +42,38 @@ namespace ql {
 			_mutator(_value, _value);
 		}
 
-		constexpr dynamic_property& operator=(dynamic_property const& bounded) noexcept {
+		constexpr auto& operator=(dynamic_property const& bounded) noexcept {
 			set_value(bounded.value());
 			return *this;
 		}
-		constexpr dynamic_property& operator=(dynamic_property&& bounded) noexcept {
+		constexpr auto& operator=(dynamic_property&& bounded) noexcept {
 			set_value(std::move(bounded.value()));
 			return *this;
 		}
-		constexpr dynamic_property& operator=(value_type const& value) noexcept {
+		constexpr auto& operator=(value_type const& value) noexcept {
 			set_value(value);
 			return *this;
 		}
-		constexpr dynamic_property& operator=(value_type&& value) noexcept {
+		constexpr auto& operator=(value_type&& value) noexcept {
 			set_value(std::move(value));
 			return *this;
 		}
 
 		//! The property's underlying value.
-		constexpr value_type const& value() const noexcept {
+		constexpr auto value() const noexcept {
 			return _value;
 		}
 
 		//! Sets the property's underlying value to the given value and calls the mutator on it.
 		//! @param value The property's new value.
-		void set_value(value_type const& value) noexcept {
+		auto set_value(value_type const& value) noexcept -> void {
 			_mutator(_value, value);
 		}
 
 		//! Sets the property's mutator function to the given function.
 		//! @param mutator The new function to use as the mutator.
 		//! @param mutate_now Whether to call the new mutator on the current value.
-		void set_mutator(mutator_type mutator, bool mutate_now = true) noexcept {
+		auto set_mutator(mutator_type mutator, bool mutate_now = true) noexcept -> void {
 			_mutator = std::move(mutator);
 			if (mutate_now) { _mutator(_value, _value); }
 		}

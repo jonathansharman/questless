@@ -40,16 +40,16 @@ namespace ql {
 		sprite_animation(sprite_sheet sprite_sheet, std::vector<frame> frames, loop_type loop, start_time start_time = start_time::zero);
 
 		//! The number of times the animation has looped.
-		int loops() const {
+		auto loops() const {
 			return _loops;
 		}
 
 		//! The total duration of the animation.
-		sec duration() const;
+		auto duration() const -> sec;
 
 		//! Moves to the start or a random time point in the animation, sets the loop counter to zero, and sets the over
 		//! flag to false.
-		void reset(start_time start_time = start_time::zero);
+		auto reset(start_time start_time = start_time::zero) -> void;
 
 	private:
 		sprite_sheet _sprite_sheet;
@@ -58,8 +58,8 @@ namespace ql {
 		sec _accrued_time;
 		int _loops = 0;
 
-		void animation_subupdate(sec elapsed_time) final;
+		auto animation_subupdate(sec elapsed_time) -> void final;
 
-		void animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const final;
+		auto animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
 	};
 }

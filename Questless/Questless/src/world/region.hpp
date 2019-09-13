@@ -70,7 +70,7 @@ namespace ql {
 		}
 
 		//! The illuminance of the tile at @p tile_coords.
-		lum illuminance(tile_hex::point tile_coords) const;
+		auto illuminance(tile_hex::point tile_coords) const -> lum;
 
 		//! The temperature of the tile at @p tile_coords.
 		auto temperature(tile_hex::point tile_coords) const -> ql::temperature;
@@ -117,7 +117,7 @@ namespace ql {
 
 		//! Performs some operation on each section in the loaded rhomboid of sections.
 		//! @param f The operation to perform on each section.
-		void for_each_loaded_section(std::function<void(section&)> const& f);
+		auto for_each_loaded_section(std::function<void(section&)> const& f) -> void;
 	};
 
 	auto make_region(id region_id, std::string name) -> id;

@@ -59,7 +59,7 @@ namespace ql::dmg {
 				[this](rot_factor f) { rot = f; });
 		}
 
-		Derived& operator+=(Derived const& d) {
+		auto& operator+=(Derived const& d) {
 			slash += d.slash;
 			pierce += d.pierce;
 			cleave += d.cleave;
@@ -71,7 +71,7 @@ namespace ql::dmg {
 			rot += d.rot;
 			return static_cast<Derived&>(*this);
 		}
-		Derived& operator-=(Derived const& d) {
+		auto& operator-=(Derived const& d) {
 			slash -= d.slash;
 			pierce -= d.pierce;
 			cleave -= d.cleave;
@@ -83,7 +83,7 @@ namespace ql::dmg {
 			rot -= d.rot;
 			return static_cast<Derived&>(*this);
 		}
-		Derived& operator*=(int k) {
+		auto& operator*=(int k) {
 			slash *= k;
 			pierce *= k;
 			cleave *= k;
@@ -95,7 +95,7 @@ namespace ql::dmg {
 			rot *= k;
 			return static_cast<Derived&>(*this);
 		}
-		Derived& operator/=(int k) {
+		auto& operator/=(int k) {
 			slash /= k;
 			pierce /= k;
 			cleave /= k;
@@ -108,24 +108,24 @@ namespace ql::dmg {
 			return static_cast<Derived&>(*this);
 		}
 
-		friend constexpr Derived operator+(Derived d1, Derived const& d2) {
+		friend constexpr auto operator+(Derived d1, Derived const& d2) {
 			d1 += d2;
 			return d1;
 		}
-		friend constexpr Derived operator-(Derived d1, Derived const& d2) {
+		friend constexpr auto operator-(Derived d1, Derived const& d2) {
 			d1 -= d2;
 			return d1;
 		}
-		friend constexpr Derived operator*(Derived d, int k) {
+		friend constexpr auto operator*(Derived d, int k) {
 			d *= k;
 			return d;
 		}
-		friend constexpr Derived operator*(int k, Derived d) {
+		friend constexpr auto operator*(int k, Derived d) {
 			// int multiplication is commutative.
 			d *= k;
 			return d;
 		}
-		friend constexpr Derived operator/(Derived d, int k) {
+		friend constexpr auto operator/(Derived d, int k) {
 			d /= k;
 			return d;
 		}

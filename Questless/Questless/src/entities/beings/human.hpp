@@ -9,5 +9,5 @@
 #include "world/coordinates.hpp"
 
 namespace ql {
-	id make_human(id id, location location, agent agent);
+	id make_human(id human_id, location location, agent agent);
 }

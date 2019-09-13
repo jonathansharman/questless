@@ -19,13 +19,9 @@
 
 namespace ql {
 	game::game(bool fullscreen) {
-#if true
 		constexpr int _dflt_window_width = 1024;
 		constexpr int _dflt_window_height = 768;
-#else
-		constexpr int _dflt_window_width = 1920;
-		constexpr int _dflt_window_height = 1080;
-#endif
+
 		auto const window_style = fullscreen ? sf::Style::Fullscreen : sf::Style::Default;
 		_window.create(sf::VideoMode{_dflt_window_width, _dflt_window_height}, "Questless", window_style);
 		auto icon = rsrc::load<sf::Image>("resources/textures/icon.png");
@@ -41,7 +37,7 @@ namespace ql {
 
 	game::~game() = default;
 
-	void game::run() {
+	auto game::run() -> void {
 		for (;;) {
 			// Handle events.
 			sf::Event event;
@@ -141,7 +137,7 @@ namespace ql {
 		return frame_duration;
 	}
 
-	void game::draw_fps() {
+	auto game::draw_fps() -> void {
 		sf::Text fps_text{fmt::format("{}", _avg_fps.get()), _fonts.firamono, 20};
 		fps_text.setOutlineColor(sf::Color::Black);
 		fps_text.setOutlineThickness(1.0f);

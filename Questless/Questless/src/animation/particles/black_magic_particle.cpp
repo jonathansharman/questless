@@ -24,7 +24,7 @@ namespace ql {
 		uniform(-dtheta_max, dtheta_max) * dtheta_max / 1.0_s;
 	}
 
-	void black_magic_particle::sprite_particle_subupdate(sec elapsed_time) {
+	auto black_magic_particle::sprite_particle_subupdate(sec elapsed_time) -> void {
 		constexpr auto acceleration_factor = 1.25_hz;
 		constexpr auto turn_rate = 4.0_rad / 1.0_s;
 

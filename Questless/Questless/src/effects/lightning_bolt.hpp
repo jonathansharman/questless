@@ -10,7 +10,7 @@ namespace ql::effects {
 	struct lightning_bolt {
 		tile_hex::point origin;
 
-		constexpr span range() const {
+		constexpr auto range() const -> span {
 			return 10_span;
 		}
 	};

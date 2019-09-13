@@ -22,26 +22,27 @@ namespace ql {
 		using handler_t = sptr<std::function<bool(Args...)>>; //! @todo This shared_ptr and the one in delegate are smelly.
 
 		//! Adds a new event handler @p f at the end of the handlers list.
-		void add(handler_t const& f) {
+		auto add(handler_t const& f) -> void {
 			_handlers.push_back(f);
 		}
 
 		//! Removes any instances of the event handler @p f.
-		void remove(handler_t const& f) {
+		auto remove(handler_t const& f) -> void {
 			erase_if(_handlers, [&f](handler_t const& x) { return x == f; });
 		}
 
-		event& operator+=(handler_t const& f) {
+		auto& operator+=(handler_t const& f) {
 			add(f);
+			return *this;
 		}
-		event& operator-=(handler_t const& f) {
+		auto& operator-=(handler_t const& f) {
 			remove(f);
 			return *this;
 		}
 
 		//! Calls each event handler in turn, passing @p args to each.
 		//! @return Whether the callback marked the event as handled.
-		[[nodiscard]] handled operator()(Args... args) {
+		[[nodiscard]] auto operator()(Args... args) -> handled {
 			for (auto& handler : _handlers) {
 				if (!(*handler)(args...)) { return false; }
 			}

@@ -9,7 +9,7 @@
 namespace ql::dmg {
 	using coverage = cancel::quantity<double, cancel::unit_t<struct coverage_tag>>;
 
-	constexpr dmg::coverage operator"" _coverage(long double value) {
+	constexpr auto operator"" _coverage(long double value) {
 		return dmg::coverage{static_cast<double>(value)};
 	}
 

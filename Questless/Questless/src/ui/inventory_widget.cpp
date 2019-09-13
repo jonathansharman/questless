@@ -21,13 +21,13 @@ namespace ql {
 		//! @todo Cache the displayed items (only need to regenerate list if a turn has been taken).
 	}
 
-	view::vector inventory_widget::get_size() const {
+	auto inventory_widget::get_size() const -> view::vector {
 		return _size;
 	}
 
-	void inventory_widget::update(sec /*elapsed_time*/) {}
+	auto inventory_widget::update(sec /*elapsed_time*/) -> void {}
 
-	void inventory_widget::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	auto inventory_widget::draw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
 		auto const layout = get_bounding_box();
 
 		// Draw background.
@@ -78,7 +78,7 @@ namespace ql {
 		_col_count = lround(_size[0] / item_icon_size[0]);
 	};
 
-	widget::event_handled inventory_widget::on_key_press(sf::Event::KeyEvent const& event) {
+	auto inventory_widget::on_key_press(sf::Event::KeyEvent const& event) -> event_handled {
 		switch (event.code) {
 			case sf::Keyboard::Num1:
 				assign_idx(0);
@@ -120,7 +120,7 @@ namespace ql {
 		_mouse_position = mouse_position;
 	}
 
-	void inventory_widget::assign_idx(size_t hotbar_idx) {
+	auto inventory_widget::assign_idx(size_t hotbar_idx) -> void {
 		auto const layout = get_bounding_box();
 
 		// Ensure row is in bounds.

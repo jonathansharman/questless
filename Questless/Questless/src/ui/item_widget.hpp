@@ -23,6 +23,9 @@ namespace ql {
 		//! Item widgets have a fixed size.
 		static constexpr view::vector size{view::px{55.0f}, view::px{55.0f}};
 
+		//! Invoked when this widget is clicked, passing the item's ID, if any, and the mouse click coordinates.
+		std::function<void(std::optional<id>, view::point)> on_click;
+
 		item_widget(rsrc::item const& item_resources, rsrc::spell const& spell_resources);
 
 		~item_widget();
@@ -32,9 +35,6 @@ namespace ql {
 
 		//! Sets this widget's item ID to @p item_id.
 		auto set_o_item_id(std::optional<id> o_item_id) -> void;
-
-		//! Invoked when this widget is clicked, passing the item's ID, if any, and the mouse click coordinates.
-		std::function<void(std::optional<id>, view::point)> on_click;
 
 		auto get_size() const -> view::vector final;
 

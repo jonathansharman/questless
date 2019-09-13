@@ -45,11 +45,11 @@ namespace ql {
 		render_entities(view);
 	}
 
-	view::vector world_widget::get_size() const {
+	auto world_widget::get_size() const -> view::vector {
 		return _size;
 	}
 
-	void world_widget::update(sec elapsed_time) {
+	auto world_widget::update(sec elapsed_time) -> void {
 		// Update tile widgets.
 		for (auto& id_and_widget : _tile_widgets) {
 			id_and_widget.second.update(elapsed_time);
@@ -126,11 +126,11 @@ namespace ql {
 		}
 	}
 
-	void world_widget::set_highlight_predicate(std::function<bool(tile_hex::point)> predicate) {
+	auto world_widget::set_highlight_predicate(std::function<bool(tile_hex::point)> predicate) -> void {
 		_highlight_predicate = std::move(predicate);
 	}
 
-	void world_widget::clear_highlight_predicate() {
+	auto world_widget::clear_highlight_predicate() -> void {
 		_highlight_predicate = std::nullopt;
 	}
 
@@ -143,7 +143,7 @@ namespace ql {
 		}
 	}
 
-	void world_widget::render_entities(world_view const& view) {
+	auto world_widget::render_entities(world_view const& view) -> void {
 		using ev = world_view::entity_view;
 
 		_entity_widgets.clear();
@@ -160,7 +160,7 @@ namespace ql {
 		}
 	}
 
-	void world_widget::render_effect(effects::effect const& effect) {
+	auto world_widget::render_effect(effects::effect const& effect) -> void {
 		match(
 			effect.value,
 			[&](effects::arrow_attack const& e) {

@@ -14,14 +14,14 @@
 
 namespace ql {
 	namespace {
-		void apply_status(body_part& part, body_part_status const& status, tick elapsed) {
+		auto apply_status(body_part& part, body_part_status const& status, tick elapsed) -> void {
 			match(
 				status,
 				[&](healing const& h) { part.stats.regen_factor.cur += h.additional_regen_factor; },
 				[&](poisoned const& p) { part.cond.poisoning += p.rate * elapsed; });
 		}
 
-		void apply_wound(body_part& part, wound const& w, tick /*elapsed*/) {
+		auto apply_wound(body_part& part, wound const& w, tick /*elapsed*/) -> void {
 			match(
 				w,
 				[&](laceration const& l) {
@@ -39,7 +39,7 @@ namespace ql {
 		}
 	}
 
-	void body_part_status_set::apply(tick elapsed) {
+	auto body_part_status_set::apply(tick elapsed) -> void {
 		auto& part = reg.get<body_part>(id);
 
 		// Apply permanent effects.

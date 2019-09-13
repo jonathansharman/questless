@@ -11,14 +11,19 @@
 #include "magic/spell.hpp"
 
 namespace ql {
-	id make_gatestone(id id, magic::color color, dynamic_nonnegative<mana> charge, dynamic_nonnegative<tick> cooldown) {
-		make_item(id, 1.0_mass);
-		make_equipment(id, std::nullopt, {{body_part::tag::hand, std::nullopt}}, 10_ap, 10_ap);
-		reg.assign<gatestone>(id, id, color, charge, cooldown);
-		return id;
+	auto make_gatestone( //
+		id gatestone_id,
+		magic::color color,
+		dynamic_nonnegative<mana> charge,
+		dynamic_nonnegative<tick> cooldown) -> id //
+	{
+		make_item(gatestone_id, 1.0_mass);
+		make_equipment(gatestone_id, std::nullopt, {{body_part::tag::hand, std::nullopt}}, 10_ap, 10_ap);
+		reg.assign<gatestone>(gatestone_id, gatestone_id, color, charge, cooldown);
+		return gatestone_id;
 	}
 
-	void gatestone::update(tick elapsed) {
+	auto gatestone::update(tick elapsed) -> void {
 		cooldown -= elapsed;
 
 		// Charge over time.

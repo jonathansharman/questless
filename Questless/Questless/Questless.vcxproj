@@ -505,7 +505,6 @@
     <ClCompile Include="src\ui\world_widget.cpp" />
     <ClCompile Include="src\utility\debug.cpp" />
     <ClCompile Include="src\utility\io.cpp" />
-    <ClCompile Include="src\utility\utility.cpp" />
     <ClCompile Include="src\world\light_source.cpp" />
     <ClCompile Include="src\world\region.cpp" />
     <ClCompile Include="src\world\section.cpp" />

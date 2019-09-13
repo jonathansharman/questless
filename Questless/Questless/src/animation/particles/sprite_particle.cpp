@@ -10,12 +10,12 @@ namespace ql {
 		setOrigin(sf::Vector2f{texture.getSize()} / 2.0f);
 	}
 
-	void sprite_particle::particle_subupdate(sec elapsed_time) {
+	auto sprite_particle::particle_subupdate(sec elapsed_time) -> void {
 		_sprite.setColor(color_factor);
 		sprite_particle_subupdate(elapsed_time);
 	}
 
-	void sprite_particle::particle_subdraw(sf::RenderTarget& target, sf::RenderStates states) const {
+	auto sprite_particle::particle_subdraw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
 		target.draw(_sprite, states);
 	}
 }

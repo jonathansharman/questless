@@ -10,11 +10,12 @@ namespace ql {
 	namespace {
 		constexpr auto lum_per_span = 10_lum / 1_span;
 	}
-	span light_source::range() const {
+
+	auto light_source::range() const -> span {
 		return luminance / lum_per_span;
 	}
 
-	lum light_source::luminance_at(location target_location) const {
+	auto light_source::luminance_at(location target_location) const -> lum {
 		auto const& location = reg.get<ql::location>(id);
 
 		// Only provides light within its own region.

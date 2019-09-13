@@ -17,7 +17,7 @@ namespace ql {
 		static_assert(capacity > 0, "Capacity must be positive.");
 
 		//! Adds @param value to the list, pushing out an old value if the buffer is full.
-		void push(value_type value) {
+		auto push(value_type value) -> void {
 			// Subtract oldest value.
 			_sum -= _buffer[_idx];
 			// Add new value.
@@ -30,7 +30,7 @@ namespace ql {
 		}
 
 		//! Gets the current moving average.
-		value_type get() const {
+		auto get() const {
 			return _sum / _size;
 		}
 

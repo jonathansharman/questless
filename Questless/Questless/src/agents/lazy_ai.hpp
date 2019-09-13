@@ -16,10 +16,10 @@ namespace ql {
 	struct lazy_ai {
 		id id;
 
-		std::future<void> act() {
+		auto act() -> std::future<void> {
 			return make_ready_future();
 		}
 
-		void perceive(effects::effect const&) {}
+		auto perceive(effects::effect const&) -> void {}
 	};
 }

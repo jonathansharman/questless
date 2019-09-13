@@ -17,14 +17,14 @@ namespace ql {
 		static constexpr auto perception_loss_per_span = 10_perception / 1_span;
 	}
 
-	span max_visual_range(std::vector<stats::vision> const& vision_sources) {
+	auto max_visual_range(std::vector<stats::vision> const& vision_sources) -> span {
 		if (vision_sources.empty()) { return 0_span; }
 		auto acuities = vision_sources | ranges::views::transform([](stats::vision const& v) { return v.acuity.value(); });
 		return ranges::max(acuities) / perception_loss_per_span;
 	}
 
 	//! Determines whether @p target is in the field of vision specified by @p location and @p direction.
-	bool inside_field_of_vision(location const& location, tile_hex::direction direction, tile_hex::point target) {
+	auto inside_field_of_vision(location const& location, tile_hex::direction direction, tile_hex::point target) -> bool {
 		auto offset = target - location.coords;
 		switch (direction) {
 			case tile_hex::direction::dr:
@@ -45,7 +45,7 @@ namespace ql {
 	}
 
 	//! Computes the perception @p vision is capable of, factoring in the @p illuminance.
-	perception light_adjusted_perception(stats::vision const& vision, lum illuminance) {
+	auto light_adjusted_perception(stats::vision const& vision, lum illuminance) -> perception {
 		if (illuminance < vision.min_illuminance.value()) {
 			// Too dark.
 			return vision.acuity - (vision.min_illuminance.value() - illuminance) * vision.darkness_penalty.value();
@@ -58,7 +58,7 @@ namespace ql {
 		}
 	}
 
-	perception perception_of(id perceptor_id, tile_hex::point target) {
+	auto perception_of(id perceptor_id, tile_hex::point target) -> perception {
 		auto const& body = reg.get<ql::body>(perceptor_id);
 
 		// Check that the perceptor has at least one source of vision.

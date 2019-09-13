@@ -26,17 +26,17 @@ namespace ql::stats {
 		stat<std::vector<vision>> vision_sources;
 
 		//! The maximum volume of blood that can be stored in something with these stats.
-		blood max_blood() const {
+		auto max_blood() const -> blood {
 			return vitality.base * 1.0_blood / 1_hp;
 		}
 
 		//! The maximum rate at which something with these stats can lose blood.
-		blood_per_tick max_bleeding() const {
+		auto max_bleeding() const -> blood_per_tick {
 			return max_blood() / 10_tick;
 		}
 
 		//! Combines current values with those of @p that.
-		void combine_with(aggregate const& that) {
+		auto combine_with(aggregate const& that) -> void {
 			vitality.cur += that.vitality.cur;
 			spirit.cur += that.spirit.cur;
 			strength.cur += that.strength.cur;
@@ -50,7 +50,7 @@ namespace ql::stats {
 		}
 
 		//! Resets current stats to base stats.
-		void reset() {
+		auto reset() -> void {
 			vitality.reset();
 			spirit.reset();
 			strength.reset();

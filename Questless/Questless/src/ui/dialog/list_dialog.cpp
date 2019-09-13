@@ -62,7 +62,7 @@ namespace ql {
 		return _size;
 	}
 
-	void list_dialog::update(sec /*elapsed_time*/) {}
+	auto list_dialog::update(sec /*elapsed_time*/) -> void {}
 
 	auto list_dialog::set_position(view::point position) -> void {
 		_position = position;
@@ -154,7 +154,7 @@ namespace ql {
 		return event_handled::no;
 	}
 
-	void list_dialog::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	auto list_dialog::draw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
 		// Draw background.
 		target.draw(_bg);
 		// Draw title.

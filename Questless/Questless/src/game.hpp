@@ -25,7 +25,7 @@ namespace ql {
 		~game();
 
 		//! Runs a new game of Questless.
-		void run();
+		auto run() -> void;
 
 	private:
 		sf::RenderWindow _window;

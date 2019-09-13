@@ -14,5 +14,5 @@ namespace ql {
 		inventory inventory;
 	};
 
-	id make_quiver(id id, inventory inventory);
+	auto make_quiver(id quiver_id, inventory inventory) -> id;
 }

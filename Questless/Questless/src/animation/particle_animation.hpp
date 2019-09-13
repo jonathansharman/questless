@@ -19,11 +19,11 @@ namespace ql {
 		virtual ~particle_animation() = default;
 
 	private:
-		void animation_subupdate(sec elapsed_time) final;
+		auto animation_subupdate(sec elapsed_time) -> void final;
 
-		void animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const final;
+		auto animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
 
 		//! Advances this particle animation by @p elapsed_time in a subtype-specific way.
-		virtual void particle_animation_subupdate(sec elapsed_time) = 0;
+		virtual auto particle_animation_subupdate(sec elapsed_time) -> void = 0;
 	};
 }

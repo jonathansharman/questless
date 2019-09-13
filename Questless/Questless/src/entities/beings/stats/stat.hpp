@@ -21,16 +21,18 @@ namespace ql::stats {
 		stat(T const& base, T const& cur) : base{base}, cur{base} {}
 
 		//! Resets current value to base value.
-		void reset() {
+		auto reset() -> void {
 			cur = base;
 		}
 
 		//! Clamps the current value into [0, base].
-		void clamp_zero_base() {
+		auto clamp_zero_base() -> void {
 			cur = std::clamp(cur, T(0), base);
 		}
 
 		//! Clamps the current value into [0, infinity).
-		void clamp_nonnegative() {}
+		auto clamp_nonnegative() -> void {
+			cur = std::max(cur, T(0));
+		}
 	};
 }

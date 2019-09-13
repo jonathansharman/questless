@@ -16,7 +16,7 @@
 namespace ql {
 	basic_ai::basic_ai(id id) : _id{id} {}
 
-	std::future<void> basic_ai::act() {
+	auto basic_ai::act() -> std::future<void> {
 		return match(
 			_state,
 			[this](idle_state) {
@@ -28,7 +28,7 @@ namespace ql {
 			},
 			[this](walk_state) {
 				// Randomly either move in current direction or turn towards a random direction.
-				if (random_bool()) {
+				if (coin_flip()) {
 					walk(_id, reg.get<body>(_id).cond.direction);
 				} else {
 					turn(_id, random_direction());
@@ -73,7 +73,7 @@ namespace ql {
 			});
 	}
 
-	void basic_ai::perceive(effects::effect const& effect) {
+	auto basic_ai::perceive(effects::effect const& effect) -> void {
 		if (std::holds_alternative<effects::injury>(effect.value)) {
 			// Retaliate against injuries.
 			effects::injury const& injury = std::get<effects::injury>(effect.value);

@@ -10,11 +10,19 @@
 #include "entities/beings/being.hpp"
 
 namespace ql {
-	void make_equipment(ql::id id, std::optional<ql::id> o_bearer_id, std::vector<equipment::tab> tabs, action equip_cost, action unequip_cost) {
-		reg.assign<equipment>(id, id, o_bearer_id, std::move(tabs), equip_cost, unequip_cost);
+	auto make_equipment( //
+		id equipment_id,
+		std::optional<id> o_bearer_id,
+		std::vector<equipment::tab> tabs,
+		action equip_cost,
+		action unequip_cost) -> id //
+	{
+		reg.assign<equipment>(equipment_id, equipment_id, o_bearer_id, std::move(tabs), equip_cost, unequip_cost);
+
+		return equipment_id;
 	}
 
-	void equipment::equip(ql::id actor_id) {
+	auto equipment::equip(ql::id actor_id) -> void {
 		//! @todo Allow bearer to choose where to equip item.
 
 		for (auto& tab : tabs) {
@@ -32,13 +40,13 @@ namespace ql {
 		//! @todo Incur equip cost.
 	}
 
-	void equipment::unequip() {
+	auto equipment::unequip() -> void {
 		if (!equipped()) return;
 		//! @todo Incur unequip cost.
 		forced_unequip();
 	}
 
-	void equipment::forced_unequip() {
+	auto equipment::forced_unequip() -> void {
 		for (auto& tab : tabs) {
 			if (tab.o_part_id && reg.valid(*tab.o_part_id)) {
 				auto& part = reg.get<body_part>(*tab.o_part_id);

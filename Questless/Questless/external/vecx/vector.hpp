@@ -42,7 +42,7 @@ namespace vecx {
 		static constexpr auto zero() { return vector<scalar_t, n>{}; }
 
 		template <typename ThatQuantity>
-		constexpr bool operator ==(vector<ThatQuantity, n> const& that) const {
+		constexpr auto operator ==(vector<ThatQuantity, n> const& that) const -> bool {
 			for (std::size_t i = 0; i < n; ++i) {
 				if (components[i] != that[i]) return false;
 			}
@@ -50,7 +50,7 @@ namespace vecx {
 		}
 
 		template <typename ThatQuantity>
-		constexpr bool operator !=(vector<ThatQuantity, n> const& that) const {
+		constexpr auto operator !=(vector<ThatQuantity, n> const& that) const -> bool {
 			for (std::size_t i = 0; i < n; ++i) {
 				if (components[i] != that[i]) return true;
 			}
@@ -128,7 +128,7 @@ namespace vecx {
 		}
 
 		//! Rotates this vector by @p angle in the @p axis1 to @p axis2 plane.
-		constexpr void rotate(radians angle, std::size_t axis1 = 0, std::size_t axis2 = 1) {
+		constexpr auto rotate(radians angle, std::size_t axis1 = 0, std::size_t axis2 = 1) -> void {
 			auto const cos_angle = gcem::cos(angle.value);
 			auto const sin_angle = gcem::sin(angle.value);
 			auto const old_axis1 = components[axis1];
@@ -169,11 +169,10 @@ namespace vecx {
 		constexpr auto length() const { return sqrt(length_squared()); }
 
 		//! The angle of this vector in the @p axis1 to @p axis2 plane, in radians.
-		constexpr radians angle(std::size_t axis1 = 0, std::size_t axis2 = 1) const {
-			static_assert
-				(std::is_convertible_v<scalar_t::rep, double>
-				, "Scalar representation must be convertible to double to find the vector angle."
-				);
+		constexpr auto angle(std::size_t axis1 = 0, std::size_t axis2 = 1) const {
+			static_assert(
+				std::is_convertible_v<scalar_t::rep, double>,
+				"Scalar representation must be convertible to double to find the vector angle.");
 			return radians{gcem::atan2(static_cast<double>(components[axis2].value), static_cast<double>(components[axis1].value))};
 		}
 	};

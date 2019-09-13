@@ -11,5 +11,5 @@ namespace ql {
 		id id;
 	};
 
-	id make_arrow(id id);
+	auto make_arrow(id arrow_id) -> id;
 }

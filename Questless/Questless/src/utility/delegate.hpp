@@ -18,25 +18,26 @@ namespace ql {
 		using callback_t = sptr<std::function<void(Args...)>>; //! @todo This shared_ptr and the one in event are smelly.
 
 		//! Adds a new callback function @p f at the end of the callbacks list.
-		void add(callback_t const& f) {
+		auto add(callback_t const& f) -> void {
 			_callbacks.push_back(f);
 		}
 
 		//! Removes any instances of the callback function @p f.
-		void remove(callback_t const& f) {
+		auto remove(callback_t const& f) -> void {
 			_callbacks.erase_if(_callbacks, [&f](callback_t const& x) { return x == f; });
 		}
 
-		delegate& operator+=(callback_t const& f) {
+		auto& operator+=(callback_t const& f) {
 			add(f);
+			return *this;
 		}
-		delegate& operator-=(callback_t const& f) {
+		auto& operator-=(callback_t const& f) {
 			remove(f);
 			return *this;
 		}
 
 		//! Calls each callback in turn, passing them @p args.
-		void operator()(Args... args) {
+		auto operator()(Args... args) -> void {
 			for (auto& callback : _callbacks) {
 				(*callback)(args...);
 			}

@@ -15,12 +15,12 @@ namespace ql {
 		, _frames{std::move(frames)}
 		, _accrued_time{start_time == start_time::random ? uniform(0.0f, 1.0f) * duration() : 0.0_s} {}
 
-	sec sprite_animation::duration() const {
+	auto sprite_animation::duration() const -> sec {
 		return std::accumulate(
 			_frames.begin(), _frames.end(), 0.0_s, [](sec acc, frame const& frame) { return acc + frame.duration; });
 	}
 
-	void sprite_animation::reset(start_time start_time) {
+	auto sprite_animation::reset(start_time start_time) -> void {
 		if (start_time == start_time::random) {
 			// The next time update() is called, the animation will advance to a random point.
 			_accrued_time = uniform(0.0f, 1.0f) * duration();
@@ -30,7 +30,7 @@ namespace ql {
 		restart();
 	}
 
-	void sprite_animation::animation_subupdate(sec elapsed_time) {
+	auto sprite_animation::animation_subupdate(sec elapsed_time) -> void {
 		_accrued_time += elapsed_time;
 		while (_accrued_time > _frames[_frame_index].duration) {
 			_accrued_time -= _frames[_frame_index].duration;
@@ -63,7 +63,7 @@ namespace ql {
 		setOrigin(sf::Vector2f{_frames[_frame_index].origin});
 	}
 
-	void sprite_animation::animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const {
+	auto sprite_animation::animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
 		sprite_animation::frame const& frame = _frames[_frame_index];
 		sf::Sprite sprite{_sprite_sheet.texture, _sprite_sheet.get_cel_rect(frame.cel_coords)};
 		sprite.setColor(color);

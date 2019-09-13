@@ -32,16 +32,16 @@ namespace ql {
 		body(ql::id id, ql::id root_part_id, body_cond cond, stats::body stats);
 
 		//! Performs @p f for each body part in this body. See also @p for_enabled_parts.
-		void for_all_parts(std::function<void(body_part const&)> const& f) const;
+		auto for_all_parts(std::function<void(body_part const&)> const& f) const -> void;
 		//! Performs @p f for each body part in this body. See also @p for_enabled_parts.
-		void for_all_parts(std::function<void(body_part&)> const& f);
+		auto for_all_parts(std::function<void(body_part&)> const& f) -> void;
 
 		//! Performs @p f for each enabled body part in this body. See also @p for_all_parts.
-		void for_enabled_parts(std::function<void(body_part const&)> const& f) const;
+		auto for_enabled_parts(std::function<void(body_part const&)> const& f) const -> void;
 		//! Performs @p f for each enabled body part in this body. See also @p for_all_parts.
-		void for_enabled_parts(std::function<void(body_part&)> const& f);
+		auto for_enabled_parts(std::function<void(body_part&)> const& f) -> void;
 
 		//! Advances this body and all its parts by @p elapsed.
-		void update(tick elapsed);
+		auto update(tick elapsed) -> void;
 	};
 }

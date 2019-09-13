@@ -5,9 +5,9 @@
 #include "arrow.hpp"
 
 namespace ql {
-	id make_arrow(id id) {
-		make_item(id, 0.1_mass);
-		reg.assign<arrow>(id, id);
-		return id;
+	auto make_arrow(id arrow_id) -> id {
+		make_item(arrow_id, 0.1_mass);
+		reg.assign<arrow>(arrow_id, arrow_id);
+		return arrow_id;
 	}
 }

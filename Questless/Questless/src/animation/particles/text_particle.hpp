@@ -20,8 +20,8 @@ namespace ql {
 	private:
 		sf::Text _text;
 
-		void particle_subupdate(sec) final {}
+		auto particle_subupdate(sec) -> void final {}
 
-		void particle_subdraw(sf::RenderTarget& target, sf::RenderStates states) const final;
+		auto particle_subdraw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
 	};
 }

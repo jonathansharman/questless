@@ -14,7 +14,7 @@
 
 namespace ql {
 	//! A pseudorandom number generator.
-	inline std::mt19937_64& prng() {
+	inline auto& prng() {
 		static auto result = [] {
 			std::random_device seeder{};
 			return std::mt19937_64{seeder()};
@@ -23,13 +23,13 @@ namespace ql {
 	}
 
 	//! True or false with equal probability.
-	inline bool random_bool() {
+	inline auto coin_flip() -> bool {
 		return std::uniform_int<int>(0, 1)(prng()) == 0;
 	}
 
 	//! Generates a random value with a uniform distribution in [@p min, @p max].
 	template <typename T>
-	typename T uniform(T min, T max) requires std::is_arithmetic_v<T> {
+	typename auto uniform(T min, T max) -> T requires std::is_arithmetic_v<T> {
 		if constexpr (std::is_integral_v<T>) {
 			return std::uniform_int_distribution<T>(min, max)(prng());
 		} else if constexpr (std::is_floating_point_v<T>) {
@@ -44,22 +44,22 @@ namespace ql {
 	}
 
 	//! True or false with @p probability chance of returning true.
-	inline bool bernoulli_trial(double probability) {
+	inline auto bernoulli_trial(double probability) -> bool {
 		return probability > uniform(0.0, 1.0);
 	}
 
 	//! A uniformly randomly chosen direction in region tile space.
-	inline tile_hex::direction random_direction() {
+	inline auto random_direction() {
 		return static_cast<tile_hex::direction>(uniform(0, 5));
 	}
 
 	//! A random angle in degrees.
-	inline typename vecx::radians random_radians() {
+	inline auto random_radians() {
 		return uniform(vecx::radians{0.0}, vecx::circle_rad);
 	}
 
 	//! A random angle in degrees.
-	inline typename vecx::degrees random_degrees() {
+	inline auto random_degrees() {
 		return uniform(vecx::degrees{0.0}, vecx::circle_deg);
 	}
 
@@ -79,7 +79,7 @@ namespace ql {
 	}
 
 	//! A uniformly randomly sampled point from within the bounds of @p box.
-	inline view::point random_point_within(view::box box) { //! @todo Check containment logic here.
+	inline auto random_point_within(view::box box) { //! @todo Check containment logic here.
 		return box.position + view::vector{uniform(view::px{0.0}, width(box)), uniform(view::px{0.0}, height(box))};
 	}
 }

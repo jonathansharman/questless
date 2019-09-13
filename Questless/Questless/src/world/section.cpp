@@ -43,22 +43,22 @@ namespace ql {
 		return _entity_id_map;
 	}
 
-	std::optional<id> section::entity_id_at(tile_hex::point tile_coords) const {
+	auto section::entity_id_at(tile_hex::point tile_coords) const -> std::optional<id> {
 		auto it = _entity_id_map.find(tile_coords);
 		return it != _entity_id_map.end() ? std::make_optional(it->second) : std::nullopt;
 	}
 
-	bool section::try_add(id entity_id) {
+	auto section::try_add(id entity_id) -> bool {
 		auto result = _entity_id_map.insert({reg.get<location>(entity_id).coords, entity_id});
 		return result.second;
 	}
 
-	typename void section::remove_at(tile_hex::point coords) {
+	auto section::remove_at(tile_hex::point coords) -> void {
 		auto it = _entity_id_map.find(coords);
 		if (it != _entity_id_map.end()) { _entity_id_map.erase(it); }
 	}
 
-	void section::remove(id entity_id) {
+	auto section::remove(id entity_id) -> void {
 		remove_at(reg.get<location>(entity_id).coords);
 	}
 

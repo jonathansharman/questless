@@ -54,23 +54,23 @@ namespace ql {
 		}
 
 		//! The contained value.
-		constexpr arithmetic_type value() const noexcept {
+		constexpr auto value() const noexcept {
 			return _value;
 		}
 
 		//! The maximum value in the range (inclusive).
-		constexpr arithmetic_type const& upper_bound() const noexcept {
+		constexpr auto const& upper_bound() const noexcept {
 			return _upper_bound;
 		}
 
 		//! Sets the contained value to the given new value, clamped to the valid range.
-		constexpr void set_value(arithmetic_type const& value) noexcept {
+		constexpr auto set_value(arithmetic_type const& value) noexcept -> void {
 			_value = std::clamp(value, arithmetic_type(0), _upper_bound);
 		}
 
 		//! Sets the inclusive maximum value to the maximum of @p upper_bound and zero and clamps the contained value if
 		//! necessary.
-		constexpr void set_upper_bound(arithmetic_type const& upper_bound) noexcept {
+		constexpr auto set_upper_bound(arithmetic_type const& upper_bound) noexcept -> void {
 			_upper_bound = std::max(arithmetic_type(0), upper_bound);
 			if (_value > _upper_bound) { _value = _upper_bound; }
 		}

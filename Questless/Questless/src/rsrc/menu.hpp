@@ -26,7 +26,6 @@ namespace ql::rsrc {
 
 		struct {
 			sf::SoundBuffer hover = load<sf::SoundBuffer>("resources/sounds/menu/hover.wav");
-
 			sf::SoundBuffer select = load<sf::SoundBuffer>("resources/sounds/menu/select.wav");
 		} sfx;
 	};

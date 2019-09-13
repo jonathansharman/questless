@@ -11,25 +11,25 @@
 namespace ql {
 	//! Wall time duration in seconds.
 	using sec = cancel::quantity<float, cancel::unit_t<struct sec_tag>>;
-	constexpr sec operator"" _s(long double value) {
+	constexpr auto operator"" _s(long double value) {
 		return sec{static_cast<float>(value)};
 	}
 
 	//! Wall time duration in milliseconds.
 	using msec = cancel::quantity<float, cancel::unit_t<struct msec_tag>>;
-	constexpr msec operator"" _ms(long double value) {
+	constexpr auto operator"" _ms(long double value) {
 		return msec{static_cast<float>(value)};
 	}
 
 	//! Wall time rate in inverse seconds.
 	using per_sec = cancel::inverse_t<sec>;
-	constexpr per_sec operator"" _hz(long double value) {
+	constexpr auto operator"" _hz(long double value) {
 		return per_sec{static_cast<float>(value)};
 	}
 
 	//! Wall time rate in inverse milliseconds.
 	using per_msec = cancel::inverse_t<msec>;
-	constexpr per_msec operator"" _khz(long double value) {
+	constexpr auto operator"" _khz(long double value) {
 		return per_msec{static_cast<float>(value)};
 	}
 

@@ -22,36 +22,36 @@ namespace ql {
 		virtual ~animation() = default;
 
 		//! Whether this animation is paused.
-		bool paused() const {
+		auto paused() const -> bool {
 			return _paused;
 		}
 
 		//! Pauses this animation.
-		void pause() {
+		auto pause() -> void {
 			_paused = true;
 		}
 
 		//! Resumes this animation.
-		void resume() {
+		auto resume() -> void {
 			_paused = false;
 		}
 
 		//! Stops this animation.
-		void stop() {
+		auto stop() -> void {
 			_stopped = true;
 		}
 
 		//! Whether this animation has played to its end or been stopped early.
-		bool stopped() const {
+		auto stopped() const -> bool {
 			return _stopped;
 		}
 
 		//! Advances this animation by @p elapsed_time.
-		void update(sec elapsed_time);
+		auto update(sec elapsed_time) -> void;
 
 	protected:
 		//! Marks this animation as not stopped.
-		void restart() {
+		auto restart() -> void {
 			_stopped = false;
 		}
 
@@ -59,13 +59,13 @@ namespace ql {
 		bool _stopped = false;
 		bool _paused = false;
 
-		void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
+		auto draw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
 
 		//! Advances this animation by @p elapsed_time in a subtype-specific way.
-		virtual void animation_subupdate(sec elapsed_time) = 0;
+		virtual auto animation_subupdate(sec elapsed_time) -> void = 0;
 
 		//! Draws this animation in a subtype-specific way. The transform has already been applied to
 		//! @note The @p states transform has already been multiplied by this animation's transform before this call.
-		virtual void animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
+		virtual auto animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const -> void = 0;
 	};
 }

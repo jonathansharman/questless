@@ -27,14 +27,14 @@ namespace vecx {
 		template <typename... Args>
 		constexpr point(Args&& ... args) requires (std::is_convertible_v<Args, scalar_t>&& ...) : components{std::forward<Args>(args)...} {}
 
-		constexpr point& operator =(point const&) = default;
-		constexpr point& operator =(point&&) = default;
+		constexpr auto operator =(point const&)->point & = default;
+		constexpr auto operator =(point&&)->point & = default;
 
 		//! The canonical origin point for this point type, viz. all zeroes.
 		static constexpr auto origin() { return point<scalar_t, n>{}; }
 
 		template <typename ThatQuantity>
-		constexpr bool operator ==(point<ThatQuantity, n> const& that) const {
+		constexpr auto operator ==(point<ThatQuantity, n> const& that) const {
 			for (std::size_t i = 0; i < n; ++i) {
 				if (components[i] != that[i]) return false;
 			}
@@ -108,12 +108,12 @@ namespace vecx {
 		//! Rotates this point around another point.
 		//! @param origin The origin around which to rotate this point.
 		//! @param angle The angle of the rotation, from @p axis1 to @p axis2.
-		constexpr void rotate(point<scalar_t, n> const& origin, radians angle, std::size_t axis1 = 0, std::size_t axis2 = 1) {
+		constexpr auto rotate(point<scalar_t, n> const& origin, radians angle, std::size_t axis1 = 0, std::size_t axis2 = 1) -> void {
 			*this = rotated(origin, angle, axis1, axis2);
 		}
 
 		//! Rotates this point around @p origin by each of @p angles, in successive planes.
-		constexpr void rotate(point<scalar_t, n> const& origin, std::array<radians, n - 1> const& angles) {
+		constexpr auto rotate(point<scalar_t, n> const& origin, std::array<radians, n - 1> const& angles) -> void {
 			*this = rotated(origin, angles);
 		}
 	};

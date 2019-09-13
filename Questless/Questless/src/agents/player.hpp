@@ -18,7 +18,7 @@ namespace ql {
 	struct player {
 		player(hud* hud = nullptr);
 
-		std::future<void> act();
+		auto act() -> std::future<void>;
 
 		auto perceive(effects::effect const& effect) -> void;
 

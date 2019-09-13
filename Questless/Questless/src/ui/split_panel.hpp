@@ -48,9 +48,9 @@ namespace ql {
 		auto draw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
 
 		//! Calls the first child's @p on_parent_resize and sets its position.
-		void arrange_first();
+		auto arrange_first() -> void;
 
 		//! Calls the second child's @p on_parent_resize and sets its position.
-		void arrange_second();
+		auto arrange_second() -> void;
 	};
 }

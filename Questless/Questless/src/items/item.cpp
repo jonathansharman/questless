@@ -5,7 +5,9 @@
 #include "item.hpp"
 
 namespace ql {
-	void make_item(id id, mass mass) {
-		reg.assign<ql::mass>(id, mass);
+	auto make_item(id item_id, mass mass) -> id {
+		reg.assign<ql::mass>(item_id, mass);
+
+		return item_id;
 	}
 }

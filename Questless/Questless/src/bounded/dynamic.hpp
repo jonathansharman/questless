@@ -36,16 +36,16 @@ namespace ql {
 		constexpr dynamic_bounded(dynamic_bounded&& other) noexcept = default;
 
 		//! Assigns the value from @p bounded to this value. Does not affect the lower and upper bounds.
-		constexpr dynamic_bounded& operator=(dynamic_bounded const& bounded) noexcept {
+		constexpr auto& operator=(dynamic_bounded const& bounded) noexcept {
 			set_value(bounded.value());
 			return *this;
 		}
 		//! Assigns the value from @p bounded to this value. Does not affect the lower and upper bounds.
-		constexpr dynamic_bounded& operator=(dynamic_bounded&& bounded) noexcept {
+		constexpr auto& operator=(dynamic_bounded&& bounded) noexcept {
 			set_value(std::move(bounded.value()));
 			return *this;
 		}
-		constexpr dynamic_bounded& operator=(arithmetic_type const& value) noexcept {
+		constexpr auto& operator=(arithmetic_type const& value) noexcept {
 			set_value(value);
 			return *this;
 		}
@@ -60,35 +60,35 @@ namespace ql {
 		}
 
 		//! The contained value.
-		constexpr arithmetic_type value() const noexcept {
+		constexpr auto value() const noexcept {
 			return _value;
 		}
 
 		//! The minimum value in the range (inclusive).
-		constexpr arithmetic_type const& lower_bound() const noexcept {
+		constexpr auto const& lower_bound() const noexcept {
 			return _lower_bound;
 		}
 
 		//! The maximum value in the range (inclusive).
-		constexpr arithmetic_type const& upper_bound() const noexcept {
+		constexpr auto const& upper_bound() const noexcept {
 			return _upper_bound;
 		}
 
 		//! Sets the contained value to the given new value, clamped to the valid range.
-		constexpr void set_value(arithmetic_type const& value) noexcept {
+		constexpr auto set_value(arithmetic_type const& value) -> void noexcept {
 			_value = std::clamp(value, _lower_bound, _upper_bound);
 		}
 
 		//! Sets the inclusive minimum value to the minimum of @p lower_bound and the current upper bound and clamps the
 		//! contained value if necessary.
-		constexpr void set_lower_bound(arithmetic_type const& lower_bound) noexcept {
+		constexpr auto set_lower_bound(arithmetic_type const& lower_bound) -> void noexcept {
 			_lower_bound = std::min(lower_bound, _upper_bound);
 			if (_value < _lower_bound) { _value = _lower_bound; }
 		}
 
 		//! Sets the inclusive maximum value to the maximum of @p upper_bound and the current lower bound and clamps the
 		//! contained value if necessary.
-		constexpr void set_upper_bound(arithmetic_type const& upper_bound) noexcept {
+		constexpr auto set_upper_bound(arithmetic_type const& upper_bound) -> void noexcept {
 			_upper_bound = std::max(_lower_bound, upper_bound);
 			if (_value > _upper_bound) { _value = _upper_bound; }
 		}

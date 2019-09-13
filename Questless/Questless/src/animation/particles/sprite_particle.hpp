@@ -18,11 +18,11 @@ namespace ql {
 	private:
 		sf::Sprite _sprite;
 
-		void particle_subupdate(sec elapsed_time) final;
+		auto particle_subupdate(sec elapsed_time) -> void final;
 
-		void particle_subdraw(sf::RenderTarget& target, sf::RenderStates states) const final;
+		auto particle_subdraw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
 
 		//! Sprite particle subtype-specific update.
-		virtual void sprite_particle_subupdate(sec elapsed_time) = 0;
+		virtual auto sprite_particle_subupdate(sec elapsed_time) -> void = 0;
 	};
 }

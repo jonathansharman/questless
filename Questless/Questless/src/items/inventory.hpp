@@ -18,13 +18,13 @@ namespace ql {
 
 		//! Adds the item with the given ID to the inventory.
 		//! @param item_id The ID of the item to add to the inventory.
-		void add(id item_id) {
+		auto add(id item_id) -> void {
 			item_ids.insert(item_id);
 		}
 
 		//! Removes the item with the given ID from the inventory.
 		//! @param item_id The ID of an item to remove from the inventory.
-		void remove(id item_id) {
+		auto remove(id item_id) -> void {
 			item_ids.erase(item_id);
 		}
 	};

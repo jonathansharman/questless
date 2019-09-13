@@ -17,10 +17,10 @@ namespace ql {
 		dynamic_nonnegative<ql::durability> durability;
 
 		//! Whether the item is broken, i.e. integrity is zero.
-		bool broken() const {
+		auto broken() const -> bool {
 			return durability.value() <= 0_durability;
 		}
 	};
 
-	void make_breakable(id id, dynamic_nonnegative<ql::durability> durability);
+	auto make_breakable(id breakable_id, dynamic_nonnegative<ql::durability> durability) -> id;
 }

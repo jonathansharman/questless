@@ -26,8 +26,12 @@ namespace ql {
 		//! Time left before this gatestone can be used again.
 		dynamic_nonnegative<tick> cooldown;
 
-		void update(tick elapsed);
+		auto update(tick elapsed) -> void;
 	};
 
-	id make_gatestone(id id, magic::color color, dynamic_nonnegative<mana> charge, dynamic_nonnegative<tick> cooldown);
+	auto make_gatestone( //
+		id gatestone_id,
+		magic::color color,
+		dynamic_nonnegative<mana> charge,
+		dynamic_nonnegative<tick> cooldown) -> id;
 }

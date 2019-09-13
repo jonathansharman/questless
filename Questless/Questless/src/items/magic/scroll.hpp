@@ -17,5 +17,5 @@ namespace ql {
 		std::optional<magic::spell> spell;
 	};
 
-	id make_scroll(id id, std::optional<magic::spell> spell);
+	auto make_scroll(id scroll_id, std::optional<magic::spell> spell) -> id;
 }

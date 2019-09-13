@@ -18,9 +18,9 @@ namespace ql {
 	struct basic_ai {
 		basic_ai(id id);
 
-		std::future<void> act();
+		auto act() -> std::future<void>;
 
-		void perceive(effects::effect const& effect);
+		auto perceive(effects::effect const& effect) -> void;
 
 	private:
 		id _id;

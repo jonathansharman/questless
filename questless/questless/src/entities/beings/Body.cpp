@@ -14,7 +14,7 @@
 
 namespace ql {
 	namespace {
-		void reset_stats(body& b) {
+		auto reset_stats(body& b) -> void {
 			// Aggregate part stats.
 			b.stats.reset();
 			b.for_enabled_parts([&](body_part const& part) { b.stats.a.combine_with(part.stats.a); });
@@ -24,7 +24,7 @@ namespace ql {
 		}
 
 		template <typename ConstQualifiedBodyPartType, typename F>
-		void for_parts_impl(body const& body, bool include_disabled, F const& f) {
+		auto for_parts_impl(body const& body, bool include_disabled, F const& f) -> void {
 			std::queue<id> work_list;
 			work_list.push(body.root_part_id);
 			while (!work_list.empty()) {
@@ -55,21 +55,21 @@ namespace ql {
 		reset_stats(*this);
 	}
 
-	void body::for_all_parts(std::function<void(body_part const&)> const& f) const {
+	auto body::for_all_parts(std::function<void(body_part const&)> const& f) const -> void {
 		for_parts_impl<body_part const&>(*this, true, f);
 	}
-	void body::for_all_parts(std::function<void(body_part&)> const& f) {
+	auto body::for_all_parts(std::function<void(body_part&)> const& f) -> void {
 		for_parts_impl<body_part&>(*this, true, f);
 	}
 
-	void body::for_enabled_parts(std::function<void(body_part const&)> const& f) const {
+	auto body::for_enabled_parts(std::function<void(body_part const&)> const& f) const -> void {
 		for_parts_impl<body_part const&>(*this, false, f);
 	}
-	void body::for_enabled_parts(std::function<void(body_part&)> const& f) {
+	auto body::for_enabled_parts(std::function<void(body_part&)> const& f) -> void {
 		for_parts_impl<body_part&>(*this, false, f);
 	}
 
-	void body::update(tick elapsed) {
+	auto body::update(tick elapsed) -> void {
 		// Reset and aggregate stats.
 		reset_stats(*this);
 

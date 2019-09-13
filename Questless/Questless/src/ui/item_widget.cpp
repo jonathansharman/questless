@@ -28,7 +28,7 @@ namespace ql {
 	using namespace view::literals;
 
 	namespace {
-		uptr<animation> animate_spell(rsrc::spell const& resources, magic::spell const& spell) {
+		auto animate_spell(rsrc::spell const& resources, magic::spell const& spell) -> uptr<animation> {
 			return match(
 				spell.value,
 				[&](magic::telescope const&) { return umake<still_image>(resources.txtr.telescope); },

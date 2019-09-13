@@ -39,25 +39,25 @@ namespace ql {
 
 		virtual ~particle() = default;
 
-		void animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const final;
+		auto animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
 
 	private:
 		//! Whether the particle should fade out as it nears expiration.
-		virtual bool fade_out() const {
+		virtual auto fade_out() const -> bool {
 			return true;
 		};
 
 		//! Whether the particle's angle should be set to match its velocity.
-		virtual bool face_towards_heading() const {
+		virtual auto face_towards_heading() const -> bool {
 			return false;
 		}
 
-		void animation_subupdate(sec elapsed_time) final;
+		auto animation_subupdate(sec elapsed_time) -> void final;
 
 		//! Updates the particle in a subtype-specific way.
-		virtual void particle_subupdate(sec elapsed_time) = 0;
+		virtual auto particle_subupdate(sec elapsed_time) -> void = 0;
 
 		//! Draws the particle in a subtype-specific way.
-		virtual void particle_subdraw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
+		virtual auto particle_subdraw(sf::RenderTarget& target, sf::RenderStates states) const -> void = 0;
 	};
 }

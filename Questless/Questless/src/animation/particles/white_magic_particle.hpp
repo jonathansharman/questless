@@ -18,6 +18,6 @@ namespace ql {
 		white_magic_particle(rsrc::particle const& resources);
 
 	private:
-		void sprite_particle_subupdate(sec) final;
+		auto sprite_particle_subupdate(sec) -> void final;
 	};
 }

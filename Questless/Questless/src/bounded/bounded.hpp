@@ -8,22 +8,22 @@
 
 #include <compare>
 
-#define DEFINE_BINARY_OPERATOR(op)                   \
-	Derived operator op(Derived const& that) const { \
-		return value() op that.value();              \
-	}                                                \
-	template <typename T>                            \
-	Derived operator op(T const& that) const {       \
-		return value() op that;                      \
-	}                                                \
-	Derived& operator op##=(Derived const& that) {   \
-		set_value(value() op that.value());          \
-		return static_cast<Derived&>(*this);         \
-	}                                                \
-	template <typename T>                            \
-	Derived& operator op##=(T const& that) {         \
-		set_value(value() op that);                  \
-		return static_cast<Derived&>(*this);         \
+#define DEFINE_BINARY_OPERATOR(op)                         \
+	auto operator op(Derived const& that) const->Derived { \
+		return value() op that.value();                    \
+	}                                                      \
+	template <typename T>                                  \
+	auto operator op(T const& that) const->Derived {       \
+		return value() op that;                            \
+	}                                                      \
+	auto operator op##=(Derived const& that) {             \
+		set_value(value() op that.value());                \
+		return static_cast<Derived&>(*this);               \
+	}                                                      \
+	template <typename T>                                  \
+	auto operator op##=(T const& that) {                   \
+		set_value(value() op that);                        \
+		return static_cast<Derived&>(*this);               \
 	}
 
 namespace ql {
@@ -35,14 +35,14 @@ namespace ql {
 	private:
 		using value_type = ValueType;
 
-		constexpr value_type value() const {
+		constexpr auto value() const {
 			return static_cast<Derived const&>(*this).value();
 		}
 
-		constexpr void set_value(value_type const& value) {
+		constexpr auto set_value(value_type const& value) -> void {
 			static_cast<Derived&>(*this).set_value(value);
 		}
-		constexpr void set_value(value_type&& value) {
+		constexpr auto set_value(value_type&& value) -> void {
 			static_cast<Derived&>(*this).set_value(std::move(value));
 		}
 
@@ -72,26 +72,26 @@ namespace ql {
 
 		// Arithmetic Operators
 
-		Derived& operator++() {
+		auto operator++() -> Derived& {
 			set_value(value() + 1);
 			return *this;
 		}
-		Derived& operator--() {
+		auto operator--() -> Derived& {
 			set_value(value() - 1);
 			return *this;
 		}
-		Derived operator++(int) {
+		auto operator++(int) -> Derived {
 			value_type old_value = value();
 			set_value(value() + 1);
 			return old_value;
 		}
-		Derived operator--(int) {
+		auto operator--(int) -> Derived {
 			value_type old_value = value();
 			set_value(value() - 1);
 			return old_value;
 		}
 
-		Derived operator-() const {
+		auto operator-() const -> Derived {
 			return -value();
 		}
 
@@ -103,7 +103,7 @@ namespace ql {
 
 		// Bit-wise Operators
 
-		Derived operator~() const {
+		auto operator~() const -> Derived {
 			~(value());
 		}
 
@@ -112,32 +112,32 @@ namespace ql {
 		DEFINE_BINARY_OPERATOR(^);
 
 		template <typename T>
-		Derived& operator>>=(int shift) {
+		auto operator>>=(int shift) -> Derived& {
 			set_value(value() >> shift);
 			return *this;
 		}
-		Derived operator>>(int shift) const {
+		auto operator>>(int shift) const -> Derived {
 			return value() >> shift;
 		}
 
 		template <typename T>
-		Derived& operator<<=(int shift) {
+		auto operator<<=(int shift) -> Derived& {
 			set_value(value() << shift);
 			return *this;
 		}
-		Derived operator<<(int shift) const {
+		auto operator<<(int shift) const -> Derived {
 			return value() << shift;
 		}
 
 		// Serialization
 
 		template <typename Archive>
-		void save(Archive& archive) const {
+		auto save(Archive& archive) const -> void {
 			archive(cereal::make_nvp("value", value()));
 		}
 
 		template <typename Archive>
-		void load(Archive& archive) {
+		auto load(Archive& archive) -> void {
 			value_type value;
 			archive(cereal::make_nvp("value", value));
 			set_value(std::move(value));

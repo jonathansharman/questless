@@ -28,8 +28,8 @@ namespace ql {
 			constexpr protect(protect&&) noexcept = default;
 			constexpr protect(protect const&) = default;
 
-			constexpr protect& operator=(protect&&) noexcept = default;
-			constexpr protect& operator=(protect const&) = default;
+			constexpr auto operator=(protect&&) noexcept -> protect& = default;
+			constexpr auto operator=(protect const&) -> protect& = default;
 
 			constexpr protect(dmg::slash slash) : slash{slash} {}
 			constexpr protect(dmg::pierce pierce) : pierce{pierce} {}
@@ -41,7 +41,7 @@ namespace ql {
 			constexpr protect(dmg::poison poison) : poison{poison} {}
 			constexpr protect(dmg::rot rot) : rot{rot} {}
 
-			protect& operator+=(protect const& p) {
+			auto& operator+=(protect const& p) {
 				slash += p.slash;
 				pierce += p.pierce;
 				cleave += p.cleave;
@@ -53,7 +53,8 @@ namespace ql {
 				rot += p.rot;
 				return *this;
 			}
-			protect& operator-=(protect const& p) {
+
+			auto& operator-=(protect const& p) {
 				slash -= p.slash;
 				pierce -= p.pierce;
 				cleave -= p.cleave;
@@ -65,7 +66,8 @@ namespace ql {
 				rot -= p.rot;
 				return *this;
 			}
-			protect& operator*=(int k) {
+
+			auto& operator*=(int k) {
 				slash *= k;
 				pierce *= k;
 				cleave *= k;
@@ -77,7 +79,8 @@ namespace ql {
 				rot *= k;
 				return *this;
 			}
-			protect& operator/=(int k) {
+
+			auto& operator/=(int k) {
 				slash /= k;
 				pierce /= k;
 				cleave /= k;
@@ -91,23 +94,27 @@ namespace ql {
 			}
 		};
 
-		inline protect operator+(protect p1, protect const& p2) {
+		inline auto operator+(protect p1, protect const& p2) {
 			p1 += p2;
 			return p1;
 		}
-		inline protect operator-(protect p1, protect const& p2) {
+
+		inline auto operator-(protect p1, protect const& p2) {
 			p1 -= p2;
 			return p1;
 		}
-		inline protect operator*(protect p, int k) {
+
+		inline auto operator*(protect p, int k) {
 			p *= k;
 			return p;
 		}
-		inline protect operator*(int k, protect const& p) {
+
+		inline auto operator*(int k, protect const& p) {
 			// Multiplication of int is commutative, so it's okay to delegate to p * k.
 			return p * k;
 		}
-		inline protect operator/(protect p, int k) {
+
+		inline auto operator/(protect p, int k) {
 			p /= k;
 			return p;
 		}

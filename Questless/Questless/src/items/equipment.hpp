@@ -38,19 +38,20 @@ namespace ql {
 		action unequip_cost;
 
 		//! Whether the item is currently equipped to some being.
-		bool equipped() const {
+		auto equipped() const -> bool {
 			return o_bearer_id.has_value();
 		}
 
 		//! Equips this to the being with ID @p bearer_id.
-		void equip(ql::id bearer_id);
+		auto equip(ql::id bearer_id) -> void;
 
 		//! If equipped, unequips from the bearer, incurring costs.
-		void unequip();
+		auto unequip() -> void;
 
 		//! If equipped, immediately unequips from the bearer, without incurring costs.
-		void forced_unequip();
+		auto forced_unequip() -> void;
 	};
 
-	void make_equipment(ql::id id, std::optional<ql::id> o_bearer_id, std::vector<equipment::tab> tabs, action equip_cost, action unequip_cost);
+	auto make_equipment(id equipment_id, std::optional<id> o_bearer_id, std::vector<equipment::tab> tabs, action equip_cost, action unequip_cost)
+		-> id;
 }

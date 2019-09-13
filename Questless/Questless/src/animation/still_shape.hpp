@@ -16,8 +16,8 @@ namespace ql {
 		still_shape(uptr<sf::Shape> shape) : shape{std::move(shape)} {}
 
 	private:
-		void animation_subupdate(sec) final {}
+		auto animation_subupdate(sec) -> void final {}
 
-		void animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const final;
+		auto animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const -> void final;
 	};
 }

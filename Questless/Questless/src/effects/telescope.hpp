@@ -12,7 +12,7 @@ namespace ql {
 			tile_hex::point origin;
 			id const caster_id;
 
-			constexpr span range() const {
+			constexpr auto range() const -> span {
 				return 3_span;
 			}
 		};

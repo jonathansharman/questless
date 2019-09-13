@@ -21,7 +21,7 @@ namespace ql {
 		// Spawn the player into the main region.
 		auto player_id = create_and_spawn_player(region_id);
 		// Create HUD.
-		_hud = umake<ql::hud>(fonts, region_id, player_id);
+		_hud = umake<hud>(fonts, region_id, player_id);
 	}
 
 	main_menu::~main_menu() = default;

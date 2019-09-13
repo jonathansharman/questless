@@ -15,7 +15,7 @@
 
 namespace ql {
 	namespace {
-		void apply_single(body& body, body_status status, tick /*elapsed*/) {
+		auto apply_single(body& body, body_status status, tick /*elapsed*/) -> void {
 			match(
 				status,
 				[&](blind const& b) {
@@ -43,7 +43,7 @@ namespace ql {
 		}
 	}
 
-	void body_status_set::apply(tick elapsed) {
+	auto body_status_set::apply(tick elapsed) -> void {
 		auto& body = reg.get<ql::body>(id);
 
 		// Apply permanent effects.

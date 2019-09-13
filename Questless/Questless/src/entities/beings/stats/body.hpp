@@ -15,7 +15,7 @@ namespace ql::stats {
 		stat<dmg::armor> armor;
 
 		//! Resets current stats to base stats.
-		void reset() {
+		auto reset() -> void {
 			a.reset();
 			armor.reset();
 		}

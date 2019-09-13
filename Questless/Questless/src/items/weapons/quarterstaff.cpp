@@ -11,33 +11,33 @@
 #include "items/item.hpp"
 
 namespace ql {
-	void quarterstaff::strike() {
+	auto quarterstaff::strike() -> void {
 		//! @todo This.
 
 		dmg::group damage = {24_bludgeon};
 		tick cooldown = 20_tick;
 	}
 
-	void quarterstaff::jab() {
+	auto quarterstaff::jab() -> void {
 		//! @todo This.
 
 		dmg::group damage = {12_bludgeon};
 		tick cooldown = 13_tick;
 	}
 
-	id make_quarterstaff(id id) {
-		make_item(id, 2.5_mass);
+	auto make_quarterstaff(id quarterstaff_id) -> id {
+		make_item(quarterstaff_id, 2.5_mass);
 
-		make_breakable(id, {500_durability, 500_durability});
+		make_breakable(quarterstaff_id, {500_durability, 500_durability});
 
-		make_equipment(id,
+		make_equipment(quarterstaff_id,
 			std::nullopt,
 			{equipment::tab{body_part::tag::hand, std::nullopt}, equipment::tab{body_part::tag::hand, std::nullopt}},
 			1_ap,
 			1_ap);
 
-		reg.assign<quarterstaff>(id, id);
+		reg.assign<quarterstaff>(quarterstaff_id, quarterstaff_id);
 
-		return id;
+		return quarterstaff_id;
 	}
 }

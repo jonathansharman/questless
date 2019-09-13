@@ -19,13 +19,13 @@ namespace ql::stats {
 		stat<ql::temperature> max_temp;
 		stat<dmg::armor> armor;
 
-		blood_per_tick blood_regen() const {
+		auto blood_regen() const -> blood_per_tick {
 			// Blood regen is proportional to base vitality and the regen factor.
 			return a.vitality.base * regen_factor.cur * 0.01_blood / 1_tick / 1_hp;
 		}
 
 		//! Resets current stats to base stats.
-		void reset() {
+		auto reset() -> void {
 			a.reset();
 			regen_factor.reset();
 			bleeding.reset();

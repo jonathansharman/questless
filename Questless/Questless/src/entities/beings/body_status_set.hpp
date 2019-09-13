@@ -28,6 +28,6 @@ namespace ql {
 
 		//! Applies the effects of this status set to its being.
 		//! @param elapsed The elapsed turns since this was last applied.
-		void apply(tick elapsed);
+		auto apply(tick elapsed) -> void;
 	};
 }

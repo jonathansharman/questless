@@ -31,30 +31,30 @@ namespace ql {
 			mutator(_value, _value);
 		}
 
-		constexpr static_property& operator=(static_property const& bounded) noexcept {
+		constexpr auto& operator=(static_property const& bounded) noexcept {
 			set_value(bounded.value());
 			return *this;
 		}
-		constexpr static_property& operator=(static_property&& bounded) noexcept {
+		constexpr auto& operator=(static_property&& bounded) noexcept {
 			set_value(std::move(bounded.value()));
 			return *this;
 		}
-		constexpr static_property& operator=(value_type const& value) noexcept {
+		constexpr auto& operator=(value_type const& value) noexcept {
 			set_value(value);
 			return *this;
 		}
-		constexpr static_property& operator=(value_type&& value) noexcept {
+		constexpr auto& operator=(value_type&& value) noexcept {
 			set_value(std::move(value));
 			return *this;
 		}
 
 		//! The property's underlying value.
-		constexpr value_type const& value() const noexcept {
+		constexpr auto value() const noexcept {
 			return _value;
 		}
 
 		//! Sets the property's underlying value to @p value and calls the mutator on it.
-		constexpr void set_value(value_type const& value) noexcept {
+		constexpr auto set_value(value_type const& value) noexcept -> void {
 			mutator(_value, value);
 		}
 

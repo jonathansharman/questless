@@ -20,10 +20,10 @@ namespace ql {
 
 		//! Whether this body part is currently functioning. Parts can be disabled by damage or other effects.
 		ableness ableness = ableness::enabled;
-		constexpr bool enabled() const {
+		constexpr auto enabled() const -> bool {
 			return ableness == ableness::enabled;
 		}
-		constexpr bool disabled() const {
+		constexpr auto disabled() const -> bool {
 			return ableness == ableness::disabled;
 		}
 
