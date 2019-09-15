@@ -66,6 +66,7 @@ namespace ql {
 		//! @param event The mouse wheel scroll event that occurred.
 		virtual auto on_mouse_wheel_scroll(sf::Event::MouseWheelScrollEvent const& event) -> event_handled;
 
+		//! Called when the user requests to quit the program.
 		virtual auto on_request_quit() -> event_handled;
 	};
 }

@@ -195,16 +195,16 @@ namespace ql {
 
 					auto render_slash_or_pierce = [&](int const amount) {
 						spawn_blood(amount);
-						_effect_animations.push_back(
-							umake<text_particle>(text_duration, font, std::to_string(amount), sf::Color::White));
+						_effect_animations.push_back(umake<text_particle>(
+							text_duration, font, std::to_string(amount), sf::Color::White, sf::Color::Black, 1.0f));
 						_effect_animations.back()->setPosition(view::to_sfml(position));
 						_pierce_sound.play();
 					};
 
 					auto render_cleave_or_bludgeon = [&](int const amount) {
 						spawn_blood(amount);
-						_effect_animations.push_back(
-							umake<text_particle>(text_duration, font, std::to_string(amount), sf::Color::White));
+						_effect_animations.push_back(umake<text_particle>(
+							text_duration, font, std::to_string(amount), sf::Color::White, sf::Color::Black, 1.0f));
 						_effect_animations.back()->setPosition(view::to_sfml(position));
 						_hit_sound.play();
 					};
@@ -217,27 +217,27 @@ namespace ql {
 						[&](dmg::bludgeon const& bludgeon) { render_cleave_or_bludgeon(bludgeon.value); },
 						[&](dmg::scorch const& scorch) {
 							_effect_animations.push_back(umake<text_particle>(
-								text_duration, font, std::to_string(scorch.value), sf::Color{255, 128, 0}));
+								text_duration, font, std::to_string(scorch.value), sf::Color{255, 128, 0}, sf::Color::Black, 1.0f));
 							_effect_animations.back()->setPosition(view::to_sfml(position));
 						},
 						[&](dmg::freeze const& freeze) {
-							_effect_animations.push_back(
-								umake<text_particle>(text_duration, font, std::to_string(freeze.value), sf::Color::Cyan));
+							_effect_animations.push_back(umake<text_particle>(
+								text_duration, font, std::to_string(freeze.value), sf::Color::Cyan, sf::Color::Black, 1.0f));
 							_effect_animations.back()->setPosition(view::to_sfml(position));
 						},
 						[&](dmg::shock const& shock) {
-							_effect_animations.push_back(
-								umake<text_particle>(text_duration, font, std::to_string(shock.value), sf::Color::Yellow));
+							_effect_animations.push_back(umake<text_particle>(
+								text_duration, font, std::to_string(shock.value), sf::Color::Yellow, sf::Color::Black, 1.0f));
 							_effect_animations.back()->setPosition(view::to_sfml(position));
 						},
 						[&](dmg::poison const& poison) {
 							_effect_animations.push_back(umake<text_particle>(
-								text_duration, font, std::to_string(poison.value), sf::Color{128, 0, 192}));
+								text_duration, font, std::to_string(poison.value), sf::Color{128, 0, 192}, sf::Color::Black, 1.0f));
 							_effect_animations.back()->setPosition(view::to_sfml(position));
 						},
 						[&](dmg::rot const& rot) {
 							_effect_animations.push_back(umake<text_particle>(
-								text_duration, font, std::to_string(rot.value), sf::Color{96, 96, 96}));
+								text_duration, font, std::to_string(rot.value), sf::Color{96, 96, 96}, sf::Color::White, 1.0f));
 							_effect_animations.back()->setPosition(view::to_sfml(position));
 						});
 				}
