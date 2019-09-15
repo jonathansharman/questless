@@ -46,8 +46,8 @@ namespace ql {
 				[[maybe_unused]] auto handled = widget::event_handled::yes;
 				switch (event.type) {
 					case sf::Event::Closed:
-						// End immediately if the window is closed.
-						return;
+						request_quit();
+						break;
 					case sf::Event::Resized: {
 						// Rescale view to fit the new window size.
 						auto const float_width = static_cast<float>(event.size.width);
@@ -59,8 +59,9 @@ namespace ql {
 					}
 					case sf::Event::KeyPressed:
 						if (event.key.alt && event.key.code == sf::Keyboard::F4) {
-							// End immediately on Alt-F4.
-							return;
+							// Alt-F4 to quit.
+							request_quit();
+							break;
 						} else {
 							handled = _root->on_key_press(event.key);
 						}
@@ -143,5 +144,11 @@ namespace ql {
 		fps_text.setOutlineThickness(1.0f);
 		fps_text.setFillColor(sf::Color::White);
 		_window.draw(fps_text);
+	}
+
+	auto game::request_quit() -> void {
+		[[maybe_unused]] auto handled = _root->on_request_quit();
+		// Root element must handle quit events.
+		assert(handled == widget::event_handled::yes);
 	}
 }

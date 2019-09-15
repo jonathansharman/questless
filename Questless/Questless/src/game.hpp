@@ -55,5 +55,8 @@ namespace ql {
 
 		//! Draws the FPS counter.
 		auto draw_fps() -> void;
+
+		//! Inform the root element that the user is trying to quit.
+		auto request_quit() -> void;
 	};
 }

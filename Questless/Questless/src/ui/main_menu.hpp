@@ -30,6 +30,8 @@ namespace ql {
 
 		auto on_parent_resize(view::vector parent_size) -> void final;
 
+		auto on_request_quit() -> event_handled final;
+
 	private:
 		uptr<widget>& _root;
 		uptr<hud> _hud;

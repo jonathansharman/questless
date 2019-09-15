@@ -21,7 +21,7 @@ namespace ql {
 		// Spawn the player into the main region.
 		auto player_id = create_and_spawn_player(region_id);
 		// Create HUD.
-		_hud = umake<hud>(fonts, region_id, player_id);
+		_hud = umake<hud>(root, fonts, region_id, player_id);
 	}
 
 	main_menu::~main_menu() = default;
@@ -50,5 +50,10 @@ namespace ql {
 
 	auto main_menu::on_parent_resize(view::vector parent_size) -> void {
 		_size = parent_size;
+	}
+
+	auto main_menu::on_request_quit() -> event_handled {
+		_root = nullptr;
+		return event_handled::yes;
 	}
 }

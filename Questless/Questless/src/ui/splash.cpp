@@ -128,6 +128,11 @@ namespace ql {
 		return event_handled::yes;
 	}
 
+	auto splash::on_request_quit() -> event_handled {
+		_root = nullptr;
+		return event_handled::yes;
+	}
+
 	auto splash::end_scene() -> void {
 		_flame_sound.stop();
 		auto menu = umake<main_menu>(_root, _fonts);

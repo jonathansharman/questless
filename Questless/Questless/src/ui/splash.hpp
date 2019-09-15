@@ -36,6 +36,8 @@ namespace ql {
 
 		auto on_mouse_press(sf::Event::MouseButtonEvent const&) -> event_handled final;
 
+		auto on_request_quit() -> event_handled final;
+
 	private:
 		clock::time_point _start_time = clock::now();
 

@@ -28,7 +28,7 @@ namespace ql {
 	//! The primary interface with the player during gameplay.
 	struct hud : widget {
 		//! @param player_id The ID of the player-controlled being.
-		hud(rsrc::fonts const& fonts, id region_id, id player_id);
+		hud(uptr<widget>& root, rsrc::fonts const& fonts, id region_id, id player_id);
 
 		~hud();
 
@@ -59,7 +59,11 @@ namespace ql {
 
 		auto on_mouse_move(view::point mouse_position) -> void final;
 
+		auto on_request_quit() -> event_handled final;
+
 	private:
+		uptr<widget>& _root;
+
 		id _region_id;
 		id _player_id{};
 		std::promise<void> _pass_promise;

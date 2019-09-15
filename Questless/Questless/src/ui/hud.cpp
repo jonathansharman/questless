@@ -26,10 +26,12 @@ namespace ql {
 	}
 
 	hud::hud( //
+		uptr<widget>& root,
 		rsrc::fonts const& fonts,
 		id region_id,
 		id player_id)
-		: _rsrc{fonts}
+		: _root{root}
+		, _rsrc{fonts}
 		, _region_id{region_id}
 		, _player_id{player_id}
 		, _world_widget{rsrc::world_widget{_rsrc.entity, _rsrc.fonts, _rsrc.particle, _rsrc.tile}}
@@ -203,6 +205,11 @@ namespace ql {
 		_hotbar.on_mouse_move(mouse_position);
 		_inv.on_mouse_move(mouse_position);
 		_world_widget.on_mouse_move(mouse_position);
+	}
+
+	auto hud::on_request_quit() -> event_handled {
+		_root = nullptr;
+		return event_handled::yes;
 	}
 
 	auto hud::draw(sf::RenderTarget& target, sf::RenderStates states) const -> void {

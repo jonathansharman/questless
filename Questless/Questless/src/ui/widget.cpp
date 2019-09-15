@@ -38,4 +38,8 @@ namespace ql {
 	auto widget::on_mouse_wheel_scroll(sf::Event::MouseWheelScrollEvent const&) -> event_handled {
 		return event_handled::no;
 	}
+
+	auto widget::on_request_quit() -> event_handled {
+		return event_handled::no;
+	}
 }
