@@ -14,13 +14,13 @@
 
 namespace ql {
 	namespace {
-		static constexpr auto perception_loss_per_span = 10_perception / 1_span;
+		static constexpr auto perception_loss_per_pace = 10_perception / 1_pace;
 	}
 
-	auto max_visual_range(std::vector<stats::vision> const& vision_sources) -> span {
-		if (vision_sources.empty()) { return 0_span; }
+	auto max_visual_range(std::vector<stats::vision> const& vision_sources) -> pace {
+		if (vision_sources.empty()) { return 0_pace; }
 		auto acuities = vision_sources | ranges::views::transform([](stats::vision const& v) { return v.acuity.value(); });
-		return ranges::max(acuities) / perception_loss_per_span;
+		return ranges::max(acuities) / perception_loss_per_pace;
 	}
 
 	//! Determines whether @p target is in the field of vision specified by @p location and @p direction.
@@ -28,17 +28,17 @@ namespace ql {
 		auto offset = target - location.coords;
 		switch (direction) {
 			case tile_hex::direction::dr:
-				return offset.q >= 0_span && offset.q + offset.r >= 0_span;
+				return offset.q >= 0_pace && offset.q + offset.r >= 0_pace;
 			case tile_hex::direction::d:
-				return offset.r >= 0_span && offset.q + offset.r >= 0_span;
+				return offset.r >= 0_pace && offset.q + offset.r >= 0_pace;
 			case tile_hex::direction::dl:
-				return offset.q <= 0_span && offset.r >= 0_span;
+				return offset.q <= 0_pace && offset.r >= 0_pace;
 			case tile_hex::direction::ul:
-				return offset.q <= 0_span && offset.q + offset.r <= 0_span;
+				return offset.q <= 0_pace && offset.q + offset.r <= 0_pace;
 			case tile_hex::direction::u:
-				return offset.r <= 0_span && offset.q + offset.r <= 0_span;
+				return offset.r <= 0_pace && offset.q + offset.r <= 0_pace;
 			case tile_hex::direction::ur:
-				return offset.q >= 0_span && offset.r <= 0_span;
+				return offset.q >= 0_pace && offset.r <= 0_pace;
 			default:
 				UNREACHABLE;
 		}
@@ -85,8 +85,8 @@ namespace ql {
 			[&](perception acc, stats::vision v) { return std::max(acc, light_adjusted_perception(v, illuminance)); });
 
 		// Account for distance.
-		span const distance = (target - location.coords).length();
-		auto const best_distance_adjusted_perception = best_light_adjusted_perception - distance * perception_loss_per_span;
+		pace const distance = (target - location.coords).length();
+		auto const best_distance_adjusted_perception = best_light_adjusted_perception - distance * perception_loss_per_pace;
 
 		// Account for occlusions between the perceptor and the target.
 		double const occlusion = region.occlusion(location.coords, target);

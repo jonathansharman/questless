@@ -11,7 +11,7 @@ namespace ql::effects {
 		tile_hex::point origin;
 		tile_hex::point const target;
 
-		constexpr auto range() const -> span {
+		constexpr auto range() const -> pace {
 			return 2 * (target - origin).length();
 		}
 	};

@@ -279,16 +279,16 @@ namespace ql {
 			target.draw(*animation, states);
 		}
 		{ // Draw axes.
-			tile_hex::point origin{0_span, 0_span};
+			tile_hex::point origin{0_pace, 0_pace};
 			sf::VertexArray q_array(sf::Lines);
 			q_array.append(sf::Vertex(view::to_sfml(world_layout.to_view_space(origin)), sf::Color::Red));
 			q_array.append(sf::Vertex(
-				view::to_sfml(world_layout.to_view_space(origin + tile_hex::vector{3_span, 0_span})), sf::Color::Red));
+				view::to_sfml(world_layout.to_view_space(origin + tile_hex::vector{3_pace, 0_pace})), sf::Color::Red));
 			target.draw(q_array, states);
 			sf::VertexArray r_array(sf::Lines);
 			r_array.append(sf::Vertex(view::to_sfml(world_layout.to_view_space(origin)), sf::Color::Green));
 			r_array.append(sf::Vertex(
-				view::to_sfml(world_layout.to_view_space(origin + tile_hex::vector{0_span, 3_span})), sf::Color::Green));
+				view::to_sfml(world_layout.to_view_space(origin + tile_hex::vector{0_pace, 3_pace})), sf::Color::Green));
 			target.draw(r_array, states);
 		}
 	}

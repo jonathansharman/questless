@@ -18,7 +18,7 @@ namespace ql::magic {
 	auto shock::cast(id caster_id, id gatestone_id, tile_hex::point target, dmg::shock damage) -> void {
 		// Check range.
 		auto const caster_location = reg.get<location>(caster_id);
-		if ((caster_location.coords - target).length() > 3_span) { return; }
+		if ((caster_location.coords - target).length() > 3_pace) { return; }
 
 		// Check and pay cost.
 		auto& gatestone = reg.get<ql::gatestone>(gatestone_id);

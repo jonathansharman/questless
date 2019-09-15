@@ -22,7 +22,7 @@ namespace ql::effects {
 		auto origin() const -> tile_hex::point;
 
 		//! The maximum distance from the origin at which @p effect may be perceived.
-		auto range() const -> span;
+		auto range() const -> pace;
 	};
 
 	//! @todo Should effects have an origin? If so, find a good way to factor it out so it's not duplicated accross

@@ -13,11 +13,11 @@
 #include "ui/view_space.hpp"
 
 namespace ql {
-	constexpr auto section_radius = 10_span;
-	constexpr auto section_diameter = 2 * section_radius + 1_span;
+	constexpr auto section_radius = 10_pace;
+	constexpr auto section_diameter = 2 * section_radius + 1_pace;
 
 	//! The space of tiles in a region.
-	using tile_hex = hex_space<struct tile_hex_tag, span>;
+	using tile_hex = hex_space<struct tile_hex_tag, pace>;
 
 	//! The space of sections in a region.
 	using section_hex = hex_space<struct section_hex_tag, section_span>;
@@ -59,7 +59,7 @@ namespace ql {
 		auto const r1 = world_layout.orientation.b1 * (p[1] - world_layout.origin[1]) / world_layout.size[1];
 		auto const r2 = world_layout.orientation.b2 * (p[0] - world_layout.origin[0]) / world_layout.size[0];
 		auto const r3 = world_layout.orientation.b3 * (p[1] - world_layout.origin[1]) / world_layout.size[1];
-		return tile_hex::point{span{static_cast<int>((r0 + r1).value)}, span{static_cast<int>((r2 + r3).value)}};
+		return tile_hex::point{pace{static_cast<int>((r0 + r1).value)}, pace{static_cast<int>((r2 + r3).value)}};
 	}
 	//! Converts @p v to a region tile space vector.
 	constexpr auto to_region_tile(view::vector v) {
@@ -67,7 +67,7 @@ namespace ql {
 		auto const r1 = world_layout.orientation.b1 * v[1] / world_layout.size[1];
 		auto const r2 = world_layout.orientation.b2 * v[0] / world_layout.size[0];
 		auto const r3 = world_layout.orientation.b3 * v[1] / world_layout.size[1];
-		return tile_hex::vector{span{static_cast<int>((r0 + r1).value)}, span{static_cast<int>((r2 + r3).value)}};
+		return tile_hex::vector{pace{static_cast<int>((r0 + r1).value)}, pace{static_cast<int>((r2 + r3).value)}};
 	}
 }
 

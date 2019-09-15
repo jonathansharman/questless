@@ -20,8 +20,8 @@ namespace ql {
 			id target_part_id;
 			std::optional<id> o_source_id;
 
-			constexpr auto range() const -> span {
-				return 7_span;
+			constexpr auto range() const -> pace {
+				return 7_pace;
 			}
 		};
 	}

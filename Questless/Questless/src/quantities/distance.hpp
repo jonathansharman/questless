@@ -8,13 +8,13 @@
 
 namespace ql {
 	//! In-game distance, defined as the distance between adjacent tiles.
-	using span = cancel::quantity<int, cancel::unit_t<struct span_tag>>;
-	constexpr auto operator"" _span(unsigned long long value) {
-		return span{static_cast<int>(value)};
+	using pace = cancel::quantity<int, cancel::unit_t<struct pace_tag>>;
+	constexpr auto operator"" _pace(unsigned long long value) {
+		return pace{static_cast<int>(value)};
 	}
 
 	//! Distance between sections.
-	using section_span = cancel::quantity<int, cancel::unit_t<struct section_span_tag>>;
+	using section_span = cancel::quantity<int, cancel::unit_t<struct section_pace_tag>>;
 	constexpr auto operator"" _section_span(unsigned long long value) {
 		return section_span{static_cast<int>(value)};
 	}

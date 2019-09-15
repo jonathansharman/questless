@@ -16,8 +16,8 @@ namespace ql {
 	section::section(id region_id, section_hex::point coords) : _coords{coords} {
 		// Create a section with random tiles.
 		auto const center = center_coords();
-		for (span q = -section_radius; q <= section_radius; ++q) {
-			for (span r = -section_radius; r <= section_radius; ++r) {
+		for (pace q = -section_radius; q <= section_radius; ++q) {
+			for (pace r = -section_radius; r <= section_radius; ++r) {
 				auto const terrain = static_cast<ql::terrain>(uniform(0, static_cast<int>(terrain::terrain_count) - 1));
 				auto const tile_coords = center + tile_hex::vector{q, r};
 				location location{region_id, tile_coords};

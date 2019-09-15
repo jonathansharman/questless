@@ -58,7 +58,7 @@ namespace ql {
 						return make_ready_future();
 					} else {
 						// Facing towards target.
-						if ((target_location.coords - target_location.coords).length() == 1_span) {
+						if ((target_location.coords - target_location.coords).length() == 1_pace) {
 							// Within striking distance of target.
 
 							//! @todo Find and use melee weapon in inventory, if present.

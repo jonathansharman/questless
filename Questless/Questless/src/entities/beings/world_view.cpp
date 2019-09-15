@@ -18,8 +18,8 @@ namespace ql {
 		auto& region = reg.get<ql::region>(center.region_id);
 
 		// Iterate over the rhomboid specified by the location and visual range to find visible tiles and beings.
-		for (span q = -visual_range; q <= visual_range; ++q) {
-			for (span r = -visual_range; r <= visual_range; ++r) {
+		for (pace q = -visual_range; q <= visual_range; ++q) {
+			for (pace r = -visual_range; r <= visual_range; ++r) {
 				auto const offset = tile_hex::vector{q, r};
 
 				// Skip corner tiles that are out of range.

@@ -174,6 +174,11 @@ namespace ql {
 				move(_player_id, tile_hex::direction::dr, event.shift);
 				_world_widget.render_view(world_view{_player_id});
 				break;
+			// Snap camera to player.
+			case sf::Keyboard::Space:
+				_world_widget.set_position(
+					view::point{} - world_layout.to_view_space(reg.get<location>(_player_id).coords) + view::point{});
+				return event_handled::yes;
 			default:
 				return event_handled::no;
 		}

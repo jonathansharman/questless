@@ -52,8 +52,8 @@ namespace ql {
 
 				// Add beings randomly.
 				auto const section_center = section.center_coords();
-				for (span q = -section_radius; q <= section_radius; ++q) {
-					for (span r = -section_radius; r <= section_radius; ++r) {
+				for (pace q = -section_radius; q <= section_radius; ++q) {
+					for (pace r = -section_radius; r <= section_radius; ++r) {
 						if ((section_r != 0_section_span || section_q != 0_section_span) && uniform(0, 10) == 0) {
 							auto const entity_coords = section_center + tile_hex::vector{q, r};
 							if (!uniform(0, 12)) {
@@ -94,7 +94,7 @@ namespace ql {
 		//! @todo More advanced spawning.
 
 		// Spawn at the origin.
-		tile_hex::point player_coords{0_span, 0_span};
+		tile_hex::point player_coords{0_pace, 0_pace};
 
 		// Destroy and remove the entity currently there, if any.
 		if (auto const o_entity_id = entity_id_at(player_coords)) {
@@ -211,10 +211,10 @@ namespace ql {
 	}
 
 	auto region::containing_section(tile_hex::point tile_coords) -> section* {
-		auto const q = tile_coords.q >= 0_span //
+		auto const q = tile_coords.q >= 0_pace //
 			? 1_section_span * (tile_coords.q + section_radius) / section_diameter
 			: 1_section_span * (tile_coords.q - section_radius) / section_diameter;
-		auto const r = tile_coords.r >= 0_span //
+		auto const r = tile_coords.r >= 0_pace //
 			? 1_section_span * (tile_coords.r + section_radius) / section_diameter
 			: 1_section_span * (tile_coords.r - section_radius) / section_diameter;
 		auto it = _section_map.find(section_hex::point{q, r});

@@ -16,7 +16,7 @@ namespace ql {
 		lum luminance;
 
 		//! The distance this light source's light reaches.
-		auto range() const -> span;
+		auto range() const -> pace;
 
 		//! How brightly this light source shines at @p target_location.
 		auto luminance_at(location target_location) const -> lum;

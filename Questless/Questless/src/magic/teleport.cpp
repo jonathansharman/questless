@@ -14,11 +14,11 @@ namespace ql::magic {
 		// Check range.
 		auto const caster_location = reg.get<location>(caster_id);
 		auto const distance = (caster_location.coords - target).length();
-		if (distance > 15_span) { return; }
+		if (distance > 15_pace) { return; }
 
 		// Check and pay cost.
 		auto& gatestone = reg.get<ql::gatestone>(gatestone_id);
-		auto const mana_cost = distance * 5_mp / 1_span;
+		auto const mana_cost = distance * 5_mp / 1_pace;
 		if (gatestone.charge < mana_cost) { return; }
 		gatestone.charge -= mana_cost;
 

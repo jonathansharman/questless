@@ -37,7 +37,7 @@ namespace ql {
 		std::vector<tile_view> tile_views;
 		std::vector<entity_view> entity_views;
 		location center;
-		span visual_range;
+		pace visual_range;
 
 		//! Constructs the world view of the being with id @p viewer_id.
 		world_view(id viewer_id);

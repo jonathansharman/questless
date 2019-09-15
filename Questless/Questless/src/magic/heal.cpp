@@ -14,7 +14,7 @@ namespace ql::magic {
 		// Check range.
 		auto const caster_location = reg.get<location>(caster_id);
 		auto const target_location = reg.get<location>(target_id);
-		if ((caster_location.coords - target_location.coords).length() > 5_span) { return; }
+		if ((caster_location.coords - target_location.coords).length() > 5_pace) { return; }
 
 		// Check and pay cost.
 		auto& gatestone = reg.get<ql::gatestone>(gatestone_id);

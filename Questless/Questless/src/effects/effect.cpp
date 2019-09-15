@@ -13,7 +13,7 @@ namespace ql::effects {
 		return match(value, [](auto const& effect) { return effect.origin; });
 	}
 
-	auto effect::range() const -> span {
+	auto effect::range() const -> pace {
 		return match(value, [](auto const& effect) { return effect.range(); });
 	}
 }
