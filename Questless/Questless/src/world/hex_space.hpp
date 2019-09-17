@@ -1,6 +1,5 @@
 //! @file
-//! @author Jonathan Sharman
-//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
+//! @copyright See <a href="LICENSE.txt">LICENSE.txt</a>.
 //!
 //! Adapted from the <a href="http://www.redblobgames.com/grids/hexagons/">red Blob Games hexagons tutorial</a>.
 //!

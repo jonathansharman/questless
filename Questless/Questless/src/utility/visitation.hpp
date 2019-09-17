@@ -1,6 +1,5 @@
 //! @file
-//! @author Jonathan Sharman
-//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
+//! @copyright See <a href="LICENSE.txt">LICENSE.txt</a>.
 //! @brief Utility functions for making variant visitation nicer.
 
 #pragma once

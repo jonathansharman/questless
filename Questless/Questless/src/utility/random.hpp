@@ -1,6 +1,5 @@
 //! @file
-//! @author Jonathan Sharman
-//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
+//! @copyright See <a href="LICENSE.txt">LICENSE.txt</a>.
 //! @brief Convenience functions for generating various random values.
 
 #pragma once

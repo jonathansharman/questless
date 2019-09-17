@@ -1,6 +1,5 @@
 //! @file
-//! @author Jonathan Sharman
-//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
+//! @copyright See <a href="LICENSE.txt">LICENSE.txt</a>.
 //! @brief Defines a type list type and related operations.
 
 #pragma once

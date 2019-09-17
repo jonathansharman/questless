@@ -260,10 +260,10 @@ White - good - life - light
 			How will this work?
 		Summon Guardian Angel - Summon's this being's guardian angel from the Heavens. Each being born in the Nexus has an associated guardian angel that when summoned will defend its summoner against attackers. After a fixed length of time, the angel returns to the Heavens and resets its state.
 	Restorative
-		Cleanse - Remove a bane from a being. The bane's power must be lower than the invocation power.
-		Immunize - Give a being X blight resistance for Y ticks.
-		Mend - Heal a wound.
-		Regenerate - Restore a being's body to full health and replenish its blood.
+		Cleanse - Remove a bane from a living being. The bane's power must be lower than the invocation power.
+		Immunize - Give a being X poison resistance for Y ticks.
+		Mend - Heal a wound on a living being.
+		Regenerate - Restore a living being's body to full health and replenish its blood.
 		Resurrect - Return a corpse to life, with X% of its health.
 	Light
 		Bright Vision - Temporarily raise a being's glare tolerance.

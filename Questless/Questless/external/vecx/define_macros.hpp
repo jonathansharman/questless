@@ -1,6 +1,5 @@
 //! @file
-//! @author Jonathan Sharman
-//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
+//! @copyright See <a href="LICENSE.txt">LICENSE.txt</a>.
 //! @brief Defines convenience macros for defining space types.
 
 #define DEFINE_VECTOR_INDEX_NAME(vector_type, index, name) \

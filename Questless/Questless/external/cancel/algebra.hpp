@@ -1,6 +1,5 @@
 //! @file
-//! @author Jonathan Sharman
-//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
+//! @copyright See <a href="LICENSE.txt">LICENSE.txt</a>.
 //! @brief Types and type functions to manage algebraic powers of types.
 
 #pragma once
@@ -112,7 +111,7 @@ namespace cancel {
 			static_assert((Head::power* ExpNum) % ExpDen == 0, "A type power exponential must result in integral powers.");
 
 			using type = cons
-				< type_power<typename Head::type, Head::power* ExpNum / ExpDen>
+				< type_power<typename Head::type, Head::power * ExpNum / ExpDen>
 				, exponential_t<ExpNum, ExpDen, Tail>
 				>;
 		};

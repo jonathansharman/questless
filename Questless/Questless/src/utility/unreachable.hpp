@@ -1,6 +1,5 @@
 //! @file
-//! @author Jonathan Sharman
-//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
+//! @copyright See <a href="LICENSE.txt">LICENSE.txt</a>.
 //! @brief Defines an UNREACHABLE macro, implementing http://open-std.org/JTC1/SC22/WG21/docs/papers/2017/p0627r0.pdf.
 
 #pragma once

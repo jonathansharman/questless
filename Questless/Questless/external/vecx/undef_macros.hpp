@@ -1,6 +1,5 @@
 //! @file
-//! @author Jonathan Sharman
-//! @copyright See <a href='../../LICENSE.txt'>LICENSE.txt</a>.
+//! @copyright See <a href="LICENSE.txt">LICENSE.txt</a>.
 //! @brief Undefines vecx convenience macros, to avoid polluting the global namespace.
 //!
 //! Include this file at the end of another file, after using the macros.
