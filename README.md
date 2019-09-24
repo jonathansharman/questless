@@ -1,13 +1,15 @@
 # Questless
+
 "Not all those who wander are lost"
 
-Questless is an open-world fantasy roguelike written in C++ using SDL.
+An open-world fantasy roguelike written in modern C++ using SFML and entt.
 
-Dependences
------------
-  * [SDL 2](https://www.libsdl.org/download-2.0.php)
-  * [SDL Image](https://www.libsdl.org/projects/SDL_image/)
-  * [SDL TTF](https://www.libsdl.org/projects/SDL_ttf/)
-  * [SDL Mixer](https://www.libsdl.org/projects/SDL_mixer/)
-  * [Boost 1.63.0](http://www.boost.org/)
+Dependencies
+------------
+  * [SFML](https://github.com/SFML/SFML)
+  * [entt](https://github.com/skypjack/entt)
+  * [Boost 1.70.0](http://www.boost.org/)
   * [doctest](https://github.com/onqtam/doctest)
+  * [range-v3](https://github.com/ericniebler/range-v3)
+  * [gcem](https://github.com/kthohr/gcem)
+  * [fmtlib](https://github.com/fmtlib/fmt)
