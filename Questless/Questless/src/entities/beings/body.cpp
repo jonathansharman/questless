@@ -14,8 +14,8 @@
 namespace ql {
 	namespace {
 		auto reset_stats(body& b) -> void {
-			// Aggregate part stats.
 			b.stats.reset();
+			// Aggregate part stats.
 			b.for_enabled_parts([&](body_part const& part) { b.stats.a.combine_with(part.stats.a); });
 			// Apply condition effects.
 			if (b.cond.weary()) { b.stats.a.strength.cur /= 2; }

@@ -109,7 +109,7 @@ namespace ql {
 				return vector{v.q / k, v.r / k};
 			}
 			friend constexpr auto operator/(vector v, length_t k) {
-				return hex_space<Tag, cancel::unitless<length_t::rep>>::vector{v.q / k, v.r / k};
+				return typename hex_space<Tag, cancel::unitless<length_t::rep>>::vector{v.q / k, v.r / k};
 			}
 
 			constexpr auto length() const {

@@ -12,6 +12,7 @@
 
 #include <algorithm>
 #include <array>
+#include <functional>
 
 namespace vecx {
 	//! Represents an n-dimensional vector of quantities.
