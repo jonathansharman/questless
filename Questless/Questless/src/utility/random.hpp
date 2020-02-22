@@ -13,26 +13,27 @@
 
 namespace ql {
 	//! A pseudorandom number generator.
-	inline auto& prng() {
-		static auto result = [] {
-			std::random_device seeder{};
-			return std::mt19937_64{seeder()};
-		}();
-		return result;
-	}
+	inline auto prng = [] {
+		std::random_device rng{};
+		constexpr auto n = sizeof(std::mt19937_64::result_type) * std::mt19937_64::state_size / sizeof(unsigned);
+		std::array<unsigned, n> seed_data;
+		std::generate(seed_data.begin(), seed_data.end(), std::ref(rng));
+		std::seed_seq seed(seed_data.begin(), seed_data.end());
+		return std::mt19937_64{seed};
+	}();
 
 	//! True or false with equal probability.
 	inline auto coin_flip() -> bool {
-		return std::uniform_int<int>(0, 1)(prng()) == 0;
+		return std::uniform_int<int>(0, 1)(prng) == 0;
 	}
 
 	//! Generates a random value with a uniform distribution in [@p min, @p max].
 	template <typename T>
 	typename auto uniform(T min, T max) -> T requires std::is_arithmetic_v<T> {
 		if constexpr (std::is_integral_v<T>) {
-			return std::uniform_int_distribution<T>(min, max)(prng());
+			return std::uniform_int_distribution<T>(min, max)(prng);
 		} else if constexpr (std::is_floating_point_v<T>) {
-			return std::uniform_real_distribution<T>(min, max)(prng());
+			return std::uniform_real_distribution<T>(min, max)(prng);
 		}
 	}
 
