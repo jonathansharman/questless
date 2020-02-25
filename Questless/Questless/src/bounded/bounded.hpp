@@ -103,7 +103,7 @@ namespace ql {
 		// Bit-wise Operators
 
 		auto operator~() const -> Derived {
-			~(value());
+			return ~(value());
 		}
 
 		DEFINE_BINARY_OPERATOR(&);
