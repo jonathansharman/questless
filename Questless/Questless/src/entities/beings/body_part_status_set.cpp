@@ -51,29 +51,32 @@ namespace ql {
 			apply_status(part, status, elapsed);
 		}
 
-		// Apply timed effects.
+		// Remove expired timed effects.
+		timed.erase( //
+			std::remove_if( //
+				timed.begin(),
+				timed.end(),
+				[](timed_body_part_status const& status) { return status.duration <= 0_tick; }),
+			timed.end());
+		// Apply unexpired timed status effects; decrement time left.
 		for (auto it = timed.begin(); it != timed.end(); ++it) {
-			// Check for expiration.
-			if (it->duration <= 0_tick) {
-				timed.erase(it);
-				--it;
-				continue;
-			}
 			// Compute the duration over which to apply the status.
-			auto effective_elapsed = std::min(it->duration, elapsed);
+			auto const effective_elapsed = std::min(it->duration, elapsed);
 			// Apply status.
 			apply_status(part, it->status, effective_elapsed);
 			// Decrease status duration.
 			it->duration -= elapsed;
 		}
 
-		// Apply wound effects.
+		// Remove healed wounds.
+		wounds.erase( //
+			std::remove_if( //
+				wounds.begin(),
+				wounds.end(),
+				[](wound const& wound) { return match(wound, [](auto const& w) { return w.value <= 0; }); }),
+			wounds.end());
+		// Apply effects of ongoing wounds; heal.
 		for (auto it = wounds.begin(); it != wounds.end(); ++it) {
-			// Check if the wound is healed.
-			if (match(*it, [](auto const& w) { return w.value <= 0; })) {
-				wounds.erase(it);
-				--it;
-			}
 			// Apply wound.
 			apply_wound(part, *it, elapsed);
 			// Heal wound.

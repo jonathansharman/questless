@@ -14,7 +14,7 @@
 
 namespace ql {
 	namespace {
-		auto apply_single(body& body, body_status status, tick /*elapsed*/) -> void {
+		auto apply_status(body& body, body_status status, tick /*elapsed*/) -> void {
 			match(
 				status,
 				[&](blind const& b) {
@@ -47,26 +47,29 @@ namespace ql {
 
 		// Apply permanent effects.
 		for (auto const& status : permanent) {
-			apply_single(body, status, elapsed);
+			apply_status(body, status, elapsed);
 		}
 
 		// Apply semipermanent effects.
 		for (auto const& status : semipermanent) {
-			apply_single(body, status, elapsed);
+			apply_status(body, status, elapsed);
 		}
 
-		// Apply timed effects, decrease times, and remove any that expired.
+		// Remove expired timed effects.
+		timed.erase( //
+			std::remove_if( //
+				timed.begin(),
+				timed.end(),
+				[](timed_body_status const& status) { return status.duration <= 0_tick; }),
+			timed.end());
+		// Apply unexpired timed status effects; decrement time left.
 		for (auto it = timed.begin(); it != timed.end(); ++it) {
-			if (it->duration > elapsed) {
-				// Will not expire this turn.
-				apply_single(body, it->status, elapsed);
-				it->duration -= elapsed;
-			} else {
-				// Expires after this turn.
-				apply_single(body, it->status, it->duration);
-				timed.erase(it);
-				--it;
-			}
+			// Compute the duration over which to apply the status.
+			auto const effective_elapsed = std::min(it->duration, elapsed);
+			// Apply status.
+			apply_status(body, it->status, effective_elapsed);
+			// Decrease status duration.
+			it->duration -= elapsed;
 		}
 	}
 }
