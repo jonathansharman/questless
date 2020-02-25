@@ -45,8 +45,7 @@ namespace ql {
 		//! How far behind the target frame duration the scene is.
 		static_bounded<sec, min_time_debt, max_time_debt> _time_debt = 0.0_s;
 
-		static constexpr size_t _fps_buffer_size = 25;
-		simple_moving_average<per_sec, _fps_buffer_size> _avg_fps;
+		simple_moving_average<per_sec, 25> _avg_fps;
 
 		//! Tries to keep the scene running at the target frame rate.
 		//! @return The duration of the last frame.
