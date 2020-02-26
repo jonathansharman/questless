@@ -9,12 +9,8 @@
 #include "utility/reference.hpp"
 
 #include <array>
-#include <iostream>
-#include <memory>
 #include <optional>
-#include <string>
 #include <unordered_map>
-#include <unordered_set>
 
 namespace ql {
 	struct light_source;
