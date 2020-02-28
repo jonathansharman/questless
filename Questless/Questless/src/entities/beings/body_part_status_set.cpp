@@ -59,13 +59,13 @@ namespace ql {
 				[](timed_body_part_status const& status) { return status.duration <= 0_tick; }),
 			timed.end());
 		// Apply unexpired timed status effects; decrement time left.
-		for (auto it = timed.begin(); it != timed.end(); ++it) {
+		for (auto& status : timed) {
 			// Compute the duration over which to apply the status.
-			auto const effective_elapsed = std::min(it->duration, elapsed);
+			auto const effective_elapsed = std::min(status.duration, elapsed);
 			// Apply status.
-			apply_status(part, it->status, effective_elapsed);
+			apply_status(part, status.status, effective_elapsed);
 			// Decrease status duration.
-			it->duration -= elapsed;
+			status.duration -= elapsed;
 		}
 
 		// Remove healed wounds.
@@ -76,12 +76,12 @@ namespace ql {
 				[](wound const& wound) { return match(wound, [](auto const& w) { return w.value <= 0; }); }),
 			wounds.end());
 		// Apply effects of ongoing wounds; heal.
-		for (auto it = wounds.begin(); it != wounds.end(); ++it) {
+		for (auto& wound : wounds) {
 			// Apply wound.
-			apply_wound(part, *it, elapsed);
+			apply_wound(part, wound, elapsed);
 			// Heal wound.
 			match(
-				*it,
+				wound,
 				[&](laceration& l) { l -= 1_laceration * elapsed / 1_tick; },
 				[&](puncture& p) { p -= 1_puncture * elapsed / 1_tick; },
 				[&](bruise& b) { b -= 1_bruise * elapsed / 1_tick; },

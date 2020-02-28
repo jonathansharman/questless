@@ -63,13 +63,13 @@ namespace ql {
 				[](timed_body_status const& status) { return status.duration <= 0_tick; }),
 			timed.end());
 		// Apply unexpired timed status effects; decrement time left.
-		for (auto it = timed.begin(); it != timed.end(); ++it) {
+		for (auto& status : timed) {
 			// Compute the duration over which to apply the status.
-			auto const effective_elapsed = std::min(it->duration, elapsed);
+			auto const effective_elapsed = std::min(status.duration, elapsed);
 			// Apply status.
-			apply_status(body, it->status, effective_elapsed);
+			apply_status(body, status.status, effective_elapsed);
 			// Decrease status duration.
-			it->duration -= elapsed;
+			status.duration -= elapsed;
 		}
 	}
 }
