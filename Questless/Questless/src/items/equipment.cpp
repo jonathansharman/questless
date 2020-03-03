@@ -10,13 +10,14 @@
 
 namespace ql {
 	auto make_equipment( //
+		reg& reg,
 		id equipment_id,
 		std::optional<id> o_bearer_id,
 		std::vector<equipment::tab> tabs,
 		action equip_cost,
 		action unequip_cost) -> id //
 	{
-		reg.assign<equipment>(equipment_id, equipment_id, o_bearer_id, std::move(tabs), equip_cost, unequip_cost);
+		reg.assign<equipment>(equipment_id, &reg, equipment_id, o_bearer_id, std::move(tabs), equip_cost, unequip_cost);
 
 		return equipment_id;
 	}
@@ -26,7 +27,7 @@ namespace ql {
 
 		for (auto& tab : tabs) {
 			bool found = false;
-			reg.get<ql::body>(actor_id).for_all_parts([&](body_part& part) {
+			reg->get<ql::body>(actor_id).for_all_parts([&](body_part& part) {
 				if (!found && part.tags.find(tab.tag) != part.tags.end() && !part.equipped_item_id) {
 					part.equipped_item_id = id;
 					tab.o_part_id = part.id;
@@ -47,8 +48,8 @@ namespace ql {
 
 	auto equipment::forced_unequip() -> void {
 		for (auto& tab : tabs) {
-			if (tab.o_part_id && reg.valid(*tab.o_part_id)) {
-				auto& part = reg.get<body_part>(*tab.o_part_id);
+			if (tab.o_part_id && reg->valid(*tab.o_part_id)) {
+				auto& part = reg->get<body_part>(*tab.o_part_id);
 				part.equipped_item_id = std::nullopt;
 			}
 			tab.o_part_id = std::nullopt;

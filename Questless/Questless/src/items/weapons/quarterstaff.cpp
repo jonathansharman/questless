@@ -24,18 +24,20 @@ namespace ql {
 		tick cooldown = 13_tick;
 	}
 
-	auto make_quarterstaff(id quarterstaff_id) -> id {
-		make_item(quarterstaff_id, 2.5_mass);
+	auto make_quarterstaff(reg& reg, id quarterstaff_id) -> id {
+		make_item(reg, quarterstaff_id, 2.5_mass);
 
-		make_breakable(quarterstaff_id, {500_durability, 500_durability});
+		make_breakable(reg, quarterstaff_id, {500_durability, 500_durability});
 
-		make_equipment(quarterstaff_id,
+		make_equipment( //
+			reg,
+			quarterstaff_id,
 			std::nullopt,
 			{equipment::tab{body_part::tag::hand, std::nullopt}, equipment::tab{body_part::tag::hand, std::nullopt}},
 			1_ap,
 			1_ap);
 
-		reg.assign<quarterstaff>(quarterstaff_id, quarterstaff_id);
+		reg.assign<quarterstaff>(quarterstaff_id, &reg, quarterstaff_id);
 
 		return quarterstaff_id;
 	}

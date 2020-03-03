@@ -14,6 +14,6 @@ namespace ql::magic {
 		static constexpr magic::color color = magic::color::green;
 		static constexpr tick cooldown = 5_tick;
 
-		auto cast(id caster_id, id gatestone_id) -> void;
+		auto cast(reg& reg, id caster_id, id gatestone_id) -> void;
 	};
 }

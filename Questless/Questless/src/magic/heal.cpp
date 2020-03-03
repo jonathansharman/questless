@@ -9,7 +9,7 @@
 #include "world/coordinates.hpp"
 
 namespace ql::magic {
-	auto heal::cast(id caster_id, id gatestone_id, id target_id, health healing) -> void {
+	auto heal::cast(reg& reg, id caster_id, id gatestone_id, id target_id, health healing) -> void {
 		// Check range.
 		auto const caster_location = reg.get<location>(caster_id);
 		auto const target_location = reg.get<location>(target_id);

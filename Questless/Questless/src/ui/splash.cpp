@@ -20,8 +20,9 @@ namespace ql {
 		constexpr sec duration = fade_out_duration + fade_in_duration;
 	}
 
-	splash::splash(uptr<widget>& root, rsrc::fonts const& fonts)
-		: _root{root}
+	splash::splash(reg& reg, uptr<widget>& root, rsrc::fonts const& fonts)
+		: _reg{&reg}
+		, _root{root}
 		, _fonts{fonts}
 		, _flame_sound{_rsrc.sfx.flame} //
 	{
@@ -134,7 +135,7 @@ namespace ql {
 
 	auto splash::end_scene() -> void {
 		_flame_sound.stop();
-		auto menu = umake<main_menu>(_root, _fonts);
+		auto menu = umake<main_menu>(*_reg, _root, _fonts);
 		// Initialize size and position.
 		menu->on_parent_resize(_size);
 		menu->set_position(_position);

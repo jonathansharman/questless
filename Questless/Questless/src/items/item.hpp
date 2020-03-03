@@ -8,5 +8,5 @@
 
 namespace ql {
 	//! Makes @p item_id an item that can be picked up, used by beings, etc.
-	auto make_item(id item_id, mass mass) -> id;
+	auto make_item(reg& reg, id item_id, mass mass) -> id;
 }

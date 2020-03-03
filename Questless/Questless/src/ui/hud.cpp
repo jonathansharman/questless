@@ -25,16 +25,18 @@ namespace ql {
 	}
 
 	hud::hud( //
+		reg& reg,
 		uptr<widget>& root,
 		rsrc::fonts const& fonts,
 		id region_id,
 		id player_id)
-		: _root{root}
+		: _reg{&reg}
+		, _root{root}
 		, _rsrc{fonts}
 		, _region_id{region_id}
 		, _player_id{player_id}
-		, _world_widget{rsrc::world_widget{_rsrc.entity, _rsrc.fonts, _rsrc.particle, _rsrc.tile}}
-		, _hotbar{_rsrc.item, _rsrc.spell}
+		, _world_widget{reg, rsrc::world_widget{_rsrc.entity, _rsrc.fonts, _rsrc.particle, _rsrc.tile}}
+		, _hotbar{reg, _rsrc.item, _rsrc.spell}
 		, _inv{reg.get<inventory>(player_id), _hotbar}
 		, _state{state::player_input}
 		, _game_logic_thread{make_game_logic_thread()} //
@@ -60,7 +62,7 @@ namespace ql {
 		}
 
 		// Render the initial world view.
-		_world_widget.render_view(world_view{_player_id});
+		_world_widget.render_view(world_view{*_reg, _player_id});
 
 		// Begin game loop.
 		_state.store(state::game_loop);
@@ -86,7 +88,7 @@ namespace ql {
 	}
 
 	auto hud::pass_future() -> std::future<void> {
-		_world_widget.render_view(world_view{_player_id});
+		_world_widget.render_view(world_view{*_reg, _player_id});
 		_state.store(state::player_input);
 		return _pass_promise.get_future();
 	}
@@ -152,33 +154,33 @@ namespace ql {
 				return event_handled::yes;
 			// Movement commands.
 			case sf::Keyboard::Q:
-				move(_player_id, tile_hex::direction::ul, event.shift);
-				_world_widget.render_view(world_view{_player_id});
+				move(*_reg, _player_id, tile_hex::direction::ul, event.shift);
+				_world_widget.render_view(world_view{*_reg, _player_id});
 				break;
 			case sf::Keyboard::W:
-				move(_player_id, tile_hex::direction::u, event.shift);
-				_world_widget.render_view(world_view{_player_id});
+				move(*_reg, _player_id, tile_hex::direction::u, event.shift);
+				_world_widget.render_view(world_view{*_reg, _player_id});
 				break;
 			case sf::Keyboard::E:
-				move(_player_id, tile_hex::direction::ur, event.shift);
-				_world_widget.render_view(world_view{_player_id});
+				move(*_reg, _player_id, tile_hex::direction::ur, event.shift);
+				_world_widget.render_view(world_view{*_reg, _player_id});
 				break;
 			case sf::Keyboard::A:
-				move(_player_id, tile_hex::direction::dl, event.shift);
-				_world_widget.render_view(world_view{_player_id});
+				move(*_reg, _player_id, tile_hex::direction::dl, event.shift);
+				_world_widget.render_view(world_view{*_reg, _player_id});
 				break;
 			case sf::Keyboard::S:
-				move(_player_id, tile_hex::direction::d, event.shift);
-				_world_widget.render_view(world_view{_player_id});
+				move(*_reg, _player_id, tile_hex::direction::d, event.shift);
+				_world_widget.render_view(world_view{*_reg, _player_id});
 				break;
 			case sf::Keyboard::D:
-				move(_player_id, tile_hex::direction::dr, event.shift);
-				_world_widget.render_view(world_view{_player_id});
+				move(*_reg, _player_id, tile_hex::direction::dr, event.shift);
+				_world_widget.render_view(world_view{*_reg, _player_id});
 				break;
 			// Snap camera to player.
 			case sf::Keyboard::Space:
 				_world_widget.set_position(
-					view::point{} - world_layout.to_view_space(reg.get<location>(_player_id).coords) + view::point{});
+					view::point{} - world_layout.to_view_space(_reg->get<location>(_player_id).coords) + view::point{});
 				return event_handled::yes;
 			default:
 				return event_handled::no;
@@ -226,7 +228,7 @@ namespace ql {
 		if (_show_inv) { target.draw(_inv, states); }
 
 		{ // Draw the current time.
-			auto const& region = reg.get<ql::region>(_region_id);
+			auto const& region = _reg->get<ql::region>(_region_id);
 			tick const time_of_day = region.time_of_day();
 			std::string time_name;
 			switch (region.period_of_day()) {
@@ -261,9 +263,9 @@ namespace ql {
 
 	auto hud::get_item_options(id item_id) -> std::vector<std::tuple<sf::String, std::function<void()>>> {
 		std::vector<std::tuple<sf::String, std::function<void()>>> result;
-		if (auto equipment = reg.try_get<ql::equipment>(item_id)) {
+		if (auto equipment = _reg->try_get<ql::equipment>(item_id)) {
 			if (equipment->equipped()) {
-				if (auto bow = reg.try_get<ql::bow>(item_id)) {
+				if (auto bow = _reg->try_get<ql::bow>(item_id)) {
 					if (bow->nocked_arrow_id) {
 						result.emplace_back("Draw", [bow] { bow->draw(); });
 						result.emplace_back("Loose", [bow] { bow->loose(); });
@@ -273,7 +275,7 @@ namespace ql {
 							// bow->nock(arrow_id);
 						});
 					}
-				} else if (auto quarterstaff = reg.try_get<ql::quarterstaff>(item_id)) {
+				} else if (auto quarterstaff = _reg->try_get<ql::quarterstaff>(item_id)) {
 					result.emplace_back("Strike", [quarterstaff] { quarterstaff->strike(); });
 					result.emplace_back("Jab", [quarterstaff] { quarterstaff->jab(); });
 				}
@@ -284,8 +286,8 @@ namespace ql {
 				// Fall through to the drop and toss actions.
 			}
 		}
-		result.emplace_back("Drop", [id = _player_id, item_id] { drop(id, item_id); });
-		result.emplace_back("Toss", [id = _player_id, item_id] { toss(id, item_id); });
+		result.emplace_back("Drop", [this, id = _player_id, item_id] { drop(*_reg, id, item_id); });
+		result.emplace_back("Toss", [this, id = _player_id, item_id] { toss(*_reg, id, item_id); });
 		return result;
 	}
 
@@ -309,10 +311,10 @@ namespace ql {
 						constexpr auto elapsed_ticks = 1_tick;
 
 						// Update the region.
-						reg.get<region>(_region_id).update(elapsed_ticks);
+						_reg->get<region>(_region_id).update(elapsed_ticks);
 
 						// For each being, update its body and allow it to act.
-						reg.view<body, agent>().each([this, elapsed_ticks](body& body, agent& agent) {
+						_reg->view<body, agent>().each([this, elapsed_ticks](body& body, agent& agent) {
 							body.update(elapsed_ticks);
 							agent.act().get();
 						});

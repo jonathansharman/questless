@@ -15,5 +15,5 @@ namespace ql {
 	//! @param location This tile's location in the world.
 	//! @param temperature The temperature at this tile.
 	//! @param luminance The amount of light at this tile.
-	auto make_tile(id tile_id, terrain terrain, location location, temperature temperature, lum luminance) -> id;
+	auto make_tile(reg& reg, id tile_id, terrain terrain, location location, temperature temperature, lum luminance) -> id;
 }

@@ -13,7 +13,7 @@
 #include "utility/visitation.hpp"
 
 namespace ql {
-	basic_ai::basic_ai(id id) : _id{id} {}
+	basic_ai::basic_ai(reg& reg, id id) : _reg{&reg}, _id{id} {}
 
 	auto basic_ai::act() -> std::future<void> {
 		return match(
@@ -28,32 +28,32 @@ namespace ql {
 			[this](walk_state) {
 				// Randomly either move in current direction or turn towards a random direction.
 				if (coin_flip()) {
-					walk(_id, reg.get<body>(_id).cond.direction);
+					walk(*_reg, _id, _reg->get<body>(_id).cond.direction);
 				} else {
-					turn(_id, random_direction());
+					turn(*_reg, _id, random_direction());
 				}
 				// Idle next time.
 				_state = idle_state{};
 				return make_ready_future();
 			},
 			[this](attack_state const& as) {
-				if (!reg.valid(as.target_id)) {
+				if (!_reg->valid(as.target_id)) {
 					// Target not found. Switch to idle state.
 					_state = idle_state{};
 					return make_ready_future();
 				}
-				auto const& target_location = reg.get<location>(as.target_id);
-				if (perception_of(_id, target_location.coords) <= 0_perception) {
+				auto const& target_location = _reg->get<location>(as.target_id);
+				if (perception_of(*_reg, _id, target_location.coords) <= 0_perception) {
 					// Target not visible. Switch to idle state.
 					_state = idle_state{};
 					return make_ready_future();
 					//! @todo Only go passive while target is out of visual range. Keep a grudge list?
 				} else {
 					auto target_direction = (target_location.coords - target_location.coords).direction();
-					auto const& target_body = reg.get<body>(as.target_id);
+					auto const& target_body = _reg->get<body>(as.target_id);
 					if (target_body.cond.direction != target_direction) {
 						// Facing away from target. Turn towards it.
-						turn(_id, target_direction);
+						turn(*_reg, _id, target_direction);
 						return make_ready_future();
 					} else {
 						// Facing towards target.
@@ -64,7 +64,7 @@ namespace ql {
 							return make_ready_future();
 						} else {
 							// Out of range. Move towards target.
-							walk(_id, target_direction);
+							walk(*_reg, _id, target_direction);
 							return make_ready_future();
 						}
 					}

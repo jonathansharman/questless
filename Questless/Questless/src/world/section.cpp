@@ -12,7 +12,7 @@
 #include "world/region.hpp"
 
 namespace ql {
-	section::section(id region_id, section_hex::point coords) : _coords{coords} {
+	section::section(reg& reg, id region_id, section_hex::point coords) : _reg{&reg}, _coords{coords} {
 		// Create a section with random tiles.
 		auto const center = center_coords();
 		for (pace q = -section_radius; q <= section_radius; ++q) {
@@ -21,7 +21,7 @@ namespace ql {
 				auto const tile_coords = center + tile_hex::vector{q, r};
 				location location{region_id, tile_coords};
 				id const tile_id = reg.create();
-				make_tile(tile_id, terrain, location, 0_temp, 0_lum);
+				make_tile(reg, tile_id, terrain, location, 0_temp, 0_lum);
 
 				// Add the tile's ID to the tile ID array.
 				auto [i, j] = indices(tile_coords);
@@ -48,7 +48,7 @@ namespace ql {
 	}
 
 	auto section::try_add(id entity_id) -> bool {
-		auto result = _entity_id_map.insert({reg.get<location>(entity_id).coords, entity_id});
+		auto result = _entity_id_map.insert({_reg->get<location>(entity_id).coords, entity_id});
 		return result.second;
 	}
 
@@ -58,7 +58,7 @@ namespace ql {
 	}
 
 	auto section::remove(id entity_id) -> void {
-		remove_at(reg.get<location>(entity_id).coords);
+		remove_at(_reg->get<location>(entity_id).coords);
 	}
 
 	auto section::tile_id_at(tile_hex::point coords) const -> id {

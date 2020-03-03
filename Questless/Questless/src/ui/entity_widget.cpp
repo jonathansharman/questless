@@ -18,16 +18,18 @@
 
 namespace ql {
 	entity_widget::entity_widget( //
+		reg& reg,
 		rsrc::entity const& entity_resources,
 		rsrc::particle const& particle_resources,
 		world_view::entity_view entity_view)
-		: _entity_resources{entity_resources}
+		: _reg{&reg}
+		, _entity_resources{entity_resources}
 		, _particle_resources{particle_resources}
 		, _ev{entity_view} //
 	{
 		_ani = [this]() -> uptr<animation> {
 			if (_ev.perception >= 25_perception) {
-				if (reg.has<campfire>(_ev.id)) {
+				if (_reg->has<campfire>(_ev.id)) {
 					auto firewood = umake<still_image>(_entity_resources.txtr.firewood);
 					firewood->set_relative_origin({0.5f, 0.5f}, true);
 
@@ -45,7 +47,7 @@ namespace ql {
 					ani->front_children.push_back(std::move(flame));
 
 					return ani;
-				} else if (auto body = reg.try_get<ql::body>(_ev.id)) {
+				} else if (auto body = _reg->try_get<ql::body>(_ev.id)) {
 					// Sprite animation
 					auto scene_node = umake<ql::scene_node>(umake<sprite_animation>( //
 						ql::sprite_sheet{_entity_resources.ss.human, {3, 1}},

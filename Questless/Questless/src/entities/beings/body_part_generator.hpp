@@ -14,34 +14,34 @@ namespace ql::generators {
 		auto make_body_stats() -> stats::body;
 
 		struct torso {
-			auto make(id owner_id) const -> id;
+			auto make(reg& reg, id owner_id) const -> id;
 		};
 		struct head {
-			auto make(id owner_id) const -> id;
+			auto make(reg& reg, id owner_id) const -> id;
 		};
 		struct left_arm {
-			auto make(id owner_id) const -> id;
+			auto make(reg& reg, id owner_id) const -> id;
 		};
 		struct right_arm {
-			auto make(id owner_id) const -> id;
+			auto make(reg& reg, id owner_id) const -> id;
 		};
 		struct left_hand {
-			auto make(id owner_id) const -> id;
+			auto make(reg& reg, id owner_id) const -> id;
 		};
 		struct right_hand {
-			auto make(id owner_id) const -> id;
+			auto make(reg& reg, id owner_id) const -> id;
 		};
 		struct left_leg {
-			auto make(id owner_id) const -> id;
+			auto make(reg& reg, id owner_id) const -> id;
 		};
 		struct right_leg {
-			auto make(id owner_id) const -> id;
+			auto make(reg& reg, id owner_id) const -> id;
 		};
 		struct left_foot {
-			auto make(id owner_id) const -> id;
+			auto make(reg& reg, id owner_id) const -> id;
 		};
 		struct right_foot {
-			auto make(id owner_id) const -> id;
+			auto make(reg& reg, id owner_id) const -> id;
 		};
 	}
 
@@ -64,6 +64,6 @@ namespace ql::generators {
 		//! Generates a body part.
 		//! @param owner_id The ID of the being to own the new body part.
 		//! @return The ID of the new body part.
-		auto make(id owner_id) const -> id;
+		auto make(reg& reg, id owner_id) const -> id;
 	};
 }

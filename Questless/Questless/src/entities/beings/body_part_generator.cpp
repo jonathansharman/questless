@@ -65,9 +65,9 @@ namespace ql::generators {
 			return {};
 		}
 
-		auto torso::make(id owner_id) const -> id {
+		auto torso::make(reg& reg, id owner_id) const -> id {
 			id id = reg.create();
-			auto& part = reg.assign<body_part>(id, id, owner_id);
+			auto& part = reg.assign<body_part>(id, reg, id, owner_id);
 
 			part.name = "human torso";
 			part.tags = {body_part::tag::torso};
@@ -118,9 +118,9 @@ namespace ql::generators {
 			return id;
 		}
 
-		auto head::make(id owner_id) const -> id {
+		auto head::make(reg& reg, id owner_id) const -> id {
 			id id = reg.create();
-			auto& part = reg.assign<body_part>(id, id, owner_id);
+			auto& part = reg.assign<body_part>(id, reg, id, owner_id);
 
 			part.name = "human head";
 			part.tags = {body_part::tag::head};
@@ -150,9 +150,9 @@ namespace ql::generators {
 			return id;
 		}
 
-		auto make_arm(id owner_id, side side) -> id {
+		auto make_arm(reg& reg, id owner_id, side side) -> id {
 			id id = reg.create();
-			auto& part = reg.assign<body_part>(id, id, owner_id);
+			auto& part = reg.assign<body_part>(id, reg, id, owner_id);
 
 			part.name = side == side::left ? "human left arm" : "human right arm";
 			part.tags = {body_part::tag::arm};
@@ -178,17 +178,17 @@ namespace ql::generators {
 			return id;
 		}
 
-		auto left_arm::make(id owner_id) const -> id {
-			return make_arm(owner_id, side::left);
+		auto left_arm::make(reg& reg, id owner_id) const -> id {
+			return make_arm(reg, owner_id, side::left);
 		}
 
-		auto right_arm::make(id owner_id) const -> id {
-			return make_arm(owner_id, side::right);
+		auto right_arm::make(reg& reg, id owner_id) const -> id {
+			return make_arm(reg, owner_id, side::right);
 		}
 
-		auto make_hand(id owner_id, side side) -> id {
+		auto make_hand(reg& reg, id owner_id, side side) -> id {
 			id id = reg.create();
-			auto& part = reg.assign<body_part>(id, id, owner_id);
+			auto& part = reg.assign<body_part>(id, reg, id, owner_id);
 
 			part.name = side == side::left ? "human left hand" : "human right hand";
 			part.tags = {body_part::tag::hand};
@@ -208,17 +208,17 @@ namespace ql::generators {
 			return id;
 		}
 
-		auto left_hand::make(id owner_id) const -> id {
-			return make_hand(owner_id, side::left);
+		auto left_hand::make(reg& reg, id owner_id) const -> id {
+			return make_hand(reg, owner_id, side::left);
 		}
 
-		auto right_hand::make(id owner_id) const -> id {
-			return make_hand(owner_id, side::right);
+		auto right_hand::make(reg& reg, id owner_id) const -> id {
+			return make_hand(reg, owner_id, side::right);
 		}
 
-		auto make_leg(id owner_id, side side) -> id {
+		auto make_leg(reg& reg, id owner_id, side side) -> id {
 			id id = reg.create();
-			auto& part = reg.assign<body_part>(id, id, owner_id);
+			auto& part = reg.assign<body_part>(id, reg, id, owner_id);
 
 			part.name = side == side::left ? "human left leg" : "human right leg";
 			part.tags = {body_part::tag::leg};
@@ -244,17 +244,17 @@ namespace ql::generators {
 			return id;
 		}
 
-		auto left_leg::make(id owner_id) const -> id {
-			return make_leg(owner_id, side::left);
+		auto left_leg::make(reg& reg, id owner_id) const -> id {
+			return make_leg(reg, owner_id, side::left);
 		}
 
-		auto right_leg::make(id owner_id) const -> id {
-			return make_leg(owner_id, side::right);
+		auto right_leg::make(reg& reg, id owner_id) const -> id {
+			return make_leg(reg, owner_id, side::right);
 		}
 
-		auto make_foot(id owner_id, side side) -> id {
+		auto make_foot(reg& reg, id owner_id, side side) -> id {
 			id id = reg.create();
-			auto& part = reg.assign<body_part>(id, id, owner_id);
+			auto& part = reg.assign<body_part>(id, reg, id, owner_id);
 
 			part.name = side == side::left ? "human left foot" : "human right foot";
 			part.tags = {body_part::tag::foot};
@@ -274,18 +274,18 @@ namespace ql::generators {
 			return id;
 		}
 
-		auto left_foot::make(id owner_id) const -> id {
-			return make_foot(owner_id, side::left);
+		auto left_foot::make(reg& reg, id owner_id) const -> id {
+			return make_foot(reg, owner_id, side::left);
 		}
 
-		auto right_foot::make(id owner_id) const -> id {
-			return make_foot(owner_id, side::right);
+		auto right_foot::make(reg& reg, id owner_id) const -> id {
+			return make_foot(reg, owner_id, side::right);
 		}
 	}
 
-	auto generator::make(id owner_id) const -> id {
-		return match(value, [owner_id](auto const& value) { //
-			return value.make(owner_id);
+	auto generator::make(reg& reg, id owner_id) const -> id {
+		return match(value, [&](auto const& value) { //
+			return value.make(reg, owner_id);
 		});
 	}
 }

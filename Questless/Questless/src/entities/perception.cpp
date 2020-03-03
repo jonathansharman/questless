@@ -57,7 +57,7 @@ namespace ql {
 		}
 	}
 
-	auto perception_of(id perceptor_id, tile_hex::point target) -> perception {
+	auto perception_of(reg& reg, id perceptor_id, tile_hex::point target) -> perception {
 		auto const& body = reg.get<ql::body>(perceptor_id);
 
 		// Check that the perceptor has at least one source of vision.

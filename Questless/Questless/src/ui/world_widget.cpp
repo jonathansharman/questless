@@ -30,8 +30,9 @@ namespace ql {
 
 	using namespace view::literals;
 
-	world_widget::world_widget(rsrc::world_widget const& resources)
-		: _rsrc{resources}
+	world_widget::world_widget(reg& reg, rsrc::world_widget const& resources)
+		: _reg{&reg}
+		, _rsrc{resources}
 		, _arrow_sound{_rsrc.sfx.arrow}
 		, _hit_sound{_rsrc.sfx.hit}
 		, _pierce_sound{_rsrc.sfx.pierce}
@@ -136,7 +137,7 @@ namespace ql {
 	auto world_widget::render_terrain(world_view const& view) -> void {
 		_tile_widgets.clear();
 		for (auto const& tv : view.tile_views) {
-			auto& tile_widget = _tile_widgets.try_emplace(tv.id, _rsrc.tile, tv).first->second;
+			auto& tile_widget = _tile_widgets.try_emplace(tv.id, *_reg, _rsrc.tile, tv).first->second;
 			tile_widget.on_parent_resize(_size);
 			tile_widget.set_position(tv.position);
 		}
@@ -153,7 +154,7 @@ namespace ql {
 		});
 		// Render sorted entities.
 		for (auto const& ev : sorted_entity_views) {
-			auto& entity_widget = _entity_widgets.try_emplace(ev.id, _rsrc.entity, _rsrc.particle, ev).first->second;
+			auto& entity_widget = _entity_widgets.try_emplace(ev.id, *_reg, _rsrc.entity, _rsrc.particle, ev).first->second;
 			entity_widget.on_parent_resize(_size);
 			entity_widget.set_position(ev.position);
 		}
@@ -169,7 +170,7 @@ namespace ql {
 				_arrow_sound.play();
 			},
 			[&](effects::injury const& e) {
-				body_part const* const target_part = reg.try_get<body_part>(e.target_part_id);
+				body_part const* const target_part = _reg->try_get<body_part>(e.target_part_id);
 				// Assume vitality = 100 if being no longer exists to check.
 				auto const target_vitality = target_part ? target_part->stats.a.vitality.cur : 100_hp;
 				//! @todo Pass along the vitality in the event object if it's needed here (to avoid having to make

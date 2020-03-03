@@ -14,6 +14,8 @@
 namespace ql {
 	//! A gem that can hold spell charges.
 	struct gatestone {
+		reg_ptr reg;
+
 		id id;
 
 		//! The color of spell this gatestone can be used to cast.
@@ -29,6 +31,7 @@ namespace ql {
 	};
 
 	auto make_gatestone( //
+		reg& reg,
 		id gatestone_id,
 		magic::color color,
 		dynamic_nonnegative<mana> charge,

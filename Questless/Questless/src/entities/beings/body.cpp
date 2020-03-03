@@ -23,7 +23,7 @@ namespace ql {
 		}
 
 		template <typename ConstQualifiedBodyPartType, typename F>
-		auto for_parts_impl(body const& body, bool include_disabled, F const& f) -> void {
+		auto for_parts_impl(reg& reg, body const& body, bool include_disabled, F const& f) -> void {
 			std::queue<id> work_list;
 			work_list.push(body.root_part_id);
 			while (!work_list.empty()) {
@@ -45,8 +45,9 @@ namespace ql {
 		}
 	}
 
-	body::body(ql::id id, ql::id root_part_id, body_cond cond, stats::body stats)
-		: id{id}
+	body::body(reg& reg, ql::id id, ql::id root_part_id, body_cond cond, stats::body stats)
+		: _reg{&reg}
+		, id{id}
 		, root_part_id{root_part_id}
 		, cond{std::move(cond)}
 		, stats{std::move(stats)} //
@@ -55,17 +56,17 @@ namespace ql {
 	}
 
 	auto body::for_all_parts(std::function<void(body_part const&)> const& f) const -> void {
-		for_parts_impl<body_part const&>(*this, true, f);
+		for_parts_impl<body_part const&>(*_reg, *this, true, f);
 	}
 	auto body::for_all_parts(std::function<void(body_part&)> const& f) -> void {
-		for_parts_impl<body_part&>(*this, true, f);
+		for_parts_impl<body_part&>(*_reg, *this, true, f);
 	}
 
 	auto body::for_enabled_parts(std::function<void(body_part const&)> const& f) const -> void {
-		for_parts_impl<body_part const&>(*this, false, f);
+		for_parts_impl<body_part const&>(*_reg, *this, false, f);
 	}
 	auto body::for_enabled_parts(std::function<void(body_part&)> const& f) -> void {
-		for_parts_impl<body_part&>(*this, false, f);
+		for_parts_impl<body_part&>(*_reg, *this, false, f);
 	}
 
 	auto body::update(tick elapsed) -> void {

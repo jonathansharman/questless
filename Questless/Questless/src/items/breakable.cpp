@@ -6,7 +6,7 @@
 #include "breakable.hpp"
 
 namespace ql {
-	auto make_breakable(id breakable_id, dynamic_nonnegative<ql::durability> durability) -> id {
+	auto make_breakable(reg& reg, id breakable_id, dynamic_nonnegative<ql::durability> durability) -> id {
 		reg.assign<breakable>(breakable_id, breakable_id, durability);
 
 		return breakable_id;

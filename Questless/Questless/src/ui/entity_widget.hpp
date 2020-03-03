@@ -22,6 +22,7 @@ namespace ql {
 	struct entity_widget : widget {
 		//! @param entity_view A view of the entity this widget interfaces with.
 		entity_widget( //
+			reg& reg,
 			rsrc::entity const& entity_resources,
 			rsrc::particle const& particle_resources,
 			world_view::entity_view entity_view);
@@ -35,6 +36,8 @@ namespace ql {
 		auto get_position() const -> view::point final;
 
 	private:
+		reg_ptr _reg;
+
 		rsrc::entity const& _entity_resources;
 		rsrc::particle const& _particle_resources;
 

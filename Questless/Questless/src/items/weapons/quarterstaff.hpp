@@ -7,11 +7,12 @@
 
 namespace ql {
 	struct quarterstaff {
+		reg_ptr reg;
 		id id;
 
 		void strike();
 		void jab();
 	};
 
-	auto make_quarterstaff(id quarterstaff_id) -> id;
+	auto make_quarterstaff(reg& reg, id quarterstaff_id) -> id;
 }

@@ -25,7 +25,7 @@ namespace ql {
 		//! Invoked when this widget is clicked, passing the item's ID, if any, and the mouse click coordinates.
 		std::function<void(std::optional<id>, view::point)> on_click;
 
-		item_widget(rsrc::item const& item_resources, rsrc::spell const& spell_resources);
+		item_widget(reg& reg, rsrc::item const& item_resources, rsrc::spell const& spell_resources);
 
 		~item_widget();
 
@@ -46,6 +46,8 @@ namespace ql {
 		auto on_mouse_press(sf::Event::MouseButtonEvent const& event) -> event_handled final;
 
 	private:
+		reg_ptr _reg;
+
 		rsrc::item const& _item_resources;
 		rsrc::spell const& _spell_resources;
 

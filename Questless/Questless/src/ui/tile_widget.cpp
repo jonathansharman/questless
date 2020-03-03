@@ -9,8 +9,9 @@
 #include "world/terrain.hpp"
 
 namespace ql {
-	tile_widget::tile_widget(rsrc::tile const& resources, world_view::tile_view tile_view)
-		: _rsrc{resources}
+	tile_widget::tile_widget(reg& reg, rsrc::tile const& resources, world_view::tile_view tile_view)
+		: _reg{&reg}
+		, _rsrc{resources}
 		, _tv{tile_view} //
 	{
 		_ani = [&] {

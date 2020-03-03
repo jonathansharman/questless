@@ -5,11 +5,10 @@
 
 #include "widget.hpp"
 
-#include "view_space.hpp"
-
-#include "utility/reference.hpp"
-
+#include "reg.hpp"
 #include "rsrc/splash.hpp"
+#include "utility/reference.hpp"
+#include "view_space.hpp"
 
 namespace ql {
 	namespace rsrc {
@@ -19,7 +18,7 @@ namespace ql {
 	//! The splash screen.
 	struct splash : widget {
 		//! @param root A reference to the root UI element of the game, used to change scenes when the splash screen ends.
-		splash(uptr<widget>& root, rsrc::fonts const& fonts);
+		splash(reg& reg, uptr<widget>& root, rsrc::fonts const& fonts);
 
 		auto get_size() const -> view::vector final;
 
@@ -39,6 +38,8 @@ namespace ql {
 
 	private:
 		clock::time_point _start_time = clock::now();
+
+		reg_ptr _reg;
 
 		uptr<widget>& _root;
 		rsrc::fonts const& _fonts;

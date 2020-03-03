@@ -21,5 +21,5 @@ namespace ql {
 		}
 	};
 
-	auto make_breakable(id breakable_id, dynamic_nonnegative<ql::durability> durability) -> id;
+	auto make_breakable(reg& reg, id breakable_id, dynamic_nonnegative<ql::durability> durability) -> id;
 }

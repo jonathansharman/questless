@@ -9,9 +9,10 @@
 namespace ql {
 	//! An item for containing projectiles, such as arrows.
 	struct quiver {
+		reg_ptr reg;
 		id id;
 		inventory inventory;
 	};
 
-	auto make_quiver(id quiver_id, inventory inventory) -> id;
+	auto make_quiver(reg& reg, id quiver_id, inventory inventory) -> id;
 }

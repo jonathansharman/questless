@@ -22,7 +22,7 @@ namespace ql {
 
 	//! Handles interaction with the world, as the player sees it.
 	struct world_widget : widget {
-		world_widget(rsrc::world_widget const& resources);
+		world_widget(reg& reg, rsrc::world_widget const& resources);
 
 		//! Updates the world renderer's world view.
 		//! @param world_view The new world view to render.
@@ -55,6 +55,8 @@ namespace ql {
 		auto render_effect(effects::effect const& effect) -> void;
 
 	private:
+		reg_ptr _reg;
+
 		rsrc::world_widget _rsrc;
 		sf::Sound _arrow_sound;
 		sf::Sound _hit_sound;

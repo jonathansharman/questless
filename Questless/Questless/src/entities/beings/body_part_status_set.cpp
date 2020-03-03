@@ -38,7 +38,7 @@ namespace ql {
 		}
 	}
 
-	auto body_part_status_set::apply(tick elapsed) -> void {
+	auto body_part_status_set::apply(reg& reg, tick elapsed) -> void {
 		auto& part = reg.get<body_part>(id);
 
 		// Apply permanent effects.

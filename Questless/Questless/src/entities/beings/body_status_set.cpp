@@ -42,7 +42,7 @@ namespace ql {
 		}
 	}
 
-	auto body_status_set::apply(tick elapsed) -> void {
+	auto body_status_set::apply(reg& reg, tick elapsed) -> void {
 		auto& body = reg.get<ql::body>(id);
 
 		// Apply permanent effects.

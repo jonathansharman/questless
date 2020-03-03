@@ -6,7 +6,7 @@
 #include "tile.hpp"
 
 namespace ql {
-	auto make_tile(id tile_id, terrain terrain, location location, temperature temperature, lum luminance) -> id {
+	auto make_tile(reg& reg, id tile_id, terrain terrain, location location, temperature temperature, lum luminance) -> id {
 		reg.assign<ql::terrain>(tile_id, terrain);
 		reg.assign<ql::location>(tile_id, location);
 		reg.assign<ql::temperature>(tile_id, temperature);

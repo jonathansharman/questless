@@ -27,7 +27,7 @@ namespace ql {
 		//! Pseudo-randomly generates a new region.
 		//! @param id The ID of the new region.
 		//! @param name The name of the new region.
-		region(ql::id id, std::string region_name);
+		region(reg& reg, ql::id id, std::string region_name);
 
 		//! The region's name.
 		auto name() const -> std::string {
@@ -85,9 +85,7 @@ namespace ql {
 		auto add_effect(effects::effect const& effect) -> void;
 
 	private:
-		/////////////////
-		// Member Data //
-		/////////////////
+		reg_ptr _reg;
 
 		std::string _name;
 		std::map<section_hex::point, section> _section_map;
@@ -98,10 +96,6 @@ namespace ql {
 		ql::period_of_day _period_of_day;
 
 		lum _ambient_illuminance;
-
-		//////////////////////
-		// Member Functions //
-		//////////////////////
 
 		//! The section that contains @p tile_coords or nullptr if none.
 		auto containing_section(tile_hex::point tile_coords) -> section*;
@@ -119,5 +113,5 @@ namespace ql {
 		auto for_each_loaded_section(std::function<void(section&)> const& f) -> void;
 	};
 
-	auto make_region(id region_id, std::string name) -> id;
+	auto make_region(reg& reg, id region_id, std::string name) -> id;
 }

@@ -7,8 +7,9 @@
 
 namespace ql {
 	struct arrow {
+		reg_ptr eg;
 		id id;
 	};
 
-	auto make_arrow(id arrow_id) -> id;
+	auto make_arrow(reg& reg, id arrow_id) -> id;
 }

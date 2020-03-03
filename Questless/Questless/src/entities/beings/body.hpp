@@ -28,7 +28,7 @@ namespace ql {
 
 		body_status_set status_set;
 
-		body(ql::id id, ql::id root_part_id, body_cond cond, stats::body stats);
+		body(reg& reg, ql::id id, ql::id root_part_id, body_cond cond, stats::body stats);
 
 		//! Performs @p f for each body part in this body. See also @p for_enabled_parts.
 		auto for_all_parts(std::function<void(body_part const&)> const& f) const -> void;
@@ -42,5 +42,8 @@ namespace ql {
 
 		//! Advances this body and all its parts by @p elapsed.
 		auto update(tick elapsed) -> void;
+
+	private:
+		reg_ptr _reg;
 	};
 }

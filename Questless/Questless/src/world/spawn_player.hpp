@@ -11,5 +11,5 @@ namespace ql {
 	//! Creates a being for the player and spawns it into the world.
 	//! @param region_id The ID of the region to spawn the player into.
 	//! @return The ID of the spawned player.
-	auto create_and_spawn_player(id region_id) -> id;
+	auto create_and_spawn_player(reg& reg, id region_id) -> id;
 }

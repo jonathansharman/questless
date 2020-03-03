@@ -37,8 +37,8 @@ namespace ql {
 		}
 	}
 
-	item_widget::item_widget(rsrc::item const& item_resources, rsrc::spell const& spell_resources)
-		: _item_resources{item_resources}, _spell_resources{spell_resources} {}
+	item_widget::item_widget(reg& reg, rsrc::item const& item_resources, rsrc::spell const& spell_resources)
+		: _reg{&reg}, _item_resources{item_resources}, _spell_resources{spell_resources} {}
 
 	item_widget::~item_widget() = default;
 
@@ -53,15 +53,15 @@ namespace ql {
 		id item_id = *_o_item_id;
 
 		// Render item.
-		if (reg.has<bow>(item_id)) {
+		if (_reg->has<bow>(item_id)) {
 			_ani = umake<still_image>(_item_resources.bow);
-		} else if (reg.has<quarterstaff>(item_id)) {
+		} else if (_reg->has<quarterstaff>(item_id)) {
 			_ani = umake<still_image>(_item_resources.quarterstaff);
-		} else if (reg.has<quiver>(item_id)) {
+		} else if (_reg->has<quiver>(item_id)) {
 			_ani = umake<still_image>(_item_resources.quiver);
-		} else if (reg.has<arrow>(item_id)) {
+		} else if (_reg->has<arrow>(item_id)) {
 			_ani = umake<still_image>(_item_resources.arrow);
-		} else if (auto scroll = reg.try_get<ql::scroll>(item_id)) {
+		} else if (auto scroll = _reg->try_get<ql::scroll>(item_id)) {
 			if (scroll->spell == std::nullopt) {
 				_ani = umake<still_image>(_item_resources.blank_scroll);
 			} else {
@@ -69,7 +69,7 @@ namespace ql {
 				node->front_children.push_front(animate_spell(_spell_resources, *scroll->spell));
 				_ani = std::move(node);
 			}
-		} else if (auto gatestone = reg.try_get<ql::gatestone>(item_id)) {
+		} else if (auto gatestone = _reg->try_get<ql::gatestone>(item_id)) {
 			if (gatestone->charge.value() == 0_mp) {
 				_ani = umake<still_image>(_item_resources.uncharged_gatestone);
 			} else {

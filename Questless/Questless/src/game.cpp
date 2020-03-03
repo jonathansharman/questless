@@ -27,7 +27,7 @@ namespace ql {
 		_window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
 		// Start on the splash screen.
-		_root = umake<splash>(_root, _fonts);
+		_root = umake<splash>(_reg, _root, _fonts);
 
 		// Communicate the initial window size, and set position.
 		_root->on_parent_resize(view::vector_from_sfml(_window.getSize()));

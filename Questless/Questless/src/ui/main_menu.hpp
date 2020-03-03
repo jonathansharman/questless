@@ -5,6 +5,7 @@
 
 #include "widget.hpp"
 
+#include "reg.hpp"
 #include "utility/reference.hpp"
 
 namespace ql {
@@ -15,7 +16,7 @@ namespace ql {
 
 	//! The scene for the main menu.
 	struct main_menu : widget {
-		main_menu(uptr<widget>& root, rsrc::fonts const& fonts);
+		main_menu(reg& reg, uptr<widget>& root, rsrc::fonts const& fonts);
 
 		~main_menu();
 
@@ -32,6 +33,8 @@ namespace ql {
 		auto on_request_quit() -> event_handled final;
 
 	private:
+		reg_ptr _reg;
+
 		uptr<widget>& _root;
 		uptr<hud> _hud;
 

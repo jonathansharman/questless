@@ -12,15 +12,15 @@
 #include "world/spawn_player.hpp"
 
 namespace ql {
-	main_menu::main_menu(uptr<widget>& root, rsrc::fonts const& fonts) : _root{root} {
+	main_menu::main_menu(reg& reg, uptr<widget>& root, rsrc::fonts const& fonts) : _reg{&reg}, _root{root} {
 		//! @todo Implement main menu stuff instead of just immediately switching into the game.
 
 		// Create the main region.
-		id region_id = make_region(reg.create(), "Region 1");
+		id region_id = make_region(reg, reg.create(), "Region 1");
 		// Spawn the player into the main region.
-		auto player_id = create_and_spawn_player(region_id);
+		auto player_id = create_and_spawn_player(reg, region_id);
 		// Create HUD.
-		_hud = umake<hud>(root, fonts, region_id, player_id);
+		_hud = umake<hud>(reg, root, fonts, region_id, player_id);
 	}
 
 	main_menu::~main_menu() = default;

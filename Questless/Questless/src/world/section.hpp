@@ -20,7 +20,7 @@ namespace ql {
 		//! Generates a new section.
 		//! @param region_id The ID of the region containing this section.
 		//! @param coords The coordinates of the section within its region.
-		section(id region_id, section_hex::point coords);
+		section(reg& reg, id region_id, section_hex::point coords);
 
 		//! The hex coordinates of this section within its region's sections.
 		auto section_coords() const;
@@ -49,6 +49,8 @@ namespace ql {
 		auto tile_id_at(tile_hex::point coords) const -> id;
 
 	private:
+		reg_ptr _reg;
+
 		//! A q-major array of tiles, representing a rhomboid section of tiles centered on this section's hex coordinates.
 		std::array<std::array<id, section_diameter.value>, section_diameter.value> _tile_ids;
 

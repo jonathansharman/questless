@@ -5,6 +5,7 @@
 
 #include "bounded/static.hpp"
 #include "quantities/wall_time.hpp"
+#include "reg.hpp"
 #include "rsrc/fonts.hpp"
 #include "utility/reference.hpp"
 #include "utility/simple_moving_average.hpp"
@@ -27,6 +28,8 @@ namespace ql {
 		auto run() -> void;
 
 	private:
+		reg _reg;
+
 		sf::RenderWindow _window;
 
 		rsrc::fonts _fonts;

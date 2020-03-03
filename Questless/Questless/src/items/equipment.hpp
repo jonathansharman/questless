@@ -22,6 +22,8 @@ namespace ql {
 			std::optional<id> o_part_id;
 		};
 
+		reg_ptr reg;
+
 		id id;
 
 		//! The ID of the bearer of this equipment, or nullopt if not equipped.
@@ -51,6 +53,11 @@ namespace ql {
 		auto forced_unequip() -> void;
 	};
 
-	auto make_equipment(id equipment_id, std::optional<id> o_bearer_id, std::vector<equipment::tab> tabs, action equip_cost, action unequip_cost)
-		-> id;
+	auto make_equipment( //
+		reg& reg,
+		id equipment_id,
+		std::optional<id> o_bearer_id,
+		std::vector<equipment::tab> tabs,
+		action equip_cost,
+		action unequip_cost) -> id;
 }

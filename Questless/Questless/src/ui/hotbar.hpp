@@ -13,7 +13,7 @@
 namespace ql {
 	//! Holds items for ready use.
 	struct hotbar : widget {
-		hotbar(rsrc::item const& item_resources, rsrc::spell const& spell_resources);
+		hotbar(reg& reg, rsrc::item const& item_resources, rsrc::spell const& spell_resources);
 
 		auto get_size() const -> view::vector final;
 

@@ -9,6 +9,8 @@
 
 namespace ql {
 	struct light_source {
+		reg_ptr reg;
+
 		id id;
 
 		//! How brightly this light source shines.

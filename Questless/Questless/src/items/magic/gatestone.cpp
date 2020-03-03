@@ -11,14 +11,15 @@
 
 namespace ql {
 	auto make_gatestone( //
+		reg& reg,
 		id gatestone_id,
 		magic::color color,
 		dynamic_nonnegative<mana> charge,
 		dynamic_nonnegative<tick> cooldown) -> id //
 	{
-		make_item(gatestone_id, 1.0_mass);
-		make_equipment(gatestone_id, std::nullopt, {{body_part::tag::hand, std::nullopt}}, 10_ap, 10_ap);
-		reg.assign<gatestone>(gatestone_id, gatestone_id, color, charge, cooldown);
+		make_item(reg, gatestone_id, 1.0_mass);
+		make_equipment(reg, gatestone_id, std::nullopt, {{body_part::tag::hand, std::nullopt}}, 10_ap, 10_ap);
+		reg.assign<gatestone>(gatestone_id, &reg, gatestone_id, color, charge, cooldown);
 		return gatestone_id;
 	}
 

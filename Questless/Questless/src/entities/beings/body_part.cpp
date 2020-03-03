@@ -11,26 +11,26 @@
 
 namespace ql {
 	namespace {
-		auto generate_attached_parts_helper(id part_id) -> void {
+		auto generate_attached_parts_helper(reg& reg, id part_id) -> void {
 			auto const& part = reg.get<body_part>(part_id);
 			auto const n = part.attachments.size();
 			auto const owner_id = part.owner_id;
 			for (size_t i = 0; i < n; ++i) {
-				auto const attached_part_id = reg.get<body_part>(part_id).attachments[i].default_generator.make(owner_id);
-				generate_attached_parts_helper(attached_part_id);
+				auto const attached_part_id = reg.get<body_part>(part_id).attachments[i].default_generator.make(reg, owner_id);
+				generate_attached_parts_helper(reg, attached_part_id);
 				reg.get<body_part>(part_id).attachments[i].o_part_id = attached_part_id;
 			}
 		}
 	}
 
-	body_part::body_part(ql::id id, ql::id owner_id) : id{id}, owner_id{owner_id} {}
+	body_part::body_part(reg& reg, ql::id id, ql::id owner_id) : _reg{&reg}, id{id}, owner_id{owner_id} {}
 
 	auto body_part::update(tick elapsed) -> void {
-		body& owner = reg.get<body>(owner_id);
+		body& owner = _reg->get<body>(owner_id);
 
 		{ // Handle temperature damage.
-			auto const& location = reg.get<ql::location>(owner_id);
-			auto const& region = reg.get<ql::region>(location.region_id);
+			auto const& location = _reg->get<ql::location>(owner_id);
+			auto const& region = _reg->get<ql::region>(location.region_id);
 			auto const temp = region.temperature(location.coords);
 			if (temp > stats.max_temp.cur) {
 				constexpr auto temperature_scorch_rate = 1_scorch / 1_temp / 1_tick;
@@ -64,12 +64,12 @@ namespace ql {
 	auto body_part::take_damage(dmg::group& damage, std::optional<ql::id> o_source_id) -> void {
 		// Apply part's equipped item's armor.
 		if (equipped_item_id) {
-			if (auto armor = reg.try_get<dmg::armor>(*equipped_item_id)) { damage = damage.against(*armor); }
+			if (auto armor = _reg->try_get<dmg::armor>(*equipped_item_id)) { damage = damage.against(*armor); }
 		}
 		// Apply part's armor.
 		damage = damage.against(stats.armor.cur);
 		// Apply owner's armor.
-		auto const& body = reg.get<ql::body>(owner_id);
+		auto const& body = _reg->get<ql::body>(owner_id);
 		damage = damage.against(body.stats.armor.cur);
 
 		// Apply secondary damage effects.
@@ -95,14 +95,14 @@ namespace ql {
 				[&](dmg::shock const& s) { status_set.wounds.push_back(wound{s * 1_burn / 1_shock}); },
 				[&](dmg::poison const&) {},
 				[&](dmg::rot const&) {});
-		};
+		}
 
 		// Add injury effect.
-		auto const location = reg.get<ql::location>(owner_id);
-		reg.get<region>(location.region_id).add_effect({effects::injury{location.coords, damage, owner_id, id, o_source_id}});
+		auto const location = _reg->get<ql::location>(owner_id);
+		_reg->get<region>(location.region_id).add_effect({effects::injury{location.coords, damage, owner_id, id, o_source_id}});
 	}
 
 	auto body_part::generate_attached_parts() -> void {
-		generate_attached_parts_helper(id);
+		generate_attached_parts_helper(*_reg, id);
 	}
 }

@@ -5,9 +5,17 @@
 
 #include <entt/entity/registry.hpp>
 
+#include <gsl/pointers>
+
+#include <functional>
+
 namespace ql {
+	//! ID of an entt entity.
 	using id = entt::registry::entity_type;
 
-	//! @brief The global ECS registry.
-	inline entt::registry reg;
+	//! The entt registry type used to manage Questless entities.
+	using reg = entt::registry;
+
+	//! Non-null pointer to a registry.
+	using reg_ptr = gsl::not_null<reg*>;
 }

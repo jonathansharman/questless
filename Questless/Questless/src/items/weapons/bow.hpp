@@ -10,6 +10,7 @@
 namespace ql {
 	//! An ordinary war bow.
 	struct bow {
+		reg_ptr reg;
 		id id;
 
 		std::optional<ql::id> string_id;
@@ -20,5 +21,5 @@ namespace ql {
 		void loose();
 	};
 
-	id make_bow(id bow_id);
+	id make_bow(reg& reg, id bow_id);
 }
