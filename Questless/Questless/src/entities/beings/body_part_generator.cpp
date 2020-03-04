@@ -67,7 +67,7 @@ namespace ql::generators {
 
 		auto torso::make(reg& reg, id owner_id) const -> id {
 			id id = reg.create();
-			auto& part = reg.assign<body_part>(id, reg, id, owner_id);
+			auto& part = reg.assign<body_part>(id, &reg, id, owner_id);
 
 			part.name = "human torso";
 			part.tags = {body_part::tag::torso};
@@ -120,7 +120,7 @@ namespace ql::generators {
 
 		auto head::make(reg& reg, id owner_id) const -> id {
 			id id = reg.create();
-			auto& part = reg.assign<body_part>(id, reg, id, owner_id);
+			auto& part = reg.assign<body_part>(id, &reg, id, owner_id);
 
 			part.name = "human head";
 			part.tags = {body_part::tag::head};
@@ -152,7 +152,7 @@ namespace ql::generators {
 
 		auto make_arm(reg& reg, id owner_id, side side) -> id {
 			id id = reg.create();
-			auto& part = reg.assign<body_part>(id, reg, id, owner_id);
+			auto& part = reg.assign<body_part>(id, &reg, id, owner_id);
 
 			part.name = side == side::left ? "human left arm" : "human right arm";
 			part.tags = {body_part::tag::arm};
@@ -188,7 +188,7 @@ namespace ql::generators {
 
 		auto make_hand(reg& reg, id owner_id, side side) -> id {
 			id id = reg.create();
-			auto& part = reg.assign<body_part>(id, reg, id, owner_id);
+			auto& part = reg.assign<body_part>(id, &reg, id, owner_id);
 
 			part.name = side == side::left ? "human left hand" : "human right hand";
 			part.tags = {body_part::tag::hand};
@@ -218,7 +218,7 @@ namespace ql::generators {
 
 		auto make_leg(reg& reg, id owner_id, side side) -> id {
 			id id = reg.create();
-			auto& part = reg.assign<body_part>(id, reg, id, owner_id);
+			auto& part = reg.assign<body_part>(id, &reg, id, owner_id);
 
 			part.name = side == side::left ? "human left leg" : "human right leg";
 			part.tags = {body_part::tag::leg};
@@ -254,7 +254,7 @@ namespace ql::generators {
 
 		auto make_foot(reg& reg, id owner_id, side side) -> id {
 			id id = reg.create();
-			auto& part = reg.assign<body_part>(id, reg, id, owner_id);
+			auto& part = reg.assign<body_part>(id, &reg, id, owner_id);
 
 			part.name = side == side::left ? "human left foot" : "human right foot";
 			part.tags = {body_part::tag::foot};

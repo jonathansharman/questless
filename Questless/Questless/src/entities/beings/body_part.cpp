@@ -23,8 +23,6 @@ namespace ql {
 		}
 	}
 
-	body_part::body_part(ql::reg& reg, ql::id id, ql::id owner_id) : reg{&reg}, id{id}, owner_id{owner_id} {}
-
 	auto body_part::update(tick elapsed) -> void {
 		body& owner = reg->get<body>(owner_id);
 

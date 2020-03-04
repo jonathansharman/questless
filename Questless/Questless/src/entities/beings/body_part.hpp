@@ -58,8 +58,6 @@ namespace ql {
 		//! The ID of the item equipped to this body or nullopt if none.
 		std::optional<ql::id> equipped_item_id = std::nullopt;
 
-		body_part(ql::reg& reg, ql::id id, ql::id owner_id);
-
 		//! Advances the body part by @p elapsed.
 		auto update(tick elapsed) -> void;
 
