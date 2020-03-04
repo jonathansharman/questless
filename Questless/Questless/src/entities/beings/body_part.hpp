@@ -27,6 +27,8 @@ namespace ql {
 	struct body_part {
 		enum class tag : int { head = 0, torso, arm, hand, leg, foot, wing, tail };
 
+		reg_ptr reg;
+
 		id id;
 
 		//! The ID of the being that owns this body part.
@@ -56,7 +58,7 @@ namespace ql {
 		//! The ID of the item equipped to this body or nullopt if none.
 		std::optional<ql::id> equipped_item_id = std::nullopt;
 
-		body_part(reg& reg, ql::id id, ql::id owner_id);
+		body_part(ql::reg& reg, ql::id id, ql::id owner_id);
 
 		//! Advances the body part by @p elapsed.
 		auto update(tick elapsed) -> void;
@@ -68,8 +70,5 @@ namespace ql {
 
 		//! Recursively generates each missing attached body part using default parts.
 		auto generate_attached_parts() -> void;
-
-	private:
-		reg_ptr _reg;
 	};
 }

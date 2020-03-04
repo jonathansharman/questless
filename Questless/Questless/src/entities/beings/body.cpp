@@ -45,8 +45,8 @@ namespace ql {
 		}
 	}
 
-	body::body(reg& reg, ql::id id, ql::id root_part_id, body_cond cond, stats::body stats)
-		: _reg{&reg}
+	body::body(ql::reg& reg, ql::id id, ql::id root_part_id, body_cond cond, stats::body stats)
+		: reg{&reg}
 		, id{id}
 		, root_part_id{root_part_id}
 		, cond{std::move(cond)}
@@ -56,17 +56,17 @@ namespace ql {
 	}
 
 	auto body::for_all_parts(std::function<void(body_part const&)> const& f) const -> void {
-		for_parts_impl<body_part const&>(*_reg, *this, true, f);
+		for_parts_impl<body_part const&>(*reg, *this, true, f);
 	}
 	auto body::for_all_parts(std::function<void(body_part&)> const& f) -> void {
-		for_parts_impl<body_part&>(*_reg, *this, true, f);
+		for_parts_impl<body_part&>(*reg, *this, true, f);
 	}
 
 	auto body::for_enabled_parts(std::function<void(body_part const&)> const& f) const -> void {
-		for_parts_impl<body_part const&>(*_reg, *this, false, f);
+		for_parts_impl<body_part const&>(*reg, *this, false, f);
 	}
 	auto body::for_enabled_parts(std::function<void(body_part&)> const& f) -> void {
-		for_parts_impl<body_part&>(*_reg, *this, false, f);
+		for_parts_impl<body_part&>(*reg, *this, false, f);
 	}
 
 	auto body::update(tick elapsed) -> void {

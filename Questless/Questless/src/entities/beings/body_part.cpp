@@ -23,14 +23,14 @@ namespace ql {
 		}
 	}
 
-	body_part::body_part(reg& reg, ql::id id, ql::id owner_id) : _reg{&reg}, id{id}, owner_id{owner_id} {}
+	body_part::body_part(ql::reg& reg, ql::id id, ql::id owner_id) : reg{&reg}, id{id}, owner_id{owner_id} {}
 
 	auto body_part::update(tick elapsed) -> void {
-		body& owner = _reg->get<body>(owner_id);
+		body& owner = reg->get<body>(owner_id);
 
 		{ // Handle temperature damage.
-			auto const& location = _reg->get<ql::location>(owner_id);
-			auto const& region = _reg->get<ql::region>(location.region_id);
+			auto const& location = reg->get<ql::location>(owner_id);
+			auto const& region = reg->get<ql::region>(location.region_id);
 			auto const temp = region.temperature(location.coords);
 			if (temp > stats.max_temp.cur) {
 				constexpr auto temperature_scorch_rate = 1_scorch / 1_temp / 1_tick;
@@ -64,12 +64,12 @@ namespace ql {
 	auto body_part::take_damage(dmg::group& damage, std::optional<ql::id> o_source_id) -> void {
 		// Apply part's equipped item's armor.
 		if (equipped_item_id) {
-			if (auto armor = _reg->try_get<dmg::armor>(*equipped_item_id)) { damage = damage.against(*armor); }
+			if (auto armor = reg->try_get<dmg::armor>(*equipped_item_id)) { damage = damage.against(*armor); }
 		}
 		// Apply part's armor.
 		damage = damage.against(stats.armor.cur);
 		// Apply owner's armor.
-		auto const& body = _reg->get<ql::body>(owner_id);
+		auto const& body = reg->get<ql::body>(owner_id);
 		damage = damage.against(body.stats.armor.cur);
 
 		// Apply secondary damage effects.
@@ -98,11 +98,11 @@ namespace ql {
 		}
 
 		// Add injury effect.
-		auto const location = _reg->get<ql::location>(owner_id);
-		_reg->get<region>(location.region_id).add_effect({effects::injury{location.coords, damage, owner_id, id, o_source_id}});
+		auto const location = reg->get<ql::location>(owner_id);
+		reg->get<region>(location.region_id).add_effect({effects::injury{location.coords, damage, owner_id, id, o_source_id}});
 	}
 
 	auto body_part::generate_attached_parts() -> void {
-		generate_attached_parts_helper(*_reg, id);
+		generate_attached_parts_helper(*reg, id);
 	}
 }
