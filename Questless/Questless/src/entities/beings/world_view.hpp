@@ -39,15 +39,12 @@ namespace ql {
 		pace visual_range;
 
 		//! Constructs the world view of the being with id @p viewer_id.
-		world_view(reg& reg, id viewer_id);
+		world_view(ql::reg& reg, id viewer_id);
 
 		world_view(world_view const&) = default;
 		world_view(world_view&&) = default;
 
 		auto operator=(world_view const&) -> world_view& = default;
 		auto operator=(world_view &&) -> world_view& = default;
-
-	private:
-		reg_ptr _reg;
 	};
 }

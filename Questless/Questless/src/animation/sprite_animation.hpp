@@ -46,8 +46,8 @@ namespace ql {
 		//! The total duration of the animation.
 		auto duration() const -> sec;
 
-		//! Moves to the start or a random time point in the animation, sets the loop counter to zero, and sets the over
-		//! flag to false.
+		//! Moves to the start or a random time point in the animation, sets the loop counter to zero, and sets the
+		//! stopped flag to false.
 		auto reset(start_time start_time = start_time::zero) -> void;
 
 	private:

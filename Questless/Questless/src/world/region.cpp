@@ -30,10 +30,10 @@ namespace ql {
 		constexpr tick end_of_night = 95 * day_length / 100;
 	}
 
-	region::region(reg& reg, ql::id id, std::string region_name)
-		: id{id}
-		, _reg{&reg}
-		, _name{std::move(region_name)}
+	region::region(ql::reg& reg, ql::id id, std::string region_name)
+		: reg{&reg}
+		, id{id}
+		, name{std::move(region_name)}
 		, _time{0}
 		, _time_of_day{get_time_of_day()}
 		, _period_of_day{get_period_of_day()}
@@ -48,7 +48,7 @@ namespace ql {
 
 				// Generate a new random section.
 				section& section =
-					_section_map.insert(std::make_pair(section_coords, ql::section{*_reg, id, section_coords})).first->second;
+					_section_map.insert(std::make_pair(section_coords, ql::section{reg, id, section_coords})).first->second;
 
 				// Add beings randomly.
 				auto const section_center = section.center_coords();
@@ -58,19 +58,19 @@ namespace ql {
 							auto const entity_coords = section_center + tile_hex::vector{q, r};
 							if (!uniform(0, 12)) {
 								// Create and spawn campfire.
-								auto const campfire_id = _reg->create();
-								make_campfire(*_reg, campfire_id, location{id, entity_coords});
+								auto const campfire_id = reg.create();
+								make_campfire(reg, campfire_id, location{id, entity_coords});
 								bool const success = try_add(campfire_id, entity_coords);
 								assert(success);
 							} else {
 								// Create human.
-								auto const human_id = _reg->create();
-								make_human(*_reg, human_id, location{id, entity_coords}, {basic_ai{*_reg, human_id}});
+								auto const human_id = reg.create();
+								make_human(reg, human_id, location{id, entity_coords}, {basic_ai{reg, human_id}});
 								// Create quarterstaff.
-								auto const quarterstaff_id = _reg->create();
-								make_quarterstaff(*_reg, quarterstaff_id);
+								auto const quarterstaff_id = reg.create();
+								make_quarterstaff(reg, quarterstaff_id);
 								// Give quarterstaff to human.
-								_reg->get<inventory>(human_id).add(quarterstaff_id);
+								reg.get<inventory>(human_id).add(quarterstaff_id);
 								// Spawn human.
 								bool const success = try_add(std::move(human_id), entity_coords);
 								assert(success);
@@ -99,7 +99,7 @@ namespace ql {
 		// Destroy and remove the entity currently there, if any.
 		if (auto const o_entity_id = entity_id_at(player_coords)) {
 			auto const entity_id = *o_entity_id;
-			_reg->destroy(entity_id);
+			reg->destroy(entity_id);
 			remove(entity_id);
 		}
 
@@ -109,7 +109,7 @@ namespace ql {
 
 	auto region::try_add(ql::id entity_id, tile_hex::point tile_coords) -> bool {
 		if (auto section = containing_section(tile_coords)) {
-			_reg->get<location>(entity_id) = {id, tile_coords};
+			reg->get<location>(entity_id) = {id, tile_coords};
 
 			return section->try_add(entity_id);
 		} else {
@@ -119,7 +119,7 @@ namespace ql {
 	}
 
 	auto region::try_move(ql::id entity_id, tile_hex::point tile_coords) -> bool {
-		auto& location = _reg->get<ql::location>(entity_id);
+		auto& location = reg->get<ql::location>(entity_id);
 		if (location.region_id != id) {
 			// The entity is not in this region to begin with.
 			return false;
@@ -153,7 +153,7 @@ namespace ql {
 	}
 
 	auto region::remove(ql::id entity_id) -> void {
-		auto& location = _reg->get<ql::location>(entity_id);
+		auto& location = reg->get<ql::location>(entity_id);
 		if (auto section = containing_section(location.coords)) { section->remove(entity_id); }
 	}
 
@@ -167,7 +167,7 @@ namespace ql {
 
 	auto region::illuminance(tile_hex::point tile_coords) const -> lum {
 		if (auto tile_id = tile_id_at(tile_coords)) {
-			return _ambient_illuminance + _reg->get<lum>(*tile_id);
+			return _ambient_illuminance + reg->get<lum>(*tile_id);
 		} else {
 			return _ambient_illuminance;
 		}
@@ -175,7 +175,7 @@ namespace ql {
 
 	auto region::temperature(tile_hex::point tile_coords) const -> ql::temperature {
 		if (auto tile_id = tile_id_at(tile_coords)) {
-			return _reg->get<ql::temperature>(*tile_id);
+			return reg->get<ql::temperature>(*tile_id);
 		} else {
 			return 0_temp;
 		}
@@ -204,7 +204,7 @@ namespace ql {
 		for_each_loaded_section([&](section& section) {
 			for (auto& [coords, id] : section.entity_id_map()) {
 				if ((coords - effect.origin()).length() <= effect.range()) {
-					if (agent* agent = _reg->try_get<ql::agent>(id)) { agent->perceive(effect); }
+					if (agent* agent = reg->try_get<ql::agent>(id)) { agent->perceive(effect); }
 				}
 			}
 		});

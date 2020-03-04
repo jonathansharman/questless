@@ -10,12 +10,11 @@
 #include <set>
 
 namespace ql {
-	world_view::world_view(reg& reg, id viewer_id)
-		: _reg{&reg}
-		, center{reg.get<ql::location>(viewer_id)}
+	world_view::world_view(ql::reg& reg, id viewer_id)
+		: center{reg.get<ql::location>(viewer_id)}
 		, visual_range{max_visual_range(reg.get<body>(viewer_id).stats.a.vision_sources.cur)} //
 	{
-		auto& region = _reg->get<ql::region>(center.region_id);
+		auto& region = reg.get<ql::region>(center.region_id);
 
 		// Iterate over the rhomboid specified by the location and visual range to find visible tiles and beings.
 		for (pace q = -visual_range; q <= visual_range; ++q) {
@@ -32,7 +31,7 @@ namespace ql {
 				auto const tile_id = *o_tile_id;
 
 				// Get tile perception and position.
-				auto const tile_perception = perception_of(*_reg, viewer_id, tile_coords);
+				auto const tile_perception = perception_of(reg, viewer_id, tile_coords);
 				auto const tile_position = to_view_space(tile_coords);
 
 				// Add tile view if perceptible.

@@ -22,17 +22,15 @@ namespace ql {
 
 	//! A large set of connected sections of hexagonal tiles.
 	struct region {
+		reg_ptr reg;
+
 		id id;
 
-		//! Pseudo-randomly generates a new region.
-		//! @param id The ID of the new region.
-		//! @param name The name of the new region.
-		region(reg& reg, ql::id id, std::string region_name);
+		//! The player-visible name of the region.
+		std::string name;
 
-		//! The region's name.
-		auto name() const -> std::string {
-			return _name;
-		}
+		//! Pseudo-randomly generates a new region.
+		region(ql::reg& reg, ql::id id, std::string region_name);
 
 		//! The ID of the entity at @p tile_coords or nullopt if none.
 		auto entity_id_at(tile_hex::point tile_coords) const -> std::optional<ql::id>;
@@ -85,9 +83,6 @@ namespace ql {
 		auto add_effect(effects::effect const& effect) -> void;
 
 	private:
-		reg_ptr _reg;
-
-		std::string _name;
 		std::map<section_hex::point, section> _section_map;
 		section_hex::point center_section_coords{0_section_span, 0_section_span};
 
