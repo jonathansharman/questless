@@ -21,10 +21,14 @@ namespace ql {
 		constexpr int _dflt_window_width = 1024;
 		constexpr int _dflt_window_height = 768;
 
-		auto const window_style = fullscreen ? sf::Style::Fullscreen : sf::Style::Default;
-		_window.create(sf::VideoMode{_dflt_window_width, _dflt_window_height}, "Questless", window_style);
-		auto icon = rsrc::load<sf::Image>("resources/textures/icon.png");
-		_window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+		{ // Create window.
+			auto const window_style = fullscreen ? sf::Style::Fullscreen : sf::Style::Default;
+			sf::ContextSettings settings;
+			settings.antialiasingLevel = 8;
+			_window.create(sf::VideoMode{_dflt_window_width, _dflt_window_height}, "Questless", window_style, settings);
+			auto icon = rsrc::load<sf::Image>("resources/textures/icon.png");
+			_window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+		}
 
 		// Start on the splash screen.
 		_root = umake<splash>(_reg, _root, _fonts);
