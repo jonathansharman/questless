@@ -7,7 +7,7 @@
 
 namespace ql::effects {
 	struct lightning_bolt {
-		tile_hex::point origin;
+		tile_hex_point origin;
 
 		constexpr auto range() const -> pace {
 			return 10_pace;

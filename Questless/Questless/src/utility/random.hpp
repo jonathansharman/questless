@@ -50,7 +50,7 @@ namespace ql {
 
 	//! A uniformly randomly chosen direction in region tile space.
 	inline auto random_direction() {
-		return static_cast<tile_hex::direction>(uniform(0, 5));
+		return static_cast<hex_direction>(uniform(0, 5));
 	}
 
 	//! A random angle in degrees.

@@ -3,47 +3,56 @@
 
 #include "tile_widget.hpp"
 
-#include "animation/still_image.hpp"
+#include "animation/still_shape.hpp"
 #include "rsrc/tile.hpp"
 #include "utility/unreachable.hpp"
 #include "world/terrain.hpp"
 
 namespace ql {
-	tile_widget::tile_widget(reg& reg, rsrc::tile const& resources, world_view::tile_view tile_view)
+	tile_widget::tile_widget(reg& reg, rsrc::tile const& resources, world_view::tile_view const& tile_view)
 		: _reg{&reg}
 		, _rsrc{resources}
 		, _tv{tile_view} //
 	{
 		_ani = [&] {
 			auto const terrain = reg.get<ql::terrain>(_tv.id);
-			uptr<still_image> image;
+			sf::ConvexShape cs;
+			{ // Add offset points.
+				cs.setPointCount(6);
+				std::size_t idx = 0;
+				for (auto const& offset : tile_layout.corner_offsets()) {
+					cs.setPoint(idx++, view::to_sfml(offset));
+				}
+			}
+			cs.setOutlineColor(sf::Color::Black);
+			cs.setOutlineThickness(1);
+			auto shape = std::make_unique<still_shape>(std::make_unique<sf::ConvexShape>(cs));
 			switch (terrain) {
 				case terrain::dirt:
-					image = umake<still_image>(_rsrc.txtr.dirt);
+					shape->shape->setTexture(&_rsrc.txtr.dirt);
 					break;
 				case terrain::edge:
-					image = nullptr;
-					return image;
+					// Leave texture null.
+					break;
 				case terrain::grass:
-					image = umake<still_image>(_rsrc.txtr.grass);
+					shape->shape->setTexture(&_rsrc.txtr.grass);
 					break;
 				case terrain::sand:
-					image = umake<still_image>(_rsrc.txtr.sand);
+					shape->shape->setTexture(&_rsrc.txtr.sand);
 					break;
 				case terrain::snow:
-					image = umake<still_image>(_rsrc.txtr.snow);
+					shape->shape->setTexture(&_rsrc.txtr.snow);
 					break;
 				case terrain::stone:
-					image = umake<still_image>(_rsrc.txtr.stone);
+					shape->shape->setTexture(&_rsrc.txtr.stone);
 					break;
 				case terrain::water:
-					image = umake<still_image>(_rsrc.txtr.water);
+					shape->shape->setTexture(&_rsrc.txtr.water);
 					break;
 				default:
 					UNREACHABLE;
 			}
-			image->set_relative_origin({0.5f, 0.5f}, true);
-			return image;
+			return shape;
 		}();
 	}
 

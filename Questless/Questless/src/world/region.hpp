@@ -33,23 +33,23 @@ namespace ql {
 		region(ql::reg& reg, ql::id id, std::string region_name);
 
 		//! The ID of the entity at @p tile_coords or nullopt if none.
-		auto entity_id_at(tile_hex::point tile_coords) const -> std::optional<ql::id>;
+		auto entity_id_at(tile_hex_point tile_coords) const -> std::optional<ql::id>;
 
 		//! Finds a suitable spawn location.
 		auto get_spawn_location() -> location;
 
 		//! Adds @p entity_id to the region, setting its coordinates to @p tile_coords.
-		[[nodiscard]] auto try_add(ql::id entity_id, tile_hex::point tile_coords) -> bool;
+		[[nodiscard]] auto try_add(ql::id entity_id, tile_hex_point tile_coords) -> bool;
 
 		//! Moves @p entity_id to the tile at @p tile_coords.
 		//! @return Whether @p being was successfully moved.
-		[[nodiscard]] auto try_move(ql::id entity_id, tile_hex::point tile_coords) -> bool;
+		[[nodiscard]] auto try_move(ql::id entity_id, tile_hex_point tile_coords) -> bool;
 
 		//! Removes @p entity_id from the region, if present.
 		auto remove(ql::id entity_id) -> void;
 
 		//! The tile at @p tile_coords or nullopt if none.
-		auto tile_id_at(tile_hex::point tile_coords) const -> std::optional<ql::id>;
+		auto tile_id_at(tile_hex_point tile_coords) const -> std::optional<ql::id>;
 
 		//! The total in-game time in this region.
 		auto time() const -> tick {
@@ -67,13 +67,13 @@ namespace ql {
 		}
 
 		//! The illuminance of the tile at @p tile_coords.
-		auto illuminance(tile_hex::point tile_coords) const -> lum;
+		auto illuminance(tile_hex_point tile_coords) const -> lum;
 
 		//! The temperature of the tile at @p tile_coords.
-		auto temperature(tile_hex::point tile_coords) const -> ql::temperature;
+		auto temperature(tile_hex_point tile_coords) const -> ql::temperature;
 
 		//! The proportion of light/vision occluded between @p start and @p end, as a number in [0, 1].
-		auto occlusion(tile_hex::point start, tile_hex::point end) const -> double;
+		auto occlusion(tile_hex_point start, tile_hex_point end) const -> double;
 
 		//! Advances this region by @elapsed time.
 		auto update(tick elapsed) -> void;
@@ -83,8 +83,8 @@ namespace ql {
 		auto add_effect(effects::effect const& effect) -> void;
 
 	private:
-		std::map<section_hex::point, section> _section_map;
-		section_hex::point center_section_coords{0_section_span, 0_section_span};
+		std::map<section_hex_point, section> _section_map;
+		section_hex_point center_section_coords{0_section_span, 0_section_span};
 
 		tick _time;
 		tick _time_of_day;
@@ -93,10 +93,10 @@ namespace ql {
 		lum _ambient_illuminance;
 
 		//! The section that contains @p tile_coords or nullptr if none.
-		auto containing_section(tile_hex::point tile_coords) -> section*;
+		auto containing_section(tile_hex_point tile_coords) -> section*;
 
 		//! The section that contains @p tile_coords or nullptr if none.
-		auto containing_section(tile_hex::point tile_coords) const -> section const*;
+		auto containing_section(tile_hex_point tile_coords) const -> section const*;
 
 		auto get_time_of_day() const -> tick;
 		auto get_period_of_day() const -> ql::period_of_day;

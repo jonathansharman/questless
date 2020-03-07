@@ -126,7 +126,7 @@ namespace ql {
 		}
 	}
 
-	auto world_widget::set_highlight_predicate(std::function<bool(tile_hex::point)> predicate) -> void {
+	auto world_widget::set_highlight_predicate(std::function<bool(tile_hex_point)> predicate) -> void {
 		_highlight_predicate = std::move(predicate);
 	}
 
@@ -164,8 +164,8 @@ namespace ql {
 		match(
 			effect.value,
 			[&](effects::arrow_attack const& e) {
-				view::point source = to_view_space(e.origin);
-				view::point target = to_view_space(e.target);
+				view::point source = tile_layout.to_world(e.origin);
+				view::point target = tile_layout.to_world(e.target);
 				_effect_animations.push_back(umake<arrow_particle>(_rsrc.particle, source, target));
 				_arrow_sound.play();
 			},
@@ -176,11 +176,9 @@ namespace ql {
 				//! @todo Pass along the vitality in the event object if it's needed here (to avoid having to make
 				//! up a number).
 
-				view::point const position = to_view_space(e.origin);
+				view::point const position = tile_layout.to_world(e.origin);
 
-				dmg::group const& damage = e.damage;
-
-				for (auto const& part : damage.parts) {
+				for (auto const& part : e.damage.parts) {
 					static constexpr sec text_duration = 2.0_s;
 
 					auto const& font = _rsrc.fonts.firamono;
@@ -243,7 +241,7 @@ namespace ql {
 				}
 			},
 			[&](effects::lightning_bolt const& e) {
-				view::point position = to_view_space(e.origin);
+				view::point position = tile_layout.to_world(e.origin);
 				for (int i = 0; i < 35; ++i) {
 					auto p = umake<yellow_magic_particle>(_rsrc.particle);
 					p->setPosition(to_sfml(position));
@@ -252,7 +250,7 @@ namespace ql {
 				_shock_sound.play();
 			},
 			[&](effects::telescope const& e) {
-				view::point position = to_view_space(e.origin);
+				view::point position = tile_layout.to_world(e.origin);
 				for (int i = 0; i < 50; ++i) {
 					auto particle = umake<green_magic_particle>(_rsrc.particle);
 					particle->setPosition(to_sfml(position));
@@ -279,16 +277,16 @@ namespace ql {
 			target.draw(*animation, states);
 		}
 		{ // Draw axes.
-			tile_hex::point origin{0_pace, 0_pace};
+			tile_hex_point origin{0_pace, 0_pace};
 			sf::VertexArray q_array(sf::Lines);
-			q_array.append(sf::Vertex(view::to_sfml(world_layout.to_view_space(origin)), sf::Color::Red));
+			q_array.append(sf::Vertex(view::to_sfml(tile_layout.to_world(origin)), sf::Color::Red));
 			q_array.append(sf::Vertex(
-				view::to_sfml(world_layout.to_view_space(origin + tile_hex::vector{3_pace, 0_pace})), sf::Color::Red));
+				view::to_sfml(tile_layout.to_world(origin + tile_hex_vector{3_pace, 0_pace})), sf::Color::Red));
 			target.draw(q_array, states);
 			sf::VertexArray r_array(sf::Lines);
-			r_array.append(sf::Vertex(view::to_sfml(world_layout.to_view_space(origin)), sf::Color::Green));
+			r_array.append(sf::Vertex(view::to_sfml(tile_layout.to_world(origin)), sf::Color::Green));
 			r_array.append(sf::Vertex(
-				view::to_sfml(world_layout.to_view_space(origin + tile_hex::vector{0_pace, 3_pace})), sf::Color::Green));
+				view::to_sfml(tile_layout.to_world(origin + tile_hex_vector{0_pace, 3_pace})), sf::Color::Green));
 			target.draw(r_array, states);
 		}
 	}

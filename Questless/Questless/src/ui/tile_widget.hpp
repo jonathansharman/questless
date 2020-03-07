@@ -20,7 +20,7 @@ namespace ql {
 	//! Allows interaction with a tile in the world.
 	struct tile_widget : widget {
 		//! @param entity_view A view of the tile this widget interfaces with.
-		tile_widget(reg& reg, rsrc::tile const& resources, world_view::tile_view tile_view);
+		tile_widget(reg& reg, rsrc::tile const& resources, world_view::tile_view const& tile_view);
 
 		auto get_size() const -> view::vector final;
 

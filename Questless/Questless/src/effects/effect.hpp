@@ -18,7 +18,7 @@ namespace ql::effects {
 		std::variant<arrow_attack, injury, lightning_bolt, telescope> value;
 
 		//! The coordinates from which @p effect originates.
-		auto origin() const -> tile_hex::point;
+		auto origin() const -> tile_hex_point;
 
 		//! The maximum distance from the origin at which @p effect may be perceived.
 		auto range() const -> pace;

@@ -77,7 +77,7 @@ namespace ql {
 			return serenity.value() > min_serenity + 3 * (max_serenity - min_serenity) / 4;
 		}
 
-		tile_hex::direction direction = tile_hex::direction::dr;
+		hex_direction direction = hex_direction::dr;
 
 		ql::awakeness awakeness = awakeness::awake;
 		constexpr auto awake() const -> bool {

@@ -8,12 +8,12 @@
 #include "world/coordinates.hpp"
 
 namespace ql {
-	auto turn(reg& reg, id turner_id, tile_hex::direction direction) -> void;
+	auto turn(reg& reg, id turner_id, hex_direction direction) -> void;
 
-	auto walk(reg& reg, id walker_id, tile_hex::direction direction) -> void;
+	auto walk(reg& reg, id walker_id, hex_direction direction) -> void;
 
 	//! Moves or turns towards the given direction, depending on the current heading and the value of @p strafe.
-	auto move(reg& reg, id mover_id, tile_hex::direction direction, bool strafe) -> void;
+	auto move(reg& reg, id mover_id, hex_direction direction, bool strafe) -> void;
 
 	auto fly(reg& reg, id flyer_id) -> void;
 

@@ -44,7 +44,7 @@ namespace ql {
 
 		for (section_span section_r = -r_radius; section_r <= r_radius; ++section_r) {
 			for (section_span section_q = -q_radius; section_q <= q_radius; ++section_q) {
-				section_hex::point section_coords{section_q, section_r};
+				section_hex_point section_coords{section_q, section_r};
 
 				// Generate a new random section.
 				section& section =
@@ -55,7 +55,7 @@ namespace ql {
 				for (pace q = -section_radius; q <= section_radius; ++q) {
 					for (pace r = -section_radius; r <= section_radius; ++r) {
 						if ((section_r != 0_section_span || section_q != 0_section_span) && uniform(0, 10) == 0) {
-							auto const entity_coords = section_center + tile_hex::vector{q, r};
+							auto const entity_coords = section_center + tile_hex_vector{q, r};
 							if (!uniform(0, 12)) {
 								// Create and spawn campfire.
 								auto const campfire_id = reg.create();
@@ -82,7 +82,7 @@ namespace ql {
 		}
 	}
 
-	auto region::entity_id_at(tile_hex::point tile_coords) const -> std::optional<ql::id> {
+	auto region::entity_id_at(tile_hex_point tile_coords) const -> std::optional<ql::id> {
 		if (auto section = containing_section(tile_coords)) {
 			return section->entity_id_at(tile_coords);
 		} else {
@@ -94,7 +94,7 @@ namespace ql {
 		//! @todo More advanced spawning.
 
 		// Spawn at the origin.
-		tile_hex::point player_coords{0_pace, 0_pace};
+		tile_hex_point player_coords{0_pace, 0_pace};
 
 		// Destroy and remove the entity currently there, if any.
 		if (auto const o_entity_id = entity_id_at(player_coords)) {
@@ -107,7 +107,7 @@ namespace ql {
 		return location{id, player_coords};
 	}
 
-	auto region::try_add(ql::id entity_id, tile_hex::point tile_coords) -> bool {
+	auto region::try_add(ql::id entity_id, tile_hex_point tile_coords) -> bool {
 		if (auto section = containing_section(tile_coords)) {
 			reg->get<location>(entity_id) = {id, tile_coords};
 
@@ -118,7 +118,7 @@ namespace ql {
 		}
 	}
 
-	auto region::try_move(ql::id entity_id, tile_hex::point tile_coords) -> bool {
+	auto region::try_move(ql::id entity_id, tile_hex_point tile_coords) -> bool {
 		auto& location = reg->get<ql::location>(entity_id);
 		if (location.region_id != id) {
 			// The entity is not in this region to begin with.
@@ -157,7 +157,7 @@ namespace ql {
 		if (auto section = containing_section(location.coords)) { section->remove(entity_id); }
 	}
 
-	auto region::tile_id_at(tile_hex::point tile_coords) const -> std::optional<ql::id> {
+	auto region::tile_id_at(tile_hex_point tile_coords) const -> std::optional<ql::id> {
 		if (auto section = containing_section(tile_coords)) {
 			return section->tile_id_at(tile_coords);
 		} else {
@@ -165,7 +165,7 @@ namespace ql {
 		}
 	}
 
-	auto region::illuminance(tile_hex::point tile_coords) const -> lum {
+	auto region::illuminance(tile_hex_point tile_coords) const -> lum {
 		if (auto tile_id = tile_id_at(tile_coords)) {
 			return _ambient_illuminance + reg->get<lum>(*tile_id);
 		} else {
@@ -173,7 +173,7 @@ namespace ql {
 		}
 	}
 
-	auto region::temperature(tile_hex::point tile_coords) const -> ql::temperature {
+	auto region::temperature(tile_hex_point tile_coords) const -> ql::temperature {
 		if (auto tile_id = tile_id_at(tile_coords)) {
 			return reg->get<ql::temperature>(*tile_id);
 		} else {
@@ -181,7 +181,7 @@ namespace ql {
 		}
 	}
 
-	auto region::occlusion(tile_hex::point start, tile_hex::point end) const -> double {
+	auto region::occlusion(tile_hex_point start, tile_hex_point end) const -> double {
 		auto line = start.line_to(end);
 		double transparency = 1.0;
 		for (std::size_t i = 1; i < line.size() - 1; ++i) {
@@ -210,18 +210,18 @@ namespace ql {
 		});
 	}
 
-	auto region::containing_section(tile_hex::point tile_coords) -> section* {
+	auto region::containing_section(tile_hex_point tile_coords) -> section* {
 		auto const q = tile_coords.q >= 0_pace //
 			? 1_section_span * (tile_coords.q + section_radius) / section_diameter
 			: 1_section_span * (tile_coords.q - section_radius) / section_diameter;
 		auto const r = tile_coords.r >= 0_pace //
 			? 1_section_span * (tile_coords.r + section_radius) / section_diameter
 			: 1_section_span * (tile_coords.r - section_radius) / section_diameter;
-		auto it = _section_map.find(section_hex::point{q, r});
+		auto it = _section_map.find(section_hex_point{q, r});
 		return it == _section_map.end() ? nullptr : &it->second;
 	}
 
-	auto region::containing_section(tile_hex::point tile_coords) const -> section const* {
+	auto region::containing_section(tile_hex_point tile_coords) const -> section const* {
 		return const_cast<region&>(*this).containing_section(tile_coords);
 	}
 
@@ -280,7 +280,7 @@ namespace ql {
 
 		for (section_span r = -loaded_sections_q_radius; r <= loaded_sections_q_radius; ++r) {
 			for (section_span q = -loaded_sections_r_radius; q <= loaded_sections_r_radius; ++q) {
-				section_hex::point const section_coords{q, r};
+				section_hex_point const section_coords{q, r};
 				if (auto it = _section_map.find(section_coords); it != _section_map.end()) { f(it->second); }
 			}
 		}

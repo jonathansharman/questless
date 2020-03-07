@@ -23,20 +23,20 @@ namespace ql {
 	}
 
 	//! Determines whether @p target is in the field of vision specified by @p location and @p direction.
-	auto inside_field_of_vision(location const& location, tile_hex::direction direction, tile_hex::point target) -> bool {
+	auto inside_field_of_vision(location const& location, hex_direction direction, tile_hex_point target) -> bool {
 		auto offset = target - location.coords;
 		switch (direction) {
-			case tile_hex::direction::dr:
+			case hex_direction::dr:
 				return offset.q >= 0_pace && offset.q + offset.r >= 0_pace;
-			case tile_hex::direction::d:
+			case hex_direction::d:
 				return offset.r >= 0_pace && offset.q + offset.r >= 0_pace;
-			case tile_hex::direction::dl:
+			case hex_direction::dl:
 				return offset.q <= 0_pace && offset.r >= 0_pace;
-			case tile_hex::direction::ul:
+			case hex_direction::ul:
 				return offset.q <= 0_pace && offset.q + offset.r <= 0_pace;
-			case tile_hex::direction::u:
+			case hex_direction::u:
 				return offset.r <= 0_pace && offset.q + offset.r <= 0_pace;
-			case tile_hex::direction::ur:
+			case hex_direction::ur:
 				return offset.q >= 0_pace && offset.r <= 0_pace;
 			default:
 				UNREACHABLE;
@@ -57,7 +57,7 @@ namespace ql {
 		}
 	}
 
-	auto perception_of(reg& reg, id perceptor_id, tile_hex::point target) -> perception {
+	auto perception_of(reg& reg, id perceptor_id, tile_hex_point target) -> perception {
 		auto const& body = reg.get<ql::body>(perceptor_id);
 
 		// Check that the perceptor has at least one source of vision.

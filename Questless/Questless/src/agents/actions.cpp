@@ -10,19 +10,19 @@
 #include "world/region.hpp"
 
 namespace ql {
-	auto turn(reg& reg, id turner_id, tile_hex::direction direction) -> void {
+	auto turn(reg& reg, id turner_id, hex_direction direction) -> void {
 		auto& body = reg.get<ql::body>(turner_id);
 
 		constexpr auto base_cost = 1_ap;
 		constexpr auto cost_per_turn = 1_ap;
-		auto const turn_cost = base_cost + cost_per_turn * tile_hex::distance(body.cond.direction, direction);
+		auto const turn_cost = base_cost + cost_per_turn * distance(body.cond.direction, direction);
 
 		//! @todo Spend leg ability points.
 
 		body.cond.direction = direction;
 	}
 
-	auto walk(reg& reg, id walker_id, tile_hex::direction direction) -> void {
+	auto walk(reg& reg, id walker_id, hex_direction direction) -> void {
 		auto [body, location] = reg.get<ql::body, ql::location>(walker_id);
 
 		constexpr auto base_cost = 1_ap;
@@ -39,10 +39,10 @@ namespace ql {
 		if (!region.try_move(walker_id, location.coords.neighbor(direction))) { return; }
 
 		// Increase busy time.
-		auto const strafe_cost = cost_per_turn * tile_hex::distance(body.cond.direction, direction);
+		auto const strafe_cost = cost_per_turn * distance(body.cond.direction, direction);
 	}
 
-	auto move(reg& reg, id mover_id, tile_hex::direction direction, bool strafe) -> void {
+	auto move(reg& reg, id mover_id, hex_direction direction, bool strafe) -> void {
 		if (strafe) {
 			// Strafe.
 			walk(reg, mover_id, direction);

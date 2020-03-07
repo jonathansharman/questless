@@ -19,7 +19,7 @@ namespace ql {
 		// Iterate over the rhomboid specified by the location and visual range to find visible tiles and beings.
 		for (pace q = -visual_range; q <= visual_range; ++q) {
 			for (pace r = -visual_range; r <= visual_range; ++r) {
-				auto const offset = tile_hex::vector{q, r};
+				auto const offset = tile_hex_vector{q, r};
 
 				// Skip corner tiles that are out of range.
 				if (offset.length() > visual_range) { continue; }
@@ -32,7 +32,7 @@ namespace ql {
 
 				// Get tile perception and position.
 				auto const tile_perception = perception_of(reg, viewer_id, tile_coords);
-				auto const tile_position = to_view_space(tile_coords);
+				auto const tile_position = tile_layout.to_world(tile_coords);
 
 				// Add tile view if perceptible.
 				if (tile_perception > 0_perception) { tile_views.push_back({tile_id, tile_perception, tile_position}); }

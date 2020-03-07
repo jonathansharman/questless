@@ -8,7 +8,7 @@
 namespace ql {
 	namespace effects {
 		struct telescope {
-			tile_hex::point origin;
+			tile_hex_point origin;
 			id const caster_id;
 
 			constexpr auto range() const -> pace {

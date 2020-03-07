@@ -47,7 +47,7 @@ namespace ql {
 		auto on_mouse_move(view::point mouse_position) -> void final;
 
 		//! Causes the tiles for which @p predicate returns true to be highlighted.
-		auto set_highlight_predicate(std::function<bool(tile_hex::point)> predicate) -> void;
+		auto set_highlight_predicate(std::function<bool(tile_hex_point)> predicate) -> void;
 
 		//! Clears the current highlight predicate so that no tiles are highlighted.
 		auto clear_highlight_predicate() -> void;
@@ -74,7 +74,7 @@ namespace ql {
 
 		std::vector<uptr<animation>> _effect_animations;
 
-		std::optional<std::function<bool(tile_hex::point)>> _highlight_predicate;
+		std::optional<std::function<bool(tile_hex_point)>> _highlight_predicate;
 
 		auto render_terrain(world_view const& view) -> void;
 

@@ -154,33 +154,33 @@ namespace ql {
 				return event_handled::yes;
 			// Movement commands.
 			case sf::Keyboard::Q:
-				move(*_reg, _player_id, tile_hex::direction::ul, event.shift);
+				move(*_reg, _player_id, hex_direction::ul, event.shift);
 				_world_widget.render_view(world_view{*_reg, _player_id});
 				break;
 			case sf::Keyboard::W:
-				move(*_reg, _player_id, tile_hex::direction::u, event.shift);
+				move(*_reg, _player_id, hex_direction::u, event.shift);
 				_world_widget.render_view(world_view{*_reg, _player_id});
 				break;
 			case sf::Keyboard::E:
-				move(*_reg, _player_id, tile_hex::direction::ur, event.shift);
+				move(*_reg, _player_id, hex_direction::ur, event.shift);
 				_world_widget.render_view(world_view{*_reg, _player_id});
 				break;
 			case sf::Keyboard::A:
-				move(*_reg, _player_id, tile_hex::direction::dl, event.shift);
+				move(*_reg, _player_id, hex_direction::dl, event.shift);
 				_world_widget.render_view(world_view{*_reg, _player_id});
 				break;
 			case sf::Keyboard::S:
-				move(*_reg, _player_id, tile_hex::direction::d, event.shift);
+				move(*_reg, _player_id, hex_direction::d, event.shift);
 				_world_widget.render_view(world_view{*_reg, _player_id});
 				break;
 			case sf::Keyboard::D:
-				move(*_reg, _player_id, tile_hex::direction::dr, event.shift);
+				move(*_reg, _player_id, hex_direction::dr, event.shift);
 				_world_widget.render_view(world_view{*_reg, _player_id});
 				break;
 			// Snap camera to player.
 			case sf::Keyboard::Space:
 				_world_widget.set_position(
-					view::point{} - world_layout.to_view_space(_reg->get<location>(_player_id).coords) + view::point{});
+					view::point{} - tile_layout.to_world(_reg->get<location>(_player_id).coords) + view::point{});
 				return event_handled::yes;
 			default:
 				return event_handled::no;
