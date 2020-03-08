@@ -32,7 +32,7 @@ namespace ql {
 					shape->shape->setTexture(&_rsrc.txtr.dirt);
 					break;
 				case terrain::edge:
-					// Leave texture null.
+					shape->shape->setTexture(&_rsrc.txtr.blank);
 					break;
 				case terrain::grass:
 					shape->shape->setTexture(&_rsrc.txtr.grass);
