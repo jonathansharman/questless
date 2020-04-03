@@ -40,7 +40,7 @@ namespace ql {
 	//! Overload of the uniform sample function for quantity types.
 	template <typename Rep, typename Unit>
 	auto uniform(cancel::quantity<Rep, Unit> const& min, cancel::quantity<Rep, Unit> const& max) {
-		return cancel::quantity<Rep, Unit>{uniform(min.value, max.value)};
+		return cancel::quantity<Rep, Unit>{uniform(min.data, max.data)};
 	}
 
 	//! True or false with @p probability chance of returning true.

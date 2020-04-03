@@ -49,7 +49,7 @@ namespace ql {
 
 	//! Converts from a seconds quantity to std::chrono seconds. Useful for interacting with the Standard Library.
 	constexpr auto to_chrono_sec(sec sec) {
-		return chrono_sec(sec.value);
+		return chrono_sec(sec.data);
 	}
 
 	//! Converts from std::chrono::seconds to a seconds quantity.

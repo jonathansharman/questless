@@ -82,12 +82,12 @@ namespace ql::view {
 
 	//! Converts from a @p view::vector into an @p sf::Vector.
 	inline auto to_sfml(vector v) {
-		return sf::Vector2f{v[0].value, v[1].value};
+		return sf::Vector2f{v[0].data, v[1].data};
 	}
 
 	//! Converts from a @p view::point into an @p sf::Vector.
 	inline auto to_sfml(point p) {
-		return sf::Vector2f{p[0].value, p[1].value};
+		return sf::Vector2f{p[0].data, p[1].data};
 	}
 
 	// Conversions from SFML to view space

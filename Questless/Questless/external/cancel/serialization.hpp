@@ -12,15 +12,15 @@ namespace cancel {
 	//! Stream extraction operator for quantities.
 	template <typename Rep, typename Unit>
 	auto operator <<(std::ostream& out, quantity<Rep, Unit> const& q) -> std::ostream& {
-		out << q.value;
+		out << q.data;
 		return out;
 	}
 
 	//! cereal-compatible save function for quantities.
 	template <typename Archive, typename Rep, typename Unit>
-	auto save(Archive& archive, quantity<Rep, Unit> const& q) -> void { archive(q.value); }
+	auto save(Archive& archive, quantity<Rep, Unit> const& q) -> void { archive(q.data); }
 
 	//! cereal-compatible load function for quantities.
 	template <typename Archive, typename Rep, typename Unit>
-	auto load(Archive& archive, quantity<Rep, Unit>& q) -> void { archive(q.value); }
+	auto load(Archive& archive, quantity<Rep, Unit>& q) -> void { archive(q.data); }
 }

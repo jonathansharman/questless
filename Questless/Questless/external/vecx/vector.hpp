@@ -129,8 +129,8 @@ namespace vecx {
 
 		//! Rotates this vector by @p angle in the @p axis1 to @p axis2 plane.
 		constexpr auto rotate(radians angle, std::size_t axis1 = 0, std::size_t axis2 = 1) -> void {
-			auto const cos_angle = gcem::cos(angle.value);
-			auto const sin_angle = gcem::sin(angle.value);
+			auto const cos_angle = gcem::cos(angle.data);
+			auto const sin_angle = gcem::sin(angle.data);
 			auto const old_axis1 = components[axis1];
 			components[axis1] = cancel::quantity_cast<scalar_t>(old_axis1 * cos_angle - components[axis2] * sin_angle);
 			components[axis2] = cancel::quantity_cast<scalar_t>(old_axis1 * sin_angle + components[axis2] * cos_angle);
@@ -173,7 +173,7 @@ namespace vecx {
 			static_assert(
 				std::is_convertible_v<scalar_t::rep, double>,
 				"Scalar representation must be convertible to double to find the vector angle.");
-			return radians{gcem::atan2(static_cast<double>(components[axis2].value), static_cast<double>(components[axis1].value))};
+			return radians{gcem::atan2(static_cast<double>(components[axis2].data), static_cast<double>(components[axis1].data))};
 		}
 	};
 
@@ -251,11 +251,11 @@ TEST_CASE("[vector] operations") {
 	auto v1 = vector{q_t{3}, q_t{4}};
 
 	SUBCASE("length") {
-		CHECK(v1.length().value == 5);
-		CHECK(v1.length_squared().value == 25);
+		CHECK(v1.length().data == 5);
+		CHECK(v1.length_squared().data == 25);
 	}
 	SUBCASE("angle") {
-		CHECK(v1.angle().value == doctest::Approx(0.927295218));
+		CHECK(v1.angle().data == doctest::Approx(0.927295218));
 	}
 	SUBCASE("binary operations") {
 		constexpr auto v2 = vector{q_t{1}, q_t{6}};

@@ -73,7 +73,7 @@ namespace ql {
 			std::remove_if( //
 				wounds.begin(),
 				wounds.end(),
-				[](wound const& wound) { return match(wound, [](auto const& w) { return w.value <= 0; }); }),
+				[](wound const& wound) { return match(wound, [](auto const& w) { return w.data <= 0; }); }),
 			wounds.end());
 		// Apply effects of ongoing wounds; heal.
 		for (auto& wound : wounds) {

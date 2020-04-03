@@ -35,7 +35,7 @@ namespace ql {
 	}
 
 	auto section::center_coords() const -> tile_hex_point {
-		return tile_hex_point{_coords.q.value * section_diameter, _coords.r.value * section_diameter};
+		return tile_hex_point{_coords.q.data * section_diameter, _coords.r.data * section_diameter};
 	}
 
 	auto section::entity_id_map() const -> std::unordered_map<tile_hex_point, id> const& {
@@ -68,6 +68,6 @@ namespace ql {
 
 	auto section::indices(tile_hex_point coords) const -> std::tuple<size_t, size_t> {
 		auto const offset = center_coords() - coords + tile_hex_vector{section_radius, section_radius};
-		return std::make_tuple(static_cast<size_t>(offset.q.value), static_cast<size_t>(offset.r.value));
+		return std::make_tuple(static_cast<size_t>(offset.q.data), static_cast<size_t>(offset.r.data));
 	}
 }

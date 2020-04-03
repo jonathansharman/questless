@@ -127,9 +127,9 @@ namespace ql {
 		//! The nearest direction this vector points towards. This vector must be non-zero.
 		constexpr auto direction() const -> hex_direction {
 			auto const u = unit();
-			switch (u.q.value) {
+			switch (u.q.data) {
 				case -1:
-					switch (u.r.value) {
+					switch (u.r.data) {
 						case 0:
 							return hex_direction::ul;
 						case 1:
@@ -138,7 +138,7 @@ namespace ql {
 							break;
 					}
 				case 0:
-					switch (u.r.value) {
+					switch (u.r.data) {
 						case -1:
 							return hex_direction::u;
 						case 1:
@@ -147,7 +147,7 @@ namespace ql {
 							break;
 					}
 				case 1:
-					switch (u.r.value) {
+					switch (u.r.data) {
 						case -1:
 							return hex_direction::ur;
 						case 0:
@@ -163,7 +163,7 @@ namespace ql {
 
 		//! Simple hash function for hex vectors.
 		friend constexpr auto hash_value(hex_vector const& v) -> std::size_t {
-			return 31 * v.q.value + v.r.value;
+			return 31 * v.q.data + v.r.data;
 		}
 	};
 
@@ -213,9 +213,9 @@ namespace ql {
 		//! Interpolates @p proportion of the way from this point to @p dest.
 		constexpr auto lerp(hex_point dest, float proportion) const -> hex_point {
 			return hex_point{//
-				this->q.value + (dest.q - this->q).value * proportion,
-				this->r.value + (dest.r - this->r).value * proportion,
-				this->s().value + (dest.s() - this->s()).value * proportion};
+				this->q.data + (dest.q - this->q).data * proportion,
+				this->r.data + (dest.r - this->r).data * proportion,
+				this->s().data + (dest.s() - this->s()).data * proportion};
 		}
 
 		//! Interpolates @p proportion of the way from this point towards @p heading.
@@ -225,7 +225,7 @@ namespace ql {
 
 		//! A range of points on the shortest line from this point to @p dest, inclusive.
 		auto line_to(hex_point dest) const {
-			int n = (dest - *this).length().value + 1;
+			int n = (dest - *this).length().data + 1;
 			float const step = 1.0f / std::max(n, 1);
 			return ranges::views::ints(0, n) |
 				ranges::views::transform([src = *this, dest, step](int i) { return src.lerp(dest, step * i); });
@@ -253,7 +253,7 @@ namespace ql {
 
 		//! Simple hash function for hex points.
 		friend constexpr auto hash_value(hex_point const& p) -> std::size_t {
-			return 31 * p.q.value + p.r.value;
+			return 31 * p.q.data + p.r.data;
 		}
 	};
 
@@ -316,13 +316,13 @@ namespace ql {
 		constexpr auto to_world(hex_point<hex_length_t> p) const -> world_point_t {
 			auto const x = (orientation.f0 * p.q + orientation.f1 * p.r) * size[0];
 			auto const y = (orientation.f2 * p.q + orientation.f3 * p.r) * size[1];
-			return origin + world_vector_t{world_length_t{x.value}, world_length_t{y.value}};
+			return origin + world_vector_t{world_length_t{x.data}, world_length_t{y.data}};
 		}
 		//! Converts @p v to a world space vector.
 		constexpr auto to_world(hex_vector<hex_length_t> v) const -> world_vector_t {
 			auto const x = (orientation.f0 * v.q + orientation.f1 * v.r) * size[0];
 			auto const y = (orientation.f2 * v.q + orientation.f3 * v.r) * size[1];
-			return {world_length_t{x.value}, world_length_t{y.value}};
+			return {world_length_t{x.data}, world_length_t{y.data}};
 		}
 
 		//! Converts @p p to a hex space point.
@@ -332,8 +332,8 @@ namespace ql {
 			auto const r2 = orientation.b2 * (p[0] - origin[0]) / size[0];
 			auto const r3 = orientation.b3 * (p[1] - origin[1]) / size[1];
 			return {//
-				hex_length_t{static_cast<typename hex_length_t::rep>((r0 + r1).value)},
-				hex_length_t{static_cast<typename hex_length_t::rep>((r2 + r3).value)}};
+				hex_length_t{static_cast<typename hex_length_t::rep>((r0 + r1).data)},
+				hex_length_t{static_cast<typename hex_length_t::rep>((r2 + r3).data)}};
 		}
 		//! Converts @p v to a hex space vector.
 		constexpr auto to_hex_space(world_vector_t v) const -> hex_vector<hex_length_t> {
@@ -341,12 +341,12 @@ namespace ql {
 			auto const r1 = orientation.b1 * v[1] / size[1];
 			auto const r2 = orientation.b2 * v[0] / size[0];
 			auto const r3 = orientation.b3 * v[1] / size[1];
-			return {hex_length_t{static_cast<int>((r0 + r1).value)}, hex_length_t{static_cast<int>((r2 + r3).value)}};
+			return {hex_length_t{static_cast<int>((r0 + r1).data)}, hex_length_t{static_cast<int>((r2 + r3).data)}};
 		}
 
 		auto corner_offset(int corner) const -> world_vector_t {
 			vecx::radians const angle = corner * vecx::circle_rad / 6.0 + orientation.start_angle;
-			return {size[0] * static_cast<float>(cos(angle.value)), size[1] * static_cast<float>(sin(angle.value))};
+			return {size[0] * static_cast<float>(cos(angle.data)), size[1] * static_cast<float>(sin(angle.data))};
 		}
 
 		//! A range containing the offsets from center of the six corners of hexes in this layout.

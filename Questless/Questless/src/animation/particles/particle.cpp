@@ -36,8 +36,8 @@ namespace ql {
 
 	auto particle::animation_subdraw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
 		// Combine animation/other transforms with particle transforms.
-		states.transform.scale({scale.value, scale.value});
-		states.transform.rotate(static_cast<float>((angle * vecx::deg_per_rad).value));
+		states.transform.scale({scale.data, scale.data});
+		states.transform.rotate(static_cast<float>((angle * vecx::deg_per_rad).data));
 		states.transform.translate(to_sfml(displacement));
 
 		// Subdraw.

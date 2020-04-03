@@ -52,7 +52,7 @@ namespace ql {
 		reg_ptr _reg;
 
 		//! A q-major array of tiles, representing a rhomboid section of tiles centered on this section's hex coordinates.
-		std::array<std::array<id, section_diameter.value>, section_diameter.value> _tile_ids;
+		std::array<std::array<id, section_diameter.data>, section_diameter.data> _tile_ids;
 
 		std::unordered_map<tile_hex_point, id> _entity_id_map;
 

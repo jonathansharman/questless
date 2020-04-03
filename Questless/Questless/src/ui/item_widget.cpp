@@ -105,8 +105,7 @@ namespace ql {
 						default:
 							UNREACHABLE;
 					}
-					result.a = static_cast<sf::Uint8>(
-						(255 * gatestone->charge.get() / gatestone->charge.upper_bound()).value);
+					result.a = static_cast<sf::Uint8>((255 * gatestone->charge.get() / gatestone->charge.upper_bound()).data);
 					return result;
 				}();
 				gatestone_still->set_color(draw_color_factor);
@@ -123,7 +122,7 @@ namespace ql {
 				}
 
 				{ // Overlay charge bar foreground.
-					float const height = 55.f * gatestone->charge.get().value / gatestone->charge.upper_bound().value;
+					float const height = 55.f * gatestone->charge.get().data / gatestone->charge.upper_bound().data;
 					auto charge_bar_foreground = umake<sf::RectangleShape>(sf::Vector2f{6, height});
 					charge_bar_foreground->setFillColor(draw_color_factor);
 					charge_bar_foreground->setOutlineColor(sf::Color::Black);

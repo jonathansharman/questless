@@ -123,10 +123,10 @@ namespace ql {
 		auto const layout = get_bounding_box();
 
 		// Ensure row is in bounds.
-		int const row = static_cast<int>(floor((_mouse_position[1] - top(layout)) / item_icon_size[1]).value);
+		int const row = static_cast<int>(floor((_mouse_position[1] - top(layout)) / item_icon_size[1]).data);
 		if (row < 0 || row >= _row_count) { return; }
 		// Ensure column is in bounds.
-		int const col = static_cast<int>(floor((_mouse_position[0] - left(layout)) / item_icon_size[0]).value);
+		int const col = static_cast<int>(floor((_mouse_position[0] - left(layout)) / item_icon_size[0]).data);
 		if (col < 0 || col >= _col_count) { return; }
 		// Ensure index is in bounds.
 		size_t const idx = row * _col_count + col;

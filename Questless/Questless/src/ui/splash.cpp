@@ -99,7 +99,7 @@ namespace ql {
 			auto const flame_size = _rsrc.txtr.flame.getSize();
 			for (auto position : _flame_positions) {
 				// Set origin such that flames just go off-screen at position = 0 and position = 1.
-				flame_sprite.setOrigin(flame_size.x / 2.0f, (1.0f - position[1].value) * flame_size.y);
+				flame_sprite.setOrigin(flame_size.x / 2.0f, (1.0f - position[1].data) * flame_size.y);
 				// Set position based on current size and draw.
 				flame_sprite.setPosition(to_sfml(vecx::component_wise_product(_size, position)));
 				target.draw(flame_sprite, states);
