@@ -20,7 +20,7 @@ namespace ql {
 
 	auto max_visual_range(std::vector<stats::vision> const& vision_sources) -> pace {
 		if (vision_sources.empty()) { return 0_pace; }
-		auto acuities = vision_sources | ranges::views::transform([](stats::vision const& v) { return v.acuity.value(); });
+		auto acuities = vision_sources | ranges::views::transform([](stats::vision const& v) { return v.acuity.get(); });
 		return ranges::max(acuities) / perception_loss_per_pace;
 	}
 
@@ -47,12 +47,12 @@ namespace ql {
 
 	//! Computes the perception @p vision is capable of, factoring in the @p illuminance.
 	auto light_adjusted_perception(stats::vision const& vision, lum illuminance) -> perception {
-		if (illuminance < vision.min_illuminance.value()) {
+		if (illuminance < vision.min_illuminance.get()) {
 			// Too dark.
-			return vision.acuity - (vision.min_illuminance.value() - illuminance) * vision.darkness_penalty.value();
-		} else if (illuminance > vision.max_illuminance.value()) {
+			return vision.acuity - (vision.min_illuminance.get() - illuminance) * vision.darkness_penalty.get();
+		} else if (illuminance > vision.max_illuminance.get()) {
 			// Too bright.
-			return vision.acuity - (illuminance - vision.max_illuminance.value()) * vision.glare_penalty.value();
+			return vision.acuity - (illuminance - vision.max_illuminance.get()) * vision.glare_penalty.get();
 		} else {
 			// Within ideal illuminance range.
 			return vision.acuity;

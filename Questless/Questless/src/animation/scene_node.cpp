@@ -22,7 +22,7 @@ namespace ql {
 		// Update child animations, factoring in this node's time scale.
 		auto update_children = [&](auto& children) {
 			for (auto& child : children) {
-				child->update(elapsed_time * node_animation->time_scale.value());
+				child->update(elapsed_time * node_animation->time_scale.get());
 			}
 			// Remove stopped children.
 			ranges::actions::remove_if(children, [](auto& child) { return child->stopped(); });

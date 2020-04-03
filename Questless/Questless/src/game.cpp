@@ -122,7 +122,7 @@ namespace ql {
 			sec time_surplus = -time_deficit;
 			if (_time_debt < time_surplus) {
 				// Pay full debt.
-				time_surplus -= _time_debt.value();
+				time_surplus -= _time_debt.get();
 				_time_debt = 0.0_s;
 				// Sleep for remaining time surplus.
 				auto const sleep = std::chrono::duration_cast<std::chrono::milliseconds>(to_chrono_sec(time_surplus));

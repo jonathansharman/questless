@@ -17,7 +17,7 @@ namespace ql {
 
 		//! Whether the item is broken, i.e. integrity is zero.
 		auto broken() const -> bool {
-			return durability.value() <= 0_durability;
+			return durability.get() <= 0_durability;
 		}
 	};
 

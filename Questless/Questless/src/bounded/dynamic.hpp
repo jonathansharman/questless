@@ -36,20 +36,20 @@ namespace ql {
 
 		//! Assigns the value from @p bounded to this value. Does not affect the lower and upper bounds.
 		constexpr auto& operator=(dynamic_bounded const& bounded) noexcept {
-			set_value(bounded.value());
+			set(bounded.get());
 			return *this;
 		}
 		//! Assigns the value from @p bounded to this value. Does not affect the lower and upper bounds.
 		constexpr auto& operator=(dynamic_bounded&& bounded) noexcept {
-			set_value(std::move(bounded.value()));
+			set(std::move(bounded.get()));
 			return *this;
 		}
 		constexpr auto& operator=(arithmetic_type const& value) noexcept {
-			set_value(value);
+			set(value);
 			return *this;
 		}
 		constexpr dynamic_bounded& operator=(arithmetic_type&& value) noexcept {
-			set_value(std::move(value));
+			set(std::move(value));
 			return *this;
 		}
 
@@ -59,7 +59,7 @@ namespace ql {
 		}
 
 		//! The contained value.
-		constexpr auto value() const noexcept {
+		constexpr auto get() const noexcept {
 			return _value;
 		}
 
@@ -74,7 +74,7 @@ namespace ql {
 		}
 
 		//! Sets the contained value to the given new value, clamped to the valid range.
-		constexpr auto set_value(arithmetic_type const& value) -> void noexcept {
+		constexpr auto set(arithmetic_type const& value) -> void noexcept {
 			_value = std::clamp(value, _lower_bound, _upper_bound);
 		}
 

@@ -42,40 +42,40 @@ namespace ql {
 			, _value{std::move(other._value)} {}
 
 		constexpr auto& operator=(lazy_bounded const& bounded) noexcept {
-			set_value(bounded.value());
+			set(bounded.get());
 			return *this;
 		}
 		constexpr auto& operator=(lazy_bounded&& bounded) noexcept {
-			set_value(std::move(bounded.value()));
+			set(std::move(bounded.get()));
 			return *this;
 		}
 		constexpr auto& operator=(arithmetic_type const& value) noexcept {
-			set_value(value);
+			set(value);
 			return *this;
 		}
 		constexpr auto& operator=(arithmetic_type&& value) noexcept {
-			set_value(std::move(value));
+			set(std::move(value));
 			return *this;
 		}
 
 		//! Implicit conversion to the contained type.
 		constexpr operator arithmetic_type() const noexcept {
-			return value();
+			return get();
 		}
 
 		//! The contained value.
-		constexpr auto value() const noexcept {
+		constexpr auto get() const noexcept {
 			auto result = std::clamp(_value, lower_bound_getter(), upper_bound_getter());
 			return result;
 		}
 
 		//! Sets the contained value to the given new value, clamped to the valid range.
-		constexpr auto set_value(arithmetic_type const& value) noexcept -> void {
+		constexpr auto set(arithmetic_type const& value) noexcept -> void {
 			_value = value;
 		}
 
 		//! Sets the contained value to the given new value, clamped to the valid range.
-		constexpr auto set_value(arithmetic_type&& value) noexcept -> void {
+		constexpr auto set(arithmetic_type&& value) noexcept -> void {
 			_value = std::move(value);
 		}
 

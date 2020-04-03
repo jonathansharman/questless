@@ -30,20 +30,20 @@ namespace ql {
 
 		//! Assigns the value from @p bounded to this value. Does not affect the upper bound.
 		constexpr dynamic_nonnegative& operator=(dynamic_nonnegative const& bounded) noexcept {
-			set_value(bounded.value());
+			set(bounded.get());
 			return *this;
 		}
 		//! Assigns the value from @p bounded to this value. Does not affect the upper bound.
 		constexpr dynamic_nonnegative& operator=(dynamic_nonnegative&& bounded) noexcept {
-			set_value(std::move(bounded.value()));
+			set(std::move(bounded.get()));
 			return *this;
 		}
 		constexpr dynamic_nonnegative& operator=(arithmetic_type const& value) noexcept {
-			set_value(value);
+			set(value);
 			return *this;
 		}
 		constexpr dynamic_nonnegative& operator=(arithmetic_type&& value) noexcept {
-			set_value(std::move(value));
+			set(std::move(value));
 			return *this;
 		}
 
@@ -53,7 +53,7 @@ namespace ql {
 		}
 
 		//! The contained value.
-		constexpr auto value() const noexcept {
+		constexpr auto get() const noexcept {
 			return _value;
 		}
 
@@ -63,7 +63,7 @@ namespace ql {
 		}
 
 		//! Sets the contained value to the given new value, clamped to the valid range.
-		constexpr auto set_value(arithmetic_type const& value) noexcept -> void {
+		constexpr auto set(arithmetic_type const& value) noexcept -> void {
 			_value = std::clamp(value, arithmetic_type(0), _upper_bound);
 		}
 

@@ -70,7 +70,7 @@ namespace ql {
 				_ani = std::move(node);
 			}
 		} else if (auto gatestone = _reg->try_get<ql::gatestone>(item_id)) {
-			if (gatestone->charge.value() == 0_mp) {
+			if (gatestone->charge.get() == 0_mp) {
 				_ani = umake<still_image>(_item_resources->uncharged_gatestone);
 			} else {
 				// Create gatestone still.
@@ -106,7 +106,7 @@ namespace ql {
 							UNREACHABLE;
 					}
 					result.a = static_cast<sf::Uint8>(
-						(255 * gatestone->charge.value() / gatestone->charge.upper_bound()).value);
+						(255 * gatestone->charge.get() / gatestone->charge.upper_bound()).value);
 					return result;
 				}();
 				gatestone_still->set_color(draw_color_factor);
@@ -123,7 +123,7 @@ namespace ql {
 				}
 
 				{ // Overlay charge bar foreground.
-					float const height = 55.f * gatestone->charge.value().value / gatestone->charge.upper_bound().value;
+					float const height = 55.f * gatestone->charge.get().value / gatestone->charge.upper_bound().value;
 					auto charge_bar_foreground = umake<sf::RectangleShape>(sf::Vector2f{6, height});
 					charge_bar_foreground->setFillColor(draw_color_factor);
 					charge_bar_foreground->setOutlineColor(sf::Color::Black);

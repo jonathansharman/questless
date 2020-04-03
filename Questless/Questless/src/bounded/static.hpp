@@ -48,29 +48,29 @@ namespace ql {
 			: _value{std::clamp(value, lower_bound, upper_bound)} {}
 
 		constexpr auto& operator=(static_bounded const& bounded) noexcept {
-			set_value(bounded.value());
+			set(bounded.get());
 			return *this;
 		}
 		constexpr auto& operator=(static_bounded&& bounded) noexcept {
-			set_value(std::move(bounded.value()));
+			set(std::move(bounded.get()));
 			return *this;
 		}
 		constexpr auto& operator=(arithmetic_type const& value) noexcept {
-			set_value(value);
+			set(value);
 			return *this;
 		}
 		constexpr auto& operator=(arithmetic_type&& value) noexcept {
-			set_value(std::move(value));
+			set(std::move(value));
 			return *this;
 		}
 
 		//! The contained value.
-		constexpr auto value() const noexcept {
+		constexpr auto get() const noexcept {
 			return _value;
 		}
 
 		//! Sets the contained value to the given new value, clamped to the valid range.
-		constexpr auto set_value(arithmetic_type const& value) noexcept -> void {
+		constexpr auto set(arithmetic_type const& value) noexcept -> void {
 			constexpr auto min = std::numeric_limits<arithmetic_type>::min();
 			constexpr auto max = std::numeric_limits<arithmetic_type>::max();
 			if constexpr (lower_bound == min && upper_bound == max) {
