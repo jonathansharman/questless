@@ -11,7 +11,7 @@ namespace ql::dmg {
 		group result = *this;
 
 		// Return the damage unmodified if the armor was bypassed.
-		if (result.bypass > armor.coverage) { return result; }
+		if (result.bypass.value() > armor.coverage.value()) { return result; }
 
 		for (auto& part : result.parts) {
 			// Apply protection if not bypassed.

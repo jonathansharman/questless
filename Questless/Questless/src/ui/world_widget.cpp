@@ -22,7 +22,9 @@
 #include "world/region.hpp"
 #include "world/tile.hpp"
 
+#include <range/v3/action/push_back.hpp>
 #include <range/v3/action/remove_if.hpp>
+#include <range/v3/view/generate_n.hpp>
 
 namespace ql {
 	using namespace vecx;
@@ -186,9 +188,9 @@ namespace ql {
 					auto spawn_blood = [&](int const damage) {
 						constexpr int scaling_factor = 20;
 						int const n = damage * scaling_factor / target_vitality.value;
-						for (int i = 0; i < n; ++i) {
-							_effect_animations.push_back(umake<blood_particle>(_rsrc.particle));
-						}
+						ranges::actions::push_back( //
+							_effect_animations,
+							ranges::views::generate_n([&] { return umake<blood_particle>(_rsrc.particle); }, n));
 					};
 
 					auto render_slash_or_pierce = [&](int const amount) {
@@ -241,21 +243,29 @@ namespace ql {
 				}
 			},
 			[&](effects::lightning_bolt const& e) {
+				constexpr int n = 35;
 				view::point position = tile_layout.to_world(e.origin);
-				for (int i = 0; i < 35; ++i) {
-					auto p = umake<yellow_magic_particle>(_rsrc.particle);
-					p->setPosition(to_sfml(position));
-					_effect_animations.push_back(std::move(p));
-				}
+				ranges::actions::push_back(_effect_animations,
+					ranges::views::generate_n(
+						[&] {
+							auto p = umake<yellow_magic_particle>(_rsrc.particle);
+							p->setPosition(to_sfml(position));
+							return p;
+						},
+						n));
 				_shock_sound.play();
 			},
 			[&](effects::telescope const& e) {
+				constexpr int n = 35;
 				view::point position = tile_layout.to_world(e.origin);
-				for (int i = 0; i < 50; ++i) {
-					auto particle = umake<green_magic_particle>(_rsrc.particle);
-					particle->setPosition(to_sfml(position));
-					_effect_animations.push_back(std::move(particle));
-				}
+				ranges::actions::push_back(_effect_animations,
+					ranges::views::generate_n(
+						[&] {
+							auto p = umake<green_magic_particle>(_rsrc.particle);
+							p->setPosition(to_sfml(position));
+							return p;
+						},
+						n));
 				_telescope_sound.play();
 			});
 	}
@@ -280,8 +290,8 @@ namespace ql {
 			tile_hex_point origin{0_pace, 0_pace};
 			sf::VertexArray q_array(sf::Lines);
 			q_array.append(sf::Vertex(view::to_sfml(tile_layout.to_world(origin)), sf::Color::Red));
-			q_array.append(sf::Vertex(
-				view::to_sfml(tile_layout.to_world(origin + tile_hex_vector{3_pace, 0_pace})), sf::Color::Red));
+			q_array.append(
+				sf::Vertex(view::to_sfml(tile_layout.to_world(origin + tile_hex_vector{3_pace, 0_pace})), sf::Color::Red));
 			target.draw(q_array, states);
 			sf::VertexArray r_array(sf::Lines);
 			r_array.append(sf::Vertex(view::to_sfml(tile_layout.to_world(origin)), sf::Color::Green));

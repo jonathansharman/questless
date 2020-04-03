@@ -11,6 +11,8 @@
 #include <range/v3/algorithm/max.hpp>
 #include <range/v3/view/transform.hpp>
 
+#include <numeric>
+
 namespace ql {
 	namespace {
 		static constexpr auto perception_loss_per_pace = 10_perception / 1_pace;

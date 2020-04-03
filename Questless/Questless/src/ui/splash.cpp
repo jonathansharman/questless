@@ -9,6 +9,8 @@
 
 #include "utility/random.hpp"
 
+#include <range/v3/action/push_back.hpp>
+
 #include <algorithm>
 
 namespace ql {
@@ -30,10 +32,12 @@ namespace ql {
 		_fade_shader.setUniform("texture", sf::Shader::CurrentTexture);
 
 		constexpr int flame_count = 20;
-		for (int i = 0; i < flame_count; ++i) {
-			_flame_positions.emplace_back(cancel::unitless<float>{uniform(0.0f, 1.0f)},
-				cancel::unitless<float>{static_cast<float>(i + 1) / flame_count});
-		}
+		ranges::actions::push_back( //
+			_flame_positions,
+			ranges::views::closed_iota(0, flame_count) | ranges::views::transform([](int i) {
+				return vecx::vector{cancel::unitless<float>{uniform(0.0f, 1.0f)},
+					cancel::unitless<float>{static_cast<float>(i + 1) / flame_count}};
+			}));
 	}
 
 	auto splash::get_size() const -> view::vector {

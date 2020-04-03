@@ -195,8 +195,8 @@ namespace ql {
 		_title.set_position(content_position);
 		// Set option positions.
 		content_position[1] += title_height;
-		for (std::size_t i = 0; i < _options.size(); ++i) {
-			std::get<0>(_options[i]).set_position(content_position);
+		for (auto& option : _options) {
+			std::get<0>(option).set_position(content_position);
 			content_position[1] += option_height;
 		}
 	}

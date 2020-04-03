@@ -18,6 +18,8 @@
 
 #include <fmt/format.h>
 #include <fmt/ostream.h>
+#include <range/v3/view/enumerate.hpp>
+#include <range/v3/view/take.hpp>
 
 namespace ql {
 	namespace {
@@ -53,12 +55,11 @@ namespace ql {
 			}
 		});
 
-		// Initialize hotbar with as many items as possible.
-		auto& inv = reg.get<inventory>(_player_id);
-		size_t i = 0;
-		for (auto it = inv.item_ids.begin(); it != inv.item_ids.end() && i < 10; ++it) {
-			_hotbar.set_item(i, *it);
-			++i;
+		{ // Initialize hotbar with as many items as possible.
+			auto& inv = reg.get<inventory>(_player_id);
+			for (auto [idx, item] : ranges::views::enumerate(inv.item_ids) | ranges::views::take(hotbar::item_count)) {
+				_hotbar.set_item(idx, item);
+			}
 		}
 
 		// Render the initial world view.

@@ -8,6 +8,8 @@
 
 #include <vector>
 
+#include <range/v3/view/tail.hpp>
+
 namespace vecx {
 	//! A 2D simple closed polygon defined by a sequence of vertices.
 	//! @note Behavior is undefined if the given points do not form a simple closed polygon.
@@ -32,8 +34,8 @@ namespace vecx {
 		constexpr auto bounding_box() const {
 			//! @todo Check that the edge cases are correct here. Calling .contains(v) on the result of this function should work for all v in polygon.
 			box result{vertices.front(), vector<scalar_t, 2>::zero()};
-			for (auto it = vertices.begin() + 1; it != vertices.end(); ++it) {
-				result.extend(*it);
+			for (auto const& vertex : ranges::views::tail(vertices)) {
+				result.extend(vertex);
 			}
 			return result;
 		}

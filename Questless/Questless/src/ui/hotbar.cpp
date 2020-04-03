@@ -11,8 +11,8 @@ namespace ql {
 	//! @todo Is there a DRYer way to initialize the item widgets?
 
 	hotbar::hotbar(reg& reg, rsrc::item const& item_resources, rsrc::spell const& spell_resources)
-		: _item_resources{item_resources}
-		, _spell_resources{spell_resources}
+		: _item_resources{&item_resources}
+		, _spell_resources{&spell_resources}
 		, _item_widgets{//
 			  item_widget{reg, item_resources, spell_resources},
 			  item_widget{reg, item_resources, spell_resources},

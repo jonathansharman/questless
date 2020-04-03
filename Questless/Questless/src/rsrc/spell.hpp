@@ -6,6 +6,7 @@
 #include "utility.hpp"
 
 #include <SFML/Graphics.hpp>
+#include <gsl/pointers>
 
 namespace ql::rsrc {
 	//! Contains textures for spell animations.
@@ -17,4 +18,6 @@ namespace ql::rsrc {
 			sf::Texture teleport = load<sf::Texture>("resources/textures/textures/spells/teleport.png");
 		} txtr;
 	};
+
+	using spell_ptr = gsl::not_null<spell const*>;
 }

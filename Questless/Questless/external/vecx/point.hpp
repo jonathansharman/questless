@@ -5,6 +5,8 @@
 
 #include "vector.hpp"
 
+#include <range/v3/algorithm/equal.hpp>
+
 namespace vecx {
 	//! Represents an n-dimensional point of quantities.
 	//! @tparam Quantity The quantity type of scalars in this point type.
@@ -34,10 +36,7 @@ namespace vecx {
 
 		template <typename ThatQuantity>
 		constexpr auto operator ==(point<ThatQuantity, n> const& that) const {
-			for (std::size_t i = 0; i < n; ++i) {
-				if (components[i] != that[i]) return false;
-			}
-			return true;
+			return ranges::equal(components, that.components);
 		}
 
 		//! Gets the component at index @p index.
@@ -131,7 +130,7 @@ namespace vecx {
 	//! The sum of vector @p v and point @p p.
 	template <typename QuantityVector, typename QuantityPoint, std::size_t N>
 	constexpr auto operator +(vector<QuantityVector, N> const& v, point<QuantityPoint, N> const& p) {
-		auto result = p;
+		point<QuantityPoint, N> result;
 		for (std::size_t i = 0; i < N; ++i) {
 			result[i] = v[i] + p[i];
 		}

@@ -16,6 +16,8 @@
 #include "rsrc/entity.hpp"
 #include "rsrc/particle.hpp"
 
+#include <range/v3/view/repeat_n.hpp>
+
 namespace ql {
 	entity_widget::entity_widget( //
 		reg& reg,
@@ -38,9 +40,9 @@ namespace ql {
 					auto flame = umake<ql::flame>(_particle_resources);
 					{ // Pre-update the flame so it's steady immediately.
 						constexpr auto fast_forward = 2.0_s;
-						constexpr int step = 100;
-						for (int i = 0; i < step; ++i) {
-							flame->update(fast_forward / step);
+						constexpr int n_iters = 100;
+						for (auto step : ranges::views::repeat_n(fast_forward / n_iters, n_iters)) {
+							flame->update(step);
 						}
 					}
 

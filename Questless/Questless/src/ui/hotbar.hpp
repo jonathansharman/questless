@@ -13,6 +13,9 @@
 namespace ql {
 	//! Holds items for ready use.
 	struct hotbar : widget {
+		//! The maximum number of items in the hotbar.
+		static constexpr std::size_t item_count = 10;
+
 		hotbar(reg& reg, rsrc::item const& item_resources, rsrc::spell const& spell_resources);
 
 		auto get_size() const -> view::vector final;
@@ -36,13 +39,13 @@ namespace ql {
 		auto set_on_click(std::function<void(std::optional<id>, view::point)> handler) -> void;
 
 	private:
-		rsrc::item const& _item_resources;
-		rsrc::spell const& _spell_resources;
+		rsrc::item_ptr _item_resources;
+		rsrc::spell_ptr _spell_resources;
 
 		view::point _position;
 		view::point _mouse_position;
 
-		std::array<item_widget, 10> _item_widgets;
+		std::array<item_widget, item_count> _item_widgets;
 		size_t _most_recent_idx = 0;
 
 		sf::Texture _slot_texture;

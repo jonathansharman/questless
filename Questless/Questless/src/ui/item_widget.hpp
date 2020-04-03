@@ -6,15 +6,13 @@
 #include "widget.hpp"
 
 #include "reg.hpp"
+#include "rsrc/item_fwd.hpp"
+#include "rsrc/spell_fwd.hpp"
 #include "utility/reference.hpp"
 
 #include <optional>
 
 namespace ql {
-	namespace rsrc {
-		struct item;
-		struct spell;
-	}
 	struct animation;
 
 	//! Allows interaction with an item.
@@ -48,8 +46,8 @@ namespace ql {
 	private:
 		reg_ptr _reg;
 
-		rsrc::item const& _item_resources;
-		rsrc::spell const& _spell_resources;
+		rsrc::item_ptr _item_resources;
+		rsrc::spell_ptr _spell_resources;
 
 		std::optional<id> _o_item_id;
 		uptr<animation> _ani;

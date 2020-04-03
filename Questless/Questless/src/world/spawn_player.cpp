@@ -20,6 +20,9 @@
 #include "magic/spell.hpp"
 #include "rsrc/fonts.hpp"
 
+#include <range/v3/range/conversion.hpp>
+#include <range/v3/view/generate_n.hpp>
+
 namespace ql {
 	auto create_and_spawn_player(reg& reg, id region_id) -> id {
 		// Get a valid spawn location from the region.
@@ -45,12 +48,10 @@ namespace ql {
 		player_inv.add(make_bow(reg, reg.create()));
 
 		{ // Add a quiver of arrows.
-			inventory quiver_inventory;
 			constexpr int arrow_count = 20;
-			for (int i = 0; i < arrow_count; ++i) {
-				player_inv.add(make_arrow(reg, reg.create()));
-			}
-			player_inv.add(make_quiver(reg, reg.create(), std::move(quiver_inventory)));
+			auto arrows = ranges::views::generate_n([&] { return make_arrow(reg, reg.create()); }, arrow_count) //
+				| ranges::to<std::unordered_set<id>>();
+			player_inv.add(make_quiver(reg, reg.create(), inventory{std::move(arrows)}));
 		}
 
 		// Add a gatestone.

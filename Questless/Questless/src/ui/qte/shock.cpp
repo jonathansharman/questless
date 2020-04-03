@@ -6,6 +6,9 @@
 #include "rsrc/particle.hpp"
 #include "utility/random.hpp"
 
+#include <range/v3/action/push_back.hpp>
+#include <range/v3/view/generate_n.hpp>
+
 namespace ql::qte {
 	using namespace view::literals;
 
@@ -26,11 +29,14 @@ namespace ql::qte {
 			return;
 		}
 
-		for (int i = 0; i < charges_per_quadrant; ++i) {
-			auto const position = _target_point + random_displacement(100.0_px);
-			auto const velocity = vecx::make_polar_vector(100.0_px / 1.0_s, random_radians());
-			_charges.push_back(charge{position, velocity});
-		}
+		ranges::actions::push_back(_charges,
+			ranges::views::generate_n(
+				[&] {
+					auto const position = _target_point + random_displacement(100.0_px);
+					auto const velocity = vecx::make_polar_vector(100.0_px / 1.0_s, random_radians());
+					return charge{position, velocity};
+				},
+				charges_per_quadrant));
 
 		for (auto& point_charge : _charges) {
 			// Get displacement to target.

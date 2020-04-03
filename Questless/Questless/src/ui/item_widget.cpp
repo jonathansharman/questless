@@ -38,7 +38,7 @@ namespace ql {
 	}
 
 	item_widget::item_widget(reg& reg, rsrc::item const& item_resources, rsrc::spell const& spell_resources)
-		: _reg{&reg}, _item_resources{item_resources}, _spell_resources{spell_resources} {}
+		: _reg{&reg}, _item_resources{&item_resources}, _spell_resources{&spell_resources} {}
 
 	item_widget::~item_widget() = default;
 
@@ -54,27 +54,27 @@ namespace ql {
 
 		// Render item.
 		if (_reg->has<bow>(item_id)) {
-			_ani = umake<still_image>(_item_resources.bow);
+			_ani = umake<still_image>(_item_resources->bow);
 		} else if (_reg->has<quarterstaff>(item_id)) {
-			_ani = umake<still_image>(_item_resources.quarterstaff);
+			_ani = umake<still_image>(_item_resources->quarterstaff);
 		} else if (_reg->has<quiver>(item_id)) {
-			_ani = umake<still_image>(_item_resources.quiver);
+			_ani = umake<still_image>(_item_resources->quiver);
 		} else if (_reg->has<arrow>(item_id)) {
-			_ani = umake<still_image>(_item_resources.arrow);
+			_ani = umake<still_image>(_item_resources->arrow);
 		} else if (auto scroll = _reg->try_get<ql::scroll>(item_id)) {
 			if (scroll->spell == std::nullopt) {
-				_ani = umake<still_image>(_item_resources.blank_scroll);
+				_ani = umake<still_image>(_item_resources->blank_scroll);
 			} else {
-				auto node = umake<scene_node>(umake<still_image>(_item_resources.written_scroll));
-				node->front_children.push_front(animate_spell(_spell_resources, *scroll->spell));
+				auto node = umake<scene_node>(umake<still_image>(_item_resources->written_scroll));
+				node->front_children.push_front(animate_spell(*_spell_resources, *scroll->spell));
 				_ani = std::move(node);
 			}
 		} else if (auto gatestone = _reg->try_get<ql::gatestone>(item_id)) {
 			if (gatestone->charge.value() == 0_mp) {
-				_ani = umake<still_image>(_item_resources.uncharged_gatestone);
+				_ani = umake<still_image>(_item_resources->uncharged_gatestone);
 			} else {
 				// Create gatestone still.
-				auto gatestone_still = umake<still_image>(_item_resources.charged_gatestone);
+				auto gatestone_still = umake<still_image>(_item_resources->charged_gatestone);
 				sf::Color const draw_color_factor = [&] {
 					sf::Color result;
 					switch (gatestone->color) {
@@ -135,7 +135,7 @@ namespace ql {
 			}
 		} else {
 			// No item components recognized. Fallback to an "error" sprite.
-			_ani = umake<still_image>(_item_resources.error);
+			_ani = umake<still_image>(_item_resources->error);
 		}
 
 		// Set/reset position, in case item ID was unset last time set_position() was called.

@@ -6,6 +6,9 @@
 #include "point.hpp"
 #include "vector.hpp"
 
+#include <range/v3/algorithm/all_of.hpp>
+#include <range/v3/view/zip.hpp>
+
 namespace vecx {
 	//! An n-dimensional rectangular volume.
 	template <typename Quantity, std::size_t N>
@@ -87,22 +90,22 @@ namespace vecx {
 		//! Whether this box contains @p point.
 		//! @note Lower bounds are inclusive, and upper bounds are exclusive.
 		constexpr auto contains(point<scalar_t, n> const& point) -> bool {
-			for (int i = 0; i < n; ++i) {
-				if (point[i] < position[i] || point[i] >= position[i] + size[i]) {
-					return false;
-				}
-			}
-			return true;
+			return ranges::all_of(
+				ranges::views::zip(point.components, position.components, size.components),
+				[](auto const& element) {
+					auto [i_point, i_pos, i_size] = element;
+					return i_pos <= i_point && i_point < i_pos + i_size;
+				});
 		}
 
 		//! Extends this box, if necessary, to include the given point.
 		auto extend(point<scalar_t, n> const& point) -> void {
-			for (int i = 0; i < n; ++i) {
-				if (point[i] < position[i]) {
-					size[i] += position[i] - point[i];
-					position[i] = point[i];
-				} else if (point[i] > position[i] + size[i]) {
-					size[i] = point[i] - position[i];
+			for (auto&& [i_point, i_pos, i_size] : ranges::views::zip(point.components, position.components, size.components)) {
+				if (i_point < i_pos) {
+					i_size += i_pos - i_point;
+					i_pos = i_point;
+				} else if (i_point > i_pos + i_size) {
+					i_size = i_point - i_pos;
 				}
 			}
 		}
