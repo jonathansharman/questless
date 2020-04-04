@@ -6,15 +6,12 @@
 #include "widget.hpp"
 
 #include "reg.hpp"
+#include "rsrc/fonts_fwd.hpp"
 #include "rsrc/splash.hpp"
 #include "utility/reference.hpp"
 #include "view_space.hpp"
 
 namespace ql {
-	namespace rsrc {
-		struct fonts;
-	}
-
 	//! The splash screen.
 	struct splash : widget {
 		//! @param root A reference to the root UI element of the game, used to change scenes when the splash screen ends.
@@ -42,7 +39,7 @@ namespace ql {
 		reg_ptr _reg;
 
 		uptr<widget>& _root;
-		rsrc::fonts const& _fonts;
+		rsrc::fonts_ptr _fonts;
 
 		rsrc::splash _rsrc;
 		sf::Shader _fade_shader;

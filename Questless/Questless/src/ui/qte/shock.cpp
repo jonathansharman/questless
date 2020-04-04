@@ -13,7 +13,7 @@ namespace ql::qte {
 	using namespace view::literals;
 
 	shock::shock(rsrc::particle const& particle_resources, tile_hex_point target_coords)
-		: _particle_resources{particle_resources}
+		: _particle_resources{&particle_resources}
 		, _target_point{tile_layout.to_world(target_coords)} //
 	{}
 
@@ -56,7 +56,7 @@ namespace ql::qte {
 	auto shock::draw(sf::RenderTarget& target, sf::RenderStates states) const -> void {
 		// Draw point charges.
 		for (auto const& charge : _charges) {
-			sf::Sprite sprite{_particle_resources.glow_small};
+			sf::Sprite sprite{_particle_resources->glow_small};
 
 			sprite.setPosition(view::to_sfml(charge.position));
 

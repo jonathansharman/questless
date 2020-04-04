@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include "particle_fwd.hpp"
 #include "utility.hpp"
 
 #include <SFML/Graphics.hpp>

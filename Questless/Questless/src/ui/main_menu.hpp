@@ -6,12 +6,10 @@
 #include "widget.hpp"
 
 #include "reg.hpp"
+#include "rsrc/fonts_fwd.hpp"
 #include "utility/reference.hpp"
 
 namespace ql {
-	namespace rsrc {
-		struct fonts;
-	}
 	struct hud;
 
 	//! The scene for the main menu.

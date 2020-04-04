@@ -570,6 +570,30 @@
     <ClInclude Include="src\rsrc\spell_fwd.hpp">
       <Filter>src\rsrc</Filter>
     </ClInclude>
+    <ClInclude Include="src\rsrc\entity_fwd.hpp">
+      <Filter>src\rsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rsrc\fonts_fwd.hpp">
+      <Filter>src\rsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rsrc\hud_fwd.hpp">
+      <Filter>src\rsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rsrc\splash_fwd.hpp">
+      <Filter>src\rsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rsrc\tile_fwd.hpp">
+      <Filter>src\rsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rsrc\world_widget_fwd.hpp">
+      <Filter>src\rsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rsrc\menu_fwd.hpp">
+      <Filter>src\rsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rsrc\particle_fwd.hpp">
+      <Filter>src\rsrc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">

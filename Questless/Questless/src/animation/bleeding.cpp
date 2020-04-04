@@ -9,7 +9,7 @@ namespace ql {
 	auto bleeding::particle_animation_subupdate(sec elapsed_time) -> void {
 		_drops += drop_rate * elapsed_time;
 		while (_drops > drops{1.0}) {
-			particles.push_front(umake<blood_particle>(_rsrc));
+			particles.push_front(umake<blood_particle>(*_rsrc));
 			_drops -= drops{1.0};
 		}
 	}

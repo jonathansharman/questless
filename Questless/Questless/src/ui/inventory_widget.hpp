@@ -29,8 +29,8 @@ namespace ql {
 		auto on_mouse_move(view::point mouse_position) -> void final;
 
 	private:
-		inventory& _inv;
-		hotbar& _hotbar;
+		gsl::not_null<inventory*> _inv;
+		gsl::not_null<hotbar*> _hotbar;
 		view::point _position;
 		view::vector _size;
 		int _inv_page = 0; //! @todo Replace with filters and a scrollable view.

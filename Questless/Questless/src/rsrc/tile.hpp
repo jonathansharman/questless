@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include "tile_fwd.hpp"
 #include "utility.hpp"
 
 #include <SFML/Graphics.hpp>

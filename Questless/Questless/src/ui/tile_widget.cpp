@@ -11,7 +11,7 @@
 namespace ql {
 	tile_widget::tile_widget(reg& reg, rsrc::tile const& resources, world_view::tile_view const& tile_view)
 		: _reg{&reg}
-		, _rsrc{resources}
+		, _rsrc{&resources}
 		, _tv{tile_view} //
 	{
 		_ani = [&] {
@@ -29,25 +29,25 @@ namespace ql {
 			auto shape = std::make_unique<still_shape>(std::make_unique<sf::ConvexShape>(cs));
 			switch (terrain) {
 				case terrain::dirt:
-					shape->shape->setTexture(&_rsrc.txtr.dirt);
+					shape->shape->setTexture(&_rsrc->txtr.dirt);
 					break;
 				case terrain::edge:
-					shape->shape->setTexture(&_rsrc.txtr.blank);
+					shape->shape->setTexture(&_rsrc->txtr.blank);
 					break;
 				case terrain::grass:
-					shape->shape->setTexture(&_rsrc.txtr.grass);
+					shape->shape->setTexture(&_rsrc->txtr.grass);
 					break;
 				case terrain::sand:
-					shape->shape->setTexture(&_rsrc.txtr.sand);
+					shape->shape->setTexture(&_rsrc->txtr.sand);
 					break;
 				case terrain::snow:
-					shape->shape->setTexture(&_rsrc.txtr.snow);
+					shape->shape->setTexture(&_rsrc->txtr.snow);
 					break;
 				case terrain::stone:
-					shape->shape->setTexture(&_rsrc.txtr.stone);
+					shape->shape->setTexture(&_rsrc->txtr.stone);
 					break;
 				case terrain::water:
-					shape->shape->setTexture(&_rsrc.txtr.water);
+					shape->shape->setTexture(&_rsrc->txtr.water);
 					break;
 				default:
 					UNREACHABLE;

@@ -5,11 +5,9 @@
 
 #include "particle_animation.hpp"
 
-namespace ql {
-	namespace rsrc {
-		struct particle;
-	}
+#include "rsrc/particle_fwd.hpp"
 
+namespace ql {
 	//! Creates drops of blood.
 	struct bleeding : particle_animation {
 		//! Unit of drops of blood, for use in bleeding animations.
@@ -21,11 +19,11 @@ namespace ql {
 		//! @param drop_rate The number of drops of blood to create per second. Can be less than one.
 		bleeding(rsrc::particle const& resources, cancel::quotient_t<drops, sec> drop_rate)
 			: drop_rate{drop_rate}
-			, _rsrc{resources} //
+			, _rsrc{&resources} //
 		{}
 
 	private:
-		rsrc::particle const& _rsrc;
+		rsrc::particle_ptr _rsrc;
 
 		//! The current accumulation of drops of blood.
 		drops _drops{0.0};

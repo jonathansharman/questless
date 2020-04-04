@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include "splash_fwd.hpp"
 #include "utility.hpp"
 
 #include <SFML/Audio.hpp>

@@ -3,6 +3,9 @@
 
 #pragma once
 
+#include "world_widget_fwd.hpp"
+#include "utility.hpp"
+
 #include "entity.hpp"
 #include "fonts.hpp"
 #include "particle.hpp"

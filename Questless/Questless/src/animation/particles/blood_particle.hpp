@@ -5,11 +5,9 @@
 
 #include "sprite_particle.hpp"
 
-namespace ql {
-	namespace rsrc {
-		struct particle;
-	}
+#include "rsrc/particle_fwd.hpp"
 
+namespace ql {
 	//! A blood drop particle.
 	struct blood_particle : sprite_particle {
 		blood_particle(rsrc::particle const& resources);

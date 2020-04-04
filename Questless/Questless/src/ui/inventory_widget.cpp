@@ -13,8 +13,8 @@ namespace ql {
 	}
 
 	inventory_widget::inventory_widget(inventory& inventory, hotbar& hotbar)
-		: _inv{inventory}
-		, _hotbar{hotbar} //
+		: _inv{&inventory}
+		, _hotbar{&hotbar} //
 	{
 		//! @todo Support item sorting (alphabetical or custom).
 		//! @todo Cache the displayed items (only need to regenerate list if a turn has been taken).
@@ -133,6 +133,6 @@ namespace ql {
 		if (idx >= _displayed_items.size()) { return; }
 
 		// Add the selected item to the hotbar.
-		_hotbar.set_item(hotbar_idx, _displayed_items[idx]);
+		_hotbar->set_item(hotbar_idx, _displayed_items[idx]);
 	}
 }

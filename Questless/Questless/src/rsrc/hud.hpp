@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include "hud_fwd.hpp"
+
 #include "entity.hpp"
 #include "fonts.hpp"
 #include "item.hpp"

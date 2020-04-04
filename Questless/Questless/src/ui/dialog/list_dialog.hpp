@@ -5,15 +5,12 @@
 
 #include "dialog.hpp"
 
+#include "rsrc/fonts_fwd.hpp"
 #include "ui/label.hpp"
 
 #include <vector>
 
 namespace ql {
-	namespace rsrc {
-		struct fonts;
-	}
-
 	//! Retrieves the player's choice from a list of options.
 	struct list_dialog : dialog<std::function<void()>> {
 		//! @param options The list of pairs of option names and their callbacks. Must be non-empty.

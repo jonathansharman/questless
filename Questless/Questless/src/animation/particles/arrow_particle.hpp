@@ -5,11 +5,9 @@
 
 #include "sprite_particle.hpp"
 
-namespace ql {
-	namespace rsrc {
-		struct particle;
-	}
+#include "rsrc/particle_fwd.hpp"
 
+namespace ql {
 	//! An arrow in flight.
 	struct arrow_particle : sprite_particle {
 		//! @param resources Particle resources used to animate this particle.

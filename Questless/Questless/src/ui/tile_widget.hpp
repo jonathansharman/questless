@@ -7,14 +7,12 @@
 
 #include "entities/beings/world_view.hpp"
 #include "reg.hpp"
+#include "rsrc/tile_fwd.hpp"
 #include "utility/reference.hpp"
 
 #include <optional>
 
 namespace ql {
-	namespace rsrc {
-		struct tile;
-	}
 	struct animation;
 
 	//! Allows interaction with a tile in the world.
@@ -33,7 +31,7 @@ namespace ql {
 	private:
 		reg_ptr _reg;
 
-		rsrc::tile const& _rsrc;
+		rsrc::tile_ptr _rsrc;
 
 		world_view::tile_view _tv;
 		view::point _position;

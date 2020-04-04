@@ -7,15 +7,13 @@
 
 #include "entities/beings/world_view.hpp"
 #include "reg.hpp"
+#include "rsrc/entity_fwd.hpp"
+#include "rsrc/particle_fwd.hpp"
 #include "utility/reference.hpp"
 
 #include <optional>
 
 namespace ql {
-	namespace rsrc {
-		struct entity;
-		struct particle;
-	}
 	struct animation;
 
 	//! Allows interaction with an entity.
@@ -38,8 +36,8 @@ namespace ql {
 	private:
 		reg_ptr _reg;
 
-		rsrc::entity const& _entity_resources;
-		rsrc::particle const& _particle_resources;
+		rsrc::entity_ptr _entity_resources;
+		rsrc::particle_ptr _particle_resources;
 
 		world_view::entity_view _ev;
 		view::point _position;

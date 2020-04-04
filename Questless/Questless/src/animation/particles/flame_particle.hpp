@@ -5,11 +5,9 @@
 
 #include "sprite_particle.hpp"
 
-namespace ql {
-	namespace rsrc {
-		struct particle;
-	}
+#include "rsrc/particle_fwd.hpp"
 
+namespace ql {
 	//! A particle of flame and smoke.
 	struct flame_particle : sprite_particle {
 		flame_particle(rsrc::particle const& resources);

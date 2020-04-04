@@ -6,14 +6,10 @@
 #include "ui/dialog/dialog.hpp"
 
 #include "quantities/wall_time.hpp"
+#include "rsrc/particle_fwd.hpp"
 #include "world/coordinates.hpp"
 
 namespace ql {
-	namespace rsrc {
-		struct fonts;
-		struct particle;
-	}
-
 	namespace qte {
 		//! Quick time event for determining shock strength.
 		struct shock : dialog<float> {
@@ -30,7 +26,7 @@ namespace ql {
 				view::vel velocity;
 			};
 
-			rsrc::particle const& _particle_resources;
+			rsrc::particle_ptr _particle_resources;
 
 			view::point _target_point;
 

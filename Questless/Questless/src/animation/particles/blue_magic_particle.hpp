@@ -5,11 +5,9 @@
 
 #include "sprite_particle.hpp"
 
-namespace ql {
-	namespace rsrc {
-		struct particle;
-	}
+#include "rsrc/particle_fwd.hpp"
 
+namespace ql {
 	//! A particle for effects involving blue magic.
 	struct blue_magic_particle : sprite_particle {
 		blue_magic_particle(rsrc::particle const& resources);

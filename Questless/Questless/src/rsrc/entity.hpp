@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include "entity_fwd.hpp"
 #include "utility.hpp"
 
 #include "animation/still_image.hpp"
