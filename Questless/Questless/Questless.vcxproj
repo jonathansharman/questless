@@ -103,6 +103,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)src;$(ProjectDir)external;C:\Program Files (x86)\Windows Kits\8.1\Include\shared\;$(SourcePath)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
+    <EnableClangTidyCodeAnalysis>true</EnableClangTidyCodeAnalysis>
+    <ClangTidyChecks>modernize-use-trailing-return-type</ClangTidyChecks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Test|x64'">
     <IncludePath>$(ProjectDir)src;$(ProjectDir)external;C:\Program Files (x86)\Windows Kits\8.1\Include\shared\;$(SourcePath)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
